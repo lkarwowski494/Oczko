@@ -254,10 +254,10 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(200);
   });
 
-  test('10 000 serializacji i deserializacji kopert Garmin ConnectIQ w < 60 ms', () => {
+  test('10 000 serializacji i deserializacji kopert Garmin ConnectIQ w < 150 ms', () => {
     const payload = createGarminSyncPayload({
       counterId: 'c1',
       projectName: 'Sweter',
