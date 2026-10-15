@@ -70,4 +70,41 @@ describe('Oczko Core — Trenażer powtórzeń wzorów (DEC-17)', () => {
     expect(s.currentRepeatNumber).toBe(1);
     expect(s.isCompleted).toBe(false);
   });
+
+  test('Trenażer przechodzi do kolejnego rzędu w ćwiczeniu wielorzędowym', () => {
+    const multiRowExercise: any = {
+      id: 'ex_multi',
+      name: 'Wielorzędowe',
+      description: 'Ćwiczenie wielorzędowe',
+      category: 'ribbing',
+      totalStitches: 10,
+      craftType: 'knitting' as const,
+      difficulty: 'początkujący' as const,
+      rows: [
+        {
+          rowNumber: 1,
+          side: 'RS' as const,
+          repeats: {
+            repeatCount: 1,
+            steps: [{ code: '1 o.p.', label: 'Oczko prawe' }],
+          },
+        },
+        {
+          rowNumber: 2,
+          side: 'WS' as const,
+          repeats: {
+            repeatCount: 1,
+            steps: [{ code: '1 o.l.', label: 'Oczko lewe' }],
+          },
+        },
+      ],
+    };
+
+    const trainer = new PatternTrainerEngine(multiRowExercise);
+    expect(trainer.getState().currentRowNumber).toBe(1);
+    trainer.nextStep(); // Row 1 done, advances to Row 2
+    expect(trainer.getState().currentRowNumber).toBe(2);
+    trainer.nextStep(); // Row 2 done, complete!
+    expect(trainer.getState().isCompleted).toBe(true);
+  });
 });

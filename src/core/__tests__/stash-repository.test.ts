@@ -6,10 +6,12 @@ import { createInMemoryDatabase } from '../database';
 import {
   insertStashYarn,
   listStashYarns,
+  getStashYarn,
   updateStashYarnRemaining,
   deleteStashYarn,
   insertStashTool,
   listStashTools,
+  getStashTool,
   deleteStashTool,
   seedDefaultStashIfEmpty,
   StashYarnRecord,
@@ -126,8 +128,35 @@ describe('Oczko Core — Repozytorium magazynu włóczek i narzędzi (BR-MAG-001
     const list = await listStashTools(db);
     expect(list.some((t) => t.id === 'tool_chiaogoo_4mm')).toBe(true);
 
+    const found = await getStashTool(db, 'tool_chiaogoo_4mm');
+    expect(found?.name).toBe('ChiaoGoo Red Lace 4.0mm');
+    const notFound = await getStashTool(db, 'nonexistent_tool');
+    expect(notFound).toBeNull();
+
     await deleteStashTool(db, 'tool_chiaogoo_4mm');
     const afterDelete = await listStashTools(db);
     expect(afterDelete.length).toBe(0);
+  });
+
+  test('getStashYarn poprawnie zwraca obiekt włóczki lub null', async () => {
+    const yarn: StashYarnRecord = {
+      id: 'yarn_find',
+      brand: 'Isager',
+      name: 'Silk Mohair',
+      colorway: '6',
+      weightCategory: 'Lace',
+      composition: '75% Mohair, 25% Silk',
+      skeinsTotal: 2,
+      skeinsRemaining: 2,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    await insertStashYarn(db, yarn);
+
+    const found = await getStashYarn(db, 'yarn_find');
+    expect(found?.name).toBe('Silk Mohair');
+
+    const notFound = await getStashYarn(db, 'nonexistent_yarn');
+    expect(notFound).toBeNull();
   });
 });

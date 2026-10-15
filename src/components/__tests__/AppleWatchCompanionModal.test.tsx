@@ -117,6 +117,20 @@ describe('AppleWatchCompanionModal (DEC-03, BR-ZEG-003, BR-ZEG-009)', () => {
     });
 
     expect(onStepMock).toHaveBeenCalledWith('increment');
+
+    // Obrót koronki w dół (-1)
+    const crownDownBtn = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node).includes('▼ Koronka')
+      );
+    });
+
+    act(() => {
+      crownDownBtn.props.onPress();
+    });
+
+    expect(onStepMock).toHaveBeenCalledWith('decrement');
   });
 
   it('obsługuje cofnięcie rzędu (-1) z zegarka', () => {

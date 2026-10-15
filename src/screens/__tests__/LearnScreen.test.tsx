@@ -164,5 +164,17 @@ describe('LearnScreen — Pełne testy słownika i trenażera powtórzeń (DEC-1
 
     text = extractAllStrings(tree.toJSON());
     expect(text).toContain('Zalicz krok (+)');
+
+    // Przełącz z powrotem na Słownik (linia 79)
+    const glossaryTab = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Słownik & Symbole')
+    );
+
+    act(() => {
+      glossaryTab.props.onPress();
+    });
+
+    expect(extractAllStrings(tree.toJSON())).toContain('Słownik & Symbole');
   });
 });

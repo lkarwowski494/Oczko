@@ -23,6 +23,13 @@ describe('Oczko Core — Fasada projektu (Test integracyjny rdzenia)', () => {
     state = manager.getCounterState('cnt_rows');
     expect(state.rawValue).toBe(1);
 
+    manager.undoLast('cnt_rows', 'iphone', 1300);
+    expect(manager.getCounterState('cnt_rows').rawValue).toBe(0);
+
+    // Próba cofnięcia gdy nie ma już nic do cofnięcia (zwraca null w createAndApplyUndo)
+    const emptyUndo = manager.undoLast('cnt_rows', 'iphone', 1400);
+    expect(emptyUndo).toBe(false);
+
     // Testujemy moduł matematyczny i parser wbudowany w fasadę
     const design = manager.evaluateDesign(22, 10, 50, 92, 96);
     expect(design.gaugeRes.exact).toBe(110);

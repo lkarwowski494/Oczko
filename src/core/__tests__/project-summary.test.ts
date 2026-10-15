@@ -114,4 +114,23 @@ describe('Project Summary & Share Card Core (DEC-01)', () => {
 
     expect(text).toContain('🎉 Ukończony (FO)');
   });
+
+  it('generuje tekst udostępniania gdy brak zdefiniowanego celu rzędów (totalTargetRows undefined)', () => {
+    const noTargetProj: EnrichedProject = {
+      ...mockProject,
+      parts: [
+        {
+          id: 'p1',
+          projectId: 'p',
+          name: 'Część',
+          sortOrder: 0,
+          targetRows: undefined,
+          counters: [{ id: 'c1', partId: 'p1', name: 'Rzędy', currentValue: 25 }],
+        },
+      ],
+    };
+    const summary = buildProjectSummary(noTargetProj, []);
+    const text = generateShareableText(summary);
+    expect(text).toContain('📏 Przerobione rzędy: 25 rz.');
+  });
 });

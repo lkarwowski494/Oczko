@@ -139,6 +139,11 @@ describe('Apple Watch & Live Activities Companion (DEC-03, BR-SYS-003, BR-ZEG-00
       expect(queue.getPendingCount()).toBe(0);
       expect(flushed[0].timestampMs).toBe(1000);
       expect(flushed[1].timestampMs).toBe(2000);
+
+      queue.enqueue({ action: 'increment', counterId: 'c1', timestampMs: 3000 });
+      expect(queue.getPendingCount()).toBe(1);
+      queue.clear();
+      expect(queue.getPendingCount()).toBe(0);
     });
   });
 

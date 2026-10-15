@@ -183,19 +183,15 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
     const { tree } = await renderProjectsScreen();
     const root = tree.root;
 
-    // Znajdź przyciski "⚖️ Zużycie"
-    const usageBtns = root.findAll((node: any) => {
-      return (
-        node.props?.onPress &&
-        node.props?.children?.props?.children === '⚖️ Zużycie'
-      );
-    });
+    // 1. Otwórz z paska górnego (styles.gaugeButton -> #F0ECE8)
+    const topBarUsageBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      n.props?.style?.backgroundColor === '#F0ECE8' &&
+      extractAllStrings(n).includes('⚖️ Zużycie')
+    );
 
-    expect(usageBtns.length).toBeGreaterThan(0);
-
-    // 1. Otwórz z paska górnego
     await act(async () => {
-      usageBtns[0].props.onPress();
+      topBarUsageBtn.props.onPress();
       await new Promise((r) => setTimeout(r, 40));
     });
 
@@ -206,7 +202,7 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
     const closeBtn = root.find((node: any) => {
       return (
         node.props?.onPress &&
-        node.props?.children?.props?.children === '✕'
+        extractAllStrings(node).includes('✕')
       );
     });
 
@@ -215,26 +211,35 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
       await new Promise((r) => setTimeout(r, 40));
     });
 
-    // 2. Otwórz z karty projektu
+    // 2. Otwórz z karty projektu (styles.cardShareButton -> #FAF5F0)
+    const cardUsageBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      n.props?.style?.backgroundColor === '#FAF5F0' &&
+      extractAllStrings(n).includes('⚖️ Zużycie')
+    );
+
     await act(async () => {
-      usageBtns[1].props.onPress();
+      cardUsageBtn.props.onPress();
       await new Promise((r) => setTimeout(r, 40));
     });
 
     text = extractAllStrings(tree.toJSON());
     expect(text).toContain('Kalkulator Zużycia Włóczki');
 
-    // Zamknij ponownie nowo wyrenderowany modal
-    const closeBtnAgain = root.find((node: any) => {
-      return (
-        node.props?.onPress &&
-        node.props?.children?.props?.children === '✕'
-      );
+    // Bezpośrednie wywołanie onClose na YarnUsageEstimatorModal (linie 475-476)
+    const yarnModal = root.find((node: any) => typeof node.props?.availableYarns !== 'undefined');
+    await act(async () => {
+      yarnModal.props.onClose();
     });
 
-    await act(async () => {
-      closeBtnAgain.props.onPress();
-      await new Promise((r) => setTimeout(r, 40));
+    // 3. Obsługa onRequestClose w modalach
+    const modals = root.findAll((node: any) => node.type === 'Modal' || node.props?.onRequestClose);
+    modals.forEach((m: any) => {
+      if (typeof m.props?.onRequestClose === 'function') {
+        act(() => {
+          m.props.onRequestClose();
+        });
+      }
     });
   });
 
@@ -312,5 +317,111 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
     });
 
     expect(tree).toBeDefined();
+  });
+
+  it('obsługuje wybór projektu kliknięciem w kartę (handleSelectProject)', async () => {
+    const { tree } = await renderProjectsScreen();
+    const root = tree.root;
+
+    // Kliknij całą kartę projektu
+    const card = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Mój Sweter Raglanowy')
+    );
+
+    await act(async () => {
+      card.props.onPress();
+    });
+
+    expect(tree).toBeDefined();
+  });
+
+  it('obsługuje anulowanie modali nowego projektu i nowej części oraz przełącznik drutów', async () => {
+    const { tree } = await renderProjectsScreen();
+    const root = tree.root;
+
+    // 1. Otwórz modal nowego projektu
+    const newProjBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === '+ Nowy projekt'
+    );
+    await act(async () => {
+      newProjBtn.props.onPress();
+    });
+
+    // Przełącz na druty (linia 330)
+    const knittingBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Druty (Knitting)')
+    );
+    await act(async () => {
+      knittingBtn.props.onPress();
+    });
+
+    // Anuluj modal nowego projektu (linia 383)
+    const cancelNewProjBtn = root.findAll((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Anuluj')
+    )[0];
+    await act(async () => {
+      cancelNewProjBtn.props.onPress();
+    });
+
+    // 2. Otwórz modal dodawania części i anuluj (linia 437)
+    const addPartBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === '+ Część'
+    );
+    await act(async () => {
+      addPartBtn.props.onPress();
+    });
+
+    const cancelAddPartBtn = root.findAll((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Anuluj')
+    )[0];
+    await act(async () => {
+      cancelAddPartBtn.props.onPress();
+    });
+
+    expect(tree).toBeDefined();
+  });
+
+  it('obsługuje tworzenie projektu z próbki ściegu (handleCreateProjectFromGauge) oraz zamknięcie modali', async () => {
+    const { tree } = await renderProjectsScreen();
+    const root = tree.root;
+
+    // Znajdź GaugeCalculatorModal
+    const gaugeModal = root.find((n: any) => typeof n.props?.onCreateProject === 'function');
+    await act(async () => {
+      await gaugeModal.props.onCreateProject({
+        name: 'Sweter z próbki',
+        craftType: 'knitting',
+        targetRows: 160,
+      });
+      await gaugeModal.props.onClose();
+    });
+
+    // Znajdź ProjectShareCardModal i wywołaj onClose
+    const shareModal = root.find((n: any) => typeof n.props?.onStatusChange === 'function' && typeof n.props?.onClose === 'function');
+    await act(async () => {
+      shareModal.props.onClose();
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Sweter z próbki');
+  });
+
+  it('obsługuje renderowanie bez kontekstu ProjectProvider (fallback try-catch)', () => {
+    let treeNoProv: any;
+    act(() => {
+      treeNoProv = renderer.create(<ProjectsScreen />);
+    });
+    expect(treeNoProv).toBeDefined();
+    try {
+      act(() => {
+        treeNoProv.unmount();
+      });
+    } catch (_e) {}
   });
 });

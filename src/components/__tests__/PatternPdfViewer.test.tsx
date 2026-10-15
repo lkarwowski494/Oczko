@@ -1,5 +1,6 @@
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
+import * as DocumentPicker from 'expo-document-picker';
 import PatternPdfViewer from '../PatternPdfViewer';
 import { PatternDocument } from '../../core/pattern-document-service';
 
@@ -280,6 +281,199 @@ describe('PatternPdfViewer (BR-WZOR-001, DEC-09, NFR-DOST-009)', () => {
         rulerYPercent: expect.any(Number),
       })
     );
+  });
+
+  it('obsługuje przesuwanie linijki wyżej (▲ Wyżej)', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <PatternPdfViewer
+          initialDocument={MOCK_DOC}
+          activeCounterRow={14}
+        />
+      );
+    });
+
+    const root = tree.root;
+    const upBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wyżej')
+    );
+
+    act(() => {
+      upBtn.props.onPress();
+    });
+
+    expect(extractAllStrings(tree.toJSON())).toContain('sweter_nord.pdf');
+  });
+
+  it('obsługuje callback onPickDocument oraz DocumentPicker z poprawnym plikiem i błędem', async () => {
+    // 1. Z callbackiem onPickDocument
+    const onPickMock = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <PatternPdfViewer initialDocument={null} onPickDocument={onPickMock} />
+      );
+    });
+    const pickBtn = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wczytaj plik PDF'));
+    await act(async () => {
+      await pickBtn.props.onPress();
+    });
+    expect(onPickMock).toHaveBeenCalled();
+
+    // 2. Bez onPickDocument, DocumentPicker zwraca poprawny plik
+    const DocumentPicker = require('expo-document-picker');
+    const spyPicker = jest.spyOn(DocumentPicker, 'getDocumentAsync').mockResolvedValueOnce({
+      canceled: false,
+      assets: [
+        {
+          uri: 'file:///test/pattern.pdf',
+          name: 'pattern.pdf',
+          size: 2048,
+          mimeType: 'application/pdf',
+        },
+      ],
+    });
+
+    const onDocChange = jest.fn();
+    act(() => {
+      tree = renderer.create(
+        <PatternPdfViewer initialDocument={null} onDocumentChange={onDocChange} />
+      );
+    });
+    const pickBtn2 = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wczytaj plik PDF'));
+    await act(async () => {
+      await pickBtn2.props.onPress();
+    });
+    expect(onDocChange).toHaveBeenCalledWith(
+      expect.objectContaining({ fileName: 'pattern.pdf' })
+    );
+    spyPicker.mockRestore();
+
+    // 3. DocumentPicker rzuca wyjątek (obsługa catch)
+    const spyError = jest.spyOn(DocumentPicker, 'getDocumentAsync').mockRejectedValueOnce(
+      new Error('Picker crashed')
+    );
+    let tree3: any;
+    act(() => {
+      tree3 = renderer.create(
+        <PatternPdfViewer initialDocument={null} />
+      );
+    });
+    const pickBtn3 = tree3.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wczytaj plik PDF'));
+    await act(async () => {
+      await pickBtn3.props.onPress();
+    });
+    spyError.mockRestore();
+
+    // 4. DocumentPicker.getDocumentAsync nie jest zdefiniowane (gałąź else fallback)
+    const originalGetDoc = DocumentPicker.getDocumentAsync;
+    DocumentPicker.getDocumentAsync = null;
+    let tree4: any;
+    const onDocChange4 = jest.fn();
+    act(() => {
+      tree4 = renderer.create(
+        <PatternPdfViewer initialDocument={null} onDocumentChange={onDocChange4} />
+      );
+    });
+    const pickBtn4 = tree4.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wczytaj plik PDF'));
+    await act(async () => {
+      await pickBtn4.props.onPress();
+    });
+    expect(onDocChange4).toHaveBeenCalled();
+    DocumentPicker.getDocumentAsync = originalGetDoc;
+  });
+
+  it('obsługuje anulowanie wyboru pliku oraz plik niepoprawny w DocumentPicker', async () => {
+    // 1. Użytkownik anulował wybór (canceled: true)
+    const spyCanceled = jest.spyOn(DocumentPicker, 'getDocumentAsync').mockResolvedValueOnce({
+      canceled: true,
+      assets: null,
+    });
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<PatternPdfViewer initialDocument={null} />);
+    });
+    const pickBtn = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wczytaj plik PDF'));
+    await act(async () => {
+      await pickBtn.props.onPress();
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('Brak wczytanego wzoru');
+    spyCanceled.mockRestore();
+
+    // 2. Plik niepoprawny (np. za duży lub nieobsługiwany)
+    const spyInvalid = jest.spyOn(DocumentPicker, 'getDocumentAsync').mockResolvedValueOnce({
+      canceled: false,
+      assets: [
+        {
+          uri: 'file:///bad.exe',
+          name: 'bad.exe',
+          size: 50 * 1024 * 1024,
+          mimeType: 'application/octet-stream',
+          lastModified: Date.now(),
+        },
+      ],
+    } as any);
+    let tree2: any;
+    act(() => {
+      tree2 = renderer.create(<PatternPdfViewer initialDocument={null} />);
+    });
+    const pickBtn2 = tree2.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wczytaj plik PDF'));
+    await act(async () => {
+      await pickBtn2.props.onPress();
+    });
+    expect(extractAllStrings(tree2.toJSON())).toContain('Brak wczytanego wzoru');
+    spyInvalid.mockRestore();
+  });
+
+  it('obsługuje formatowanie rozmiaru w KB i brak rozmiaru, oraz krańce stron', () => {
+    // 1. Rozmiar w KB oraz pierwsza strona (prev button disabled)
+    const docKB: PatternDocument = {
+      ...MOCK_DOC,
+      currentPage: 1,
+      totalPages: 1,
+      fileSize: 500 * 1024,
+    };
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<PatternPdfViewer initialDocument={docKB} />);
+    });
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('500 KB');
+
+    // Próba kliknięcia prev/next gdy jesteśmy na 1 z 1
+    const prevBtn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Poprzednia strona');
+    const nextBtn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Następna strona');
+    act(() => {
+      prevBtn.props.onPress();
+      nextBtn.props.onPress();
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('Strona 1 z 1');
+
+    // 2. Brak rozmiaru pliku (fileSize = 0) oraz aktualizacja initialDocument przez props
+    const docNoSize: PatternDocument = {
+      ...MOCK_DOC,
+      currentPage: 1,
+      totalPages: 3,
+      fileSize: 0,
+    };
+    act(() => {
+      tree.update(<PatternPdfViewer initialDocument={docNoSize} />);
+    });
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('sweter_nord.pdf');
+  });
+
+  it('obsługuje brak modułu expo-document-picker (try-catch require)', () => {
+    jest.resetModules();
+    jest.doMock('expo-document-picker', () => {
+      throw new Error('Module not available');
+    });
+    const FallbackViewer = require('../PatternPdfViewer').default;
+    expect(FallbackViewer).toBeDefined();
+    jest.dontMock('expo-document-picker');
+    jest.resetModules();
   });
 });
 

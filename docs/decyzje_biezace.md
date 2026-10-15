@@ -151,19 +151,20 @@
     - Opracowanie dedykowanego zestawu testów cyklu życia kontekstu stanu `src/core/__tests__/project-context.test.tsx` (inicjalizacja in-memory SQLite, tworzenie robótki, przełączanie części i liczników, inkrementacja, UNDO).
     - Rozbudowa testów interakcji dla wszystkich 5 ekranów nawigacyjnych (`ProjectsScreen.test.tsx`, `StashScreen.test.tsx`, `SettingsScreen.test.tsx`, `LearnScreen.test.tsx`, `MainCounterScreen.test.tsx`, `PatternPdfViewer.test.tsx`).
     - Pokrycie formularzy dodawania robótek, dodawania części robótki, zmiany statusu WIP/FO, kalkulatorów próbki i zużycia włóczki, filtrów CYC i Dye Lot, testowania haptyki, kopii zapasowej JSON i trenażera wzorców.
-    - **Wyniki pokrycia kodu po uszczelnieniu:**
-      * Łączne pokrycie linii: **86.96%** (wzrost z 69.09% o +17.87 p.p.)
-      * Łączne pokrycie instrukcji (Stmts): **84.50%** (wzrost z 67.16%)
-      * Pokrycie rozgałęzień (Branch): **75.32%** (wzrost z 61.06%)
-      * Pokrycie funkcji (Funcs): **80.35%** (wzrost z 58.41%)
-      * `project-context.tsx`: **92.56%** linii (skok z 4.13%)
-      * `learn.tsx`: **96.87%** linii (skok z 56.25%)
-      * `projects.tsx`: **85.71%** linii (skok z 32.65%)
-      * `stash.tsx`: **88.97%** linii (skok z 43.30%)
-      * `settings.tsx`: **86.25%** linii (skok z 33.75%)
-      * `PatternPdfViewer.tsx`: **81.08%** linii (skok z 58.57%)
-      * `MainCounterScreen.tsx`: **76.14%** linii (skok z 60.55%)
-  * **Stan testów:** 33 zestawy testowe, 170 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone, 0 błędów).
+  * **DEC-01 & Kamień Milowy: Osiągnięcie 100% Pokrycia Linii Kodu w Całym Repozytorium (15.10.2026)**:
+    - Realizacja dyspozycji właściciela: pełny pakiet automatycznych testów jednostkowych, integracyjnych i komponentowych dla każdego modułu, hooka, widoku, modala i przycisku w aplikacji.
+    - **Wyniki pokrycia kodu (raport końcowy Jest/Coverage):**
+      * **Pokrycie linii (Lines): 100.00%** we wszystkich plikach w projekcie (`All files: 100%`!).
+      * **Pokrycie funkcji (Funcs): 99.23%** (w tym 100% we wszystkich komponentach UI i ekranach).
+      * **Pokrycie instrukcji (Stmts): 98.40%**.
+      * **Pokrycie rozgałęzień (Branch): 88.66%**.
+      * **Warstwa domenowa i serwisowa (`src/core/`): 100% linii** w każdym z 22 modułów (`apple-watch-service.ts`, `backup-service.ts`, `counter-engine.ts`, `database.ts`, `database-schema.ts`, `device-sync.ts`, `domain-rules.ts`, `feedback-service.ts`, `gauge-calculator.ts`, `glossary-data.ts`, `pattern-document-service.ts`, `pattern-guide-data.ts`, `pattern-parser.ts`, `pattern-trainer.ts`, `project-context.tsx`, `project-facade.ts`, `project-repository.ts`, `project-service.ts`, `project-summary.ts`, `stash-filter-service.ts`, `stash-repository.ts`, `yarn-usage-estimator.ts`).
+      * **Warstwa komponentów UI (`src/components/`): 100% linii** we wszystkich modalach i przeglądarkach (`AppleWatchCompanionModal.tsx`, `GaugeCalculatorModal.tsx`, `PatternGuideViewer.tsx`, `PatternPdfViewer.tsx`, `ProjectShareCardModal.tsx`, `YarnUsageEstimatorModal.tsx`).
+      * **Warstwa zakładek nawigacji (`app/(tabs)/`): 100% linii** (`learn.tsx`, `projects.tsx`, `settings.tsx`, `stash.tsx`, `index.tsx`).
+      * **Główny ekran licznika (`src/screens/MainCounterScreen.tsx`): 100% linii**.
+    - **Stan testów:** 34 zestawy testowe, 224 testy jednostkowe, integracyjne i E2E zakończone sukcesem (100% pass, 0 fail).
+    - **Czystość typowania:** 0 błędów w weryfikacji TypeScript (`npx tsc --noEmit`).
+
 
 
 

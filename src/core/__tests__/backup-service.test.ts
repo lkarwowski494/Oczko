@@ -213,6 +213,17 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
       updatedAt: '2026-10-15T10:00:00.000Z',
     });
 
+    await insertStashTool(sourceDb, {
+      id: 'tool-restore',
+      name: 'Druty KP 3.5mm',
+      toolType: 'circular',
+      sizeMm: 3.5,
+      material: 'wood',
+      cableLengthCm: 60,
+      createdAt: '2026-10-15T10:00:00.000Z',
+      updatedAt: '2026-10-15T10:00:00.000Z',
+    });
+
     const backupJson = await exportBackupToJson(sourceDb);
 
     // Nowa baza z innymi danymi początkowymi
@@ -232,15 +243,28 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
     expect(result.importedCounts.projects).toBe(1);
     expect(result.importedCounts.events).toBe(1);
     expect(result.importedCounts.yarns).toBe(1);
+    expect(result.importedCounts.tools).toBe(1);
 
     // Weryfikacja stanu targetDb
     const targetStats = await getDatabaseStats(targetDb);
     expect(targetStats.projects).toBe(1);
     expect(targetStats.events).toBe(1);
     expect(targetStats.yarns).toBe(1);
+    expect(targetStats.tools).toBe(1);
 
     const restoredProjects = await targetDb.getAllAsync<any>('SELECT * FROM projects');
     expect(restoredProjects[0].name).toBe('Kocyk dziecięcy');
     expect(restoredProjects[0].id).toBe('proj-restore');
+  });
+
+  it('odrzuca backup będący liczbą lub wartością prostą oraz rzuca błąd przy importowaniu niepoprawnego backupu', async () => {
+    const valNonObject = validateBackupData('12345');
+    expect(valNonObject.valid).toBe(false);
+    if (!valNonObject.valid) {
+      expect(valNonObject.error).toContain('musi być obiektem JSON');
+    }
+
+    const db = createInMemoryDatabase();
+    await expect(importDatabaseBackup(db, '{ "bad": true }')).rejects.toThrow('Błąd walidacji kopii zapasowej');
   });
 });

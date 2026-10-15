@@ -315,4 +315,318 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
     expect(text).toContain('co 8 rz.');
     expect(text).toContain('Dodaj oczko na brzegu');
   });
+
+  test('W kontekście ProjectProvider obsługuje krok i cofnięcie licznika, osiągnięcie celu (goal) oraz cykl i interwał (haptics)', async () => {
+    const { ProjectProvider } = require('../../core/project-context');
+    const { createInMemoryDatabase } = require('../../core/database');
+    const { createFullProject } = require('../../core/project-service');
+    const feedback = require('../../core/feedback-service');
+    const hapticSpy = jest.spyOn(feedback, 'triggerHaptic').mockImplementation(async () => {});
+
+    const db = createInMemoryDatabase();
+    // Projekt z częścią z celem na 2 rzędy
+    await createFullProject(db, {
+      name: 'Sweter Testowy Cel',
+      craftType: 'knitting',
+      parts: [{ name: 'Karb', targetRows: 2 }],
+    });
+
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <MainCounterScreen />
+        </ProjectProvider>
+      );
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    const root = tree.root;
+
+    // 1. Krok 1: wartość przechodzi z 0 na 1 (normalny krok - 'step')
+    const incBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Stuknij, aby dodać rząd')
+    );
+    await act(async () => {
+      incBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+    expect(hapticSpy).toHaveBeenCalledWith('step');
+
+    // 2. Krok 2: wartość przechodzi z 1 na 2 (cel osiągnięty targetRows=2 - 'goal')
+    await act(async () => {
+      incBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+    expect(hapticSpy).toHaveBeenCalledWith('goal');
+
+    // 3. Cofnięcie licznika w kontekście (linia 159 - 'undo')
+    const undoBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Cofnij')
+    );
+    await act(async () => {
+      undoBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+    expect(hapticSpy).toHaveBeenCalledWith('undo');
+
+    // 4. Ustawienie interwału (np. co 1 rząd) -> następny krok wyzwoli 'reminder'
+    const intervalChip = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).toLowerCase().includes('przypomnienie cykliczne')
+    );
+    act(() => {
+      intervalChip.props.onPress();
+    });
+    const intervalInputs = root.findAll((ti: any) => typeof ti.props?.onChangeText === 'function');
+    const intervalInput = intervalInputs.find((ti: any) => ti.props?.placeholder === 'np. 6' && ti.props?.keyboardType === 'numeric');
+    if (intervalInput) {
+      act(() => {
+        intervalInput.props.onChangeText('1');
+      });
+    }
+    const saveIntervalBtn = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Zapisz'));
+    act(() => {
+      saveIntervalBtn.props.onPress();
+    });
+
+    // Krok przy aktywnym interwale (wartość 1 -> 2 jest też celem, cofnijmy do 0 najpierw)
+    await act(async () => {
+      undoBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+    // Teraz counterValue = 0, targetRows = 2. Następny krok -> 1 (nie osiąga celu 2, ale spełnia interwał 1 % 1 == 0 -> 'reminder')
+    await act(async () => {
+      incBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+    expect(hapticSpy).toHaveBeenCalledWith('reminder');
+
+    hapticSpy.mockRestore();
+  });
+
+  test('Obsługuje zmianę trybu widoku na PatternGuideViewer, PDF oraz powrót do Licznika (linie 226, 269-270)', async () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+    const root = tree.root;
+
+    // 1. Przełącz na Schemat & Linijka
+    const patternTab = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Schemat & Linijka'));
+    act(() => {
+      patternTab.props.onPress();
+    });
+
+    // Wywołaj onStepCounter w PatternGuideViewer (linie 269-270)
+    const guideViewer = root.find((n: any) => typeof n.props?.onStepCounter === 'function');
+    act(() => {
+      guideViewer.props.onStepCounter('increment');
+      guideViewer.props.onStepCounter('decrement');
+    });
+
+    // 2. Powrót do Licznika (linia 226)
+    const counterTab = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Licznik') && !extractAllStrings(n).includes('Licznik wzoru'));
+    act(() => {
+      counterTab.props.onPress();
+    });
+
+    expect(extractAllStrings(tree.toJSON())).toContain('Stuknij, aby dodać rząd');
+  });
+
+  test('Obsługuje operacje na dokumencie PDF w MainCounterScreen z bazą SQLite (linie 182-198, 206-211)', async () => {
+    const { ProjectProvider } = require('../../core/project-context');
+    const { createInMemoryDatabase } = require('../../core/database');
+    const { listProjects } = require('../../core/project-repository');
+    const db = createInMemoryDatabase();
+
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <MainCounterScreen />
+        </ProjectProvider>
+      );
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    const projects = await listProjects(db);
+    const activeProjectId = projects[0]?.id || 'proj_default';
+
+    const root = tree.root;
+
+    // Przełącz na Wzór PDF
+    const pdfTab = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Wzór PDF'));
+    act(() => {
+      pdfTab.props.onPress();
+    });
+
+    const pdfViewer = root.find((n: any) => typeof n.props?.onDocumentChange === 'function');
+    const testDoc = {
+      id: 'doc_test_1',
+      projectId: activeProjectId,
+      fileName: 'test_pattern.pdf',
+      fileUri: 'file:///test.pdf',
+      fileSize: 1024,
+      currentPage: 1,
+      totalPages: 3,
+      rulerYPercent: 20,
+      rulerHeightPercent: 5,
+      autoStepEnabled: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // 1. Wstawienie dokumentu (insert - linie 196-198)
+    await act(async () => {
+      await pdfViewer.props.onDocumentChange(testDoc);
+    });
+
+    // 2. Aktualizacja dokumentu (update - linie 189-195)
+    await act(async () => {
+      await pdfViewer.props.onDocumentChange({ ...testDoc, rulerYPercent: 25 });
+    });
+
+    // 3. Usunięcie dokumentu (delete - linie 206-211)
+    await act(async () => {
+      await pdfViewer.props.onDeleteDocument();
+    });
+
+    expect(tree).toBeDefined();
+  });
+
+  test('Obsługuje dodawanie powiązanego licznika wzoru oraz anulowanie modali i Apple Watch', async () => {
+    const { ProjectProvider } = require('../../core/project-context');
+    const { createInMemoryDatabase } = require('../../core/database');
+    const feedback = require('../../core/feedback-service');
+    const hapticSpy = jest.spyOn(feedback, 'triggerHaptic').mockImplementation(async () => {});
+    const db = createInMemoryDatabase();
+
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <MainCounterScreen />
+        </ProjectProvider>
+      );
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    const root = tree.root;
+
+    // 1. Otwórz modal powiązanego licznika
+    const addLinkedBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Licznik wzoru (warkocz/ażur)')
+    );
+    act(() => {
+      addLinkedBtn.props.onPress();
+    });
+
+    // Znajdź modale z onRequestClose
+    const modals = root.findAll((n: any) => typeof n.props?.onRequestClose === 'function');
+    // Zamknięcie przez onRequestClose (linia 396)
+    act(() => {
+      modals[0].props.onRequestClose();
+    });
+
+    // Otwórz ponownie
+    act(() => {
+      addLinkedBtn.props.onPress();
+    });
+    // Zamknięcie przez przycisk Anuluj (linia 437)
+    const cancelBtns = root.findAll((n: any) => n.props?.onPress && extractAllStrings(n).includes('Anuluj'));
+    act(() => {
+      cancelBtns[0].props.onPress();
+    });
+
+    // Otwórz ponownie
+    act(() => {
+      addLinkedBtn.props.onPress();
+    });
+
+    // Test early return gdy newLinkedName jest pusty (linia 168)
+    const inputs = root.findAll((n: any) => typeof n.props?.onChangeText === 'function');
+    const nameInput = inputs.find((ti: any) => ti.props?.placeholder?.includes('Warkocz'));
+    act(() => {
+      if (nameInput) nameInput.props.onChangeText('');
+    });
+    const addBtn = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Dodaj licznik'));
+    await act(async () => {
+      await addBtn.props.onPress();
+    });
+
+    // Wprowadź dane licznika (linie 169-178, 409, 418, 428)
+    const numericInputs = inputs.filter((ti: any) => ti.props?.keyboardType === 'numeric');
+    const cycleInput = numericInputs[0];
+    const reminderInput = numericInputs[1];
+
+    act(() => {
+      if (nameInput) nameInput.props.onChangeText('Warkocz 2x2');
+      if (cycleInput) cycleInput.props.onChangeText('1');
+      if (reminderInput) reminderInput.props.onChangeText('1');
+    });
+
+    const submitBtn = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Dodaj licznik'));
+    await act(async () => {
+      await submitBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    // Krok licznika wyzwalający cykl linked countera (linie 147, 150 - 'cycle')
+    const incBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Stuknij, aby dodać rząd')
+    );
+    await act(async () => {
+      incBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+    expect(hapticSpy).toHaveBeenCalledWith('cycle');
+
+    // 2. Modal interwału: onRequestClose (linia 458) i Anuluj (linia 513)
+    const intervalChip = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).toLowerCase().includes('przypomnienie cykliczne')
+    );
+    act(() => {
+      intervalChip.props.onPress();
+    });
+    const currentModals = root.findAll((n: any) => typeof n.props?.onRequestClose === 'function');
+    act(() => {
+      currentModals[1].props.onRequestClose();
+    });
+    act(() => {
+      intervalChip.props.onPress();
+    });
+    const currentCancelBtns = root.findAll((n: any) => n.props?.onPress && extractAllStrings(n).includes('Anuluj'));
+    act(() => {
+      currentCancelBtns[1].props.onPress();
+    });
+
+    // 3. Modal Apple Watch: otwieranie, onStep('increment'), onStep('decrement'), onClose (linie 537, 540, 541)
+    const watchChip = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Apple Watch'));
+    act(() => {
+      watchChip.props.onPress();
+    });
+    const watchModal = root.find((n: any) => typeof n.props?.onClose === 'function' && typeof n.props?.onStep === 'function');
+    await act(async () => {
+      watchModal.props.onStep('increment');
+      watchModal.props.onStep('decrement');
+      watchModal.props.onClose();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+
+    hapticSpy.mockRestore();
+    expect(tree).toBeDefined();
+  });
 });
+

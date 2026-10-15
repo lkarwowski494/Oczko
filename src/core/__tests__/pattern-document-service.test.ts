@@ -10,6 +10,7 @@ import {
   insertPatternDocument,
   getPatternDocument,
   getPatternDocumentForProject,
+  listPatternDocuments,
   updatePatternRuler,
   deletePatternDocument,
   PatternDocument,
@@ -111,10 +112,18 @@ describe('Pattern Document & PDF Progress Ruler (BR-WZOR-001, DEC-09)', () => {
       expect(updated.currentPage).toBe(2);
       expect(updated.rulerYPercent).toBe(15);
     });
+
+    it('cofa linijkę przy ujemnym kroku licznika (undo/decrement) oraz ignoruje krok 0', () => {
+      const backward = stepPatternDocumentWithCounter(baseDoc, -1);
+      expect(backward.rulerYPercent).toBeLessThan(baseDoc.rulerYPercent);
+
+      const zeroDelta = stepPatternDocumentWithCounter(baseDoc, 0);
+      expect(zeroDelta).toBe(baseDoc);
+    });
   });
 
   describe('Database Persistence', () => {
-    it('zapisuje, odczytuje, aktualizuje pozycję linijki i usuwa wzór w SQLite', async () => {
+    it('zapisuje, listuje, aktualizuje pozycję linijki i usuwa wzór w SQLite', async () => {
       const db = createInMemoryDatabase();
 
       const doc: PatternDocument = {
@@ -136,11 +145,15 @@ describe('Pattern Document & PDF Progress Ruler (BR-WZOR-001, DEC-09)', () => {
       // 1. Zapis
       await insertPatternDocument(db, doc);
 
-      // 2. Odczyt po ID
+      // 2. Odczyt po ID i lista
       const fetchedById = await getPatternDocument(db, 'doc_test_1');
       expect(fetchedById).not.toBeNull();
       expect(fetchedById?.fileName).toBe('wzor_czapka.pdf');
       expect(fetchedById?.rulerYPercent).toBe(25.0);
+
+      const allDocs = await listPatternDocuments(db);
+      expect(allDocs).toHaveLength(1);
+      expect(allDocs[0].id).toBe('doc_test_1');
 
       // 3. Odczyt po ID projektu
       const fetchedByProj = await getPatternDocumentForProject(db, 'proj_test_1');
@@ -148,9 +161,17 @@ describe('Pattern Document & PDF Progress Ruler (BR-WZOR-001, DEC-09)', () => {
 
       // 4. Aktualizacja pozycji linijki i strony
       await updatePatternRuler(db, 'doc_test_1', 40.5, 2);
-      const updated = await getPatternDocument(db, 'doc_test_1');
+      let updated = await getPatternDocument(db, 'doc_test_1');
       expect(updated?.rulerYPercent).toBe(40.5);
       expect(updated?.currentPage).toBe(2);
+
+      // 4b. Aktualizacja bez podania currentPage
+      await updatePatternRuler(db, 'doc_test_1', 45.0);
+      updated = await getPatternDocument(db, 'doc_test_1');
+      expect(updated?.rulerYPercent).toBe(45.0);
+
+      // 4c. Aktualizacja nieistniejącego dokumentu bez currentPage (linia 166 w database.ts)
+      await updatePatternRuler(db, 'nonexistent_doc_id', 50.0);
 
       // 5. Usunięcie
       await deletePatternDocument(db, 'doc_test_1');
@@ -159,3 +180,4 @@ describe('Pattern Document & PDF Progress Ruler (BR-WZOR-001, DEC-09)', () => {
     });
   });
 });
+

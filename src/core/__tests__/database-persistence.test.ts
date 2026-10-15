@@ -3,6 +3,7 @@ import {
   insertProject,
   getProject,
   listProjects,
+  updateProjectStatus,
   insertProjectPart,
   getProjectParts,
   insertCounter,
@@ -29,6 +30,10 @@ describe('Oczko Core — Trwałość danych SQLite i Dziennik Zdarzeń (BR-LICZ-
     expect(project).not.toBeNull();
     expect(project?.name).toBe('Mój Ciepły Sweter');
     expect(project?.craftType).toBe('knitting');
+
+    await updateProjectStatus(db, 'proj_sweter', 'finished');
+    const updatedProject = await getProject(db, 'proj_sweter');
+    expect(updatedProject?.status).toBe('finished');
 
     const allProjects = await listProjects(db);
     expect(allProjects).toHaveLength(1);
@@ -113,6 +118,9 @@ describe('Oczko Core — Trwałość danych SQLite i Dziennik Zdarzeń (BR-LICZ-
     const undone = await persistProjectUndo(db, facade, 'cnt_hat', 'iphone', 4000);
     expect(undone).toBe(true);
     expect(facade.getCounterState('cnt_hat').rawValue).toBe(2);
+
+    const undoneFail = await persistProjectUndo(db, facade, 'nonexistent_counter', 'iphone', 4100);
+    expect(undoneFail).toBe(false);
 
     // 4. SYMULACJA AWARII / RESTARTU APLIKACJI
     // Tworzymy nową instancję fasady, czytając wyłącznie dane zapisane w SQLite

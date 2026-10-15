@@ -29,7 +29,7 @@ export async function initializeDatabase(db: DatabaseClient): Promise<void> {
  * Otwiera bazę danych SQLite w środowisku produkcyjnym (Expo / iOS / Android).
  */
 export async function openOczkoDatabase(dbName: string = 'oczko.db'): Promise<DatabaseClient> {
-  const SQLite = await import('expo-sqlite');
+  const SQLite = require('expo-sqlite');
   const nativeDb = await SQLite.openDatabaseAsync(dbName);
   
   const client: DatabaseClient = {
@@ -41,10 +41,10 @@ export async function openOczkoDatabase(dbName: string = 'oczko.db'): Promise<Da
       return { changes: res.changes, lastInsertRowId: res.lastInsertRowId };
     },
     async getFirstAsync<T>(source: string, ...params: unknown[]): Promise<T | null> {
-      return nativeDb.getFirstAsync<T>(source, ...(params as any[]));
+      return (nativeDb as any).getFirstAsync(source, ...(params as any[]));
     },
     async getAllAsync<T>(source: string, ...params: unknown[]): Promise<T[]> {
-      return nativeDb.getAllAsync<T>(source, ...(params as any[]));
+      return (nativeDb as any).getAllAsync(source, ...(params as any[]));
     },
     async withTransactionAsync<T>(action: () => Promise<T>): Promise<T> {
       let result: T;
@@ -148,18 +148,28 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // UPDATE pattern_documents
       if (/^UPDATE\s+pattern_documents/i.test(clean)) {
-        const [ruler_y_percent, current_page, updated_at, id] = params as any[];
-        const existing = getTable('pattern_documents').get(id);
-        if (existing) {
-          Object.assign(existing, { ruler_y_percent, current_page, updated_at });
-          return { changes: 1, lastInsertRowId: 0 };
+        if (/current_page\s*=/i.test(clean)) {
+          const [ruler_y_percent, current_page, updated_at, id] = params as any[];
+          const existing = getTable('pattern_documents').get(id);
+          if (existing) {
+            Object.assign(existing, { ruler_y_percent, current_page, updated_at });
+            return { changes: 1, lastInsertRowId: 0 };
+          }
+          return { changes: 0, lastInsertRowId: 0 };
+        } else {
+          const [ruler_y_percent, updated_at, id] = params as any[];
+          const existing = getTable('pattern_documents').get(id);
+          if (existing) {
+            Object.assign(existing, { ruler_y_percent, updated_at });
+            return { changes: 1, lastInsertRowId: 0 };
+          }
+          return { changes: 0, lastInsertRowId: 0 };
         }
-        return { changes: 0, lastInsertRowId: 0 };
       }
 
       // UPDATE projects
       if (/^UPDATE\s+projects/i.test(clean)) {
-        if (/status\s*=\s*\?,\s*updated_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
+        if (/SET\s+status\s*=\s*\?,\s*updated_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
           const [status, updated_at, id] = params as [string, string, string];
           const existing = getTable('projects').get(id);
           if (existing) {

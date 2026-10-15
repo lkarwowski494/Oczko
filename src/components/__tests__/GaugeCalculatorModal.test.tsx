@@ -146,4 +146,89 @@ describe('GaugeCalculatorModal (DEC-01, BR-PROJ-004)', () => {
     );
     expect(mockClose).toHaveBeenCalled();
   });
+
+  it('obsługuje przełączanie jednostek miary (cm / cale), powrót do zakładki kalkulatora i puste dane wejściowe', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <GaugeCalculatorModal visible={true} onClose={jest.fn()} />
+      );
+    });
+
+    const root = tree.root;
+
+    // Przełącz na cale (inch)
+    const inchBtn = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Cale (inch)'));
+    act(() => {
+      inchBtn.props.onPress();
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('Cale (inch)');
+
+    // Przełącz z powrotem na cm
+    const cmBtn = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Centymetry (cm)'));
+    act(() => {
+      cmBtn.props.onPress();
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('Centymetry (cm)');
+
+    // Przełącz na Napięcie wzoru
+    const compareTab = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Napięcie wzoru'));
+    act(() => {
+      compareTab.props.onPress();
+    });
+
+    // Powrót do zakładki Kalkulatora przez przycisk
+    const calcTab = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Przelicznik'));
+    act(() => {
+      calcTab.props.onPress();
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('1. Twoja próbka ściegu');
+
+    // Wpisanie nieprawidłowej/pustej wartości w polu oczek próbki (powoduje calculationResult === null)
+    const inputs = root.findAllByType('TextInput' as any);
+    expect(inputs.length).toBeGreaterThan(0);
+    act(() => {
+      inputs[0].props.onChangeText('');
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('Wpisz poprawne wartości liczbowe większe od 0');
+
+    // Przełącz na Napięcie wzoru i wyczyść dane, by sprawdzić comparisonResult === null (linia 119)
+    act(() => {
+      compareTab.props.onPress();
+    });
+    const compareInputs = root.findAllByType('TextInput' as any);
+    act(() => {
+      compareInputs[0].props.onChangeText('');
+    });
+    expect(extractAllStrings(tree.toJSON())).not.toContain('ANALIZA NAPRĘŻENIA DZIANINY');
+  });
+
+  it('obsługuje błędy przeliczania w blokach catch kalkulatora i porównywarki', () => {
+    const gaugeModule = require('../../core/gauge-calculator');
+    const spyCalc = jest.spyOn(gaugeModule, 'calculateTargetStitchesAndRows').mockImplementation(() => {
+      throw new Error('Calc error');
+    });
+
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<GaugeCalculatorModal visible={true} onClose={jest.fn()} />);
+    });
+    expect(extractAllStrings(tree.toJSON())).toContain('Wpisz poprawne wartości liczbowe większe od 0');
+    spyCalc.mockRestore();
+
+    const spyCompare = jest.spyOn(gaugeModule, 'compareGauges').mockImplementation(() => {
+      throw new Error('Compare error');
+    });
+
+    act(() => {
+      tree = renderer.create(<GaugeCalculatorModal visible={true} onClose={jest.fn()} />);
+    });
+    const root = tree.root;
+    const compareTab = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Napięcie wzoru'));
+    act(() => {
+      compareTab.props.onPress();
+    });
+    expect(extractAllStrings(tree.toJSON())).not.toContain('ANALIZA NAPRĘŻENIA DZIANINY');
+    spyCompare.mockRestore();
+  });
 });

@@ -72,7 +72,8 @@ describe('Gauge Calculator & Templates Core (DEC-01, BR-PROJ-004)', () => {
       };
       const target: TargetDimensions = { width: 50, height: 60, unit: 'cm' };
 
-      expect(() => calculateTargetStitchesAndRows(invalidSwatch, target)).toThrow();
+      expect(() => calculateTargetStitchesAndRows(invalidSwatch, target)).toThrow('Wymiary próbki oraz liczba oczek');
+      expect(() => calculateTargetStitchesAndRows({ stitches: 10, rows: 10, width: 10, height: 10, unit: 'cm' }, { width: 0, height: 50, unit: 'cm' })).toThrow('Docelowe wymiary projektu muszą być większe od zera');
     });
   });
 

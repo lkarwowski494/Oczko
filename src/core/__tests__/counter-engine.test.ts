@@ -169,4 +169,41 @@ describe('Oczko Core — Silnik licznika i dziennik zdarzeń (BR-LICZ)', () => {
     expect(checkPossibleInterDeviceDuplicate(ev1, ev2Close)).toBe(true);
     expect(checkPossibleInterDeviceDuplicate(ev1, ev3Distant)).toBe(false);
   });
+
+  test('computeCounterState obsługuje zdarzenia RESET oraz SET', () => {
+    // rawValue === 0 z moduloCycle
+    const zeroState = computeCounterState(repeatCounter, []);
+    expect(zeroState.cycleStep).toBe(0);
+    expect(zeroState.completedCycles).toBe(0);
+
+    const events: CounterEvent[] = [
+      { id: 'e1', counterId: 'cnt_main', type: 'INCREMENT', delta: 5, source: 'iphone', timestampMs: 1000 },
+      { id: 'e2', counterId: 'cnt_main', type: 'SET', delta: 12, source: 'iphone', timestampMs: 2000 },
+      { id: 'e3', counterId: 'cnt_main', type: 'RESET', delta: 0, source: 'iphone', timestampMs: 3000 },
+    ];
+
+    const state = computeCounterState(mainCounter, events);
+    expect(state.rawValue).toBe(mainCounter.initialValue ?? 0);
+  });
+
+  test('createUndoEvent zwraca null gdy brak zdarzeń lub wszystkie zostały już cofnięte', () => {
+    const emptyUndo = createUndoEvent({
+      counterId: 'cnt_main',
+      events: [],
+      source: 'iphone',
+      timestampMs: 1000,
+    });
+    expect(emptyUndo).toBeNull();
+
+    const ev: CounterEvent = { id: 'step_1', counterId: 'cnt_main', type: 'INCREMENT', delta: 1, source: 'iphone', timestampMs: 1000 };
+    const undo1: CounterEvent = { id: 'undo_1', counterId: 'cnt_main', type: 'UNDO', delta: 0, targetEventId: 'step_1', source: 'iphone', timestampMs: 2000 };
+
+    const secondUndo = createUndoEvent({
+      counterId: 'cnt_main',
+      events: [ev, undo1],
+      source: 'iphone',
+      timestampMs: 3000,
+    });
+    expect(secondUndo).toBeNull();
+  });
 });

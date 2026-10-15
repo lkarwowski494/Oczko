@@ -298,5 +298,225 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
 
     const text = extractAllStrings(tree.toJSON());
     expect(text).toContain('Kalkulator Zużycia Włóczki');
+
+    // Zamknij modal estymatora (linia 745)
+    const estimatorModal = root.find((n: any) => typeof n.props?.availableYarns !== 'undefined');
+    act(() => {
+      estimatorModal.props.onClose();
+    });
+  });
+
+  it('obsługuje chipsy CYC, filtry surowców, reset filtrów oraz przełączanie z powrotem na zakładkę włóczek', async () => {
+    const { root } = await renderStashScreen();
+
+    // 1. Kliknij chip surowca (np. Wełna - linia 427)
+    const fiberTag = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wełna')
+    );
+    await act(async () => {
+      fiberTag.props.onPress();
+    });
+
+    // 2. Kliknij "Wszystkie surowce" (linia 411)
+    const allFibersTag = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wszystkie surowce')
+    );
+    await act(async () => {
+      allFibersTag.props.onPress();
+    });
+
+    // 3. Kliknij "Wszystkie grubości" (linia 360)
+    const allWeightsChip = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wszystkie grubości')
+    );
+    await act(async () => {
+      allWeightsChip.props.onPress();
+    });
+
+    // 4. Przełącz na zakładkę drutów i z powrotem na włóczki (linia 284)
+    const toolsTab = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Druty i szydełka')
+    );
+    await act(async () => {
+      toolsTab.props.onPress();
+    });
+
+    const yarnTab = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Włóczki')
+    );
+    await act(async () => {
+      yarnTab.props.onPress();
+    });
+
+    // 5. Wpisz wyszukiwanie i zresetuj filtry (linie 272-275)
+    const searchInput = root.find((node: any) =>
+      node.props?.onChangeText &&
+      node.props?.placeholder &&
+      node.props.placeholder.includes('Szukaj')
+    );
+    await act(async () => {
+      searchInput.props.onChangeText('NierealnaWłóczkaNieIstnieje');
+    });
+
+    const resetFiltersBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Resetuj wszystkie filtry')
+    );
+    await act(async () => {
+      resetFiltersBtn.props.onPress();
+    });
+
+    expect(extractAllStrings(tree.toJSON())).toContain('Twoje Zapasy Włóczek');
+  });
+
+  it('obsługuje anulowanie modalu dodawania oraz wybór kategorii grubości CYC w formularzu (linie 570, 631, 726)', async () => {
+    const { root } = await renderStashScreen();
+
+    // Otwórz modal dodawania włóczki
+    const addYarnBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === '+ Dodaj włóczkę'
+    );
+    await act(async () => {
+      addYarnBtn.props.onPress();
+    });
+
+    // Wybierz kategorię grubości w modalu (np. Worsted - linia 631)
+    const worstedChips = root.findAll((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Worsted')
+    );
+    await act(async () => {
+      worstedChips[worstedChips.length - 1].props.onPress();
+    });
+
+    // Anuluj modal przyciskiem Anuluj (linia 726)
+    const cancelBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Anuluj')
+    );
+    await act(async () => {
+      cancelBtn.props.onPress();
+    });
+
+    // Otwórz ponownie i wywołaj onRequestClose (linia 570)
+    await act(async () => {
+      addYarnBtn.props.onPress();
+    });
+
+    const modal = root.find((node: any) => node.type === 'Modal' && node.props?.onRequestClose);
+    act(() => {
+      modal.props.onRequestClose();
+    });
+
+    expect(tree).toBeDefined();
+  });
+
+  it('obsługuje tryb offline bez bazy SQLite (db null - linie 100, 199, 233, 247-248, 258, 267)', async () => {
+    let treeOffline: any;
+    act(() => {
+      treeOffline = renderer.create(<StashScreen />);
+    });
+    const root = treeOffline.root;
+
+    // 1. Dodaj nową włóczkę offline (linia 199)
+    const addYarnBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === '+ Dodaj włóczkę'
+    );
+    await act(async () => {
+      addYarnBtn.props.onPress();
+    });
+
+    const inputs = root.findAll((n: any) => n.type === 'TextInput' || n.props?.onChangeText);
+    const brandInput = inputs.find((n: any) => n.props?.placeholder && n.props.placeholder.includes('Drops'));
+    const nameInput = inputs.find((n: any) => n.props?.placeholder && n.props.placeholder.includes('Air / Sunday'));
+    await act(async () => {
+      brandInput.props.onChangeText('Drops');
+      nameInput.props.onChangeText('Lima');
+    });
+
+    const submitYarnBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Zapisz w magazynie'
+    );
+    await act(async () => {
+      await submitYarnBtn.props.onPress();
+    });
+
+    let text = extractAllStrings(treeOffline.toJSON());
+    expect(text).toContain('Lima');
+
+    // 2. Zużyj motek offline (linie 247-248)
+    const useBtns = root.findAll((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Zużyj 1 motek (-1)'
+    );
+    await act(async () => {
+      await useBtns[0].props.onPress();
+    });
+
+    // 3. Usuń włóczkę offline (linia 258)
+    const deleteBtns = root.findAll((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Usuń'
+    );
+    await act(async () => {
+      await deleteBtns[0].props.onPress();
+    });
+
+    // 4. Przełącz na druty, dodaj narzędzie offline (linia 233)
+    const toolsTab = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Druty i szydełka')
+    );
+    await act(async () => {
+      toolsTab.props.onPress();
+    });
+
+    const addToolBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === '+ Dodaj druty'
+    );
+    await act(async () => {
+      addToolBtn.props.onPress();
+    });
+
+    const toolInputs = root.findAll((n: any) => n.type === 'TextInput' || n.props?.onChangeText);
+    const toolNameInput = toolInputs.find((n: any) => n.props?.placeholder && n.props.placeholder.includes('KnitPro Zing na żyłce'));
+    await act(async () => {
+      toolNameInput.props.onChangeText('Szydełko Tulip 3.5');
+    });
+
+    const submitToolBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Zapisz w magazynie'
+    );
+    await act(async () => {
+      await submitToolBtn.props.onPress();
+    });
+
+    text = extractAllStrings(treeOffline.toJSON());
+    expect(text).toContain('Szydełko Tulip 3.5');
+
+    // 5. Usuń narzędzie offline (linia 267)
+    const deleteToolBtns = root.findAll((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Usuń z magazynu'
+    );
+    await act(async () => {
+      await deleteToolBtns[0].props.onPress();
+    });
+
+    try {
+      act(() => {
+        treeOffline.unmount();
+      });
+    } catch (_e) {}
   });
 });

@@ -199,7 +199,31 @@ describe('Yarn Usage & Finished Object Weight Estimator (BR-MAG-004)', () => {
       expect(result.requiredSkeins).toBe(14);
     });
 
-    it('odrzuca nieprawidłowe wymiary próbki lub wyrobu', () => {
+    it('obsługuje ukończony projekt (isCompleted) z podaną liczbą dostępnych motków', () => {
+      const result = estimateYarnFromProgress({
+        completedRows: 100,
+        targetRows: 100,
+        usedWeightGrams: 80,
+        skeinWeightGrams: 50,
+        availableSkeins: 3,
+      });
+      expect(result.yarnChickenRisk).toBe('safe');
+      expect(result.isSufficient).toBe(true);
+      expect(result.differenceGrams).toBeDefined();
+    });
+
+    it('generuje poradę ogólną, gdy liczba dostępnych motków nie jest podana', () => {
+      const result = estimateYarnFromProgress({
+        completedRows: 50,
+        targetRows: 100,
+        usedWeightGrams: 40,
+        skeinWeightGrams: 50,
+      });
+      expect(result.availableSkeins).toBeUndefined();
+      expect(result.advice).toContain('Szacowane łączne zapotrzebowanie to');
+    });
+
+    it('odrzuca nieprawidłowe wymiary próbki lub wyrobu w estimateYarnFromSwatch', () => {
       expect(() =>
         estimateYarnFromSwatch({
           swatchWidthCm: 0,
@@ -210,6 +234,82 @@ describe('Yarn Usage & Finished Object Weight Estimator (BR-MAG-004)', () => {
           skeinWeightGrams: 50,
         })
       ).toThrow('Wymiary próbki muszą być większe od zera');
+
+      expect(() =>
+        estimateYarnFromSwatch({
+          swatchWidthCm: 10,
+          swatchHeightCm: 10,
+          swatchWeightGrams: 0,
+          finishedWidthCm: 50,
+          finishedHeightCm: 60,
+          skeinWeightGrams: 50,
+        })
+      ).toThrow('Waga próbki musi być większa od zera');
+
+      expect(() =>
+        estimateYarnFromSwatch({
+          swatchWidthCm: 10,
+          swatchHeightCm: 10,
+          swatchWeightGrams: 10,
+          finishedWidthCm: 0,
+          finishedHeightCm: 60,
+          skeinWeightGrams: 50,
+        })
+      ).toThrow('Wymiary wyrobu muszą być większe od zera');
+
+      expect(() =>
+        estimateYarnFromSwatch({
+          swatchWidthCm: 10,
+          swatchHeightCm: 10,
+          swatchWeightGrams: 10,
+          finishedWidthCm: 50,
+          finishedHeightCm: 60,
+          skeinWeightGrams: 0,
+        })
+      ).toThrow('Waga motka musi być większa od zera');
+    });
+
+    it('wystawia ostrzeżenie warning przy zapasie na styk z próbki oraz poradę ogólną bez zapasu', () => {
+      // Danger case: brakuje włóczki
+      const dangerRes = estimateYarnFromSwatch({
+        swatchWidthCm: 10,
+        swatchHeightCm: 10,
+        swatchWeightGrams: 10,
+        finishedWidthCm: 100,
+        finishedHeightCm: 100,
+        skeinWeightGrams: 100,
+        availableSkeins: 5, // Potrzeba 10+ motków, jest tylko 5
+        safetyMarginPercent: 0,
+      });
+      expect(dangerRes.yarnChickenRisk).toBe('danger');
+      expect(dangerRes.isSufficient).toBe(false);
+      expect(dangerRes.missingSkeins).toBe(5);
+
+      // Swatch 10x10=100cm2, waga 10g -> 0.1 g/cm2. Wyrób: 100x100=10000cm2 -> 1000g.
+      // Dostępne motki: 10 motków po 102g = 1020g. Nadwyżka 20g (< 5% z 1000g).
+      const warningRes = estimateYarnFromSwatch({
+        swatchWidthCm: 10,
+        swatchHeightCm: 10,
+        swatchWeightGrams: 10,
+        finishedWidthCm: 100,
+        finishedHeightCm: 100,
+        skeinWeightGrams: 102,
+        availableSkeins: 10,
+        safetyMarginPercent: 0,
+      });
+      expect(warningRes.yarnChickenRisk).toBe('warning');
+      expect(warningRes.advice).toContain('Zapas na styk');
+
+      // Bez availableSkeins
+      const noAvailRes = estimateYarnFromSwatch({
+        swatchWidthCm: 10,
+        swatchHeightCm: 10,
+        swatchWeightGrams: 10,
+        finishedWidthCm: 50,
+        finishedHeightCm: 50,
+        skeinWeightGrams: 50,
+      });
+      expect(noAvailRes.advice).toContain('Na wyrób o łącznej powierzchni');
     });
   });
 
@@ -220,8 +320,9 @@ describe('Yarn Usage & Finished Object Weight Estimator (BR-MAG-004)', () => {
       expect(grist.metersPer100g).toBeCloseTo(350, 1);
     });
 
-    it('zgłasza błąd przy zerowej wadze', () => {
+    it('zgłasza błąd przy zerowej wadze i zerowej długości', () => {
       expect(() => calculateYarnGrist(0, 100)).toThrow('Waga musi być większa od zera');
+      expect(() => calculateYarnGrist(50, 0)).toThrow('Długość musi być większa od zera');
     });
   });
 
@@ -251,3 +352,4 @@ describe('Yarn Usage & Finished Object Weight Estimator (BR-MAG-004)', () => {
     });
   });
 });
+

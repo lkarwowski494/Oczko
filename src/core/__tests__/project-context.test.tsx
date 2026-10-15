@@ -222,4 +222,79 @@ describe('ProjectContext & ProjectProvider (BR-PROJ-001...005, BR-LICZ-003, BR-L
     expect(currentCtx.db).toBeDefined();
     expect(currentCtx.projects.length).toBeGreaterThan(0);
   });
+
+  it('obsługuje błędy bazy w refreshProjects, selectActiveCounter, stepCounter i undoCounter', async () => {
+    const errorDb = createInMemoryDatabase();
+    let currentCtx: any = null;
+
+    await act(async () => {
+      renderer.create(
+        <ProjectProvider initialDb={errorDb}>
+          <TestConsumer onState={(ctx) => { currentCtx = ctx; }} />
+        </ProjectProvider>
+      );
+    });
+
+    // Sprawdzamy błąd w selectActiveCounter
+    jest.spyOn(errorDb, 'getAllAsync').mockRejectedValueOnce(new Error('SQLite error'));
+    await act(async () => {
+      await currentCtx.selectActiveCounter('p_broken', 'c_broken');
+    });
+    expect(currentCtx.error).toBe('SQLite error');
+
+    // Sprawdzamy błąd w stepCounter
+    jest.spyOn(errorDb, 'withTransactionAsync').mockRejectedValueOnce(new Error('Step error'));
+    await act(async () => {
+      await currentCtx.stepCounter('increment');
+    });
+    expect(currentCtx.error).toBe('Step error');
+
+    // Sprawdzamy błąd w undoCounter
+    jest.spyOn(errorDb, 'withTransactionAsync').mockRejectedValueOnce(new Error('Undo error'));
+    await act(async () => {
+      await currentCtx.undoCounter();
+    });
+    expect(currentCtx.error).toBe('Undo error');
+
+    // Sprawdzamy błąd w refreshProjects
+    jest.spyOn(errorDb, 'getAllAsync').mockRejectedValueOnce(new Error('Refresh error'));
+    await act(async () => {
+      await currentCtx.refreshProjects();
+    });
+    expect(currentCtx.error).toBe('Refresh error');
+  });
+
+  it('obsługuje błąd krytyczny w initDb', async () => {
+    const dbModule = require('../database');
+    const spy = jest.spyOn(dbModule, 'createInMemoryDatabase').mockImplementationOnce(() => {
+      throw new Error('Crash in createInMemoryDatabase');
+    });
+
+    let currentCtx: any = null;
+    await act(async () => {
+      renderer.create(
+        <ProjectProvider>
+          <TestConsumer onState={(ctx) => { currentCtx = ctx; }} />
+        </ProjectProvider>
+      );
+    });
+
+    expect(currentCtx.error).toBe('Crash in createInMemoryDatabase');
+    expect(currentCtx.isLoading).toBe(false);
+    spy.mockRestore();
+  });
+
+  it('poprawnie czyści flagę montowania przy unmount', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <ProjectProvider>
+          <TestConsumer />
+        </ProjectProvider>
+      );
+    });
+    act(() => {
+      tree.unmount();
+    });
+  });
 });

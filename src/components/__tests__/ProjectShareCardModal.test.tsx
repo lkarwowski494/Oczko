@@ -132,4 +132,102 @@ describe('ProjectShareCardModal (DEC-01)', () => {
 
     expect(mockStatusChange).toHaveBeenCalledWith('proj-modal-1', 'finished');
   });
+
+  it('handles native share error and user did not share error', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    // 1. Native error (logged to console.error)
+    (Share.share as jest.Mock).mockRejectedValueOnce(new Error('Share failure'));
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <ProjectShareCardModal
+          visible={true}
+          project={mockProject}
+          onClose={jest.fn()}
+        />
+      );
+    });
+    const shareBtn = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n.props?.children).includes('Udostępnij kartę'));
+    await act(async () => {
+      await shareBtn.props.onPress();
+    });
+    expect(consoleErrorSpy).toHaveBeenCalled();
+
+    // 2. User did not share (cancellation, not logged)
+    consoleErrorSpy.mockClear();
+    (Share.share as jest.Mock).mockRejectedValueOnce(new Error('User did not share'));
+    await act(async () => {
+      await shareBtn.props.onPress();
+    });
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('renders finished crochet project and resumes project to WIP', async () => {
+    const finishedCrochetProject: EnrichedProject = {
+      ...mockProject,
+      craftType: 'crochet',
+      status: 'finished',
+      parts: [
+        {
+          id: 'part-2',
+          projectId: 'proj-modal-1',
+          name: 'Chusta',
+          sortOrder: 0,
+          counters: [
+            {
+              id: 'cnt-2',
+              partId: 'part-2',
+              name: 'Rzędy',
+              initialValue: 0,
+              step: 1,
+              currentValue: 50,
+            },
+          ],
+        },
+      ],
+    };
+
+    const mockStatusChange = jest.fn();
+    const mockClose = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <ProjectShareCardModal
+          visible={true}
+          project={finishedCrochetProject}
+          onClose={mockClose}
+          onStatusChange={mockStatusChange}
+        />
+      );
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('SZYDEŁKO (CROCHET)');
+    expect(text).toContain('FO (UKOŃCZONY)');
+
+    // Kliknij przycisk zamknięcia ✕
+    const closeBtn = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('✕'));
+    act(() => {
+      closeBtn.props.onPress();
+    });
+    expect(mockClose).toHaveBeenCalledTimes(1);
+
+    // Wprowadź nazwę włóczki i narzędzia do TextInput
+    const textInputs = tree.root.findAll((n: any) => n.type === 'TextInput');
+    expect(textInputs.length).toBe(2);
+    act(() => {
+      textInputs[0].props.onChangeText('Drops Safran');
+      textInputs[1].props.onChangeText('Szydełko 3.0 mm');
+    });
+
+    // Wznów projekt (zmień finished na active)
+    const resumeBtn = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n.props?.children).includes('Wznów robótkę'));
+    await act(async () => {
+      await resumeBtn.props.onPress();
+    });
+    expect(mockStatusChange).toHaveBeenCalledWith('proj-modal-1', 'active');
+  });
 });
