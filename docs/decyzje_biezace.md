@@ -120,7 +120,12 @@
     - Elastyczny mechanizm powiadomień interwałowych (`checkIntervalReminder`) z wykrywaniem progów co $N$ rzędów (np. co 4, 6, 8, 10 rzędów) lub wyznaczonych rzędów specjalnych wraz z konfigurowalnymi etykietami czynności (np. „Zmiana koloru nitki”, „Splot warkocza C6F”).
     - Interfejs `MainCounterScreen`: dedykowany chip szybkiej konfiguracji interwału nad kartą licznika, dynamiczny baner powiadomienia na karcie licznika oraz modal wyboru predefiniowanych interwałów.
     - Interfejs `app/(tabs)/settings.tsx`: przełącznik wibracji haptycznych, interaktywny panel testowania każdego profilu wibracji w czasie rzeczywistym oraz wybór domyślnego interwału przypomnień.
-  * **Stan testów:** 23 zestawy testowe, 95 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-01, BR-WZOR-001, DEC-09, NFR-DOST-009 & Import Własnych Wzorów PDF z Pływającą Linijką Postępu (Pattern PDF Viewer)**:
+    - Nowa tabela `pattern_documents` w schemacie bazy danych SQLite z indeksem projektu (`src/core/database-schema.ts`, `src/core/database.ts`) przechowująca metadane dokumentu (URI, nazwa, rozmiar, strona, pozycja linijki `ruler_y_percent`, wysokość i flaga auto-kroku).
+    - Serwis domenowy `src/core/pattern-document-service.ts` realizujący walidację formatów (PDF, PNG, JPG), obliczanie przesunięcia linijki z detekcją przejścia na kolejną stronę (`calculateNextRulerPosition`), automatyczną synchronizację z licznikiem rzędów (`stepPatternDocumentWithCounter`) oraz operacje CRUD w bazie SQLite.
+    - Dedykowany komponent czytnika `src/components/PatternPdfViewer.tsx` ze stanem pustym, integracją z selektorem plików `expo-document-picker`, nawigacją stronicową (`◀`, `▶`), manualnym pozycjonowaniem linijki (`▲ Wyżej`, `▼ Niżej`, `↺ Na górę`), przełącznikiem `Auto-krok` oraz trybem podwyższonego kontrastu o wysokiej dostępności (`NFR-DOST-009`).
+    - Integracja z `src/screens/MainCounterScreen.tsx`: 3-stanowy przełącznik widoków (`🔢 Licznik` | `📜 Schemat & Linijka` | `📑 Wzór PDF`), umożliwiający podgląd własnego wzoru PDF i jednoczesne przesuwanie linijki wraz ze stuknięciami w licznik rzędów.
+  * **Stan testów:** 25 zestawów testowych, 112 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
 
 
 

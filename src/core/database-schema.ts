@@ -85,5 +85,24 @@ export const SQLITE_SCHEMA_STATEMENTS = [
   );`,
 
   `CREATE INDEX IF NOT EXISTS idx_stash_tools_type_size
-    ON stash_tools(tool_type, size_mm);`
+    ON stash_tools(tool_type, size_mm);`,
+
+  `CREATE TABLE IF NOT EXISTS pattern_documents (
+    id TEXT PRIMARY KEY NOT NULL,
+    project_id TEXT REFERENCES projects(id) ON DELETE CASCADE,
+    file_name TEXT NOT NULL,
+    file_uri TEXT NOT NULL,
+    file_size INTEGER,
+    current_page INTEGER NOT NULL DEFAULT 1,
+    total_pages INTEGER NOT NULL DEFAULT 1,
+    ruler_y_percent REAL NOT NULL DEFAULT 20.0,
+    ruler_height_percent REAL NOT NULL DEFAULT 6.0,
+    auto_step_enabled INTEGER NOT NULL DEFAULT 1,
+    notes TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );`,
+
+  `CREATE INDEX IF NOT EXISTS idx_pattern_documents_project
+    ON pattern_documents(project_id);`
 ] as const;

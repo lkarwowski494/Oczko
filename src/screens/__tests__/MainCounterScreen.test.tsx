@@ -117,4 +117,27 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
     text = extractAllStrings(tree.toJSON());
     expect(text).toContain('0');
   });
+
+  test('Przełącza tryb widoku na Wzór PDF i renderuje komponent podglądu PDF (BR-WZOR-001, DEC-09)', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+
+    const root = tree.root;
+    const pdfTab = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node).includes('Wzór PDF')
+      );
+    });
+
+    act(() => {
+      pdfTab.props.onPress();
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Brak wczytanego wzoru');
+    expect(text).toContain('Wczytaj plik PDF');
+  });
 });

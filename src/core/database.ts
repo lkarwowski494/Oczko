@@ -133,6 +133,30 @@ export function createInMemoryDatabase(): DatabaseClient {
         return { changes: 1, lastInsertRowId: 1 };
       }
 
+      // INSERT INTO pattern_documents
+      if (/^INSERT\s+INTO\s+pattern_documents/i.test(clean)) {
+        const [
+          id, project_id, file_name, file_uri, file_size, current_page, total_pages,
+          ruler_y_percent, ruler_height_percent, auto_step_enabled, notes, created_at, updated_at
+        ] = params as any[];
+        getTable('pattern_documents').set(id, {
+          id, project_id, file_name, file_uri, file_size, current_page, total_pages,
+          ruler_y_percent, ruler_height_percent, auto_step_enabled, notes, created_at, updated_at
+        });
+        return { changes: 1, lastInsertRowId: 1 };
+      }
+
+      // UPDATE pattern_documents
+      if (/^UPDATE\s+pattern_documents/i.test(clean)) {
+        const [ruler_y_percent, current_page, updated_at, id] = params as any[];
+        const existing = getTable('pattern_documents').get(id);
+        if (existing) {
+          Object.assign(existing, { ruler_y_percent, current_page, updated_at });
+          return { changes: 1, lastInsertRowId: 0 };
+        }
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+
       // UPDATE projects
       if (/^UPDATE\s+projects/i.test(clean)) {
         if (/status\s*=\s*\?,\s*updated_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
@@ -263,6 +287,23 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       if (/FROM\s+stash_tools/i.test(clean)) {
         return Array.from(getTable('stash_tools').values()) as unknown as T[];
+      }
+
+      if (/FROM\s+pattern_documents\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
+        const id = params[0] as string;
+        const row = getTable('pattern_documents').get(id);
+        return row ? [row as unknown as T] : [];
+      }
+
+      if (/FROM\s+pattern_documents\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
+        const projectId = params[0] as string;
+        const rows = Array.from(getTable('pattern_documents').values())
+          .filter((p) => p.project_id === projectId);
+        return rows as unknown as T[];
+      }
+
+      if (/FROM\s+pattern_documents/i.test(clean)) {
+        return Array.from(getTable('pattern_documents').values()) as unknown as T[];
       }
 
       return [];

@@ -3,7 +3,7 @@
  * Integruje przełączanie części i synchroniczne liczniki powiązane (BR-PROJ-002, BR-LICZ-003, BR-LICZ-005).
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -17,7 +17,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProjectManagerFacade } from '../core/project-facade';
 import { useProject, ProjectContextValue } from '../core/project-context';
 import PatternGuideViewer from '../components/PatternGuideViewer';
+import PatternPdfViewer from '../components/PatternPdfViewer';
 import { triggerHaptic, checkIntervalReminder } from '../core/feedback-service';
+import {
+  PatternDocument,
+  getPatternDocumentForProject,
+  insertPatternDocument,
+  updatePatternRuler,
+  deletePatternDocument,
+} from '../core/pattern-document-service';
 
 // Fallback dla izolowanych testów komponentu
 const fallbackFacade = new ProjectManagerFacade('proj_demo', 'Mój Sweter');
@@ -41,7 +49,8 @@ export default function MainCounterScreen() {
     fallbackFacade.getCounterState('counter_main')
   );
 
-  const [viewMode, setViewMode] = useState<'counter' | 'pattern'>('counter');
+  const [viewMode, setViewMode] = useState<'counter' | 'pattern' | 'pdf'>('counter');
+  const [patternDoc, setPatternDoc] = useState<PatternDocument | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [newLinkedName, setNewLinkedName] = useState('Warkocz');
   const [newModuloCycle, setNewModuloCycle] = useState('6');
@@ -53,6 +62,15 @@ export default function MainCounterScreen() {
   const [intervalModalVisible, setIntervalModalVisible] = useState<boolean>(false);
   const [tempIntervalInput, setTempIntervalInput] = useState<string>('6');
   const [tempLabelInput, setTempLabelInput] = useState<string>('Zmiana splotu / nitki');
+
+  // Ładowanie zaimportowanego wzoru PDF dla aktywnego projektu (BR-WZOR-001, DEC-09)
+  useEffect(() => {
+    if (projectCtx?.db && projectCtx?.activeProject?.id) {
+      getPatternDocumentForProject(projectCtx.db, projectCtx.activeProject.id)
+        .then((loaded) => setPatternDoc(loaded))
+        .catch(() => {});
+    }
+  }, [projectCtx?.db, projectCtx?.activeProject?.id]);
 
   const isConnectedToContext = Boolean(projectCtx && projectCtx.activeProject);
 
@@ -136,6 +154,39 @@ export default function MainCounterScreen() {
     setModalVisible(false);
   };
 
+  const handleDocumentChange = async (updatedDoc: PatternDocument) => {
+    setPatternDoc(updatedDoc);
+    if (projectCtx?.db) {
+      try {
+        const existing = await getPatternDocumentForProject(
+          projectCtx.db,
+          projectCtx.activeProject?.id ?? ''
+        );
+        if (existing) {
+          await updatePatternRuler(
+            projectCtx.db,
+            updatedDoc.id,
+            updatedDoc.rulerYPercent,
+            updatedDoc.currentPage
+          );
+        } else {
+          await insertPatternDocument(projectCtx.db, updatedDoc);
+        }
+      } catch (_err) {
+        // błąd zapisu do bazy (np. mock)
+      }
+    }
+  };
+
+  const handleDeleteDocument = async () => {
+    if (patternDoc && projectCtx?.db) {
+      try {
+        await deletePatternDocument(projectCtx.db, patternDoc.id);
+      } catch (_err) {}
+    }
+    setPatternDoc(null);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Nagłówek projektu */}
@@ -144,7 +195,7 @@ export default function MainCounterScreen() {
         <Text style={styles.partTitle}>{partName}</Text>
       </View>
 
-      {/* Przełącznik trybu: Licznik vs Schemat z linijką */}
+      {/* Przełącznik trybu: Licznik vs Schemat z linijką vs Wzór PDF */}
       <View style={styles.viewModeTabs}>
         <TouchableOpacity
           style={[styles.viewModeTab, viewMode === 'counter' && styles.viewModeTabActive]}
@@ -172,6 +223,19 @@ export default function MainCounterScreen() {
             📜 Schemat & Linijka
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.viewModeTab, viewMode === 'pdf' && styles.viewModeTabActive]}
+          onPress={() => setViewMode('pdf')}
+        >
+          <Text
+            style={[
+              styles.viewModeTabText,
+              viewMode === 'pdf' && styles.viewModeTabTextActive,
+            ]}
+          >
+            📑 Wzór PDF
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {viewMode === 'pattern' ? (
@@ -181,6 +245,14 @@ export default function MainCounterScreen() {
             if (direction === 'increment') handleIncrement();
             else handleDecrement();
           }}
+        />
+      ) : viewMode === 'pdf' ? (
+        <PatternPdfViewer
+          initialDocument={patternDoc}
+          activeCounterRow={counterValue}
+          projectId={projectCtx?.activeProject?.id}
+          onDocumentChange={handleDocumentChange}
+          onDeleteDocument={handleDeleteDocument}
         />
       ) : (
         <>
