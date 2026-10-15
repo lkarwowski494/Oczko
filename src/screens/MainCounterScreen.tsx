@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProjectManagerFacade } from '../core/project-facade';
 import { useProject, ProjectContextValue } from '../core/project-context';
+import PatternGuideViewer from '../components/PatternGuideViewer';
 
 // Fallback dla izolowanych testów komponentu
 const fallbackFacade = new ProjectManagerFacade('proj_demo', 'Mój Sweter');
@@ -39,6 +40,7 @@ export default function MainCounterScreen() {
     fallbackFacade.getCounterState('counter_main')
   );
 
+  const [viewMode, setViewMode] = useState<'counter' | 'pattern'>('counter');
   const [modalVisible, setModalVisible] = useState(false);
   const [newLinkedName, setNewLinkedName] = useState('Warkocz');
   const [newModuloCycle, setNewModuloCycle] = useState('6');
@@ -107,83 +109,126 @@ export default function MainCounterScreen() {
         <Text style={styles.partTitle}>{partName}</Text>
       </View>
 
-      {/* Przełącznik części projektu (jeśli projekt ma więcej niż 1 część) */}
-      {projectParts.length > 1 && (
-        <View style={styles.partsWrapper}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.partsScroll}
+      {/* Przełącznik trybu: Licznik vs Schemat z linijką */}
+      <View style={styles.viewModeTabs}>
+        <TouchableOpacity
+          style={[styles.viewModeTab, viewMode === 'counter' && styles.viewModeTabActive]}
+          onPress={() => setViewMode('counter')}
+        >
+          <Text
+            style={[
+              styles.viewModeTabText,
+              viewMode === 'counter' && styles.viewModeTabTextActive,
+            ]}
           >
-            {projectParts.map((p) => (
-              <TouchableOpacity
-                key={p.id}
-                style={[styles.partChip, p.id === activePartId && styles.partChipActive]}
-                onPress={() => projectCtx?.switchActivePart(p.id)}
-              >
-                <Text
-                  style={[
-                    styles.partChipText,
-                    p.id === activePartId && styles.partChipTextActive,
-                  ]}
-                >
-                  {p.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      )}
-
-      {/* Liczniki powiązane (np. warkocze, powtórzenia ażuru) */}
-      {activeLinkedStates.length > 0 && (
-        <View style={styles.linkedCountersWrapper}>
-          {activeLinkedStates.map((lc) => (
-            <View key={lc.counterId} style={styles.linkedCard}>
-              <View style={styles.linkedCardHeader}>
-                <Text style={styles.linkedName}>🪢 {lc.name}</Text>
-                {lc.activeReminder && (
-                  <View style={styles.linkedAlert}>
-                    <Text style={styles.linkedAlertText}>⚠️ Skrzyżuj / Operacja!</Text>
-                  </View>
-                )}
-              </View>
-              <Text style={styles.linkedValue}>
-                {lc.moduloCycle
-                  ? `Rząd ${lc.cycleStep ?? 0} z ${lc.moduloCycle} (Ukończono cykli: ${lc.completedCycles ?? 0})`
-                  : `Rząd: ${lc.rawValue}`}
-              </Text>
-            </View>
-          ))}
-        </View>
-      )}
-
-      {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
-      <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
-        <Text style={styles.counterValue}>{counterValue}</Text>
-        <Text style={styles.counterHint}>Stuknij, aby dodać rząd</Text>
-        {activeReminder && (
-          <View style={styles.reminderBadge}>
-            <Text style={styles.reminderText}>⚠️ Ważny rząd / przypomnienie</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      {/* Stopka z przyciskami UNDO oraz dodawania licznika warkocza */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.undoButton} onPress={handleDecrement}>
-          <Text style={styles.undoButtonText}>Cofnij ostatni (Undo)</Text>
+            🔢 Licznik
+          </Text>
         </TouchableOpacity>
-
-        {isConnectedToContext && (
-          <TouchableOpacity
-            style={styles.addLinkedButton}
-            onPress={() => setModalVisible(true)}
+        <TouchableOpacity
+          style={[styles.viewModeTab, viewMode === 'pattern' && styles.viewModeTabActive]}
+          onPress={() => setViewMode('pattern')}
+        >
+          <Text
+            style={[
+              styles.viewModeTabText,
+              viewMode === 'pattern' && styles.viewModeTabTextActive,
+            ]}
           >
-            <Text style={styles.addLinkedButtonText}>+ Licznik wzoru (warkocz/ażur)</Text>
-          </TouchableOpacity>
-        )}
+            📜 Schemat & Linijka
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      {viewMode === 'pattern' ? (
+        <PatternGuideViewer
+          activeCounterRow={counterValue}
+          onStepCounter={(direction) => {
+            if (direction === 'increment') handleIncrement();
+            else handleDecrement();
+          }}
+        />
+      ) : (
+        <>
+          {/* Przełącznik części projektu (jeśli projekt ma więcej niż 1 część) */}
+          {projectParts.length > 1 && (
+            <View style={styles.partsWrapper}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.partsScroll}
+              >
+                {projectParts.map((p) => (
+                  <TouchableOpacity
+                    key={p.id}
+                    style={[styles.partChip, p.id === activePartId && styles.partChipActive]}
+                    onPress={() => projectCtx?.switchActivePart(p.id)}
+                  >
+                    <Text
+                      style={[
+                        styles.partChipText,
+                        p.id === activePartId && styles.partChipTextActive,
+                      ]}
+                    >
+                      {p.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {/* Liczniki powiązane (np. warkocze, powtórzenia ażuru) */}
+          {activeLinkedStates.length > 0 && (
+            <View style={styles.linkedCountersWrapper}>
+              {activeLinkedStates.map((lc) => (
+                <View key={lc.counterId} style={styles.linkedCard}>
+                  <View style={styles.linkedCardHeader}>
+                    <Text style={styles.linkedName}>🪢 {lc.name}</Text>
+                    {lc.activeReminder && (
+                      <View style={styles.linkedAlert}>
+                        <Text style={styles.linkedAlertText}>⚠️ Skrzyżuj / Operacja!</Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={styles.linkedValue}>
+                    {lc.moduloCycle
+                      ? `Rząd ${lc.cycleStep ?? 0} z ${lc.moduloCycle} (Ukończono cykli: ${lc.completedCycles ?? 0})`
+                      : `Rząd: ${lc.rawValue}`}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
+          <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
+            <Text style={styles.counterValue}>{counterValue}</Text>
+            <Text style={styles.counterHint}>Stuknij, aby dodać rząd</Text>
+            {activeReminder && (
+              <View style={styles.reminderBadge}>
+                <Text style={styles.reminderText}>⚠️ Ważny rząd / przypomnienie</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+
+          {/* Stopka z przyciskami UNDO oraz dodawania licznika warkocza */}
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.undoButton} onPress={handleDecrement}>
+              <Text style={styles.undoButtonText}>Cofnij ostatni (Undo)</Text>
+            </TouchableOpacity>
+
+            {isConnectedToContext && (
+              <TouchableOpacity
+                style={styles.addLinkedButton}
+                onPress={() => setModalVisible(true)}
+              >
+                <Text style={styles.addLinkedButtonText}>+ Licznik wzoru (warkocz/ażur)</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      )}
+
 
       {/* Modal definiowania powiązanego licznika wzoru */}
       <Modal
@@ -469,4 +514,37 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
   },
+  viewModeTabs: {
+    flexDirection: 'row',
+    marginHorizontal: 16,
+    marginTop: 6,
+    marginBottom: 8,
+    backgroundColor: '#F0ECE8',
+    borderRadius: 12,
+    padding: 3,
+  },
+  viewModeTab: {
+    flex: 1,
+    paddingVertical: 7,
+    alignItems: 'center',
+    borderRadius: 9,
+  },
+  viewModeTabActive: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  viewModeTabText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#777777',
+  },
+  viewModeTabTextActive: {
+    color: '#8B5E3C',
+    fontWeight: '700',
+  },
 });
+

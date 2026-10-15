@@ -93,6 +93,12 @@
     - Ścisła walidacja strukturalna formatu pliku przed przywróceniem (`validateBackupData`).
     - Atomowe, transakcyjne przywracanie stanu z kopii zapasowej (`importDatabaseBackup`) z kaskadowym czyszczeniem i odtwarzaniem powiązań kluczy obcych.
     - Interfejs `app/(tabs)/settings.tsx`: kafel statystyk bazy w czasie rzeczywistym (liczba projektów, zdarzeń, włóczek, narzędzi), natywny eksport przez systemowy Share Sheet (zapis do plików, iCloud, AirDrop) oraz modal bezpiecznego przywracania z podglądem błędów walidacji.
-  * **Stan testów:** 15 zestawów testowych, 48 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-09, NFR-DOST-009 & Przeglądarka Schematów z Linijką Przypiętą do Wiersza (Pattern Guide Viewer)**:
+    - Baza wbudowanych schematów dziewiarskich CYC (`src/core/pattern-guide-data.ts`) dla warkoczy (C6F) oraz ażurów z dziurkami (romby).
+    - Komponent `src/components/PatternGuideViewer.tsx` wyposażony w interaktywną, półprzezroczystą linijkę o wysokim kontraście (high accessibility NFR-DOST-009) podświetlającą bieżący wiersz diagramu.
+    - Opcja automatycznego kroku linijki (`Auto-krok`) zsynchronizowana z licznikiem głównym robótki oraz tryb ręcznego przesuwania linijki po diagramie.
+    - Zintegrowany przełącznik widoku w `src/screens/MainCounterScreen.tsx` (`🔢 Licznik` vs `📜 Schemat & Linijka`), umożliwiający podgląd wzoru z jednoczesnym naliczaniem rzędów.
+  * **Stan testów:** 16 zestawów testowych, 53 testy jednostkowe, komponentowe i integracyjne zaliczone (100% zielone).
+
 
 
