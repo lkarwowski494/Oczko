@@ -227,8 +227,8 @@
          - Bezkonfliktowa synchronizacja dwukierunkowa paczek zdarzeń (`processIncomingSync`).
          - Równoległe asynchroniczne zapisy do bazy SQLite (Concurrent repository writes).
     - **Podsumowanie Wyników Pokrycia i Jakości:**
-      * **Test Suites: 42/42 zdanych (100% pass)**.
-      * **Tests: 286/286 zdanych (100% pass)**.
+      * **Test Suites: 44/44 zdanych (100% pass)**.
+      * **Tests: 318/318 zdanych (100% pass)**.
       * **Pokrycie linii (Lines Coverage): 100.00%** w całym projekcie!
       * **Czystość typowania:** 0 błędów w weryfikacji TypeScript (`npx tsc --noEmit`).
       * **Dedykowane skrypty NPM:** `npm run test:pbt`, `npm run test:perf`, `npm run test:a11y`, `npm run test:resilience`, `npm run test:concurrency`, `npm run test:corpus`, `npm run check:corpus`, `npm run test:coverage`.
@@ -255,10 +255,11 @@
     - **Test Suites: 42/42 zdanych, 286/286 testów zdanych**.
     - Zaktualizowane testy PBT (`property-based.test.ts`), Dostępności & HIG (`a11y-contracts.test.tsx`), Strażników architektury (`interaction-guards.test.ts`), Budżetów wydajnościowych (`perf-budget.test.ts` — 10 000 rozpoznań w < 20 ms) oraz Odporności (`resilience.test.ts`).
 
-
-
-
-
-
-
-
+* **Implementacja: Kalkulator Kształtowania i Równomiernego Dodawania/Odejmowania Oczek (15.10.2026):**
+  - **Architektura:** Czysty deterministyczny moduł domenowy (src/core/shaping-calculator.ts) implementujący euklidesowy algorytm symetrycznego i równomiernego rozmieszczania modyfikacji oczek bez widocznych skupisk.
+  - **Trzy tryby pracy:**
+    1. *Równomierne dodawanie w rzędzie (Increase Evenly):* obsługa metod M1L, M1R, kfb, yo z wyliczaniem grup regularnych i powiększonych, uwzględnieniem specyfiki zużywania oczka przez kfb oraz ochroną brzegów (edgeStitches).
+    2. *Równomierne odejmowanie w rzędzie (Decrease Evenly):* obsługa metod k2tog, ssk, p2tog z uwzględnieniem zużycia po 2 o. na akcję i generowaniem symetrycznej rozpiski.
+    3. *Kształtowanie wielorzędowe (Multi-Row Shaping):* wyliczanie częstotliwości rzędów dla rękawów, raglanów i dekoltów (oth_edges vs single_edge) z optymalizacją pod rzędy prawe (RS only).
+  - **Interfejs użytkownika:** Interaktywny modal src/components/ShapingCalculatorModal.tsx zintegrowany z ekranem projektów (pp/(tabs)/projects.tsx - przycisk ✂️ Oczka) z natywnym udostępnianiem przez Share Sheet.
+  - **Zgodność z ZAS-QA-01:** 100.00% Line Coverage w całym repozytorium (44/44 suites, 318/318 passed, PBT z ast-check, A11y & Apple HIG >= 44pt, strażnicy czystości domeny, budżet < 100ms na 10 000 kalkulacji, resilience na ujemne/skrajne dane).

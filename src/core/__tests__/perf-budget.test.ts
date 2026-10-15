@@ -28,6 +28,11 @@ import {
 import { parseRowInstruction } from '../pattern-parser';
 import { processDigitalCrownDelta } from '../apple-watch-service';
 import { identifyStitch } from '../stitch-identifier';
+import {
+  calculateEvenIncreases,
+  calculateEvenDecreases,
+  calculateMultiRowShaping,
+} from '../shaping-calculator';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -218,5 +223,26 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     const durationMs = performance.now() - t0;
 
     expect(durationMs).toBeLessThan(40);
+  });
+
+  test('10 000 kalkulacji kształtowania (dodawanie/odejmowanie/wielorzędowe) w < 100 ms', () => {
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      if (i % 3 === 0) {
+        calculateEvenIncreases(80 + (i % 20), 100 + (i % 20), 2, 'M1L');
+      } else if (i % 3 === 1) {
+        calculateEvenDecreases(100 + (i % 20), 80 + (i % 20), 2, 'k2tog');
+      } else {
+        calculateMultiRowShaping({
+          startStitches: 40 + (i % 10),
+          endStitches: 60 + (i % 10),
+          totalRows: 40 + (i % 20),
+          shapingPlacement: 'both_edges',
+        });
+      }
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(100);
   });
 });

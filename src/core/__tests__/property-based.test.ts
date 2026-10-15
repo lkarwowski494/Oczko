@@ -29,6 +29,11 @@ import {
 } from '../stash-filter-service';
 import { StashYarnRecord, YarnWeightCategory } from '../stash-repository';
 import { identifyStitch } from '../stitch-identifier';
+import {
+  calculateEvenIncreases,
+  calculateEvenDecreases,
+  calculateMultiRowShaping,
+} from '../shaping-calculator';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -413,6 +418,99 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
           }
         ),
         { numRuns: 50 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Kalkulatora Kształtowania (shaping-calculator.ts)', () => {
+    it('Niezmiennik zachowania liczby oczek przy dodawaniu: suma wygenerowanych grup i brzegów zawsze wynosi targetStitches', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 10, max: 200 }),
+          fc.integer({ min: 1, max: 50 }),
+          fc.integer({ min: 0, max: 3 }),
+          (initial, add, edge) => {
+            const target = initial + add;
+            const res = calculateEvenIncreases(initial, target, edge, 'M1L');
+
+            if (res.isValid) {
+              expect(res.targetStitches).toBe(target);
+              expect(res.difference).toBe(add);
+
+              // Suma oczek roboczych z grup musi równać się initial - 2 * edge
+              const usedWorkingStitches = res.groups.reduce(
+                (sum, g) => sum + g.normalStitches * g.repeatCount,
+                0
+              );
+              expect(usedWorkingStitches).toBe(initial - 2 * edge);
+
+              // Suma dodanych oczek z grup musi równać się różnicy (add)
+              const totalAdded = res.groups.reduce((sum, g) => sum + g.repeatCount, 0);
+              expect(totalAdded).toBe(add);
+            }
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Niezmiennik poprawności odejmowania: po odjęciu suma oczek zawsze wynosi targetStitches', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 30, max: 200 }),
+          fc.integer({ min: 1, max: 10 }),
+          fc.integer({ min: 0, max: 2 }),
+          (initial, dec, edge) => {
+            const target = initial - dec;
+            const res = calculateEvenDecreases(initial, target, edge, 'k2tog');
+
+            if (res.isValid) {
+              expect(res.targetStitches).toBe(target);
+              expect(res.difference).toBe(dec);
+
+              // Każda akcja k2tog zużywa (normalStitches + 2) oczek początkowych
+              const totalInitialConsumed = res.groups.reduce(
+                (sum, g) => sum + (g.normalStitches + 2) * g.repeatCount,
+                0
+              );
+              expect(totalInitialConsumed).toBe(initial - 2 * edge);
+
+              // Łączna liczba odejmowań równa się dec
+              const totalDecreases = res.groups.reduce((sum, g) => sum + g.repeatCount, 0);
+              expect(totalDecreases).toBe(dec);
+            }
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Niezmiennik wielorzędowy: różnica oczek i zgodność rzędów', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 20, max: 100 }),
+          fc.integer({ min: 2, max: 20 }),
+          fc.integer({ min: 30, max: 120 }),
+          (start, diff, rows) => {
+            const evenDiff = diff % 2 === 0 ? diff : diff + 1;
+            const end = start + evenDiff;
+
+            const res = calculateMultiRowShaping({
+              startStitches: start,
+              endStitches: end,
+              totalRows: rows,
+              shapingPlacement: 'both_edges',
+              workSidePreference: 'right_side_only',
+            });
+
+            if (res.isValid) {
+              expect(res.totalStitchDiff).toBe(evenDiff);
+              expect(res.endStitches).toBe(end);
+              expect(res.actionCount).toBe(evenDiff / 2);
+            }
+          }
+        ),
+        { numRuns: 100 }
       );
     });
   });

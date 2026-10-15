@@ -31,6 +31,11 @@ import {
   CounterEvent,
 } from '../counter-engine';
 import { identifyStitch } from '../stitch-identifier';
+import {
+  calculateEvenIncreases,
+  calculateEvenDecreases,
+  calculateMultiRowShaping,
+} from '../shaping-calculator';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -365,6 +370,48 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(resGibberish.id).toBe('stockinette');
       expect(resGibberish.namePl.length).toBeGreaterThan(0);
       expect(resGibberish.description.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Odporność Kalkulatora Kształtowania Oczek (shaping-calculator.ts)', () => {
+    test('Obsługuje ujemne, ułamkowe i zerowe wartości wejściowe bez awarii', () => {
+      // Ujemne wartości w dodawaniu
+      const incNeg = calculateEvenIncreases(-50, -20, -5);
+      expect(incNeg.initialStitches).toBe(0);
+      expect(incNeg.targetStitches).toBe(0);
+      expect(incNeg.isValid).toBe(true);
+
+      // Ujemne wartości w odejmowaniu
+      const decNeg = calculateEvenDecreases(-100, -50, -2);
+      expect(decNeg.initialStitches).toBe(0);
+      expect(decNeg.targetStitches).toBe(0);
+      expect(decNeg.isValid).toBe(true);
+
+      // Wartości ułamkowe (zaokrąglane w dół do int)
+      const incFloat = calculateEvenIncreases(60.9, 72.4, 1.8);
+      expect(incFloat.initialStitches).toBe(60);
+      expect(incFloat.targetStitches).toBe(72);
+      expect(incFloat.edgeStitches).toBe(1);
+      expect(incFloat.isValid).toBe(true);
+
+      // Wielorzędowe z ujemnymi rzędami
+      const multiNeg = calculateMultiRowShaping({
+        startStitches: -20,
+        endStitches: -10,
+        totalRows: -5,
+        shapingPlacement: 'both_edges',
+      });
+      expect(multiNeg.startStitches).toBe(1);
+      expect(multiNeg.endStitches).toBe(1);
+      expect(multiNeg.totalRows).toBe(1);
+      expect(multiNeg.isValid).toBe(true);
+    });
+
+    test('Skrajnie duża liczba oczek (np. 100 000) nie powoduje zawieszenia', () => {
+      const hugeInc = calculateEvenIncreases(100000, 120000, 2, 'M1L');
+      expect(hugeInc.isValid).toBe(true);
+      expect(hugeInc.difference).toBe(20000);
+      expect(hugeInc.groups.length).toBeGreaterThan(0);
     });
   });
 });

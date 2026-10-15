@@ -68,6 +68,7 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'pattern-trainer.ts'),
         join(srcCoreDir, 'glossary-data.ts'),
         join(srcCoreDir, 'stitch-identifier.ts'),
+        join(srcCoreDir, 'shaping-calculator.ts'),
       ];
 
       for (const filePath of pureDomainFiles) {

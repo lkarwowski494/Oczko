@@ -3,6 +3,7 @@ import renderer, { act } from 'react-test-renderer';
 import ProjectsScreen from '../../../app/(tabs)/projects';
 import { ProjectProvider } from '../../core/project-context';
 import { createInMemoryDatabase } from '../../core/database';
+import { ShapingCalculatorModal } from '../../components/ShapingCalculatorModal';
 
 function extractAllStrings(node: any): string {
   if (!node) return '';
@@ -410,6 +411,21 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
 
     const text = extractAllStrings(tree.toJSON());
     expect(text).toContain('Sweter z próbki');
+
+    // Znajdź przycisk otwierania kalkulatora kształtowania oczek
+    const shapingBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('✂️ Oczka')
+    );
+    await act(async () => {
+      shapingBtn.props.onPress();
+    });
+
+    // Znajdź ShapingCalculatorModal i zamknij
+    const shapingModal = root.findByType(ShapingCalculatorModal);
+    await act(async () => {
+      shapingModal.props.onClose();
+    });
   });
 
   it('obsługuje renderowanie bez kontekstu ProjectProvider (fallback try-catch)', () => {

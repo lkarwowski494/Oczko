@@ -24,6 +24,7 @@ import GaugeCalculatorModal, {
 } from '../../src/components/GaugeCalculatorModal';
 import ProjectShareCardModal from '../../src/components/ProjectShareCardModal';
 import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
+import { ShapingCalculatorModal } from '../../src/components/ShapingCalculatorModal';
 
 
 export default function ProjectsScreen() {
@@ -57,6 +58,7 @@ export default function ProjectsScreen() {
 
   // Modal estymatora zużycia włóczki i Yarn Chicken
   const [yarnEstimatorVisible, setYarnEstimatorVisible] = useState(false);
+  const [shapingModalVisible, setShapingModalVisible] = useState(false);
   const [estimatorInitialRows, setEstimatorInitialRows] = useState<{ completed: number; target: number } | undefined>();
   const [stashYarns, setStashYarns] = useState<StashYarnRecord[]>([]);
 
@@ -278,6 +280,15 @@ export default function ProjectsScreen() {
             <Text style={styles.gaugeButtonText}>📐 Próbka</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => setShapingModalVisible(true)}
+            accessibilityLabel="Otwórz kalkulator kształtowania i dodawania oczek"
+            accessibilityRole="button"
+          >
+            <Text style={styles.gaugeButtonText}>✂️ Oczka</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.newButton}
             activeOpacity={0.8}
             onPress={() => setModalVisible(true)}
@@ -478,6 +489,12 @@ export default function ProjectsScreen() {
         availableYarns={stashYarns}
         initialCompletedRows={estimatorInitialRows?.completed ?? 50}
         initialTargetRows={estimatorInitialRows?.target ?? 200}
+      />
+
+      {/* Modal kalkulatora kształtowania i oczek */}
+      <ShapingCalculatorModal
+        visible={shapingModalVisible}
+        onClose={() => setShapingModalVisible(false)}
       />
     </SafeAreaView>
   );

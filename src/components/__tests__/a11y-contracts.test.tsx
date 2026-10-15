@@ -13,6 +13,7 @@ import { StyleSheet } from 'react-native';
 import MainCounterScreen from '../../screens/MainCounterScreen';
 import AppleWatchCompanionModal from '../AppleWatchCompanionModal';
 import PatternPdfViewer from '../PatternPdfViewer';
+import { ShapingCalculatorModal } from '../ShapingCalculatorModal';
 import LearnScreen from '../../../app/(tabs)/learn';
 import { createWatchCounterSnapshot } from '../../core/apple-watch-service';
 
@@ -152,6 +153,34 @@ describe('Kontrakty Dostępności i Human Interface Guidelines (WCAG AAA & Apple
         expect(opt.props.accessibilityLabel.length).toBeGreaterThan(0);
 
         const flat = StyleSheet.flatten(opt.props.style) as any;
+        if (flat) {
+          const hasAdequateTouchTarget =
+            (flat.minHeight && flat.minHeight >= 44) ||
+            (flat.height && flat.height >= 40) ||
+            (flat.paddingVertical && flat.paddingVertical >= 8);
+          expect(hasAdequateTouchTarget).toBeTruthy();
+        }
+      }
+    });
+
+    it('kontrolki i przyciski w ShapingCalculatorModal spełniają wymóg >= 44 pt oraz posiadają etykiety VoiceOver', () => {
+      let tree: any;
+      act(() => {
+        tree = renderer.create(<ShapingCalculatorModal visible={true} onClose={jest.fn()} />);
+      });
+
+      const root = tree.root;
+      const buttons = root.findAll(
+        (n: any) => n.props?.accessibilityRole === 'button' || n.props?.accessibilityRole === 'checkbox'
+      );
+      expect(buttons.length).toBeGreaterThanOrEqual(5);
+
+      for (const btn of buttons) {
+        expect(btn.props.accessibilityLabel).toBeDefined();
+        expect(typeof btn.props.accessibilityLabel).toBe('string');
+        expect(btn.props.accessibilityLabel.length).toBeGreaterThan(0);
+
+        const flat = StyleSheet.flatten(btn.props.style) as any;
         if (flat) {
           const hasAdequateTouchTarget =
             (flat.minHeight && flat.minHeight >= 44) ||
