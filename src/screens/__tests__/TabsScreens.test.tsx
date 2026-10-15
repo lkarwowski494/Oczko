@@ -27,8 +27,9 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     expect(tree).toBeDefined();
     const allText = extractAllStrings(tree.toJSON());
     expect(allText).toContain('Twoje Robótki');
-    expect(allText).toContain('+ Nowy projekt');
+    expect(allText).toContain('+ Nowy');
     expect(allText).toContain('Próbka');
+    expect(allText).toContain('Zużycie');
   });
 
 
@@ -41,6 +42,7 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     const allText = extractAllStrings(tree.toJSON());
     expect(allText).toContain('Włóczki');
     expect(allText).toContain('Druty i szydełka');
+    expect(allText).toContain('Zużycie');
   });
 
   test('Ekran Nauka poprawnie renderuje słownik i pozycje skrótów dziewiarskich', () => {

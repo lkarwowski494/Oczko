@@ -108,7 +108,15 @@
     - Generator sformatowanego opisu społecznościowego (`generateShareableText`) na Ravelry, Instagram czy grupy rękodzielnicze z automatycznym dopasowaniem włóczki, drutów i hashtagów.
     - Wizualna karta rzemieślnicza w ciepłej palecie craftowej `src/components/ProjectShareCardModal.tsx` z podglądem postępu, natywnym udostępnianiem przez Share Sheet oraz możliwością przełączania statusu projektu: w trakcie (`WIP`) vs ukończony (`FO - Finished Object`).
     - Integracja z listą projektów `app/(tabs)/projects.tsx` poprzez przycisk `📊 Karta` przy każdym projekcie.
-  * **Stan testów:** 20 zestawów testowych, 71 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-01, BR-MAG-004 & Kalkulator Zużycia Włóczki i Estymator Wagi Wyrobu (Yarn Usage Estimator)**:
+    - Silnik obliczeniowy `src/core/yarn-usage-estimator.ts` oferujący dwa niezależne tryby kalkulacji:
+      1. W trakcie robótki: wyliczanie tempa zużycia przędzy (g/rząd), całkowitej wagi wyrobu, pozostałych do przerobienia gramów/metrów oraz liczby motków na podstawie zważonej części robótki.
+      2. Przed startem: estymacja wagi i motków na podstawie wymiarów i wagi próbki ściegu (swatch) oraz docelowej powierzchni elementów dzianiny.
+    - Algorytm detekcji ryzyka „Yarn Chicken” (gra w cykora z włóczką) z trzystopniową kategoryzacją (`safe` / `warning` < 5% rezerwy / `danger` deficyt) oraz kontekstowymi radami ratunkowymi (dokupienie motka z tego samego lotu farbowania, modyfikacja ściągacza).
+    - Obsługa konfigurowalnego marginesu bezpieczeństwa (0%, +5%, +10%, +15%, +20%) na końcówki, próbki i zmienność naprężenia nitki oraz wskaźnika grist (m/g, m/100g).
+    - Interaktywny komponent `src/components/YarnUsageEstimatorModal.tsx` zintegrowany zarówno z Magazynem (`app/(tabs)/stash.tsx` - przycisk `⚖️ Zużycie`), jak i listą projektów (`app/(tabs)/projects.tsx` - w pasku akcji oraz na kartach robótek z automatycznym zaczytaniem liczby rzędów).
+  * **Stan testów:** 22 zestawy testowe, 86 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+
 
 
 

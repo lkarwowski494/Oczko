@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,10 +18,12 @@ import {
   ProjectStatus,
   updateProjectStatus,
 } from '../../src/core/project-repository';
+import { listStashYarns, StashYarnRecord } from '../../src/core/stash-repository';
 import GaugeCalculatorModal, {
   CreateProjectFromGaugeInput,
 } from '../../src/components/GaugeCalculatorModal';
 import ProjectShareCardModal from '../../src/components/ProjectShareCardModal';
+import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
 
 
 export default function ProjectsScreen() {
@@ -52,6 +54,17 @@ export default function ProjectsScreen() {
   const [targetProjectId, setTargetProjectId] = useState<string | null>(null);
   const [addedPartName, setAddedPartName] = useState('');
   const [addedPartTarget, setAddedPartTarget] = useState('');
+
+  // Modal estymatora zużycia włóczki i Yarn Chicken
+  const [yarnEstimatorVisible, setYarnEstimatorVisible] = useState(false);
+  const [estimatorInitialRows, setEstimatorInitialRows] = useState<{ completed: number; target: number } | undefined>();
+  const [stashYarns, setStashYarns] = useState<StashYarnRecord[]>([]);
+
+  useEffect(() => {
+    if (projectCtx?.db) {
+      listStashYarns(projectCtx.db).then(setStashYarns).catch(() => {});
+    }
+  }, [projectCtx?.db]);
 
   const projects = projectCtx?.projects ?? [];
   const activeProjectId = projectCtx?.activeProject?.id ?? null;
@@ -193,6 +206,22 @@ export default function ProjectsScreen() {
         <View style={styles.cardActions}>
           <TouchableOpacity
             style={styles.cardShareButton}
+            onPress={() => {
+              const part = item.parts[0];
+              if (part) {
+                setEstimatorInitialRows({
+                  completed: part.counters[0]?.currentValue ?? 0,
+                  target: part.targetRows ?? 200,
+                });
+              }
+              setYarnEstimatorVisible(true);
+            }}
+          >
+            <Text style={styles.cardShareButtonText}>⚖️ Zużycie</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.cardShareButton}
             onPress={() => setSelectedShareProject(item)}
           >
             <Text style={styles.cardShareButtonText}>📊 Karta</Text>
@@ -225,6 +254,22 @@ export default function ProjectsScreen() {
       <View style={styles.topBar}>
         <Text style={styles.heading}>Twoje Robótki</Text>
         <View style={styles.topBarActions}>
+          <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => {
+              const activePart = projectCtx?.activeProject?.parts[0];
+              if (activePart) {
+                setEstimatorInitialRows({
+                  completed: activePart.counters[0]?.currentValue ?? 0,
+                  target: activePart.targetRows ?? 200,
+                });
+              }
+              setYarnEstimatorVisible(true);
+            }}
+          >
+            <Text style={styles.gaugeButtonText}>⚖️ Zużycie</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
@@ -421,6 +466,18 @@ export default function ProjectsScreen() {
         project={selectedShareProject}
         onClose={() => setSelectedShareProject(null)}
         onStatusChange={handleProjectStatusChange}
+      />
+
+      {/* Modal kalkulatora zużycia włóczki i wagi wyrobu */}
+      <YarnUsageEstimatorModal
+        visible={yarnEstimatorVisible}
+        onClose={() => {
+          setYarnEstimatorVisible(false);
+          setEstimatorInitialRows(undefined);
+        }}
+        availableYarns={stashYarns}
+        initialCompletedRows={estimatorInitialRows?.completed ?? 50}
+        initialTargetRows={estimatorInitialRows?.target ?? 200}
       />
     </SafeAreaView>
   );

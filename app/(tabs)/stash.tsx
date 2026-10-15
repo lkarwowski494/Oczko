@@ -26,6 +26,7 @@ import {
   ToolType,
   ToolMaterial,
 } from '../../src/core/stash-repository';
+import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
 
 type StashTab = 'yarn' | 'tools';
 
@@ -97,6 +98,8 @@ export default function StashScreen() {
 
   // Formularz dodawania
   const [modalVisible, setModalVisible] = useState(false);
+  // Modal kalkulatora zużycia włóczki
+  const [yarnEstimatorVisible, setYarnEstimatorVisible] = useState(false);
   // Pola dla włóczki
   const [yarnBrand, setYarnBrand] = useState('');
   const [yarnName, setYarnName] = useState('');
@@ -249,15 +252,26 @@ export default function StashScreen() {
         <Text style={styles.sectionTitle}>
           {activeTab === 'yarn' ? 'Twoje Zapasy Włóczek' : 'Twoje Narzędzia'}
         </Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          activeOpacity={0.8}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.addButtonText}>
-            {activeTab === 'yarn' ? '+ Dodaj włóczkę' : '+ Dodaj druty'}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.topActionsGroup}>
+          {activeTab === 'yarn' && (
+            <TouchableOpacity
+              style={styles.estimatorButton}
+              activeOpacity={0.8}
+              onPress={() => setYarnEstimatorVisible(true)}
+            >
+              <Text style={styles.estimatorButtonText}>⚖️ Zużycie</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.addButton}
+            activeOpacity={0.8}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.addButtonText}>
+              {activeTab === 'yarn' ? '+ Dodaj włóczkę' : '+ Dodaj druty'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {activeTab === 'yarn' ? (
@@ -454,6 +468,13 @@ export default function StashScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Modal kalkulatora zużycia włóczki i Yarn Chicken */}
+      <YarnUsageEstimatorModal
+        visible={yarnEstimatorVisible}
+        onClose={() => setYarnEstimatorVisible(false)}
+        availableYarns={yarns}
+      />
     </SafeAreaView>
   );
 }
@@ -505,6 +526,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: '#1A1A1A',
+  },
+  topActionsGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  estimatorButton: {
+    backgroundColor: '#F0ECE8',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#D8C8BE',
+  },
+  estimatorButtonText: {
+    color: '#8B5E3C',
+    fontWeight: '700',
+    fontSize: 12,
   },
   addButton: {
     backgroundColor: '#8B5E3C',
