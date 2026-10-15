@@ -28,6 +28,7 @@ import {
   StashFilterCriteria,
 } from '../stash-filter-service';
 import { StashYarnRecord, YarnWeightCategory } from '../stash-repository';
+import { identifyStitch } from '../stitch-identifier';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -357,4 +358,63 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
       );
     });
   });
+
+  describe('Niezmienniki Klucza Identyfikacji Ściegów (stitch-identifier.ts, DEC-16)', () => {
+    it('Niezmiennik totalności: dla dowolnego słownika odpowiedzi zwraca poprawny profil bez błędów wykonania', () => {
+      fc.assert(
+        fc.property(
+          fc.dictionary(fc.string({ minLength: 1, maxLength: 30 }), fc.string({ minLength: 1, maxLength: 30 })),
+          (randomAnswers) => {
+            const match = identifyStitch(randomAnswers);
+            expect(match).toBeDefined();
+            expect(match.id.length).toBeGreaterThan(0);
+            expect(match.namePl.length).toBeGreaterThan(0);
+            expect(match.nameEn.length).toBeGreaterThan(0);
+            expect(match.description.length).toBeGreaterThan(0);
+            expect(['knitting', 'crochet']).toContain(match.craftType);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Niezmiennik determinizmu cech dominujących: splot szydełkowy zawsze klasyfikuje craftType jako crochet', () => {
+      fc.assert(
+        fc.property(
+          fc.string(),
+          fc.string(),
+          (reverse, edge) => {
+            const match = identifyStitch({
+              surface_texture: 'crochet_knots',
+              reversibility: reverse,
+              edge_and_stretch: edge,
+            });
+            expect(match.craftType).toBe('crochet');
+            expect(match.id).toBe('crochet_basic');
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+
+    it('Niezmiennik kategorii ażuru: cecha otworów zawsze klasyfikuje kategorię jako lace', () => {
+      fc.assert(
+        fc.property(
+          fc.string(),
+          fc.string(),
+          (reverse, edge) => {
+            const match = identifyStitch({
+              surface_texture: 'holes',
+              reversibility: reverse,
+              edge_and_stretch: edge,
+            });
+            expect(match.category).toBe('lace');
+            expect(match.id).toBe('lace_eyelet');
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+  });
 });
+

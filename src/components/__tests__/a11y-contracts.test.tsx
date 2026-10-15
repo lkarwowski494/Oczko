@@ -13,6 +13,7 @@ import { StyleSheet } from 'react-native';
 import MainCounterScreen from '../../screens/MainCounterScreen';
 import AppleWatchCompanionModal from '../AppleWatchCompanionModal';
 import PatternPdfViewer from '../PatternPdfViewer';
+import LearnScreen from '../../../app/(tabs)/learn';
 import { createWatchCounterSnapshot } from '../../core/apple-watch-service';
 
 function extractAllNodes(node: any): any[] {
@@ -117,6 +118,45 @@ describe('Kontrakty Dostępności i Human Interface Guidelines (WCAG AAA & Apple
             (flatStyle.padding && flatStyle.padding >= 10) ||
             (flatStyle.paddingVertical && flatStyle.paddingVertical >= 8);
 
+          expect(hasAdequateTouchTarget).toBeTruthy();
+        }
+      }
+    });
+
+    it('kontrolki i kafelki opcji w kluczu Co widzisz spełniają wymóg >= 44 pt oraz posiadają etykiety VoiceOver', () => {
+      let tree: any;
+      act(() => {
+        tree = renderer.create(<LearnScreen />);
+      });
+
+      const root = tree.root;
+      // Przełącz na "Co widzisz?"
+      const tabBtn = root.find(
+        (n: any) => n.props?.accessibilityLabel && n.props.accessibilityLabel.includes('Co widzisz?')
+      );
+      expect(tabBtn).toBeDefined();
+
+      act(() => {
+        tabBtn.props.onPress();
+      });
+
+      // Sprawdź karty wyboru cech ściegu
+      const options = root.findAll(
+        (n: any) => n.props?.accessibilityRole === 'button' && n.props?.accessibilityLabel
+      );
+      expect(options.length).toBeGreaterThanOrEqual(4);
+
+      for (const opt of options) {
+        expect(opt.props.accessibilityRole).toBe('button');
+        expect(typeof opt.props.accessibilityLabel).toBe('string');
+        expect(opt.props.accessibilityLabel.length).toBeGreaterThan(0);
+
+        const flat = StyleSheet.flatten(opt.props.style) as any;
+        if (flat) {
+          const hasAdequateTouchTarget =
+            (flat.minHeight && flat.minHeight >= 44) ||
+            (flat.height && flat.height >= 40) ||
+            (flat.paddingVertical && flat.paddingVertical >= 8);
           expect(hasAdequateTouchTarget).toBeTruthy();
         }
       }

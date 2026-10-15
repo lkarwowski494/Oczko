@@ -30,6 +30,7 @@ import {
   CounterConfig,
   CounterEvent,
 } from '../counter-engine';
+import { identifyStitch } from '../stitch-identifier';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -348,4 +349,23 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(shouldDebounceClick(2000, 1000, 300)).toBe(false);
     });
   });
+
+  describe('Odporność Klucza Identyfikacji Ściegów na Zniekształcone Dane (DEC-16)', () => {
+    test('Obsługuje puste, częściowe i nieznane cechy wejściowe bez rzucania wyjątków', () => {
+      // Pusty słownik
+      const resEmpty = identifyStitch({});
+      expect(resEmpty.id).toBe('stockinette');
+
+      // Nieznane identyfikatory opcji
+      const resGibberish = identifyStitch({
+        surface_texture: 'nieznana_faktura_xyz',
+        reversibility: 'nieznany_spod_123',
+        edge_and_stretch: 'losowa_cecha_999',
+      });
+      expect(resGibberish.id).toBe('stockinette');
+      expect(resGibberish.namePl.length).toBeGreaterThan(0);
+      expect(resGibberish.description.length).toBeGreaterThan(0);
+    });
+  });
 });
+

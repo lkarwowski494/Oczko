@@ -20,8 +20,13 @@ import {
   TrainerExercise,
   PatternTrainerEngine,
 } from '../../src/core/pattern-trainer';
+import {
+  getQuestionByStep,
+  identifyStitch,
+  StitchMatchResult,
+} from '../../src/core/stitch-identifier';
 
-type ActiveTab = 'glossary' | 'trainer';
+type ActiveTab = 'glossary' | 'trainer' | 'identifier';
 
 const CATEGORY_CHIPS: Array<{ key: GlossaryCategory | 'all'; label: string }> = [
   { key: 'all', label: 'Wszystkie' },
@@ -46,6 +51,35 @@ export default function LearnScreen() {
     () => new PatternTrainerEngine(TRAINER_EXERCISES[0])
   );
   const [trainerState, setTrainerState] = useState(() => trainerEngine.getState());
+
+  // Stan klucza identyfikacji ściegów (DEC-16)
+  const [identifierStep, setIdentifierStep] = useState(0);
+  const [identifierAnswers, setIdentifierAnswers] = useState<Record<string, string>>({});
+  const [identifierResult, setIdentifierResult] = useState<StitchMatchResult | null>(null);
+
+  const handleSelectIdentifierOption = (questionId: string, optionId: string) => {
+    const updated = { ...identifierAnswers, [questionId]: optionId };
+    setIdentifierAnswers(updated);
+    if (identifierStep < 2) {
+      setIdentifierStep(identifierStep + 1);
+    } else {
+      const result = identifyStitch(updated);
+      setIdentifierResult(result);
+      setIdentifierStep(3);
+    }
+  };
+
+  const handleIdentifierBack = () => {
+    if (identifierStep > 0) {
+      setIdentifierStep(identifierStep - 1);
+    }
+  };
+
+  const handleIdentifierReset = () => {
+    setIdentifierAnswers({});
+    setIdentifierResult(null);
+    setIdentifierStep(0);
+  };
 
   const handleSelectExercise = (exercise: TrainerExercise) => {
     const newEngine = new PatternTrainerEngine(exercise);
@@ -72,28 +106,43 @@ export default function LearnScreen() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
-      {/* Przełącznik główny: Słownik / Trenażer powtórzeń */}
+      {/* Przełącznik główny: Słownik / Trenażer powtórzeń / Co widzisz? */}
       <View style={styles.segmentContainer}>
         <TouchableOpacity
           style={[styles.segmentButton, activeTab === 'glossary' && styles.segmentButtonActive]}
           onPress={() => setActiveTab('glossary')}
+          accessibilityRole="button"
+          accessibilityLabel="Słownik i symbole"
         >
           <Text style={[styles.segmentText, activeTab === 'glossary' && styles.segmentTextActive]}>
-            📖 Słownik & Symbole ({KNITTING_GLOSSARY.length})
+            📖 Słownik & Symbole
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.segmentButton, activeTab === 'trainer' && styles.segmentButtonActive]}
           onPress={() => setActiveTab('trainer')}
+          accessibilityRole="button"
+          accessibilityLabel="Trenażer powtórzeń"
         >
           <Text style={[styles.segmentText, activeTab === 'trainer' && styles.segmentTextActive]}>
             🎯 Trenażer powtórzeń
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.segmentButton, activeTab === 'identifier' && styles.segmentButtonActive]}
+          onPress={() => setActiveTab('identifier')}
+          accessibilityRole="button"
+          accessibilityLabel="Klucz rozpoznawania ściegów: Co widzisz?"
+        >
+          <Text style={[styles.segmentText, activeTab === 'identifier' && styles.segmentTextActive]}>
+            🔍 Co widzisz?
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      {activeTab === 'glossary' ? (
+      {activeTab === 'glossary' && (
         <View style={styles.tabContent}>
           {/* Wyszukiwarka */}
           <View style={styles.searchBox}>
@@ -172,8 +221,10 @@ export default function LearnScreen() {
             )}
           />
         </View>
-      ) : (
-        /* Widok: Trenażer powtórzeń (DEC-17) */
+      )}
+
+      {/* Widok: Trenażer powtórzeń (DEC-17) */}
+      {activeTab === 'trainer' && (
         <ScrollView contentContainerStyle={styles.trainerScrollContent}>
           {/* Wybór ćwiczenia */}
           <Text style={styles.sectionHeader}>WYBIERZ WZORZEC DO ĆWICZENIA</Text>
@@ -257,6 +308,144 @@ export default function LearnScreen() {
               </>
             )}
           </View>
+        </ScrollView>
+      )}
+
+      {activeTab === 'identifier' && (
+        <ScrollView style={styles.tabContent} contentContainerStyle={styles.identifierScrollContent}>
+          {identifierStep < 3 ? (
+            (() => {
+              const currentQuestion = getQuestionByStep(identifierStep);
+              if (!currentQuestion) return null;
+              return (
+                <View style={styles.identifierCard}>
+                  <View style={styles.identifierHeaderRow}>
+                    <Text style={styles.identifierStepBadge}>
+                      {`Krok ${currentQuestion.stepNumber} z ${currentQuestion.totalSteps}`}
+                    </Text>
+                    {identifierStep > 0 && (
+                      <TouchableOpacity
+                        style={styles.identifierBackButton}
+                        onPress={handleIdentifierBack}
+                        accessibilityRole="button"
+                        accessibilityLabel="Cofnij do poprzedniego pytania"
+                      >
+                        <Text style={styles.identifierBackButtonText}>◀ Cofnij</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+
+                  <Text style={styles.identifierTitle}>{currentQuestion.title}</Text>
+                  <Text style={styles.identifierSubtitle}>{currentQuestion.subtitle}</Text>
+
+                  <View style={styles.optionsList}>
+                    {currentQuestion.options.map((option) => (
+                      <TouchableOpacity
+                        key={option.id}
+                        style={[
+                          styles.optionCard,
+                          identifierAnswers[currentQuestion.id] === option.id && styles.optionCardSelected,
+                        ]}
+                        activeOpacity={0.7}
+                        onPress={() => handleSelectIdentifierOption(currentQuestion.id, option.id)}
+                        accessibilityRole="button"
+                        accessibilityLabel={`${option.label}: ${option.description}`}
+                      >
+                        <View style={styles.optionHeader}>
+                          <Text style={styles.optionLabel}>{option.label}</Text>
+                          {option.badge && <Text style={styles.optionBadge}>{option.badge}</Text>}
+                        </View>
+                        <Text style={styles.optionDescription}>{option.description}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.identifierResetButton}
+                    onPress={handleIdentifierReset}
+                    accessibilityRole="button"
+                    accessibilityLabel="Zresetuj identyfikację"
+                  >
+                    <Text style={styles.identifierResetButtonText}>↺ Zacznij od początku</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })()
+          ) : (
+            identifierResult && (
+              <View style={styles.resultContainer}>
+                <View style={styles.resultHeaderCard}>
+                  <View style={styles.resultBadgeRow}>
+                    <Text style={styles.resultCategoryBadge}>
+                      {identifierResult.craftType === 'knitting' ? '🧶 Druty' : '🪡 Szydełko'} • {identifierResult.category.toUpperCase()}
+                    </Text>
+                    <Text style={styles.resultConfidenceBadge}>✓ Pewne dopasowanie</Text>
+                  </View>
+
+                  <Text style={styles.resultTitlePl}>{identifierResult.namePl}</Text>
+                  <Text style={styles.resultTitleEn}>({identifierResult.nameEn})</Text>
+                  <Text style={styles.resultDescription}>{identifierResult.description}</Text>
+                </View>
+
+                {/* Sekcja porad liczenia rzędów */}
+                <View style={styles.tipCard}>
+                  <Text style={styles.tipHeader}>🔢 Jak liczyć rzędy w tym ściegu?</Text>
+                  <Text style={styles.tipText}>{identifierResult.rowCountingTip}</Text>
+                </View>
+
+                {/* Sekcja rad dot. brzegów i blokowania */}
+                {identifierResult.curlingAdvice && (
+                  <View style={styles.adviceCard}>
+                    <Text style={styles.adviceHeader}>💡 Wskazówka techniczna & brzegi</Text>
+                    <Text style={styles.adviceText}>{identifierResult.curlingAdvice}</Text>
+                  </View>
+                )}
+
+                {/* Przyciski akcji łączące moduł nauki */}
+                <View style={styles.resultActions}>
+                  {identifierResult.glossaryTermQuery && (
+                    <TouchableOpacity
+                      style={styles.actionPrimaryButton}
+                      onPress={() => {
+                        setActiveTab('glossary');
+                        setSearchQuery(identifierResult.glossaryTermQuery!);
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Zobacz definicję w słowniku"
+                    >
+                      <Text style={styles.actionPrimaryButtonText}>📖 Pokaż definicję w słowniku</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {identifierResult.trainerExerciseId && (
+                    <TouchableOpacity
+                      style={styles.actionSecondaryButton}
+                      onPress={() => {
+                        const ex = TRAINER_EXERCISES.find((e) => e.id === identifierResult.trainerExerciseId);
+                        if (ex) {
+                          handleSelectExercise(ex);
+                          setActiveTab('trainer');
+                        }
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Przejdź do ćwiczenia w trenażerze"
+                    >
+                      <Text style={styles.actionSecondaryButtonText}>🎯 Poćwicz ten ścieg w trenażerze</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  <TouchableOpacity
+                    style={styles.restartIdentifierButton}
+                    onPress={handleIdentifierReset}
+                    accessibilityRole="button"
+                    accessibilityLabel="Zidentyfikuj inny ścieg"
+                  >
+                    <Text style={styles.restartIdentifierButtonText}>🔍 Zidentyfikuj inny ścieg</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )
+          )}
         </ScrollView>
       )}
     </SafeAreaView>
@@ -616,5 +805,242 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600',
     fontSize: 14,
+  },
+  // Style klucza identyfikacji ściegów (DEC-16)
+  identifierScrollContent: {
+    padding: 16,
+    paddingBottom: 36,
+  },
+  identifierCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  identifierHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  identifierStepBadge: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#8B5E3C',
+    backgroundColor: '#F5EDE4',
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  identifierBackButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    minHeight: 44,
+    minWidth: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  identifierBackButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666666',
+  },
+  identifierTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  identifierSubtitle: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  optionsList: {
+    gap: 12,
+  },
+  optionCard: {
+    minHeight: 64,
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  optionCardSelected: {
+    borderColor: '#8B5E3C',
+    backgroundColor: '#FDFBF9',
+  },
+  optionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  optionLabel: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    flex: 1,
+  },
+  optionBadge: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#8B5E3C',
+    backgroundColor: '#F5EDE4',
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  optionDescription: {
+    fontSize: 13,
+    color: '#666666',
+    lineHeight: 18,
+  },
+  identifierResetButton: {
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  identifierResetButtonText: {
+    fontSize: 13,
+    color: '#888888',
+  },
+  resultContainer: {
+    gap: 12,
+  },
+  resultHeaderCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  resultBadgeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  resultCategoryBadge: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#3A6073',
+    backgroundColor: '#EBF4F6',
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  resultConfidenceBadge: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#28A745',
+    backgroundColor: '#E8F5E9',
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  resultTitlePl: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 2,
+  },
+  resultTitleEn: {
+    fontSize: 14,
+    color: '#777777',
+    fontStyle: 'italic',
+    marginBottom: 10,
+  },
+  resultDescription: {
+    fontSize: 14,
+    color: '#444444',
+    lineHeight: 21,
+  },
+  tipCard: {
+    backgroundColor: '#F0F9FF',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+  },
+  tipHeader: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#0369A1',
+    marginBottom: 4,
+  },
+  tipText: {
+    fontSize: 13,
+    color: '#0C4A6E',
+    lineHeight: 19,
+  },
+  adviceCard: {
+    backgroundColor: '#FFFBEB',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+  },
+  adviceHeader: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#92400E',
+    marginBottom: 4,
+  },
+  adviceText: {
+    fontSize: 13,
+    color: '#78350F',
+    lineHeight: 19,
+  },
+  resultActions: {
+    gap: 10,
+    marginTop: 4,
+  },
+  actionPrimaryButton: {
+    minHeight: 48,
+    backgroundColor: '#8B5E3C',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  actionPrimaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  actionSecondaryButton: {
+    minHeight: 48,
+    backgroundColor: '#3A6073',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  actionSecondaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  restartIdentifierButton: {
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  restartIdentifierButtonText: {
+    fontSize: 14,
+    color: '#666666',
+    fontWeight: '600',
   },
 });

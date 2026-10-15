@@ -27,6 +27,7 @@ import {
 } from '../yarn-usage-estimator';
 import { parseRowInstruction } from '../pattern-parser';
 import { processDigitalCrownDelta } from '../apple-watch-service';
+import { identifyStitch } from '../stitch-identifier';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -197,5 +198,25 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     const durationMs = performance.now() - t0;
 
     expect(durationMs).toBeLessThan(30);
+  });
+
+  test('10 000 deterministycznych rozpoznań ściegu w < 20 ms', () => {
+    const scenarios: Record<string, string>[] = [
+      { surface_texture: 'v_columns', reversibility: 'different_ridges', edge_and_stretch: 'curls' },
+      { surface_texture: 'cables', reversibility: 'flat_background' },
+      { surface_texture: 'holes', edge_and_stretch: 'airy_lace' },
+      { surface_texture: 'ribs', edge_and_stretch: 'elastic_accordion' },
+      { surface_texture: 'crochet_knots' },
+      { surface_texture: 'grains', reversibility: 'identical' },
+    ];
+
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      const answers = scenarios[i % scenarios.length];
+      identifyStitch(answers);
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(20);
   });
 });

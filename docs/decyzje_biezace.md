@@ -227,11 +227,33 @@
          - Bezkonfliktowa synchronizacja dwukierunkowa paczek zdarzeń (`processIncomingSync`).
          - Równoległe asynchroniczne zapisy do bazy SQLite (Concurrent repository writes).
     - **Podsumowanie Wyników Pokrycia i Jakości:**
-      * **Test Suites: 41/41 zdanych (100% pass)**.
-      * **Tests: 268/268 zdanych (100% pass)**.
+      * **Test Suites: 42/42 zdanych (100% pass)**.
+      * **Tests: 286/286 zdanych (100% pass)**.
       * **Pokrycie linii (Lines Coverage): 100.00%** w całym projekcie!
       * **Czystość typowania:** 0 błędów w weryfikacji TypeScript (`npx tsc --noEmit`).
       * **Dedykowane skrypty NPM:** `npm run test:pbt`, `npm run test:perf`, `npm run test:a11y`, `npm run test:resilience`, `npm run test:concurrency`, `npm run test:corpus`, `npm run check:corpus`, `npm run test:coverage`.
+
+* **DEC-16 Implementacja: Wizualny Klucz Identyfikacji Ściegu „Co widzisz?” (15.10.2026):**
+  - **Architektura:** W pełni deterministyczny silnik domenowy (`src/core/stitch-identifier.ts`), bez użycia AI (inwariant ZP-05). Drzewo decyzyjne oparte na 3 cechach obserwowanych dzianiny:
+    1. *Struktura powierzchni* (`surface_texture`): kolumienki V, fale/grzbiety, żeberka pionowe, ziarna ryżu, warkocze, ażur/dziurki, pętelki szydełkowe.
+    2. *Rewers / Odwracalność* (`reversibility`): grzbiety lewe, identyczny rewers, negatyw żeberka, gładkie tło pod warkoczem, identyczna ziarnistość.
+    3. *Krawędź i elastyczność* (`edge_and_stretch`): rolowanie krawędzi, stabilna płaska krawędź, sprężysta harmonijka, zwarta nieelastyczna, przewiewna firanka.
+  - **Obsługiwane profile ściegów (8 profili):**
+    - Ścieg dżersejowy / pończoszniczy (`stockinette`),
+    - Ścieg dżersejowy lewy (`reverse_stockinette`),
+    - Ścieg francuski (`garter`),
+    - Ściągacz 1x1 / 2x2 (`ribbing`),
+    - Ścieg ryżowy / perłowy (`seed_stitch`),
+    - Warkocz klasyczny (`cable_c6f`),
+    - Ażur z narzutami (`lace_eyelet`),
+    - Splot szydełkowy bazowy (`crochet_basic`).
+  - **Interfejs użytkownika:** Nowa zakładka w module Nauka (`app/(tabs)/learn.tsx`) — `🔍 Co widzisz?`.
+    - Płynny kreator krok po kroku z nawigacją wstecz i resetem.
+    - Karta wynikowa z poziomem dopasowania (`confidence`), cechami diagnostycznymi, poradą technologiczną oraz szybkimi akcjami (przejście do słownika i trenażera wzorców).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **100.00% Line Coverage** w całym repozytorium (w tym `stitch-identifier.ts` 100% stmts/branch/funcs/lines).
+    - **Test Suites: 42/42 zdanych, 286/286 testów zdanych**.
+    - Zaktualizowane testy PBT (`property-based.test.ts`), Dostępności & HIG (`a11y-contracts.test.tsx`), Strażników architektury (`interaction-guards.test.ts`), Budżetów wydajnościowych (`perf-budget.test.ts` — 10 000 rozpoznań w < 20 ms) oraz Odporności (`resilience.test.ts`).
 
 
 
