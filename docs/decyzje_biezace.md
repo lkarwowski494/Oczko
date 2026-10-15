@@ -60,6 +60,18 @@
 * **ZAS-TYMCZ Tymczasowa reguła wykonawcza właściciela (15.10.2026):**
   * *Rozstrzygnięcie:* Agent automatycznie przyjmuje rekomendowane opcje decyzyjne i nieprzerwanie kontynuuje implementację kolejnych modułów MVP, raportując twarde dowody (testy, CI) oraz aktualny stan po każdym kroku (obowiązuje do odwołania przez właściciela).
 
+* **ZAS-QA-01 Bezwzględny standard jakości i wieloperspektywicznych testów (Reguła właściciela — 15.10.2026):**
+  * *Rozstrzygnięcie:* **Każda nowa funkcja, zmiana logiki lub modyfikacja interfejsu w projekcie Oczko bezwzględnie musi otrzymać lub zaktualizować zestaw testów automatycznych w standardzie i zakresie repozytorium `organizer`**.
+  * *Obowiązujące wymogi dla każdego zadania i commita:*
+    1. **100% Pokrycia Linii (100% Line Coverage):** Żaden plik domenowy, serwisowy ani komponentowy nie może spaść poniżej 100% pokrycia linii (`npm run test:coverage`).
+    2. **Property-Based Testing (PBT / `fast-check`):** Nowe algorytmy obliczeniowe i operacje na stanach muszą posiadać testy niezmienników matematycznych na tysiącach generowanych danych wejściowych (`npm run test:pbt`).
+    3. **Kontrakty Dostępności i Apple HIG:** Każdy nowy widok/przycisk/modal musi spełniać kryteria obszaru dotyku $\ge 44 \times 44\,\text{pt}$, etykiety VoiceOver i odporność modali (`npm run test:a11y`).
+    4. **Strażnicy Architektury (Architecture & Security Guards):** Sprawdzanie sparametryzowania SQL (`?`) oraz zachowania czystości domeny (brak zależności UI w `src/core/`).
+    5. **Budżety Wydajnościowe (Performance Budget):** Obliczenia, filtry i replay event-sourcingu muszą mieścić się w rygorystycznych limitach czasu CPU (`npm run test:perf`).
+    6. **Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection):** Obsługa wartości brzegowych, dzielenia przez zero, uszkodzonych plików JSON oraz transakcyjnego rollbacku bez częściowych zapisów (`npm run test:resilience`).
+    7. **Współbieżność i Wyścigi (Concurrency & Race Conditions):** Weryfikacja determinizmu zdarzeń submilisekundowych, buforowania offline i bezkonfliktowej synchronizacji (`npm run test:concurrency`).
+    8. **Zero Błędów Typowania i Zielone CI:** `npx tsc --noEmit` musi kończyć się z kodem 0, a każdy pipeline GitHub Actions musi przejść na zielono.
+
 ---
 
 ## 4. Postęp implementacji MVP (Tydzień 0/1)

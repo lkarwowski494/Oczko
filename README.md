@@ -126,19 +126,21 @@ flowchart LR
 
 ---
 
-## 🧪 9 Warstw Weryfikacji Jakości (Testing Rigor & DoD)
+## 🧪 Wieloperspektywiczna Matryca Testów (Testing Rigor & DoD)
 
-Projekt realizowany jest zgodnie z rygorystyczną definicją ukończenia (DoD):
+Projekt realizowany jest zgodnie ze ścisłą definicją ukończenia (DoD) wzorowaną na standardzie repozytorium [organizer](https://github.com/lkarwowski494/organizer):
 
-1. **100% Pokrycia Linii Kodu (100% Lines Coverage):** Bezwzględny wymóg pełnego pokrycia testami dla wszystkich warstw aplikacji (`app/(tabs)/`, `src/components/`, `src/screens/`, `src/core/`).
-2. **Zero Regresji i 100% Testów Zielonych:** Wszystkie 34 pakiety testowe i 224 testy jednostkowe, integracyjne i komponentowe kończą się statusem PASS.
-3. **Architektura Czystej Domeny:** Logika biznesowa (`src/core/`) jest całkowicie odizolowana od frameworka React Native i testowana w środowisku Node.js z bazą SQLite w pamięci RAM.
-4. **Symulacja Awarii i Restartu:** Testy sprawdzające poprawność odtworzenia stanu licznika i robótek wyłącznie z historii bazy SQLite po symulowanym restarcie aplikacji.
-5. **Rygorystyczny Test Debounce (BR-LICZ-007):** Automatyczna weryfikacja eliminacji fałszywych kliknięć o odstępie $< 300\,\text{ms}$.
-6. **Dostępność Cyfrowa (WCAG AAA & Apple HIG):** Minimalna powierzchnia dotyku $44 \times 44\,\text{pt}$, wysoki kontrast kolorów oraz etykiety semantyczne dla VoiceOver.
-7. **Standaryzacja Craft Yarn Council (CYC):** Testy weryfikujące zgodność klasyfikacji grubości włóczek, rekomendowanych rozmiarów drutów i symboli diagramów z międzynarodowymi normami.
-8. **Statyczna Kontrola Typów TypeScript:** Weryfikacja całego projektu poleceniem `npx tsc --noEmit` kończąca się bez jakichkolwiek błędów czy ostrzeżeń typowania.
-9. **Ciągła Integracja GitHub Actions (CI):** Automatyczna walidacja każdego commita i pull requesta na branchu `main` w środowisku CI.
+1. **100% Pokrycia Linii Kodu (100% Lines Coverage):** Bezwzględny wymóg pełnego pokrycia testami dla wszystkich plików w projekcie (`app/(tabs)/`, `src/components/`, `src/screens/`, `src/core/`).
+2. **Zero Regresji i 100% Testów Zielonych:** Wszystkie **41 pakietów testowych** i **268 testów** kończą się statusem PASS.
+3. **Property-Based Testing (PBT / `fast-check`):** Testowanie niezmienników matematycznych (odwracalność zdarzeń $V + \Delta - \Delta = V$, monotoniczność debouncera, symetria konwersji jednostek $cm \leftrightarrow inch$, liniowe skalowanie metrażu) na tysiącach losowych danych wejściowych.
+4. **Differential Testing / Niezależny Korpus Matematyczny:** Równoległa walidacja krzyżowa algorytmów dziewiarskich z niezależną referencyjną implementacją w Pythonie 3.14 (`scripts/gen-gauge-corpus.py` ↔ `gauge-corpus.test.ts`).
+5. **Dostępność Cyfrowa i Kontrakty Apple HIG:** Minimalna powierzchnia dotyku $\ge 44 \times 44\,\text{pt}$, wysoki kontrast kolorów (WCAG AAA $\ge 7.0:1$), czytnik PDF w trybie wysokiego kontrastu oraz etykiety semantyczne VoiceOver.
+6. **Strażnicy Architektury i Bezpieczeństwa:** Automatyczna weryfikacja statyczna ochrony przed SQL Injection (100% sparametryzowanych zapytań `?`), czystości architektury domenowej (`src/core/` wolne od importów `react-native`) i odporności modali.
+7. **Budżety Wydajnościowe CPU (Performance Budget):** Gwarancja złożoności obliczeniowej $O(N)$ i brak wąskich gardeł (replay 5 000 zdarzeń $< 60\,\text{ms}$, filtrowanie 2 500 włóczek $< 40\,\text{ms}$, 10 000 kalkulacji próbki $< 50\,\text{ms}$).
+8. **Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection):** Testowanie transakcyjnego wycofywania błędów w SQLite (Zero Partial Writes), odrzucania uszkodzonych i sfałszowanych kopii zapasowych JSON oraz odporności na anomalie zegara systemowego (Clock Skew).
+9. **Współbieżność i Wyścigi (Concurrency & Race Conditions):** Rozstrzyganie remisów submilisekundowych, buforowanie i uzgadnianie kolejki zdarzeń offline zegarka (`WatchOfflineQueue`) oraz odporność na 25 równoległych asynchronicznych zapisów do SQLite.
+10. **Statyczna Kontrola Typów TypeScript:** Weryfikacja całego projektu poleceniem `npx tsc --noEmit` kończąca się bez jakichkolwiek błędów czy ostrzeżeń typowania.
+11. **Ciągła Integracja GitHub Actions (CI):** Automatyczna walidacja każdego commita i pull requesta na branchu `main` w środowisku CI.
 
 ---
 
@@ -150,14 +152,23 @@ Wymagane środowisko: Node.js 20+ oraz npm.
 # Instalacja zależności
 npm install
 
-# Pełna weryfikacja projektu (kontrola typów TypeScript + testy jednostkowe)
+# Pełna weryfikacja projektu (kontrola typów TypeScript + 100% testy z raportem pokrycia)
 npm run verify
 
-# Uruchomienie testów jednostkowych i integracyjnych Jest
+# Uruchomienie wszystkich 41 pakietów testowych Jest
 npm test
 
 # Uruchomienie testów z pełnym raportem pokrycia kodu (Coverage)
-npm test -- --coverage --forceExit
+npm run test:coverage
+
+# Dedykowane testy wieloperspektywiczne:
+npm run test:pbt           # Property-Based Testing (fast-check)
+npm run test:perf          # Budżety wydajnościowe CPU
+npm run test:a11y          # Kontrakty dostępności Apple HIG (>= 44x44 pt)
+npm run test:resilience    # Odporność, rollback transakcji i fault injection
+npm run test:concurrency   # Współbieżność, Apple Watch offline queue i wyścigi
+npm run test:corpus        # Testy różnicowe z korpusem referencyjnym
+npm run check:corpus       # Regeneracja korpusu w Pythonie 3.14
 
 # Statyczna kontrola typów TypeScript
 npm run typecheck
