@@ -7,14 +7,6 @@
     "test": "jest",
     "typecheck": "tsc --noEmit"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx"],
-    "transform": {
-      "^.+\\.(ts|tsx)$": ["ts-jest", { "tsconfig": "tsconfig.json" }]
-    }
-  },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.0",
