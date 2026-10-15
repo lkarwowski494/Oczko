@@ -20,7 +20,7 @@ export default function MainCounterScreen() {
   const [counterState, setCounterState] = useState(facade.getCounterState('counter_main'));
 
   const handleIncrement = () => {
-    facade.stepCounter('counter_main', 'increment', 'iphone', Date.now());
+    facade.stepCounter('counter_main', 'increment', 'iphone', Date.now(), 300);
     setCounterState(facade.getCounterState('counter_main'));
   };
 

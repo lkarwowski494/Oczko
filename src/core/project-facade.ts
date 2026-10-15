@@ -2,7 +2,7 @@
  * Oczko Core — Fasada projektu (Orkiestrator spajający logikę, liczniki i reguły)
  */
 
-import { CounterConfig, CounterEvent, computeCounterState, recordCounterStep, createUndoEvent } from './counter-engine';
+import { CounterConfig, CounterEvent, DeviceSource, computeCounterState, recordCounterStep, createUndoEvent } from './counter-engine';
 import { calculateFromGauge, evaluateGarmentEase } from './domain-rules';
 import { parseRowInstruction } from './pattern-parser';
 
@@ -29,10 +29,27 @@ export class ProjectManagerFacade {
     this.context.counters.set(config.id, config);
   }
 
-  public stepCounter(counterId: string, direction: 'increment' | 'decrement', source: 'iphone' | 'apple_watch' | 'garmin', timestampMs: number): void {
+  public loadExistingEvents(events: CounterEvent[]): void {
+    this.context.events = [...events];
+  }
+
+  public getLastEventTimestamp(counterId: string): number | undefined {
+    const counterEvents = this.context.events.filter((e) => e.counterId === counterId);
+    if (counterEvents.length === 0) return undefined;
+    return Math.max(...counterEvents.map((e) => e.timestampMs));
+  }
+
+  public stepCounter(
+    counterId: string,
+    direction: 'increment' | 'decrement',
+    source: DeviceSource,
+    timestampMs: number,
+    debounceThresholdMs: number = 0
+  ): CounterEvent[] {
     const config = this.context.counters.get(counterId);
     if (!config) throw new Error(`Nie znalezniono licznika o ID: ${counterId}`);
 
+    const lastTimestamp = this.getLastEventTimestamp(counterId);
     const linkedConfigs = Array.from(this.context.counters.values());
     const newEvents = recordCounterStep({
       primaryConfig: config,
@@ -40,12 +57,21 @@ export class ProjectManagerFacade {
       direction,
       source,
       timestampMs,
+      lastEventTimestampMs: lastTimestamp,
+      debounceThresholdMs,
     });
 
-    this.context.events.push(...newEvents);
+    if (newEvents.length > 0) {
+      this.context.events.push(...newEvents);
+    }
+    return newEvents;
   }
 
-  public undoLast(counterId: string, source: 'iphone' | 'apple_watch' | 'garmin', timestampMs: number): boolean {
+  public createAndApplyUndo(
+    counterId: string,
+    source: DeviceSource,
+    timestampMs: number
+  ): CounterEvent | null {
     const undoEvent = createUndoEvent({
       counterId,
       events: this.context.events,
@@ -55,9 +81,13 @@ export class ProjectManagerFacade {
 
     if (undoEvent) {
       this.context.events.push(undoEvent);
-      return true;
+      return undoEvent;
     }
-    return false;
+    return null;
+  }
+
+  public undoLast(counterId: string, source: DeviceSource, timestampMs: number): boolean {
+    return this.createAndApplyUndo(counterId, source, timestampMs) !== null;
   }
 
   public getCounterState(counterId: string) {

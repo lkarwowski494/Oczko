@@ -53,3 +53,13 @@
 * **DEC-18 Języki terminologii w MVP:** Opcja A (EN-US/UK, DE, FR, polskie druty; polskie szydełko opisowo).
 * **DEC-21 iPad i Mac:** Opcja A (iPhone w MVP, iPad w 1.2; Mac wyłączony w ASC do czasu testu).
 * **DEC-24 Glify symboli:** Opcja A (własne glify wektorowe + przypis do standardu + równoległe zapytanie o licencję).
+
+---
+
+## 4. Postęp implementacji MVP (Tydzień 0/1)
+* **Zrealizowane wymagania:**
+  * **BR-LICZ-001 & 003**: Silnik licznika, obsługa cykli i powtórzeń, progi powiadomień (`src/core/counter-engine.ts`).
+  * **BR-LICZ-004**: Obsługa niezawodnego cofania (UNDO) ze znakowaniem zdarzeń anulowanych.
+  * **BR-LICZ-007**: Ochrona przed podwójnym liczeniem (debounce 300 ms dla manualnych stuknięć, detekcja potencjalnych duplikatów między urządzeniami <= 2s).
+  * **BR-LICZ-008 & BR-DANE-001**: Trwałość w SQLite (`src/core/database.ts`, `src/core/project-repository.ts`), niezmienny dziennik zdarzeń (append-only), pełne odtwarzanie stanu po awarii i restarcie.
+  * **Stan testów:** 7 zestawów testowych, 21 testów zaliczonych (100% zielone lokalnie i w CI).

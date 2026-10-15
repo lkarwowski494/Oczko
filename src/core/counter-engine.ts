@@ -3,7 +3,7 @@
  */
 
 export type DeviceSource = 'iphone' | 'apple_watch' | 'garmin' | 'voice' | 'gesture';
-export type CounterEventType = 'INCREMENT' | 'DECREMENT' | 'RESET' | 'UNDO';
+export type CounterEventType = 'INCREMENT' | 'DECREMENT' | 'RESET' | 'UNDO' | 'SET';
 
 export interface CounterConfig {
   id: string;
@@ -67,6 +67,8 @@ export function computeCounterState(
     activeEventsCount++;
     if (ev.type === 'RESET') {
       rawValue = initial;
+    } else if (ev.type === 'SET') {
+      rawValue = Math.max(0, ev.delta);
     } else {
       rawValue = Math.max(0, rawValue + ev.delta);
     }
@@ -105,12 +107,35 @@ export function computeCounterState(
   };
 }
 
+export function shouldDebounceClick(
+  lastTimestampMs: number | undefined,
+  currentTimestampMs: number,
+  thresholdMs: number = 300
+): boolean {
+  if (lastTimestampMs === undefined || thresholdMs <= 0) return false;
+  return currentTimestampMs - lastTimestampMs < thresholdMs;
+}
+
+export function checkPossibleInterDeviceDuplicate(
+  prevEvent: CounterEvent | undefined,
+  currentEvent: CounterEvent,
+  windowMs: number = 2000
+): boolean {
+  if (!prevEvent) return false;
+  if (prevEvent.counterId !== currentEvent.counterId) return false;
+  if (prevEvent.type !== 'INCREMENT' || currentEvent.type !== 'INCREMENT') return false;
+  if (prevEvent.source === currentEvent.source) return false;
+  return Math.abs(currentEvent.timestampMs - prevEvent.timestampMs) <= windowMs;
+}
+
 export function recordCounterStep(params: {
   primaryConfig: CounterConfig;
   linkedConfigs?: readonly CounterConfig[];
   direction: 'increment' | 'decrement';
   source: DeviceSource;
   timestampMs: number;
+  lastEventTimestampMs?: number;
+  debounceThresholdMs?: number;
   idPrefix?: string;
 }): CounterEvent[] {
   const {
@@ -119,8 +144,14 @@ export function recordCounterStep(params: {
     direction,
     source,
     timestampMs,
+    lastEventTimestampMs,
+    debounceThresholdMs = 0,
     idPrefix = 'ev',
   } = params;
+
+  if (shouldDebounceClick(lastEventTimestampMs, timestampMs, debounceThresholdMs)) {
+    return [];
+  }
 
   const allConfigs = [
     primaryConfig,

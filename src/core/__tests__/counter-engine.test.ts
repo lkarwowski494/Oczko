@@ -90,4 +90,83 @@ describe('Oczko Core — Silnik licznika i dziennik zdarzeń (BR-LICZ)', () => {
     expect(merged).toHaveLength(2); // zdeduplikowało ev_1
     expect(computeCounterState(mainCounter, merged).rawValue).toBe(2);
   });
+
+  test('BR-LICZ-007: ochrona przed podwójnym liczeniem (seria 10 stuknięć co 150 ms)', () => {
+    // Seria 10 stuknięć co 150 ms przy progu 300 ms -> powinno dać dokładnie 5 zdarzeń
+    let recordedEventsThreshold300: CounterEvent[] = [];
+    let lastAcceptedTime: number | undefined = undefined;
+
+    for (let i = 0; i < 10; i++) {
+      const now = 1000 + i * 150;
+      const evs = recordCounterStep({
+        primaryConfig: mainCounter,
+        direction: 'increment',
+        source: 'iphone',
+        timestampMs: now,
+        lastEventTimestampMs: lastAcceptedTime,
+        debounceThresholdMs: 300,
+        idPrefix: `tap_${i}`,
+      });
+      if (evs.length > 0) {
+        recordedEventsThreshold300.push(...evs);
+        lastAcceptedTime = now;
+      }
+    }
+    expect(recordedEventsThreshold300).toHaveLength(5);
+
+    // Przy progu 0 ms -> powinno zarejestrować wszystkie 10 zdarzeń
+    let recordedEventsThreshold0: CounterEvent[] = [];
+    lastAcceptedTime = undefined;
+
+    for (let i = 0; i < 10; i++) {
+      const now = 1000 + i * 150;
+      const evs = recordCounterStep({
+        primaryConfig: mainCounter,
+        direction: 'increment',
+        source: 'iphone',
+        timestampMs: now,
+        lastEventTimestampMs: lastAcceptedTime,
+        debounceThresholdMs: 0,
+        idPrefix: `tap0_${i}`,
+      });
+      if (evs.length > 0) {
+        recordedEventsThreshold0.push(...evs);
+        lastAcceptedTime = now;
+      }
+    }
+    expect(recordedEventsThreshold0).toHaveLength(10);
+  });
+
+  test('BR-LICZ-007: wykrywanie możliwego podwójnego naliczenia między urządzeniami (odstęp <= 2s)', () => {
+    const ev1: CounterEvent = {
+      id: 'ev_watch_1',
+      counterId: 'cnt_main',
+      type: 'INCREMENT',
+      delta: 1,
+      source: 'apple_watch',
+      timestampMs: 5000,
+    };
+
+    const ev2Close: CounterEvent = {
+      id: 'ev_phone_1',
+      counterId: 'cnt_main',
+      type: 'INCREMENT',
+      delta: 1,
+      source: 'iphone',
+      timestampMs: 6500, // 1.5s później z innego urządzenia
+    };
+
+    const ev3Distant: CounterEvent = {
+      id: 'ev_phone_2',
+      counterId: 'cnt_main',
+      type: 'INCREMENT',
+      delta: 1,
+      source: 'iphone',
+      timestampMs: 7500, // 2.5s po pierwszym
+    };
+
+    const { checkPossibleInterDeviceDuplicate } = require('../counter-engine');
+    expect(checkPossibleInterDeviceDuplicate(ev1, ev2Close)).toBe(true);
+    expect(checkPossibleInterDeviceDuplicate(ev1, ev3Distant)).toBe(false);
+  });
 });
