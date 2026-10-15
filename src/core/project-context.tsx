@@ -317,3 +317,7 @@ export function useProject(): ProjectContextValue {
   }
   return context;
 }
+
+export function useOptionalProject(): ProjectContextValue | null {
+  return useContext(ProjectContext);
+}

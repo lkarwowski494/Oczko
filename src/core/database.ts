@@ -166,6 +166,14 @@ export function createInMemoryDatabase(): DatabaseClient {
         return { changes: deleted ? 1 : 0, lastInsertRowId: 0 };
       }
 
+      if (/^DELETE\s+FROM\s+(\w+)\s*;?$/i.test(clean)) {
+        const match = clean.match(/^DELETE\s+FROM\s+(\w+)/i);
+        const tbl = match ? match[1] : '';
+        const count = getTable(tbl).size;
+        getTable(tbl).clear();
+        return { changes: count, lastInsertRowId: 0 };
+      }
+
       return { changes: 0, lastInsertRowId: 0 };
     },
 
@@ -195,6 +203,10 @@ export function createInMemoryDatabase(): DatabaseClient {
         return rows as unknown as T[];
       }
 
+      if (/FROM\s+project_parts/i.test(clean)) {
+        return Array.from(getTable('project_parts').values()) as unknown as T[];
+      }
+
       if (/FROM\s+counters\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
         const id = params[0] as string;
         const row = getTable('counters').get(id);
@@ -207,12 +219,20 @@ export function createInMemoryDatabase(): DatabaseClient {
         return rows as unknown as T[];
       }
 
+      if (/FROM\s+counters/i.test(clean)) {
+        return Array.from(getTable('counters').values()) as unknown as T[];
+      }
+
       if (/FROM\s+counter_events\s+WHERE\s+counter_id\s*=\s*\?/i.test(clean)) {
         const counterId = params[0] as string;
         const rows = Array.from(getTable('counter_events').values())
           .filter((e) => e.counter_id === counterId)
           .sort((a, b) => ((a.created_at_ms as number) - (b.created_at_ms as number)));
         return rows as unknown as T[];
+      }
+
+      if (/FROM\s+counter_events/i.test(clean)) {
+        return Array.from(getTable('counter_events').values()) as unknown as T[];
       }
 
       if (/FROM\s+stash_yarns\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {

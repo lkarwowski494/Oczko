@@ -88,5 +88,11 @@
     - Transakcyjne i spójne wycofywanie (UNDO) kroku nadrzędnego wraz z powiązanymi krokami podrzędnymi w pojedynczej transakcji SQLite (`createAndApplyUndoWithLinked`).
     - Interfejs `MainCounterScreen`: poziomy pasek wyboru części robótki (chipsy) z licznikami rzędów, karty powiązanych liczników z wyliczaniem rzędu w powtórzeniu (np. `Rząd 4/6 (Powt. 2)`), plakietki ostrzeżeń/przypomnień oraz modal szybkiego dodawania wzorów/warkoczy.
     - Ekran `app/(tabs)/projects.tsx`: podgląd wszystkich części i ich postępu dla każdego projektu oraz modal dodawania nowej części.
-  * **Stan testów:** 14 zestawów testowych, 45 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-10, ZP-06, BR-DANE-002 & Kopia Zapasowa Bazy SQLite (Export / Import JSON)**:
+    - Serwis kopii bezpieczeństwa `src/core/backup-service.ts` realizujący pełny eksport wszystkich 6 tabel bazy SQLite wraz z metadanymi wersji, bundle ID i liczbą rekordów.
+    - Ścisła walidacja strukturalna formatu pliku przed przywróceniem (`validateBackupData`).
+    - Atomowe, transakcyjne przywracanie stanu z kopii zapasowej (`importDatabaseBackup`) z kaskadowym czyszczeniem i odtwarzaniem powiązań kluczy obcych.
+    - Interfejs `app/(tabs)/settings.tsx`: kafel statystyk bazy w czasie rzeczywistym (liczba projektów, zdarzeń, włóczek, narzędzi), natywny eksport przez systemowy Share Sheet (zapis do plików, iCloud, AirDrop) oraz modal bezpiecznego przywracania z podglądem błędów walidacji.
+  * **Stan testów:** 15 zestawów testowych, 48 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+
 

@@ -54,7 +54,7 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     expect(allText).toContain('Oczko prawe');
   });
 
-  test('Ekran Ustawienia poprawnie renderuje konfigurację debounce i sekcję o aplikacji', () => {
+  test('Ekran Ustawienia poprawnie renderuje konfigurację debounce, kopię zapasową i sekcję o aplikacji', () => {
     let tree: any;
     act(() => {
       tree = renderer.create(<SettingsScreen />);
@@ -64,5 +64,9 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     expect(allText).toContain('LICZNIK & STUKNIĘCIA');
     expect(allText).toContain('com.apps4brew.knitting');
     expect(allText).toMatch(/300\s*ms/);
+    expect(allText).toContain('Eksportuj kopię');
+    expect(allText).toContain('Przywróć kopię');
+    expect(allText).toContain('Stan lokalnej bazy SQLite');
   });
 });
+
