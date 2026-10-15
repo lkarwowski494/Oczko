@@ -210,7 +210,7 @@
          - Ograniczenia czasu procesora z mikrosekundową precyzją:
            * Replay 5 000 zdarzeń licznika (Event Sourcing): $< 60\,\text{ms}$ (rzeczywisty czas: $4\,\text{ms}$).
            * Złożone filtrowanie i agregacja metryk 2 500 włóczek: $< 40\,\text{ms}$ (rzeczywisty czas: $2\,\text{ms}$).
-           * 10 000 kalkulacji próbki i wskaźnika Yarn Grist: $< 50\,\text{ms}$ (rzeczywisty czas: $9\,\text{ms}$).
+           * 10 000 kalkulacji próbki i wskaźnika Yarn Grist: $< 100\,\text{ms}$ (rzeczywisty czas: $9\,\text{ms}$).
            * Analiza leksykalna i parsowanie 500 wierszy wzoru: $< 40\,\text{ms}$ (rzeczywisty czas: $1\,\text{ms}$).
            * 10 000 obrotów cyfrowej koronki (Digital Crown): $< 25\,\text{ms}$ (rzeczywisty czas: $2\,\text{ms}$).
       6. **Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection):**
