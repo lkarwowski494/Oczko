@@ -320,7 +320,23 @@ export function createInMemoryDatabase(): DatabaseClient {
     },
 
     async withTransactionAsync<T>(action: () => Promise<T>): Promise<T> {
-      return action();
+      const snapshot = new Map<string, Map<string, Record<string, unknown>>>();
+      for (const [tbl, data] of tables.entries()) {
+        const copy = new Map<string, Record<string, unknown>>();
+        for (const [k, v] of data.entries()) {
+          copy.set(k, { ...v });
+        }
+        snapshot.set(tbl, copy);
+      }
+      try {
+        return await action();
+      } catch (err) {
+        tables.clear();
+        for (const [tbl, data] of snapshot.entries()) {
+          tables.set(tbl, data);
+        }
+        throw err;
+      }
     },
   };
 

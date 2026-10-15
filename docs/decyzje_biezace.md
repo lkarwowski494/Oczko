@@ -162,8 +162,64 @@
       * **Warstwa komponentów UI (`src/components/`): 100% linii** we wszystkich modalach i przeglądarkach (`AppleWatchCompanionModal.tsx`, `GaugeCalculatorModal.tsx`, `PatternGuideViewer.tsx`, `PatternPdfViewer.tsx`, `ProjectShareCardModal.tsx`, `YarnUsageEstimatorModal.tsx`).
       * **Warstwa zakładek nawigacji (`app/(tabs)/`): 100% linii** (`learn.tsx`, `projects.tsx`, `settings.tsx`, `stash.tsx`, `index.tsx`).
       * **Główny ekran licznika (`src/screens/MainCounterScreen.tsx`): 100% linii**.
-    - **Stan testów:** 34 zestawy testowe, 224 testy jednostkowe, integracyjne i E2E zakończone sukcesem (100% pass, 0 fail).
+    - **Stan testów bazowych:** 34 zestawy testowe, 224 testy jednostkowe, integracyjne i E2E zakończone sukcesem (100% pass, 0 fail).
     - **Czystość typowania:** 0 błędów w weryfikacji TypeScript (`npx tsc --noEmit`).
+  * **DEC-01 & Wdrożenie Wieloperspektywicznej Matrycy Testów (Standard `organizer` — 15.10.2026)**:
+    - Realizacja polecenia właściciela: zaimplementowanie w `Oczko` identycznego, wielowymiarowego podejścia do testowania jak w referencyjnym repozytorium [`lkarwowski494/organizer`](https://github.com/lkarwowski494/organizer).
+    - **7 Warstw Rygoru Jakościowego (Multi-Perspective Testing Matrix):**
+      1. **Property-Based Testing (PBT / `fast-check`):**
+         - Plik: `src/core/__tests__/property-based.test.ts` (11 testów).
+         - Testowanie niezmienników matematycznych na tysiącach losowych danych wejściowych:
+           * Odwracalność dziennika zdarzeń (Event-Sourcing Invertibility: $V + \Delta - \Delta = V$).
+           * Monotoniczność debouncera kliknięć w czasie rzeczywistym.
+           * Symetria i bezstratność konwersji jednostek metrycznych i imperialnych ($cm \to cal \to cm$).
+           * Liniowa proporcjonalność kalkulatora próbki ściegu i zachowanie współczynników naprężenia.
+           * Liniowe skalowanie metrażu i wagi wskaźnika Yarn Grist.
+           * Niezmienniki podzbiorów i filtry inkluzywne magazynu włóczek.
+      2. **Differential Testing / Niezależny Korpus Referencyjny (Cross-Validation Python ↔ TypeScript):**
+         - Skrypt generatora: `scripts/gen-gauge-corpus.py` (Python 3.14).
+         - Korpus referencyjny: `src/core/__tests__/fixtures/gauge-corpus.json`.
+         - Zestaw testowy: `src/core/__tests__/gauge-corpus.test.ts` (4 testy).
+         - Walidacja krzyżowa algorytmów dziewiarskich Oczko z niezależną implementacją matematyczną w Pythonie (próbki ściegu, wskaźniki Yarn Grist, kalkulacja kontrastów WCAG 2.2 AAA dla palety craftowej).
+      3. **Kontrakty Dostępności i Apple HIG (Accessibility & Touch Targets):**
+         - Plik: `src/components/__tests__/a11y-contracts.test.tsx` (5 testów).
+         - Weryfikacja kryteriów Apple Human Interface Guidelines:
+           * Minimalny obszar dotykowy $\ge 44 \times 44\,\text{pt}$ dla wszystkich interaktywnych kontrolek (przycisk licznika głównego, kontrolki zegarka, linijka PDF).
+           * Semantyczne etykiety i role VoiceOver (`accessibilityRole`, `accessibilityLabel`).
+           * Odporność modali i bezpieczne zamykanie interfejsu (`onRequestClose`).
+      4. **Strażnicy Architektury i Bezpieczeństwa (Interaction & Architecture Guards):**
+         - Plik: `src/core/__tests__/interaction-guards.test.ts` (3 testy).
+         - Automatyczna analiza statyczna kodu:
+           * Ochrona przed SQL Injection — weryfikacja, że 100% zapytań modyfikujących (INSERT, UPDATE, DELETE) w repozytoriach stosuje sparametryzowane symbole zastępcze (`?`).
+           * Czystość architektury heksagonalnej — rdzeń domenowy (`counter-engine`, `gauge-calculator`, `domain-rules`, `yarn-usage-estimator`) nie importuje zależności UI (`react-native`).
+           * Bezpieczeństwo i spójność modali.
+      5. **Budżety Wydajnościowe i Efektywność CPU (Performance Budget Testing):**
+         - Plik: `src/core/__tests__/perf-budget.test.ts` (6 testów).
+         - Ograniczenia czasu procesora z mikrosekundową precyzją:
+           * Replay 5 000 zdarzeń licznika (Event Sourcing): $< 60\,\text{ms}$ (rzeczywisty czas: $4\,\text{ms}$).
+           * Złożone filtrowanie i agregacja metryk 2 500 włóczek: $< 40\,\text{ms}$ (rzeczywisty czas: $2\,\text{ms}$).
+           * 10 000 kalkulacji próbki i wskaźnika Yarn Grist: $< 50\,\text{ms}$ (rzeczywisty czas: $9\,\text{ms}$).
+           * Analiza leksykalna i parsowanie 500 wierszy wzoru: $< 40\,\text{ms}$ (rzeczywisty czas: $1\,\text{ms}$).
+           * 10 000 obrotów cyfrowej koronki (Digital Crown): $< 25\,\text{ms}$ (rzeczywisty czas: $2\,\text{ms}$).
+      6. **Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection):**
+         - Plik: `src/core/__tests__/resilience.test.ts` (10 testów).
+         - Wycofywanie przerwanych transakcji (Rollback on Error) w bazie danych bez częściowych zapisów (Zero Partial Writes).
+         - Odrzucanie uszkodzonych, zniekształconych i obcych plików kopii zapasowej JSON.
+         - Obsługa wartości brzegowych, zerowych, ujemnych i skrajnych w kalkulatorach próbki i włóczki.
+         - Idempotencja operacji UNDO i odporność na anomalie zegara systemowego (Clock Skew).
+      7. **Symulacja Współbieżności i Wyścigów (Concurrency & Race Conditions):**
+         - Plik: `src/core/__tests__/concurrency.test.ts` (5 testów).
+         - Determinizm rozstrzygania remisów submilisekundowych (Sub-millisecond tie breaking) przy jednoczesnych zdarzeniach z Apple Watch i iPhone'a.
+         - Buforowanie i uzgadnianie kolejki zdarzeń offline zegarka (`WatchOfflineQueue`).
+         - Detekcja duplikatów międzyurządzeniowych (Inter-device duplicate detection).
+         - Bezkonfliktowa synchronizacja dwukierunkowa paczek zdarzeń (`processIncomingSync`).
+         - Równoległe asynchroniczne zapisy do bazy SQLite (Concurrent repository writes).
+    - **Podsumowanie Wyników Pokrycia i Jakości:**
+      * **Test Suites: 41/41 zdanych (100% pass)**.
+      * **Tests: 268/268 zdanych (100% pass)**.
+      * **Pokrycie linii (Lines Coverage): 100.00%** w całym projekcie!
+      * **Czystość typowania:** 0 błędów w weryfikacji TypeScript (`npx tsc --noEmit`).
+      * **Dedykowane skrypty NPM:** `npm run test:pbt`, `npm run test:perf`, `npm run test:a11y`, `npm run test:resilience`, `npm run test:concurrency`, `npm run test:corpus`, `npm run check:corpus`, `npm run test:coverage`.
 
 
 

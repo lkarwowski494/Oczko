@@ -96,6 +96,14 @@ export function calculateTargetStitchesAndRows(
 }
 
 /**
+ * Przelicza liczbę nabieranych oczek w oparciu o stosunek gęstości próbki.
+ */
+export function calculateCastOnAdjustment(patternCastOn: number, stitchRatio: number): number {
+  if (patternCastOn <= 0 || stitchRatio <= 0) return 0;
+  return Math.max(1, Math.round(patternCastOn * stitchRatio));
+}
+
+/**
  * Porównuje próbkę wykonawcy z próbką wymaganą przez wzór.
  * Podaje rekomendację doboru rozmiaru drutów lub współczynnik przeliczenia oczek.
  */
@@ -132,7 +140,7 @@ export function compareGauges(
   }
 
   const recalculatedCastOn = (patternCastOn: number) => {
-    return Math.max(1, Math.round(patternCastOn * stitchRatio));
+    return calculateCastOnAdjustment(patternCastOn, stitchRatio);
   };
 
   return {

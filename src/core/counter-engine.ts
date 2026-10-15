@@ -113,7 +113,8 @@ export function shouldDebounceClick(
   thresholdMs: number = 300
 ): boolean {
   if (lastTimestampMs === undefined || thresholdMs <= 0) return false;
-  return currentTimestampMs - lastTimestampMs < thresholdMs;
+  const elapsed = currentTimestampMs - lastTimestampMs;
+  return elapsed >= 0 && elapsed < thresholdMs;
 }
 
 export function checkPossibleInterDeviceDuplicate(
