@@ -14,6 +14,9 @@ import { useRouter } from 'expo-router';
 import { useProject, ProjectContextValue } from '../../src/core/project-context';
 import { EnrichedProject } from '../../src/core/project-service';
 import { CraftType } from '../../src/core/project-repository';
+import GaugeCalculatorModal, {
+  CreateProjectFromGaugeInput,
+} from '../../src/components/GaugeCalculatorModal';
 
 export default function ProjectsScreen() {
   const router = useRouter();
@@ -32,6 +35,9 @@ export default function ProjectsScreen() {
   const [newPartName, setNewPartName] = useState('Korpus');
   const [newTargetRows, setNewTargetRows] = useState('');
 
+  // Modal kalkulatora próbki (Gauge)
+  const [gaugeModalVisible, setGaugeModalVisible] = useState(false);
+
   // Modal dodawania nowej części do istniejącego projektu
   const [partModalVisible, setPartModalVisible] = useState(false);
   const [targetProjectId, setTargetProjectId] = useState<string | null>(null);
@@ -40,6 +46,21 @@ export default function ProjectsScreen() {
 
   const projects = projectCtx?.projects ?? [];
   const activeProjectId = projectCtx?.activeProject?.id ?? null;
+
+  const handleCreateProjectFromGauge = async (input: CreateProjectFromGaugeInput) => {
+    if (projectCtx) {
+      await projectCtx.createProject({
+        name: input.name,
+        craftType: input.craftType,
+        parts: [
+          {
+            name: 'Część główna',
+            targetRows: input.targetRows,
+          },
+        ],
+      });
+    }
+  };
 
   const handleCreateProject = async () => {
     if (!newProjectName.trim()) return;
@@ -175,13 +196,22 @@ export default function ProjectsScreen() {
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <View style={styles.topBar}>
         <Text style={styles.heading}>Twoje Robótki</Text>
-        <TouchableOpacity
-          style={styles.newButton}
-          activeOpacity={0.8}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.newButtonText}>+ Nowy projekt</Text>
-        </TouchableOpacity>
+        <View style={styles.topBarActions}>
+          <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => setGaugeModalVisible(true)}
+          >
+            <Text style={styles.gaugeButtonText}>📐 Próbka</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.newButton}
+            activeOpacity={0.8}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.newButtonText}>+ Nowy projekt</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <FlatList
@@ -349,6 +379,13 @@ export default function ProjectsScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Modal kalkulatora próbki (Gauge) */}
+      <GaugeCalculatorModal
+        visible={gaugeModalVisible}
+        onClose={() => setGaugeModalVisible(false)}
+        onCreateProject={handleCreateProjectFromGauge}
+      />
     </SafeAreaView>
   );
 }
@@ -369,6 +406,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: '#1A1A1A',
+  },
+  topBarActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  gaugeButton: {
+    backgroundColor: '#F0ECE8',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#D8C8BE',
+  },
+  gaugeButtonText: {
+    color: '#8B5E3C',
+    fontWeight: '700',
+    fontSize: 13,
   },
   newButton: {
     backgroundColor: '#8B5E3C',

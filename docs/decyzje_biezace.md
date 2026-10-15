@@ -98,7 +98,13 @@
     - Komponent `src/components/PatternGuideViewer.tsx` wyposażony w interaktywną, półprzezroczystą linijkę o wysokim kontraście (high accessibility NFR-DOST-009) podświetlającą bieżący wiersz diagramu.
     - Opcja automatycznego kroku linijki (`Auto-krok`) zsynchronizowana z licznikiem głównym robótki oraz tryb ręcznego przesuwania linijki po diagramie.
     - Zintegrowany przełącznik widoku w `src/screens/MainCounterScreen.tsx` (`🔢 Licznik` vs `📜 Schemat & Linijka`), umożliwiający podgląd wzoru z jednoczesnym naliczaniem rzędów.
-  * **Stan testów:** 16 zestawów testowych, 53 testy jednostkowe, komponentowe i integracyjne zaliczone (100% zielone).
+  * **DEC-01, BR-PROJ-004 & Kalkulator Próbki Ściegu (Gauge Swatch) i Szablony Projektów**:
+    - Silnik obliczeniowy `src/core/gauge-calculator.ts` wyliczający wymaganą liczbę oczek do nabrania (cast-on) i docelowych rzędów na podstawie wymiarów próbki i gotowego wyrobu (w cm lub calach).
+    - Analiza różnic naprężenia dzianiny (Tension check) między próbką ze wzoru a próbką wykonawcy z rekomendacjami doboru grubości drutów/szydełka oraz przelicznikiem oczek bez konieczności prucia próbki.
+    - Baza gotowych szablonów projektowych (`BUILT_IN_PROJECT_TEMPLATES`) dla czapek beanie, szali, kocyków niemowlęcych, swetrów i skarpetek z rekomendowaną grubością przędzy i standardową próbką.
+    - Interfejs `src/components/GaugeCalculatorModal.tsx` zintegrowany z ekranem `app/(tabs)/projects.tsx` (przycisk `📐 Próbka`) z możliwością natychmiastowego utworzenia robótki w SQLite z wyliczoną liczbą rzędów.
+  * **Stan testów:** 18 zestawów testowych, 65 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+
 
 
 

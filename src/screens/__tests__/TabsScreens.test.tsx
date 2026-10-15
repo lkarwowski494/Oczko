@@ -28,7 +28,9 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     const allText = extractAllStrings(tree.toJSON());
     expect(allText).toContain('Twoje Robótki');
     expect(allText).toContain('+ Nowy projekt');
+    expect(allText).toContain('Próbka');
   });
+
 
   test('Ekran Magazyn (Stash) poprawnie renderuje przełącznik i pozycje włóczek', () => {
     let tree: any;
