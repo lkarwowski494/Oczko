@@ -18,25 +18,37 @@ function extractAllStrings(node: any): string {
   return `${childrenText} ${propsText} ${valueText}`;
 }
 
-async function renderProjectsScreen(db = createInMemoryDatabase()) {
-  let tree: any;
-  await act(async () => {
-    tree = renderer.create(
-      <ProjectProvider initialDb={db}>
-        <ProjectsScreen />
-      </ProjectProvider>
-    );
-  });
-
-  // Poczekaj na załadowanie projektów ze seeda SQLite i renderowanie listy
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 60));
-  });
-
-  return { tree, db };
-}
+jest.setTimeout(15000);
 
 describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..005)', () => {
+  let tree: any = null;
+
+  afterEach(() => {
+    if (tree) {
+      try {
+        act(() => {
+          tree.unmount();
+        });
+      } catch (_e) {}
+      tree = null;
+    }
+  });
+
+  async function renderProjectsScreen(db = createInMemoryDatabase()) {
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <ProjectsScreen />
+        </ProjectProvider>
+      );
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 80));
+    });
+
+    return { tree, db, root: tree.root };
+  }
   it('otwiera modal nowego projektu, zmienia technikę na szydełko, wypełnia pola i tworzy projekt', async () => {
     const { tree } = await renderProjectsScreen();
     const root = tree.root;

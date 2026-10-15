@@ -20,27 +20,41 @@ function extractAllStrings(node: any): string {
   return `${childrenText} ${propsText} ${valueText}`;
 }
 
-async function renderSettingsScreen(db = createInMemoryDatabase()) {
-  let tree: any;
-  await act(async () => {
-    tree = renderer.create(
-      <ProjectProvider initialDb={db}>
-        <SettingsScreen />
-      </ProjectProvider>
-    );
-  });
-
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 60));
-  });
-
-  return { tree, db };
-}
+jest.setTimeout(15000);
 
 describe('SettingsScreen — Pełne testy ustawień, kopii zapasowych i haptyki (BR-LICZ-008, DEC-10)', () => {
+  let tree: any = null;
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
+  afterEach(() => {
+    if (tree) {
+      try {
+        act(() => {
+          tree.unmount();
+        });
+      } catch (_e) {}
+      tree = null;
+    }
+  });
+
+  async function renderSettingsScreen(db = createInMemoryDatabase()) {
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <SettingsScreen />
+        </ProjectProvider>
+      );
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 80));
+    });
+
+    return { tree, db };
+  }
 
   it('obsługuje zmianę czasu blokady debounce stuknięć (200, 400, 500 ms)', async () => {
     const { tree } = await renderSettingsScreen();

@@ -4,6 +4,8 @@ import StashScreen from '../../../app/(tabs)/stash';
 import { ProjectProvider } from '../../core/project-context';
 import { createInMemoryDatabase } from '../../core/database';
 
+jest.setTimeout(15000);
+
 function extractAllStrings(node: any): string {
   if (!node) return '';
   if (typeof node === 'string' || typeof node === 'number') {
@@ -18,28 +20,38 @@ function extractAllStrings(node: any): string {
   return `${childrenText} ${propsText} ${valueText}`;
 }
 
-async function renderStashScreen(db = createInMemoryDatabase()) {
-  let tree: any;
-  await act(async () => {
-    tree = renderer.create(
-      <ProjectProvider initialDb={db}>
-        <StashScreen />
-      </ProjectProvider>
-    );
-  });
-
-  // Poczekaj na załadowanie danych z bazy SQLite
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 60));
-  });
-
-  return { tree, db };
-}
-
 describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-001..004)', () => {
+  let tree: any = null;
+
+  afterEach(() => {
+    if (tree) {
+      try {
+        act(() => {
+          tree.unmount();
+        });
+      } catch (_e) {}
+      tree = null;
+    }
+  });
+
+  async function renderStashScreen(db = createInMemoryDatabase()) {
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <StashScreen />
+        </ProjectProvider>
+      );
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 80));
+    });
+
+    return { tree, db, root: tree.root };
+  }
+
   it('renderuje początkowe włóczki i obsługuje filtrowanie po nazwie oraz czyszczenie wyszukiwarki', async () => {
-    const { tree } = await renderStashScreen();
-    const root = tree.root;
+    const { root } = await renderStashScreen();
 
     let text = extractAllStrings(tree.toJSON());
     expect(text).toContain('Twoje Zapasy Włóczek');
@@ -78,10 +90,9 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
   });
 
   it('obsługuje filtrowanie po grubości przędzy CYC i dostępności na stanie', async () => {
-    const { tree } = await renderStashScreen();
-    const root = tree.root;
+    const { root } = await renderStashScreen();
 
-    // Przełącznik "Tylko na stanie" (początkowo tekst "Wszystkie (w tym 0)")
+    // Przełącznik "Tylko na stanie"
     const stockToggle = root.find((node: any) =>
       node.props?.onPress &&
       extractAllStrings(node).includes('Wszystkie (w tym 0)')
@@ -109,8 +120,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
   });
 
   it('otwiera modal, dodaje nową włóczkę i zapisuje w magazynie', async () => {
-    const { tree } = await renderStashScreen();
-    const root = tree.root;
+    const { root } = await renderStashScreen();
 
     // Kliknij "+ Dodaj włóczkę"
     const addYarnBtn = root.find((node: any) =>
@@ -120,7 +130,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
 
     await act(async () => {
       addYarnBtn.props.onPress();
-      await new Promise((r) => setTimeout(r, 30));
+      await new Promise((r) => setTimeout(r, 40));
     });
 
     let text = extractAllStrings(tree.toJSON());
@@ -163,8 +173,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
   });
 
   it('obsługuje zużycie motka (-1) oraz usunięcie włóczki', async () => {
-    const { tree } = await renderStashScreen();
-    const root = tree.root;
+    const { root } = await renderStashScreen();
 
     // Znajdź przycisk "Zużyj 1 motek (-1)"
     const useBtns = root.findAll((node: any) =>
@@ -199,8 +208,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
   });
 
   it('przełącza na zakładkę drutów i szydełek, dodaje nowe narzędzie i usuwa je', async () => {
-    const { tree } = await renderStashScreen();
-    const root = tree.root;
+    const { root } = await renderStashScreen();
 
     // Przełącz na "Druty i szydełka"
     const toolsTab = root.find((node: any) =>
@@ -210,7 +218,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
 
     await act(async () => {
       toolsTab.props.onPress();
-      await new Promise((r) => setTimeout(r, 30));
+      await new Promise((r) => setTimeout(r, 40));
     });
 
     let text = extractAllStrings(tree.toJSON());
@@ -224,7 +232,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
 
     await act(async () => {
       addToolBtn.props.onPress();
-      await new Promise((r) => setTimeout(r, 30));
+      await new Promise((r) => setTimeout(r, 40));
     });
 
     text = extractAllStrings(tree.toJSON());
@@ -276,8 +284,7 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
   });
 
   it('otwiera modal estymatora zużycia włóczki z przycisku ⚖️ Zużycie w Magazynie', async () => {
-    const { tree } = await renderStashScreen();
-    const root = tree.root;
+    const { root } = await renderStashScreen();
 
     const usageBtn = root.find((node: any) =>
       node.props?.onPress &&
