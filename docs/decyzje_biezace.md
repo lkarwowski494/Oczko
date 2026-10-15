@@ -82,4 +82,11 @@
     - Tabele `stash_yarns` i `stash_tools` ze schematem SQLite i indeksami (`src/core/database-schema.ts`, `src/core/database.ts`).
     - Repozytorium operacji CRUD i seedowania danych startowych (`src/core/stash-repository.ts`).
     - Interaktywny interfejs `app/(tabs)/stash.tsx` z przełącznikiem Włóczki / Druty i szydełka, modalem rejestracji nowych motków i akcesoriów oraz operacją zużycia motka.
-  * **Stan testów:** 13 zestawów testowych, 42 testy jednostkowe, komponentowe i integracyjne zaliczone (100% zielone).
+  * **BR-PROJ-002, BR-LICZ-003, BR-LICZ-005 & Wieloczęściowość i Powiązane Liczniki Modulo (Warkocze / Ażury)**:
+    - Rozszerzenie `ProjectService` o dodawanie części robótki oraz liczników powiązanych z konfigurowalnym modulo cyklu i etykietą przypomnienia (`addPartToProject`, `addLinkedCounterToPart`).
+    - Synchroniczna inkrementacja licznika powiązanego w `ProjectFacade.stepCounter` przy kroku licznika głównego części.
+    - Transakcyjne i spójne wycofywanie (UNDO) kroku nadrzędnego wraz z powiązanymi krokami podrzędnymi w pojedynczej transakcji SQLite (`createAndApplyUndoWithLinked`).
+    - Interfejs `MainCounterScreen`: poziomy pasek wyboru części robótki (chipsy) z licznikami rzędów, karty powiązanych liczników z wyliczaniem rzędu w powtórzeniu (np. `Rząd 4/6 (Powt. 2)`), plakietki ostrzeżeń/przypomnień oraz modal szybkiego dodawania wzorów/warkoczy.
+    - Ekran `app/(tabs)/projects.tsx`: podgląd wszystkich części i ich postępu dla każdego projektu oraz modal dodawania nowej części.
+  * **Stan testów:** 14 zestawów testowych, 45 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+

@@ -245,9 +245,13 @@ export async function persistProjectUndo(
   source: DeviceSource,
   timestampMs: number
 ): Promise<boolean> {
-  const undoEvent = facade.createAndApplyUndo(counterId, source, timestampMs);
-  if (undoEvent) {
-    await appendCounterEvent(db, undoEvent);
+  const undoEvents = facade.createAndApplyUndoWithLinked(counterId, source, timestampMs);
+  if (undoEvents.length > 0) {
+    await db.withTransactionAsync(async () => {
+      for (const ev of undoEvents) {
+        await appendCounterEvent(db, ev);
+      }
+    });
     return true;
   }
   return false;

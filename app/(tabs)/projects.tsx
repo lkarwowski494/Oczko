@@ -25,11 +25,18 @@ export default function ProjectsScreen() {
     projectCtx = null;
   }
 
+  // Modal nowego projektu
   const [modalVisible, setModalVisible] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [newCraftType, setNewCraftType] = useState<CraftType>('knitting');
   const [newPartName, setNewPartName] = useState('Korpus');
   const [newTargetRows, setNewTargetRows] = useState('');
+
+  // Modal dodawania nowej części do istniejącego projektu
+  const [partModalVisible, setPartModalVisible] = useState(false);
+  const [targetProjectId, setTargetProjectId] = useState<string | null>(null);
+  const [addedPartName, setAddedPartName] = useState('');
+  const [addedPartTarget, setAddedPartTarget] = useState('');
 
   const projects = projectCtx?.projects ?? [];
   const activeProjectId = projectCtx?.activeProject?.id ?? null;
@@ -55,6 +62,21 @@ export default function ProjectsScreen() {
     setNewPartName('Korpus');
     setNewTargetRows('');
     setModalVisible(false);
+  };
+
+  const handleAddPartSubmit = async () => {
+    if (!addedPartName.trim() || !targetProjectId || !projectCtx) return;
+    const targetRowsNum = parseInt(addedPartTarget, 10);
+
+    await projectCtx.addPart(targetProjectId, {
+      name: addedPartName.trim(),
+      targetRows: !isNaN(targetRowsNum) && targetRowsNum > 0 ? targetRowsNum : undefined,
+    });
+
+    setAddedPartName('');
+    setAddedPartTarget('');
+    setPartModalVisible(false);
+    setTargetProjectId(null);
   };
 
   const handleSelectProject = async (project: EnrichedProject) => {
@@ -105,18 +127,20 @@ export default function ProjectsScreen() {
           </Text>
         </View>
 
-        <Text style={styles.partInfo}>
-          Część: <Text style={styles.partName}>{primaryPart?.name ?? 'Brak części'}</Text> ({item.parts.length} części ogółem)
-        </Text>
-
-        <View style={styles.progressRow}>
-          <Text style={styles.rowNumbers}>
-            Rząd: <Text style={styles.rowHighlight}>{currentRow}</Text>
-            {targetRow ? ` / ${targetRow}` : ''}
-          </Text>
-          {progressPercent !== null && (
-            <Text style={styles.progressPercent}>{progressPercent}%</Text>
-          )}
+        {/* Szczegółowa lista części w projekcie */}
+        <View style={styles.partsSummaryContainer}>
+          <Text style={styles.partsHeaderTitle}>Części ({item.parts.length}):</Text>
+          {item.parts.map((part) => {
+            const count = part.counters[0]?.currentValue ?? 0;
+            return (
+              <View key={part.id} style={styles.partDetailRow}>
+                <Text style={styles.partDetailName}>• {part.name}</Text>
+                <Text style={styles.partDetailCount}>
+                  {count} {part.targetRows ? `/ ${part.targetRows} rz.` : 'rz.'}
+                </Text>
+              </View>
+            );
+          })}
         </View>
 
         {progressPercent !== null && (
@@ -126,6 +150,16 @@ export default function ProjectsScreen() {
         )}
 
         <View style={styles.cardActions}>
+          <TouchableOpacity
+            style={styles.addPartButton}
+            onPress={() => {
+              setTargetProjectId(item.id);
+              setPartModalVisible(true);
+            }}
+          >
+            <Text style={styles.addPartButtonText}>+ Dodaj część</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.openCounterButton}
             onPress={() => handleOpenInCounter(item)}
@@ -262,6 +296,59 @@ export default function ProjectsScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Modal dodawania nowej części do istniejącego projektu */}
+      <Modal
+        visible={partModalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setPartModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Dodaj nową część robótki</Text>
+
+            <Text style={styles.inputLabel}>Nazwa części (np. Rękaw lewy, Kołnierz)</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="np. Rękaw lewy"
+              placeholderTextColor="#999999"
+              value={addedPartName}
+              onChangeText={setAddedPartName}
+            />
+
+            <Text style={styles.inputLabel}>Docelowa liczba rzędów (opcjonalnie)</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="np. 80"
+              placeholderTextColor="#999999"
+              keyboardType="numeric"
+              value={addedPartTarget}
+              onChangeText={setAddedPartTarget}
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setPartModalVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>Anuluj</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.submitButton,
+                  !addedPartName.trim() && styles.submitButtonDisabled,
+                ]}
+                disabled={!addedPartName.trim()}
+                onPress={handleAddPartSubmit}
+              >
+                <Text style={styles.submitButtonText}>Dodaj część</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -354,34 +441,32 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 6,
   },
-  partInfo: {
-    fontSize: 13,
-    color: '#666666',
-    marginBottom: 10,
+  partsSummaryContainer: {
+    backgroundColor: '#FAF5F0',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 8,
   },
-  partName: {
-    color: '#1A1A1A',
-    fontWeight: '500',
+  partsHeaderTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#8B5E3C',
+    marginBottom: 4,
   },
-  progressRow: {
+  partDetailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 6,
+    paddingVertical: 2,
   },
-  rowNumbers: {
-    fontSize: 14,
-    color: '#444444',
-  },
-  rowHighlight: {
-    fontWeight: '700',
-    color: '#1A1A1A',
-    fontSize: 16,
-  },
-  progressPercent: {
+  partDetailName: {
     fontSize: 13,
+    color: '#333333',
+    fontWeight: '500',
+  },
+  partDetailCount: {
+    fontSize: 13,
+    color: '#666666',
     fontWeight: '600',
-    color: '#8B5E3C',
   },
   progressBarBackground: {
     height: 6,
@@ -398,9 +483,21 @@ const styles = StyleSheet.create({
   cardActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    gap: 8,
     borderTopWidth: 1,
     borderTopColor: '#F5F5F5',
     paddingTop: 10,
+  },
+  addPartButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: '#F0F0F0',
+  },
+  addPartButtonText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#444444',
   },
   openCounterButton: {
     paddingVertical: 6,

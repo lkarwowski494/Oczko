@@ -1,6 +1,6 @@
 /**
- * Oczko State — Kontekst stanu projektów i aktywnego licznika (SQLite & Facade)
- * Zgodny z zasadami: offline-first, reaktywność, bezpieczna trwałość (BR-PROJ-001...005, BR-LICZ-008).
+ * Oczko State — Kontekst stanu projektów, części i powiązanych liczników (SQLite & Facade)
+ * Zgodny z zasadami: offline-first, reaktywność, bezpieczna trwałość (BR-PROJ-001...005, BR-LICZ-003, BR-LICZ-005).
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
@@ -11,6 +11,10 @@ import {
   createFullProject,
   loadAllProjectsWithProgress,
   seedDefaultProjectIfEmpty,
+  AddPartInput,
+  AddLinkedCounterInput,
+  addPartToProject,
+  addLinkedCounterToPart,
 } from './project-service';
 import { ProjectManagerFacade } from './project-facade';
 import {
@@ -20,18 +24,28 @@ import {
 } from './project-repository';
 import { ComputedCounterState } from './counter-engine';
 
+export interface LinkedCounterDisplayState extends ComputedCounterState {
+  name: string;
+  moduloCycle?: number;
+}
+
 export interface ProjectContextValue {
   db: DatabaseClient | null;
   projects: EnrichedProject[];
   activeProject: EnrichedProject | null;
+  activePartId: string | null;
   activePartName: string | null;
   activeCounterId: string | null;
   activeCounterState: ComputedCounterState | null;
+  activeLinkedCounterStates: LinkedCounterDisplayState[];
   isLoading: boolean;
   error: string | null;
   refreshProjects: () => Promise<void>;
   createProject: (input: CreateProjectInput) => Promise<string>;
   selectActiveCounter: (projectId: string, counterId: string) => Promise<void>;
+  switchActivePart: (partId: string) => Promise<void>;
+  addPart: (projectId: string, input: AddPartInput) => Promise<void>;
+  addLinkedCounter: (partId: string, parentCounterId: string, input: AddLinkedCounterInput) => Promise<void>;
   stepCounter: (direction: 'increment' | 'decrement') => Promise<void>;
   undoCounter: () => Promise<void>;
 }
@@ -161,6 +175,45 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
     [db]
   );
 
+  const activeProject = projects.find((p) => p.id === activeProjectId) ?? null;
+
+  // Przełączanie części w aktywnym projekcie
+  const switchActivePart = useCallback(
+    async (partId: string) => {
+      if (!activeProject) return;
+      const part = activeProject.parts.find((p) => p.id === partId);
+      const counterId = part?.counters[0]?.id;
+      if (counterId) {
+        await selectActiveCounter(activeProject.id, counterId);
+      }
+    },
+    [activeProject, selectActiveCounter]
+  );
+
+  // Dodawanie nowej części do projektu
+  const addPart = useCallback(
+    async (projectId: string, input: AddPartInput) => {
+      if (!db) return;
+      const res = await addPartToProject(db, projectId, input);
+      await refreshProjects();
+      if (projectId === activeProjectId) {
+        await selectActiveCounter(projectId, res.primaryCounter.id);
+      }
+    },
+    [db, activeProjectId, refreshProjects, selectActiveCounter]
+  );
+
+  // Dodawanie licznika powiązanego (np. warkocz, ażur)
+  const addLinkedCounter = useCallback(
+    async (partId: string, parentCounterId: string, input: AddLinkedCounterInput) => {
+      if (!db || !activeProjectId) return;
+      await addLinkedCounterToPart(db, partId, parentCounterId, input);
+      await refreshProjects();
+      await selectActiveCounter(activeProjectId, parentCounterId);
+    },
+    [db, activeProjectId, refreshProjects, selectActiveCounter]
+  );
+
   // Krok licznika (+1 / -1) z blokadą debounce i trwałym zapisem w SQLite
   const stepCounter = useCallback(
     async (direction: 'increment' | 'decrement') => {
@@ -207,29 +260,49 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
     }
   }, [db, activeFacade, activeCounterId]);
 
-  const activeProject = projects.find((p) => p.id === activeProjectId) ?? null;
+  let activePartId: string | null = null;
   let activePartName: string | null = null;
   if (activeProject && activeCounterId) {
     for (const part of activeProject.parts) {
       if (part.counters.some((c) => c.id === activeCounterId)) {
+        activePartId = part.id;
         activePartName = part.name;
         break;
       }
     }
   }
 
+  // Pobranie powiązanych liczników cyklicznych dla aktywnego licznika nadrzędnego
+  const activeLinkedConfigs = activeFacade && activeCounterId
+    ? activeFacade.getLinkedCounters(activeCounterId)
+    : [];
+
+  const activeLinkedCounterStates: LinkedCounterDisplayState[] = activeLinkedConfigs.map((cfg) => {
+    const computed = activeFacade!.getCounterState(cfg.id);
+    return {
+      ...computed,
+      name: cfg.name,
+      moduloCycle: cfg.moduloCycle,
+    };
+  });
+
   const value: ProjectContextValue = {
     db,
     projects,
     activeProject,
+    activePartId,
     activePartName,
     activeCounterId,
     activeCounterState,
+    activeLinkedCounterStates,
     isLoading,
     error,
     refreshProjects,
     createProject,
     selectActiveCounter,
+    switchActivePart,
+    addPart,
+    addLinkedCounter,
     stepCounter,
     undoCounter,
   };

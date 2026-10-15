@@ -180,3 +180,73 @@ export async function seedDefaultProjectIfEmpty(
     ],
   });
 }
+
+export interface AddPartInput {
+  name: string;
+  targetRows?: number;
+}
+
+export interface AddLinkedCounterInput {
+  name: string;
+  moduloCycle?: number;
+  reminderRows?: number[];
+  step?: number;
+}
+
+/**
+ * Dodaje nową część robótki do istniejącego projektu z automatycznym licznikiem rzędów.
+ */
+export async function addPartToProject(
+  db: DatabaseClient,
+  projectId: string,
+  input: AddPartInput
+): Promise<{ part: ProjectPartDefinition; primaryCounter: CounterConfig }> {
+  const existingParts = await getProjectParts(db, projectId);
+  const sortOrder = existingParts.length + 1;
+  const partId = `part_${projectId}_${Date.now()}`;
+
+  const part: ProjectPartDefinition = {
+    id: partId,
+    projectId,
+    name: input.name.trim(),
+    sortOrder,
+    targetRows: input.targetRows,
+  };
+  await insertProjectPart(db, part);
+
+  const counterId = `cnt_${partId}_main`;
+  const primaryCounter: CounterConfig = {
+    id: counterId,
+    partId,
+    name: 'Rzędy',
+    initialValue: 0,
+    step: 1,
+  };
+  await insertCounter(db, primaryCounter);
+
+  return { part, primaryCounter };
+}
+
+/**
+ * Dodaje licznik powiązany (np. licznik warkocza lub powtórzeń ażuru) do danej części.
+ */
+export async function addLinkedCounterToPart(
+  db: DatabaseClient,
+  partId: string,
+  parentCounterId: string,
+  input: AddLinkedCounterInput
+): Promise<CounterConfig> {
+  const counterId = `cnt_${partId}_linked_${Date.now()}`;
+  const counter: CounterConfig = {
+    id: counterId,
+    partId,
+    name: input.name.trim(),
+    initialValue: 0,
+    step: input.step ?? 1,
+    moduloCycle: input.moduloCycle,
+    reminderRows: input.reminderRows,
+    linkedToParentId: parentCounterId,
+  };
+  await insertCounter(db, counter);
+  return counter;
+}

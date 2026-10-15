@@ -67,6 +67,12 @@ export class ProjectManagerFacade {
     return newEvents;
   }
 
+  public getLinkedCounters(parentCounterId: string): CounterConfig[] {
+    return Array.from(this.context.counters.values()).filter(
+      (c) => c.linkedToParentId === parentCounterId
+    );
+  }
+
   public createAndApplyUndo(
     counterId: string,
     source: DeviceSource,
@@ -84,6 +90,23 @@ export class ProjectManagerFacade {
       return undoEvent;
     }
     return null;
+  }
+
+  public createAndApplyUndoWithLinked(
+    counterId: string,
+    source: DeviceSource,
+    timestampMs: number
+  ): CounterEvent[] {
+    const result: CounterEvent[] = [];
+    const mainUndo = this.createAndApplyUndo(counterId, source, timestampMs);
+    if (mainUndo) result.push(mainUndo);
+
+    const linked = this.getLinkedCounters(counterId);
+    for (const child of linked) {
+      const childUndo = this.createAndApplyUndo(child.id, source, timestampMs);
+      if (childUndo) result.push(childUndo);
+    }
+    return result;
   }
 
   public undoLast(counterId: string, source: DeviceSource, timestampMs: number): boolean {
