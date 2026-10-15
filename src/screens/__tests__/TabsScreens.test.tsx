@@ -48,7 +48,8 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     });
     expect(tree).toBeDefined();
     const allText = extractAllStrings(tree.toJSON());
-    expect(allText).toContain('Słownik dziewiarski');
+    expect(allText).toContain('Słownik');
+    expect(allText).toContain('Trenażer powtórzeń');
     expect(allText).toContain('k2tog');
     expect(allText).toContain('Oczko prawe');
   });

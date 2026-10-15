@@ -71,4 +71,8 @@
     - Reaktywny kontekst stanu `ProjectProvider` (`src/core/project-context.tsx`) łączący SQLite z UI.
     - Interaktywny ekran `Projekty` z modalem tworzenia robótek (nazwa, druty/szydełko, części, docelowe rzędy) i wyborem aktywnego projektu.
     - Pełna integracja z ekranem `Licznik`: stuknięcie w ekran trwale rejestruje krok w SQLite (`counter_events`), odświeża stan w czasie rzeczywistym i umożliwia cofanie (UNDO).
-  * **Stan testów:** 10 zestawów testowych, 29 testów jednostkowych, komponentowych i integracyjnych zaliczonych (100% zielone).
+  * **DEC-04, DEC-17, DEC-18, DEC-24 & Moduł Nauka (Wyróżnik MVP)**:
+    - Autorytatywna baza 42 terminów dziewiarskich i szydełkowych (`src/core/glossary-data.ts`) ze standardem CYC, terminologią PL ↔ EN / DE / FR, glifami i filtrowaniem po kategoriach.
+    - Silnik trenażera powtórzeń sekwencji ściegów (`src/core/pattern-trainer.ts`) z 4 wzorcami (Ściągacz 2x2, Ścieg ryżowy, Warkocz C6F, Ażur z dziurkami).
+    - Interaktywny ekran `app/(tabs)/learn.tsx` z przełącznikiem trybów (Słownik / Trenażer), podglądem bieżącego kroku, stroną RS/WS, licznikiem powtórzeń w rzędzie oraz ekranem gratulacyjnym.
+  * **Stan testów:** 12 zestawów testowych, 37 testów jednostkowych, komponentowych i integracyjnych zaliczonych (100% zielone).
