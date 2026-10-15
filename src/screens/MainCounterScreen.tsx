@@ -1,15 +1,17 @@
 /**
  * Oczko UI — Główny ekran licznika (Minimalistyczny, wolny od rozpraszaczy)
+ * Integruje stan bazy SQLite poprzez useProject(), z fallbackiem do fasady lokalnej.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProjectManagerFacade } from '../core/project-facade';
+import { useProject, ProjectContextValue } from '../core/project-context';
 
-// Inicjalizacja fasady projektu dla widoku
-const facade = new ProjectManagerFacade('proj_demo', 'Mój Sweter');
-facade.registerCounter({
+// Fallback dla izolowanych testów komponentu
+const fallbackFacade = new ProjectManagerFacade('proj_demo', 'Mój Sweter');
+fallbackFacade.registerCounter({
   id: 'counter_main',
   partId: 'part_body',
   name: 'Rzędy korpusu',
@@ -18,30 +20,65 @@ facade.registerCounter({
 });
 
 export default function MainCounterScreen() {
-  const [counterState, setCounterState] = useState(facade.getCounterState('counter_main'));
+  let projectCtx: ProjectContextValue | null = null;
+  try {
+    projectCtx = useProject();
+  } catch (_e) {
+    projectCtx = null;
+  }
+
+  const [localFallbackState, setLocalFallbackState] = useState(
+    fallbackFacade.getCounterState('counter_main')
+  );
+
+  const isConnectedToContext = Boolean(projectCtx && projectCtx.activeProject);
+
+  const projectName = isConnectedToContext
+    ? projectCtx!.activeProject!.name
+    : 'Mój Sweter';
+
+  const partName = isConnectedToContext
+    ? projectCtx!.activePartName ?? 'Rzędy korpusu'
+    : 'Rzędy korpusu';
+
+  const counterValue = isConnectedToContext
+    ? (projectCtx!.activeCounterState?.rawValue ?? 0)
+    : localFallbackState.rawValue;
+
+  const activeReminder = isConnectedToContext
+    ? (projectCtx!.activeCounterState?.activeReminder ?? false)
+    : localFallbackState.activeReminder;
 
   const handleIncrement = () => {
-    facade.stepCounter('counter_main', 'increment', 'iphone', Date.now(), 300);
-    setCounterState(facade.getCounterState('counter_main'));
+    if (isConnectedToContext) {
+      projectCtx!.stepCounter('increment');
+    } else {
+      fallbackFacade.stepCounter('counter_main', 'increment', 'iphone', Date.now(), 300);
+      setLocalFallbackState(fallbackFacade.getCounterState('counter_main'));
+    }
   };
 
   const handleDecrement = () => {
-    facade.undoLast('counter_main', 'iphone', Date.now());
-    setCounterState(facade.getCounterState('counter_main'));
+    if (isConnectedToContext) {
+      projectCtx!.undoCounter();
+    } else {
+      fallbackFacade.undoLast('counter_main', 'iphone', Date.now());
+      setLocalFallbackState(fallbackFacade.getCounterState('counter_main'));
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.projectTitle}>Mój Sweter</Text>
-        <Text style={styles.partTitle}>Rzędy korpusu</Text>
+        <Text style={styles.projectTitle}>{projectName}</Text>
+        <Text style={styles.partTitle}>{partName}</Text>
       </View>
 
       {/* Główny obszar klikalny – cały ekran lub duży panel */}
       <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
-        <Text style={styles.counterValue}>{counterState.rawValue}</Text>
+        <Text style={styles.counterValue}>{counterValue}</Text>
         <Text style={styles.counterHint}>Stuknij, aby dodać rząd</Text>
-        {counterState.activeReminder && (
+        {activeReminder && (
           <View style={styles.reminderBadge}>
             <Text style={styles.reminderText}>⚠️ Ważny rząd / przypomnienie</Text>
           </View>

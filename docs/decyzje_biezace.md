@@ -66,4 +66,9 @@
   * **BR-LICZ-007**: Ochrona przed podwójnym liczeniem (debounce 300 ms dla manualnych stuknięć, detekcja potencjalnych duplikatów między urządzeniami <= 2s).
   * **BR-LICZ-008 & BR-DANE-001**: Trwałość w SQLite (`src/core/database.ts`, `src/core/project-repository.ts`), niezmienny dziennik zdarzeń (append-only), pełne odtwarzanie stanu po awarii i restarcie.
   * **BR-NAV-001 & Architektura UI**: Pełny layout nawigacyjny w Expo Router (`app/_layout.tsx`, `app/(tabs)/_layout.tsx`) z 5 dedykowanymi ekranami: Licznik (`index.tsx`), Projekty (`projects.tsx`), Magazyn (`stash.tsx`), Nauka (`learn.tsx`), Ustawienia (`settings.tsx`).
-  * **Stan testów:** 8 zestawów testowych, 25 testów jednostkowych i komponentowych zaliczonych (100% zielone lokalnie i gotowe do weryfikacji w CI).
+  * **BR-PROJ-001...005 & Pionowy plasterek (Vertical Slice)**:
+    - Serwis zarządzania cyklem życia projektów i wyliczania postępów (`src/core/project-service.ts`).
+    - Reaktywny kontekst stanu `ProjectProvider` (`src/core/project-context.tsx`) łączący SQLite z UI.
+    - Interaktywny ekran `Projekty` z modalem tworzenia robótek (nazwa, druty/szydełko, części, docelowe rzędy) i wyborem aktywnego projektu.
+    - Pełna integracja z ekranem `Licznik`: stuknięcie w ekran trwale rejestruje krok w SQLite (`counter_events`), odświeża stan w czasie rzeczywistym i umożliwia cofanie (UNDO).
+  * **Stan testów:** 10 zestawów testowych, 29 testów jednostkowych, komponentowych i integracyjnych zaliczonych (100% zielone).
