@@ -23,7 +23,9 @@ import {
 } from '../../src/core/backup-service';
 import { triggerHaptic } from '../../src/core/feedback-service';
 import AppleWatchCompanionModal from '../../src/components/AppleWatchCompanionModal';
+import { GarminCompanionModal } from '../../src/components/GarminCompanionModal';
 import { createWatchCounterSnapshot } from '../../src/core/apple-watch-service';
+import { createGarminSyncPayload } from '../../src/core/garmin-service';
 
 export default function SettingsScreen() {
   const projectContext = useOptionalProject();
@@ -36,6 +38,8 @@ export default function SettingsScreen() {
   const [defaultInterval, setDefaultInterval] = useState(0);
   const [iCloudBackup, setICloudBackup] = useState(true);
   const [isWatchModalVisible, setIsWatchModalVisible] = useState(false);
+  const [isGarminModalVisible, setIsGarminModalVisible] = useState(false);
+  const [garminTestCount, setGarminTestCount] = useState(24);
 
   // Stan bazy danych i kopii zapasowych (DEC-10, BR-DANE-002)
   const [stats, setStats] = useState<OczkoBackupMetadata['itemCounts'] | null>(null);
@@ -338,8 +342,16 @@ export default function SettingsScreen() {
           </View>
 
           <View style={styles.statusRow}>
-            <Text style={styles.statusLabel}>Garmin Connect IQ:</Text>
-            <Text style={styles.statusPlanned}>Planowany w v1.1 (DEC-02)</Text>
+            <Text style={styles.statusLabel}>Garmin Connect IQ (DEC-02):</Text>
+            <View style={styles.watchStatusGroup}>
+              <Text style={styles.statusActive}>Prototyp</Text>
+              <TouchableOpacity
+                style={styles.watchTestBtn}
+                onPress={() => setIsGarminModalVisible(true)}
+              >
+                <Text style={styles.watchTestBtnText}>🛰️ Testuj</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -445,6 +457,22 @@ export default function SettingsScreen() {
           },
           reminderReason: '🔔 Przypomnienie interwałowe',
         })}
+      />
+
+      {/* Modal testowy Garmin ConnectIQ (DEC-02) */}
+      <GarminCompanionModal
+        visible={isGarminModalVisible}
+        onClose={() => setIsGarminModalVisible(false)}
+        syncPayload={createGarminSyncPayload({
+          counterId: 'c1',
+          projectName: 'Mój Projekt',
+          partName: 'Korpus',
+          currentCount: garminTestCount,
+          targetCount: 60,
+          unitLabel: 'rząd',
+        })}
+        onIncrement={() => setGarminTestCount((c) => c + 1)}
+        onDecrement={() => setGarminTestCount((c) => Math.max(0, c - 1))}
       />
     </SafeAreaView>
   );

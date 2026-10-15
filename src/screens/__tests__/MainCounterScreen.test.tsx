@@ -625,6 +625,31 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
       await new Promise((r) => setTimeout(r, 30));
     });
 
+    // 4. Modal Garmin ConnectIQ (DEC-02): otwieranie, onIncrement, onDecrement, onNextPart, onPreviousPart, onClose
+    const garminChip = root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Garmin'));
+    act(() => {
+      garminChip.props.onPress();
+    });
+    let garminModal = root.find(
+      (n: any) => typeof n.props?.onClose === 'function' && typeof n.props?.onIncrement === 'function' && n.props?.syncPayload
+    );
+    await act(async () => {
+      garminModal.props.onIncrement();
+      garminModal.props.onDecrement();
+      if (garminModal.props.onNextPart) garminModal.props.onNextPart();
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    // Po przełączeniu na kolejną część (activePartIndex > 0), wywołaj onPreviousPart:
+    garminModal = root.find(
+      (n: any) => typeof n.props?.onClose === 'function' && typeof n.props?.onIncrement === 'function' && n.props?.syncPayload
+    );
+    await act(async () => {
+      if (garminModal.props.onPreviousPart) garminModal.props.onPreviousPart();
+      garminModal.props.onClose();
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
     hapticSpy.mockRestore();
     expect(tree).toBeDefined();
   });

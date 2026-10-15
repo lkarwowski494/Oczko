@@ -263,3 +263,33 @@
     3. *Kształtowanie wielorzędowe (Multi-Row Shaping):* wyliczanie częstotliwości rzędów dla rękawów, raglanów i dekoltów (oth_edges vs single_edge) z optymalizacją pod rzędy prawe (RS only).
   - **Interfejs użytkownika:** Interaktywny modal src/components/ShapingCalculatorModal.tsx zintegrowany z ekranem projektów (pp/(tabs)/projects.tsx - przycisk ✂️ Oczka) z natywnym udostępnianiem przez Share Sheet.
   - **Zgodność z ZAS-QA-01:** 100.00% Line Coverage w całym repozytorium (44/44 suites, 318/318 passed, PBT z ast-check, A11y & Apple HIG >= 44pt, strażnicy czystości domeny, budżet < 100ms na 10 000 kalkulacji, resilience na ujemne/skrajne dane).
+
+
+* **DEC-02 Implementacja: Protokół Garmin ConnectIQ Companion & Symulator Zegarka (15.10.2026):**
+  - **Architektura Protokołu BLE (`src/core/garmin-service.ts`):**
+    - Pełna obsługa ConnectIQ Mobile SDK JSON bridge z dedykowanym identyfikatorem `GARMIN_COMM_UUID` (`c48e89f2-7e04-4b53-9f89-8d76b1f20001`).
+    - Deterministyczna serializacja i walidacja kopert wiadomości (`GarminMessageEnvelope`: `HANDSHAKE`, `SYNC_STATE`, `WATCH_EVENT`, `ACK`, `NACK`).
+    - Mapowanie fizycznych przycisków i gestów zegarka Garmin (`KEY_START_STOP` / `TOUCH_TAP` -> +1, `KEY_LAP` -> UNDO, `KEY_DOWN` -> następna część, `KEY_UP` -> poprzednia część).
+    - Mechanizm buforowania zdarzeń offline `GarminOfflineQueue` ze sztywnym limitem pojemności (capacity enforcement) i bezkonfliktowym opróżnianiem po wznowieniu połączenia BLE.
+  - **Interfejs Użytkownika (`src/components/GarminCompanionModal.tsx`):**
+    - Realistyczny symulator okrągłego zegarka Garmin (47 mm) z obsługą AMOLED / MIP, fizycznymi przyciskami na bezelu (`START-STOP`, `BACK-LAP`, `UP-MENU`, `DOWN`) oraz dotykowym ekranem centralnym.
+    - Przełącznik trybu Offline (`🔌 Rozłącz BLE / Połącz`) umożliwiający manualne testowanie buforowania zdarzeń i ich synchronizacji wsadowej.
+    - Zintegrowany z głównym licznikiem (`src/screens/MainCounterScreen.tsx` — chip `🛰️ Garmin`) oraz ekranem ustawień (`app/(tabs)/settings.tsx` — sekcja Garmin Connect IQ).
+
+* **Implementacja: Miarka Rozmiarów Drutów i Przelicznik Jednostek Rzemieślniczych (15.10.2026):**
+  - **Architektura Domenowa (`src/core/needle-gauge-converter.ts`):**
+    - Tabela standardów 22 rozmiarów CYC/ISO (od 2.0 mm do 25.0 mm) z dokładnym mapowaniem pomiędzy systemem metrycznym (mm), US (druty i szydełka), UK oraz japońskim (JP).
+    - Algorytm najbliższego dopasowania metrycznego `findClosestMetricNeedle` i dwukierunkowej konwersji `convertNeedleSize`.
+    - Deterministyczne przeliczniki jednostek: długość (metry ↔ jardy), waga (gramy ↔ uncje) oraz gęstość próbki ściegu (oczka na 10 cm ↔ oczka na 4 cale).
+  - **Interfejs Użytkownika (`src/components/NeedleGaugeModal.tsx`):**
+    - Dwuzakładkowy modal:
+      1. *Tabela i Suwmiarka:* Interaktywna miarka drutów z natychmiastowym podglądem odpowiedników we wszystkich standardach oraz pełna tabela referencyjna.
+      2. *Przelicznik Jednostek:* Pola kalkulacji w czasie rzeczywistym dla metrażu motków, gramatury i próbki ściegu.
+    - Zintegrowany z zakładką Narzędzia w Magazynie (`app/(tabs)/stash.tsx` — przycisk `📏 Miarka drutów`).
+
+* **Stan Jakości i Pokrycia (ZAS-QA-01):**
+  - **Test Suites: 48/48 zdanych (100% pass)**.
+  - **Tests: 367/367 zdanych (100% pass)**.
+  - **Line Coverage: 100.00% w całym projekcie** (`npm run test:coverage`).
+  - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+  - **Multi-Perspective Testing:** Rozbudowane PBT (`fast-check`), Apple HIG & A11y ($\ge 44\,\text{pt}$), Architecture Guards (czystość domeny bez RN), Budżety wydajnościowe CPU oraz Resilience (odporność na zniekształcony JSON i wartości brzegowe).

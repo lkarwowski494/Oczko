@@ -33,6 +33,7 @@ import {
   FIBER_FILTER_TAGS,
 } from '../../src/core/stash-filter-service';
 import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
+import { NeedleGaugeModal } from '../../src/components/NeedleGaugeModal';
 
 type StashTab = 'yarn' | 'tools';
 
@@ -116,6 +117,8 @@ export default function StashScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   // Modal kalkulatora zużycia włóczki
   const [yarnEstimatorVisible, setYarnEstimatorVisible] = useState(false);
+  // Modal miarki drutów i przelicznika jednostek
+  const [needleGaugeVisible, setNeedleGaugeVisible] = useState(false);
 
   // Pola dla włóczki
   const [yarnBrand, setYarnBrand] = useState('');
@@ -310,6 +313,17 @@ export default function StashScreen() {
               onPress={() => setYarnEstimatorVisible(true)}
             >
               <Text style={styles.estimatorButtonText}>⚖️ Zużycie</Text>
+            </TouchableOpacity>
+          )}
+          {activeTab === 'tools' && (
+            <TouchableOpacity
+              style={styles.estimatorButton}
+              activeOpacity={0.8}
+              onPress={() => setNeedleGaugeVisible(true)}
+              accessibilityLabel="Otwórz miarkę drutów i przelicznik jednostek"
+              accessibilityRole="button"
+            >
+              <Text style={styles.estimatorButtonText}>📏 Miarka drutów</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity
@@ -744,6 +758,12 @@ export default function StashScreen() {
         visible={yarnEstimatorVisible}
         onClose={() => setYarnEstimatorVisible(false)}
         availableYarns={yarns}
+      />
+
+      {/* Modal kalkulatora rozmiarów drutów i jednostek */}
+      <NeedleGaugeModal
+        visible={needleGaugeVisible}
+        onClose={() => setNeedleGaugeVisible(false)}
       />
     </SafeAreaView>
   );

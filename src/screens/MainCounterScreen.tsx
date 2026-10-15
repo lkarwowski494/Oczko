@@ -19,8 +19,10 @@ import { useProject, ProjectContextValue } from '../core/project-context';
 import PatternGuideViewer from '../components/PatternGuideViewer';
 import PatternPdfViewer from '../components/PatternPdfViewer';
 import AppleWatchCompanionModal from '../components/AppleWatchCompanionModal';
+import { GarminCompanionModal } from '../components/GarminCompanionModal';
 import { triggerHaptic, checkIntervalReminder } from '../core/feedback-service';
 import { createWatchCounterSnapshot } from '../core/apple-watch-service';
+import { createGarminSyncPayload } from '../core/garmin-service';
 import {
   PatternDocument,
   getPatternDocumentForProject,
@@ -67,6 +69,7 @@ export default function MainCounterScreen() {
 
   // Apple Watch & Live Activities (DEC-03, BR-SYS-003)
   const [watchModalVisible, setWatchModalVisible] = useState<boolean>(false);
+  const [garminModalVisible, setGarminModalVisible] = useState<boolean>(false);
 
   // Ładowanie zaimportowanego wzoru PDF dla aktywnego projektu (BR-WZOR-001, DEC-09)
   useEffect(() => {
@@ -124,6 +127,31 @@ export default function MainCounterScreen() {
     },
     reminderReason: showReminder ? reminderMessage : undefined,
   });
+
+  // Ładunek synchronizacji dla Garmin ConnectIQ Companion (DEC-02)
+  const garminPayload = createGarminSyncPayload({
+    counterId: activeCounterId || 'counter_main',
+    projectName,
+    partName,
+    currentCount: counterValue,
+    targetCount: (projectParts.find((p) => p.id === activePartId)?.targetRows) ?? 0,
+    unitLabel: 'rząd',
+    linkedPatternName: activeLinkedStates[0]?.name,
+    linkedPatternCycle: activeLinkedStates[0]?.moduloCycle ?? undefined,
+    linkedPatternStep: activeLinkedStates[0]?.cycleStep != null ? activeLinkedStates[0].cycleStep : undefined,
+  });
+
+  const activePartIndex = projectParts.findIndex((p) => p.id === activePartId);
+  const handleNextPart = () => {
+    if (activePartIndex >= 0 && activePartIndex < projectParts.length - 1) {
+      projectCtx?.switchActivePart(projectParts[activePartIndex + 1].id);
+    }
+  };
+  const handlePreviousPart = () => {
+    if (activePartIndex > 0) {
+      projectCtx?.switchActivePart(projectParts[activePartIndex - 1].id);
+    }
+  };
 
   const handleIncrement = () => {
     const nextValue = counterValue + 1;
@@ -356,6 +384,16 @@ export default function MainCounterScreen() {
             >
               <Text style={styles.watchChipText}>⌚ Apple Watch</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.garminChip}
+              activeOpacity={0.8}
+              onPress={() => setGarminModalVisible(true)}
+              accessibilityLabel="Otwórz symulator zegarka Garmin"
+              accessibilityRole="button"
+            >
+              <Text style={styles.garminChipText}>🛰️ Garmin</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
@@ -540,6 +578,17 @@ export default function MainCounterScreen() {
           if (direction === 'increment') handleIncrement();
           else handleDecrement();
         }}
+      />
+
+      {/* Modal Garmin ConnectIQ Companion (DEC-02) */}
+      <GarminCompanionModal
+        visible={garminModalVisible}
+        onClose={() => setGarminModalVisible(false)}
+        syncPayload={garminPayload}
+        onIncrement={handleIncrement}
+        onDecrement={handleDecrement}
+        onNextPart={handleNextPart}
+        onPreviousPart={handlePreviousPart}
       />
     </SafeAreaView>
   );
@@ -859,6 +908,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     color: '#FF9F0A',
+  },
+  garminChip: {
+    backgroundColor: '#0F172A',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#0284C7',
+  },
+  garminChipText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#38BDF8',
   },
 });
 

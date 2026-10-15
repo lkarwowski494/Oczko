@@ -69,6 +69,8 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'glossary-data.ts'),
         join(srcCoreDir, 'stitch-identifier.ts'),
         join(srcCoreDir, 'shaping-calculator.ts'),
+        join(srcCoreDir, 'garmin-service.ts'),
+        join(srcCoreDir, 'needle-gauge-converter.ts'),
       ];
 
       for (const filePath of pureDomainFiles) {
@@ -97,7 +99,10 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
             code.includes('onClose') ||
             code.includes('setModalVisible(false)') ||
             code.includes('setIntervalModalVisible(false)') ||
-            code.includes('setWatchModalVisible(false)');
+            code.includes('setWatchModalVisible(false)') ||
+            code.includes('setGarminModalVisible(false)') ||
+            code.includes('setIsGarminModalVisible(false)') ||
+            code.includes('setNeedleGaugeVisible(false)');
           expect(hasDismissal).toBe(true);
         }
       }

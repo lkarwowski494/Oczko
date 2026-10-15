@@ -519,4 +519,45 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
       });
     } catch (_e) {}
   });
+
+  it('otwiera modal miarki drutów i przelicznika jednostek w zakładce Narzędzia oraz zamyka go', async () => {
+    const { root, tree } = await renderStashScreen();
+
+    // 1. Przełącz na zakładkę drutów i szydełek
+    const toolsTab = root.find(
+      (node: any) =>
+        node.props?.onPress &&
+        extractAllStrings(node).includes('Druty i szydełka')
+    );
+    await act(async () => {
+      toolsTab.props.onPress();
+    });
+
+    // 2. Znajdź przycisk Miarka drutów
+    const gaugeBtn = root.find(
+      (node: any) =>
+        node.props?.onPress &&
+        extractAllStrings(node).includes('Miarka drutów')
+    );
+    expect(gaugeBtn).toBeDefined();
+
+    // 3. Otwórz modal
+    await act(async () => {
+      gaugeBtn.props.onPress();
+    });
+
+    const needleModal = root.find(
+      (node: any) =>
+        typeof node.props?.onClose === 'function' &&
+        node.props?.visible === true
+    );
+    expect(needleModal).toBeDefined();
+
+    // 4. Zamknij modal
+    await act(async () => {
+      needleModal.props.onClose();
+    });
+
+    expect(tree).toBeDefined();
+  });
 });

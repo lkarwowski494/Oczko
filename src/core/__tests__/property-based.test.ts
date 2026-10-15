@@ -34,6 +34,19 @@ import {
   calculateEvenDecreases,
   calculateMultiRowShaping,
 } from '../shaping-calculator';
+import {
+  serializeGarminEnvelope,
+  deserializeGarminEnvelope,
+  createGarminSyncPayload,
+  GarminOfflineQueue,
+  GARMIN_COMM_UUID,
+  GarminWatchEvent,
+} from '../garmin-service';
+import {
+  convertCraftLength,
+  convertCraftWeight,
+  convertGaugeTension,
+} from '../needle-gauge-converter';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -510,6 +523,99 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
             }
           }
         ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Protokołu Garmin ConnectIQ (garmin-service.ts)', () => {
+    it('Roundtrip: Serializacja i deserializacja koperty zachowuje appUuid, seqId i type', () => {
+      fc.assert(
+        fc.property(
+          fc.constantFrom<'HANDSHAKE' | 'SYNC_STATE' | 'WATCH_EVENT' | 'ACK' | 'NACK'>(
+            'HANDSHAKE',
+            'SYNC_STATE',
+            'WATCH_EVENT',
+            'ACK',
+            'NACK'
+          ),
+          fc.integer({ min: 1, max: 100000 }),
+          fc.string({ minLength: 1, maxLength: 50 }),
+          (type, seqId, textPayload) => {
+            const raw = serializeGarminEnvelope(type, { text: textPayload }, seqId);
+            const parsed = deserializeGarminEnvelope<{ text: string }>(raw);
+
+            expect(parsed.valid).toBe(true);
+            expect(parsed.envelope).toBeDefined();
+            expect(parsed.envelope!.appUuid).toBe(GARMIN_COMM_UUID);
+            expect(parsed.envelope!.seqId).toBe(seqId);
+            expect(parsed.envelope!.type).toBe(type);
+            expect(parsed.envelope!.payload.text).toBe(textPayload);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Niezmiennik bufora offline: GarminOfflineQueue nigdy nie przekracza maxCapacity', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 5, max: 50 }),
+          fc.integer({ min: 1, max: 200 }),
+          (capacity, eventCount) => {
+            const queue = new GarminOfflineQueue(capacity);
+            for (let i = 0; i < eventCount; i++) {
+              const event: GarminWatchEvent = {
+                eventId: `evt_${i}`,
+                source: 'garmin_connectiq',
+                button: 'KEY_START_STOP',
+                counterId: 'cnt_pbt',
+                timestamp: 1000 + i,
+              };
+              queue.enqueue(event);
+            }
+
+            expect(queue.size()).toBeLessThanOrEqual(capacity);
+            const flushed = queue.flush();
+            expect(flushed.length).toBeLessThanOrEqual(capacity);
+            expect(queue.size()).toBe(0);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Przelicznika Rozmiarów Drutów i Jednostek (needle-gauge-converter.ts)', () => {
+    it('Odwracalność jednostek długości (metry <-> jardy)', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 5, max: 5000 }), (m) => {
+          const yd = convertCraftLength(m, 'meters', 'yards');
+          const back = convertCraftLength(yd, 'yards', 'meters');
+          expect(Math.abs(back - m)).toBeLessThanOrEqual(0.05);
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Odwracalność jednostek wagi (gramy <-> uncje)', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 10, max: 2000 }), (g) => {
+          const oz = convertCraftWeight(g, 'grams', 'ounces');
+          const back = convertCraftWeight(oz, 'ounces', 'grams');
+          expect(Math.abs(back - g)).toBeLessThanOrEqual(0.2);
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Odwracalność jednostek próbki ściegu (10 cm <-> 4 cale)', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 6, max: 60 }), (sts) => {
+          const in4 = convertGaugeTension(sts, '10cm', '4inch');
+          const back = convertGaugeTension(in4, '4inch', '10cm');
+          expect(Math.abs(back - sts)).toBeLessThanOrEqual(0.2);
+        }),
         { numRuns: 100 }
       );
     });

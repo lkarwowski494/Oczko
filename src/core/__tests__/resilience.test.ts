@@ -36,6 +36,20 @@ import {
   calculateEvenDecreases,
   calculateMultiRowShaping,
 } from '../shaping-calculator';
+import {
+  deserializeGarminEnvelope,
+  GarminOfflineQueue,
+  handleGarminWatchEvent,
+  GARMIN_COMM_UUID,
+  GarminWatchEvent,
+} from '../garmin-service';
+import {
+  convertNeedleSize,
+  findClosestMetricNeedle,
+  convertCraftLength,
+  convertCraftWeight,
+  convertGaugeTension,
+} from '../needle-gauge-converter';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -412,6 +426,109 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(hugeInc.isValid).toBe(true);
       expect(hugeInc.difference).toBe(20000);
       expect(hugeInc.groups.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Odporność Protokołu Garmin ConnectIQ na uszkodzone dane i payloady BLE', () => {
+    test('deserializeGarminEnvelope bezpiecznie odrzuca uszkodzone dane wejściowe', () => {
+      // 1. Puste i niepoprawne typy
+      expect(deserializeGarminEnvelope('')).toEqual({ valid: false, error: 'EMPTY_PAYLOAD' });
+      expect(deserializeGarminEnvelope(null as any)).toEqual({ valid: false, error: 'EMPTY_PAYLOAD' });
+      expect(deserializeGarminEnvelope(undefined as any)).toEqual({ valid: false, error: 'EMPTY_PAYLOAD' });
+
+      // 2. Niepoprawny JSON
+      expect(deserializeGarminEnvelope('{ invalid json').valid).toBe(false);
+      expect(deserializeGarminEnvelope('{ invalid json').error).toMatch(/JSON_SYNTAX_ERROR/);
+
+      // 3. Typ nieobiektowy po parsowaniu (np. liczba lub string JSON)
+      expect(deserializeGarminEnvelope('"string"')).toEqual({ valid: false, error: 'NOT_AN_OBJECT' });
+      expect(deserializeGarminEnvelope('123')).toEqual({ valid: false, error: 'NOT_AN_OBJECT' });
+
+      // 4. Nieprawidłowy lub brakujący appUuid
+      expect(
+        deserializeGarminEnvelope(JSON.stringify({ appUuid: 'wrong-uuid', type: 'ACK' }))
+      ).toEqual({ valid: false, error: 'INVALID_APP_UUID' });
+
+      // 5. Brak typu wiadomości
+      expect(
+        deserializeGarminEnvelope(JSON.stringify({ appUuid: GARMIN_COMM_UUID }))
+      ).toEqual({ valid: false, error: 'MISSING_MESSAGE_TYPE' });
+    });
+
+    test('GarminOfflineQueue bezpiecznie obsługuje przepełnienie i odrzuca nadmiarowe wpisy', () => {
+      const queue = new GarminOfflineQueue(3);
+      const results: boolean[] = [];
+      for (let i = 1; i <= 5; i++) {
+        const ev: GarminWatchEvent = {
+          eventId: `ev_${i}`,
+          source: 'garmin_connectiq',
+          button: 'KEY_START_STOP',
+          counterId: 'c1',
+          timestamp: i * 100,
+        };
+        results.push(queue.enqueue(ev));
+      }
+
+      expect(results).toEqual([true, true, true, false, false]);
+      expect(queue.size()).toBe(3);
+      const items = queue.flush();
+      expect(items.map((e) => e.eventId)).toEqual(['ev_1', 'ev_2', 'ev_3']);
+      expect(queue.size()).toBe(0);
+    });
+
+    test('handleGarminWatchEvent działa bezpiecznie przy pustym obiekcie akcji i nieznanych przyciskach', () => {
+      const event: GarminWatchEvent = {
+        eventId: 'ev_test',
+        source: 'garmin_connectiq',
+        button: 'TOUCH_TAP',
+        counterId: 'c1',
+        timestamp: 1234,
+      };
+
+      // Nie rzuca błędu przy pustych handlerach
+      expect(() => handleGarminWatchEvent(event, {})).not.toThrow();
+
+      // Nieznany przycisk
+      const unknownEvent = { ...event, button: 'UNKNOWN_BUTTON' as any };
+      expect(() => handleGarminWatchEvent(unknownEvent, {})).not.toThrow();
+    });
+  });
+
+  describe('Odporność Przelicznika Rozmiarów Drutów i Jednostek (needle-gauge-converter.ts)', () => {
+    test('Bezpieczna obsługa wartości brzegowych w konwersji rozmiarów drutów', () => {
+      // 1. Skrajnie małe i duże mm
+      const tiny = findClosestMetricNeedle(-5);
+      expect(tiny.metricMm).toBe(2.0);
+
+      const huge = findClosestMetricNeedle(999);
+      expect(huge.metricMm).toBe(25.0);
+
+      // 2. Nieprawidłowe ciągi i NaN
+      const nanRes = convertNeedleSize('nieznany rozmiar', 'metric');
+      expect(nanRes.metricMm).toBe(4.0);
+
+      const emptyRes = convertNeedleSize('', 'us');
+      expect(emptyRes.metricMm).toBe(4.0);
+
+      const ukUnknown = convertNeedleSize('uk 99', 'uk');
+      expect(ukUnknown.metricMm).toBe(4.0);
+
+      const jpUnknown = convertNeedleSize('jp 99', 'jp');
+      expect(jpUnknown.metricMm).toBe(4.0);
+    });
+
+    test('Przeliczniki jednostek rzemieślniczych zwracają 0 dla ujemnych i NaN', () => {
+      expect(convertCraftLength(-10, 'meters', 'yards')).toBe(0);
+      expect(convertCraftLength(NaN, 'meters', 'yards')).toBe(0);
+      expect(convertCraftLength(10, 'meters', 'meters')).toBe(10);
+
+      expect(convertCraftWeight(-5, 'grams', 'ounces')).toBe(0);
+      expect(convertCraftWeight(NaN, 'grams', 'ounces')).toBe(0);
+      expect(convertCraftWeight(50, 'grams', 'grams')).toBe(50);
+
+      expect(convertGaugeTension(-20, '10cm', '4inch')).toBe(0);
+      expect(convertGaugeTension(NaN, '10cm', '4inch')).toBe(0);
+      expect(convertGaugeTension(22, '10cm', '10cm')).toBe(22);
     });
   });
 });

@@ -14,8 +14,11 @@ import MainCounterScreen from '../../screens/MainCounterScreen';
 import AppleWatchCompanionModal from '../AppleWatchCompanionModal';
 import PatternPdfViewer from '../PatternPdfViewer';
 import { ShapingCalculatorModal } from '../ShapingCalculatorModal';
+import { GarminCompanionModal } from '../GarminCompanionModal';
+import { NeedleGaugeModal } from '../NeedleGaugeModal';
 import LearnScreen from '../../../app/(tabs)/learn';
 import { createWatchCounterSnapshot } from '../../core/apple-watch-service';
+import { createGarminSyncPayload } from '../../core/garmin-service';
 
 function extractAllNodes(node: any): any[] {
   if (!node) return [];
@@ -188,6 +191,55 @@ describe('Kontrakty Dostępności i Human Interface Guidelines (WCAG AAA & Apple
             (flat.paddingVertical && flat.paddingVertical >= 8);
           expect(hasAdequateTouchTarget).toBeTruthy();
         }
+      }
+    });
+
+    it('kontrolki w GarminCompanionModal spełniają standardy dostępności dotykowej i etykiet', () => {
+      let tree: any;
+      const payload = createGarminSyncPayload({
+        counterId: 'c1',
+        projectName: 'Szalik',
+        partName: 'Ścieg',
+        currentCount: 15,
+        targetCount: 40,
+        unitLabel: 'rząd',
+      });
+
+      act(() => {
+        tree = renderer.create(
+          <GarminCompanionModal
+            visible={true}
+            onClose={() => {}}
+            syncPayload={payload}
+            onIncrement={() => {}}
+            onDecrement={() => {}}
+          />
+        );
+      });
+
+      const root = tree.root;
+      const buttons = root.findAll((n: any) => n.props?.accessibilityRole === 'button' && n.props?.accessibilityLabel);
+      expect(buttons.length).toBeGreaterThanOrEqual(4);
+
+      for (const btn of buttons) {
+        expect(typeof btn.props.accessibilityLabel).toBe('string');
+        expect(btn.props.accessibilityLabel.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('kontrolki i przełączniki w NeedleGaugeModal spełniają wymóg >= 44 pt oraz posiadają etykiety VoiceOver', () => {
+      let tree: any;
+      act(() => {
+        tree = renderer.create(<NeedleGaugeModal visible={true} onClose={() => {}} />);
+      });
+
+      const root = tree.root;
+      const buttons = root.findAll((n: any) => n.props?.accessibilityRole === 'button' && n.props?.accessibilityLabel);
+      expect(buttons.length).toBeGreaterThanOrEqual(2);
+
+      for (const btn of buttons) {
+        expect(typeof btn.props.accessibilityLabel).toBe('string');
+        expect(btn.props.accessibilityLabel.length).toBeGreaterThan(0);
       }
     });
   });

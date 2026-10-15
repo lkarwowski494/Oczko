@@ -397,4 +397,36 @@ describe('SettingsScreen — Pełne testy ustawień, kopii zapasowych i haptyki 
     spy.mockRestore();
     consoleErrorSpy.mockRestore();
   });
+
+  it('otwiera modal symulatora Garmin ConnectIQ i wykonuje akcje licznika oraz zamknięcia', async () => {
+    const { tree } = await renderSettingsScreen();
+    const root = tree.root;
+
+    const garminBtn = root.find(
+      (node: any) =>
+        node.props?.onPress &&
+        extractAllStrings(node).includes('🛰️ Testuj')
+    );
+    expect(garminBtn).toBeDefined();
+
+    await act(async () => {
+      garminBtn.props.onPress();
+    });
+
+    const garminModal = root.find(
+      (node: any) =>
+        typeof node.props?.onClose === 'function' &&
+        typeof node.props?.onIncrement === 'function' &&
+        node.props?.syncPayload
+    );
+    expect(garminModal).toBeDefined();
+
+    await act(async () => {
+      garminModal.props.onIncrement();
+      garminModal.props.onDecrement();
+      garminModal.props.onClose();
+    });
+
+    expect(tree).toBeDefined();
+  });
 });
