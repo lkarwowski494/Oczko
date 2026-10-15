@@ -53,6 +53,19 @@ export async function getProject(db: DatabaseClient, projectId: string): Promise
   };
 }
 
+export async function updateProjectStatus(
+  db: DatabaseClient,
+  projectId: string,
+  status: ProjectStatus
+): Promise<void> {
+  await db.runAsync(
+    `UPDATE projects SET status = ?, updated_at = ? WHERE id = ?`,
+    status,
+    new Date().toISOString(),
+    projectId
+  );
+}
+
 export async function listProjects(db: DatabaseClient): Promise<ProjectRecord[]> {
   interface Row {
     id: string;

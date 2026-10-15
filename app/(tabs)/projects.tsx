@@ -13,10 +13,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useProject, ProjectContextValue } from '../../src/core/project-context';
 import { EnrichedProject } from '../../src/core/project-service';
-import { CraftType } from '../../src/core/project-repository';
+import {
+  CraftType,
+  ProjectStatus,
+  updateProjectStatus,
+} from '../../src/core/project-repository';
 import GaugeCalculatorModal, {
   CreateProjectFromGaugeInput,
 } from '../../src/components/GaugeCalculatorModal';
+import ProjectShareCardModal from '../../src/components/ProjectShareCardModal';
+
 
 export default function ProjectsScreen() {
   const router = useRouter();
@@ -38,6 +44,9 @@ export default function ProjectsScreen() {
   // Modal kalkulatora próbki (Gauge)
   const [gaugeModalVisible, setGaugeModalVisible] = useState(false);
 
+  // Modal karty podsumowania i udostępniania robótki
+  const [selectedShareProject, setSelectedShareProject] = useState<EnrichedProject | null>(null);
+
   // Modal dodawania nowej części do istniejącego projektu
   const [partModalVisible, setPartModalVisible] = useState(false);
   const [targetProjectId, setTargetProjectId] = useState<string | null>(null);
@@ -46,6 +55,17 @@ export default function ProjectsScreen() {
 
   const projects = projectCtx?.projects ?? [];
   const activeProjectId = projectCtx?.activeProject?.id ?? null;
+
+  const handleProjectStatusChange = async (projectId: string, newStatus: ProjectStatus) => {
+    if (projectCtx?.db) {
+      await updateProjectStatus(projectCtx.db, projectId, newStatus);
+      await projectCtx.refreshProjects();
+      const updated = projectCtx.projects.find((p) => p.id === projectId);
+      if (updated) {
+        setSelectedShareProject({ ...updated, status: newStatus });
+      }
+    }
+  };
 
   const handleCreateProjectFromGauge = async (input: CreateProjectFromGaugeInput) => {
     if (projectCtx) {
@@ -172,22 +192,30 @@ export default function ProjectsScreen() {
 
         <View style={styles.cardActions}>
           <TouchableOpacity
+            style={styles.cardShareButton}
+            onPress={() => setSelectedShareProject(item)}
+          >
+            <Text style={styles.cardShareButtonText}>📊 Karta</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={styles.addPartButton}
             onPress={() => {
               setTargetProjectId(item.id);
               setPartModalVisible(true);
             }}
           >
-            <Text style={styles.addPartButtonText}>+ Dodaj część</Text>
+            <Text style={styles.addPartButtonText}>+ Część</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.openCounterButton}
             onPress={() => handleOpenInCounter(item)}
           >
-            <Text style={styles.openCounterText}>Otwórz w liczniku 🧶</Text>
+            <Text style={styles.openCounterText}>Licznik 🧶</Text>
           </TouchableOpacity>
         </View>
+
       </TouchableOpacity>
     );
   };
@@ -386,9 +414,18 @@ export default function ProjectsScreen() {
         onClose={() => setGaugeModalVisible(false)}
         onCreateProject={handleCreateProjectFromGauge}
       />
+
+      {/* Modal karty podsumowania i udostępniania robótki */}
+      <ProjectShareCardModal
+        visible={selectedShareProject !== null}
+        project={selectedShareProject}
+        onClose={() => setSelectedShareProject(null)}
+        onStatusChange={handleProjectStatusChange}
+      />
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -669,4 +706,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
   },
+  cardShareButton: {
+    backgroundColor: '#FAF5F0',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E2D4C8',
+  },
+  cardShareButtonText: {
+    color: '#8B5E3C',
+    fontWeight: '700',
+    fontSize: 12,
+  },
 });
+

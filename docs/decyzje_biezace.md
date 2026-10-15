@@ -103,7 +103,13 @@
     - Analiza różnic naprężenia dzianiny (Tension check) między próbką ze wzoru a próbką wykonawcy z rekomendacjami doboru grubości drutów/szydełka oraz przelicznikiem oczek bez konieczności prucia próbki.
     - Baza gotowych szablonów projektowych (`BUILT_IN_PROJECT_TEMPLATES`) dla czapek beanie, szali, kocyków niemowlęcych, swetrów i skarpetek z rekomendowaną grubością przędzy i standardową próbką.
     - Interfejs `src/components/GaugeCalculatorModal.tsx` zintegrowany z ekranem `app/(tabs)/projects.tsx` (przycisk `📐 Próbka`) z możliwością natychmiastowego utworzenia robótki w SQLite z wyliczoną liczbą rzędów.
-  * **Stan testów:** 18 zestawów testowych, 65 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-01 & Karty Podsumowania i Udostępniania Robótki (Project Summary & Share Card)**:
+    - Moduł agregacji metryk projektu `src/core/project-summary.ts` wyliczający sumaryczne przerobione rzędy, procent ukończenia, rozbicie na części i ramy czasowe z dziennika zdarzeń.
+    - Generator sformatowanego opisu społecznościowego (`generateShareableText`) na Ravelry, Instagram czy grupy rękodzielnicze z automatycznym dopasowaniem włóczki, drutów i hashtagów.
+    - Wizualna karta rzemieślnicza w ciepłej palecie craftowej `src/components/ProjectShareCardModal.tsx` z podglądem postępu, natywnym udostępnianiem przez Share Sheet oraz możliwością przełączania statusu projektu: w trakcie (`WIP`) vs ukończony (`FO - Finished Object`).
+    - Integracja z listą projektów `app/(tabs)/projects.tsx` poprzez przycisk `📊 Karta` przy każdym projekcie.
+  * **Stan testów:** 20 zestawów testowych, 71 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+
 
 
 

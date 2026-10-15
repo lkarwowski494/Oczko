@@ -135,6 +135,15 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // UPDATE projects
       if (/^UPDATE\s+projects/i.test(clean)) {
+        if (/status\s*=\s*\?,\s*updated_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
+          const [status, updated_at, id] = params as [string, string, string];
+          const existing = getTable('projects').get(id);
+          if (existing) {
+            Object.assign(existing, { status, updated_at });
+            return { changes: 1, lastInsertRowId: 0 };
+          }
+          return { changes: 0, lastInsertRowId: 0 };
+        }
         const [name, status, updated_at, id] = params as [string, string, string, string];
         const existing = getTable('projects').get(id);
         if (existing) {
@@ -143,6 +152,7 @@ export function createInMemoryDatabase(): DatabaseClient {
         }
         return { changes: 0, lastInsertRowId: 0 };
       }
+
 
       // UPDATE stash_yarns
       if (/^UPDATE\s+stash_yarns/i.test(clean)) {
