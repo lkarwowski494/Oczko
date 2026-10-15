@@ -43,6 +43,61 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     expect(allText).toContain('Włóczki');
     expect(allText).toContain('Druty i szydełka');
     expect(allText).toContain('Zużycie');
+    expect(allText).toContain('Wszystkie grubości');
+    expect(allText).toContain('Wszystkie surowce');
+    expect(allText).toContain('Znaleziono:');
+  });
+
+  test('Ekran Magazyn obsługuje wyszukiwanie po partii farbowania (Dye Lot) oraz czyszczenie filtrów', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<StashScreen />);
+    });
+
+    const root = tree.root;
+    // Znajdź pole wyszukiwania
+    const searchInput = root.find((node: any) => {
+      return (
+        node.props?.onChangeText &&
+        node.props?.placeholder &&
+        node.props.placeholder.includes('Szukaj')
+      );
+    });
+
+    // Wpisz partię farbowania '1240'
+    act(() => {
+      searchInput.props.onChangeText('1240');
+    });
+
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Nord');
+    expect(text).toContain('Lot: 1240');
+    expect(text).not.toContain('Sunday');
+
+    // Wpisz frazę nieistniejącą
+    act(() => {
+      searchInput.props.onChangeText('brak_takiej_wloczki_xyz');
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Brak pasujących włóczek');
+    expect(text).toContain('Resetuj wszystkie filtry');
+
+    // Kliknij przycisk resetu filtrów
+    const resetBtn = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node).includes('Resetuj wszystkie filtry')
+      );
+    });
+
+    act(() => {
+      resetBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Nord');
+    expect(text).toContain('Sunday');
   });
 
   test('Ekran Nauka poprawnie renderuje słownik i pozycje skrótów dziewiarskich', () => {

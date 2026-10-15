@@ -124,8 +124,19 @@
     - Nowa tabela `pattern_documents` w schemacie bazy danych SQLite z indeksem projektu (`src/core/database-schema.ts`, `src/core/database.ts`) przechowująca metadane dokumentu (URI, nazwa, rozmiar, strona, pozycja linijki `ruler_y_percent`, wysokość i flaga auto-kroku).
     - Serwis domenowy `src/core/pattern-document-service.ts` realizujący walidację formatów (PDF, PNG, JPG), obliczanie przesunięcia linijki z detekcją przejścia na kolejną stronę (`calculateNextRulerPosition`), automatyczną synchronizację z licznikiem rzędów (`stepPatternDocumentWithCounter`) oraz operacje CRUD w bazie SQLite.
     - Dedykowany komponent czytnika `src/components/PatternPdfViewer.tsx` ze stanem pustym, integracją z selektorem plików `expo-document-picker`, nawigacją stronicową (`◀`, `▶`), manualnym pozycjonowaniem linijki (`▲ Wyżej`, `▼ Niżej`, `↺ Na górę`), przełącznikiem `Auto-krok` oraz trybem podwyższonego kontrastu o wysokiej dostępności (`NFR-DOST-009`).
-    - Integracja z `src/screens/MainCounterScreen.tsx`: 3-stanowy przełącznik widoków (`🔢 Licznik` | `📜 Schemat & Linijka` | `📑 Wzór PDF`), umożliwiający podgląd własnego wzoru PDF i jednoczesne przesuwanie linijki wraz ze stuknięciami w licznik rzędów.
-  * **Stan testów:** 25 zestawów testowych, 112 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-01, BR-MAG-002, BR-MAG-003 & Zaawansowane Filtry i Klasyfikacja w Magazynie Włóczek (Stash Filter & Classification)**:
+    - Serwis domenowy `src/core/stash-filter-service.ts`:
+      - Standaryzacja grubości przędzy wg Craft Yarn Council (`YARN_WEIGHT_STANDARDS`, CYC 0-6: Lace, Fingering, Sport, DK, Worsted, Aran, Bulky, Super Bulky) z rekomendowanymi rozmiarami drutów (mm) oraz orientacyjną próbką ściegu.
+      - Baza tagów surowcowych (`FIBER_FILTER_TAGS`) i detektor składu (`detectFiberTags`) automatycznie klasyfikujący włóczki (Wełna/Merino, Alpaka, Bawełna, Jedwab, Mohair, Len, Syntetyki).
+      - Silnik filtrowania `filterStashYarns` z natychmiastowym przeszukiwaniem po nazwie, producencie, odcieniu, notatkach oraz **numerze partii farbowania (Dye Lot)**.
+      - Agregator statystyk magazynu `calculateStashMetrics` wyliczający sumaryczną liczbę pozycji, dostępnych motków, gramaturę i metraż dla dowolnej kombinacji aktywnych filtrów.
+    - Interfejs `app/(tabs)/stash.tsx`:
+      - Pasek wyszukiwania z lupą i przyciskiem natychmiastowego czyszczenia (✕).
+      - Poziome paski wyboru filtrów grubości CYC, tagów surowcowych oraz przełącznik `Tylko na stanie`.
+      - Dynamiczny pasek podsumowania zasobów (np. `Znaleziono: 2 poz. • 6 motków • 300 g • 1020 m`).
+      - Rozszerzony modal dodawania włóczek o dedykowane pola partii farbowania (`Dye Lot`), wagi (g), długości (m) oraz chipsy wyboru standardu CYC.
+      - Plakietki `CYC {nr}` i specyfikacje motka na kartach magazynowych oraz widok stanu pustego z przyciskiem resetowania filtrów.
+  * **Stan testów:** 26 zestawów testowych, 127 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
 
 
 
