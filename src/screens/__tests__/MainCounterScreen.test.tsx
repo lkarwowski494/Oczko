@@ -179,4 +179,140 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
     text = extractAllStrings(tree.toJSON());
     expect(text).toContain('1'); // licznik na zegarku i ekranie wzrósł do 1
   });
+
+  test('W połączeniu z ProjectProvider pozwala przełączać części robótki oraz dodać licznik wzoru', async () => {
+    const { ProjectProvider } = require('../../core/project-context');
+    const { createInMemoryDatabase } = require('../../core/database');
+    const db = createInMemoryDatabase();
+
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <MainCounterScreen />
+        </ProjectProvider>
+      );
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    const root = tree.root;
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Mój Sweter Raglanowy');
+
+    // 1. Przełącz część na 'Rękaw lewy'
+    const sleeveChip = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Rękaw lewy'
+    );
+
+    await act(async () => {
+      await sleeveChip.props.onPress();
+      await new Promise((r) => setTimeout(r, 30));
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Rękaw lewy');
+
+    // 2. Otwórz modal dodawania licznika powiązanego (+ Licznik wzoru)
+    const addLinkedBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('+ Licznik wzoru')
+    );
+
+    await act(async () => {
+      addLinkedBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Dodaj powiązany licznik wzoru');
+
+    // 3. Wypełnij pola
+    const inputs = root.findAll((node: any) => node.type === 'TextInput' || node.props?.onChangeText);
+    const nameInput = inputs.find((n: any) => n.props?.placeholder && n.props.placeholder.includes('Warkocz na rękawie'));
+    const cycleInput = inputs.find((n: any) => n.props?.value === '6');
+
+    if (nameInput) {
+      await act(async () => {
+        nameInput.props.onChangeText('Ażur Liście');
+      });
+    }
+
+    if (cycleInput) {
+      await act(async () => {
+        cycleInput.props.onChangeText('12');
+      });
+    }
+
+    // 4. Kliknij 'Dodaj licznik'
+    const submitLinkedBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Dodaj licznik'
+    );
+
+    await act(async () => {
+      await submitLinkedBtn.props.onPress();
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Ażur Liście');
+  });
+
+  test('Ustawia i zapisuje przypomnienie cykliczne z presetem co 8 i własną etykietą', async () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+
+    const root = tree.root;
+
+    // Otwórz modal interwału
+    const intervalChip = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).toLowerCase().includes('przypomnienie cykliczne')
+    );
+
+    act(() => {
+      intervalChip.props.onPress();
+    });
+
+    // Wybierz preset 'co 8'
+    const preset8 = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'co 8'
+    );
+
+    act(() => {
+      preset8.props.onPress();
+    });
+
+    // Zmień etykietę
+    const inputs = root.findAll((node: any) => node.type === 'TextInput' || node.props?.onChangeText);
+    const labelInput = inputs.find((n: any) =>
+      n.props?.placeholder && n.props.placeholder.includes('Zmiana splotu')
+    );
+
+    if (labelInput) {
+      act(() => {
+        labelInput.props.onChangeText('Dodaj oczko na brzegu');
+      });
+    }
+
+    // Kliknij "Zapisz"
+    const saveBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      node.props?.children?.props?.children === 'Zapisz'
+    );
+
+    act(() => {
+      saveBtn.props.onPress();
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('co 8 rz.');
+    expect(text).toContain('Dodaj oczko na brzegu');
+  });
 });

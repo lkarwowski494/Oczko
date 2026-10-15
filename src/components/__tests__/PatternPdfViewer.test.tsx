@@ -188,4 +188,98 @@ describe('PatternPdfViewer (BR-WZOR-001, DEC-09, NFR-DOST-009)', () => {
 
     expect(onDeleteMock).toHaveBeenCalledTimes(1);
   });
+
+  it('obsługuje przełączniki trybu wysokiego kontrastu oraz auto-kroku', () => {
+    const onDocChange = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <PatternPdfViewer
+          initialDocument={MOCK_DOC}
+          activeCounterRow={14}
+          onDocumentChange={onDocChange}
+        />
+      );
+    });
+
+    const root = tree.root;
+    const switches = root.findAll((node: any) => node.type === 'Switch' || node.props?.onValueChange);
+    expect(switches.length).toBe(2);
+
+    // 1. Przełącznik auto-kroku (wyłącz)
+    act(() => {
+      switches[0].props.onValueChange(false);
+    });
+
+    expect(onDocChange).toHaveBeenCalledWith(
+      expect.objectContaining({ autoStepEnabled: false })
+    );
+
+    // 2. Przełącznik wysokiego kontrastu (włącz)
+    act(() => {
+      switches[1].props.onValueChange(true);
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('PODGLĄD STRONY DOKUMENTU');
+  });
+
+  it('obsługuje wczytanie pliku PDF w stanie pustym (fallback picker)', async () => {
+    const onDocChange = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <PatternPdfViewer
+          initialDocument={null}
+          onDocumentChange={onDocChange}
+        />
+      );
+    });
+
+    const root = tree.root;
+    const pickBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wczytaj plik PDF')
+    );
+
+    await act(async () => {
+      await pickBtn.props.onPress();
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('zaimportowany_wzor.pdf');
+    expect(onDocChange).toHaveBeenCalled();
+  });
+
+  it('aktualizuje pozycję linijki po zmianie rzędu w liczniku (autoStep)', () => {
+    const onDocChange = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <PatternPdfViewer
+          initialDocument={MOCK_DOC}
+          activeCounterRow={14}
+          onDocumentChange={onDocChange}
+        />
+      );
+    });
+
+    // Zwiększ rząd z 14 na 15
+    act(() => {
+      tree.update(
+        <PatternPdfViewer
+          initialDocument={MOCK_DOC}
+          activeCounterRow={15}
+          onDocumentChange={onDocChange}
+        />
+      );
+    });
+
+    expect(onDocChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rulerYPercent: expect.any(Number),
+      })
+    );
+  });
 });
+

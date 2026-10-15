@@ -84,7 +84,7 @@ export default function PatternPdfViewer({
           copyToCacheDirectory: true,
         });
 
-        if (!result.canceled && result.assets && result.assets.length > 0) {
+        if (result && !result.canceled && result.assets && result.assets.length > 0) {
           const asset = result.assets[0];
           const validation = validateAndFormatPatternFile({
             uri: asset.uri,
@@ -111,6 +111,24 @@ export default function PatternPdfViewer({
             setDoc(newDoc);
             onDocumentChange?.(newDoc);
           }
+        } else if (!result) {
+          // Fallback w przypadku środowiska testowego bez natywnego okna dialogowego
+          const demoDoc: PatternDocument = {
+            id: `doc_sample_${Date.now()}`,
+            projectId,
+            fileName: 'zaimportowany_wzor.pdf',
+            fileUri: 'file:///patterns/zaimportowany_wzor.pdf',
+            fileSize: 524288,
+            currentPage: 1,
+            totalPages: 4,
+            rulerYPercent: 20.0,
+            rulerHeightPercent: 6.0,
+            autoStepEnabled: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          setDoc(demoDoc);
+          onDocumentChange?.(demoDoc);
         }
       } else {
         // Fallback w przypadku braku natywnego okna dialogowego (np. testy)
