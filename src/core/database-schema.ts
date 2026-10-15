@@ -1,6 +1,6 @@
 /**
- * Schemat bazy danych SQLite / PowerSync dla aplikacji Oczko.
- * Zgodny z podejściem local-first (DEC-05: PowerSync) oraz dziennikiem zdarzeń (BR-LICZ-002).
+ * Schemat bazy danych SQLite dla aplikacji Oczko.
+ * Zgodny z podejściem local-first (DEC-10) oraz zasadą trwałego zapisu stanu (BR-LICZ-008, BR-MAG-001...005).
  */
 
 export const SQLITE_SCHEMA_STATEMENTS = [
@@ -48,5 +48,42 @@ export const SQLITE_SCHEMA_STATEMENTS = [
   );`,
 
   `CREATE INDEX IF NOT EXISTS idx_counter_events_counter_time
-    ON counter_events(counter_id, created_at_ms ASC);`
+    ON counter_events(counter_id, created_at_ms ASC);`,
+
+  `CREATE TABLE IF NOT EXISTS stash_yarns (
+    id TEXT PRIMARY KEY NOT NULL,
+    brand TEXT NOT NULL,
+    name TEXT NOT NULL,
+    colorway TEXT NOT NULL,
+    dye_lot TEXT,
+    weight_category TEXT NOT NULL CHECK (weight_category IN ('Lace', 'Fingering', 'Sport', 'DK', 'Worsted', 'Aran', 'Bulky', 'Super Bulky')),
+    composition TEXT NOT NULL,
+    skeins_total REAL NOT NULL DEFAULT 1,
+    skeins_remaining REAL NOT NULL DEFAULT 1,
+    weight_grams_per_skein REAL,
+    length_meters_per_skein REAL,
+    notes TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );`,
+
+  `CREATE INDEX IF NOT EXISTS idx_stash_yarns_brand_name
+    ON stash_yarns(brand, name);`,
+
+  `CREATE TABLE IF NOT EXISTS stash_tools (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    tool_type TEXT NOT NULL CHECK (tool_type IN ('circular', 'straight', 'dpn', 'crochet_hook', 'interchangeable_cable', 'interchangeable_tip')),
+    size_mm REAL NOT NULL,
+    us_size TEXT,
+    material TEXT NOT NULL CHECK (material IN ('bamboo', 'wood', 'metal', 'plastic', 'carbon')),
+    cable_length_cm INTEGER,
+    brand TEXT,
+    notes TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );`,
+
+  `CREATE INDEX IF NOT EXISTS idx_stash_tools_type_size
+    ON stash_tools(tool_type, size_mm);`
 ] as const;

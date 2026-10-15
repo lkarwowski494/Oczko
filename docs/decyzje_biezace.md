@@ -57,6 +57,9 @@
 * **DEC-25 Architektura nawigacji aplikacji:** Opcja A (15.10.2026)
   * *Rozstrzygnięcie:* 5-zakładkowa architektura w Expo Router (`app/(tabs)/`: `index` Licznik, `projects` Projekty, `stash` Magazyn, `learn` Nauka, `settings` Ustawienia) z root layoutem Stack oraz `SafeAreaProvider`.
 
+* **ZAS-TYMCZ Tymczasowa reguła wykonawcza właściciela (15.10.2026):**
+  * *Rozstrzygnięcie:* Agent automatycznie przyjmuje rekomendowane opcje decyzyjne i nieprzerwanie kontynuuje implementację kolejnych modułów MVP, raportując twarde dowody (testy, CI) oraz aktualny stan po każdym kroku (obowiązuje do odwołania przez właściciela).
+
 ---
 
 ## 4. Postęp implementacji MVP (Tydzień 0/1)
@@ -75,4 +78,8 @@
     - Autorytatywna baza 42 terminów dziewiarskich i szydełkowych (`src/core/glossary-data.ts`) ze standardem CYC, terminologią PL ↔ EN / DE / FR, glifami i filtrowaniem po kategoriach.
     - Silnik trenażera powtórzeń sekwencji ściegów (`src/core/pattern-trainer.ts`) z 4 wzorcami (Ściągacz 2x2, Ścieg ryżowy, Warkocz C6F, Ażur z dziurkami).
     - Interaktywny ekran `app/(tabs)/learn.tsx` z przełącznikiem trybów (Słownik / Trenażer), podglądem bieżącego kroku, stroną RS/WS, licznikiem powtórzeń w rzędzie oraz ekranem gratulacyjnym.
-  * **Stan testów:** 12 zestawów testowych, 37 testów jednostkowych, komponentowych i integracyjnych zaliczonych (100% zielone).
+  * **BR-MAG-001...005 & Trwały Magazyn Włóczek i Narzędzi w SQLite**:
+    - Tabele `stash_yarns` i `stash_tools` ze schematem SQLite i indeksami (`src/core/database-schema.ts`, `src/core/database.ts`).
+    - Repozytorium operacji CRUD i seedowania danych startowych (`src/core/stash-repository.ts`).
+    - Interaktywny interfejs `app/(tabs)/stash.tsx` z przełącznikiem Włóczki / Druty i szydełka, modalem rejestracji nowych motków i akcesoriów oraz operacją zużycia motka.
+  * **Stan testów:** 13 zestawów testowych, 42 testy jednostkowe, komponentowe i integracyjne zaliczone (100% zielone).

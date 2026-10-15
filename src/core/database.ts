@@ -115,6 +115,24 @@ export function createInMemoryDatabase(): DatabaseClient {
         return { changes: 1, lastInsertRowId: 1 };
       }
 
+      // INSERT INTO stash_yarns
+      if (/^INSERT\s+INTO\s+stash_yarns/i.test(clean)) {
+        const [id, brand, name, colorway, dye_lot, weight_category, composition, skeins_total, skeins_remaining, weight_grams_per_skein, length_meters_per_skein, notes, created_at, updated_at] = params as any[];
+        getTable('stash_yarns').set(id, {
+          id, brand, name, colorway, dye_lot, weight_category, composition, skeins_total, skeins_remaining, weight_grams_per_skein, length_meters_per_skein, notes, created_at, updated_at
+        });
+        return { changes: 1, lastInsertRowId: 1 };
+      }
+
+      // INSERT INTO stash_tools
+      if (/^INSERT\s+INTO\s+stash_tools/i.test(clean)) {
+        const [id, name, tool_type, size_mm, us_size, material, cable_length_cm, brand, notes, created_at, updated_at] = params as any[];
+        getTable('stash_tools').set(id, {
+          id, name, tool_type, size_mm, us_size, material, cable_length_cm, brand, notes, created_at, updated_at
+        });
+        return { changes: 1, lastInsertRowId: 1 };
+      }
+
       // UPDATE projects
       if (/^UPDATE\s+projects/i.test(clean)) {
         const [name, status, updated_at, id] = params as [string, string, string, string];
@@ -122,6 +140,19 @@ export function createInMemoryDatabase(): DatabaseClient {
         if (existing) {
           Object.assign(existing, { name, status, updated_at });
           return { changes: 1, lastInsertRowId: 0 };
+        }
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+
+      // UPDATE stash_yarns
+      if (/^UPDATE\s+stash_yarns/i.test(clean)) {
+        if (/skeins_remaining\s*=\s*\?/i.test(clean)) {
+          const [skeins_remaining, updated_at, id] = params as any[];
+          const existing = getTable('stash_yarns').get(id);
+          if (existing) {
+            Object.assign(existing, { skeins_remaining, updated_at });
+            return { changes: 1, lastInsertRowId: 0 };
+          }
         }
         return { changes: 0, lastInsertRowId: 0 };
       }
@@ -182,6 +213,26 @@ export function createInMemoryDatabase(): DatabaseClient {
           .filter((e) => e.counter_id === counterId)
           .sort((a, b) => ((a.created_at_ms as number) - (b.created_at_ms as number)));
         return rows as unknown as T[];
+      }
+
+      if (/FROM\s+stash_yarns\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
+        const id = params[0] as string;
+        const row = getTable('stash_yarns').get(id);
+        return row ? [row as unknown as T] : [];
+      }
+
+      if (/FROM\s+stash_yarns/i.test(clean)) {
+        return Array.from(getTable('stash_yarns').values()) as unknown as T[];
+      }
+
+      if (/FROM\s+stash_tools\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
+        const id = params[0] as string;
+        const row = getTable('stash_tools').get(id);
+        return row ? [row as unknown as T] : [];
+      }
+
+      if (/FROM\s+stash_tools/i.test(clean)) {
+        return Array.from(getTable('stash_tools').values()) as unknown as T[];
       }
 
       return [];
