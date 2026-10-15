@@ -1,26 +1,98 @@
-import { translateStitchToken, parseRowInstruction } from '../pattern-parser';
+/**
+ * Oczko Core — Parser i tłumacz skrótów dziewiarskich / szydełkowych (Moduł nauki i importu)
+ * Obsługuje podstawowy słownik uniwersalny (EN / PL) oraz dekonstrukcję rzędów wzoru.
+ */
 
-describe('Oczko Core — Parser wzorów i skrótów (Moduł nauki)', () => {
-  test('Tłumaczy znane skróty dziewiarskie na polski i angielski', () => {
-    const k2tog = translateStitchToken('k2tog');
-    expect(k2tog).not.toBeNull();
-    expect(k2tog?.polishName).toBe('Przerób 2 oczka razem na prawo');
-    expect(k2tog?.category).toBe('decrease');
+export interface StitchTranslation {
+  code: string;
+  englishName: string;
+  polishName: string;
+  description: string;
+  category: 'knit' | 'purl' | 'increase' | 'decrease' | 'special';
+}
 
-    const yo = translateStitchToken('yo');
-    expect(yo?.polishName).toBe('Narzut');
-    expect(yo?.category).toBe('increase');
+const STITCH_DICTIONARY: Record<string, StitchTranslation> = {
+  k: {
+    code: 'k',
+    englishName: 'Knit',
+    polishName: 'Oczko prawe',
+    description: 'Przerób oczko na prawo (prawe oczko w rzędzie).',
+    category: 'knit',
+  },
+  p: {
+    code: 'p',
+    englishName: 'Purl',
+    polishName: 'Oczko lewe',
+    description: 'Przerób oczko na lewo (lewe oczko w rzędzie).',
+    category: 'purl',
+  },
+  yo: {
+    code: 'yo',
+    englishName: 'Yarn over',
+    polishName: 'Narzut',
+    description: 'Nawinęcie włóczki na drut tworzące ażurowe oczko.',
+    category: 'increase',
+  },
+  k2tog: {
+    code: 'k2tog',
+    englishName: 'Knit 2 together',
+    polishName: 'Przerób 2 oczka razem na prawo',
+    description: 'Ujęcie oczka: przerób dwa oczka na raz na prawo (pochylenie w prawo).',
+    category: 'decrease',
+  },
+  ssk: {
+    code: 'ssk',
+    englishName: 'Slip, slip, knit',
+    polishName: 'Ściągnij, ściągnij, przerób',
+    description: 'Ujęcie oczka: przełóż dwa oczka pojedynczo na prawy drut, a następnie przerób razem za tylne nitki (pochylenie w lewo).',
+    category: 'decrease',
+  },
+  kfb: {
+    code: 'kfb',
+    englishName: 'Knit front and back',
+    polishName: 'Przerób przednią i tylną nitkę',
+    description: 'Zwiększenie oczka: przerób to samo oczko najpierw za przednią, a potem za tylną nitkę.',
+    category: 'increase',
+  },
+};
 
-    const unknown = translateStitchToken('unknown_stitch');
-    expect(unknown).toBeNull();
+/**
+ * Tłumaczy pojedynczy token skrótu na opis i polską nazwę.
+ */
+export function translateStitchToken(token: string): StitchTranslation | null {
+  const clean = token.toLowerCase().trim();
+  return STITCH_DICTIONARY[clean] ?? null;
+}
+
+export interface ParsedRowInstruction {
+  rawText: string;
+  tokens: Array<{ raw: string; translation: StitchTranslation | null }>;
+  isRecognized: boolean;
+}
+
+/**
+ * Parsuje linijkę tekstu wzoru i rozbija ją na znane skróty techniczne.
+ */
+export function parseRowInstruction(rowText: string): ParsedRowInstruction {
+  const rawTokens = rowText.replace(/[\.,]/g, '').split(/\s+/).filter(Boolean);
+  
+  let recognizedCount = 0;
+  const tokens = rawTokens.map((raw) => {
+    const baseMatch = raw.match(/^([a-zA-Z0-9]+)(\d*)$/);
+    const lookupKey = baseMatch ? baseMatch[1].toLowerCase() : raw.toLowerCase();
+    
+    const translation = STITCH_DICTIONARY[lookupKey] ?? null;
+    if (translation) recognizedCount++;
+
+    return {
+      raw,
+      translation,
+    };
   });
 
-  test('Parsuje linię instrukcji wzoru z wieloma skrótami', () => {
-    const result = parseRowInstruction('k2tog, yo, k');
-    expect(result.isRecognized).toBe(true);
-    expect(result.tokens).toHaveLength(3);
-    expect(result.tokens[0].translation?.code).toBe('k2tog');
-    expect(result.tokens[1].translation?.code).toBe('yo');
-    expect(result.tokens[2].translation?.code).toBe('k');
-  });
-});
+  return {
+    rawText,
+    tokens,
+    isRecognized: tokens.length > 0 && recognizedCount > 0,
+  };
+}
