@@ -22,6 +22,8 @@ import {
   OczkoBackupMetadata,
 } from '../../src/core/backup-service';
 import { triggerHaptic } from '../../src/core/feedback-service';
+import AppleWatchCompanionModal from '../../src/components/AppleWatchCompanionModal';
+import { createWatchCounterSnapshot } from '../../src/core/apple-watch-service';
 
 export default function SettingsScreen() {
   const projectContext = useOptionalProject();
@@ -33,6 +35,7 @@ export default function SettingsScreen() {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [defaultInterval, setDefaultInterval] = useState(0);
   const [iCloudBackup, setICloudBackup] = useState(true);
+  const [isWatchModalVisible, setIsWatchModalVisible] = useState(false);
 
   // Stan bazy danych i kopii zapasowych (DEC-10, BR-DANE-002)
   const [stats, setStats] = useState<OczkoBackupMetadata['itemCounts'] | null>(null);
@@ -323,7 +326,15 @@ export default function SettingsScreen() {
 
           <View style={[styles.statusRow, styles.borderTop]}>
             <Text style={styles.statusLabel}>Apple Watch (watchOS 11):</Text>
-            <Text style={styles.statusActive}>Gotowy do synchronizacji</Text>
+            <View style={styles.watchStatusGroup}>
+              <Text style={styles.statusActive}>Gotowy</Text>
+              <TouchableOpacity
+                style={styles.watchTestBtn}
+                onPress={() => setIsWatchModalVisible(true)}
+              >
+                <Text style={styles.watchTestBtnText}>⌚ Testuj</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.statusRow}>
@@ -412,6 +423,29 @@ export default function SettingsScreen() {
           </ScrollView>
         </SafeAreaView>
       </Modal>
+
+      {/* Modal testowy Apple Watch & Smart Stack (DEC-03) */}
+      <AppleWatchCompanionModal
+        visible={isWatchModalVisible}
+        onClose={() => setIsWatchModalVisible(false)}
+        snapshot={createWatchCounterSnapshot({
+          projectId: 'proj_settings_test',
+          projectName: 'Mój Projekt',
+          partId: 'part_test',
+          partName: 'Korpus',
+          counterId: 'c1',
+          counterName: 'Rzędy',
+          counterState: {
+            rawValue: 24,
+            targetValue: 60,
+            activeReminder: true,
+            reminderRows: [24],
+            isGoalReached: false,
+            history: [],
+          },
+          reminderReason: '🔔 Przypomnienie interwałowe',
+        })}
+      />
     </SafeAreaView>
   );
 }
@@ -717,5 +751,23 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: '#5C3E26',
+  },
+  watchStatusGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  watchTestBtn: {
+    backgroundColor: '#1C1C1E',
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#3A3A3C',
+  },
+  watchTestBtnText: {
+    color: '#FF9F0A',
+    fontSize: 11,
+    fontWeight: '700',
   },
 });

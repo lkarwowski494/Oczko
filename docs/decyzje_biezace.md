@@ -135,8 +135,19 @@
       - Poziome paski wyboru filtrów grubości CYC, tagów surowcowych oraz przełącznik `Tylko na stanie`.
       - Dynamiczny pasek podsumowania zasobów (np. `Znaleziono: 2 poz. • 6 motków • 300 g • 1020 m`).
       - Rozszerzony modal dodawania włóczek o dedykowane pola partii farbowania (`Dye Lot`), wagi (g), długości (m) oraz chipsy wyboru standardu CYC.
-      - Plakietki `CYC {nr}` i specyfikacje motka na kartach magazynowych oraz widok stanu pustego z przyciskiem resetowania filtrów.
-  * **Stan testów:** 26 zestawów testowych, 127 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-01, DEC-03, BR-SYS-003, BR-ZEG-003, BR-ZEG-009 & Apple Watch Companion, Cyfrowa Koronka i Smart Stack / Live Activities**:
+    - Serwis domenowy `src/core/apple-watch-service.ts`:
+      - `createWatchCounterSnapshot`: tworzenie kompaktowego zrzutu stanu licznika (`WatchCounterSnapshot`) dla watchOS 11 / WCSession.
+      - `handleWatchInteraction`: rejestracja i obsługa zdarzeń ze smartwatcha (`INCREMENT`, `UNDO`) z oznaczeniem źródła `source: 'apple_watch'`.
+      - `processDigitalCrownDelta`: obsługa fizycznej cyfrowej koronki (Digital Crown, BR-ZEG-003) z akumulatorem obrotu i progiem czułości.
+      - `WatchOfflineQueue`: buforowanie operacji zegarka w trybie offline przy braku łączności BLE z iPhonem i ich automatyczny zrzut po powrocie do zasięgu.
+      - `generateLiveActivityAttributes`: generowanie struktury dla ActivityKit (Live Activities na ekranie blokady oraz Dynamic Island na iOS 18 i Smart Stack na watchOS 11, BR-ZEG-009).
+    - Komponent `src/components/AppleWatchCompanionModal.tsx`:
+      - Pełny interaktywny symulator zegarka Apple Watch (OLED 45 mm) z dużym dotykowym przyciskiem `+1 Rząd` (idealny do szybkiego stuknięcia podczas dziergania bez odkładania drutów), przyciskiem cofania `-1`, kontrolkami cyfrowej koronki oraz podglądem widżetu Smart Stack.
+    - Integracja z interfejsem użytkownika:
+      - Ekran główny `src/screens/MainCounterScreen.tsx`: dedykowany chip `⌚ Apple Watch` obok powiadomień cyklicznych z dwukierunkową synchronizacją stanu w czasie rzeczywistym.
+      - Ekran `app/(tabs)/settings.tsx`: status połączenia WCSession oraz przycisk testowania zegarka.
+  * **Stan testów:** 28 zestawów testowych, 140 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
 
 
 

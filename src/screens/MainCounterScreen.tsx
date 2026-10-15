@@ -18,7 +18,9 @@ import { ProjectManagerFacade } from '../core/project-facade';
 import { useProject, ProjectContextValue } from '../core/project-context';
 import PatternGuideViewer from '../components/PatternGuideViewer';
 import PatternPdfViewer from '../components/PatternPdfViewer';
+import AppleWatchCompanionModal from '../components/AppleWatchCompanionModal';
 import { triggerHaptic, checkIntervalReminder } from '../core/feedback-service';
+import { createWatchCounterSnapshot } from '../core/apple-watch-service';
 import {
   PatternDocument,
   getPatternDocumentForProject,
@@ -63,6 +65,9 @@ export default function MainCounterScreen() {
   const [tempIntervalInput, setTempIntervalInput] = useState<string>('6');
   const [tempLabelInput, setTempLabelInput] = useState<string>('Zmiana splotu / nitki');
 
+  // Apple Watch & Live Activities (DEC-03, BR-SYS-003)
+  const [watchModalVisible, setWatchModalVisible] = useState<boolean>(false);
+
   // Ładowanie zaimportowanego wzoru PDF dla aktywnego projektu (BR-WZOR-001, DEC-09)
   useEffect(() => {
     if (projectCtx?.db && projectCtx?.activeProject?.id) {
@@ -100,6 +105,25 @@ export default function MainCounterScreen() {
   const reminderMessage = intervalCheck.shouldRemind
     ? (intervalCheck.reason || '🔔 Przypomnienie interwałowe!')
     : '⚠️ Ważny rząd / przypomnienie';
+
+  // Zrzut stanu dla Apple Watch & Smart Stack (DEC-03, BR-SYS-003)
+  const watchSnapshot = createWatchCounterSnapshot({
+    projectId: isConnectedToContext ? projectCtx!.activeProject!.id : 'proj_demo',
+    projectName,
+    partId: activePartId || 'part_main',
+    partName,
+    counterId: activeCounterId || 'counter_main',
+    counterName: 'Rzędy',
+    counterState: {
+      rawValue: counterValue,
+      targetValue: projectParts.find((p) => p.id === activePartId)?.targetRows,
+      activeReminder: showReminder,
+      reminderRows: intervalReminderRows > 0 ? [intervalReminderRows] : [],
+      isGoalReached: false,
+      history: [],
+    },
+    reminderReason: showReminder ? reminderMessage : undefined,
+  });
 
   const handleIncrement = () => {
     const nextValue = counterValue + 1;
@@ -307,22 +331,32 @@ export default function MainCounterScreen() {
             </View>
           )}
 
-          {/* Pasek szybkiej konfiguracji przypomnienia cyklicznego */}
-          <TouchableOpacity
-            style={styles.intervalChip}
-            activeOpacity={0.8}
-            onPress={() => {
-              setTempIntervalInput(intervalReminderRows > 0 ? String(intervalReminderRows) : '6');
-              setTempLabelInput(intervalReminderLabel);
-              setIntervalModalVisible(true);
-            }}
-          >
-            <Text style={styles.intervalChipText}>
-              {intervalReminderRows > 0
-                ? `🔔 Przypomnienie: co ${intervalReminderRows} rz. (${intervalReminderLabel})`
-                : '🔔 Ustaw przypomnienie cykliczne'}
-            </Text>
-          </TouchableOpacity>
+          {/* Pasek szybkiej konfiguracji przypomnienia cyklicznego oraz Apple Watch (DEC-03) */}
+          <View style={styles.accessoryChipsRow}>
+            <TouchableOpacity
+              style={styles.intervalChip}
+              activeOpacity={0.8}
+              onPress={() => {
+                setTempIntervalInput(intervalReminderRows > 0 ? String(intervalReminderRows) : '6');
+                setTempLabelInput(intervalReminderLabel);
+                setIntervalModalVisible(true);
+              }}
+            >
+              <Text style={styles.intervalChipText}>
+                {intervalReminderRows > 0
+                  ? `🔔 Przypomnienie: co ${intervalReminderRows} rz. (${intervalReminderLabel})`
+                  : '🔔 Ustaw przypomnienie cykliczne'}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.watchChip}
+              activeOpacity={0.8}
+              onPress={() => setWatchModalVisible(true)}
+            >
+              <Text style={styles.watchChipText}>⌚ Apple Watch</Text>
+            </TouchableOpacity>
+          </View>
 
           {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
           <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
@@ -496,6 +530,17 @@ export default function MainCounterScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Modal Apple Watch & Live Activities (DEC-03) */}
+      <AppleWatchCompanionModal
+        visible={watchModalVisible}
+        onClose={() => setWatchModalVisible(false)}
+        snapshot={watchSnapshot}
+        onStep={(direction) => {
+          if (direction === 'increment') handleIncrement();
+          else handleDecrement();
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -792,6 +837,28 @@ const styles = StyleSheet.create({
   presetButtonTextActive: {
     color: '#FFFFFF',
     fontWeight: '700',
+  },
+  accessoryChipsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+    paddingHorizontal: 16,
+    flexWrap: 'wrap',
+  },
+  watchChip: {
+    backgroundColor: '#1C1C1E',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#3A3A3C',
+  },
+  watchChipText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FF9F0A',
   },
 });
 

@@ -140,4 +140,43 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
     expect(text).toContain('Brak wczytanego wzoru');
     expect(text).toContain('Wczytaj plik PDF');
   });
+
+  test('Otwiera symulator Apple Watch (DEC-03) i zwiększa licznik główny po stuknięciu +1 na zegarku', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+
+    const root = tree.root;
+    // Znajdź przycisk otwierający Apple Watch
+    const watchChip = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node).includes('Apple Watch')
+      );
+    });
+
+    act(() => {
+      watchChip.props.onPress();
+    });
+
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Apple Watch & Smart Stack');
+    expect(text).toContain('watchOS 11');
+
+    // Znajdź przycisk +1 Rząd w symulatorze zegarka
+    const watchPlusBtn = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node).includes('+1 Rząd')
+      );
+    });
+
+    act(() => {
+      watchPlusBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('1'); // licznik na zegarku i ekranie wzrósł do 1
+  });
 });
