@@ -8,7 +8,7 @@ describe('Oczko Core — Parser wzorów i skrótów (Moduł nauki)', () => {
     expect(k2tog?.category).toBe('decrease');
 
     const yo = translateStitchToken('yo');
-    expect(yo?.polishName).toBe('Narzędzia/Narzut' || 'Narzut'); // weryfikacja
+    expect(yo?.polishName).toBe('Narzut');
     expect(yo?.category).toBe('increase');
 
     const unknown = translateStitchToken('unknown_stitch');
