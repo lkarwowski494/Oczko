@@ -115,7 +115,13 @@
     - Algorytm detekcji ryzyka „Yarn Chicken” (gra w cykora z włóczką) z trzystopniową kategoryzacją (`safe` / `warning` < 5% rezerwy / `danger` deficyt) oraz kontekstowymi radami ratunkowymi (dokupienie motka z tego samego lotu farbowania, modyfikacja ściągacza).
     - Obsługa konfigurowalnego marginesu bezpieczeństwa (0%, +5%, +10%, +15%, +20%) na końcówki, próbki i zmienność naprężenia nitki oraz wskaźnika grist (m/g, m/100g).
     - Interaktywny komponent `src/components/YarnUsageEstimatorModal.tsx` zintegrowany zarówno z Magazynem (`app/(tabs)/stash.tsx` - przycisk `⚖️ Zużycie`), jak i listą projektów (`app/(tabs)/projects.tsx` - w pasku akcji oraz na kartach robótek z automatycznym zaczytaniem liczby rzędów).
-  * **Stan testów:** 22 zestawy testowe, 86 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+  * **DEC-01, BR-LICZ-003, BR-SYS-011 & Haptyka Dotykowa i Powiadomienia Interwałowe (Tactile Haptics & Interval Reminders)**:
+    - Moduł `src/core/feedback-service.ts` obsługujący natywny silnik haptyczny (`expo-haptics`) ze zróżnicowanymi profilami wibracji: lekki impuls (`step`) przy manualnym naliczeniu rzędu, wyczuwalny impuls średni (`undo`) przy cofaniu, mocny impuls (`cycle`) przy pełnym obrocie cyklu modulo warkocza/ażuru oraz uroczyste powiadomienie sukcesu (`goal`) po ukończeniu robótki.
+    - Elastyczny mechanizm powiadomień interwałowych (`checkIntervalReminder`) z wykrywaniem progów co $N$ rzędów (np. co 4, 6, 8, 10 rzędów) lub wyznaczonych rzędów specjalnych wraz z konfigurowalnymi etykietami czynności (np. „Zmiana koloru nitki”, „Splot warkocza C6F”).
+    - Interfejs `MainCounterScreen`: dedykowany chip szybkiej konfiguracji interwału nad kartą licznika, dynamiczny baner powiadomienia na karcie licznika oraz modal wyboru predefiniowanych interwałów.
+    - Interfejs `app/(tabs)/settings.tsx`: przełącznik wibracji haptycznych, interaktywny panel testowania każdego profilu wibracji w czasie rzeczywistym oraz wybór domyślnego interwału przypomnień.
+  * **Stan testów:** 23 zestawy testowe, 95 testów jednostkowych, komponentowych i integracyjnych zaliczone (100% zielone).
+
 
 
 

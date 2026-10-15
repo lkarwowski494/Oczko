@@ -21,6 +21,7 @@ import {
   validateBackupData,
   OczkoBackupMetadata,
 } from '../../src/core/backup-service';
+import { triggerHaptic } from '../../src/core/feedback-service';
 
 export default function SettingsScreen() {
   const projectContext = useOptionalProject();
@@ -30,6 +31,7 @@ export default function SettingsScreen() {
   const [debounceMs, setDebounceMs] = useState(300);
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [defaultInterval, setDefaultInterval] = useState(0);
   const [iCloudBackup, setICloudBackup] = useState(true);
 
   // Stan bazy danych i kopii zapasowych (DEC-10, BR-DANE-002)
@@ -168,10 +170,51 @@ export default function SettingsScreen() {
             </View>
             <Switch
               value={hapticsEnabled}
-              onValueChange={setHapticsEnabled}
+              onValueChange={(val) => {
+                setHapticsEnabled(val);
+                if (val) triggerHaptic('step', { hapticsEnabled: true });
+              }}
               trackColor={{ false: '#E5E5EA', true: '#8B5E3C' }}
             />
           </View>
+
+          {hapticsEnabled && (
+            <View style={[styles.testHapticsContainer, styles.borderTop]}>
+              <Text style={styles.testHapticsTitle}>Przetestuj profile wibracji:</Text>
+              <View style={styles.testChipsRow}>
+                <TouchableOpacity
+                  style={styles.testChip}
+                  onPress={() => triggerHaptic('step', { hapticsEnabled: true })}
+                >
+                  <Text style={styles.testChipText}>👆 Krok (+1)</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.testChip}
+                  onPress={() => triggerHaptic('undo', { hapticsEnabled: true })}
+                >
+                  <Text style={styles.testChipText}>↩️ Cofnięcie (-1)</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.testChip}
+                  onPress={() => triggerHaptic('cycle', { hapticsEnabled: true })}
+                >
+                  <Text style={styles.testChipText}>🪢 Cykl wzoru</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.testChip}
+                  onPress={() => triggerHaptic('goal', { hapticsEnabled: true })}
+                >
+                  <Text style={styles.testChipText}>🏆 Cel robótki</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.testChip}
+                  onPress={() => triggerHaptic('reminder', { hapticsEnabled: true })}
+                >
+                  <Text style={styles.testChipText}>🔔 Przypomnienie</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
 
           <View style={[styles.toggleRow, styles.borderTop]}>
             <View style={styles.toggleTextContainer}>
@@ -183,6 +226,35 @@ export default function SettingsScreen() {
               onValueChange={setSoundEnabled}
               trackColor={{ false: '#E5E5EA', true: '#8B5E3C' }}
             />
+          </View>
+        </View>
+
+        {/* Przypomnienia interwałowe */}
+        <View style={styles.card}>
+          <Text style={styles.settingTitle}>Domyślne przypomnienie interwałowe</Text>
+          <Text style={styles.settingDesc}>
+            Automatyczny sygnał wibracyjny i powiadomienie co N rzędów (BR-LICZ-003).
+          </Text>
+          <View style={styles.optionsRow}>
+            {[0, 4, 6, 8, 10, 12].map((cnt) => (
+              <TouchableOpacity
+                key={cnt}
+                style={[
+                  styles.optionChip,
+                  defaultInterval === cnt && styles.optionChipActive,
+                ]}
+                onPress={() => setDefaultInterval(cnt)}
+              >
+                <Text
+                  style={[
+                    styles.optionChipText,
+                    defaultInterval === cnt && styles.optionChipTextActive,
+                  ]}
+                >
+                  {cnt === 0 ? 'Wyłącz' : `co ${cnt}`}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
@@ -617,5 +689,33 @@ const styles = StyleSheet.create({
     color: '#777777',
     fontSize: 14,
     fontWeight: '600',
+  },
+  testHapticsContainer: {
+    paddingTop: 12,
+    marginTop: 4,
+  },
+  testHapticsTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#666666',
+    marginBottom: 8,
+  },
+  testChipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  testChip: {
+    backgroundColor: '#F4ECE4',
+    borderWidth: 1,
+    borderColor: '#D8C8BE',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+  },
+  testChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#5C3E26',
   },
 });

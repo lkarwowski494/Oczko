@@ -68,6 +68,9 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
     expect(allText).toContain('LICZNIK & STUKNIĘCIA');
     expect(allText).toContain('com.apps4brew.knitting');
     expect(allText).toMatch(/300\s*ms/);
+    expect(allText).toContain('Wibracje haptyczne');
+    expect(allText).toContain('Przetestuj profile wibracji');
+    expect(allText).toContain('Domyślne przypomnienie interwałowe');
     expect(allText).toContain('Eksportuj kopię');
     expect(allText).toContain('Przywróć kopię');
     expect(allText).toContain('Stan lokalnej bazy SQLite');

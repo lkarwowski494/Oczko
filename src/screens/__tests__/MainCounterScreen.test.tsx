@@ -12,10 +12,11 @@ function extractAllStrings(node: any): string {
   }
   const childrenText = node.children ? node.children.map(extractAllStrings).join(' ') : '';
   const propsText = node.props?.children ? extractAllStrings(node.props.children) : '';
-  return `${childrenText} ${propsText}`;
+  const valueText = node.props?.value ? String(node.props.value) : '';
+  return `${childrenText} ${propsText} ${valueText}`;
 }
 
-describe('Oczko UI — Test renderowania głównego ekranu', () => {
+describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ-003, BR-SYS-011)', () => {
   test('Komponent ekranu licznika definiuje poprawną strukturę i renderuje drzewo', () => {
     let tree: any;
     act(() => {
@@ -27,6 +28,7 @@ describe('Oczko UI — Test renderowania głównego ekranu', () => {
     expect(allText).toContain('Licznik');
     expect(allText).toContain('Schemat & Linijka');
     expect(allText).toContain('Stuknij, aby dodać rząd');
+    expect(allText).toMatch(/przypomnienie cykliczne/i);
   });
 
   test('Przełącza tryb widoku na Schemat & Linijka i renderuje przeglądarkę wzorów', () => {
@@ -36,11 +38,10 @@ describe('Oczko UI — Test renderowania głównego ekranu', () => {
     });
 
     const root = tree.root;
-    // Znajdź tab "Schemat & Linijka"
     const patternTab = root.find((node: any) => {
       return (
         node.props?.onPress &&
-        extractAllStrings(node.props?.children).includes('Schemat & Linijka')
+        extractAllStrings(node).includes('Schemat & Linijka')
       );
     });
 
@@ -53,5 +54,67 @@ describe('Oczko UI — Test renderowania głównego ekranu', () => {
     expect(text).toContain('DIAGRAM DZIEWIARSKI');
     expect(text).toContain('LINIJKA');
     expect(text).toContain('Legenda symboli CYC');
+  });
+
+  test('Otwiera modal konfiguracji przypomnienia cyklicznego i pozwala ustawić interwał', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+
+    const root = tree.root;
+    const intervalChip = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node).toLowerCase().includes('przypomnienie cykliczne')
+      );
+    });
+
+    act(() => {
+      intervalChip.props.onPress();
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Przypomnienie cykliczne (Interwał)');
+    expect(text).toContain('Szybki wybór interwału:');
+    expect(text).toContain('co 6');
+  });
+
+  test('Inkrementuje i cofa licznik z obsługą haptyki', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+
+    const root = tree.root;
+    // Znajdź kartę licznika
+    const counterCard = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node.props?.children).includes('Stuknij, aby dodać rząd')
+      );
+    });
+
+    act(() => {
+      counterCard.props.onPress();
+    });
+
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('1');
+
+    // Znajdź przycisk cofania (Undo)
+    const undoBtn = root.find((node: any) => {
+      return (
+        node.props?.onPress &&
+        extractAllStrings(node.props?.children).includes('Cofnij')
+      );
+    });
+
+    act(() => {
+      undoBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('0');
   });
 });

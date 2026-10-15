@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProjectManagerFacade } from '../core/project-facade';
 import { useProject, ProjectContextValue } from '../core/project-context';
 import PatternGuideViewer from '../components/PatternGuideViewer';
+import { triggerHaptic, checkIntervalReminder } from '../core/feedback-service';
 
 // Fallback dla izolowanych testów komponentu
 const fallbackFacade = new ProjectManagerFacade('proj_demo', 'Mój Sweter');
@@ -46,6 +47,13 @@ export default function MainCounterScreen() {
   const [newModuloCycle, setNewModuloCycle] = useState('6');
   const [newReminderRow, setNewReminderRow] = useState('6');
 
+  // Przypomnienia interwałowe i sygnały haptyczne (BR-LICZ-003, BR-SYS-011)
+  const [intervalReminderRows, setIntervalReminderRows] = useState<number>(0);
+  const [intervalReminderLabel, setIntervalReminderLabel] = useState<string>('Zmiana splotu / nitki');
+  const [intervalModalVisible, setIntervalModalVisible] = useState<boolean>(false);
+  const [tempIntervalInput, setTempIntervalInput] = useState<string>('6');
+  const [tempLabelInput, setTempLabelInput] = useState<string>('Zmiana splotu / nitki');
+
   const isConnectedToContext = Boolean(projectCtx && projectCtx.activeProject);
 
   const projectName = isConnectedToContext
@@ -69,12 +77,38 @@ export default function MainCounterScreen() {
   const activeCounterId = projectCtx?.activeCounterId ?? null;
   const activeLinkedStates = projectCtx?.activeLinkedCounterStates ?? [];
 
+  const intervalCheck = checkIntervalReminder(counterValue, intervalReminderRows, undefined, intervalReminderLabel);
+  const showReminder = activeReminder || intervalCheck.shouldRemind;
+  const reminderMessage = intervalCheck.shouldRemind
+    ? (intervalCheck.reason || '🔔 Przypomnienie interwałowe!')
+    : '⚠️ Ważny rząd / przypomnienie';
+
   const handleIncrement = () => {
+    const nextValue = counterValue + 1;
+    const targetRows = projectParts.find((p) => p.id === activePartId)?.targetRows;
+    const isGoalReached = Boolean(targetRows && nextValue >= targetRows);
+    const isIntervalHit = Boolean(intervalReminderRows > 0 && nextValue % intervalReminderRows === 0);
+
     if (isConnectedToContext) {
       projectCtx!.stepCounter('increment');
     } else {
       fallbackFacade.stepCounter('counter_main', 'increment', 'iphone', Date.now(), 300);
       setLocalFallbackState(fallbackFacade.getCounterState('counter_main'));
+    }
+
+    if (isGoalReached) {
+      triggerHaptic('goal');
+    } else if (isIntervalHit || activeReminder) {
+      triggerHaptic('reminder');
+    } else {
+      const linkedCycleHit = activeLinkedStates.some(
+        (ls) => ls.moduloCycle && ((ls.cycleStep ?? 0) + 1) % ls.moduloCycle === 0
+      );
+      if (linkedCycleHit) {
+        triggerHaptic('cycle');
+      } else {
+        triggerHaptic('step');
+      }
     }
   };
 
@@ -85,6 +119,7 @@ export default function MainCounterScreen() {
       fallbackFacade.undoLast('counter_main', 'iphone', Date.now());
       setLocalFallbackState(fallbackFacade.getCounterState('counter_main'));
     }
+    triggerHaptic('undo');
   };
 
   const handleCreateLinkedCounter = async () => {
@@ -200,13 +235,30 @@ export default function MainCounterScreen() {
             </View>
           )}
 
+          {/* Pasek szybkiej konfiguracji przypomnienia cyklicznego */}
+          <TouchableOpacity
+            style={styles.intervalChip}
+            activeOpacity={0.8}
+            onPress={() => {
+              setTempIntervalInput(intervalReminderRows > 0 ? String(intervalReminderRows) : '6');
+              setTempLabelInput(intervalReminderLabel);
+              setIntervalModalVisible(true);
+            }}
+          >
+            <Text style={styles.intervalChipText}>
+              {intervalReminderRows > 0
+                ? `🔔 Przypomnienie: co ${intervalReminderRows} rz. (${intervalReminderLabel})`
+                : '🔔 Ustaw przypomnienie cykliczne'}
+            </Text>
+          </TouchableOpacity>
+
           {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
           <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
             <Text style={styles.counterValue}>{counterValue}</Text>
             <Text style={styles.counterHint}>Stuknij, aby dodać rząd</Text>
-            {activeReminder && (
+            {showReminder && (
               <View style={styles.reminderBadge}>
-                <Text style={styles.reminderText}>⚠️ Ważny rząd / przypomnienie</Text>
+                <Text style={styles.reminderText}>{reminderMessage}</Text>
               </View>
             )}
           </TouchableOpacity>
@@ -286,6 +338,87 @@ export default function MainCounterScreen() {
                 onPress={handleCreateLinkedCounter}
               >
                 <Text style={styles.submitButtonText}>Dodaj licznik</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal konfiguracji powiadomienia interwałowego (BR-LICZ-003, BR-SYS-011) */}
+      <Modal
+        visible={intervalModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIntervalModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Przypomnienie cykliczne (Interwał)</Text>
+            <Text style={styles.modalSubtitle}>
+              Otrzymasz wibrację i powiadomienie na ekranie co wybraną liczbę rzędów.
+            </Text>
+
+            <Text style={styles.inputLabel}>Szybki wybór interwału:</Text>
+            <View style={styles.intervalPresetsRow}>
+              {[0, 4, 6, 8, 10, 12].map((cnt) => {
+                const isSelected =
+                  cnt === 0 ? tempIntervalInput === '0' : tempIntervalInput === String(cnt);
+                return (
+                  <TouchableOpacity
+                    key={cnt}
+                    style={[styles.presetButton, isSelected && styles.presetButtonActive]}
+                    onPress={() => setTempIntervalInput(String(cnt))}
+                  >
+                    <Text
+                      style={[
+                        styles.presetButtonText,
+                        isSelected && styles.presetButtonTextActive,
+                      ]}
+                    >
+                      {cnt === 0 ? 'Wyłącz' : `co ${cnt}`}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+
+            <Text style={styles.inputLabel}>Liczba rzędów (własna wartość):</Text>
+            <TextInput
+              style={styles.textInput}
+              value={tempIntervalInput}
+              onChangeText={setTempIntervalInput}
+              keyboardType="numeric"
+              placeholder="np. 6"
+              placeholderTextColor="#999"
+            />
+
+            <Text style={styles.inputLabel}>Etykieta powiadomienia:</Text>
+            <TextInput
+              style={styles.textInput}
+              value={tempLabelInput}
+              onChangeText={setTempLabelInput}
+              placeholder="np. Zmiana splotu / nitki"
+              placeholderTextColor="#999"
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setIntervalModalVisible(false)}
+              >
+                <Text style={styles.cancelButtonText}>Anuluj</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={() => {
+                  const parsed = parseInt(tempIntervalInput, 10);
+                  setIntervalReminderRows(!isNaN(parsed) && parsed > 0 ? parsed : 0);
+                  setIntervalReminderLabel(tempLabelInput.trim() || 'Przypomnienie');
+                  setIntervalModalVisible(false);
+                }}
+              >
+                <Text style={styles.submitButtonText}>Zapisz</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -544,6 +677,48 @@ const styles = StyleSheet.create({
   },
   viewModeTabTextActive: {
     color: '#8B5E3C',
+    fontWeight: '700',
+  },
+  intervalChip: {
+    alignSelf: 'center',
+    backgroundColor: '#F7EFEA',
+    borderWidth: 1,
+    borderColor: '#D8C8BE',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    marginBottom: 8,
+  },
+  intervalChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#8B5E3C',
+  },
+  intervalPresetsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 12,
+  },
+  presetButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    backgroundColor: '#F0ECE8',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#D8C8BE',
+  },
+  presetButtonActive: {
+    backgroundColor: '#8B5E3C',
+    borderColor: '#8B5E3C',
+  },
+  presetButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#666666',
+  },
+  presetButtonTextActive: {
+    color: '#FFFFFF',
     fontWeight: '700',
   },
 });
