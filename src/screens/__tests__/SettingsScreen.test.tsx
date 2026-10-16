@@ -429,4 +429,97 @@ describe('SettingsScreen — Pełne testy ustawień, kopii zapasowych i haptyki 
 
     expect(tree).toBeDefined();
   });
+
+  it('wyświetla sekcję Apps4Brew Studio Pass i obsługuje otwarcie paywalla oraz przywracanie zakupów', async () => {
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    const { tree } = await renderSettingsScreen();
+    const root = tree.root;
+
+    const allText = extractAllStrings(tree.toJSON());
+    expect(allText).toContain('APPS4BREW STUDIO PASS');
+    expect(allText).toContain('Aktywny okres próbny');
+
+    // Znajdź przycisk paywalla
+    const paywallBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Odblokuj pełny dostęp')
+    );
+    expect(paywallBtn).toBeDefined();
+
+    await act(async () => {
+      paywallBtn.props.onPress();
+    });
+
+    // Znajdź przycisk przywracania zakupów
+    const restoreBtns = root.findAll((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Przywróć zakupy')
+    );
+    expect(restoreBtns.length).toBeGreaterThan(0);
+    const restoreBtn = restoreBtns[0];
+
+    await act(async () => {
+      await restoreBtn.props.onPress();
+    });
+
+    expect(alertSpy).toHaveBeenCalledWith('Sukces', 'Przywrócono poprzednie zakupy.');
+    alertSpy.mockRestore();
+  });
+
+  it('obsługuje przełączanie języka PL <-> EN oraz systemu jednostek Metric <-> Imperial', async () => {
+    const { tree } = await renderSettingsScreen();
+    const root = tree.root;
+
+    // Przełącz na angielski
+    const enChip = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Angielski')
+    );
+    expect(enChip).toBeDefined();
+
+    await act(async () => {
+      enChip.props.onPress();
+    });
+
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('English');
+
+    // Przełącz z powrotem na polski
+    const plChip = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Polish')
+    );
+    expect(plChip).toBeDefined();
+
+    await act(async () => {
+      plChip.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Polski');
+
+    // Przełącz na system imperialny
+    const imperialChip = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Imperialny')
+    );
+    expect(imperialChip).toBeDefined();
+
+    await act(async () => {
+      imperialChip.props.onPress();
+    });
+
+    // Przełącz z powrotem na metryczny
+    const metricChip = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Metryczny')
+    );
+    expect(metricChip).toBeDefined();
+
+    await act(async () => {
+      metricChip.props.onPress();
+    });
+
+    expect(tree).toBeDefined();
+  });
 });

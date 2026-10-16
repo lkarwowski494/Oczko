@@ -11,6 +11,10 @@ import {
   formatWeight,
   formatGauge,
   formatNeedleSize,
+  getUnitSystem,
+  setUnitSystem,
+  subscribeUnitSystem,
+  UnitSystem,
 } from '../unit-converter';
 
 describe('Moduł 17 / Apps4Brew Core: Unit Converter (Metric & Imperial — Zadanie O4)', () => {
@@ -59,5 +63,24 @@ describe('Moduł 17 / Apps4Brew Core: Unit Converter (Metric & Imperial — Zada
     // Rozmiar drutów
     expect(formatNeedleSize(4.0, 'metric')).toBe('4.0 mm');
     expect(formatNeedleSize(4.0, 'imperial')).toContain('US 6');
+  });
+
+  test('zarządza aktywnym systemem jednostek i powiadamianiem subskrybentów', () => {
+    setUnitSystem('metric');
+    expect(getUnitSystem()).toBe('metric');
+
+    let notified: UnitSystem = 'metric';
+    const unsubscribe = subscribeUnitSystem((sys) => {
+      notified = sys;
+    });
+
+    setUnitSystem('imperial');
+    expect(getUnitSystem()).toBe('imperial');
+    expect(notified).toBe('imperial');
+
+    unsubscribe();
+    setUnitSystem('metric');
+    expect(getUnitSystem()).toBe('metric');
+    expect(notified).toBe('imperial'); // nie powiadomiono po odsubskrybowaniu
   });
 });

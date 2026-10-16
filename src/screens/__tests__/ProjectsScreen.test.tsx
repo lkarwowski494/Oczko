@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
 import ProjectsScreen from '../../../app/(tabs)/projects';
-import { ProjectProvider } from '../../core/project-context';
+import { ProjectProvider, useProject } from '../../core/project-context';
 import { createInMemoryDatabase } from '../../core/database';
 import { ShapingCalculatorModal } from '../../components/ShapingCalculatorModal';
 import { EaseCalculatorModal } from '../../components/EaseCalculatorModal';
@@ -39,9 +39,16 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
   });
 
   async function renderProjectsScreen(db = createInMemoryDatabase()) {
+    let capturedCtx: any = null;
+    function CtxCapture() {
+      capturedCtx = useProject();
+      return null;
+    }
+
     await act(async () => {
       tree = renderer.create(
         <ProjectProvider initialDb={db}>
+          <CtxCapture />
           <ProjectsScreen />
         </ProjectProvider>
       );
@@ -51,7 +58,7 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
       await new Promise((r) => setTimeout(r, 80));
     });
 
-    return { tree, db, root: tree.root };
+    return { tree, db, root: tree.root, projectCtx: capturedCtx };
   }
   it('otwiera modal nowego projektu, zmienia technikę na szydełko, wypełnia pola i tworzy projekt', async () => {
     const { tree } = await renderProjectsScreen();
@@ -487,5 +494,48 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
         treeNoProv.unmount();
       });
     } catch (_e) {}
+  });
+
+  it('po wygaśnięciu trialu próba utworzenia projektu blokuje formularz i chroni historię (Read-Only)', async () => {
+    const { tree, projectCtx } = await renderProjectsScreen();
+
+    const textBefore = extractAllStrings(tree.toJSON());
+    // Dotychczasowy projekt ze seeda bazy jest nadal w 100% widoczny (ochrona 4.9★)
+    expect(textBefore).toContain('Mój Sweter Raglanowy');
+
+    // Tworzymy 2 kolejne projekty, aby osiągnąć limit 3 projektów w trialu
+    await act(async () => {
+      await projectCtx.createProject({
+        name: 'Projekt B',
+        craftType: 'knitting',
+        parts: [{ name: 'Główna' }],
+      });
+      await projectCtx.createProject({
+        name: 'Projekt C',
+        craftType: 'crochet',
+        parts: [{ name: 'Główna' }],
+      });
+    });
+
+    const root = tree.root;
+    // Znajdź przycisk + Nowy projekt
+    const newBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('+ Nowy projekt')
+    );
+
+    await act(async () => {
+      newBtn.props.onPress();
+    });
+
+    // Sprawdź czy pojawił się modal Paywalla
+    const textAfter = extractAllStrings(tree.toJSON());
+    expect(textAfter).toContain('APPS4BREW STUDIO PASS');
+    expect(textAfter).toContain('Dziergaj bez limitów');
+
+    // Historia wszystkich 3 projektów pozostaje nienaruszona
+    expect(textAfter).toContain('Mój Sweter Raglanowy');
+    expect(textAfter).toContain('Projekt B');
+    expect(textAfter).toContain('Projekt C');
   });
 });

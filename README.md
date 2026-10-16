@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-100%25_Offline--First-003B57?style=flat&logo=sqlite)](https://sqlite.org/)
 [![Coverage](https://img.shields.io/badge/Coverage-100.00%25_Lines-brightgreen?style=flat)](docs/decyzje_biezace.md)
-[![Tests](https://img.shields.io/badge/Tests-542_Passed_(66_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
+[![Tests](https://img.shields.io/badge/Tests-563_Passed_(68_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
 [![CI](https://github.com/lkarwowski494/Oczko/actions/workflows/ci.yml/badge.svg)](https://github.com/lkarwowski494/Oczko/actions)
 
 > **„Precyzyjny, wolny od rozpraszaczy licznik rzędów i asystent dziewiarski stworzony dla dziewiarek i dziewiarzy — zawsze z Tobą, na iPhone, Apple Watch i Garminie.”**
@@ -117,20 +117,42 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
     - Lekki, wektorowy komponent SVG renderujący kod QR bez zewnętrznych bibliotek sieciowych w modalu karty robótki.
 20. **💰 Kalkulator Ekonomii i Opłacalności Rzemiosła (`cost-calculator.ts`, Złoty Standard #8, `DEC-26`):**
     - Analiza kosztowa gotowego wyrobu: zużyta włóczka, dodatki pasmanteryjne, robocizna, koszt na 100g dzianiny oraz oszczędność względem cen w butikach rzemieślniczych.
+21. **💎 Apps4Brew Studio Pass i Model Monetyzacji Impulsowej Cheaper than Espresso (`app-access-service.ts`, `useAppAccess`, `DEC-27`):**
+    - Model monetyzacji impulsowej: **$0.99 USD / miesiąc**, **$4.99 USD / rok** (oferta główna, -70%), **$14.99 USD Lifetime** (zakup na zawsze).
+    - **100% funkcji odblokowane w trialu** (7 dni lub 3 pełne projekty) bez sztucznego blokowania narzędzi, wzorów PDF czy zegarków.
+    - **Gwarancja Read-Only po trialu**: po wygaśnięciu trialu blokowane jest jedynie tworzenie nowych projektów, a cała dotychczasowa historia, notatki i włóczki pozostają zawsze czytelne (ochrona ocen 4.9★ w sklepach).
+    - **Knit-Proof UI**: dedykowany tryb pełnoekranowy licznika z powiększoną cyfrą i chronionym przyciskiem Safe-Undo, zapobiegający przypadkowym kliknięciom podczas trzymania drutów.
+
+---
+
+## 💎 Model Monetyzacji Impulsowej „Cheaper than Espresso”
+
+Aplikacja Oczko stosuje przyjazny, rzemieślniczy model monetyzacji impulsowej **„Cheaper than Espresso”** oparty na zaufaniu i poszanowaniu danych użytkownika:
+
+| Plan | Cena USD | Cena PLN | Charakterystyka |
+| :--- | :--- | :--- | :--- |
+| **Miesięczny** | **$0.99 / msc** | ~4,49 zł | Niski próg wejścia, elastyczne wsparcie |
+| **Roczny (Polecany)** | **$4.99 / rok** | ~22,99 zł | **Najlepsza wartość (-70%)**, pełny spokój |
+| **Dożywotni (Lifetime)** | **$14.99** | ~69,99 zł | Zakup raz na zawsze, pełna niezależność |
+
+### Główne Filary Modelu:
+1. **Zero podziału Free / Pro:** W okresie próbnym (7 dni lub do 3 pełnych projektów) użytkownik ma dostęp do 100% możliwości aplikacji (wszystkie zaawansowane kalkulatory, czytnik PDF z ruchomą linijką, synchronizacja Apple Watch i Garmin, Doktor Błędów).
+2. **Historia ZAWSZE Read-Only po trialu:** Jeśli użytkownik nie zdecyduje się na subskrypcję, po wygaśnięciu trialu blokowane jest wyłącznie tworzenie nowych projektów i części. Wszystkie zapisane dotychczas robótki, wykonane rzędy, magazyn włóczek i notatki pozostają w pełni dostępne do odczytu na zawsze (ochrona ocen 4.9★).
+3. **100% Offline-First:** Brak serwerów, brak kont, brak telemetrycznych trackerów. Stan uprawnień zapisywany jest lokalnie w SQLite (`app_entitlements`).
 
 ---
 
 ### ⏳ Kolejne Moduły z BRD do Wdrożenia (Roadmapa Realizacji):
 
-21. **📚 Biblioteka Technik i Karty Rzemieślnicze (`DEC-13`, `DEC-20`, `BR-BIB-001..008`):**
+22. **📚 Biblioteka Technik i Karty Rzemieślnicze (`DEC-13`, `DEC-20`, `BR-BIB-001..008`):**
     - 21 fundamentalnych technik dziewiarskich i szydełkowych (12 drutowych, 9 szydełkowych) ze schematami rysowanymi kodem (0 zł, ZP-05) z instrukcjami dla prawo- i leworęcznych (DEC-19).
-22. **🧭 Ścieżka Progresji Dziewiarskiej (`BR-SCI-001..005`):**
+23. **🧭 Ścieżka Progresji Dziewiarskiej (`BR-SCI-001..005`):**
     - 4 kamienie milowe projektu (Szalik -> Czapka -> Skarpety -> Sweter) z kryteriami opanowania technik, odznakami rzemieślniczymi i śledzeniem postępów.
-23. **🤲 Ergonomia, Zdrowie Rąk i Przypomnienia o Przerwach (`SYT-06`, `BR-ZDR-001..003`):**
+24. **🤲 Ergonomia, Zdrowie Rąk i Przypomnienia o Przerwach (`SYT-06`, `BR-ZDR-001..003`):**
     - Licznik ciągłego dziergania, łagodne alerty zmęczenia dłoni i nadgarstków, 5 ćwiczeń rozciągających dla dziewiarek zapobiegających zespołowi cieśni nadgarstka i przeciążeniom.
-24. **📦 Eksport i Wymiana Projektów `.oczko` (`SYT-07`, `BR-WSP-001..003`):**
+25. **📦 Eksport i Wymiana Projektów `.oczko` (`SYT-07`, `BR-WSP-001..003`):**
     - Bezpieczny format pakowania `.oczko` (JSON) do przekazywania robótek przez AirDrop/komunikatory bez naruszania praw autorskich do wzorów PDF.
-25. **🧦 Kalkulator Konstrukcji Skarpet (`DEC-21`):**
+26. **🧦 Kalkulator Konstrukcji Skarpet (`DEC-21`):**
     - Kalkulacja obwodu stopy, ujemnego luzu (-1 do -2 cm), klapki pięty (heel flap), podbierania oczek klina (gusset) oraz symetrycznego czubka (wedge toe / Kitchener stitch).
 
 ---

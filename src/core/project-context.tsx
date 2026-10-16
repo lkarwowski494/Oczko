@@ -3,7 +3,7 @@
  * Zgodny z zasadami: offline-first, reaktywność, bezpieczna trwałość (BR-PROJ-001...005, BR-LICZ-003, BR-LICZ-005).
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef } from 'react';
 import { DatabaseClient, openOczkoDatabase, createInMemoryDatabase } from './database';
 import {
   EnrichedProject,
@@ -23,6 +23,8 @@ import {
   persistProjectUndo,
 } from './project-repository';
 import { ComputedCounterState } from './counter-engine';
+import { AppAccessProvider } from './app-access-context';
+import { ImpulsePaywallModal } from '../components/ImpulsePaywallModal';
 
 export interface LinkedCounterDisplayState extends ComputedCounterState {
   name: string;
@@ -66,6 +68,11 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
   const [activeCounterState, setActiveCounterState] = useState<ComputedCounterState | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const activeProjectIdRef = useRef<string | null>(activeProjectId);
+  activeProjectIdRef.current = activeProjectId;
+  const activeCounterIdRef = useRef<string | null>(activeCounterId);
+  activeCounterIdRef.current = activeCounterId;
 
   // Inicjalizacja bazy SQLite
   useEffect(() => {
@@ -111,7 +118,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
       setProjects(allProjects);
 
       // Wybór aktywnego projektu jeśli żaden nie jest wybrany
-      let curProjId = activeProjectId;
+      let curProjId = activeProjectIdRef.current;
       if (!curProjId && allProjects.length > 0) {
         curProjId = allProjects[0].id;
         setActiveProjectId(curProjId);
@@ -123,7 +130,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
 
         // Wybór aktywnego licznika
         const currentProject = allProjects.find((p) => p.id === curProjId);
-        let curCounterId = activeCounterId;
+        let curCounterId = activeCounterIdRef.current;
         if (!curCounterId && currentProject && currentProject.parts.length > 0) {
           curCounterId = currentProject.parts[0].counters[0]?.id ?? null;
         }
@@ -138,7 +145,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
       setError(err.message ?? 'Błąd ładowania projektów');
       setIsLoading(false);
     }
-  }, [db, activeProjectId, activeCounterId]);
+  }, [db]);
 
   useEffect(() => {
     if (db) {
@@ -307,7 +314,14 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
     undoCounter,
   };
 
-  return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;
+  return (
+    <ProjectContext.Provider value={value}>
+      <AppAccessProvider db={db} currentProjectsCount={projects.length}>
+        {children}
+        <ImpulsePaywallModal />
+      </AppAccessProvider>
+    </ProjectContext.Provider>
+  );
 }
 
 export function useProject(): ProjectContextValue {

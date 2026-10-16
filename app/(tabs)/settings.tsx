@@ -14,6 +14,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useOptionalProject } from '../../src/core/project-context';
+import { useAppAccess } from '../../src/core/app-access-context';
+import { useLang, setLang, t } from '../../src/core/i18n';
+import {
+  getUnitSystem,
+  setUnitSystem,
+  subscribeUnitSystem,
+  UnitSystem,
+} from '../../src/core/unit-converter';
 import {
   getDatabaseStats,
   exportBackupToJson,
@@ -26,6 +34,14 @@ import AppleWatchCompanionModal from '../../src/components/AppleWatchCompanionMo
 import { GarminCompanionModal } from '../../src/components/GarminCompanionModal';
 import { createWatchCounterSnapshot } from '../../src/core/apple-watch-service';
 import { createGarminSyncPayload } from '../../src/core/garmin-service';
+
+function useUnitSystem(): UnitSystem {
+  const [sys, setSys] = useState<UnitSystem>(getUnitSystem());
+  useEffect(() => {
+    return subscribeUnitSystem(setSys);
+  }, []);
+  return sys;
+}
 
 export default function SettingsScreen() {
   const projectContext = useOptionalProject();
@@ -53,6 +69,20 @@ export default function SettingsScreen() {
   const [isRestoring, setIsRestoring] = useState(false);
 
   const debounceOptions = [200, 300, 400, 500];
+
+  const appAccess = useAppAccess();
+  const currentLang = useLang();
+  const currentUnitSystem = useUnitSystem();
+
+  const handleRestorePurchases = async () => {
+    try {
+      await appAccess.restore();
+      setStatusMessage(t('Przywrócono poprzednie zakupy.'));
+      Alert.alert(t('Sukces'), t('Przywrócono poprzednie zakupy.'));
+    } catch (err: any) {
+      Alert.alert(t('Błąd'), err?.message || t('Nie udało się przywrócić zakupów.'));
+    }
+  };
 
   const loadStats = useCallback(async () => {
     if (!db) return;
@@ -138,6 +168,160 @@ export default function SettingsScreen() {
             <Text style={styles.bannerText}>✓ {statusMessage}</Text>
           </View>
         )}
+
+        {/* Sekcja: Apps4Brew Studio Pass & Monetyzacja */}
+        <Text style={styles.sectionHeader}>{t('APPS4BREW STUDIO PASS & SUBSKRYPCJA')}</Text>
+        <View style={styles.card}>
+          <View style={styles.passHeaderRow}>
+            <View
+              style={[
+                styles.passBadge,
+                appAccess.evaluation.isPremium
+                  ? styles.passBadgePremium
+                  : appAccess.evaluation.isTrial
+                  ? styles.passBadgeTrial
+                  : styles.passBadgeReadOnly,
+              ]}
+            >
+              <Text style={styles.passBadgeText}>
+                {appAccess.evaluation.isPremium
+                  ? '★ PRO'
+                  : appAccess.evaluation.isTrial
+                  ? '⏳ TRIAL'
+                  : '🔒 READ-ONLY'}
+              </Text>
+            </View>
+            <Text style={styles.passStatusTitle}>
+              {appAccess.evaluation.isPremium
+                ? t('Dostęp Pełny Aktywny')
+                : appAccess.evaluation.isTrial
+                ? t('Aktywny okres próbny')
+                : t('Historia (Tylko do odczytu)')}
+            </Text>
+          </View>
+
+          <Text style={styles.passDescription}>
+            {appAccess.evaluation.isPremium
+              ? t('Plan: {plan}', {
+                  plan:
+                    appAccess.evaluation.activePlan === 'lifetime'
+                      ? t('Dostęp Dożywotni (Lifetime)')
+                      : appAccess.evaluation.activePlan === 'annual'
+                      ? t('Abonament Roczny')
+                      : t('Plan Miesięczny'),
+                })
+              : appAccess.evaluation.isTrial
+              ? t('Pozostało dni: {days} | Dostępne nowe projekty: {projects}', {
+                  days: appAccess.evaluation.trialDaysRemaining,
+                  projects: appAccess.evaluation.trialProjectsRemaining,
+                })
+              : t('Okres próbny dobiegł końca. Wszystkie Twoje dotychczasowe robótki są bezpieczne. Aby tworzyć nowe, odblokuj Pass.')}
+          </Text>
+
+          <View style={styles.passButtonsRow}>
+            <TouchableOpacity
+              style={styles.passMainBtn}
+              onPress={appAccess.openPaywall}
+              accessibilityRole="button"
+            >
+              <Text style={styles.passMainBtnText}>
+                {appAccess.evaluation.isPremium
+                  ? t('Zarządzaj subskrypcją')
+                  : t('Odblokuj pełny dostęp ($0.99 / $4.99 / $14.99)')}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.passRestoreBtn}
+              onPress={handleRestorePurchases}
+              accessibilityRole="button"
+            >
+              <Text style={styles.passRestoreBtnText}>{t('Przywróć zakupy')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Sekcja: Język & System jednostek */}
+        <Text style={styles.sectionHeader}>{t('JĘZYK & SYSTEM JEDNOSTEK')}</Text>
+        <View style={styles.card}>
+          <Text style={styles.settingTitle}>{t('Język')}</Text>
+          <Text style={styles.settingDesc}>{t('Wybierz język interfejsu aplikacji')}</Text>
+          <View style={styles.optionsRow}>
+            <TouchableOpacity
+              style={[
+                styles.optionChip,
+                currentLang === 'pl' && styles.optionChipActive,
+              ]}
+              onPress={() => setLang('pl')}
+            >
+              <Text
+                style={[
+                  styles.optionChipText,
+                  currentLang === 'pl' && styles.optionChipTextActive,
+                ]}
+              >
+                🇵🇱 {t('Polski')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.optionChip,
+                currentLang === 'en' && styles.optionChipActive,
+              ]}
+              onPress={() => setLang('en')}
+            >
+              <Text
+                style={[
+                  styles.optionChipText,
+                  currentLang === 'en' && styles.optionChipTextActive,
+                ]}
+              >
+                🇬🇧 {t('Angielski')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={[styles.unitSection, styles.borderTop]}>
+            <Text style={styles.settingTitle}>{t('System jednostek')}</Text>
+            <Text style={styles.settingDesc}>
+              {t('Przeliczanie centymetrów, jardów, uncji i standardu US wg Craft Yarn Council')}
+            </Text>
+            <View style={styles.optionsRow}>
+              <TouchableOpacity
+                style={[
+                  styles.optionChip,
+                  currentUnitSystem === 'metric' && styles.optionChipActive,
+                ]}
+                onPress={() => setUnitSystem('metric')}
+              >
+                <Text
+                  style={[
+                    styles.optionChipText,
+                    currentUnitSystem === 'metric' && styles.optionChipTextActive,
+                  ]}
+                >
+                  {t('Metryczny (cm, m, g)')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.optionChip,
+                  currentUnitSystem === 'imperial' && styles.optionChipActive,
+                ]}
+                onPress={() => setUnitSystem('imperial')}
+              >
+                <Text
+                  style={[
+                    styles.optionChipText,
+                    currentUnitSystem === 'imperial' && styles.optionChipTextActive,
+                  ]}
+                >
+                  {t('Imperialny (cale, yd, oz)')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
 
         {/* Sekcja: Licznik & Interakcja */}
         <Text style={styles.sectionHeader}>LICZNIK & STUKNIĘCIA</Text>
@@ -797,5 +981,76 @@ const styles = StyleSheet.create({
     color: '#FF9F0A',
     fontSize: 11,
     fontWeight: '700',
+  },
+  passHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  passBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  passBadgePremium: {
+    backgroundColor: '#D4AF37',
+  },
+  passBadgeTrial: {
+    backgroundColor: '#8B5E3C',
+  },
+  passBadgeReadOnly: {
+    backgroundColor: '#7A1C1C',
+  },
+  passBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  passStatusTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  passDescription: {
+    fontSize: 13,
+    color: '#666666',
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+  passButtonsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 4,
+  },
+  passMainBtn: {
+    flex: 2,
+    backgroundColor: '#8B5E3C',
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  passMainBtnText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  passRestoreBtn: {
+    flex: 1,
+    backgroundColor: '#F0EAE1',
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  passRestoreBtnText: {
+    color: '#5C3E26',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  unitSection: {
+    marginTop: 12,
   },
 });

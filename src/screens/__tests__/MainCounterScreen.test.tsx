@@ -677,5 +677,68 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
     hapticSpy.mockRestore();
     expect(tree).toBeDefined();
   });
+
+  test('Obsługuje tryb Knit-Proof: wejście w tryb pełnoekranowy, tap w obszar, safe-undo i wyjście', async () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<MainCounterScreen />);
+    });
+    const root = tree.root;
+
+    // 1. Znajdź chip Knit-Proof i wejdź w tryb
+    const knitProofChip = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Knit-Proof')
+    );
+    expect(knitProofChip).toBeDefined();
+
+    act(() => {
+      knitProofChip.props.onPress();
+    });
+
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Dotknij w dowolnym miejscu');
+    expect(text).toContain('Wyjdź z trybu Knit-Proof');
+
+    // Odczytaj początkową wartość licznika
+    const startMatch = text.match(/(\d+)\s+Dotknij w dowolnym miejscu/);
+    const startVal = startMatch ? parseInt(startMatch[1], 10) : 0;
+
+    // 2. Kliknij w obszar powiększonego licznika
+    const tapArea = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Dotknij w dowolnym miejscu')
+    );
+    act(() => {
+      tapArea.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain(String(startVal + 1));
+
+    // 3. Bezpieczne cofnięcie (Safe Undo)
+    const undoBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Cofnij ostatni (Undo)')
+    );
+    act(() => {
+      undoBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain(String(startVal));
+
+    // 4. Wyjście z trybu Knit-Proof
+    const exitBtn = root.find((n: any) =>
+      n.props?.onPress &&
+      extractAllStrings(n).includes('Wyjdź z trybu Knit-Proof')
+    );
+    act(() => {
+      exitBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Stuknij, aby dodać rząd');
+  });
 });
 

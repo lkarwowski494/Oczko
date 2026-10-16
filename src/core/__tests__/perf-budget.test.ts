@@ -62,6 +62,10 @@ import { calculateCraftEconomics } from '../cost-calculator';
 import { encodeProjectToDeepLink, decodeProjectFromDeepLink } from '../project-share-protocol';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
+  // Instrumentacja pokrycia kodu (Istanbul/Jest --coverage) wprowadza narzut na każdą instrukcję w pętlach
+  const coverageFactor = (global as any).__coverage__ ? 4 : 1;
+  const budget = (ms: number) => ms * coverageFactor;
+
   const config: CounterConfig = {
     id: 'cnt_perf_01',
     partId: 'part_01',
@@ -101,7 +105,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     expect(state.activeEventsCount).toBeGreaterThan(4500);
 
     // Budżet wydajnościowy: < 60 ms na 5 000 zdarzeń
-    expect(durationMs).toBeLessThan(60);
+    expect(durationMs).toBeLessThan(budget(60));
   });
 
   test('Filtrowanie i agregacja metryk 2 500 pozycji magazynu włóczek mieści się w < 40 ms', () => {
@@ -151,7 +155,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     expect(metrics.totalMeters).toBeGreaterThan(0);
 
     // Budżet wydajnościowy: < 100 ms na 2 500 rekordów ze złożonym filtrem tekstowo-surowcowym (odporny na obciążenie CPU w CI)
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('10 000 kalkulacji próbki i wskaźnika Yarn Grist wykonuje się w < 100 ms', () => {
@@ -176,7 +180,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     const durationMs = performance.now() - t0;
 
     // Budżet: 10 000 obliczeń w < 100 ms (uwzględnia jitter maszyn wirtualnych CI)
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('Parsowanie i leksykalna analiza 500 rzędów wzoru dziewiarskiego wykonuje się w < 40 ms', () => {
@@ -194,13 +198,12 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('10 000 symulacji obrotu cyfrowej koronki (Digital Crown) w < 100 ms', () => {
     let accumulator = 0;
     let totalSteps = 0;
-
     const t0 = performance.now();
     for (let i = 0; i < 10000; i++) {
       const delta = (i % 3 === 0 ? 0.4 : 0.8);
@@ -211,7 +214,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     const durationMs = performance.now() - t0;
 
     expect(totalSteps).toBeGreaterThan(0);
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('1 000 estymacji zużycia włóczki z marginesem bezpieczeństwa w < 120 ms', () => {
@@ -229,7 +232,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(120);
+    expect(durationMs).toBeLessThan(budget(120));
   });
 
   test('10 000 deterministycznych rozpoznań ściegu w < 120 ms', () => {
@@ -249,7 +252,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(120);
+    expect(durationMs).toBeLessThan(budget(120));
   });
 
   test('10 000 kalkulacji kształtowania (dodawanie/odejmowanie/wielorzędowe) w < 100 ms', () => {
@@ -270,7 +273,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(200);
+    expect(durationMs).toBeLessThan(budget(200));
   });
 
   test('10 000 serializacji i deserializacji kopert Garmin ConnectIQ w < 150 ms', () => {
@@ -290,7 +293,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(150);
+    expect(durationMs).toBeLessThan(budget(150));
   });
 
   test('10 000 przeliczeń rozmiarów drutów i jednostek dziewiarskich w < 120 ms', () => {
@@ -303,7 +306,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(250);
+    expect(durationMs).toBeLessThan(budget(250));
   });
 
   test('10 000 kalkulacji zamienników włóczki i klasyfikacji WPI w < 150 ms', () => {
@@ -322,7 +325,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(250);
+    expect(durationMs).toBeLessThan(budget(250));
   });
 
   test('10 000 kalkulacji luzu odzieżowego, doboru rozmiaru i adaptacji oczek w < 120 ms', () => {
@@ -351,7 +354,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(250);
+    expect(durationMs).toBeLessThan(budget(250));
   });
 
   test('10 000 kalkulacji podziału raglanu i rzędów skróconych GSR w < 250 ms', () => {
@@ -374,7 +377,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(250);
+    expect(durationMs).toBeLessThan(budget(250));
   });
 
   test('10 000 kalkulacji korony czapki i rzędów zmniejszania w < 250 ms', () => {
@@ -393,7 +396,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(250);
+    expect(durationMs).toBeLessThan(budget(250));
   });
 
   test('10 000 kalkulacji prędkości robótki i formatowania czasu w < 100 ms', () => {
@@ -409,7 +412,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('10 000 diagnoz i wyszukań procedur Doktora Błędów w < 150 ms', () => {
@@ -421,7 +424,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(150);
+    expect(durationMs).toBeLessThan(budget(150));
   });
 
   test('10 000 kalkulacji ekonomii rzemiosła (calculateCraftEconomics) w < 100 ms', () => {
@@ -438,7 +441,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
       });
     }
     const durationMs = performance.now() - t0;
-    expect(durationMs).toBeLessThan(100);
+    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('1 000 cykli kodowania i dekodowania deep linku (encode/decodeProjectFromDeepLink) w < 150 ms', () => {
@@ -455,7 +458,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
       decodeProjectFromDeepLink(link);
     }
     const durationMs = performance.now() - t0;
-    expect(durationMs).toBeLessThan(150);
+    expect(durationMs).toBeLessThan(budget(150));
   });
 });
 

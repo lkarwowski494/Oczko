@@ -17,6 +17,26 @@ import {
 
 export type UnitSystem = 'metric' | 'imperial';
 
+let currentUnitSystem: UnitSystem = 'metric';
+type UnitSystemListener = (sys: UnitSystem) => void;
+const unitListeners = new Set<UnitSystemListener>();
+
+export function setUnitSystem(sys: UnitSystem): void {
+  currentUnitSystem = sys;
+  unitListeners.forEach((fn) => fn(sys));
+}
+
+export function getUnitSystem(): UnitSystem {
+  return currentUnitSystem;
+}
+
+export function subscribeUnitSystem(listener: UnitSystemListener): () => void {
+  unitListeners.add(listener);
+  return () => {
+    unitListeners.delete(listener);
+  };
+}
+
 export const CM_PER_INCH = 2.54;
 
 /**

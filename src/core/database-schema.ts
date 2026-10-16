@@ -117,5 +117,15 @@ export const SQLITE_SCHEMA_STATEMENTS = [
   );`,
 
   `CREATE INDEX IF NOT EXISTS idx_project_time_sessions_project
-    ON project_time_sessions(project_id);`
+    ON project_time_sessions(project_id);`,
+
+  `CREATE TABLE IF NOT EXISTS app_entitlements (
+    id TEXT PRIMARY KEY NOT NULL,
+    plan_type TEXT NOT NULL CHECK (plan_type IN ('trial', 'monthly', 'annual', 'lifetime')),
+    status TEXT NOT NULL CHECK (status IN ('active', 'expired')),
+    trial_started_at TEXT NOT NULL,
+    purchased_at TEXT,
+    expires_at TEXT,
+    updated_at TEXT NOT NULL
+  );`
 ] as const;

@@ -159,6 +159,15 @@ export function createInMemoryDatabase(): DatabaseClient {
         return { changes: 1, lastInsertRowId: 1 };
       }
 
+      // INSERT INTO app_entitlements
+      if (/^INSERT\s+INTO\s+app_entitlements/i.test(clean)) {
+        const [id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at] = params as any[];
+        getTable('app_entitlements').set(id, {
+          id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at
+        });
+        return { changes: 1, lastInsertRowId: 1 };
+      }
+
       // UPDATE pattern_documents
       if (/^UPDATE\s+pattern_documents/i.test(clean)) {
         if (/current_page\s*=/i.test(clean)) {
@@ -210,6 +219,25 @@ export function createInMemoryDatabase(): DatabaseClient {
             Object.assign(existing, { skeins_remaining, updated_at });
             return { changes: 1, lastInsertRowId: 0 };
           }
+        }
+        return { changes: 0, lastInsertRowId: 0 };
+      }
+
+      // UPDATE app_entitlements
+      if (/^UPDATE\s+app_entitlements/i.test(clean)) {
+        if (/trial_started_at\s*=\s*\?/i.test(clean)) {
+          const [trial_started_at, updated_at, id] = params as any[];
+          const existing = getTable('app_entitlements').get(id);
+          if (existing) {
+            Object.assign(existing, { plan_type: 'trial', status: 'active', trial_started_at, purchased_at: null, expires_at: null, updated_at });
+            return { changes: 1, lastInsertRowId: 0 };
+          }
+        }
+        const [plan_type, purchased_at, expires_at, updated_at, id] = params as any[];
+        const existing = getTable('app_entitlements').get(id);
+        if (existing) {
+          Object.assign(existing, { plan_type, status: 'active', purchased_at, expires_at, updated_at });
+          return { changes: 1, lastInsertRowId: 0 };
         }
         return { changes: 0, lastInsertRowId: 0 };
       }
@@ -346,6 +374,16 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       if (/FROM\s+project_time_sessions/i.test(clean)) {
         return Array.from(getTable('project_time_sessions').values()) as unknown as T[];
+      }
+
+      if (/FROM\s+app_entitlements\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
+        const id = params[0] as string;
+        const row = getTable('app_entitlements').get(id);
+        return row ? [row as unknown as T] : [];
+      }
+
+      if (/FROM\s+app_entitlements/i.test(clean)) {
+        return Array.from(getTable('app_entitlements').values()) as unknown as T[];
       }
 
       return [];

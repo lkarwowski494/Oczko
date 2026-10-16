@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProjectManagerFacade } from '../core/project-facade';
 import { useProject, ProjectContextValue } from '../core/project-context';
+import { useLang, t } from '../core/i18n';
 import PatternGuideViewer from '../components/PatternGuideViewer';
 import PatternPdfViewer from '../components/PatternPdfViewer';
 import AppleWatchCompanionModal from '../components/AppleWatchCompanionModal';
@@ -54,6 +55,8 @@ export default function MainCounterScreen() {
     fallbackFacade.getCounterState('counter_main')
   );
 
+  const _lang = useLang();
+  const [isKnitProof, setIsKnitProof] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'counter' | 'pattern' | 'pdf'>('counter');
   const [patternDoc, setPatternDoc] = useState<PatternDocument | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -242,173 +245,32 @@ export default function MainCounterScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Nagłówek projektu */}
-      <View style={styles.header}>
-        <Text style={styles.projectTitle}>{projectName}</Text>
-        <Text style={styles.partTitle}>{partName}</Text>
-      </View>
-
-      {/* Przełącznik trybu: Licznik vs Schemat z linijką vs Wzór PDF */}
-      <View style={styles.viewModeTabs}>
-        <TouchableOpacity
-          style={[styles.viewModeTab, viewMode === 'counter' && styles.viewModeTabActive]}
-          onPress={() => setViewMode('counter')}
-        >
-          <Text
-            style={[
-              styles.viewModeTabText,
-              viewMode === 'counter' && styles.viewModeTabTextActive,
-            ]}
-          >
-            🔢 Licznik
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.viewModeTab, viewMode === 'pattern' && styles.viewModeTabActive]}
-          onPress={() => setViewMode('pattern')}
-        >
-          <Text
-            style={[
-              styles.viewModeTabText,
-              viewMode === 'pattern' && styles.viewModeTabTextActive,
-            ]}
-          >
-            📜 Schemat & Linijka
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.viewModeTab, viewMode === 'pdf' && styles.viewModeTabActive]}
-          onPress={() => setViewMode('pdf')}
-        >
-          <Text
-            style={[
-              styles.viewModeTabText,
-              viewMode === 'pdf' && styles.viewModeTabTextActive,
-            ]}
-          >
-            📑 Wzór PDF
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {viewMode === 'pattern' ? (
-        <PatternGuideViewer
-          activeCounterRow={counterValue}
-          onStepCounter={(direction) => {
-            if (direction === 'increment') handleIncrement();
-            else handleDecrement();
-          }}
-        />
-      ) : viewMode === 'pdf' ? (
-        <PatternPdfViewer
-          initialDocument={patternDoc}
-          activeCounterRow={counterValue}
-          projectId={projectCtx?.activeProject?.id}
-          onDocumentChange={handleDocumentChange}
-          onDeleteDocument={handleDeleteDocument}
-        />
-      ) : (
-        <>
-          {/* Przełącznik części projektu (jeśli projekt ma więcej niż 1 część) */}
-          {projectParts.length > 1 && (
-            <View style={styles.partsWrapper}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.partsScroll}
-              >
-                {projectParts.map((p) => (
-                  <TouchableOpacity
-                    key={p.id}
-                    style={[styles.partChip, p.id === activePartId && styles.partChipActive]}
-                    onPress={() => projectCtx?.switchActivePart(p.id)}
-                  >
-                    <Text
-                      style={[
-                        styles.partChipText,
-                        p.id === activePartId && styles.partChipTextActive,
-                      ]}
-                    >
-                      {p.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+      {isKnitProof ? (
+        <View style={styles.knitProofContainer}>
+          <View style={styles.knitProofTopBar}>
+            <View>
+              <Text style={styles.knitProofProjectName}>{projectName}</Text>
+              <Text style={styles.knitProofPartName}>{partName}</Text>
             </View>
-          )}
-
-          {/* Liczniki powiązane (np. warkocze, powtórzenia ażuru) */}
-          {activeLinkedStates.length > 0 && (
-            <View style={styles.linkedCountersWrapper}>
-              {activeLinkedStates.map((lc) => (
-                <View key={lc.counterId} style={styles.linkedCard}>
-                  <View style={styles.linkedCardHeader}>
-                    <Text style={styles.linkedName}>🪢 {lc.name}</Text>
-                    {lc.activeReminder && (
-                      <View style={styles.linkedAlert}>
-                        <Text style={styles.linkedAlertText}>⚠️ Skrzyżuj / Operacja!</Text>
-                      </View>
-                    )}
-                  </View>
-                  <Text style={styles.linkedValue}>
-                    {lc.moduloCycle
-                      ? `Rząd ${lc.cycleStep ?? 0} z ${lc.moduloCycle} (Ukończono cykli: ${lc.completedCycles ?? 0})`
-                      : `Rząd: ${lc.rawValue}`}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          )}
-
-          {/* Stoper sesji robótki i pomiar tempa na żywo (BR-CZAS-001..004) */}
-          <KnittingTimeTracker
-            projectId={projectCtx?.activeProject?.id ?? 'proj_demo'}
-            targetRows={projectParts.find((p) => p.id === activePartId)?.targetRows}
-            currentRows={counterValue}
-            db={projectCtx?.db}
-          />
-
-          {/* Pasek szybkiej konfiguracji przypomnienia cyklicznego oraz Apple Watch (DEC-03) */}
-          <View style={styles.accessoryChipsRow}>
             <TouchableOpacity
-              style={styles.intervalChip}
-              activeOpacity={0.8}
-              onPress={() => {
-                setTempIntervalInput(intervalReminderRows > 0 ? String(intervalReminderRows) : '6');
-                setTempLabelInput(intervalReminderLabel);
-                setIntervalModalVisible(true);
-              }}
-            >
-              <Text style={styles.intervalChipText}>
-                {intervalReminderRows > 0
-                  ? `🔔 Przypomnienie: co ${intervalReminderRows} rz. (${intervalReminderLabel})`
-                  : '🔔 Ustaw przypomnienie cykliczne'}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.watchChip}
-              activeOpacity={0.8}
-              onPress={() => setWatchModalVisible(true)}
-            >
-              <Text style={styles.watchChipText}>⌚ Apple Watch</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.garminChip}
-              activeOpacity={0.8}
-              onPress={() => setGarminModalVisible(true)}
-              accessibilityLabel="Otwórz symulator zegarka Garmin"
+              style={styles.exitKnitProofBtn}
+              onPress={() => setIsKnitProof(false)}
               accessibilityRole="button"
+              accessibilityLabel="Wyjdź z trybu Knit-Proof"
             >
-              <Text style={styles.garminChipText}>🛰️ Garmin</Text>
+              <Text style={styles.exitKnitProofBtnText}>✕ {t('Wyjdź z trybu Knit-Proof')}</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
-          <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
-            <Text style={styles.counterValue}>{counterValue}</Text>
-            <Text style={styles.counterHint}>Stuknij, aby dodać rząd</Text>
+          <TouchableOpacity
+            style={styles.knitProofTapArea}
+            activeOpacity={0.9}
+            onPress={handleIncrement}
+            accessibilityRole="button"
+            accessibilityLabel={t('Stuknij, aby dodać rząd')}
+          >
+            <Text style={styles.knitProofBigValue}>{counterValue}</Text>
+            <Text style={styles.knitProofHint}>{t('Dotknij w dowolnym miejscu')}</Text>
             {showReminder && (
               <View style={styles.reminderBadge}>
                 <Text style={styles.reminderText}>{reminderMessage}</Text>
@@ -416,21 +278,219 @@ export default function MainCounterScreen() {
             )}
           </TouchableOpacity>
 
-          {/* Stopka z przyciskami UNDO oraz dodawania licznika warkocza */}
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.undoButton} onPress={handleDecrement}>
-              <Text style={styles.undoButtonText}>Cofnij ostatni (Undo)</Text>
+          <View style={styles.knitProofFooter}>
+            <TouchableOpacity
+              style={styles.knitProofUndoBtn}
+              onPress={handleDecrement}
+              accessibilityRole="button"
+            >
+              <Text style={styles.knitProofUndoBtnText}>↩️ {t('Cofnij ostatni (Undo)')}</Text>
             </TouchableOpacity>
-
-            {isConnectedToContext && (
-              <TouchableOpacity
-                style={styles.addLinkedButton}
-                onPress={() => setModalVisible(true)}
-              >
-                <Text style={styles.addLinkedButtonText}>+ Licznik wzoru (warkocz/ażur)</Text>
-              </TouchableOpacity>
-            )}
           </View>
+        </View>
+      ) : (
+        <>
+          {/* Nagłówek projektu */}
+          <View style={styles.header}>
+            <Text style={styles.projectTitle}>{projectName}</Text>
+            <Text style={styles.partTitle}>{partName}</Text>
+          </View>
+
+          {/* Przełącznik trybu: Licznik vs Schemat z linijką vs Wzór PDF */}
+          <View style={styles.viewModeTabs}>
+            <TouchableOpacity
+              style={[styles.viewModeTab, viewMode === 'counter' && styles.viewModeTabActive]}
+              onPress={() => setViewMode('counter')}
+            >
+              <Text
+                style={[
+                  styles.viewModeTabText,
+                  viewMode === 'counter' && styles.viewModeTabTextActive,
+                ]}
+              >
+                🔢 {t('Licznik')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.viewModeTab, viewMode === 'pattern' && styles.viewModeTabActive]}
+              onPress={() => setViewMode('pattern')}
+            >
+              <Text
+                style={[
+                  styles.viewModeTabText,
+                  viewMode === 'pattern' && styles.viewModeTabTextActive,
+                ]}
+              >
+                📜 {t('Schemat & Linijka')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.viewModeTab, viewMode === 'pdf' && styles.viewModeTabActive]}
+              onPress={() => setViewMode('pdf')}
+            >
+              <Text
+                style={[
+                  styles.viewModeTabText,
+                  viewMode === 'pdf' && styles.viewModeTabTextActive,
+                ]}
+              >
+                📑 {t('Wzór PDF')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {viewMode === 'pattern' ? (
+            <PatternGuideViewer
+              activeCounterRow={counterValue}
+              onStepCounter={(direction) => {
+                if (direction === 'increment') handleIncrement();
+                else handleDecrement();
+              }}
+            />
+          ) : viewMode === 'pdf' ? (
+            <PatternPdfViewer
+              initialDocument={patternDoc}
+              activeCounterRow={counterValue}
+              projectId={projectCtx?.activeProject?.id}
+              onDocumentChange={handleDocumentChange}
+              onDeleteDocument={handleDeleteDocument}
+            />
+          ) : (
+            <>
+              {/* Przełącznik części projektu (jeśli projekt ma więcej niż 1 część) */}
+              {projectParts.length > 1 && (
+                <View style={styles.partsWrapper}>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.partsScroll}
+                  >
+                    {projectParts.map((p) => (
+                      <TouchableOpacity
+                        key={p.id}
+                        style={[styles.partChip, p.id === activePartId && styles.partChipActive]}
+                        onPress={() => projectCtx?.switchActivePart(p.id)}
+                      >
+                        <Text
+                          style={[
+                            styles.partChipText,
+                            p.id === activePartId && styles.partChipTextActive,
+                          ]}
+                        >
+                          {p.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+
+              {/* Liczniki powiązane (np. warkocze, powtórzenia ażuru) */}
+              {activeLinkedStates.length > 0 && (
+                <View style={styles.linkedCountersWrapper}>
+                  {activeLinkedStates.map((lc) => (
+                    <View key={lc.counterId} style={styles.linkedCard}>
+                      <View style={styles.linkedCardHeader}>
+                        <Text style={styles.linkedName}>🪢 {lc.name}</Text>
+                        {lc.activeReminder && (
+                          <View style={styles.linkedAlert}>
+                            <Text style={styles.linkedAlertText}>⚠️ Skrzyżuj / Operacja!</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text style={styles.linkedValue}>
+                        {lc.moduloCycle
+                          ? `Rząd ${lc.cycleStep ?? 0} z ${lc.moduloCycle} (Ukończono cykli: ${lc.completedCycles ?? 0})`
+                          : `Rząd: ${lc.rawValue}`}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {/* Stoper sesji robótki i pomiar tempa na żywo (BR-CZAS-001..004) */}
+              <KnittingTimeTracker
+                projectId={projectCtx?.activeProject?.id ?? 'proj_demo'}
+                targetRows={projectParts.find((p) => p.id === activePartId)?.targetRows}
+                currentRows={counterValue}
+                db={projectCtx?.db}
+              />
+
+              {/* Pasek szybkiej konfiguracji przypomnienia cyklicznego oraz Apple Watch (DEC-03) */}
+              <View style={styles.accessoryChipsRow}>
+                <TouchableOpacity
+                  style={styles.intervalChip}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    setTempIntervalInput(intervalReminderRows > 0 ? String(intervalReminderRows) : '6');
+                    setTempLabelInput(intervalReminderLabel);
+                    setIntervalModalVisible(true);
+                  }}
+                >
+                  <Text style={styles.intervalChipText}>
+                    {intervalReminderRows > 0
+                      ? `🔔 Przypomnienie: co ${intervalReminderRows} rz. (${intervalReminderLabel})`
+                      : '🔔 Ustaw przypomnienie cykliczne'}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.watchChip}
+                  activeOpacity={0.8}
+                  onPress={() => setWatchModalVisible(true)}
+                >
+                  <Text style={styles.watchChipText}>⌚ Apple Watch</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.garminChip}
+                  activeOpacity={0.8}
+                  onPress={() => setGarminModalVisible(true)}
+                  accessibilityLabel="Otwórz symulator zegarka Garmin"
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.garminChipText}>🛰️ Garmin</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.knitProofChip}
+                  activeOpacity={0.8}
+                  onPress={() => setIsKnitProof(true)}
+                  accessibilityLabel={t('Tryb Knit-Proof')}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.knitProofChipText}>🧶 {t('Tryb Knit-Proof')}</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Główny obszar klikalny – duża, wolna od rozpraszaczy karta licznika */}
+              <TouchableOpacity style={styles.counterCard} activeOpacity={0.9} onPress={handleIncrement}>
+                <Text style={styles.counterValue}>{counterValue}</Text>
+                <Text style={styles.counterHint}>{t('Stuknij, aby dodać rząd')}</Text>
+                {showReminder && (
+                  <View style={styles.reminderBadge}>
+                    <Text style={styles.reminderText}>{reminderMessage}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+
+              {/* Stopka z przyciskami UNDO oraz dodawania licznika warkocza */}
+              <View style={styles.footer}>
+                <TouchableOpacity style={styles.undoButton} onPress={handleDecrement}>
+                  <Text style={styles.undoButtonText}>{t('Cofnij ostatni (Undo)')}</Text>
+                </TouchableOpacity>
+
+                {isConnectedToContext && (
+                  <TouchableOpacity
+                    style={styles.addLinkedButton}
+                    onPress={() => setModalVisible(true)}
+                  >
+                    <Text style={styles.addLinkedButtonText}>{t('+ Licznik wzoru (warkocz/ażur)')}</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </>
+          )}
         </>
       )}
 
@@ -930,6 +990,93 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     color: '#38BDF8',
+  },
+  knitProofContainer: {
+    flex: 1,
+    backgroundColor: '#F5EFEB',
+    padding: 16,
+    justifyContent: 'space-between',
+  },
+  knitProofTopBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  knitProofProjectName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#3C2A1E',
+  },
+  knitProofPartName: {
+    fontSize: 13,
+    color: '#8B5E3C',
+    fontWeight: '500',
+  },
+  exitKnitProofBtn: {
+    backgroundColor: '#E6D7CD',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  exitKnitProofBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#5C3E26',
+  },
+  knitProofTapArea: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    marginVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+    borderWidth: 2,
+    borderColor: '#E8DCD5',
+  },
+  knitProofBigValue: {
+    fontSize: 110,
+    fontWeight: '800',
+    color: '#8B5E3C',
+    fontVariant: ['tabular-nums'],
+  },
+  knitProofHint: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#A0806E',
+    marginTop: 8,
+  },
+  knitProofFooter: {
+    paddingBottom: 8,
+  },
+  knitProofUndoBtn: {
+    backgroundColor: '#FFF4EE',
+    borderWidth: 1.5,
+    borderColor: '#D4A373',
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  knitProofUndoBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#8B5E3C',
+  },
+  knitProofChip: {
+    backgroundColor: '#8B5E3C',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+  },
+  knitProofChipText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });
 

@@ -445,3 +445,25 @@
     - **Line Coverage: 100.00% w `src/core/` i całym repozytorium** (`npm run test:coverage`).
     - **CI Verification Gate: 100% GREEN** (`npm run verify` = typecheck + check:i18n + test:coverage).
 
+
+* **DEC-27 Model Monetyzacji Impulsowej Cheaper than Espresso i Hook useAppAccess (16.10.2026):**
+  - **Architektura Biznesowa i Cennik Impulsowy:**
+    - Cennik Apps4Brew Studio Pass: **$0.99 USD / miesiąc** (~4,49 zł), **$4.99 USD / rok** (~22,99 zł, oferta główna -70%), **$14.99 USD Lifetime** (~69,99 zł zakup na zawsze).
+    - **Zero podziału na funkcje Free i Pro:** W okresie próbnym (7 dni lub do 3 pełnych projektów) użytkownik ma dostęp do 100% możliwości aplikacji (wszystkie kalkulatory, wzory PDF z linijką, Apple Watch, Garmin, Doktor Błędów).
+    - **Historia ZAWSZE Read-Only po trialu (ochrona ocen 4.9★):** Po wygaśnięciu trialu blokowane jest wyłącznie tworzenie nowych projektów/części. Cała dotychczasowa historia, projekty, rzędy, magazyn i notatki pozostają czytelne na zawsze bez wymuszeń i utraty danych.
+  - **Silnik Domenowy i Persystencja SQLite (`src/core/app-access-service.ts`, `src/core/database-schema.ts`):**
+    - Nowa tabela `app_entitlements` z polami `plan_type`, `status`, `trial_started_at`, `purchased_at`, `expires_at`, `updated_at`.
+    - Deterministyczny ewaluator dostępu `evaluateAccess(entitlements, currentProjectsCount, now)`.
+    - Metody `initOrGetEntitlements`, `activatePlan`, `restorePurchases`, `resetTrialForTesting`.
+  - **Kontekst Stanu i Komponenty UI (`src/core/app-access-context.tsx`, `src/components/ImpulsePaywallModal.tsx`):**
+    - Reaktywny hook `useAppAccess()` dostarczający stan uprawnień, cennik, metody `openPaywall()`, `purchasePlan(tier)` oraz `restore()`.
+    - Modal paywalla zgodny z Apple HIG ($\ge 44 \times 44$ pt), prezentujący 3 kafelki planów, korzyści, przycisk zakupu oraz opcję przywracania poprzednich zakupów.
+  - **Integracja w Ekranach:**
+    - `app/(tabs)/projects.tsx`: sprawdzanie `evaluation.canCreateNewProject` przy tworzeniu projektów/części, baner statusu dostępu `accessStatusBar`, blokada formularza z otwarciem Paywalla przy próbie przekroczenia limitu po wygaśnięciu trialu.
+    - `app/(tabs)/settings.tsx`: dedykowana sekcja `🌟 Apps4Brew Studio Pass & Subskrypcja` z bieżącym statusem, przyciskiem Paywalla i przywracania zakupów, a także sekcja `Język & System jednostek` (PL/EN, Metric/Imperial).
+    - `src/screens/MainCounterScreen.tsx`: wdrożenie trybu **Knit-Proof UI** (pełnoekranowy obszar dotykowy licznika z ochroną Safe-Undo eliminującą przypadkowe kliknięcia podczas trzymania drutów) oraz pełna integracja z `t(...)` i `useLang()`.
+  - **Weryfikacja Jakości:**
+    - 100% testów zielonych we wszystkich 68 zestawach testowych (`app-access.test.ts`, `ImpulsePaywallModal.test.tsx`, `SettingsScreen.test.tsx`, `MainCounterScreen.test.tsx`, `ProjectsScreen.test.tsx`).
+    - 100.00% Line Coverage w `src/core/` i całym repozytorium.
+
+

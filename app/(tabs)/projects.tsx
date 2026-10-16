@@ -28,10 +28,12 @@ import { ShapingCalculatorModal } from '../../src/components/ShapingCalculatorMo
 import { EaseCalculatorModal } from '../../src/components/EaseCalculatorModal';
 import { RaglanCalculatorModal } from '../../src/components/RaglanCalculatorModal';
 import { HatCalculatorModal } from '../../src/components/HatCalculatorModal';
-
+import { useAppAccess } from '../../src/core/app-access-context';
+import { useLang, t } from '../../src/core/i18n';
 
 export default function ProjectsScreen() {
   const router = useRouter();
+  const { evaluation, openPaywall } = useAppAccess();
 
   let projectCtx: ProjectContextValue | null = null;
   try {
@@ -95,6 +97,10 @@ export default function ProjectsScreen() {
   };
 
   const handleCreateProjectFromGauge = async (input: CreateProjectFromGaugeInput) => {
+    if (!evaluation.canCreateNewProject) {
+      openPaywall();
+      return;
+    }
     if (projectCtx) {
       await projectCtx.createProject({
         name: input.name,
@@ -111,6 +117,10 @@ export default function ProjectsScreen() {
 
   const handleCreateProject = async () => {
     if (!newProjectName.trim()) return;
+    if (!evaluation.canCreateNewProject) {
+      openPaywall();
+      return;
+    }
     const targetRowsNum = parseInt(newTargetRows, 10);
 
     if (projectCtx) {
@@ -134,6 +144,10 @@ export default function ProjectsScreen() {
 
   const handleAddPartSubmit = async () => {
     if (!addedPartName.trim() || !targetProjectId || !projectCtx) return;
+    if (!evaluation.canCreateNewProject) {
+      openPaywall();
+      return;
+    }
     const targetRowsNum = parseInt(addedPartTarget, 10);
 
     await projectCtx.addPart(targetProjectId, {
@@ -244,8 +258,12 @@ export default function ProjectsScreen() {
           <TouchableOpacity
             style={styles.addPartButton}
             onPress={() => {
-              setTargetProjectId(item.id);
-              setPartModalVisible(true);
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setTargetProjectId(item.id);
+                setPartModalVisible(true);
+              }
             }}
           >
             <Text style={styles.addPartButtonText}>+ Część</Text>
@@ -330,11 +348,41 @@ export default function ProjectsScreen() {
           <TouchableOpacity
             style={styles.newButton}
             activeOpacity={0.8}
-            onPress={() => setModalVisible(true)}
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setModalVisible(true);
+              }
+            }}
           >
             <Text style={styles.newButtonText}>+ Nowy projekt</Text>
           </TouchableOpacity>
         </View>
+      </View>
+
+      {/* Pasek statusu dostępu i monetyzacji impulsowej Apps4Brew */}
+      <View style={styles.accessStatusBar}>
+        {evaluation.isPremium ? (
+          <Text style={styles.accessStatusTextPremium}>
+            ✨ Apps4Brew Studio Pass: {evaluation.activePlan === 'lifetime' ? 'Lifetime (Na zawsze)' : 'Aktywny'}
+          </Text>
+        ) : evaluation.canCreateNewProject ? (
+          <Text style={styles.accessStatusTextTrial}>
+            ⏳ Trial: Zostało {evaluation.trialDaysRemaining} dni ({evaluation.trialProjectsRemaining} wolne projekty)
+          </Text>
+        ) : (
+          <TouchableOpacity
+            style={styles.accessStatusBannerExpired}
+            onPress={openPaywall}
+            accessibilityRole="button"
+            accessibilityLabel="Odblokuj pełny dostęp"
+          >
+            <Text style={styles.accessStatusTextExpired}>
+              🔒 Historia: Tylko do odczytu • Odblokuj pełny dostęp ($4.99/rok)
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <FlatList
@@ -849,6 +897,48 @@ const styles = StyleSheet.create({
     color: '#8B5E3C',
     fontWeight: '700',
     fontSize: 12,
+  },
+  accessStatusBar: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  accessStatusTextPremium: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#2E7D32',
+    backgroundColor: '#E8F5E9',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    textAlign: 'center',
+  },
+  accessStatusTextTrial: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#8A5A36',
+    backgroundColor: '#FFF8F2',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#F0E2D6',
+    textAlign: 'center',
+  },
+  accessStatusBannerExpired: {
+    backgroundColor: '#FFF2EB',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#F0D5C7',
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  accessStatusTextExpired: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#C0392B',
+    textAlign: 'center',
   },
 });
 
