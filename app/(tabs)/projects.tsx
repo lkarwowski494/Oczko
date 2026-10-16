@@ -25,6 +25,7 @@ import GaugeCalculatorModal, {
 import ProjectShareCardModal from '../../src/components/ProjectShareCardModal';
 import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
 import { ShapingCalculatorModal } from '../../src/components/ShapingCalculatorModal';
+import { EaseCalculatorModal } from '../../src/components/EaseCalculatorModal';
 
 
 export default function ProjectsScreen() {
@@ -46,6 +47,9 @@ export default function ProjectsScreen() {
 
   // Modal kalkulatora próbki (Gauge)
   const [gaugeModalVisible, setGaugeModalVisible] = useState(false);
+
+  // Modal kalkulatora luzu i doboru rozmiaru (Ease)
+  const [easeModalVisible, setEaseModalVisible] = useState(false);
 
   // Modal karty podsumowania i udostępniania robótki
   const [selectedShareProject, setSelectedShareProject] = useState<EnrichedProject | null>(null);
@@ -289,6 +293,15 @@ export default function ProjectsScreen() {
             <Text style={styles.gaugeButtonText}>✂️ Oczka</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => setEaseModalVisible(true)}
+            accessibilityLabel="Otwórz kalkulator luzu odzieżowego i doboru rozmiaru"
+            accessibilityRole="button"
+          >
+            <Text style={styles.gaugeButtonText}>👕 Luz</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.newButton}
             activeOpacity={0.8}
             onPress={() => setModalVisible(true)}
@@ -495,6 +508,12 @@ export default function ProjectsScreen() {
       <ShapingCalculatorModal
         visible={shapingModalVisible}
         onClose={() => setShapingModalVisible(false)}
+      />
+
+      {/* Modal kalkulatora luzu i doboru rozmiaru */}
+      <EaseCalculatorModal
+        visible={easeModalVisible}
+        onClose={() => setEaseModalVisible(false)}
       />
     </SafeAreaView>
   );

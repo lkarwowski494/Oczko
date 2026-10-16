@@ -4,6 +4,7 @@ import ProjectsScreen from '../../../app/(tabs)/projects';
 import { ProjectProvider } from '../../core/project-context';
 import { createInMemoryDatabase } from '../../core/database';
 import { ShapingCalculatorModal } from '../../components/ShapingCalculatorModal';
+import { EaseCalculatorModal } from '../../components/EaseCalculatorModal';
 
 function extractAllStrings(node: any): string {
   if (!node) return '';
@@ -425,6 +426,21 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
     const shapingModal = root.findByType(ShapingCalculatorModal);
     await act(async () => {
       shapingModal.props.onClose();
+    });
+
+    // Znajdź przycisk otwierania kalkulatora luzu i doboru rozmiaru
+    const easeBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('👕 Luz')
+    );
+    await act(async () => {
+      easeBtn.props.onPress();
+    });
+
+    // Znajdź EaseCalculatorModal i zamknij
+    const easeModal = root.findByType(EaseCalculatorModal);
+    await act(async () => {
+      easeModal.props.onClose();
     });
   });
 

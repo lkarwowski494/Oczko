@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-100%25_Offline--First-003B57?style=flat&logo=sqlite)](https://sqlite.org/)
 [![Coverage](https://img.shields.io/badge/Coverage-100.00%25_Lines-brightgreen?style=flat)](docs/decyzje_biezace.md)
-[![Tests](https://img.shields.io/badge/Tests-391_Passed_(50_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
+[![Tests](https://img.shields.io/badge/Tests-420_Passed_(52_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
 [![CI](https://github.com/lkarwowski494/Oczko/actions/workflows/ci.yml/badge.svg)](https://github.com/lkarwowski494/Oczko/actions)
 
 > **„Precyzyjny, wolny od rozpraszaczy licznik rzędów i asystent dziewiarski stworzony dla dziewiarek i dziewiarzy — zawsze z Tobą, na iPhone, Apple Watch i Garminie.”**
@@ -248,6 +248,7 @@ oczko/
 ├── src/
 │   ├── components/             # Reużywalne komponenty i modale UI
 │   │   ├── AppleWatchCompanionModal.tsx   # Symulator Apple Watch z Cyfrową Koronką
+│   │   ├── EaseCalculatorModal.tsx        # Kalkulator luzu odzieżowego, doboru rozmiaru i adaptacji próbki
 │   │   ├── GarminCompanionModal.tsx       # Symulator zegarka Garmin z fizycznymi przyciskami i BLE
 │   │   ├── GaugeCalculatorModal.tsx       # Kalkulator próbki ściegu (mm, rzędy, oczka, szablony)
 │   │   ├── NeedleGaugeModal.tsx           # Miarka rozmiarów drutów (CYC/ISO) i przelicznik jednostek
@@ -265,6 +266,7 @@ oczko/
 │   │   ├── database.ts                    # Klient bazy SQLite (natywny + in-memory)
 │   │   ├── device-sync.ts                 # Model synchronizacji wielu urządzeń
 │   │   ├── domain-rules.ts                # Reguły biznesowe BR-LICZ, BR-PROJ, BR-MAG
+│   │   ├── ease-calculator-service.ts     # Deterministyczny dobór rozmiaru sylwetki i przelicznik oczek
 │   │   ├── feedback-service.ts            # Obsługa Taptic Engine i powiadomień interwałowych
 │   │   ├── garmin-service.ts              # Protokół Garmin Connect IQ BLE, koperty i kolejka offline
 │   │   ├── gauge-calculator.ts            # Matematyka przeliczania próbek dziewiarskich

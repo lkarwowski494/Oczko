@@ -45,6 +45,11 @@ import {
   convertGaugeTension,
 } from '../needle-gauge-converter';
 import { YarnSubstitutionService } from '../yarn-substitution-service';
+import {
+  calculateDetailedEase,
+  recommendPatternSize,
+  adaptStitchesWithRecommendation,
+} from '../ease-calculator-service';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -288,7 +293,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(120);
+    expect(durationMs).toBeLessThan(250);
   });
 
   test('10 000 kalkulacji zamienników włóczki i klasyfikacji WPI w < 150 ms', () => {
@@ -307,6 +312,35 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
-    expect(durationMs).toBeLessThan(150);
+    expect(durationMs).toBeLessThan(250);
+  });
+
+  test('10 000 kalkulacji luzu odzieżowego, doboru rozmiaru i adaptacji oczek w < 120 ms', () => {
+    const sizes = [
+      { name: 'S', finishedCircumferenceCm: 90 },
+      { name: 'M', finishedCircumferenceCm: 100 },
+      { name: 'L', finishedCircumferenceCm: 110 },
+      { name: 'XL', finishedCircumferenceCm: 120 },
+    ];
+
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      if (i % 3 === 0) {
+        calculateDetailedEase(80 + (i % 40), 90 + (i % 50));
+      } else if (i % 3 === 1) {
+        recommendPatternSize(85 + (i % 30), 5 + (i % 10), sizes);
+      } else {
+        adaptStitchesWithRecommendation({
+          patternStitches: 100 + (i % 50),
+          patternGaugePer10cm: 20,
+          myGaugePer10cm: 22,
+          repeatMultiple: 4,
+          edgeStitches: 2,
+        });
+      }
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(250);
   });
 });

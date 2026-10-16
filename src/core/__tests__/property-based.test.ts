@@ -48,6 +48,11 @@ import {
   convertGaugeTension,
 } from '../needle-gauge-converter';
 import { YarnSubstitutionService } from '../yarn-substitution-service';
+import {
+  calculateDetailedEase,
+  recommendPatternSize,
+  adaptStitchesWithRecommendation,
+} from '../ease-calculator-service';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -664,6 +669,80 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
             expect(cat).toBeLessThanOrEqual(7);
           }
         }),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Kalkulatora Luzu Odzieżowego i Doboru Rozmiaru (ease-calculator-service.ts)', () => {
+    it('Monotoniczność luzu: przy stałym obwodzie ciała, większy obwód dzianiny ściśle zwiększa luz w cm i procentach', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 60, max: 150 }),
+          fc.integer({ min: 50, max: 100 }),
+          fc.integer({ min: 101, max: 200 }),
+          (body, g1, g2) => {
+            const res1 = calculateDetailedEase(body, g1);
+            const res2 = calculateDetailedEase(body, g2);
+
+            expect(res2.easeCm).toBeGreaterThan(res1.easeCm);
+            expect(res2.percentageOfBody).toBeGreaterThan(res1.percentageOfBody);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Optymalność rekomendacji rozmiaru: wybrany rozmiar minimalizuje bezwzględną różnicę od zadanego luzu', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 70, max: 140 }),
+          fc.integer({ min: -5, max: 25 }),
+          fc.array(fc.integer({ min: 70, max: 180 }), { minLength: 2, maxLength: 8 }),
+          (body, desiredEase, sizesArr) => {
+            const sizes = sizesArr.map((s, idx) => ({
+              name: `Rozmiar ${idx + 1}`,
+              finishedCircumferenceCm: s,
+            }));
+
+            const rec = recommendPatternSize(body, desiredEase, sizes);
+            expect(rec.recommendedSize.isClosest).toBe(true);
+
+            // Niezmiennik: żaden inny kandydat nie ma mniejszej różnicy od zalecanego
+            for (const cand of rec.allCandidates) {
+              expect(cand.easeDiffFromDesiredCm).toBeGreaterThanOrEqual(
+                rec.recommendedSize.easeDiffFromDesiredCm
+              );
+            }
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Zbieżność adaptacji oczek: szerokość zalecanego wariantu nie odbiega od wzorcowej o więcej niż 1 pełny raport', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 50, max: 200 }),
+          fc.integer({ min: 14, max: 30 }),
+          fc.integer({ min: 14, max: 30 }),
+          fc.integer({ min: 1, max: 12 }),
+          fc.integer({ min: 0, max: 4 }),
+          (patternStitches, patternGauge, myGauge, repeatMultiple, edgeStitches) => {
+            const res = adaptStitchesWithRecommendation({
+              patternStitches,
+              patternGaugePer10cm: patternGauge,
+              myGaugePer10cm: myGauge,
+              repeatMultiple,
+              edgeStitches,
+            });
+
+            const repeatWidthCm = repeatMultiple / (myGauge / 10);
+            const chosen =
+              res.chosenCandidate === 'lower' ? res.lowerCandidate : res.upperCandidate;
+            expect(chosen.widthDifferenceCm).toBeLessThanOrEqual(repeatWidthCm + 0.1);
+          }
+        ),
         { numRuns: 100 }
       );
     });

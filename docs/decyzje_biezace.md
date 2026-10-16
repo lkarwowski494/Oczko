@@ -316,4 +316,22 @@
     - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
     - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
     - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 150 ms) oraz Resilience (`resilience.test.ts`).
+
+* **DEC-18 Implementacja: Kalkulator Luzu Odzieżowego, Doboru Rozmiaru i Adaptacji Oczek (16.10.2026):**
+  - **Architektura Domenowa (`src/core/ease-calculator-service.ts`):**
+    - 8 presetów stylu i luzu odzieżowego (od głębokiego ujemnego -10 cm do oversize i boxy +28 cm).
+    - Tabela standardowych sylwetek dorosłych CYC/ISO (od XS do 5XL) i automatyczne dopasowywanie rozmiaru na podstawie obwodu biustu/klatki piersiowej.
+    - Algorytm doboru rozmiaru wzoru `recommendPatternSize` minimalizujący różnicę między rzeczywistym a pożądanym luzem gotowego wyrobu.
+    - Deterministyczny adapter gęstości próbki `adaptStitchesWithRecommendation` z zachowaniem raportu wzoru, ochroną oczek brzegowych i wyborem najbliższego kandydata wymiarowego (lower vs upper candidate).
+  - **Interfejs Użytkownika (`src/components/EaseCalculatorModal.tsx`):**
+    - 2-zakładkowy modal: `Rozmiar & Luz` oraz `Przelicznik Oczek`.
+    - Karty rekomendacji ze szczegółową klasyfikacją kroju, wskaźnikiem procentowym, stepperem +/- 1 cm i porównaniem wariantów.
+    - Spełnia Apple HIG ($\ge 44 \times 44\,\text{pt}$, VoiceOver labels, Share Sheet export).
+    - Zintegrowany z ekranem robótek (`app/(tabs)/projects.tsx` — przycisk `👕 Luz`).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 52/52 zdanych (100% pass)**.
+    - **Tests: 420/420 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
+    - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+    - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 250 ms) oraz Resilience (`resilience.test.ts`).
 

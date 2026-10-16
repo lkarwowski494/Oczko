@@ -51,6 +51,11 @@ import {
   convertGaugeTension,
 } from '../needle-gauge-converter';
 import { YarnSubstitutionService } from '../yarn-substitution-service';
+import {
+  calculateDetailedEase,
+  recommendPatternSize,
+  adaptStitchesWithRecommendation,
+} from '../ease-calculator-service';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -596,6 +601,53 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(Number.isFinite(hugeResult.totalRequiredMeters)).toBe(true);
       expect(Number.isFinite(hugeResult.exactBalls)).toBe(true);
       expect(hugeResult.totalEstimatedWeightGrams).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Wstrzykiwanie Błędów do Kalkulatora Luzu i Doboru Rozmiaru (ease-calculator-service.ts)', () => {
+    test('Nieprawidłowe, ujemne lub zerowe wartości wejściowe rzucają kontrolowane błędy', () => {
+      expect(() => calculateDetailedEase(0, 100)).toThrow();
+      expect(() => calculateDetailedEase(-80, 100)).toThrow();
+      expect(() => calculateDetailedEase(90, 0)).toThrow();
+      expect(() => calculateDetailedEase(90, -100)).toThrow();
+
+      expect(() => recommendPatternSize(0, 5, [{ name: 'S', finishedCircumferenceCm: 90 }])).toThrow();
+      expect(() => recommendPatternSize(90, 5, [])).toThrow();
+      expect(() => recommendPatternSize(90, 5, [{ name: 'Błąd', finishedCircumferenceCm: -50 }])).toThrow();
+      expect(() => recommendPatternSize(20, -30, [{ name: 'S', finishedCircumferenceCm: 90 }])).toThrow();
+
+      expect(() =>
+        adaptStitchesWithRecommendation({
+          patternStitches: 0,
+          patternGaugePer10cm: 20,
+          myGaugePer10cm: 22,
+        })
+      ).toThrow();
+      expect(() =>
+        adaptStitchesWithRecommendation({
+          patternStitches: 100,
+          patternGaugePer10cm: -20,
+          myGaugePer10cm: 22,
+        })
+      ).toThrow();
+    });
+
+    test('Skrajne wartości (miniaturowe lalki, gigantyczne koce) zachowują stabilność numeryczną', () => {
+      // Bardzo mały wyrób (ubranko dla lalki: obwód 10 cm, luz 1 cm)
+      const doll = calculateDetailedEase(10, 11);
+      expect(doll.easeCm).toBe(1);
+      expect(Number.isFinite(doll.percentageOfBody)).toBe(true);
+
+      // Bardzo duży wyrób (koc / narzuta: 300 cm)
+      const big = adaptStitchesWithRecommendation({
+        patternStitches: 600,
+        patternGaugePer10cm: 20,
+        myGaugePer10cm: 25,
+        repeatMultiple: 12,
+        edgeStitches: 4,
+      });
+      expect(big.recommendedStitches).toBeGreaterThan(600);
+      expect(Number.isFinite(big.recommendedWidthCm)).toBe(true);
     });
   });
 });
