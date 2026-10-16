@@ -47,8 +47,7 @@ jobs:
         run: |
           BUILD_NUM=$((BUILD_BASE + GITHUB_RUN_NUMBER))
           echo "BUILD_NUMBER=$BUILD_NUM" >> "$GITHUB_ENV"
-          WORKSPACE_PATH=$(find ios -maxdepth 1 -name "*.xcworkspace" | head -1)
-          SCHEME_NAME=$(basename "$WORKSPACE_PATH" .xcworkspace)
+          SCHEME_NAME=$(node -p "require('./app.json').expo.name")
           echo "SCHEME_NAME=$SCHEME_NAME" >> "$GITHUB_ENV"
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUM" "ios/$SCHEME_NAME/Info.plist" || true
       - name: Instalacja CocoaPods
