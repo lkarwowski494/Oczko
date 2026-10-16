@@ -289,7 +289,9 @@ oczko/
 ├── scripts/                    # Narzędzia i generatory referencyjne
 │   └── gen-gauge-corpus.py     # Niezależny generator korpusu matematycznego w Pythonie 3.14
 ├── docs/                       # Dokumentacja projektowa i rejestr decyzji
-│   └── decyzje_biezace.md      # Rejestr decyzji (DEC-01 do DEC-25), reguły i historia wydań
+│   ├── decyzje_biezace.md      # Rejestr decyzji (DEC-01 do DEC-25), reguły i historia wydań
+│   ├── 20-definicja-ukonczenia.md # Definicja ukończenia (DoD) i matryca warstw jakościowych
+│   └── testing.md              # Strategia testów i rygor wieloperspektywiczny
 ├── .github/                    # Konfiguracja CI/CD
 │   └── workflows/ci.yml        # Pipeline GitHub Actions (typecheck + test:coverage)
 ├── babel.config.js             # Konfiguracja Babel dla Expo
@@ -303,6 +305,8 @@ oczko/
 ## 📖 Dokumentacja i Rejestr Decyzji
 
 - **Rejestr decyzji architektonicznych i stanu projektu:** [`docs/decyzje_biezace.md`](docs/decyzje_biezace.md)
+- **Definicja ukończenia (DoD):** [`docs/20-definicja-ukonczenia.md`](docs/20-definicja-ukonczenia.md)
+- **Strategia testów:** [`docs/testing.md`](docs/testing.md)
 - **Standardy grubości włóczek i symboli:** [Craft Yarn Council Standards](https://www.craftyarncouncil.com/standards)
 - **Wytyczne interfejsu Apple:** [Apple Human Interface Guidelines (iOS & watchOS)](https://developer.apple.com/design/human-interface-guidelines/)
 - **Dokumentacja Garmin Connect IQ SDK:** [Garmin Connect IQ Developer Portal](https://developer.garmin.com/connect-iq/)
