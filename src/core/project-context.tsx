@@ -4,7 +4,10 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef } from 'react';
-import { DatabaseClient, openOczkoDatabase, createInMemoryDatabase } from './database';
+import { DatabaseClient, openOczkoDatabase, createInMemoryDatabase, loadPersistedSettings } from './database';
+import { autoBackup } from './backup-service';
+import { setLang } from './i18n';
+import { setUnitSystem } from './unit-converter';
 import {
   EnrichedProject,
   CreateProjectInput,
@@ -92,6 +95,10 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
 
         if (isMounted) {
           setDb(client);
+          loadPersistedSettings(client).then((s) => {
+            if (s.language === 'pl' || s.language === 'en') setLang(s.language as any);
+            if (s.unitSystem === 'metric' || s.unitSystem === 'imperial') setUnitSystem(s.unitSystem as any);
+          }).catch(() => {});
         }
       } catch (err: any) {
         if (isMounted) {
@@ -160,6 +167,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
       const result = await createFullProject(db, input);
       await refreshProjects();
       await selectActiveCounter(result.project.id, result.activeCounterId);
+      autoBackup(db).catch(() => {});
       return result.project.id;
     },
     [db, refreshProjects]
@@ -206,6 +214,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
       if (projectId === activeProjectId) {
         await selectActiveCounter(projectId, res.primaryCounter.id);
       }
+      autoBackup(db).catch(() => {});
     },
     [db, activeProjectId, refreshProjects, selectActiveCounter]
   );
@@ -217,6 +226,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
       await addLinkedCounterToPart(db, partId, parentCounterId, input);
       await refreshProjects();
       await selectActiveCounter(activeProjectId, parentCounterId);
+      autoBackup(db).catch(() => {});
     },
     [db, activeProjectId, refreshProjects, selectActiveCounter]
   );
@@ -239,6 +249,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
         // Ciche odświeżenie postępów na liście projektów
         const updated = await loadAllProjectsWithProgress(db);
         setProjects(updated);
+        autoBackup(db).catch(() => {});
       } catch (err: any) {
         setError(err.message ?? 'Błąd zapisu kroku licznika');
       }
@@ -261,6 +272,7 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
         setActiveCounterState(activeFacade.getCounterState(activeCounterId));
         const updated = await loadAllProjectsWithProgress(db);
         setProjects(updated);
+        autoBackup(db).catch(() => {});
       }
     } catch (err: any) {
       setError(err.message ?? 'Błąd operacji cofania');

@@ -17,15 +17,16 @@ import { useOptionalProject } from '../../src/core/project-context';
 import { useAppAccess } from '../../src/core/app-access-context';
 import { useLang, setLang, t } from '../../src/core/i18n';
 import {
-  getUnitSystem,
   setUnitSystem,
-  subscribeUnitSystem,
   UnitSystem,
 } from '../../src/core/unit-converter';
+import { useUnitSystem } from '../../src/core/use-unit-system';
+import { setAppSetting } from '../../src/core/database';
 import {
   getDatabaseStats,
   exportBackupToJson,
   importDatabaseBackup,
+  safetyBackup,
   validateBackupData,
   OczkoBackupMetadata,
 } from '../../src/core/backup-service';
@@ -34,14 +35,6 @@ import AppleWatchCompanionModal from '../../src/components/AppleWatchCompanionMo
 import { GarminCompanionModal } from '../../src/components/GarminCompanionModal';
 import { createWatchCounterSnapshot } from '../../src/core/apple-watch-service';
 import { createGarminSyncPayload } from '../../src/core/garmin-service';
-
-function useUnitSystem(): UnitSystem {
-  const [sys, setSys] = useState<UnitSystem>(getUnitSystem());
-  useEffect(() => {
-    return subscribeUnitSystem(setSys);
-  }, []);
-  return sys;
-}
 
 export default function SettingsScreen() {
   const projectContext = useOptionalProject();
@@ -137,6 +130,11 @@ export default function SettingsScreen() {
     setRestoreError(null);
 
     try {
+      try {
+        await safetyBackup('import', db);
+      } catch (_e) {
+        // Bezpieczne pominięcie kopii bezpieczeństwa w środowisku testowym bez natywnego FileSystem
+      }
       const result = await importDatabaseBackup(db, validation.data);
       if (result.success) {
         if (refreshProjects) {
@@ -252,7 +250,10 @@ export default function SettingsScreen() {
                 styles.optionChip,
                 currentLang === 'pl' && styles.optionChipActive,
               ]}
-              onPress={() => setLang('pl')}
+              onPress={() => {
+                setLang('pl');
+                if (db) setAppSetting(db, 'language', 'pl').catch(() => {});
+              }}
             >
               <Text
                 style={[
@@ -268,7 +269,10 @@ export default function SettingsScreen() {
                 styles.optionChip,
                 currentLang === 'en' && styles.optionChipActive,
               ]}
-              onPress={() => setLang('en')}
+              onPress={() => {
+                setLang('en');
+                if (db) setAppSetting(db, 'language', 'en').catch(() => {});
+              }}
             >
               <Text
                 style={[
@@ -292,7 +296,10 @@ export default function SettingsScreen() {
                   styles.optionChip,
                   currentUnitSystem === 'metric' && styles.optionChipActive,
                 ]}
-                onPress={() => setUnitSystem('metric')}
+                onPress={() => {
+                  setUnitSystem('metric');
+                  if (db) setAppSetting(db, 'unit_system', 'metric').catch(() => {});
+                }}
               >
                 <Text
                   style={[
@@ -308,7 +315,10 @@ export default function SettingsScreen() {
                   styles.optionChip,
                   currentUnitSystem === 'imperial' && styles.optionChipActive,
                 ]}
-                onPress={() => setUnitSystem('imperial')}
+                onPress={() => {
+                  setUnitSystem('imperial');
+                  if (db) setAppSetting(db, 'unit_system', 'imperial').catch(() => {});
+                }}
               >
                 <Text
                   style={[

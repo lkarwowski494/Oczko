@@ -35,6 +35,12 @@ import {
 import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
 import { NeedleGaugeModal } from '../../src/components/NeedleGaugeModal';
 import { YarnSubstitutionModal } from '../../src/components/YarnSubstitutionModal';
+import { useAppAccess } from '../../src/core/app-access-context';
+import { ImpulsePaywallModal } from '../../src/components/ImpulsePaywallModal';
+import { useLang, t } from '../../src/core/i18n';
+import { useUnitSystem } from '../../src/core/use-unit-system';
+import { formatWeight, formatLength, formatNeedleSize } from '../../src/core/unit-converter';
+import { autoBackup } from '../../src/core/backup-service';
 
 type StashTab = 'yarn' | 'tools';
 
@@ -170,13 +176,21 @@ export default function StashScreen() {
     });
   }, [yarns, searchQuery, selectedWeight, selectedFiberTag, inStockOnly]);
 
-  // Sumaryczne metryki magazynu
+  const { evaluation, openPaywall } = useAppAccess();
+  const currentLang = useLang();
+  const unitSystem = useUnitSystem();
+
   const stashMetrics = useMemo(() => {
     return calculateStashMetrics(filteredYarns);
   }, [filteredYarns]);
 
   const handleAddYarn = async () => {
     if (!yarnBrand.trim() || !yarnName.trim()) return;
+    if (!evaluation.canCreateNewProject) {
+      setModalVisible(false);
+      openPaywall();
+      return;
+    }
     const skeins = parseFloat(yarnSkeins) || 1;
     const grams = parseFloat(yarnWeightGrams) || 50;
     const meters = parseFloat(yarnLengthMeters) || 170;
@@ -201,6 +215,7 @@ export default function StashScreen() {
     if (db) {
       await insertStashYarn(db, newYarn);
       await loadStashFromDb();
+      autoBackup(db).catch(() => {});
     } else {
       setYarns((prev) => [newYarn, ...prev]);
     }
@@ -218,6 +233,11 @@ export default function StashScreen() {
 
   const handleAddTool = async () => {
     if (!toolName.trim()) return;
+    if (!evaluation.canCreateNewProject) {
+      setModalVisible(false);
+      openPaywall();
+      return;
+    }
     const size = parseFloat(toolSizeMm) || 4.0;
     const cable = parseInt(toolCableLength, 10);
     const now = new Date().toISOString();
@@ -235,6 +255,7 @@ export default function StashScreen() {
     if (db) {
       await insertStashTool(db, newTool);
       await loadStashFromDb();
+      autoBackup(db).catch(() => {});
     } else {
       setTools((prev) => [newTool, ...prev]);
     }
@@ -283,6 +304,30 @@ export default function StashScreen() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
+      {/* Pasek statusu dostępu i monetyzacji impulsowej Apps4Brew */}
+      <View style={styles.accessStatusBar}>
+        {evaluation.isPremium ? (
+          <Text style={styles.accessStatusTextPremium}>
+            ✨ Apps4Brew Studio Pass: {evaluation.activePlan === 'lifetime' ? t('Lifetime (Na zawsze)') : t('Aktywny')}
+          </Text>
+        ) : evaluation.canCreateNewProject ? (
+          <Text style={styles.accessStatusTextTrial}>
+            ⏳ Trial: {t('Zostało')} {evaluation.trialDaysRemaining} {t('dni')} ({evaluation.trialProjectsRemaining} {t('wolne projekty')})
+          </Text>
+        ) : (
+          <TouchableOpacity
+            style={styles.accessStatusBannerExpired}
+            onPress={openPaywall}
+            accessibilityRole="button"
+            accessibilityLabel={t('Odblokuj pełny dostęp')}
+          >
+            <Text style={styles.accessStatusTextExpired}>
+              🔒 {t('Historia: Tylko do odczytu • Odblokuj pełny dostęp ($4.99/rok)')}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
       {/* Przełącznik Włóczki / Narzędzia */}
       <View style={styles.segmentContainer}>
         <TouchableOpacity
@@ -290,7 +335,7 @@ export default function StashScreen() {
           onPress={() => setActiveTab('yarn')}
         >
           <Text style={[styles.segmentText, activeTab === 'yarn' && styles.segmentTextActive]}>
-            🧶 Włóczki ({yarns.length})
+            🧶 {t('Włóczki')} ({yarns.length})
           </Text>
         </TouchableOpacity>
 
@@ -299,14 +344,14 @@ export default function StashScreen() {
           onPress={() => setActiveTab('tools')}
         >
           <Text style={[styles.segmentText, activeTab === 'tools' && styles.segmentTextActive]}>
-            🪡 Druty i szydełka ({tools.length})
+            🪡 {t('Druty i szydełka')} ({tools.length})
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.topActionRow}>
         <Text style={styles.sectionTitle}>
-          {activeTab === 'yarn' ? 'Twoje Zapasy Włóczek' : 'Twoje Narzędzia'}
+          {activeTab === 'yarn' ? t('Twoje Zapasy Włóczek') : t('Twoje Narzędzia')}
         </Text>
         <View style={styles.topActionsGroup}>
           {activeTab === 'yarn' && (
@@ -314,20 +359,32 @@ export default function StashScreen() {
               <TouchableOpacity
                 style={styles.estimatorButton}
                 activeOpacity={0.8}
-                onPress={() => setYarnSubstitutionVisible(true)}
-                accessibilityLabel="Otwórz kalkulator zamienników włóczek i WPI"
+                onPress={() => {
+                  if (!evaluation.canCreateNewProject) {
+                    openPaywall();
+                  } else {
+                    setYarnSubstitutionVisible(true);
+                  }
+                }}
+                accessibilityLabel={t('Otwórz kalkulator zamienników włóczek i WPI')}
                 accessibilityRole="button"
               >
-                <Text style={styles.estimatorButtonText}>🔄 Zamiennik</Text>
+                <Text style={styles.estimatorButtonText}>{t('🔄 Zamiennik')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.estimatorButton}
                 activeOpacity={0.8}
-                onPress={() => setYarnEstimatorVisible(true)}
-                accessibilityLabel="Otwórz kalkulator zużycia włóczki"
+                onPress={() => {
+                  if (!evaluation.canCreateNewProject) {
+                    openPaywall();
+                  } else {
+                    setYarnEstimatorVisible(true);
+                  }
+                }}
+                accessibilityLabel={t('Otwórz kalkulator zużycia włóczki')}
                 accessibilityRole="button"
               >
-                <Text style={styles.estimatorButtonText}>⚖️ Zużycie</Text>
+                <Text style={styles.estimatorButtonText}>{t('⚖️ Zużycie')}</Text>
               </TouchableOpacity>
             </>
           )}
@@ -335,20 +392,32 @@ export default function StashScreen() {
             <TouchableOpacity
               style={styles.estimatorButton}
               activeOpacity={0.8}
-              onPress={() => setNeedleGaugeVisible(true)}
-              accessibilityLabel="Otwórz miarkę drutów i przelicznik jednostek"
+              onPress={() => {
+                if (!evaluation.canCreateNewProject) {
+                  openPaywall();
+                } else {
+                  setNeedleGaugeVisible(true);
+                }
+              }}
+              accessibilityLabel={t('Otwórz miarkę drutów i przelicznik jednostek')}
               accessibilityRole="button"
             >
-              <Text style={styles.estimatorButtonText}>📏 Miarka drutów</Text>
+              <Text style={styles.estimatorButtonText}>{t('📏 Miarka drutów')}</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity
             style={styles.addButton}
             activeOpacity={0.8}
-            onPress={() => setModalVisible(true)}
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+                return;
+              }
+              setModalVisible(true);
+            }}
           >
             <Text style={styles.addButtonText}>
-              {activeTab === 'yarn' ? '+ Dodaj włóczkę' : '+ Dodaj druty'}
+              {activeTab === 'yarn' ? `+ ${t('Dodaj włóczkę')}` : `+ ${t('Dodaj druty')}`}
             </Text>
           </TouchableOpacity>
         </View>
@@ -471,9 +540,9 @@ export default function StashScreen() {
           {/* Podsumowanie przefiltrowanych zasobów */}
           <View style={styles.metricsSummaryBar}>
             <Text style={styles.metricsSummaryText}>
-              {`Znaleziono: ${stashMetrics.totalItems} poz. • ${stashMetrics.totalSkeins} motków`}
-              {stashMetrics.totalGrams > 0 ? ` • ${stashMetrics.totalGrams} g` : ''}
-              {stashMetrics.totalMeters > 0 ? ` • ${stashMetrics.totalMeters} m` : ''}
+              {`${t('Znaleziono:')} ${stashMetrics.totalItems} ${t('poz.')} • ${stashMetrics.totalSkeins} ${t('motków')}`}
+              {stashMetrics.totalGrams > 0 ? ` • ${formatWeight(stashMetrics.totalGrams, unitSystem)}` : ''}
+              {stashMetrics.totalMeters > 0 ? ` • ${formatLength(stashMetrics.totalMeters, unitSystem)}` : ''}
             </Text>
           </View>
         </View>
@@ -487,12 +556,12 @@ export default function StashScreen() {
           ListEmptyComponent={
             <View style={styles.emptyStateContainer}>
               <Text style={styles.emptyStateIcon}>🧶</Text>
-              <Text style={styles.emptyStateTitle}>Brak pasujących włóczek</Text>
+              <Text style={styles.emptyStateTitle}>{t('Brak pasujących włóczek')}</Text>
               <Text style={styles.emptyStateSubtitle}>
-                Żadna włóczka w Twoim magazynie nie spełnia wybranych kryteriów wyszukiwania lub filtrów.
+                {t('Żadna włóczka w Twoim magazynie nie spełnia wybranych kryteriów wyszukiwania lub filtrów.')}
               </Text>
               <TouchableOpacity style={styles.resetFiltersBtn} onPress={handleResetFilters}>
-                <Text style={styles.resetFiltersBtnText}>Resetuj wszystkie filtry</Text>
+                <Text style={styles.resetFiltersBtnText}>{t('Resetuj wszystkie filtry')}</Text>
               </TouchableOpacity>
             </View>
           }
@@ -516,19 +585,19 @@ export default function StashScreen() {
                 </View>
 
                 <Text style={styles.detailRow}>
-                  Kolor / Lot: <Text style={styles.detailBold}>{item.colorway}</Text>
-                  {item.dyeLot ? ` (Lot: ${item.dyeLot})` : ''}
+                  {t('Kolor / Lot:')} <Text style={styles.detailBold}>{item.colorway}</Text>
+                  {item.dyeLot ? ` (${t('Lot:')} ${item.dyeLot})` : ''}
                 </Text>
 
                 <Text style={styles.detailRow}>
-                  Pozostało motków:{' '}
+                  {t('Pozostało motków:')}{' '}
                   <Text style={styles.detailBold}>
-                    {item.skeinsRemaining} z {item.skeinsTotal}
+                    {item.skeinsRemaining} {t('z')} {item.skeinsTotal}
                   </Text>
                   {(item.weightGramsPerSkein || item.lengthMetersPerSkein) && (
                     <Text style={styles.specsText}>
-                      {` • ${item.weightGramsPerSkein ? item.weightGramsPerSkein + ' g' : ''}${
-                        item.lengthMetersPerSkein ? ' / ' + item.lengthMetersPerSkein + ' m' : ''
+                      {` • ${item.weightGramsPerSkein ? formatWeight(item.weightGramsPerSkein, unitSystem) : ''}${
+                        item.lengthMetersPerSkein ? ' / ' + formatLength(item.lengthMetersPerSkein, unitSystem) : ''
                       }`}
                     </Text>
                   )}
@@ -542,14 +611,14 @@ export default function StashScreen() {
                     onPress={() => handleUseSkein(item)}
                     disabled={item.skeinsRemaining <= 0}
                   >
-                    <Text style={styles.useButtonText}>Zużyj 1 motek (-1)</Text>
+                    <Text style={styles.useButtonText}>{t('Zużyj 1 motek (-1)')}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => handleDeleteYarn(item.id)}
                   >
-                    <Text style={styles.deleteButtonText}>Usuń</Text>
+                    <Text style={styles.deleteButtonText}>{t('Usuń')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -565,17 +634,17 @@ export default function StashScreen() {
             <View style={styles.card}>
               <View style={styles.cardHeader}>
                 <Text style={styles.itemTitle}>{item.name}</Text>
-                <Text style={styles.sizeBadge}>{item.sizeMm} mm</Text>
+                <Text style={styles.sizeBadge}>{formatNeedleSize(item.sizeMm, unitSystem)}</Text>
               </View>
               <Text style={styles.detailRow}>
-                Typ: <Text style={styles.detailBold}>{item.toolType}</Text>
+                {t('Typ:')} <Text style={styles.detailBold}>{item.toolType}</Text>
               </Text>
               <Text style={styles.detailRow}>
-                Materiał: <Text style={styles.detailBold}>{item.material}</Text>
+                {t('Materiał:')} <Text style={styles.detailBold}>{item.material}</Text>
               </Text>
               {item.cableLengthCm && (
                 <Text style={styles.detailRow}>
-                  Długość żyłki: <Text style={styles.detailBold}>{item.cableLengthCm} cm</Text>
+                  {t('Długość żyłki:')} <Text style={styles.detailBold}>{item.cableLengthCm} cm</Text>
                 </Text>
               )}
 
@@ -584,7 +653,7 @@ export default function StashScreen() {
                   style={styles.deleteButton}
                   onPress={() => handleDeleteTool(item.id)}
                 >
-                  <Text style={styles.deleteButtonText}>Usuń z magazynu</Text>
+                  <Text style={styles.deleteButtonText}>{t('Usuń z magazynu')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -602,25 +671,25 @@ export default function StashScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
-              {activeTab === 'yarn' ? 'Dodaj włóczkę do schowka' : 'Dodaj druty / szydełko'}
+              {activeTab === 'yarn' ? t('Dodaj włóczkę do schowka') : t('Dodaj druty / szydełko')}
             </Text>
 
             <ScrollView>
               {activeTab === 'yarn' ? (
                 <>
-                  <Text style={styles.inputLabel}>Marka (Producent)</Text>
+                  <Text style={styles.inputLabel}>{t('Marka')}</Text>
                   <TextInput
                     style={styles.textInput}
-                    placeholder="np. Drops / Sandnes Garn"
+                    placeholder={t('np. Drops / Sandnes Garn')}
                     placeholderTextColor="#999999"
                     value={yarnBrand}
                     onChangeText={setYarnBrand}
                   />
 
-                  <Text style={styles.inputLabel}>Nazwa włóczki</Text>
+                  <Text style={styles.inputLabel}>{t('Nazwa włóczki')}</Text>
                   <TextInput
                     style={styles.textInput}
-                    placeholder="np. Air / Sunday / Merino"
+                    placeholder={t('np. Air / Sunday / Merino')}
                     placeholderTextColor="#999999"
                     value={yarnName}
                     onChangeText={setYarnName}
@@ -628,20 +697,20 @@ export default function StashScreen() {
 
                   <View style={styles.twoColumnRow}>
                     <View style={styles.columnHalf}>
-                      <Text style={styles.inputLabel}>Kolor / Odcień</Text>
+                      <Text style={styles.inputLabel}>{t('Kolorystyka (Colorway)')}</Text>
                       <TextInput
                         style={styles.textInput}
-                        placeholder="np. 01 Biały"
+                        placeholder={t('np. 01 Biały')}
                         placeholderTextColor="#999999"
                         value={yarnColorway}
                         onChangeText={setYarnColorway}
                       />
                     </View>
                     <View style={styles.columnHalf}>
-                      <Text style={styles.inputLabel}>Partia farbowania (Lot)</Text>
+                      <Text style={styles.inputLabel}>{t('Numer partii / lotu (Dye Lot)')}</Text>
                       <TextInput
                         style={styles.textInput}
-                        placeholder="np. 1240"
+                        placeholder={t('np. 1240')}
                         placeholderTextColor="#999999"
                         value={yarnDyeLot}
                         onChangeText={setYarnDyeLot}
@@ -649,7 +718,7 @@ export default function StashScreen() {
                     </View>
                   </View>
 
-                  <Text style={styles.inputLabel}>Grubość przędzy (Kategoria CYC)</Text>
+                  <Text style={styles.inputLabel}>{t('Grubość przędzy (CYC)')}</Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.weightSelectorScroll}>
                     {YARN_WEIGHT_STANDARDS.map((std) => (
                       <TouchableOpacity
@@ -674,10 +743,10 @@ export default function StashScreen() {
 
                   <View style={styles.twoColumnRow}>
                     <View style={styles.columnHalf}>
-                      <Text style={styles.inputLabel}>Liczba motków</Text>
+                      <Text style={styles.inputLabel}>{t('Liczba zakupionych motków')}</Text>
                       <TextInput
                         style={styles.textInput}
-                        placeholder="np. 4"
+                        placeholder={t('np. 4')}
                         placeholderTextColor="#999999"
                         keyboardType="numeric"
                         value={yarnSkeins}
@@ -685,7 +754,7 @@ export default function StashScreen() {
                       />
                     </View>
                     <View style={styles.columnHalf}>
-                      <Text style={styles.inputLabel}>Waga motka (g)</Text>
+                      <Text style={styles.inputLabel}>{t('Waga motka')}</Text>
                       <TextInput
                         style={styles.textInput}
                         placeholder="50"
@@ -697,7 +766,7 @@ export default function StashScreen() {
                     </View>
                   </View>
 
-                  <Text style={styles.inputLabel}>Długość na motek (m)</Text>
+                  <Text style={styles.inputLabel}>{t('Długość motka')}</Text>
                   <TextInput
                     style={styles.textInput}
                     placeholder="np. 175"
@@ -707,10 +776,10 @@ export default function StashScreen() {
                     onChangeText={setYarnLengthMeters}
                   />
 
-                  <Text style={styles.inputLabel}>Skład surowcowy</Text>
+                  <Text style={styles.inputLabel}>{t('Skład surowcowy (np. 100% Wełna)')}</Text>
                   <TextInput
                     style={styles.textInput}
-                    placeholder="np. 100% Wełna Merino"
+                    placeholder={t('np. 100% Wełna Merino')}
                     placeholderTextColor="#999999"
                     value={yarnComposition}
                     onChangeText={setYarnComposition}
@@ -718,16 +787,16 @@ export default function StashScreen() {
                 </>
               ) : (
                 <>
-                  <Text style={styles.inputLabel}>Nazwa narzędzia</Text>
+                  <Text style={styles.inputLabel}>{t('Nazwa narzędzia')}</Text>
                   <TextInput
                     style={styles.textInput}
-                    placeholder="np. KnitPro Zing na żyłce"
+                    placeholder={t('np. KnitPro Zing na żyłce')}
                     placeholderTextColor="#999999"
                     value={toolName}
                     onChangeText={setToolName}
                   />
 
-                  <Text style={styles.inputLabel}>Rozmiar (mm)</Text>
+                  <Text style={styles.inputLabel}>{t('Rozmiar')}</Text>
                   <TextInput
                     style={styles.textInput}
                     placeholder="np. 4.0"
@@ -737,7 +806,7 @@ export default function StashScreen() {
                     onChangeText={setToolSizeMm}
                   />
 
-                  <Text style={styles.inputLabel}>Długość żyłki (cm, dla okrągłych)</Text>
+                  <Text style={styles.inputLabel}>{t('Długość żyłki (opcjonalnie)')}</Text>
                   <TextInput
                     style={styles.textInput}
                     placeholder="np. 80"
@@ -755,14 +824,16 @@ export default function StashScreen() {
                 style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.cancelButtonText}>Anuluj</Text>
+                <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={activeTab === 'yarn' ? handleAddYarn : handleAddTool}
               >
-                <Text style={styles.submitButtonText}>Zapisz w magazynie</Text>
+                <Text style={styles.submitButtonText}>
+                  {t('Zapisz w magazynie')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -795,6 +866,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFA',
+  },
+  accessStatusBar: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#F8F9FA',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#E0E0E0',
+  },
+  accessStatusTextPremium: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#8E24AA',
+  },
+  accessStatusTextTrial: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#2E7D32',
+  },
+  accessStatusBannerExpired: {
+    backgroundColor: '#FFEBEE',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  accessStatusTextExpired: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#C62828',
   },
   segmentContainer: {
     flexDirection: 'row',

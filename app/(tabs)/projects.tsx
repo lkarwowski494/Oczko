@@ -178,6 +178,8 @@ export default function ProjectsScreen() {
     }
   };
 
+  const currentLang = useLang();
+
   const renderProjectItem = ({ item }: { item: EnrichedProject }) => {
     const isSelected = item.id === activeProjectId;
     const primaryPart = item.parts[0];
@@ -200,18 +202,18 @@ export default function ProjectsScreen() {
             <Text style={styles.projectName}>{item.name}</Text>
             {isSelected && (
               <View style={styles.activeTag}>
-                <Text style={styles.activeTagText}>AKTYWNY</Text>
+                <Text style={styles.activeTagText}>{t('AKTYWNY')}</Text>
               </View>
             )}
           </View>
           <Text style={styles.categoryBadge}>
-            {item.craftType === 'knitting' ? 'DRUTY' : 'SZYDEŁKO'}
+            {item.craftType === 'knitting' ? t('DRUTY') : t('SZYDEŁKO')}
           </Text>
         </View>
 
         {/* Szczegółowa lista części w projekcie */}
         <View style={styles.partsSummaryContainer}>
-          <Text style={styles.partsHeaderTitle}>Części ({item.parts.length}):</Text>
+          <Text style={styles.partsHeaderTitle}>{t('Części')}:</Text>
           {item.parts.map((part) => {
             const count = part.counters[0]?.currentValue ?? 0;
             return (
@@ -245,14 +247,14 @@ export default function ProjectsScreen() {
               setYarnEstimatorVisible(true);
             }}
           >
-            <Text style={styles.cardShareButtonText}>⚖️ Zużycie</Text>
+            <Text style={styles.cardShareButtonText}>{t('⚖️ Zużycie')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.cardShareButton}
             onPress={() => setSelectedShareProject(item)}
           >
-            <Text style={styles.cardShareButtonText}>📊 Karta</Text>
+            <Text style={styles.cardShareButtonText}>{t('📊 Karta')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -266,14 +268,14 @@ export default function ProjectsScreen() {
               }
             }}
           >
-            <Text style={styles.addPartButtonText}>+ Część</Text>
+            <Text style={styles.addPartButtonText}>{t('+ Część')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.openCounterButton}
             onPress={() => handleOpenInCounter(item)}
           >
-            <Text style={styles.openCounterText}>Licznik 🧶</Text>
+            <Text style={styles.openCounterText}>{t('Licznik 🧶')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -284,12 +286,16 @@ export default function ProjectsScreen() {
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <View style={styles.topBar}>
-        <Text style={styles.heading}>Twoje Robótki</Text>
+        <Text style={styles.heading}>{t('Twoje Robótki')}</Text>
         <View style={styles.topBarActions}>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
             onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+                return;
+              }
               const activePart = projectCtx?.activeProject?.parts[0];
               if (activePart) {
                 setEstimatorInitialRows({
@@ -300,50 +306,80 @@ export default function ProjectsScreen() {
               setYarnEstimatorVisible(true);
             }}
           >
-            <Text style={styles.gaugeButtonText}>⚖️ Zużycie</Text>
+            <Text style={styles.gaugeButtonText}>{t('⚖️ Zużycie')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
-            onPress={() => setGaugeModalVisible(true)}
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setGaugeModalVisible(true);
+              }
+            }}
           >
-            <Text style={styles.gaugeButtonText}>📐 Próbka</Text>
+            <Text style={styles.gaugeButtonText}>{t('📐 Próbka')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
-            onPress={() => setShapingModalVisible(true)}
-            accessibilityLabel="Otwórz kalkulator kształtowania i dodawania oczek"
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setShapingModalVisible(true);
+              }
+            }}
+            accessibilityLabel={t('Otwórz kalkulator kształtowania i dodawania oczek')}
             accessibilityRole="button"
           >
-            <Text style={styles.gaugeButtonText}>✂️ Oczka</Text>
+            <Text style={styles.gaugeButtonText}>{t('✂️ Oczka')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
-            onPress={() => setEaseModalVisible(true)}
-            accessibilityLabel="Otwórz kalkulator luzu odzieżowego i doboru rozmiaru"
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setEaseModalVisible(true);
+              }
+            }}
+            accessibilityLabel={t('Otwórz kalkulator luzu odzieżowego i doboru rozmiaru')}
             accessibilityRole="button"
           >
-            <Text style={styles.gaugeButtonText}>👕 Luz</Text>
+            <Text style={styles.gaugeButtonText}>{t('👕 Luz')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
-            onPress={() => setRaglanModalVisible(true)}
-            accessibilityLabel="Otwórz kalkulator konstrukcji raglanu i rzędów skróconych"
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setRaglanModalVisible(true);
+              }
+            }}
+            accessibilityLabel={t('Otwórz kalkulator konstrukcji raglanu i rzędów skróconych')}
             accessibilityRole="button"
           >
-            <Text style={styles.gaugeButtonText}>🥋 Raglan</Text>
+            <Text style={styles.gaugeButtonText}>{t('🥋 Raglan')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gaugeButton}
             activeOpacity={0.8}
-            onPress={() => setHatModalVisible(true)}
-            accessibilityLabel="Otwórz kalkulator korony czapki i ściągacza"
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setHatModalVisible(true);
+              }
+            }}
+            accessibilityLabel={t('Otwórz kalkulator korony czapki i ściągacza')}
             accessibilityRole="button"
           >
-            <Text style={styles.gaugeButtonText}>🧢 Czapka</Text>
+            <Text style={styles.gaugeButtonText}>{t('🧢 Czapka')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.newButton}
@@ -356,7 +392,7 @@ export default function ProjectsScreen() {
               }
             }}
           >
-            <Text style={styles.newButtonText}>+ Nowy projekt</Text>
+            <Text style={styles.newButtonText}>{t('+ Nowy projekt')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -365,21 +401,21 @@ export default function ProjectsScreen() {
       <View style={styles.accessStatusBar}>
         {evaluation.isPremium ? (
           <Text style={styles.accessStatusTextPremium}>
-            ✨ Apps4Brew Studio Pass: {evaluation.activePlan === 'lifetime' ? 'Lifetime (Na zawsze)' : 'Aktywny'}
+            ✨ Apps4Brew Studio Pass: {evaluation.activePlan === 'lifetime' ? t('Lifetime (Na zawsze)') : t('Aktywny')}
           </Text>
         ) : evaluation.canCreateNewProject ? (
           <Text style={styles.accessStatusTextTrial}>
-            ⏳ Trial: Zostało {evaluation.trialDaysRemaining} dni ({evaluation.trialProjectsRemaining} wolne projekty)
+            ⏳ Trial: {t('Zostało')} {evaluation.trialDaysRemaining} {t('dni')} ({evaluation.trialProjectsRemaining} {t('wolne projekty')})
           </Text>
         ) : (
           <TouchableOpacity
             style={styles.accessStatusBannerExpired}
             onPress={openPaywall}
             accessibilityRole="button"
-            accessibilityLabel="Odblokuj pełny dostęp"
+            accessibilityLabel={t('Odblokuj pełny dostęp')}
           >
             <Text style={styles.accessStatusTextExpired}>
-              🔒 Historia: Tylko do odczytu • Odblokuj pełny dostęp ($4.99/rok)
+              🔒 {t('Historia: Tylko do odczytu • Odblokuj pełny dostęp ($4.99/rok)')}
             </Text>
           </TouchableOpacity>
         )}
@@ -392,7 +428,7 @@ export default function ProjectsScreen() {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Brak projektów. Rozpocznij dodając pierwszy projekt!</Text>
+            <Text style={styles.emptyText}>{t('Brak aktywnych projektów')}</Text>
           </View>
         }
       />
@@ -406,19 +442,19 @@ export default function ProjectsScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Nowa Robótka</Text>
+            <Text style={styles.modalTitle}>{t('Nowa Robótka')}</Text>
 
             <ScrollView>
-              <Text style={styles.inputLabel}>Nazwa projektu</Text>
+              <Text style={styles.inputLabel}>{t('Nazwa projektu')}</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="np. Mój Kardigan Oversize"
+                placeholder={t('np. Mój Kardigan Oversize')}
                 placeholderTextColor="#999999"
                 value={newProjectName}
                 onChangeText={setNewProjectName}
               />
 
-              <Text style={styles.inputLabel}>Typ techniki</Text>
+              <Text style={styles.inputLabel}>{t('Typ techniki')}</Text>
               <View style={styles.craftSelector}>
                 <TouchableOpacity
                   style={[
@@ -433,7 +469,7 @@ export default function ProjectsScreen() {
                       newCraftType === 'knitting' && styles.craftButtonTextActive,
                     ]}
                   >
-                    🧶 Druty (Knitting)
+                    {t('🧶 Druty (Knitting)')}
                   </Text>
                 </TouchableOpacity>
 
@@ -450,21 +486,21 @@ export default function ProjectsScreen() {
                       newCraftType === 'crochet' && styles.craftButtonTextActive,
                     ]}
                   >
-                    🪡 Szydełko (Crochet)
+                    {t('🪡 Szydełko (Crochet)')}
                   </Text>
                 </TouchableOpacity>
               </View>
 
-              <Text style={styles.inputLabel}>Nazwa pierwszej części</Text>
+              <Text style={styles.inputLabel}>{t('Nazwa pierwszej części')}</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="np. Korpus / Tył"
+                placeholder={t('np. Korpus / Tył')}
                 placeholderTextColor="#999999"
                 value={newPartName}
                 onChangeText={setNewPartName}
               />
 
-              <Text style={styles.inputLabel}>Docelowa liczba rzędów (opcjonalnie)</Text>
+              <Text style={styles.inputLabel}>{t('Docelowa liczba rzędów (opcjonalnie)')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="np. 120"
@@ -480,7 +516,7 @@ export default function ProjectsScreen() {
                 style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.cancelButtonText}>Anuluj</Text>
+                <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -491,7 +527,7 @@ export default function ProjectsScreen() {
                 disabled={!newProjectName.trim()}
                 onPress={handleCreateProject}
               >
-                <Text style={styles.submitButtonText}>Utwórz projekt</Text>
+                <Text style={styles.submitButtonText}>{t('Utwórz projekt')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -507,18 +543,18 @@ export default function ProjectsScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Dodaj nową część robótki</Text>
+            <Text style={styles.modalTitle}>{t('Dodaj nową część robótki')}</Text>
 
-            <Text style={styles.inputLabel}>Nazwa części (np. Rękaw lewy, Kołnierz)</Text>
+            <Text style={styles.inputLabel}>{t('Nazwa części (np. Rękaw lewy, Kołnierz)')}</Text>
             <TextInput
               style={styles.textInput}
-              placeholder="np. Rękaw lewy"
+              placeholder={t('np. Rękaw lewy')}
               placeholderTextColor="#999999"
               value={addedPartName}
               onChangeText={setAddedPartName}
             />
 
-            <Text style={styles.inputLabel}>Docelowa liczba rzędów (opcjonalnie)</Text>
+            <Text style={styles.inputLabel}>{t('Docelowa liczba rzędów (opcjonalnie)')}</Text>
             <TextInput
               style={styles.textInput}
               placeholder="np. 80"
@@ -533,7 +569,7 @@ export default function ProjectsScreen() {
                 style={styles.cancelButton}
                 onPress={() => setPartModalVisible(false)}
               >
-                <Text style={styles.cancelButtonText}>Anuluj</Text>
+                <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -544,7 +580,7 @@ export default function ProjectsScreen() {
                 disabled={!addedPartName.trim()}
                 onPress={handleAddPartSubmit}
               >
-                <Text style={styles.submitButtonText}>Dodaj część</Text>
+                <Text style={styles.submitButtonText}>{t('Dodaj część')}</Text>
               </TouchableOpacity>
             </View>
           </View>

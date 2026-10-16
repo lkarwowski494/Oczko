@@ -26,6 +26,10 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
       events: 0,
       yarns: 0,
       tools: 0,
+      pattern_documents: 0,
+      project_time_sessions: 0,
+      app_entitlements: 0,
+      app_settings: 0,
     });
 
     // 2. Dodanie danych testowych
@@ -87,6 +91,29 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
       updatedAt: '2026-10-15T10:00:00.000Z',
     });
 
+    await db.runAsync(
+      `INSERT INTO pattern_documents (id, project_id, file_name, file_uri, file_size, current_page, total_pages, ruler_y_percent, ruler_height_percent, auto_step_enabled, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ['doc-1', 'proj-1', 'wzor.pdf', 'file:///wzor.pdf', 1024, 1, 2, 20, 6, 1, '2026-10-15T10:00:00.000Z', '2026-10-15T10:00:00.000Z']
+    );
+
+    await db.runAsync(
+      `INSERT INTO project_time_sessions (id, project_id, start_time_ms, end_time_ms, elapsed_seconds, start_row, end_row, rows_knitted, average_seconds_per_row, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ['sess-1', 'proj-1', 1000, 2000, 60, 0, 5, 5, 12, '2026-10-15T10:00:00.000Z']
+    );
+
+    await db.runAsync(
+      `INSERT INTO app_entitlements (id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      ['ent-1', 'annual', 'active', '2026-10-15T10:00:00.000Z', '2026-10-15T10:00:00.000Z', null, '2026-10-15T10:00:00.000Z']
+    );
+
+    await db.runAsync(
+      `INSERT INTO app_settings (key, value, updated_at) VALUES (?, ?, ?)`,
+      ['language', 'pl', '2026-10-15T10:00:00.000Z']
+    );
+
     // 3. Weryfikacja statystyk
     const stats = await getDatabaseStats(db);
     expect(stats).toEqual({
@@ -96,6 +123,10 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
       events: 1,
       yarns: 1,
       tools: 1,
+      pattern_documents: 1,
+      project_time_sessions: 1,
+      app_entitlements: 1,
+      app_settings: 1,
     });
 
     // 4. Eksport kopii
@@ -112,6 +143,10 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
     expect(backup.counter_events).toHaveLength(1);
     expect(backup.stash_yarns).toHaveLength(1);
     expect(backup.stash_tools).toHaveLength(1);
+    expect(backup.pattern_documents).toHaveLength(1);
+    expect(backup.project_time_sessions).toHaveLength(1);
+    expect(backup.app_entitlements).toHaveLength(1);
+    expect(backup.app_settings).toHaveLength(1);
 
     // 5. Eksport do formatu JSON
     const jsonString = await exportBackupToJson(db);
@@ -127,7 +162,18 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
         appName: 'Oczko',
         bundleId: 'com.apps4brew.knitting',
         exportedAt: '2026-10-15T10:00:00.000Z',
-        itemCounts: { projects: 0, parts: 0, counters: 0, events: 0, yarns: 0, tools: 0 },
+        itemCounts: {
+          projects: 0,
+          parts: 0,
+          counters: 0,
+          events: 0,
+          yarns: 0,
+          tools: 0,
+          pattern_documents: 0,
+          project_time_sessions: 0,
+          app_entitlements: 0,
+          app_settings: 0,
+        },
       },
       projects: [],
       project_parts: [],
@@ -227,6 +273,29 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
       updatedAt: '2026-10-15T10:00:00.000Z',
     });
 
+    await sourceDb.runAsync(
+      `INSERT INTO pattern_documents (id, project_id, file_name, file_uri, file_size, current_page, total_pages, ruler_y_percent, ruler_height_percent, auto_step_enabled, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ['doc-res', 'proj-restore', 'kocyk.pdf', 'file:///kocyk.pdf', 2048, 1, 1, 15, 5, 1, '2026-10-15T10:00:00.000Z', '2026-10-15T10:00:00.000Z']
+    );
+
+    await sourceDb.runAsync(
+      `INSERT INTO project_time_sessions (id, project_id, start_time_ms, end_time_ms, elapsed_seconds, start_row, end_row, rows_knitted, average_seconds_per_row, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ['sess-res', 'proj-restore', 1000, 3000, 120, 0, 10, 10, 12, '2026-10-15T10:00:00.000Z']
+    );
+
+    await sourceDb.runAsync(
+      `INSERT INTO app_entitlements (id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      ['ent-res', 'lifetime', 'active', '2026-10-15T10:00:00.000Z', '2026-10-15T10:00:00.000Z', null, '2026-10-15T10:00:00.000Z']
+    );
+
+    await sourceDb.runAsync(
+      `INSERT INTO app_settings (key, value, updated_at) VALUES (?, ?, ?)`,
+      ['unit_system', 'imperial', '2026-10-15T10:00:00.000Z']
+    );
+
     const backupJson = await exportBackupToJson(sourceDb);
 
     // Nowa baza z innymi danymi początkowymi
@@ -247,6 +316,10 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
     expect(result.importedCounts.events).toBe(1);
     expect(result.importedCounts.yarns).toBe(1);
     expect(result.importedCounts.tools).toBe(1);
+    expect(result.importedCounts.pattern_documents).toBe(1);
+    expect(result.importedCounts.project_time_sessions).toBe(1);
+    expect(result.importedCounts.app_entitlements).toBe(1);
+    expect(result.importedCounts.app_settings).toBe(1);
 
     // Weryfikacja stanu targetDb
     const targetStats = await getDatabaseStats(targetDb);
@@ -254,10 +327,17 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
     expect(targetStats.events).toBe(1);
     expect(targetStats.yarns).toBe(1);
     expect(targetStats.tools).toBe(1);
+    expect(targetStats.pattern_documents).toBe(1);
+    expect(targetStats.project_time_sessions).toBe(1);
+    expect(targetStats.app_entitlements).toBe(1);
+    expect(targetStats.app_settings).toBe(1);
 
     const restoredProjects = await targetDb.getAllAsync<any>('SELECT * FROM projects');
     expect(restoredProjects[0].name).toBe('Kocyk dziecięcy');
     expect(restoredProjects[0].id).toBe('proj-restore');
+
+    const restoredSettings = await targetDb.getAllAsync<any>('SELECT * FROM app_settings WHERE key = ?', ['unit_system']);
+    expect(restoredSettings[0].value).toBe('imperial');
   });
 
   it('odrzuca backup będący liczbą lub wartością prostą oraz rzuca błąd przy importowaniu niepoprawnego backupu', async () => {

@@ -3,6 +3,7 @@ import renderer, { act } from 'react-test-renderer';
 import StashScreen from '../../../app/(tabs)/stash';
 import { ProjectProvider } from '../../core/project-context';
 import { createInMemoryDatabase } from '../../core/database';
+import { setLang } from '../../core/i18n';
 
 jest.setTimeout(15000);
 
@@ -22,6 +23,10 @@ function extractAllStrings(node: any): string {
 
 describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-001..004)', () => {
   let tree: any = null;
+
+  beforeEach(() => {
+    setLang('pl');
+  });
 
   afterEach(() => {
     if (tree) {

@@ -7,6 +7,7 @@ import { ShapingCalculatorModal } from '../../components/ShapingCalculatorModal'
 import { EaseCalculatorModal } from '../../components/EaseCalculatorModal';
 import { RaglanCalculatorModal } from '../../components/RaglanCalculatorModal';
 import { HatCalculatorModal } from '../../components/HatCalculatorModal';
+import { setLang } from '../../core/i18n';
 
 function extractAllStrings(node: any): string {
   if (!node) return '';
@@ -26,6 +27,10 @@ jest.setTimeout(15000);
 
 describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..005)', () => {
   let tree: any = null;
+
+  beforeEach(() => {
+    setLang('pl');
+  });
 
   afterEach(() => {
     if (tree) {

@@ -4,6 +4,7 @@ import ProjectsScreen from '../../../app/(tabs)/projects';
 import StashScreen from '../../../app/(tabs)/stash';
 import LearnScreen from '../../../app/(tabs)/learn';
 import SettingsScreen from '../../../app/(tabs)/settings';
+import { setLang } from '../../core/i18n';
 
 function extractAllStrings(node: any): string {
   if (!node) return '';
@@ -19,6 +20,10 @@ function extractAllStrings(node: any): string {
 }
 
 describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
+  beforeEach(() => {
+    setLang('pl');
+  });
+
   test('Ekran Projekty poprawnie renderuje nagłówek i przycisk tworzenia', () => {
     let tree: any;
     act(() => {

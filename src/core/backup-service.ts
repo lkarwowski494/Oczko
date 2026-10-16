@@ -21,6 +21,10 @@ export interface OczkoBackupMetadata {
     events: number;
     yarns: number;
     tools: number;
+    pattern_documents?: number;
+    project_time_sessions?: number;
+    app_entitlements?: number;
+    app_settings?: number;
   };
 }
 
@@ -98,6 +102,48 @@ export interface BackupToolRow {
   updated_at: string;
 }
 
+export interface BackupPatternDocumentRow {
+  id: string;
+  project_id: string | null;
+  file_name: string;
+  file_uri: string;
+  file_size: number | null;
+  current_page: number;
+  total_pages: number;
+  ruler_y_percent: number;
+  ruler_height_percent: number;
+  auto_step_enabled: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BackupTimeSessionRow {
+  id: string;
+  project_id: string;
+  started_at: string;
+  ended_at: string;
+  duration_seconds: number;
+  active_rows_count: number;
+  created_at: string;
+}
+
+export interface BackupEntitlementRow {
+  id: string;
+  plan_type: string;
+  status: string;
+  trial_started_at: string;
+  purchased_at: string | null;
+  expires_at: string | null;
+  updated_at: string;
+}
+
+export interface BackupAppSettingRow {
+  key: string;
+  value: string;
+  updated_at: string;
+}
+
 export interface OczkoBackupData {
   metadata: OczkoBackupMetadata;
   projects: BackupProjectRow[];
@@ -106,6 +152,10 @@ export interface OczkoBackupData {
   counter_events: BackupEventRow[];
   stash_yarns: BackupYarnRow[];
   stash_tools: BackupToolRow[];
+  pattern_documents?: BackupPatternDocumentRow[];
+  project_time_sessions?: BackupTimeSessionRow[];
+  app_entitlements?: BackupEntitlementRow[];
+  app_settings?: BackupAppSettingRow[];
 }
 
 export const BACKUP_SCHEMA_VERSION = 1;
@@ -151,13 +201,17 @@ const poolKey = (m: RegExpExecArray) => `${m[1]}-${(m[2] ?? '1').padStart(3, '0'
  * Odczytuje statystyki liczby encji w lokalnej bazie SQLite.
  */
 export async function getDatabaseStats(db: DatabaseClient): Promise<OczkoBackupMetadata['itemCounts']> {
-  const [projects, parts, counters, events, yarns, tools] = await Promise.all([
+  const [projects, parts, counters, events, yarns, tools, patterns, sessions, entitlements, settings] = await Promise.all([
     db.getAllAsync<any>('SELECT * FROM projects'),
     db.getAllAsync<any>('SELECT * FROM project_parts'),
     db.getAllAsync<any>('SELECT * FROM counters'),
     db.getAllAsync<any>('SELECT * FROM counter_events'),
     db.getAllAsync<any>('SELECT * FROM stash_yarns'),
     db.getAllAsync<any>('SELECT * FROM stash_tools'),
+    db.getAllAsync<any>('SELECT * FROM pattern_documents'),
+    db.getAllAsync<any>('SELECT * FROM project_time_sessions'),
+    db.getAllAsync<any>('SELECT * FROM app_entitlements'),
+    db.getAllAsync<any>('SELECT * FROM app_settings'),
   ]);
 
   return {
@@ -167,6 +221,10 @@ export async function getDatabaseStats(db: DatabaseClient): Promise<OczkoBackupM
     events: events.length,
     yarns: yarns.length,
     tools: tools.length,
+    pattern_documents: patterns.length,
+    project_time_sessions: sessions.length,
+    app_entitlements: entitlements.length,
+    app_settings: settings.length,
   };
 }
 
@@ -174,13 +232,17 @@ export async function getDatabaseStats(db: DatabaseClient): Promise<OczkoBackupM
  * Generuje pełną strukturę kopii zapasowej ze wszystkich tabel bazy SQLite.
  */
 export async function exportDatabaseBackup(db: DatabaseClient): Promise<OczkoBackupData> {
-  const [projects, parts, counters, events, yarns, tools] = await Promise.all([
+  const [projects, parts, counters, events, yarns, tools, patterns, sessions, entitlements, settings] = await Promise.all([
     db.getAllAsync<BackupProjectRow>('SELECT * FROM projects'),
     db.getAllAsync<BackupPartRow>('SELECT * FROM project_parts'),
     db.getAllAsync<BackupCounterRow>('SELECT * FROM counters'),
     db.getAllAsync<BackupEventRow>('SELECT * FROM counter_events'),
     db.getAllAsync<BackupYarnRow>('SELECT * FROM stash_yarns'),
     db.getAllAsync<BackupToolRow>('SELECT * FROM stash_tools'),
+    db.getAllAsync<BackupPatternDocumentRow>('SELECT * FROM pattern_documents'),
+    db.getAllAsync<BackupTimeSessionRow>('SELECT * FROM project_time_sessions'),
+    db.getAllAsync<BackupEntitlementRow>('SELECT * FROM app_entitlements'),
+    db.getAllAsync<BackupAppSettingRow>('SELECT * FROM app_settings'),
   ]);
 
   const metadata: OczkoBackupMetadata = {
@@ -195,6 +257,10 @@ export async function exportDatabaseBackup(db: DatabaseClient): Promise<OczkoBac
       events: events.length,
       yarns: yarns.length,
       tools: tools.length,
+      pattern_documents: patterns.length,
+      project_time_sessions: sessions.length,
+      app_entitlements: entitlements.length,
+      app_settings: settings.length,
     },
   };
 
@@ -206,6 +272,10 @@ export async function exportDatabaseBackup(db: DatabaseClient): Promise<OczkoBac
     counter_events: events,
     stash_yarns: yarns,
     stash_tools: tools,
+    pattern_documents: patterns,
+    project_time_sessions: sessions,
+    app_entitlements: entitlements,
+    app_settings: settings,
   };
 }
 
@@ -391,6 +461,8 @@ export async function importDatabaseBackup(
     // 1. Czyszczenie tabel w kolejności zależności kluczy obcych
     await db.runAsync('DELETE FROM counter_events');
     await db.runAsync('DELETE FROM counters');
+    await db.runAsync('DELETE FROM project_time_sessions');
+    await db.runAsync('DELETE FROM pattern_documents');
     await db.runAsync('DELETE FROM project_parts');
     await db.runAsync('DELETE FROM projects');
     await db.runAsync('DELETE FROM stash_yarns');
@@ -493,6 +565,74 @@ export async function importDatabaseBackup(
         t.updated_at
       );
     }
+
+    // 8. Odtwarzanie wzorów PDF
+    if (backup.pattern_documents && backup.pattern_documents.length > 0) {
+      for (const doc of backup.pattern_documents) {
+        await db.runAsync(
+          'INSERT INTO pattern_documents (id, project_id, file_name, file_uri, file_size, current_page, total_pages, ruler_y_percent, ruler_height_percent, auto_step_enabled, notes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          doc.id,
+          doc.project_id,
+          doc.file_name,
+          doc.file_uri,
+          doc.file_size,
+          doc.current_page,
+          doc.total_pages,
+          doc.ruler_y_percent,
+          doc.ruler_height_percent,
+          doc.auto_step_enabled,
+          doc.notes,
+          doc.created_at,
+          doc.updated_at
+        );
+      }
+    }
+
+    // 9. Odtwarzanie sesji czasu
+    if (backup.project_time_sessions && backup.project_time_sessions.length > 0) {
+      for (const s of backup.project_time_sessions) {
+        await db.runAsync(
+          'INSERT INTO project_time_sessions (id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          s.id,
+          s.project_id,
+          s.started_at,
+          s.ended_at,
+          s.duration_seconds,
+          s.active_rows_count,
+          s.created_at
+        );
+      }
+    }
+
+    // 10. Odtwarzanie uprawnień subskrypcji
+    if (backup.app_entitlements && backup.app_entitlements.length > 0) {
+      await db.runAsync('DELETE FROM app_entitlements');
+      for (const ent of backup.app_entitlements) {
+        await db.runAsync(
+          'INSERT INTO app_entitlements (id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          ent.id,
+          ent.plan_type,
+          ent.status,
+          ent.trial_started_at,
+          ent.purchased_at,
+          ent.expires_at,
+          ent.updated_at
+        );
+      }
+    }
+
+    // 11. Odtwarzanie ustawień aplikacji
+    if (backup.app_settings && backup.app_settings.length > 0) {
+      await db.runAsync('DELETE FROM app_settings');
+      for (const setting of backup.app_settings) {
+        await db.runAsync(
+          'INSERT INTO app_settings (key, value, updated_at) VALUES (?, ?, ?)',
+          setting.key,
+          setting.value,
+          setting.updated_at
+        );
+      }
+    }
   });
 
   return {
@@ -504,6 +644,10 @@ export async function importDatabaseBackup(
       events: backup.counter_events.length,
       yarns: backup.stash_yarns.length,
       tools: backup.stash_tools.length,
+      pattern_documents: backup.pattern_documents?.length ?? 0,
+      project_time_sessions: backup.project_time_sessions?.length ?? 0,
+      app_entitlements: backup.app_entitlements?.length ?? 0,
+      app_settings: backup.app_settings?.length ?? 0,
     },
   };
 }

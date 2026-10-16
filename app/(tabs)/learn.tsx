@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLang, t } from '../../src/core/i18n';
 import {
   KNITTING_GLOSSARY,
   GlossaryCategory,
@@ -44,6 +45,7 @@ const CATEGORY_CHIPS: Array<{ key: GlossaryCategory | 'all'; label: string }> = 
 ];
 
 export default function LearnScreen() {
+  const _lang = useLang();
   const [activeTab, setActiveTab] = useState<ActiveTab>('glossary');
 
   // Stan słownika
@@ -122,10 +124,10 @@ export default function LearnScreen() {
           style={[styles.segmentButton, activeTab === 'glossary' && styles.segmentButtonActive]}
           onPress={() => setActiveTab('glossary')}
           accessibilityRole="button"
-          accessibilityLabel="Słownik i symbole"
+          accessibilityLabel={t('Słownik i symbole')}
         >
           <Text style={[styles.segmentText, activeTab === 'glossary' && styles.segmentTextActive]}>
-            📖 Słownik & Symbole
+            📖 {t('Słownik & Symbole')}
           </Text>
         </TouchableOpacity>
 
@@ -133,10 +135,10 @@ export default function LearnScreen() {
           style={[styles.segmentButton, activeTab === 'trainer' && styles.segmentButtonActive]}
           onPress={() => setActiveTab('trainer')}
           accessibilityRole="button"
-          accessibilityLabel="Trenażer powtórzeń"
+          accessibilityLabel={t('Trenażer powtórzeń')}
         >
           <Text style={[styles.segmentText, activeTab === 'trainer' && styles.segmentTextActive]}>
-            🎯 Trenażer powtórzeń
+            🎯 {t('Trenażer powtórzeń')}
           </Text>
         </TouchableOpacity>
 
@@ -144,10 +146,10 @@ export default function LearnScreen() {
           style={[styles.segmentButton, activeTab === 'identifier' && styles.segmentButtonActive]}
           onPress={() => setActiveTab('identifier')}
           accessibilityRole="button"
-          accessibilityLabel="Klucz rozpoznawania ściegów: Co widzisz?"
+          accessibilityLabel={t('Klucz rozpoznawania ściegów: Co widzisz?')}
         >
           <Text style={[styles.segmentText, activeTab === 'identifier' && styles.segmentTextActive]}>
-            🔍 Co widzisz?
+            🔍 {t('Co widzisz?')}
           </Text>
         </TouchableOpacity>
 
@@ -158,10 +160,10 @@ export default function LearnScreen() {
             setSelectedEmergency(null);
           }}
           accessibilityRole="button"
-          accessibilityLabel="Doktor błędów i ratowanie dzianiny"
+          accessibilityLabel={t('Doktor błędów i ratowanie dzianiny')}
         >
           <Text style={[styles.segmentText, activeTab === 'doctor' && styles.segmentTextActive]}>
-            🩺 Doktor Błędów
+            🩺 {t('Doktor Błędów')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -172,7 +174,7 @@ export default function LearnScreen() {
           <View style={styles.searchBox}>
             <TextInput
               style={styles.searchInput}
-              placeholder="Szukaj skrótu lub techniki (np. k2tog, narz, c6f)..."
+              placeholder={t('Szukaj skrótu lub techniki (np. k2tog, narz, c6f)...')}
               placeholderTextColor="#999999"
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -198,7 +200,7 @@ export default function LearnScreen() {
                       selectedCategory === chip.key && styles.chipTextActive,
                     ]}
                   >
-                    {chip.label}
+                    {t(chip.label)}
                   </Text>
                 </TouchableOpacity>
               ))}

@@ -19,6 +19,7 @@ import {
   stepPatternDocumentWithCounter,
   validateAndFormatPatternFile,
 } from '../core/pattern-document-service';
+import { useLang, t } from '../core/i18n';
 
 // Bezpieczny import expo-document-picker (obsługa środowiska testowego i natywnego)
 let DocumentPicker: any = null;
@@ -35,6 +36,8 @@ export interface PatternPdfViewerProps {
   onPickDocument?: () => Promise<void> | void;
   onDeleteDocument?: () => Promise<void> | void;
   projectId?: string;
+  canImport?: boolean;
+  onRestrictedAction?: () => void;
 }
 
 export default function PatternPdfViewer({
@@ -44,7 +47,10 @@ export default function PatternPdfViewer({
   onPickDocument,
   onDeleteDocument,
   projectId,
+  canImport = true,
+  onRestrictedAction,
 }: PatternPdfViewerProps) {
+  const _lang = useLang();
   const [doc, setDoc] = useState<PatternDocument | null>(initialDocument);
   const [highContrast, setHighContrast] = useState(false);
   const prevRowRef = useRef<number>(activeCounterRow);
@@ -72,6 +78,11 @@ export default function PatternPdfViewer({
 
   // Wybór pliku PDF przez użytkownika
   const handleSelectFile = async () => {
+    if (canImport === false) {
+      onRestrictedAction?.();
+      return;
+    }
+
     if (onPickDocument) {
       await onPickDocument();
       return;
@@ -224,19 +235,17 @@ export default function PatternPdfViewer({
       <View style={styles.emptyContainer}>
         <View style={styles.emptyCard}>
           <Text style={styles.emptyIcon}>📑</Text>
-          <Text style={styles.emptyTitle}>Brak wczytanego wzoru</Text>
+          <Text style={styles.emptyTitle}>{t('Brak wczytanego wzoru')}</Text>
           <Text style={styles.emptyDescription}>
-            Zaimportuj swój własny plik PDF lub grafikę wzoru ze schematem.
-            Aplikacja nałoży interaktywną, przesuwaną linijkę podświetlającą bieżący wiersz
-            i zsynchronizuje postęp z głównym licznikiem.
+            {t('Zaimportuj swój własny plik PDF lub grafikę wzoru ze schematem. Aplikacja nałoży interaktywną, przesuwaną linijkę podświetlającą bieżący wiersz i zsynchronizuje postęp z głównym licznikiem.')}
           </Text>
           <TouchableOpacity
             style={styles.pickButton}
             onPress={handleSelectFile}
             accessibilityRole="button"
-            accessibilityLabel="Wczytaj plik PDF"
+            accessibilityLabel={t('Wczytaj plik PDF')}
           >
-            <Text style={styles.pickButtonText}>📂 Wczytaj plik PDF</Text>
+            <Text style={styles.pickButtonText}>📂 {t('Wczytaj plik PDF')}</Text>
           </TouchableOpacity>
         </View>
       </View>

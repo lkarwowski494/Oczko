@@ -86,24 +86,25 @@ export function createInMemoryDatabase(): DatabaseClient {
 
     async runAsync(source: string, ...params: unknown[]): Promise<{ changes: number; lastInsertRowId: number }> {
       const clean = source.trim();
+      const actualParams = params.length === 1 && Array.isArray(params[0]) ? (params[0] as unknown[]) : params;
       
       // INSERT INTO projects
       if (/^INSERT\s+INTO\s+projects/i.test(clean)) {
-        const [id, name, craft_type, status, created_at, updated_at] = params as [string, string, string, string, string, string];
+        const [id, name, craft_type, status, created_at, updated_at] = actualParams as [string, string, string, string, string, string];
         getTable('projects').set(id, { id, name, craft_type, status, created_at, updated_at });
         return { changes: 1, lastInsertRowId: 1 };
       }
 
       // INSERT INTO project_parts
       if (/^INSERT\s+INTO\s+project_parts/i.test(clean)) {
-        const [id, project_id, name, sort_order, target_rows, created_at] = params as [string, string, string, number, number | null, string];
+        const [id, project_id, name, sort_order, target_rows, created_at] = actualParams as [string, string, string, number, number | null, string];
         getTable('project_parts').set(id, { id, project_id, name, sort_order, target_rows, created_at });
         return { changes: 1, lastInsertRowId: 1 };
       }
 
       // INSERT INTO counters
       if (/^INSERT\s+INTO\s+counters/i.test(clean)) {
-        const [id, part_id, parent_counter_id, name, counter_type, initial_value, step, modulo_cycle, max_repeats, auto_advance_with_parent, reminder_rows_json, created_at] = params as any[];
+        const [id, part_id, parent_counter_id, name, counter_type, initial_value, step, modulo_cycle, max_repeats, auto_advance_with_parent, reminder_rows_json, created_at] = actualParams as any[];
         getTable('counters').set(id, {
           id, part_id, parent_counter_id, name, counter_type, initial_value, step, modulo_cycle, max_repeats, auto_advance_with_parent, reminder_rows_json, created_at
         });
@@ -112,7 +113,7 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // INSERT INTO counter_events
       if (/^INSERT\s+INTO\s+counter_events/i.test(clean)) {
-        const [id, counter_id, event_type, delta, target_event_id, source_device, created_at_ms] = params as any[];
+        const [id, counter_id, event_type, delta, target_event_id, source_device, created_at_ms] = actualParams as any[];
         getTable('counter_events').set(id, {
           id, counter_id, event_type, delta, target_event_id, source_device, created_at_ms
         });
@@ -121,7 +122,7 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // INSERT INTO stash_yarns
       if (/^INSERT\s+INTO\s+stash_yarns/i.test(clean)) {
-        const [id, brand, name, colorway, dye_lot, weight_category, composition, skeins_total, skeins_remaining, weight_grams_per_skein, length_meters_per_skein, notes, created_at, updated_at] = params as any[];
+        const [id, brand, name, colorway, dye_lot, weight_category, composition, skeins_total, skeins_remaining, weight_grams_per_skein, length_meters_per_skein, notes, created_at, updated_at] = actualParams as any[];
         getTable('stash_yarns').set(id, {
           id, brand, name, colorway, dye_lot, weight_category, composition, skeins_total, skeins_remaining, weight_grams_per_skein, length_meters_per_skein, notes, created_at, updated_at
         });
@@ -130,7 +131,7 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // INSERT INTO stash_tools
       if (/^INSERT\s+INTO\s+stash_tools/i.test(clean)) {
-        const [id, name, tool_type, size_mm, us_size, material, cable_length_cm, brand, notes, created_at, updated_at] = params as any[];
+        const [id, name, tool_type, size_mm, us_size, material, cable_length_cm, brand, notes, created_at, updated_at] = actualParams as any[];
         getTable('stash_tools').set(id, {
           id, name, tool_type, size_mm, us_size, material, cable_length_cm, brand, notes, created_at, updated_at
         });
@@ -142,7 +143,7 @@ export function createInMemoryDatabase(): DatabaseClient {
         const [
           id, project_id, file_name, file_uri, file_size, current_page, total_pages,
           ruler_y_percent, ruler_height_percent, auto_step_enabled, notes, created_at, updated_at
-        ] = params as any[];
+        ] = actualParams as any[];
         getTable('pattern_documents').set(id, {
           id, project_id, file_name, file_uri, file_size, current_page, total_pages,
           ruler_y_percent, ruler_height_percent, auto_step_enabled, notes, created_at, updated_at
@@ -152,7 +153,7 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // INSERT INTO project_time_sessions
       if (/^INSERT\s+INTO\s+project_time_sessions/i.test(clean)) {
-        const [id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at] = params as any[];
+        const [id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at] = actualParams as any[];
         getTable('project_time_sessions').set(id, {
           id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at
         });
@@ -161,17 +162,24 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       // INSERT INTO app_entitlements
       if (/^INSERT\s+INTO\s+app_entitlements/i.test(clean)) {
-        const [id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at] = params as any[];
+        const [id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at] = actualParams as any[];
         getTable('app_entitlements').set(id, {
           id, plan_type, status, trial_started_at, purchased_at, expires_at, updated_at
         });
         return { changes: 1, lastInsertRowId: 1 };
       }
 
+      // INSERT / UPSERT INTO app_settings
+      if (/^INSERT\s+(OR\s+REPLACE\s+INTO|INTO)\s+app_settings/i.test(clean)) {
+        const [key, value, updated_at] = actualParams as [string, string, string];
+        getTable('app_settings').set(key, { key, value, updated_at });
+        return { changes: 1, lastInsertRowId: 1 };
+      }
+
       // UPDATE pattern_documents
       if (/^UPDATE\s+pattern_documents/i.test(clean)) {
         if (/current_page\s*=/i.test(clean)) {
-          const [ruler_y_percent, current_page, updated_at, id] = params as any[];
+          const [ruler_y_percent, current_page, updated_at, id] = actualParams as any[];
           const existing = getTable('pattern_documents').get(id);
           if (existing) {
             Object.assign(existing, { ruler_y_percent, current_page, updated_at });
@@ -179,7 +187,7 @@ export function createInMemoryDatabase(): DatabaseClient {
           }
           return { changes: 0, lastInsertRowId: 0 };
         } else {
-          const [ruler_y_percent, updated_at, id] = params as any[];
+          const [ruler_y_percent, updated_at, id] = actualParams as any[];
           const existing = getTable('pattern_documents').get(id);
           if (existing) {
             Object.assign(existing, { ruler_y_percent, updated_at });
@@ -192,7 +200,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       // UPDATE projects
       if (/^UPDATE\s+projects/i.test(clean)) {
         if (/SET\s+status\s*=\s*\?,\s*updated_at\s*=\s*\?\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-          const [status, updated_at, id] = params as [string, string, string];
+          const [status, updated_at, id] = actualParams as [string, string, string];
           const existing = getTable('projects').get(id);
           if (existing) {
             Object.assign(existing, { status, updated_at });
@@ -200,7 +208,7 @@ export function createInMemoryDatabase(): DatabaseClient {
           }
           return { changes: 0, lastInsertRowId: 0 };
         }
-        const [name, status, updated_at, id] = params as [string, string, string, string];
+        const [name, status, updated_at, id] = actualParams as [string, string, string, string];
         const existing = getTable('projects').get(id);
         if (existing) {
           Object.assign(existing, { name, status, updated_at });
@@ -213,7 +221,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       // UPDATE stash_yarns
       if (/^UPDATE\s+stash_yarns/i.test(clean)) {
         if (/skeins_remaining\s*=\s*\?/i.test(clean)) {
-          const [skeins_remaining, updated_at, id] = params as any[];
+          const [skeins_remaining, updated_at, id] = actualParams as any[];
           const existing = getTable('stash_yarns').get(id);
           if (existing) {
             Object.assign(existing, { skeins_remaining, updated_at });
@@ -226,14 +234,14 @@ export function createInMemoryDatabase(): DatabaseClient {
       // UPDATE app_entitlements
       if (/^UPDATE\s+app_entitlements/i.test(clean)) {
         if (/trial_started_at\s*=\s*\?/i.test(clean)) {
-          const [trial_started_at, updated_at, id] = params as any[];
+          const [trial_started_at, updated_at, id] = actualParams as any[];
           const existing = getTable('app_entitlements').get(id);
           if (existing) {
             Object.assign(existing, { plan_type: 'trial', status: 'active', trial_started_at, purchased_at: null, expires_at: null, updated_at });
             return { changes: 1, lastInsertRowId: 0 };
           }
         }
-        const [plan_type, purchased_at, expires_at, updated_at, id] = params as any[];
+        const [plan_type, purchased_at, expires_at, updated_at, id] = actualParams as any[];
         const existing = getTable('app_entitlements').get(id);
         if (existing) {
           Object.assign(existing, { plan_type, status: 'active', purchased_at, expires_at, updated_at });
@@ -246,7 +254,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       if (/^DELETE\s+FROM\s+(\w+)\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
         const match = clean.match(/^DELETE\s+FROM\s+(\w+)/i);
         const tbl = match ? match[1] : '';
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const deleted = getTable(tbl).delete(id);
         return { changes: deleted ? 1 : 0, lastInsertRowId: 0 };
       }
@@ -269,9 +277,10 @@ export function createInMemoryDatabase(): DatabaseClient {
 
     async getAllAsync<T>(source: string, ...params: unknown[]): Promise<T[]> {
       const clean = source.trim();
+      const actualParams = params.length === 1 && Array.isArray(params[0]) ? (params[0] as unknown[]) : params;
 
       if (/FROM\s+projects\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const row = getTable('projects').get(id);
         return row ? [row as unknown as T] : [];
       }
@@ -281,7 +290,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+project_parts\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
-        const projectId = params[0] as string;
+        const projectId = actualParams[0] as string;
         const rows = Array.from(getTable('project_parts').values())
           .filter((p) => p.project_id === projectId)
           .sort((a, b) => ((a.sort_order as number) - (b.sort_order as number)));
@@ -293,13 +302,13 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+counters\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const row = getTable('counters').get(id);
         return row ? [row as unknown as T] : [];
       }
 
       if (/FROM\s+counters\s+WHERE\s+part_id\s*=\s*\?/i.test(clean)) {
-        const partId = params[0] as string;
+        const partId = actualParams[0] as string;
         const rows = Array.from(getTable('counters').values()).filter((c) => c.part_id === partId);
         return rows as unknown as T[];
       }
@@ -309,7 +318,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+counter_events\s+WHERE\s+counter_id\s*=\s*\?/i.test(clean)) {
-        const counterId = params[0] as string;
+        const counterId = actualParams[0] as string;
         const rows = Array.from(getTable('counter_events').values())
           .filter((e) => e.counter_id === counterId)
           .sort((a, b) => ((a.created_at_ms as number) - (b.created_at_ms as number)));
@@ -321,7 +330,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+stash_yarns\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const row = getTable('stash_yarns').get(id);
         return row ? [row as unknown as T] : [];
       }
@@ -331,7 +340,7 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+stash_tools\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const row = getTable('stash_tools').get(id);
         return row ? [row as unknown as T] : [];
       }
@@ -341,13 +350,13 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+pattern_documents\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const row = getTable('pattern_documents').get(id);
         return row ? [row as unknown as T] : [];
       }
 
       if (/FROM\s+pattern_documents\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
-        const projectId = params[0] as string;
+        const projectId = actualParams[0] as string;
         const rows = Array.from(getTable('pattern_documents').values())
           .filter((p) => p.project_id === projectId);
         return rows as unknown as T[];
@@ -358,14 +367,14 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/SUM\(duration_seconds\)\s+as\s+total_seconds\s+FROM\s+project_time_sessions\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
-        const projectId = params[0] as string;
+        const projectId = actualParams[0] as string;
         const rows = Array.from(getTable('project_time_sessions').values()).filter((s) => s.project_id === projectId);
         const sum = rows.reduce((acc, curr) => acc + ((curr.duration_seconds as number) || 0), 0);
         return [{ total_seconds: sum }] as unknown as T[];
       }
 
       if (/FROM\s+project_time_sessions\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
-        const projectId = params[0] as string;
+        const projectId = actualParams[0] as string;
         const rows = Array.from(getTable('project_time_sessions').values())
           .filter((s) => s.project_id === projectId)
           .sort((a, b) => ((a.started_at as string) < (b.started_at as string) ? -1 : 1));
@@ -377,13 +386,23 @@ export function createInMemoryDatabase(): DatabaseClient {
       }
 
       if (/FROM\s+app_entitlements\s+WHERE\s+id\s*=\s*\?/i.test(clean)) {
-        const id = params[0] as string;
+        const id = actualParams[0] as string;
         const row = getTable('app_entitlements').get(id);
         return row ? [row as unknown as T] : [];
       }
 
       if (/FROM\s+app_entitlements/i.test(clean)) {
         return Array.from(getTable('app_entitlements').values()) as unknown as T[];
+      }
+
+      if (/FROM\s+app_settings\s+WHERE\s+key\s*=\s*\?/i.test(clean)) {
+        const key = actualParams[0] as string;
+        const row = getTable('app_settings').get(key);
+        return row ? [row as unknown as T] : [];
+      }
+
+      if (/FROM\s+app_settings/i.test(clean)) {
+        return Array.from(getTable('app_settings').values()) as unknown as T[];
       }
 
       return [];
@@ -412,3 +431,51 @@ export function createInMemoryDatabase(): DatabaseClient {
 
   return client;
 }
+
+/**
+ * Pobiera wartość z trwałej tabeli app_settings w SQLite.
+ */
+export async function getAppSetting(
+  db: DatabaseClient,
+  key: string,
+  defaultValue: string = ''
+): Promise<string> {
+  const row = await db.getFirstAsync<{ value: string }>(
+    'SELECT value FROM app_settings WHERE key = ?',
+    key
+  );
+  return row?.value ?? defaultValue;
+}
+
+/**
+ * Zapisuje wartość do trwałej tabeli app_settings w SQLite (upsert).
+ */
+export async function setAppSetting(
+  db: DatabaseClient,
+  key: string,
+  value: string
+): Promise<void> {
+  const nowIso = new Date().toISOString();
+  await db.runAsync(
+    `INSERT INTO app_settings (key, value, updated_at)
+     VALUES (?, ?, ?)
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`,
+    key,
+    value,
+    nowIso
+  );
+}
+
+/**
+ * Wczytuje zapisane preferencje użytkownika z SQLite.
+ */
+export async function loadPersistedSettings(
+  db: DatabaseClient
+): Promise<{ language: string; unitSystem: string }> {
+  const [lang, unit] = await Promise.all([
+    getAppSetting(db, 'language', 'pl'),
+    getAppSetting(db, 'unit_system', 'metric'),
+  ]);
+  return { language: lang, unitSystem: unit };
+}
+

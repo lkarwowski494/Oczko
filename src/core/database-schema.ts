@@ -127,5 +127,11 @@ export const SQLITE_SCHEMA_STATEMENTS = [
     purchased_at TEXT,
     expires_at TEXT,
     updated_at TEXT NOT NULL
+  );`,
+
+  `CREATE TABLE IF NOT EXISTS app_settings (
+    key TEXT PRIMARY KEY NOT NULL,
+    value TEXT NOT NULL,
+    updated_at TEXT NOT NULL
   );`
 ] as const;

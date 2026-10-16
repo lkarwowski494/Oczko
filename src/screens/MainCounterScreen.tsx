@@ -32,6 +32,16 @@ import {
   updatePatternRuler,
   deletePatternDocument,
 } from '../core/pattern-document-service';
+import { useAppAccess } from '../core/app-access-context';
+import { ImpulsePaywallModal } from '../components/ImpulsePaywallModal';
+
+let KeepAwakeModule: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  KeepAwakeModule = require('expo-keep-awake');
+} catch (_e) {
+  KeepAwakeModule = null;
+}
 
 // Fallback dla izolowanych testów komponentu
 const fallbackFacade = new ProjectManagerFacade('proj_demo', 'Mój Sweter');
@@ -51,12 +61,39 @@ export default function MainCounterScreen() {
     projectCtx = null;
   }
 
+  const {
+    evaluation,
+    openPaywall,
+    closePaywall,
+    isPaywallVisible,
+    purchasePlan,
+    restore,
+  } = useAppAccess();
+
   const [localFallbackState, setLocalFallbackState] = useState(
     fallbackFacade.getCounterState('counter_main')
   );
 
   const _lang = useLang();
   const [isKnitProof, setIsKnitProof] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isKnitProof) {
+      if (KeepAwakeModule?.activateKeepAwakeAsync) {
+        KeepAwakeModule.activateKeepAwakeAsync().catch(() => {});
+      }
+    } else {
+      if (KeepAwakeModule?.deactivateKeepAwake) {
+        KeepAwakeModule.deactivateKeepAwake();
+      }
+    }
+    return () => {
+      if (KeepAwakeModule?.deactivateKeepAwake) {
+        KeepAwakeModule.deactivateKeepAwake();
+      }
+    };
+  }, [isKnitProof]);
+
   const [viewMode, setViewMode] = useState<'counter' | 'pattern' | 'pdf'>('counter');
   const [patternDoc, setPatternDoc] = useState<PatternDocument | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -198,6 +235,11 @@ export default function MainCounterScreen() {
 
   const handleCreateLinkedCounter = async () => {
     if (!newLinkedName.trim() || !activePartId || !activeCounterId || !projectCtx) return;
+    if (!evaluation.canCreateNewProject) {
+      setModalVisible(false);
+      openPaywall();
+      return;
+    }
     const modulo = parseInt(newModuloCycle, 10);
     const reminder = parseInt(newReminderRow, 10);
 
@@ -282,7 +324,10 @@ export default function MainCounterScreen() {
             <TouchableOpacity
               style={styles.knitProofUndoBtn}
               onPress={handleDecrement}
+              onLongPress={handleDecrement}
+              delayLongPress={500}
               accessibilityRole="button"
+              accessibilityLabel={t('Cofnij ostatni (Undo)')}
             >
               <Text style={styles.knitProofUndoBtnText}>↩️ {t('Cofnij ostatni (Undo)')}</Text>
             </TouchableOpacity>
@@ -352,6 +397,8 @@ export default function MainCounterScreen() {
               initialDocument={patternDoc}
               activeCounterRow={counterValue}
               projectId={projectCtx?.activeProject?.id}
+              canImport={evaluation.canCreateNewProject}
+              onRestrictedAction={openPaywall}
               onDocumentChange={handleDocumentChange}
               onDeleteDocument={handleDeleteDocument}
             />
@@ -483,7 +530,13 @@ export default function MainCounterScreen() {
                 {isConnectedToContext && (
                   <TouchableOpacity
                     style={styles.addLinkedButton}
-                    onPress={() => setModalVisible(true)}
+                    onPress={() => {
+                      if (!evaluation.canCreateNewProject) {
+                        openPaywall();
+                        return;
+                      }
+                      setModalVisible(true);
+                    }}
                   >
                     <Text style={styles.addLinkedButtonText}>{t('+ Licznik wzoru (warkocz/ażur)')}</Text>
                   </TouchableOpacity>
@@ -658,6 +711,12 @@ export default function MainCounterScreen() {
         onDecrement={handleDecrement}
         onNextPart={handleNextPart}
         onPreviousPart={handlePreviousPart}
+      />
+
+      {/* Paywall impulsowy Apps4Brew Studio */}
+      <ImpulsePaywallModal
+        visible={isPaywallVisible}
+        onClose={closePaywall}
       />
     </SafeAreaView>
   );
