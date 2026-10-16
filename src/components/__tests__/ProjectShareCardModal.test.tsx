@@ -247,5 +247,32 @@ describe('ProjectShareCardModal (DEC-01)', () => {
     const text = extractAllStrings(tree.toJSON());
     expect(text).toContain('⏱️ Czas robótki: 1h 0m');
   });
+
+  it('renders vector QR code and includes deep link oczko://project in share message', async () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <ProjectShareCardModal
+          visible={true}
+          project={mockProject}
+          onClose={jest.fn()}
+        />
+      );
+    });
+
+    const qrNode = tree.root.findByProps({ testID: 'share-card-qr' });
+    expect(qrNode).toBeDefined();
+
+    const shareBtn = tree.root.find((n: any) => n.props?.onPress && extractAllStrings(n).includes('Udostępnij kartę'));
+    await act(async () => {
+      await shareBtn.props.onPress();
+    });
+
+    expect(Share.share).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining('oczko://project?v=1&d='),
+      })
+    );
+  });
 });
 

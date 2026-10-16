@@ -420,3 +420,28 @@
     - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
     - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
     - Zaktualizowano testy PBT (`property-based.test.ts`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 diagnoz w < 100 ms) oraz Resilience (`resilience.test.ts`).
+
+
+* **DEC-26 Standaryzacja Portfolio Apps4Brew: Złoty Standard Architektoniczny (16.10.2026):**
+  - **Zadanie O1 [P0] Usunięcie wycieków asynchronicznych w testach:**
+    - Wyeliminowano wyciek `setInterval` w `KnittingTimeTracker.tsx` (dodanie `intervalRef`, `isMounted` flagi, gwarantowany `clearInterval` w unmount cleanupie).
+    - Zabezpieczono unmountowanie instancji `renderer.create` w `MainCounterScreen.test.tsx` po każdym teście (likwidacja `ReferenceError` w Jest teardown).
+  - **Zadanie O2 [P1] Międzynarodowy System i18n (PL/EN):**
+    - Wdrożono `src/core/i18n.ts` oraz `src/core/i18n.en.ts` z polskimi kluczami jako źródłem prawdy, hookiem `useLang()` i interpolacją parametrów `{klucz}`.
+    - Dodano skrypt CI `scripts/check-i18n.mjs` weryfikujący kompletność i parametry tłumaczeń w całym kodzie, zintegrowany w `package.json` pod `npm run check:i18n` i `npm run verify`.
+  - **Zadanie O3 [P1] Bezpieczna Baza SQLite i Rotacyjna Kopia Zapasowa:**
+    - Wdrożono standard bezpieczeństwa SEC-09 (`src/core/db-path.ts`): przeniesienie lokalnej bazy z publicznego `Documents/SQLite/` do prywatnego sandboxu aplikacji `/Library/SQLite` (z automatyczną migracją wsteczną).
+    - Rozszerzono `backup-service.ts` o formalną kopertę `OczkoBackupEnvelope` (`format: 'oczko-backup'`, v1), automatyczną rotację 10 plików (`autoBackup` w `Documents/Backup/oczko-*.json`) oraz kopię bezpieczeństwa `safetyBackup` przed importem i resetem.
+  - **Zadanie O4 [P2] Podwójny System Jednostek (Metric & Imperial):**
+    - Wdrożono moduł `src/core/unit-converter.ts`: metry ↔ jardy, gramy ↔ uncje (oz), cm ↔ cale, próbka 10 cm ↔ 4 cale wg wytycznych Craft Yarn Council (CYC) oraz formatowanie z jednostkami.
+  - **Zadanie O5 [P2] Wymiana Projektów Offline (Kody QR SVG i Deep Linki):**
+    - Opracowano protokół `oczko://project?v=1&d=<base64>` (`src/core/project-share-protocol.ts`) kodujący części robótki, cel rzędów i próbkę.
+    - Wdrożono w 100% offline'owy, wektorowy generator kodów QR SVG (`src/components/QrCodeSvg.tsx`) zintegrowany w modalu karty robótki `ProjectShareCardModal.tsx`.
+  - **Złoty Standard Architektoniczny #8: Kalkulator Ekonomii i Opłacalności Rzemiosła:**
+    - Wdrożono moduł `src/core/cost-calculator.ts` wyliczający koszt zużytych motków, dodatków, robocizny, koszt na 100g dzianiny oraz oszczędność względem butikowej ceny wyrobu gotowego.
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 66/66 zdanych (100% pass)**.
+    - **Tests: 542/542 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w `src/core/` i całym repozytorium** (`npm run test:coverage`).
+    - **CI Verification Gate: 100% GREEN** (`npm run verify` = typecheck + check:i18n + test:coverage).
+

@@ -81,24 +81,45 @@ export default function KnittingTimeTracker({
     prevRowsRef.current = currentRows;
   }, [currentRows, isAutoPaused, isTracking]);
 
+  const intervalRef = useRef<any>(null);
+
   // 3. Pętla stopera (co 1 sekundę) z mechanizmem wykrywania bezczynności (Auto-Pause)
   useEffect(() => {
-    if (!isTracking || isAutoPaused) return;
+    let isMounted = true;
 
-    const timer = setInterval(() => {
+    if (!isTracking || isAutoPaused) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
+      if (!isMounted) return;
       const now = Date.now();
       if (shouldAutoPauseSession(lastActivityRef.current, now, 5)) {
-        setIsAutoPaused(true);
+        if (isMounted) {
+          setIsAutoPaused(true);
+        }
       } else {
-        setSessionSeconds((prev) => prev + 1);
+        if (isMounted) {
+          setSessionSeconds((prev) => prev + 1);
+        }
       }
     }, 1000);
 
-    if (typeof (timer as any)?.unref === 'function') {
-      (timer as any).unref();
+    if (typeof intervalRef.current?.unref === 'function') {
+      intervalRef.current.unref();
     }
 
-    return () => clearInterval(timer);
+    return () => {
+      isMounted = false;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [isTracking, isAutoPaused]);
 
   // 4. Bezpieczny zapis ukończonej sesji do SQLite

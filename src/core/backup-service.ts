@@ -108,6 +108,45 @@ export interface OczkoBackupData {
   stash_tools: BackupToolRow[];
 }
 
+export const BACKUP_SCHEMA_VERSION = 1;
+export const AUTO_BACKUP_DIR = 'Backup/';
+export const AUTO_BACKUP_KEEP = 10;
+export const AUTO_BACKUP_RE = /^oczko-(\d{4}-\d{2}-\d{2}-\d{6})(?:-(\d{1,3}))?\.json$/;
+export const SAFETY_BACKUP_RE = /^oczko-przed-(?:importem|czyszczeniem)-(\d{4}-\d{2}-\d{2}-\d{6})(?:-(\d{1,3}))?\.json$/;
+
+export interface OczkoBackupEnvelope {
+  format: 'oczko-backup';
+  schemaVersion: number;
+  exportedAt: string;
+  state: OczkoBackupData;
+}
+
+export function buildBackupEnvelope(state: OczkoBackupData): OczkoBackupEnvelope {
+  return {
+    format: 'oczko-backup',
+    schemaVersion: BACKUP_SCHEMA_VERSION,
+    exportedAt: new Date().toISOString(),
+    state,
+  };
+}
+
+export function localISODate(d: Date = new Date()): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export function stampOf(d: Date = new Date()): string {
+  const iso = localISODate(d);
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
+  return `${iso}-${hours}${minutes}${seconds}`;
+}
+
+const poolKey = (m: RegExpExecArray) => `${m[1]}-${(m[2] ?? '1').padStart(3, '0')}`;
+
 /**
  * Odczytuje statystyki liczby encji w lokalnej bazie SQLite.
  */
@@ -179,7 +218,7 @@ export async function exportBackupToJson(db: DatabaseClient, pretty: boolean = t
 }
 
 /**
- * Weryfikuje strukturę i poprawność pliku kopii zapasowej.
+ * Weryfikuje strukturę i poprawność pliku kopii zapasowej (obsługuje format koperty i format bezpośredni).
  */
 export function validateBackupData(
   raw: unknown
@@ -196,6 +235,23 @@ export function validateBackupData(
 
   if (!parsed || typeof parsed !== 'object') {
     return { valid: false, error: 'Kopia zapasowa musi być obiektem JSON.' };
+  }
+
+  // Obsługa koperty Apps4Brew Standard ('oczko-backup')
+  if (parsed.format === 'oczko-backup') {
+    if (typeof parsed.schemaVersion !== 'number' || parsed.schemaVersion <= 0) {
+      return { valid: false, error: 'Nieprawidłowa wersja schematu kopii.' };
+    }
+    if (parsed.schemaVersion > BACKUP_SCHEMA_VERSION) {
+      return {
+        valid: false,
+        error: `Kopia pochodzi z nowszej wersji aplikacji (v${parsed.schemaVersion}). Zaktualizuj aplikację.`,
+      };
+    }
+    if (!parsed.state || typeof parsed.state !== 'object') {
+      return { valid: false, error: 'Brak sekcji "state" w pliku kopii zapasowej.' };
+    }
+    parsed = parsed.state;
   }
 
   const meta = parsed.metadata;
@@ -215,6 +271,106 @@ export function validateBackupData(
   }
 
   return { valid: true, data: parsed as OczkoBackupData };
+}
+
+/**
+ * Zapis kopii zapasowej w katalogu Dokumentów (Backup/...) z rotacją do AUTO_BACKUP_KEEP (10 plików).
+ */
+export async function writeBackupFile(
+  prefix: string,
+  re: RegExp,
+  state: OczkoBackupData,
+  customFs?: any
+): Promise<string> {
+  const fs = customFs || (() => {
+    try {
+      return require('expo-file-system/legacy');
+    } catch {
+      try {
+        return require('expo-file-system');
+      } catch {
+        return null;
+      }
+    }
+  })();
+
+  if (!fs || !fs.documentDirectory) {
+    throw new Error('Brak katalogu dokumentów aplikacji');
+  }
+
+  const dir = `${fs.documentDirectory}${AUTO_BACKUP_DIR}`;
+  const dirInfo = await fs.getInfoAsync(dir);
+  if (!dirInfo.exists) {
+    await fs.makeDirectoryAsync(dir, { intermediates: true });
+  }
+
+  const stamp = stampOf(new Date());
+  let name = `${prefix}${stamp}.json`;
+
+  for (let n = 2; n < 1000 && (await fs.getInfoAsync(`${dir}${name}`)).exists; n++) {
+    name = `${prefix}${stamp}-${n}.json`;
+  }
+
+  const envelope = buildBackupEnvelope(state);
+  const targetPath = `${dir}${name}`;
+
+  try {
+    await fs.writeAsStringAsync(targetPath, JSON.stringify(envelope, null, 2));
+  } catch (e) {
+    if (fs.deleteAsync) {
+      await fs.deleteAsync(targetPath, { idempotent: true }).catch(() => {});
+    }
+    throw e;
+  }
+
+  // Rotacja puli kopii zapasowych
+  try {
+    const files = await fs.readDirectoryAsync(dir);
+    const pool = files
+      .map((f: string) => [f, re.exec(f)] as const)
+      .filter((x: any): x is readonly [string, RegExpExecArray] => !!x[1]);
+
+    const oldFiles = pool
+      .map(([f, m]: any) => [f, poolKey(m)] as const)
+      .sort((a: any, b: any) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0))
+      .slice(AUTO_BACKUP_KEEP);
+
+    for (const [f] of oldFiles) {
+      await fs.deleteAsync(`${dir}${f}`, { idempotent: true });
+    }
+  } catch {
+    // Nieprzerwana praca przy błędzie sprzątania
+  }
+
+  return targetPath;
+}
+
+/**
+ * Automatyczna rotacyjna kopia zapasowa po zapisaniu postępu projektu (Apps4Brew SEC-09 / T-012).
+ */
+export async function autoBackup(
+  db: DatabaseClient,
+  customFs?: any
+): Promise<string | null> {
+  try {
+    const data = await exportDatabaseBackup(db);
+    return await writeBackupFile('oczko-', AUTO_BACKUP_RE, data, customFs);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Kopia bezpieczeństwa przed operacjami niszczącymi (import, reset bazy).
+ */
+export async function safetyBackup(
+  kind: 'import' | 'reset',
+  db: DatabaseClient,
+  customFs?: any
+): Promise<string> {
+  const prefix = kind === 'import' ? 'oczko-przed-importem-' : 'oczko-przed-czyszczeniem-';
+  const data = await exportDatabaseBackup(db);
+  return await writeBackupFile(prefix, SAFETY_BACKUP_RE, data, customFs);
 }
 
 /**

@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-100%25_Offline--First-003B57?style=flat&logo=sqlite)](https://sqlite.org/)
 [![Coverage](https://img.shields.io/badge/Coverage-100.00%25_Lines-brightgreen?style=flat)](docs/decyzje_biezace.md)
-[![Tests](https://img.shields.io/badge/Tests-460_Passed_(56_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
+[![Tests](https://img.shields.io/badge/Tests-542_Passed_(66_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
 [![CI](https://github.com/lkarwowski494/Oczko/actions/workflows/ci.yml/badge.svg)](https://github.com/lkarwowski494/Oczko/actions)
 
 > **„Precyzyjny, wolny od rozpraszaczy licznik rzędów i asystent dziewiarski stworzony dla dziewiarek i dziewiarzy — zawsze z Tobą, na iPhone, Apple Watch i Garminie.”**
@@ -104,20 +104,33 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
     - Czysto deterministyczny rejestr 6 procedur ratunkowych w kryzysach dziewiarskich i szydełkowych (ZP-05, zero generatywnego AI): spuszczone oczko, przekręcone oczko, przypadkowy narzut/dziurka, prucie rzędu na drutach (tink), linia ratunkowa (lifeline), uciekający ścieg szydełkowy.
     - Silnik wyszukiwania objawów `diagnoseEmergency` z filtrowaniem wg techniki (`knitting`, `crochet`, `both`).
     - Dedykowana zakładka `🩺 Doktor Błędów` w module Nauki z poziomami zagrożenia (`critical`, `moderate`, `low`), widokiem krok po kroku i wskazówkami profilaktycznymi.
+16. **🌐 Pełny System Międzynarodowy i18n PL/EN (`i18n.ts`, `i18n.en.ts`, `scripts/check-i18n.mjs`, `DEC-26`):**
+    - Dwujęzyczna obsługa interfejsu (PL jako autorytatywne źródło prawdy, EN w standardzie CYC).
+    - Hook reaktywny `useLang()`, interpolacja parametrów `{klucz}` oraz automatyczny skrypt CI `check:i18n` gwarantujący 100% spójności tłumaczeń.
+17. **🛡️ Bezpieczna Baza /Library/SQLite i 10 Kopii Zapasowych (SEC-09, `db-path.ts`, `backup-service.ts`, `DEC-26`):**
+    - Przeniesienie bazy danych do chronionego sandboxu aplikacji (`/Library/SQLite`) z automatyczną migracją wsteczną.
+    - Automatyczna rotacja do 10 kopii zapasowych (`Documents/Backup/oczko-*.json`) w formacie koperty `OczkoBackupEnvelope` oraz kopie `safetyBackup` przed importem i czyszczeniem.
+18. **📏 Podwójny System Jednostek Metric & Imperial (`unit-converter.ts`, `DEC-26`):**
+    - Przeliczanie długości (metry ↔ jardy), wagi (gramy ↔ uncje oz), wymiarów (cm ↔ cale) oraz próbki (10 cm ↔ 4 cale wg wytycznych Craft Yarn Council).
+19. **📱 Wymiana Projektów Offline przez Kody QR SVG i Deep Linki (`project-share-protocol.ts`, `QrCodeSvg.tsx`, `DEC-26`):**
+    - Protokół `oczko://project?v=1&d=<base64>` umożliwiający bezchmurny transfer robótki (części, cele rzędów, próbka).
+    - Lekki, wektorowy komponent SVG renderujący kod QR bez zewnętrznych bibliotek sieciowych w modalu karty robótki.
+20. **💰 Kalkulator Ekonomii i Opłacalności Rzemiosła (`cost-calculator.ts`, Złoty Standard #8, `DEC-26`):**
+    - Analiza kosztowa gotowego wyrobu: zużyta włóczka, dodatki pasmanteryjne, robocizna, koszt na 100g dzianiny oraz oszczędność względem cen w butikach rzemieślniczych.
 
 ---
 
 ### ⏳ Kolejne Moduły z BRD do Wdrożenia (Roadmapa Realizacji):
 
-16. **📚 Biblioteka Technik i Karty Rzemieślnicze (`DEC-13`, `DEC-20`, `BR-BIB-001..008`):**
+21. **📚 Biblioteka Technik i Karty Rzemieślnicze (`DEC-13`, `DEC-20`, `BR-BIB-001..008`):**
     - 21 fundamentalnych technik dziewiarskich i szydełkowych (12 drutowych, 9 szydełkowych) ze schematami rysowanymi kodem (0 zł, ZP-05) z instrukcjami dla prawo- i leworęcznych (DEC-19).
-17. **🧭 Ścieżka Progresji Dziewiarskiej (`BR-SCI-001..005`):**
+22. **🧭 Ścieżka Progresji Dziewiarskiej (`BR-SCI-001..005`):**
     - 4 kamienie milowe projektu (Szalik -> Czapka -> Skarpety -> Sweter) z kryteriami opanowania technik, odznakami rzemieślniczymi i śledzeniem postępów.
-18. **🤲 Ergonomia, Zdrowie Rąk i Przypomnienia o Przerwach (`SYT-06`, `BR-ZDR-001..003`):**
+23. **🤲 Ergonomia, Zdrowie Rąk i Przypomnienia o Przerwach (`SYT-06`, `BR-ZDR-001..003`):**
     - Licznik ciągłego dziergania, łagodne alerty zmęczenia dłoni i nadgarstków, 5 ćwiczeń rozciągających dla dziewiarek zapobiegających zespołowi cieśni nadgarstka i przeciążeniom.
-19. **📦 Eksport i Wymiana Projektów `.oczko` (`SYT-07`, `BR-WSP-001..003`):**
+24. **📦 Eksport i Wymiana Projektów `.oczko` (`SYT-07`, `BR-WSP-001..003`):**
     - Bezpieczny format pakowania `.oczko` (JSON) do przekazywania robótek przez AirDrop/komunikatory bez naruszania praw autorskich do wzorów PDF.
-20. **🧦 Kalkulator Konstrukcji Skarpet (`DEC-21`):**
+25. **🧦 Kalkulator Konstrukcji Skarpet (`DEC-21`):**
     - Kalkulacja obwodu stopy, ujemnego luzu (-1 do -2 cm), klapki pięty (heel flap), podbierania oczek klina (gusset) oraz symetrycznego czubka (wedge toe / Kitchener stitch).
 
 ---

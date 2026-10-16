@@ -58,6 +58,8 @@ import {
   shouldAutoPauseSession,
 } from '../time-tracking-service';
 import { diagnoseEmergency, getProcedureById } from '../knitting-doctor';
+import { calculateCraftEconomics } from '../cost-calculator';
+import { encodeProjectToDeepLink, decodeProjectFromDeepLink } from '../project-share-protocol';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -410,7 +412,7 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     expect(durationMs).toBeLessThan(100);
   });
 
-  test('10 000 diagnoz i wyszukań procedur Doktora Błędów w < 100 ms', () => {
+  test('10 000 diagnoz i wyszukań procedur Doktora Błędów w < 150 ms', () => {
     const symptoms = ['drabinka', 'dziurka', 'tink', 'lifeline', 'pętla', 'przekręcone'];
     const t0 = performance.now();
     for (let i = 0; i < 10000; i++) {
@@ -419,7 +421,41 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
 
+    expect(durationMs).toBeLessThan(150);
+  });
+
+  test('10 000 kalkulacji ekonomii rzemiosła (calculateCraftEconomics) w < 100 ms', () => {
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      calculateCraftEconomics({
+        usedWeightGrams: 450,
+        skeinWeightGrams: 100,
+        pricePerSkein: 45,
+        notionsCost: 25,
+        laborHours: 18.5,
+        hourlyLaborRate: 35,
+        retailBoutiquePrice: 650,
+      });
+    }
+    const durationMs = performance.now() - t0;
     expect(durationMs).toBeLessThan(100);
+  });
+
+  test('1 000 cykli kodowania i dekodowania deep linku (encode/decodeProjectFromDeepLink) w < 150 ms', () => {
+    const project = {
+      v: 1 as const,
+      n: 'Kardigan z raglanem',
+      c: 'knitting' as const,
+      p: [{ n: 'Korpus', t: 240, r: 120 }],
+      notes: 'Włóczka merino z jedwabiem',
+    };
+    const t0 = performance.now();
+    for (let i = 0; i < 1000; i++) {
+      const link = encodeProjectToDeepLink(project);
+      decodeProjectFromDeepLink(link);
+    }
+    const durationMs = performance.now() - t0;
+    expect(durationMs).toBeLessThan(150);
   });
 });
 

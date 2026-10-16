@@ -6,6 +6,9 @@ import {
   importDatabaseBackup,
   getDatabaseStats,
   OczkoBackupData,
+  buildBackupEnvelope,
+  autoBackup,
+  safetyBackup,
 } from '../backup-service';
 import { insertProject, insertProjectPart, insertCounter, appendCounterEvent } from '../project-repository';
 import { insertStashYarn, insertStashTool } from '../stash-repository';
@@ -267,4 +270,101 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
     const db = createInMemoryDatabase();
     await expect(importDatabaseBackup(db, '{ "bad": true }')).rejects.toThrow('Błąd walidacji kopii zapasowej');
   });
+
+  it('obsługuje standard koperty OczkoBackupEnvelope oraz walidację wersji schematu', async () => {
+    const db = createInMemoryDatabase();
+    const backupData = await exportDatabaseBackup(db);
+    const envelope = buildBackupEnvelope(backupData);
+
+    expect(envelope.format).toBe('oczko-backup');
+    expect(envelope.schemaVersion).toBe(1);
+    expect(envelope.state).toEqual(backupData);
+
+    // Walidacja poprawnej koperty
+    const valEnvelope = validateBackupData(envelope);
+    expect(valEnvelope.valid).toBe(true);
+
+    // Błędna wersja schematu
+    const invalidVersion = { ...envelope, schemaVersion: 999 };
+    const valBadVer = validateBackupData(invalidVersion);
+    expect(valBadVer.valid).toBe(false);
+
+    // Nieprawidłowa wersja schematu <= 0
+    const zeroVersion = { ...envelope, schemaVersion: 0 };
+    expect(validateBackupData(zeroVersion).valid).toBe(false);
+
+    // Brak sekcji state
+    const noState = { format: 'oczko-backup', schemaVersion: 1 };
+    expect(validateBackupData(noState).valid).toBe(false);
+  });
+
+  it('autoBackup i safetyBackup zapisują pliki w katalogu Backup/ i rotują do 10 kopii', async () => {
+    const db = createInMemoryDatabase();
+
+    // Mock modułu FileSystem
+    const virtualFiles: Record<string, string> = {};
+    const mockFs = {
+      documentDirectory: 'file:///data/user/0/com.apps4brew.knitting/files/',
+      getInfoAsync: jest.fn(async (path: string) => ({ exists: path in virtualFiles })),
+      makeDirectoryAsync: jest.fn(async () => {}),
+      writeAsStringAsync: jest.fn(async (path: string, content: string) => {
+        virtualFiles[path] = content;
+      }),
+      readDirectoryAsync: jest.fn(async () => {
+        const prefix = 'file:///data/user/0/com.apps4brew.knitting/files/Backup/';
+        return Object.keys(virtualFiles)
+          .filter((k) => k.startsWith(prefix))
+          .map((k) => k.replace(prefix, ''));
+      }),
+      deleteAsync: jest.fn(async (path: string) => {
+        delete virtualFiles[path];
+      }),
+    };
+
+    // 1. Wykonanie autoBackup
+    const autoPath = await autoBackup(db, mockFs);
+    expect(autoPath).toBeDefined();
+    expect(autoPath).toContain('oczko-');
+    expect(autoPath).toContain('.json');
+
+    // 2. Wykonanie safetyBackup przed importem i resetem
+    const safetyImportPath = await safetyBackup('import', db, mockFs);
+    expect(safetyImportPath).toContain('oczko-przed-importem-');
+
+    const safetyResetPath = await safetyBackup('reset', db, mockFs);
+    expect(safetyResetPath).toContain('oczko-przed-czyszczeniem-');
+
+    // 3. Symulacja rotacji powyżej 10 plików
+    for (let i = 1; i <= 15; i++) {
+      const pad = String(i).padStart(2, '0');
+      const fakeFileName = `oczko-2026-10-16-1200${pad}.json`;
+      virtualFiles[`file:///data/user/0/com.apps4brew.knitting/files/Backup/${fakeFileName}`] = '{}';
+    }
+
+    await autoBackup(db, mockFs);
+    expect(mockFs.deleteAsync).toHaveBeenCalled();
+
+    // Błąd braku documentDirectory
+    await expect(autoBackup(db, { documentDirectory: null })).resolves.toBeNull();
+
+    // Błąd zapisu na dysku i czyszczenie pliku tymczasowego
+    const failingFs = {
+      documentDirectory: 'file:///data/user/0/com.apps4brew.knitting/files/',
+      getInfoAsync: jest.fn(async () => ({ exists: true })),
+      makeDirectoryAsync: jest.fn(async () => {}),
+      writeAsStringAsync: jest.fn(async () => {
+        throw new Error('Dysk pełny');
+      }),
+      deleteAsync: jest.fn(async () => {}),
+    };
+    await expect(safetyBackup('import', db, failingFs)).rejects.toThrow('Dysk pełny');
+    expect(failingFs.deleteAsync).toHaveBeenCalled();
+
+    // autoBackup w razie błędu bezpiecznie zwraca null bez wywalania aplikacji
+    await expect(autoBackup(db, failingFs)).resolves.toBeNull();
+
+    // Domyślne wywołanie bez customFs (zwraca null w autoBackup)
+    await expect(autoBackup(db)).resolves.toBeNull();
+  });
 });
+

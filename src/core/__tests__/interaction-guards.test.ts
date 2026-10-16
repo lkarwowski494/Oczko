@@ -77,6 +77,11 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'hat-calculator.ts'),
         join(srcCoreDir, 'time-tracking-service.ts'),
         join(srcCoreDir, 'knitting-doctor.ts'),
+        join(srcCoreDir, 'technique-library.ts'),
+        join(srcCoreDir, 'db-path.ts'),
+        join(srcCoreDir, 'unit-converter.ts'),
+        join(srcCoreDir, 'cost-calculator.ts'),
+        join(srcCoreDir, 'project-share-protocol.ts'),
       ];
 
       for (const filePath of pureDomainFiles) {

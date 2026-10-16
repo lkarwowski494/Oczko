@@ -30,7 +30,11 @@ export async function initializeDatabase(db: DatabaseClient): Promise<void> {
  */
 export async function openOczkoDatabase(dbName: string = 'oczko.db'): Promise<DatabaseClient> {
   const SQLite = require('expo-sqlite');
-  const nativeDb = await SQLite.openDatabaseAsync(dbName);
+  const { dbDirectory } = require('./db-path');
+  const safeDir = dbDirectory(SQLite.defaultDatabaseDirectory);
+  const nativeDb = safeDir
+    ? await SQLite.openDatabaseAsync(dbName, undefined, safeDir)
+    : await SQLite.openDatabaseAsync(dbName);
   
   const client: DatabaseClient = {
     async execAsync(source: string): Promise<void> {

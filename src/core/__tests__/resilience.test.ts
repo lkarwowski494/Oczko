@@ -68,6 +68,17 @@ import {
   getProcedureById,
   listAllProcedures,
 } from '../knitting-doctor';
+import { calculateCraftEconomics } from '../cost-calculator';
+import {
+  swatch10cmTo4inch,
+  swatch4inchTo10cm,
+  cmToInches,
+  inchesToCm,
+} from '../unit-converter';
+import {
+  encodeProjectToDeepLink,
+  decodeProjectFromDeepLink,
+} from '../project-share-protocol';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -810,6 +821,77 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(getProcedureById('non_existent_procedure' as any)).toBeUndefined();
       expect(listAllProcedures(undefined)).toHaveLength(6);
       expect(listAllProcedures('invalid_discipline' as any)).toHaveLength(0);
+    });
+  });
+
+  describe('Odporność Kalkulatora Ekonomii Rzemiosła (cost-calculator.ts)', () => {
+    test('Obsługa zerowych, ujemnych i skrajnych danych wejściowych', () => {
+      const emptyResult = calculateCraftEconomics({
+        usedWeightGrams: 0,
+        skeinWeightGrams: 50,
+        pricePerSkein: 0,
+        notionsCost: -10,
+        laborHours: -5,
+        hourlyLaborRate: -20,
+      });
+      expect(emptyResult.materialCost).toBe(0);
+      expect(emptyResult.laborTotalCost).toBe(0);
+      expect(emptyResult.totalCraftCost).toBe(0);
+      expect(emptyResult.costPer100g).toBe(0);
+      expect(emptyResult.materialSavings).toBe(550); // benchmark defaultBoutiqueSweaterPrice
+
+      const zeroWeightResult = calculateCraftEconomics({
+        usedWeightGrams: 0,
+        skeinWeightGrams: 50,
+        pricePerSkein: 50,
+        skeinsCount: 2,
+      });
+      expect(zeroWeightResult.yarnTotalCost).toBe(100);
+      expect(zeroWeightResult.materialCost).toBe(100);
+      expect(zeroWeightResult.costPer100g).toBe(0);
+    });
+  });
+
+  describe('Odporność Konwertera Próbek i Wymiarów Dziewiarskich (unit-converter.ts)', () => {
+    test('Obsługa zerowych, ujemnych i nieprawidłowych wartości', () => {
+      expect(swatch10cmTo4inch(0)).toBe(0);
+      expect(swatch10cmTo4inch(-22)).toBe(0);
+      expect(swatch4inchTo10cm(0)).toBe(0);
+      expect(swatch4inchTo10cm(-20)).toBe(0);
+
+      expect(cmToInches(0)).toBe(0);
+      expect(cmToInches(-15)).toBe(0);
+      expect(cmToInches(NaN)).toBe(0);
+
+      expect(inchesToCm(0)).toBe(0);
+      expect(inchesToCm(-4)).toBe(0);
+      expect(inchesToCm(NaN)).toBe(0);
+
+      expect(swatch10cmTo4inch(22)).toBeCloseTo(22 * 1.016, 1);
+    });
+  });
+
+  describe('Odporność Protokołu Udostępniania Projektów i Deep Linków (project-share-protocol.ts)', () => {
+    test('Wyrzucanie czytelnych wyjątków przy uszkodzonych lub pustych linkach', () => {
+      expect(() => decodeProjectFromDeepLink('')).toThrow('Pusty link projektu');
+      expect(() => decodeProjectFromDeepLink('oczko://project')).toThrow('Brak parametrów');
+      expect(() => decodeProjectFromDeepLink('oczko://project?v=2')).toThrow('Brak parametru "d"');
+      expect(() => decodeProjectFromDeepLink('oczko://project?v=1&d=not-base64!@#$')).toThrow();
+      expect(() => decodeProjectFromDeepLink('https://nieznana-domena.pl')).toThrow();
+    });
+
+    test('Odrzucenie zmanipulowanych payloadów JSON o nieprawidłowej strukturze', () => {
+      // Pusty JSON lub brakujące pole name
+      const invalidJsonPayload = Buffer.from(JSON.stringify({ v: 1, notAName: 'test' }), 'utf-8').toString('base64');
+      expect(() => decodeProjectFromDeepLink(`oczko://project?v=1&d=${invalidJsonPayload}`)).toThrow('Projekt musi posiadać nazwę ("n")');
+
+      // Nieprawidłowy craftType
+      const invalidCraftType = Buffer.from(JSON.stringify({ v: 1, n: 'Test', c: 'origami' }), 'utf-8').toString('base64');
+      expect(() => decodeProjectFromDeepLink(`oczko://project?v=1&d=${invalidCraftType}`)).toThrow('Nieprawidłowy typ rękodzieła ("c")');
+
+      // Brak części projektu
+      const emptyParts = Buffer.from(JSON.stringify({ v: 1, n: 'Test', c: 'knitting', p: [] }), 'utf-8').toString('base64');
+      expect(() => decodeProjectFromDeepLink(`oczko://project?v=1&d=${emptyParts}`)).toThrow('Projekt musi posiadać co najmniej jedną część ("p")');
     });
   });
 });

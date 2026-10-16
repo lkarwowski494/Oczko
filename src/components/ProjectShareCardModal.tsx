@@ -22,6 +22,8 @@ import {
   buildProjectSummary,
   generateShareableText,
 } from '../core/project-summary';
+import { encodeProjectToDeepLink } from '../core/project-share-protocol';
+import { QrCodeSvg } from './QrCodeSvg';
 
 export interface ProjectShareCardModalProps {
   visible: boolean;
@@ -48,6 +50,18 @@ export default function ProjectShareCardModal({
   const summary = buildProjectSummary(project, [], totalDurationSeconds);
   const isFinished = project.status === 'finished';
 
+  const deepLink = encodeProjectToDeepLink({
+    v: 1,
+    n: project.name,
+    c: (project.craftType as any) === 'crochet' ? 'crochet' : 'knitting',
+    p: summary.partsSummary.map((p) => ({
+      n: p.name,
+      t: p.targetRows || undefined,
+      r: p.rows,
+    })),
+    desc: (project as any).description || undefined,
+  });
+
   const handleShare = async () => {
     setIsSharing(true);
     try {
@@ -57,9 +71,11 @@ export default function ProjectShareCardModal({
         includeHashtags: true,
       });
 
+      const fullMessage = `${shareText}\n\nOtwórz projekt w aplikacji Oczko:\n${deepLink}`;
+
       await Share.share({
         title: `Robótka w Oczko: ${project.name}`,
-        message: shareText,
+        message: fullMessage,
       });
     } catch (err: any) {
       if (err?.message !== 'User did not share') {
@@ -193,6 +209,21 @@ export default function ProjectShareCardModal({
               value={toolName}
               onChangeText={setToolName}
             />
+          </View>
+
+          {/* Szybka wymiana offline: Kod QR (DEC-20, Zadanie O5) */}
+          <View style={styles.qrSectionCard}>
+            <Text style={styles.qrSectionTitle}>Wymiana bezprzewodowa (Offline QR):</Text>
+            <View style={styles.qrWrapper}>
+              <QrCodeSvg
+                value={deepLink}
+                size={140}
+                color="#2B2D42"
+                backgroundColor="#FFFFFF"
+                testID="share-card-qr"
+              />
+            </View>
+            <Text style={styles.qrHint}>Zeskanuj aparatem w Oczko na drugim telefonie, aby zaimportować projekt bez sieci.</Text>
           </View>
 
           {/* Przyciski akcji */}
@@ -468,5 +499,34 @@ const styles = StyleSheet.create({
   },
   resumeStatusBtnText: {
     color: '#8B5E3C',
+  },
+  qrSectionCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#F0EAE1',
+  },
+  qrSectionTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#8B5E3C',
+    marginBottom: 10,
+  },
+  qrWrapper: {
+    padding: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E8DED6',
+    marginBottom: 8,
+  },
+  qrHint: {
+    fontSize: 11,
+    color: '#777777',
+    textAlign: 'center',
+    lineHeight: 15,
   },
 });

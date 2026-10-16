@@ -17,10 +17,34 @@ function extractAllStrings(node: any): string {
 }
 
 describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ-003, BR-SYS-011)', () => {
+  let currentTree: any = null;
+  const originalCreate = renderer.create;
+
+  beforeEach(() => {
+    renderer.create = ((element: any, options: any) => {
+      const instance = originalCreate(element, options);
+      currentTree = instance;
+      return instance;
+    }) as any;
+  });
+
+  afterEach(() => {
+    renderer.create = originalCreate;
+    if (currentTree) {
+      try {
+        act(() => {
+          currentTree.unmount();
+        });
+      } catch {}
+      currentTree = null;
+    }
+  });
+
   test('Komponent ekranu licznika definiuje poprawną strukturę i renderuje drzewo', () => {
     let tree: any;
     act(() => {
       tree = renderer.create(<MainCounterScreen />);
+      currentTree = tree;
     });
     expect(tree).toBeDefined();
     const allText = extractAllStrings(tree.toJSON());

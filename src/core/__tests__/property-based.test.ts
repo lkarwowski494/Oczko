@@ -66,6 +66,18 @@ import {
   listAllProcedures,
   DOCTOR_PROCEDURES,
 } from '../knitting-doctor';
+import {
+  metersToYards,
+  yardsToMeters,
+  cmToInches,
+  inchesToCm,
+} from '../unit-converter';
+import { calculateCraftEconomics } from '../cost-calculator';
+import {
+  encodeProjectToDeepLink,
+  decodeProjectFromDeepLink,
+  CompactProjectPayload,
+} from '../project-share-protocol';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -991,6 +1003,83 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
           }
         ),
         { numRuns: 50 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Konwertera Jednostek (unit-converter.ts)', () => {
+    it('Odwracalność konwersji (Round-trip): metry <-> jardy zachowują wartość z dokładnością do 0.1%', () => {
+      fc.assert(
+        fc.property(
+          fc.float({ min: 1, max: 5000, noNaN: true }),
+          (meters) => {
+            const yards = metersToYards(meters);
+            const roundTrip = yardsToMeters(yards);
+            expect(Math.abs(roundTrip - meters)).toBeLessThan(0.05);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Odwracalność konwersji (Round-trip): cm <-> cale zachowują wartość z dokładnością do 0.05 cm', () => {
+      fc.assert(
+        fc.property(
+          fc.float({ min: 1, max: 200, noNaN: true }),
+          (cm) => {
+            const inches = cmToInches(cm);
+            const roundTrip = inchesToCm(inches);
+            expect(Math.abs(roundTrip - cm)).toBeLessThan(0.05);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Ekonomii Rzemiosła (cost-calculator.ts)', () => {
+    it('Monotoniczność: wyższa cena za motek implikuje wyższy lub równy koszt materiałów', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 50, max: 1000 }),
+          fc.float({ min: 5, max: 50, noNaN: true }),
+          fc.float({ min: 51, max: 100, noNaN: true }),
+          (usedGrams, price1, price2) => {
+            const res1 = calculateCraftEconomics({ usedWeightGrams: usedGrams, skeinWeightGrams: 50, pricePerSkein: price1 });
+            const res2 = calculateCraftEconomics({ usedWeightGrams: usedGrams, skeinWeightGrams: 50, pricePerSkein: price2 });
+            expect(res2.materialCost).toBeGreaterThan(res1.materialCost);
+          }
+        ),
+        { numRuns: 80 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Protokołu Wymiany Projektów (project-share-protocol.ts)', () => {
+    it('Odwracalność: każdy zakodowany projekt po odkodowaniu zachowuje nazwę, typ i liczbę części', () => {
+      fc.assert(
+        fc.property(
+          fc.string({ minLength: 1, maxLength: 30 }),
+          fc.constantFrom('knitting', 'crochet' as const),
+          fc.array(fc.string({ minLength: 1, maxLength: 20 }), { minLength: 1, maxLength: 5 }),
+          (name, craft, partNames) => {
+            const payload: CompactProjectPayload = {
+              v: 1,
+              n: name,
+              c: craft,
+              p: partNames.map((n) => ({ n, t: 100, r: 10 })),
+            };
+
+            const link = encodeProjectToDeepLink(payload);
+            const restored = decodeProjectFromDeepLink(link);
+
+            expect(restored.v).toBe(1);
+            expect(restored.n).toBe(name);
+            expect(restored.c).toBe(craft);
+            expect(restored.p.length).toBe(partNames.length);
+          }
+        ),
+        { numRuns: 60 }
       );
     });
   });
