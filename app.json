@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Oczko",
+    "slug": "oczko",
+    "version": "0.1.0",
+    "scheme": "oczko",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "description": "Oczko (Purlo) — asystent dziewiarstwa i szydełkowania. Liczniki rzędów, wzory PDF, baza włóczek i drutów. 100% Offline-First.",
+    "primaryColor": "#C85A32",
+    "icon": "./assets/icon.svg",
+    "splash": {
+      "image": "./assets/splash.svg",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF8F5"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.apps4brew.knitting",
+      "appleTeamId": "8NQ9GHY8GF",
+      "buildNumber": "1",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "UIFileSharingEnabled": true,
+        "LSSupportsOpeningDocumentsInPlace": true,
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleDisplayName": "Oczko"
+      }
+    },
+    "android": {
+      "package": "com.apps4brew.knitting",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.svg",
+        "backgroundColor": "#FAF8F5"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": true
+        }
+      ]
+    ]
+  }
+}
