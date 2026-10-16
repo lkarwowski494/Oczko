@@ -9,9 +9,9 @@
     "newArchEnabled": true,
     "description": "Oczko (Purlo) — asystent dziewiarstwa i szydełkowania. Liczniki rzędów, wzory PDF, baza włóczek i drutów. 100% Offline-First.",
     "primaryColor": "#C85A32",
-    "icon": "./assets/icon.svg",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.svg",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FAF8F5"
     },
@@ -35,9 +35,12 @@
       "package": "com.apps4brew.knitting",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.svg",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FAF8F5"
       }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",

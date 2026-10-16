@@ -37,6 +37,8 @@ jobs:
       - run: npm ci
       - name: Weryfikacja jakości (TypeScript + i18n + testy jednostkowe)
         run: npm run verify
+      - name: Generowanie grafik produkcyjnych PNG
+        run: node scripts/generate-assets.mjs
       - name: Generowanie natywnego projektu iOS (expo prebuild)
         run: npx expo prebuild --platform ios --no-install --clean
       - name: Ustalenie numeru buildu (BUILD_BASE + GITHUB_RUN_NUMBER)
