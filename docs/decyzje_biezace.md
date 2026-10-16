@@ -256,13 +256,13 @@
     - Zaktualizowane testy PBT (`property-based.test.ts`), Dostępności & HIG (`a11y-contracts.test.tsx`), Strażników architektury (`interaction-guards.test.ts`), Budżetów wydajnościowych (`perf-budget.test.ts` — 10 000 rozpoznań w < 20 ms) oraz Odporności (`resilience.test.ts`).
 
 * **Implementacja: Kalkulator Kształtowania i Równomiernego Dodawania/Odejmowania Oczek (15.10.2026):**
-  - **Architektura:** Czysty deterministyczny moduł domenowy (src/core/shaping-calculator.ts) implementujący euklidesowy algorytm symetrycznego i równomiernego rozmieszczania modyfikacji oczek bez widocznych skupisk.
+  - **Architektura:** Czysty deterministyczny moduł domenowy (`src/core/shaping-calculator.ts`) implementujący euklidesowy algorytm symetrycznego i równomiernego rozmieszczania modyfikacji oczek bez widocznych skupisk.
   - **Trzy tryby pracy:**
     1. *Równomierne dodawanie w rzędzie (Increase Evenly):* obsługa metod M1L, M1R, kfb, yo z wyliczaniem grup regularnych i powiększonych, uwzględnieniem specyfiki zużywania oczka przez kfb oraz ochroną brzegów (edgeStitches).
     2. *Równomierne odejmowanie w rzędzie (Decrease Evenly):* obsługa metod k2tog, ssk, p2tog z uwzględnieniem zużycia po 2 o. na akcję i generowaniem symetrycznej rozpiski.
-    3. *Kształtowanie wielorzędowe (Multi-Row Shaping):* wyliczanie częstotliwości rzędów dla rękawów, raglanów i dekoltów (oth_edges vs single_edge) z optymalizacją pod rzędy prawe (RS only).
-  - **Interfejs użytkownika:** Interaktywny modal src/components/ShapingCalculatorModal.tsx zintegrowany z ekranem projektów (pp/(tabs)/projects.tsx - przycisk ✂️ Oczka) z natywnym udostępnianiem przez Share Sheet.
-  - **Zgodność z ZAS-QA-01:** 100.00% Line Coverage w całym repozytorium (44/44 suites, 318/318 passed, PBT z ast-check, A11y & Apple HIG >= 44pt, strażnicy czystości domeny, budżet < 100ms na 10 000 kalkulacji, resilience na ujemne/skrajne dane).
+    3. *Kształtowanie wielorzędowe (Multi-Row Shaping):* wyliczanie częstotliwości rzędów dla rękawów, raglanów i dekoltów (`both_edges` vs `single_edge`) z optymalizacją pod rzędy prawe (RS only).
+  - **Interfejs użytkownika:** Interaktywny modal `src/components/ShapingCalculatorModal.tsx` zintegrowany z ekranem projektów (`app/(tabs)/projects.tsx` - przycisk ✂️ Oczka) z natywnym udostępnianiem przez Share Sheet.
+  - **Zgodność z ZAS-QA-01:** 100.00% Line Coverage w całym repozytorium (44/44 suites, 318/318 passed, PBT z `fast-check`, A11y & Apple HIG >= 44pt, strażnicy czystości domeny, budżet < 100ms na 10 000 kalkulacji, resilience na ujemne/skrajne dane).
 
 
 * **DEC-02 Implementacja: Protokół Garmin ConnectIQ Companion & Symulator Zegarka (15.10.2026):**
@@ -292,4 +292,11 @@
   - **Tests: 367/367 zdanych (100% pass)**.
   - **Line Coverage: 100.00% w całym projekcie** (`npm run test:coverage`).
   - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
-  - **Multi-Perspective Testing:** Rozbudowane PBT (`fast-check`), Apple HIG & A11y ($\ge 44\,\text{pt}$), Architecture Guards (czystość domeny bez RN), Budżety wydajnościowe CPU oraz Resilience (odporność na zniekształcony JSON i wartości brzegowe).
+  - **Multi-Perspective Testing:** Rozbudowane PBT (`fast-check`), Apple HIG & A11y ($\ge 44\,\text{pt}$), Architecture Guards (czystość domeny bez RN), Budżety wydajnościowe CPU oraz Resilience (odporność na zniekształcony JSON i wartości brzegowe).
+* **DEC-Parity Aktualizacja Dokumentacji do Standardu `organizer` (16.10.2026):**
+  - Zaktualizowano `README.md` do najwyższego rygoru jakościowego wzorowanego na `organizer`:
+    - Odznaki: 367 zdanych testów w 48 pakietach, 100.00% pokrycia linii (`npm run test:coverage`), `Garmin Connect IQ Ready`.
+    - Kompletny wykaz 13 modułów i ekranów aplikacji wraz z najnowszymi kalkulatorami i protokołami ubieralnymi.
+    - Architektura przepływu danych i zdarzeń (diagram Mermaid) z uwzględnieniem mostka BLE Garmin oraz Apple Watch.
+    - Pełny opis 9 warstw rygoru jakościowego (DoD) wraz z konkretnymi metrykami czasu CPU i niezmienników.
+    - Wyczerpujące drzewo plików (`Architektura Kodu`) obejmujące 100% plików źródłowych, testowych i pomocniczych.
