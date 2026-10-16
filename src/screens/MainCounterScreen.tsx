@@ -20,6 +20,7 @@ import PatternGuideViewer from '../components/PatternGuideViewer';
 import PatternPdfViewer from '../components/PatternPdfViewer';
 import AppleWatchCompanionModal from '../components/AppleWatchCompanionModal';
 import { GarminCompanionModal } from '../components/GarminCompanionModal';
+import KnittingTimeTracker from '../components/KnittingTimeTracker';
 import { triggerHaptic, checkIntervalReminder } from '../core/feedback-service';
 import { createWatchCounterSnapshot } from '../core/apple-watch-service';
 import { createGarminSyncPayload } from '../core/garmin-service';
@@ -358,6 +359,14 @@ export default function MainCounterScreen() {
               ))}
             </View>
           )}
+
+          {/* Stoper sesji robótki i pomiar tempa na żywo (BR-CZAS-001..004) */}
+          <KnittingTimeTracker
+            projectId={projectCtx?.activeProject?.id ?? 'proj_demo'}
+            targetRows={projectParts.find((p) => p.id === activePartId)?.targetRows}
+            currentRows={counterValue}
+            db={projectCtx?.db}
+          />
 
           {/* Pasek szybkiej konfiguracji przypomnienia cyklicznego oraz Apple Watch (DEC-03) */}
           <View style={styles.accessoryChipsRow}>

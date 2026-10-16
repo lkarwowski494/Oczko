@@ -55,6 +55,11 @@ import {
 } from '../ease-calculator-service';
 import { RaglanCalculator } from '../raglan-calculator';
 import { calculateHatCrown } from '../hat-calculator';
+import {
+  formatDuration,
+  shouldAutoPauseSession,
+  calculateKnittingSpeed,
+} from '../time-tracking-service';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -863,6 +868,72 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
       );
     });
   });
+
+  describe('Niezmienniki Śledzenia Czasu i Prędkości Dziergania (time-tracking-service.ts)', () => {
+    it('formatDuration zawsze zwraca poprawny ciąg znaków bez wartości ujemnych', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: -1000, max: 1000000 }), (sec) => {
+          const res = formatDuration(sec);
+          expect(typeof res).toBe('string');
+          expect(res.length).toBeGreaterThan(0);
+          expect(res).not.toContain('-');
+          expect(res).toMatch(/(h|m|s)/);
+        }),
+        { numRuns: 100 }
+      );
+    });
+
+    it('shouldAutoPauseSession zachowuje ścisłą monotoniczność względem progu', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 100000, max: 2000000000 }),
+          fc.integer({ min: 1, max: 60 }),
+          (lastActivity, thresholdMinutes) => {
+            const thresholdMs = thresholdMinutes * 60 * 1000;
+            // Przed upływem progu
+            const beforeThreshold = lastActivity + thresholdMs - 1;
+            expect(shouldAutoPauseSession(lastActivity, beforeThreshold, thresholdMinutes)).toBe(false);
+
+            // Po upływie progu
+            const afterThreshold = lastActivity + thresholdMs + 100;
+            expect(shouldAutoPauseSession(lastActivity, afterThreshold, thresholdMinutes)).toBe(true);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('calculateKnittingSpeed gwarantuje nieujemne wartości i brak NaN/Infinity', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 0, max: 100000 }),
+          fc.integer({ min: 0, max: 1000 }),
+          fc.integer({ min: 0, max: 1000 }),
+          (totalSeconds, completedRows, targetRows) => {
+            const res = calculateKnittingSpeed(totalSeconds, completedRows, targetRows);
+
+            expect(Number.isFinite(res.rowsPerHour)).toBe(true);
+            expect(res.rowsPerHour).toBeGreaterThanOrEqual(0);
+            expect(Number.isFinite(res.averageSecondsPerRow)).toBe(true);
+            expect(res.averageSecondsPerRow).toBeGreaterThanOrEqual(0);
+            expect(Number.isFinite(res.estimatedRemainingSeconds)).toBe(true);
+            expect(res.estimatedRemainingSeconds).toBeGreaterThanOrEqual(0);
+
+            if (targetRows === 0) {
+              expect(res.formattedRemainingTime).toBe('Brak celu');
+            } else if (targetRows <= completedRows) {
+              expect(res.estimatedRemainingSeconds).toBe(0);
+              expect(res.formattedRemainingTime).toBe('Cel osiągnięty');
+            } else if (completedRows === 0 || totalSeconds === 0) {
+              expect(res.formattedRemainingTime).toBe('Brak danych');
+            }
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
 });
+
 
 

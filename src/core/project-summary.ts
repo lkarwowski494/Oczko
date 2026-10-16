@@ -8,6 +8,7 @@
 
 import { EnrichedProject } from './project-service';
 import { CounterEvent } from './counter-engine';
+import { formatDuration } from './time-tracking-service';
 
 export interface PartSummaryItem {
   id: string;
@@ -25,6 +26,8 @@ export interface ProjectSummaryStats {
   totalRowsKnitted: number;
   totalTargetRows?: number;
   progressPercent?: number;
+  totalDurationSeconds?: number;
+  totalDurationFormatted?: string;
   partsCount: number;
   countersCount: number;
   eventsCount: number;
@@ -44,7 +47,8 @@ export interface ShareTextOptions {
  */
 export function buildProjectSummary(
   project: EnrichedProject,
-  events: CounterEvent[] = []
+  events: CounterEvent[] = [],
+  totalDurationSeconds?: number
 ): ProjectSummaryStats {
   let totalRowsKnitted = 0;
   let totalTargetRows = 0;
@@ -88,6 +92,11 @@ export function buildProjectSummary(
     lastEventDate = new Date(sorted[sorted.length - 1].timestampMs).toISOString().split('T')[0];
   }
 
+  const formattedDuration =
+    totalDurationSeconds !== undefined && totalDurationSeconds > 0
+      ? formatDuration(totalDurationSeconds)
+      : undefined;
+
   return {
     projectId: project.id,
     projectName: project.name,
@@ -96,6 +105,8 @@ export function buildProjectSummary(
     totalRowsKnitted,
     totalTargetRows: hasAnyTarget ? totalTargetRows : undefined,
     progressPercent,
+    totalDurationSeconds,
+    totalDurationFormatted: formattedDuration,
     partsCount: project.parts.length,
     countersCount: totalCounters,
     eventsCount: events.length,
@@ -124,6 +135,10 @@ export function generateShareableText(
     lines.push(`📏 Przerobione rzędy: ${summary.totalRowsKnitted} / ${summary.totalTargetRows} rz.`);
   } else {
     lines.push(`📏 Przerobione rzędy: ${summary.totalRowsKnitted} rz.`);
+  }
+
+  if (summary.totalDurationFormatted) {
+    lines.push(`⏱️ Czas robótki: ${summary.totalDurationFormatted}`);
   }
 
   if (options.yarnName) {

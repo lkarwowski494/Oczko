@@ -28,6 +28,7 @@ export interface ProjectShareCardModalProps {
   project: EnrichedProject | null;
   onClose: () => void;
   onStatusChange?: (projectId: string, newStatus: ProjectStatus) => Promise<void>;
+  totalDurationSeconds?: number;
 }
 
 export default function ProjectShareCardModal({
@@ -35,6 +36,7 @@ export default function ProjectShareCardModal({
   project,
   onClose,
   onStatusChange,
+  totalDurationSeconds,
 }: ProjectShareCardModalProps) {
   const [yarnName, setYarnName] = useState('');
   const [toolName, setToolName] = useState('');
@@ -43,7 +45,7 @@ export default function ProjectShareCardModal({
 
   if (!project) return null;
 
-  const summary = buildProjectSummary(project);
+  const summary = buildProjectSummary(project, [], totalDurationSeconds);
   const isFinished = project.status === 'finished';
 
   const handleShare = async () => {
@@ -146,6 +148,12 @@ export default function ProjectShareCardModal({
                     ]}
                   />
                 </View>
+              )}
+
+              {summary.totalDurationFormatted && (
+                <Text style={styles.timeSpentText}>
+                  {`⏱️ Czas robótki: ${summary.totalDurationFormatted}`}
+                </Text>
               )}
             </View>
 
@@ -357,6 +365,12 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#8B5E3C',
     borderRadius: 4,
+  },
+  timeSpentText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#8B5E3C',
+    marginTop: 8,
   },
   partsContainer: {
     borderTopWidth: 1,

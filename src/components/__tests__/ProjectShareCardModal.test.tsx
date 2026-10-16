@@ -230,4 +230,22 @@ describe('ProjectShareCardModal (DEC-01)', () => {
     });
     expect(mockStatusChange).toHaveBeenCalledWith('proj-modal-1', 'active');
   });
+
+  it('renders time spent on card when totalDurationSeconds is provided', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <ProjectShareCardModal
+          visible={true}
+          project={mockProject}
+          onClose={jest.fn()}
+          totalDurationSeconds={3600} // 1h 0m
+        />
+      );
+    });
+
+    const text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('⏱️ Czas robótki: 1h 0m');
+  });
 });
+

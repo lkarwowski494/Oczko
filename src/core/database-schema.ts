@@ -104,5 +104,18 @@ export const SQLITE_SCHEMA_STATEMENTS = [
   );`,
 
   `CREATE INDEX IF NOT EXISTS idx_pattern_documents_project
-    ON pattern_documents(project_id);`
+    ON pattern_documents(project_id);`,
+
+  `CREATE TABLE IF NOT EXISTS project_time_sessions (
+    id TEXT PRIMARY KEY NOT NULL,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    started_at TEXT NOT NULL,
+    ended_at TEXT NOT NULL,
+    duration_seconds INTEGER NOT NULL,
+    active_rows_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  );`,
+
+  `CREATE INDEX IF NOT EXISTS idx_project_time_sessions_project
+    ON project_time_sessions(project_id);`
 ] as const;

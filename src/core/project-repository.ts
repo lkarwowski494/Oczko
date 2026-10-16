@@ -7,6 +7,7 @@ import { DatabaseClient } from './database';
 import { CounterConfig, CounterEvent, DeviceSource } from './counter-engine';
 import { ProjectPartDefinition } from './project-structure';
 import { ProjectManagerFacade } from './project-facade';
+import { ProjectTimeSessionRecord } from './time-tracking-service';
 
 export type CraftType = 'knitting' | 'crochet';
 export type ProjectStatus = 'active' | 'hibernated' | 'finished' | 'frogged';
@@ -269,3 +270,72 @@ export async function persistProjectUndo(
   }
   return false;
 }
+
+/**
+ * Trwały zapis ukończonej sesji czasu pracy nad projektem (BR-CZAS-001..004).
+ */
+export async function saveTimeSession(
+  db: DatabaseClient,
+  session: ProjectTimeSessionRecord
+): Promise<void> {
+  await db.runAsync(
+    `INSERT INTO project_time_sessions (id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    session.id,
+    session.projectId,
+    session.startedAt,
+    session.endedAt,
+    session.durationSeconds,
+    session.activeRowsCount,
+    session.createdAt
+  );
+}
+
+/**
+ * Pobiera listę wszystkich sesji czasowych dla danego projektu.
+ */
+export async function listTimeSessions(
+  db: DatabaseClient,
+  projectId: string
+): Promise<ProjectTimeSessionRecord[]> {
+  interface Row {
+    id: string;
+    project_id: string;
+    started_at: string;
+    ended_at: string;
+    duration_seconds: number;
+    active_rows_count: number;
+    created_at: string;
+  }
+  const rows = await db.getAllAsync<Row>(
+    `SELECT * FROM project_time_sessions WHERE project_id = ? ORDER BY started_at ASC`,
+    projectId
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    projectId: r.project_id,
+    startedAt: r.started_at,
+    endedAt: r.ended_at,
+    durationSeconds: r.duration_seconds,
+    activeRowsCount: r.active_rows_count,
+    createdAt: r.created_at,
+  }));
+}
+
+/**
+ * Zwraca łączny skumulowany czas pracy nad projektem w sekundach.
+ */
+export async function getTotalProjectDurationSeconds(
+  db: DatabaseClient,
+  projectId: string
+): Promise<number> {
+  interface Row {
+    total_seconds: number | null;
+  }
+  const row = await db.getFirstAsync<Row>(
+    `SELECT SUM(duration_seconds) as total_seconds FROM project_time_sessions WHERE project_id = ?`,
+    projectId
+  );
+  return row?.total_seconds ?? 0;
+}
+

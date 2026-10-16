@@ -150,7 +150,11 @@ describe('Oczko Core — database.ts client and in-memory mock branches', () => 
     const docFound = await db.getAllAsync('SELECT * FROM pattern_documents WHERE id = ?', 'doc1');
     expect(docFound).toHaveLength(1);
 
-    // 10. Nieznane SELECT zwraca pustą tablicę []
+    // 10. project_time_sessions (wszystkie)
+    const allSessions = await db.getAllAsync('SELECT * FROM project_time_sessions');
+    expect(allSessions).toHaveLength(0);
+
+    // 11. Nieznane SELECT zwraca pustą tablicę []
     const unknownSelect = await db.getAllAsync('SELECT * FROM unknown_random_entity');
     expect(unknownSelect).toEqual([]);
   });

@@ -133,4 +133,15 @@ describe('Project Summary & Share Card Core (DEC-01)', () => {
     const text = generateShareableText(summary);
     expect(text).toContain('📏 Przerobione rzędy: 25 rz.');
   });
+
+  it('uwzględnia czas trwania robótki (totalDurationSeconds) w podsumowaniu i tekście udostępniania', () => {
+    // 7200 sekund = 2h
+    const summary = buildProjectSummary(mockProject, mockEvents, 7200);
+    expect(summary.totalDurationSeconds).toBe(7200);
+    expect(summary.totalDurationFormatted).toBe('2h 0m');
+
+    const text = generateShareableText(summary);
+    expect(text).toContain('⏱️ Czas robótki: 2h 0m');
+  });
 });
+

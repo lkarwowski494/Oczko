@@ -31,25 +31,27 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
 
 ---
 
-## 📱 Moduły i Ekrany
+## 📱 Moduły i Ekrany (Stan Wdrożenia wg BRD)
 
-1. **⏱️ Główny Licznik Rzędów & Tryby Pracy (`MainCounterScreen` / `app/(tabs)/index.tsx`):**
+### ✅ Moduły Zrealizowane (100% Gotowe i Przetestowane):
+
+1. **⏱️ Główny Licznik Rzędów & Tryby Pracy (`MainCounterScreen` / `app/(tabs)/index.tsx`, `BR-LICZ-001..008`):**
    - Wielka, wolna od zbędnych rozpraszaczy karta dotykowa `+1 Rząd` z czytelnym podglądem numeru rzędu.
    - Przycisk natychmiastowego wycofania błędnego kliknięcia `Cofnij (Undo)` z dedykowaną haptyką powrotną.
    - Płynny przełącznik trzech widoków roboczych: `🔢 Licznik`, `📜 Schemat & Linijka`, `📑 Wzór PDF`.
    - Poziomy pasek wyboru części robótki (np. Korpus, Rękaw lewy, Rękaw prawy) z celami rzędów (`targetRows`).
    - Szybkie przypomnienia cykliczne (co 4, 6, 8, 10, 12 rzędów lub wartość własna) z wibracją i etykietą zadania (np. „Dodaj oczko na brzegu”, „Zmiana splotu”).
    - Dedykowane chipy smartwatchy: `⌚ Apple Watch` oraz `🛰️ Garmin` z podglądem stanu i dwukierunkową synchronizacją.
-2. **🪢 Liczniki Powiązane (Linked Counters — Warkocze & Ażury):**
+2. **🪢 Liczniki Powiązane (Linked Counters — Warkocze & Ażury, `BR-LICZ-003`, `BR-LICZ-005`):**
    - Równoległe, automatyczne zliczanie rzędów powtórzeń motywów (np. warkocz C6F o cyklu 6 rzędów).
    - Osobne modulo-cykle i alerty operacji w wyznaczonym rzędzie cyklu powtórzenia (np. `Rząd 4/6 (Powt. 2)`).
    - Transakcyjne, synchroniczne wycofywanie (UNDO) kroku nadrzędnego wraz z powiązanymi krokami podrzędnymi w pojedynczej operacji SQLite.
-3. **⌚ Apple Watch Companion & Live Activities (`DEC-03`, `DEC-08`, `BR-SYS-003`, `AppleWatchCompanionModal`):**
+3. **⌚ Apple Watch Companion & Live Activities (`DEC-03`, `DEC-08`, `BR-SYS-003`, `BR-ZEG-003`, `BR-ZEG-009`, `AppleWatchCompanionModal`):**
    - Zoptymalizowany ekran zegarka (OLED 45 mm) z natychmiastowym feedbackiem haptycznym.
    - Obsługa fizycznego obrotu Cyfrowej Koronki (`Digital Crown`) z akumulatorem delty i progiem czułości.
    - Kursorowe zrzuty stanu (`WatchCounterSnapshot`) dla widżetów Smart Stack i Live Activities na ekranie blokady iOS 18.
    - Bufor offline `WatchOfflineQueue` zabezpieczający naliczenia przy chwilowym braku łączności Bluetooth z telefonem.
-4. **🛰️ Garmin Connect IQ Companion & Symulator Zegarka (`DEC-02`, `GarminCompanionModal`):**
+4. **🛰️ Garmin Connect IQ Companion & Symulator Zegarka (`DEC-02`, `BR-GAR-001..013`, `GarminCompanionModal`):**
    - Realistyczny symulator okrągłego zegarka Garmin (47 mm) z obsługą ekranów AMOLED / MIP.
    - Fizyczne przyciski bezela: `START-STOP` (+1 Rząd), `BACK-LAP` (Cofnij), `UP-MENU` (Poprzednia część), `DOWN` (Następna część).
    - Protokół ConnectIQ Mobile SDK JSON z identyfikatorem `GARMIN_COMM_UUID` i kopertami wiadomości.
@@ -58,14 +60,14 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
    - Import plików PDF oraz schematów graficznych za pośrednictwem natywnego selektora plików (`expo-document-picker`).
    - Pływająca linijka optyczna z regulacją wysokości i trybem wysokiego kontrastu dla czytelności drobnego druku.
    - Funkcja `Auto-krok` automatycznie przesuwająca linię czytania o zadany skok wraz z każdym krokiem licznika.
-6. **📜 Schematy & Diagramy Splotów (`PatternGuideViewer`):**
+6. **📜 Schematy & Diagramy Splotów (`PatternGuideViewer`, `BR-SCHEM-001`):**
    - Interaktywny diagram splotu (np. warkocz C6F, ażur rombowy) z dynamicznym podświetlaniem aktywnego rzędu robótki.
    - Zintegrowana linijka śledząca oraz kompletna legenda symboli dziewiarskich Craft Yarn Council (CYC).
-7. **📁 Zarządzanie Projektami (`app/(tabs)/projects.tsx`):**
+7. **📁 Zarządzanie Projektami (`app/(tabs)/projects.tsx`, `BR-PROJ-001..005`):**
    - Podział na robótki aktywne (WIP — *Work in Progress*) oraz ukończone (FO — *Finished Objects*).
    - Dynamiczny pasek postępu procentowego bazujący na zdefiniowanych częściach i liczbie rzędów docelowych.
    - Generator estetycznych wizytówek rzemieślniczych (`ProjectShareCardModal`) do udostępniania w mediach społecznościowych i na Ravelry.
-8. **📐 Zaawansowane Kalkulatory Dziewiarskie:**
+8. **📐 Zaawansowane Kalkulatory Dziewiarskie (`BR-KALK`):**
    - **Kalkulator Próbki Ściegu (`GaugeCalculatorModal`):** Wylicza wymaganą liczbę oczek do nabrania i docelowych rzędów na podstawie wymiarów próbki i gotowego wyrobu (cm/cale), analizuje naprężenie dzianiny (Tension check) i oferuje bazę gotowych szablonów projektowych (czapki, szale, swetry, kocyki, skarpetki).
    - **Kalkulator Kształtowania Oczek (`ShapingCalculatorModal`):** Euklidesowy algorytm symetrycznego i równomiernego dodawania (M1L, M1R, kfb, yo) lub odejmowania oczek (k2tog, ssk, p2tog) bez widocznych skupisk, ochrona brzegów (`edgeStitches`) oraz kształtowanie wielorzędowe (rękawy, raglany, dekolty) z optymalizacją pod rzędy prawe (RS).
    - **Kalkulator Luzu Odzieżowego i Rozmiaru (`EaseCalculatorModal`):** Dobór rozmiarów sylwetki dorosłych CYC/ISO (XS–5XL), 8 profili dopasowania (od -10 cm do +28 cm oversize) oraz adaptacja próbki z zachowaniem raportu wzoru.
@@ -73,7 +75,7 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
    - **Kalkulator Zmniejszania Czapki i Ściągacza (`HatCalculatorModal`):** Obliczanie obwodu z ujemnym luzem (-5 cm), dobór rozmiarów CYC (od niemowlęcia do dorosłego L), wywijany lub pojedynczy ściągacz, podział na 4, 6 lub 8 klinów korony oraz generowanie rozpiski rzędów zmniejszania krok po kroku.
    - **Kalkulator Zamienników Włóczki i WPI (`YarnSubstitutionModal`):** Precyzyjne przeliczanie zapotrzebowania na motki innej włóczki z uwzględnieniem marginesu bezpieczeństwa (0–20%), kalkulator łączenia wielu nitek (multi-strand, np. Fingering + Mohair) oraz identyfikator grubości WPI (Wraps Per Inch) ze standardami CYC 0–7.
    - **Estymator Zużycia Włóczki (`YarnUsageEstimatorModal`):** Dwa tryby obliczeń (w trakcie robótki na bazie zważonej części lub przed startem na bazie powierzchni i próbki), algorytm gry w cykora z włóczką (*Yarn Chicken*) ostrzegający przed deficytem, margines bezpieczeństwa oraz wskaźnik Yarn Grist (m/g).
-9. **🧶 Magazyn Włóczek & Narzędzi (`app/(tabs)/stash.tsx`):**
+9. **🧶 Magazyn Włóczek & Narzędzi (`app/(tabs)/stash.tsx`, `BR-MAG-001..005`):**
    - Ewidencja włóczek: producent, nazwa, odcień, numer partii farbowania (`Dye Lot`), waga motka i metraż.
    - Ewidencja drutów i szydełek: rozmiar metryczny (mm) i US, długość żyłki, typ (proste, z żyłką, pończosznicze).
    - Inteligentny panel filtrów grubości CYC (0–6), tagi surowcowe (Merino, Alpaka, Bawełna, Jedwab, Syntetyki) oraz natychmiastowy agregator statystyk zasobów.
@@ -81,16 +83,40 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
     - Pełna tabela 22 standardów rozmiarów CYC/ISO (od 2.0 mm do 25.0 mm) z odpowiednikami Metric (mm), US, UK, JP i Crochet.
     - Cyfrowa suwmiarka z wyszukiwaniem najbliższego rozmiaru metrycznego.
     - Konwerter jednostek rzemieślniczych w czasie rzeczywistym: długość ($m \leftrightarrow yd$), waga ($g \leftrightarrow oz$), gęstość próbki ($10\,\text{cm} \leftrightarrow 4''$).
-11. **🎓 Moduł Nauki & Trenażer Wzorów (`app/(tabs)/learn.tsx`):**
+11. **🎓 Moduł Nauki: Słownik & Trenażer Wzorów (`app/(tabs)/learn.tsx`, `BR-TRE-001..019`):**
     - Wielojęzyczny słownik terminologii dziewiarskiej (PL, EN-US, EN-UK, DE, FR) z natychmiastową wyszukiwarką i glifami CYC.
     - Interaktywny trenażer powtórzeń wzorów krok po kroku z instrukcjami dla strony prawej (RS) i lewej (WS) oraz licznikiem powtórzeń w rzędzie.
 12. **🔍 Wizualny Identyfikator Ściegu „Co widzisz?” (`DEC-16`, `stitch-identifier.ts`):**
     - Deterministyczny klucz diagnostyczny bez AI oparty na 3 cechach obserwowanych dzianiny: strukturze powierzchni (`surface_texture`), rewersie (`reversibility`) oraz krawędzi i elastyczności (`edge_and_stretch`).
     - Rozpoznawanie 8 fundamentalnych profili dziewiarskich i szydełkowych (dżersej, dżersej lewy, ścieg francuski, ściągacz, ścieg ryżowy, warkocz, ażur, splot szydełkowy) z poradami technologicznymi i bezpośrednim linkiem do trenażera.
-13. **⚙️ Ustawienia, Haptyka, Kopia i Bezpieczeństwo (`app/(tabs)/settings.tsx`):**
+13. **⚙️ Ustawienia, Haptyka, Kopia i Bezpieczeństwo (`app/(tabs)/settings.tsx`, `BR-DANE-001..002`, `BR-UST-001..`):**
     - Panel konfiguracji haptyki Taptic Engine z możliwością odsłuchania na żywo każdego profilu (`step`, `undo`, `cycle`, `goal`, `reminder`).
     - Pełna kopia zapasowa danych do pliku JSON z weryfikacją spójności schematu, podglądem błędów walidacji i bezpiecznym przywracaniem.
     - Diagnostyka bazy danych SQLite, liczniki rekordów w czasie rzeczywistym oraz monitorowanie stanu połączeń zegarków Apple Watch i Garmin.
+14. **⏱️ Śledzenie Czasu Robótki i Prędkości Dziergania (`KnittingTimeTracker.tsx`, `BR-CZAS-001..005`, `DEC-22`):**
+    - Stoper sesji robótki powiązany z projektem w SQLite (`project_time_sessions`).
+    - Automatyczne uruchamianie sesji przy pierwszym kliknięciu w licznik lub ręcznie przyciskiem Start / Pauza.
+    - Pomiar tempa dziergania w rzędach na godzinę (`rowsPerHour`) oraz średniego czasu na rząd.
+    - Dynamiczna estymacja pozostałego czasu robótki (ETA) w oparciu o bieżące tempo i cel rzędów części (`targetRows`).
+    - Automatyczna detekcja bezczynności (Auto-Pause po 5 minutach braku aktywności) zapobiegająca fałszowaniu statystyk.
+    - Wizualizacja łącznego czasu robótki na karcie udostępniania (`ProjectShareCardModal.tsx`) oraz w podsumowaniach projektu.
+
+---
+
+### ⏳ Kolejne Moduły z BRD do Wdrożenia (Roadmapa Realizacji):
+
+15. **🩺 Doktor Błędów i Ratowanie Dzianiny (`BR-BIB-010..015`):**
+    - Interaktywne procedury krok po kroku ratowania 6 najczęstszych katastrof rękodzielniczych (spuszczone oczko, przekręcone oczko, nadmiarowe oczko, prucie rzędu na drutach / tink, linia ratunkowa / lifeline, uciekający ścieg szydełkowy).
+16. **📚 Biblioteka Technik i Karty Rzemieślnicze (`DEC-13`, `DEC-20`, `BR-BIB-001..008`):**
+    - 21 fundamentalnych technik dziewiarskich i szydełkowych (12 drutowych, 9 szydełkowych) ze schematami rysowanymi kodem (0 zł, ZP-05) z instrukcjami dla prawo- i leworęcznych (DEC-19).
+17. **🧭 Ścieżka Progresji Dziewiarskiej (`BR-SCI-001..005`):**
+    - 4 kamienie milowe projektu (Szalik -> Czapka -> Skarpety -> Sweter) z kryteriami opanowania technik, odznakami rzemieślniczymi i śledzeniem postępów.
+18. **🤲 Ergonomia, Zdrowie Rąk i Przypomnienia o Przerwach (`SYT-06`, `BR-ZDR-001..003`):**
+    - Licznik ciągłego dziergania, łagodne alerty zmęczenia dłoni i nadgarstków, 5 ćwiczeń rozciągających dla dziewiarek zapobiegających zespołowi cieśni nadgarstka i przeciążeniom.
+19. **📦 Eksport i Wymiana Projektów `.oczko` (`SYT-07`, `BR-WSP-001..003`):**
+    - Bezpieczny format pakowania `.oczko` (JSON) do przekazywania robótek przez AirDrop/komunikatory bez naruszania praw autorskich do wzorów PDF.
+20. **🧦 Kalkulator Konstrukcji Skarpet (`DEC-21`):**
+    - Kalkulacja obwodu stopy, ujemnego luzu (-1 do -2 cm), klapki pięty (heel flap), podbierania oczek klina (gusset) oraz symetrycznego czubka (wedge toe / Kitchener stitch).
 
 ---
 

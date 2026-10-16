@@ -146,6 +146,15 @@ export function createInMemoryDatabase(): DatabaseClient {
         return { changes: 1, lastInsertRowId: 1 };
       }
 
+      // INSERT INTO project_time_sessions
+      if (/^INSERT\s+INTO\s+project_time_sessions/i.test(clean)) {
+        const [id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at] = params as any[];
+        getTable('project_time_sessions').set(id, {
+          id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at
+        });
+        return { changes: 1, lastInsertRowId: 1 };
+      }
+
       // UPDATE pattern_documents
       if (/^UPDATE\s+pattern_documents/i.test(clean)) {
         if (/current_page\s*=/i.test(clean)) {
@@ -314,6 +323,25 @@ export function createInMemoryDatabase(): DatabaseClient {
 
       if (/FROM\s+pattern_documents/i.test(clean)) {
         return Array.from(getTable('pattern_documents').values()) as unknown as T[];
+      }
+
+      if (/SUM\(duration_seconds\)\s+as\s+total_seconds\s+FROM\s+project_time_sessions\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
+        const projectId = params[0] as string;
+        const rows = Array.from(getTable('project_time_sessions').values()).filter((s) => s.project_id === projectId);
+        const sum = rows.reduce((acc, curr) => acc + ((curr.duration_seconds as number) || 0), 0);
+        return [{ total_seconds: sum }] as unknown as T[];
+      }
+
+      if (/FROM\s+project_time_sessions\s+WHERE\s+project_id\s*=\s*\?/i.test(clean)) {
+        const projectId = params[0] as string;
+        const rows = Array.from(getTable('project_time_sessions').values())
+          .filter((s) => s.project_id === projectId)
+          .sort((a, b) => ((a.started_at as string) < (b.started_at as string) ? -1 : 1));
+        return rows as unknown as T[];
+      }
+
+      if (/FROM\s+project_time_sessions/i.test(clean)) {
+        return Array.from(getTable('project_time_sessions').values()) as unknown as T[];
       }
 
       return [];

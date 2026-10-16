@@ -58,6 +58,11 @@ import {
 } from '../ease-calculator-service';
 import { RaglanCalculator } from '../raglan-calculator';
 import { calculateHatCrown } from '../hat-calculator';
+import {
+  formatDuration,
+  shouldAutoPauseSession,
+  calculateKnittingSpeed,
+} from '../time-tracking-service';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -749,5 +754,41 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(res.finalRemainingStitches).toBe(6);
     });
   });
+
+  describe('Odporność Śledzenia Czasu i Prędkości Dziergania (time-tracking-service.ts)', () => {
+    test('Obsługa wartości ujemnych, NaN i skrajnych w formatDuration', () => {
+      expect(formatDuration(-100)).toBe('0s');
+      expect(formatDuration(NaN as any)).toBe('0s');
+      expect(formatDuration(undefined as any)).toBe('0s');
+      expect(formatDuration(3665)).toBe('1h 1m');
+      expect(formatDuration(65)).toBe('1m 5s');
+      expect(formatDuration(42)).toBe('42s');
+      expect(formatDuration(315360000)).toBe('87600h 0m'); // 10 lat
+    });
+
+    test('Obsługa nieprawidłowych i ujemnych timestampów w shouldAutoPauseSession', () => {
+      expect(shouldAutoPauseSession(-500, 1000, 5)).toBe(false);
+      expect(shouldAutoPauseSession(1000, -500, 5)).toBe(false);
+      expect(shouldAutoPauseSession(0, 0, 5)).toBe(false);
+      expect(shouldAutoPauseSession(1000, 1000, 0)).toBe(false);
+    });
+
+    test('Skrajne parametry i dzielenie przez zero w calculateKnittingSpeed', () => {
+      const zeroResult = calculateKnittingSpeed(0, 0, 100);
+      expect(zeroResult.rowsPerHour).toBe(0);
+      expect(zeroResult.averageSecondsPerRow).toBe(0);
+      expect(zeroResult.formattedRemainingTime).toBe('Brak danych');
+
+      const negativeResult = calculateKnittingSpeed(-100, -5, -10);
+      expect(negativeResult.rowsPerHour).toBe(0);
+      expect(negativeResult.averageSecondsPerRow).toBe(0);
+      expect(negativeResult.formattedRemainingTime).toBe('Cel osiągnięty');
+
+      const hugeResult = calculateKnittingSpeed(100000000, 500000, 750000);
+      expect(Number.isFinite(hugeResult.rowsPerHour)).toBe(true);
+      expect(Number.isFinite(hugeResult.estimatedRemainingSeconds)).toBe(true);
+    });
+  });
 });
+
 

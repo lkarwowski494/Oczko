@@ -372,4 +372,28 @@
     - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
     - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
     - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 250 ms) oraz Resilience (`resilience.test.ts`).
+
+* **DEC-22 Implementacja: Śledzenie Czasu Robótki i Prędkości Dziergania (16.10.2026, BR-CZAS-001..005):**
+  - **Architektura Domenowa (`src/core/time-tracking-service.ts`):**
+    - Czysta matematyka dziewiarska bez AI (inwariant ZP-05).
+    - Metryki prędkości dziergania: pomiar tempa w rzędach na godzinę (`rowsPerHour`), średni czas trwania jednego rzędu w sekundach (`averageSecondsPerRow`).
+    - Estymacja pozostałego czasu robótki (ETA) w oparciu o bieżące tempo i liczbę brakujących rzędów do celu (`targetRows`).
+    - Wykrywanie bezczynności i ochrona przed zafałszowaniem statystyk (`shouldAutoPauseSession`, automatyczne wstrzymanie po 5 minutach bez kliknięcia w licznik).
+    - Formatowanie czasu do czytelnych jednostek ("Xh Ym", "Ym Zs", "Zs").
+  - **Persystencja SQLite i Model Danych (`src/core/database-schema.ts`, `src/core/project-repository.ts`):**
+    - Nowa tabela `project_time_sessions` (id, project_id, started_at, ended_at, duration_seconds, active_rows_count, created_at) oraz indeks po `project_id`.
+    - Metody repozytorium: `saveTimeSession`, `listTimeSessions`, `getTotalProjectDurationSeconds` z pełną parametryzacją SQL (`?`).
+  - **Interfejs Użytkownika (`src/components/KnittingTimeTracker.tsx`, `src/screens/MainCounterScreen.tsx`, `src/components/ProjectShareCardModal.tsx`):**
+    - Komponent `KnittingTimeTracker` zintegrowany w głównym ekranie licznika (`MainCounterScreen.tsx`).
+    - Automatyczne uruchamianie sesji przy pierwszym kliknięciu w licznik robótki lub ręcznie przyciskiem Start / Pauza.
+    - Pasek wskaźnika stanu na żywo (aktywna sesja / wstrzymanie z braku aktywności), licznik czasu bieżącej sesji, tempo robótki (`⚡ rz./h`), estymacja ETA (`⏳ Zostało`).
+    - Rozwijana karta szczegółów z łącznym skumulowanym czasem projektu oraz średnim czasem na rząd.
+    - Wizualizacja skumulowanego czasu robótki na karcie udostępniania projektu (`ProjectShareCardModal.tsx` — `⏱️ Czas robótki: Xh Ym`) oraz w tekście eksportu (`generateShareableText`).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 58/58 zdanych (100% pass)**.
+    - **Tests: 484/484 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
+    - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+    - Zaktualizowano testy PBT (`property-based.test.ts`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 100 ms) oraz Resilience (`resilience.test.ts`).
+
 

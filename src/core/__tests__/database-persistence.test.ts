@@ -11,6 +11,9 @@ import {
   loadProjectFacade,
   persistProjectStep,
   persistProjectUndo,
+  saveTimeSession,
+  listTimeSessions,
+  getTotalProjectDurationSeconds,
 } from '../project-repository';
 
 describe('Oczko Core — Trwałość danych SQLite i Dziennik Zdarzeń (BR-LICZ-008, ZP-06)', () => {
@@ -178,4 +181,58 @@ describe('Oczko Core — Trwałość danych SQLite i Dziennik Zdarzeń (BR-LICZ-
     const reloaded = await loadProjectFacade(db, 'proj_test');
     expect(reloaded.getCounterState('cnt_debounce').rawValue).toBe(2);
   });
+
+  test('Zapis i odczyt sesji czasu pracy oraz sumowanie czasu robótki (BR-CZAS-001..004)', async () => {
+    const db = createInMemoryDatabase();
+
+    await insertProject(db, {
+      id: 'proj_time',
+      name: 'Projekt z czasem',
+      craftType: 'knitting',
+      status: 'active',
+      createdAt: '2026-10-16T08:00:00Z',
+      updatedAt: '2026-10-16T08:00:00Z',
+    });
+
+    // Przed zapisaniem sesji łączny czas powinien wynosić 0
+    const emptyDuration = await getTotalProjectDurationSeconds(db, 'proj_time');
+    expect(emptyDuration).toBe(0);
+
+    const emptySessions = await listTimeSessions(db, 'proj_time');
+    expect(emptySessions).toEqual([]);
+
+    // Dodanie pierwszej sesji (1200 s = 20 min)
+    await saveTimeSession(db, {
+      id: 'sess-1',
+      projectId: 'proj_time',
+      startedAt: '2026-10-16T08:00:00Z',
+      endedAt: '2026-10-16T08:20:00Z',
+      durationSeconds: 1200,
+      activeRowsCount: 15,
+      createdAt: '2026-10-16T08:20:00Z',
+    });
+
+    // Dodanie drugiej sesji (1800 s = 30 min)
+    await saveTimeSession(db, {
+      id: 'sess-2',
+      projectId: 'proj_time',
+      startedAt: '2026-10-16T09:00:00Z',
+      endedAt: '2026-10-16T09:30:00Z',
+      durationSeconds: 1800,
+      activeRowsCount: 25,
+      createdAt: '2026-10-16T09:30:00Z',
+    });
+
+    const sessions = await listTimeSessions(db, 'proj_time');
+    expect(sessions).toHaveLength(2);
+    expect(sessions[0].id).toBe('sess-1');
+    expect(sessions[0].durationSeconds).toBe(1200);
+    expect(sessions[0].activeRowsCount).toBe(15);
+    expect(sessions[1].id).toBe('sess-2');
+    expect(sessions[1].durationSeconds).toBe(1800);
+
+    const totalSeconds = await getTotalProjectDurationSeconds(db, 'proj_time');
+    expect(totalSeconds).toBe(3000);
+  });
 });
+

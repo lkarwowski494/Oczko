@@ -52,6 +52,11 @@ import {
 } from '../ease-calculator-service';
 import { RaglanCalculator } from '../raglan-calculator';
 import { calculateHatCrown } from '../hat-calculator';
+import {
+  calculateKnittingSpeed,
+  formatDuration,
+  shouldAutoPauseSession,
+} from '../time-tracking-service';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -387,4 +392,21 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
 
     expect(durationMs).toBeLessThan(250);
   });
+
+  test('10 000 kalkulacji prędkości robótki i formatowania czasu w < 100 ms', () => {
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      calculateKnittingSpeed(
+        100 + (i % 5000),
+        10 + (i % 100),
+        50 + (i % 200)
+      );
+      formatDuration(i * 15);
+      shouldAutoPauseSession(1000, 1000 + i * 100, 5);
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(100);
+  });
 });
+
