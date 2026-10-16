@@ -54,6 +54,7 @@ import {
   adaptStitchesWithRecommendation,
 } from '../ease-calculator-service';
 import { RaglanCalculator } from '../raglan-calculator';
+import { calculateHatCrown } from '../hat-calculator';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -791,6 +792,71 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
 
             expect(Math.abs(res.finalBackAfterShortRows - res.finalFrontAfterShortRows)).toBeLessThanOrEqual(1);
             expect(res.isBalancedAfterShortRows).toBe(true);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Kalkulatora Korony Czapki (hat-calculator.ts)', () => {
+    it('Zachowanie podzielności i minimalnej liczby oczek: castOnStitches jest podzielne przez kliny i >= wedges * 4', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 25, max: 75 }),
+          fc.integer({ min: 0, max: 12 }),
+          fc.integer({ min: 12, max: 35 }),
+          fc.integer({ min: 16, max: 45 }),
+          fc.constantFrom(4, 6, 8 as const),
+          (circ, ease, stGauge, rowGauge, wedges) => {
+            const res = calculateHatCrown({
+              headCircumferenceCm: circ,
+              negativeEaseCm: ease,
+              gaugeStitchesPer10Cm: stGauge,
+              gaugeRowsPer10Cm: rowGauge,
+              brimStyle: 'single',
+              brimHeightCm: 4,
+              fitStyle: 'beanie',
+              wedges,
+            });
+
+            expect(res.castOnStitches % wedges).toBe(0);
+            expect(res.castOnStitches).toBeGreaterThanOrEqual(wedges * 4);
+            expect(res.finalRemainingStitches % wedges).toBe(0);
+            expect(res.rounds.length).toBeGreaterThan(0);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Ścisła monotoniczność redukcji oczek w rzędach korony: każde zmniejszenie odejmuje dokładnie wedges oczek', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 30, max: 65 }),
+          fc.constantFrom(4, 6, 8 as const),
+          (circ, wedges) => {
+            const res = calculateHatCrown({
+              headCircumferenceCm: circ,
+              gaugeStitchesPer10Cm: 22,
+              gaugeRowsPer10Cm: 30,
+              brimStyle: 'single',
+              brimHeightCm: 5,
+              fitStyle: 'beanie',
+              wedges,
+            });
+
+            let prevStitches = res.castOnStitches;
+            for (const r of res.rounds) {
+              if (r.isDecreaseRound) {
+                expect(r.totalStitchesAfter).toBe(prevStitches - wedges);
+                expect(r.totalStitchesAfter % wedges).toBe(0);
+                prevStitches = r.totalStitchesAfter;
+              } else {
+                expect(r.totalStitchesAfter).toBe(prevStitches);
+              }
+            }
+            expect(prevStitches).toBe(res.finalRemainingStitches);
           }
         ),
         { numRuns: 100 }

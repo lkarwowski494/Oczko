@@ -353,4 +353,23 @@
     - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
     - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
     - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 250 ms) oraz Resilience (`resilience.test.ts`).
+
+* **DEC-20 Implementacja: Kalkulator Zmniejszania Korony Czapki i Ściągacza (16.10.2026):**
+  - **Architektura Domenowa (`src/core/hat-calculator.ts`):**
+    - Wzorzec rozmiarów głowy dorosłych i dzieci CYC (`HAT_STANDARD_SIZES`, 35–60 cm).
+    - Obliczenie luzu ujemnego (*negative ease*, domyślnie -5 cm, 10–12% elastyczności), zapobiegającego zsuwaniu się czapki.
+    - Deterministyczny podział korony na 4, 6 lub 8 klinów (*Crown Decrease Wedges*) ze spójnym zaokrąglaniem liczby nabieranych oczek do wspólnej wielokrotności klinów i raportu ściągacza (np. LCM 12 dla ściągacza 2x2 i 6 klinów).
+    - Krok po kroku wyliczanie sekwencji rzędów korony (zmniejszanie co 2. rząd, przejście na co 1. rząd w szczycie) z instrukcjami `*kX, k2tog*` i dokładną liczbą oczek pozostałych do ściągnięcia igłą (*final remaining stitches*).
+  - **Interfejs Użytkownika (`src/components/HatCalculatorModal.tsx`):**
+    - 2-zakładkowy modal rzemieślniczy: `Wymiary & Ściągacz` oraz `Korona & Rozpiska`.
+    - Presety standardowych obwodów głowy, steppery z haptyczną informacją zwrotną, przełącznik ściągacza pojedynczego/wywijanego oraz stylu klasycznego/slouchy.
+    - Podgląd geometrii pionowej (ściągacz, korpus, korona, łączna wysokość w cm i rzędach) oraz lista rzędów korony.
+    - Spełnia Apple HIG ($\ge 44 \times 44\,\text{pt}$, VoiceOver accessibility), natywny eksport raportu przez Share Sheet.
+    - Zintegrowany z nagłówkiem ekranu robótek (`app/(tabs)/projects.tsx` — przycisk `🧢 Czapka`).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 56/56 zdanych (100% pass)**.
+    - **Tests: 460/460 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
+    - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+    - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 250 ms) oraz Resilience (`resilience.test.ts`).
 

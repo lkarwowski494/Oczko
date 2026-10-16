@@ -6,6 +6,7 @@ import { createInMemoryDatabase } from '../../core/database';
 import { ShapingCalculatorModal } from '../../components/ShapingCalculatorModal';
 import { EaseCalculatorModal } from '../../components/EaseCalculatorModal';
 import { RaglanCalculatorModal } from '../../components/RaglanCalculatorModal';
+import { HatCalculatorModal } from '../../components/HatCalculatorModal';
 
 function extractAllStrings(node: any): string {
   if (!node) return '';
@@ -457,6 +458,21 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
     const raglanModal = root.findByType(RaglanCalculatorModal);
     await act(async () => {
       raglanModal.props.onClose();
+    });
+
+    // Znajdź przycisk otwierania kalkulatora czapki
+    const hatBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('🧢 Czapka')
+    );
+    await act(async () => {
+      hatBtn.props.onPress();
+    });
+
+    // Znajdź HatCalculatorModal i zamknij
+    const hatModal = root.findByType(HatCalculatorModal);
+    await act(async () => {
+      hatModal.props.onClose();
     });
   });
 

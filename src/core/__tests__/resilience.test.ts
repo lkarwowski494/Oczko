@@ -57,6 +57,7 @@ import {
   adaptStitchesWithRecommendation,
 } from '../ease-calculator-service';
 import { RaglanCalculator } from '../raglan-calculator';
+import { calculateHatCrown } from '../hat-calculator';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -708,6 +709,44 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
 
       expect(hugeYoke.finalBodyStitches).toBeGreaterThan(400);
       expect(Number.isFinite(hugeYoke.resultingChestCircumferenceCm)).toBe(true);
+    });
+  });
+
+  describe('Odporność Kalkulatora Korony Czapki (hat-calculator.ts)', () => {
+    test('Skrajne wartości wejściowe i wielkie rozmiary (obwód 80 cm, 8 klinów) zachowują spójność', () => {
+      const res = calculateHatCrown({
+        headCircumferenceCm: 80,
+        negativeEaseCm: 15,
+        gaugeStitchesPer10Cm: 32,
+        gaugeRowsPer10Cm: 45,
+        brimStyle: 'folded',
+        brimHeightCm: 12,
+        fitStyle: 'slouchy',
+        slouchExtraCm: 8,
+        wedges: 8,
+      });
+
+      expect(res.castOnStitches % 8).toBe(0);
+      expect(res.finalRemainingStitches).toBe(8);
+      expect(res.rounds.length).toBeGreaterThan(10);
+      expect(Number.isFinite(res.totalHeightCm)).toBe(true);
+    });
+
+    test('Wartości minimalne i zerowe są bezpiecznie domyślne lub klamrowane', () => {
+      const res = calculateHatCrown({
+        headCircumferenceCm: 0,
+        negativeEaseCm: -10,
+        gaugeStitchesPer10Cm: 0,
+        gaugeRowsPer10Cm: 0,
+        brimStyle: 'single',
+        brimHeightCm: 0,
+        fitStyle: 'beanie',
+        wedges: 6,
+      });
+
+      expect(res.castOnStitches).toBeGreaterThanOrEqual(24);
+      expect(res.rounds.length).toBeGreaterThan(0);
+      expect(res.finalRemainingStitches).toBe(6);
     });
   });
 });

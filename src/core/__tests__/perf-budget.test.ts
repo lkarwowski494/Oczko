@@ -51,6 +51,7 @@ import {
   adaptStitchesWithRecommendation,
 } from '../ease-calculator-service';
 import { RaglanCalculator } from '../raglan-calculator';
+import { calculateHatCrown } from '../hat-calculator';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -362,6 +363,25 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
           frontStitches: 28,
         });
       }
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(250);
+  });
+
+  test('10 000 kalkulacji korony czapki i rzędów zmniejszania w < 250 ms', () => {
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      calculateHatCrown({
+        headCircumferenceCm: 50 + (i % 15),
+        negativeEaseCm: 4 + (i % 3),
+        gaugeStitchesPer10Cm: 20 + (i % 6),
+        gaugeRowsPer10Cm: 28 + (i % 6),
+        brimStyle: i % 2 === 0 ? 'single' : 'folded',
+        brimHeightCm: 5,
+        fitStyle: i % 3 === 0 ? 'slouchy' : 'beanie',
+        wedges: (i % 3 === 0 ? 4 : i % 3 === 1 ? 6 : 8),
+      });
     }
     const durationMs = performance.now() - t0;
 

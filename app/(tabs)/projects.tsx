@@ -27,6 +27,7 @@ import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModa
 import { ShapingCalculatorModal } from '../../src/components/ShapingCalculatorModal';
 import { EaseCalculatorModal } from '../../src/components/EaseCalculatorModal';
 import { RaglanCalculatorModal } from '../../src/components/RaglanCalculatorModal';
+import { HatCalculatorModal } from '../../src/components/HatCalculatorModal';
 
 
 export default function ProjectsScreen() {
@@ -54,6 +55,9 @@ export default function ProjectsScreen() {
 
   // Modal kalkulatora konstrukcji raglanu i GSR
   const [raglanModalVisible, setRaglanModalVisible] = useState(false);
+
+  // Modal kalkulatora korony czapki
+  const [hatModalVisible, setHatModalVisible] = useState(false);
 
   // Modal karty podsumowania i udostępniania robótki
   const [selectedShareProject, setSelectedShareProject] = useState<EnrichedProject | null>(null);
@@ -315,6 +319,15 @@ export default function ProjectsScreen() {
             <Text style={styles.gaugeButtonText}>🥋 Raglan</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => setHatModalVisible(true)}
+            accessibilityLabel="Otwórz kalkulator korony czapki i ściągacza"
+            accessibilityRole="button"
+          >
+            <Text style={styles.gaugeButtonText}>🧢 Czapka</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.newButton}
             activeOpacity={0.8}
             onPress={() => setModalVisible(true)}
@@ -533,6 +546,12 @@ export default function ProjectsScreen() {
       <RaglanCalculatorModal
         visible={raglanModalVisible}
         onClose={() => setRaglanModalVisible(false)}
+      />
+
+      {/* Modal kalkulatora korony czapki */}
+      <HatCalculatorModal
+        visible={hatModalVisible}
+        onClose={() => setHatModalVisible(false)}
       />
     </SafeAreaView>
   );
