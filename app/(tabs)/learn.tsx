@@ -25,8 +25,13 @@ import {
   identifyStitch,
   StitchMatchResult,
 } from '../../src/core/stitch-identifier';
+import {
+  EmergencyProcedure,
+  diagnoseEmergency,
+  CraftDiscipline,
+} from '../../src/core/knitting-doctor';
 
-type ActiveTab = 'glossary' | 'trainer' | 'identifier';
+type ActiveTab = 'glossary' | 'trainer' | 'identifier' | 'doctor';
 
 const CATEGORY_CHIPS: Array<{ key: GlossaryCategory | 'all'; label: string }> = [
   { key: 'all', label: 'Wszystkie' },
@@ -44,6 +49,11 @@ export default function LearnScreen() {
   // Stan słownika
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<GlossaryCategory | 'all'>('all');
+
+  // Stan Doktora Błędów (BR-BIB-010..015)
+  const [doctorQuery, setDoctorQuery] = useState('');
+  const [doctorCraftFilter, setDoctorCraftFilter] = useState<CraftDiscipline>('both');
+  const [selectedEmergency, setSelectedEmergency] = useState<EmergencyProcedure | null>(null);
 
   // Stan trenażera powtórzeń
   const [activeExercise, setActiveExercise] = useState<TrainerExercise>(TRAINER_EXERCISES[0]);
@@ -138,6 +148,20 @@ export default function LearnScreen() {
         >
           <Text style={[styles.segmentText, activeTab === 'identifier' && styles.segmentTextActive]}>
             🔍 Co widzisz?
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.segmentButton, activeTab === 'doctor' && styles.segmentButtonActive]}
+          onPress={() => {
+            setActiveTab('doctor');
+            setSelectedEmergency(null);
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Doktor błędów i ratowanie dzianiny"
+        >
+          <Text style={[styles.segmentText, activeTab === 'doctor' && styles.segmentTextActive]}>
+            🩺 Doktor Błędów
           </Text>
         </TouchableOpacity>
       </View>
@@ -445,6 +469,195 @@ export default function LearnScreen() {
                 </View>
               </View>
             )
+          )}
+        </ScrollView>
+      )}
+
+      {activeTab === 'doctor' && (
+        <ScrollView style={styles.tabContent} contentContainerStyle={styles.doctorScrollContent}>
+          {selectedEmergency ? (
+            <View style={styles.procedureDetailsContainer}>
+              <TouchableOpacity
+                style={styles.doctorBackButton}
+                onPress={() => setSelectedEmergency(null)}
+                accessibilityRole="button"
+                accessibilityLabel="Wróć do listy problemów"
+              >
+                <Text style={styles.doctorBackButtonText}>← Wróć do listy problemów</Text>
+              </TouchableOpacity>
+
+              <View style={styles.procedureHeaderCard}>
+                <View style={styles.procedureBadgeRow}>
+                  <Text
+                    style={[
+                      styles.dangerBadge,
+                      selectedEmergency.dangerLevel === 'critical'
+                        ? styles.dangerBadgeCritical
+                        : selectedEmergency.dangerLevel === 'moderate'
+                        ? styles.dangerBadgeModerate
+                        : styles.dangerBadgeLow,
+                    ]}
+                  >
+                    {selectedEmergency.dangerLevel === 'critical'
+                      ? '🔴 Poziom: Krytyczny'
+                      : selectedEmergency.dangerLevel === 'moderate'
+                      ? '🟠 Poziom: Umiarkowany'
+                      : '🟡 Poziom: Niski'}
+                  </Text>
+                  <Text style={styles.craftBadge}>
+                    {selectedEmergency.craftType === 'knitting'
+                      ? '🧶 Druty'
+                      : selectedEmergency.craftType === 'crochet'
+                      ? '🪢 Szydełko'
+                      : '🧶 Druty & Szydełko'}
+                  </Text>
+                </View>
+
+                <Text style={styles.procedureTitle}>{selectedEmergency.title}</Text>
+                <Text style={styles.procedureSummary}>{selectedEmergency.summary}</Text>
+
+                <View style={styles.toolsCard}>
+                  <Text style={styles.toolsHeader}>🧰 Potrzebne narzędzia:</Text>
+                  {selectedEmergency.toolsNeeded.map((t, idx) => (
+                    <Text key={idx} style={styles.toolItemText}>• {t}</Text>
+                  ))}
+                </View>
+              </View>
+
+              <View style={styles.stepsContainer}>
+                <Text style={styles.stepsSectionTitle}>Procedura ratunkowa krok po kroku:</Text>
+                {selectedEmergency.steps.map((st) => (
+                  <View key={st.stepNumber} style={styles.stepCard}>
+                    <View style={styles.stepHeader}>
+                      <View style={styles.stepNumberBadge}>
+                        <Text style={styles.stepNumberText}>{st.stepNumber}</Text>
+                      </View>
+                      <Text style={styles.stepTitleText}>{st.title}</Text>
+                    </View>
+                    <Text style={styles.stepInstructionText}>{st.instruction}</Text>
+                    {st.tip && (
+                      <View style={styles.stepTipBox}>
+                        <Text style={styles.stepTipText}>💡 Porada: {st.tip}</Text>
+                      </View>
+                    )}
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.preventionCard}>
+                <Text style={styles.preventionHeader}>🛡️ Jak zapobiegać w przyszłości:</Text>
+                <Text style={styles.preventionText}>{selectedEmergency.preventionTip}</Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.doneButton}
+                onPress={() => setSelectedEmergency(null)}
+                accessibilityRole="button"
+                accessibilityLabel="Zrozumiałam, usterka naprawiona"
+              >
+                <Text style={styles.doneButtonText}>✅ Zrozumiałam, usterka naprawiona!</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.doctorHomeContainer}>
+              <View style={styles.doctorIntroCard}>
+                <Text style={styles.doctorIntroTitle}>🩺 Pogotowie Dziewiarskie</Text>
+                <Text style={styles.doctorIntroSubtitle}>
+                  Spokojnie! W rękodziele niemal każdy błąd można bezpiecznie naprawić bez prucia całej robótki.
+                </Text>
+              </View>
+
+              {/* Wyszukiwarka objawów */}
+              <View style={styles.searchBox}>
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Opisz problem (np. drabinka, dziura, pętla, spuszczone)..."
+                  placeholderTextColor="#999999"
+                  value={doctorQuery}
+                  onChangeText={setDoctorQuery}
+                  clearButtonMode="while-editing"
+                />
+              </View>
+
+              {/* Filtry dyscypliny */}
+              <View style={styles.craftFilterRow}>
+                {(['both', 'knitting', 'crochet'] as const).map((cf) => (
+                  <TouchableOpacity
+                    key={cf}
+                    style={[
+                      styles.craftFilterButton,
+                      doctorCraftFilter === cf && styles.craftFilterButtonActive,
+                    ]}
+                    onPress={() => setDoctorCraftFilter(cf)}
+                    accessibilityRole="button"
+                    accessibilityLabel={cf === 'both' ? 'Wszystkie techniki' : cf === 'knitting' ? 'Tylko druty' : 'Tylko szydełko'}
+                  >
+                    <Text
+                      style={[
+                        styles.craftFilterText,
+                        doctorCraftFilter === cf && styles.craftFilterTextActive,
+                      ]}
+                    >
+                      {cf === 'both' ? 'Wszystkie' : cf === 'knitting' ? '🧶 Druty' : '🪢 Szydełko'}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Lista procedur */}
+              <View style={styles.emergencyList}>
+                {diagnoseEmergency(doctorQuery, doctorCraftFilter).length === 0 ? (
+                  <View style={styles.emptyDoctorBox}>
+                    <Text style={styles.emptyDoctorText}>
+                      Nie znaleziono pasującej procedury awaryjnej.
+                    </Text>
+                    <Text style={styles.emptyDoctorSubtext}>
+                      Spróbuj wyszukać inne słowo kluczowe (np. "oczko", "pętla", "drabinka").
+                    </Text>
+                  </View>
+                ) : (
+                  diagnoseEmergency(doctorQuery, doctorCraftFilter).map((proc) => (
+                    <TouchableOpacity
+                      key={proc.id}
+                      style={styles.emergencyCard}
+                      onPress={() => setSelectedEmergency(proc)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Procedura: ${proc.title}`}
+                    >
+                      <View style={styles.emergencyCardHeader}>
+                        <Text style={styles.emergencyTitle}>{proc.title}</Text>
+                        <Text
+                          style={[
+                            styles.emergencyDangerBadge,
+                            proc.dangerLevel === 'critical'
+                              ? styles.dangerBadgeCritical
+                              : proc.dangerLevel === 'moderate'
+                              ? styles.dangerBadgeModerate
+                              : styles.dangerBadgeLow,
+                          ]}
+                        >
+                          {proc.dangerLevel === 'critical'
+                            ? '🔴 Krytyczny'
+                            : proc.dangerLevel === 'moderate'
+                            ? '🟠 Umiarkowany'
+                            : '🟡 Niski'}
+                        </Text>
+                      </View>
+                      <Text style={styles.emergencySummary} numberOfLines={2}>
+                        {proc.summary}
+                      </Text>
+                      <View style={styles.emergencySymptomsRow}>
+                        {proc.symptoms.slice(0, 3).map((sym, sIdx) => (
+                          <View key={sIdx} style={styles.symptomChip}>
+                            <Text style={styles.symptomChipText}>{sym}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View>
+            </View>
           )}
         </ScrollView>
       )}
@@ -1043,4 +1256,306 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontWeight: '600',
   },
+  // Style Doktora Błędów (BR-BIB-010..015)
+  doctorScrollContent: {
+    paddingBottom: 32,
+  },
+  doctorHomeContainer: {
+    gap: 12,
+  },
+  doctorIntroCard: {
+    backgroundColor: '#FDF2F8',
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#FCE7F3',
+  },
+  doctorIntroTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#9D174D',
+    marginBottom: 4,
+  },
+  doctorIntroSubtitle: {
+    fontSize: 13,
+    color: '#831843',
+    lineHeight: 18,
+  },
+  craftFilterRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 4,
+  },
+  craftFilterButton: {
+    minHeight: 44,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    backgroundColor: '#F1F5F9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  craftFilterButtonActive: {
+    backgroundColor: '#9D174D',
+    borderColor: '#9D174D',
+  },
+  craftFilterText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#475569',
+  },
+  craftFilterTextActive: {
+    color: '#FFFFFF',
+  },
+  emergencyList: {
+    gap: 10,
+  },
+  emptyDoctorBox: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 24,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  emptyDoctorText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#334155',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  emptyDoctorSubtext: {
+    fontSize: 13,
+    color: '#64748B',
+    textAlign: 'center',
+  },
+  emergencyCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    minHeight: 44,
+  },
+  emergencyCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  emergencyTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0F172A',
+    flex: 1,
+    marginRight: 8,
+  },
+  emergencyDangerBadge: {
+    fontSize: 11,
+    fontWeight: '700',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  emergencySummary: {
+    fontSize: 13,
+    color: '#475569',
+    lineHeight: 18,
+    marginBottom: 8,
+  },
+  emergencySymptomsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  symptomChip: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  symptomChipText: {
+    fontSize: 11,
+    color: '#64748B',
+  },
+  // Szczegóły procedury
+  procedureDetailsContainer: {
+    gap: 12,
+  },
+  doctorBackButton: {
+    minHeight: 44,
+    justifyContent: 'center',
+    marginBottom: 2,
+  },
+  doctorBackButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#9D174D',
+  },
+  procedureHeaderCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  procedureBadgeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  dangerBadge: {
+    fontSize: 12,
+    fontWeight: '700',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  dangerBadgeCritical: {
+    backgroundColor: '#FEE2E2',
+    color: '#DC2626',
+  },
+  dangerBadgeModerate: {
+    backgroundColor: '#FEF3C7',
+    color: '#D97706',
+  },
+  dangerBadgeLow: {
+    backgroundColor: '#FEF9C3',
+    color: '#854D0E',
+  },
+  craftBadge: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#475569',
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  procedureTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#0F172A',
+    marginBottom: 6,
+  },
+  procedureSummary: {
+    fontSize: 13,
+    color: '#334155',
+    lineHeight: 19,
+    marginBottom: 12,
+  },
+  toolsCard: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  toolsHeader: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#475569',
+    marginBottom: 4,
+  },
+  toolItemText: {
+    fontSize: 12,
+    color: '#1E293B',
+    lineHeight: 17,
+  },
+  stepsContainer: {
+    gap: 8,
+  },
+  stepsSectionTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 2,
+  },
+  stepCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  stepHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  stepNumberBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#9D174D',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  stepNumberText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  stepTitleText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#0F172A',
+    flex: 1,
+  },
+  stepInstructionText: {
+    fontSize: 13,
+    color: '#334155',
+    lineHeight: 19,
+  },
+  stepTipBox: {
+    marginTop: 8,
+    padding: 8,
+    backgroundColor: '#EFF6FF',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+  },
+  stepTipText: {
+    fontSize: 12,
+    color: '#1E40AF',
+    fontStyle: 'italic',
+  },
+  preventionCard: {
+    backgroundColor: '#ECFDF5',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
+  },
+  preventionHeader: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#065F46',
+    marginBottom: 4,
+  },
+  preventionText: {
+    fontSize: 12,
+    color: '#047857',
+    lineHeight: 18,
+  },
+  doneButton: {
+    minHeight: 48,
+    backgroundColor: '#9D174D',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  doneButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
 });
+

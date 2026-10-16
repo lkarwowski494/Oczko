@@ -100,13 +100,15 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
     - Dynamiczna estymacja pozostałego czasu robótki (ETA) w oparciu o bieżące tempo i cel rzędów części (`targetRows`).
     - Automatyczna detekcja bezczynności (Auto-Pause po 5 minutach braku aktywności) zapobiegająca fałszowaniu statystyk.
     - Wizualizacja łącznego czasu robótki na karcie udostępniania (`ProjectShareCardModal.tsx`) oraz w podsumowaniach projektu.
+15. **🩺 Doktor Błędów i Ratowanie Dzianiny (`knitting-doctor.ts`, `app/(tabs)/learn.tsx`, `BR-BIB-010..015`, `DEC-23`):**
+    - Czysto deterministyczny rejestr 6 procedur ratunkowych w kryzysach dziewiarskich i szydełkowych (ZP-05, zero generatywnego AI): spuszczone oczko, przekręcone oczko, przypadkowy narzut/dziurka, prucie rzędu na drutach (tink), linia ratunkowa (lifeline), uciekający ścieg szydełkowy.
+    - Silnik wyszukiwania objawów `diagnoseEmergency` z filtrowaniem wg techniki (`knitting`, `crochet`, `both`).
+    - Dedykowana zakładka `🩺 Doktor Błędów` w module Nauki z poziomami zagrożenia (`critical`, `moderate`, `low`), widokiem krok po kroku i wskazówkami profilaktycznymi.
 
 ---
 
 ### ⏳ Kolejne Moduły z BRD do Wdrożenia (Roadmapa Realizacji):
 
-15. **🩺 Doktor Błędów i Ratowanie Dzianiny (`BR-BIB-010..015`):**
-    - Interaktywne procedury krok po kroku ratowania 6 najczęstszych katastrof rękodzielniczych (spuszczone oczko, przekręcone oczko, nadmiarowe oczko, prucie rzędu na drutach / tink, linia ratunkowa / lifeline, uciekający ścieg szydełkowy).
 16. **📚 Biblioteka Technik i Karty Rzemieślnicze (`DEC-13`, `DEC-20`, `BR-BIB-001..008`):**
     - 21 fundamentalnych technik dziewiarskich i szydełkowych (12 drutowych, 9 szydełkowych) ze schematami rysowanymi kodem (0 zł, ZP-05) z instrukcjami dla prawo- i leworęcznych (DEC-19).
 17. **🧭 Ścieżka Progresji Dziewiarskiej (`BR-SCI-001..005`):**

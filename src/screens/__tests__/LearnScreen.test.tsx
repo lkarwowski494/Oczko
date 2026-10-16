@@ -366,4 +366,124 @@ describe('LearnScreen — Pełne testy słownika i trenażera powtórzeń (DEC-1
     expect(text).toContain('Oczko prawe');
     expect(text).toContain('prawe');
   });
+
+  it('obsługuje zakładkę Doktora Błędów, wyszukiwanie objawów, filtry i widok kroków procedury (BR-BIB-010..015)', () => {
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<LearnScreen />);
+    });
+
+    const root = tree.root;
+
+    // 1. Przełącz na zakładkę Doktora
+    const doctorTabBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Doktor Błędów')
+    );
+
+    act(() => {
+      doctorTabBtn.props.onPress();
+    });
+
+    let text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Pogotowie Dziewiarskie');
+    expect(text).toContain('Spuszczone oczko');
+    expect(text).toContain('Tink');
+
+    // 2. Filtruj dyscyplinę na Szydełko
+    const crochetFilterBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Szydełko')
+    );
+    act(() => {
+      crochetFilterBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Uciekająca pętla w szydełkowaniu');
+    expect(text).not.toContain('Spuszczone oczko');
+
+    // 3. Wyszukiwanie objawu w TextInput
+    const doctorSearchInput = root.find((node: any) =>
+      node.props?.onChangeText &&
+      node.props?.placeholder &&
+      node.props.placeholder.includes('Opisz problem')
+    );
+
+    act(() => {
+      doctorSearchInput.props.onChangeText('pętla');
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Uciekająca pętla w szydełkowaniu');
+
+    // 4. Wyszukiwanie nieistniejącego problemu (pusty stan)
+    act(() => {
+      doctorSearchInput.props.onChangeText('awaria silnika rakietowego');
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Nie znaleziono pasującej procedury awaryjnej');
+
+    // 5. Powrót do wszystkich procedur
+    act(() => {
+      doctorSearchInput.props.onChangeText('');
+    });
+    const allFilterBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wszystkie')
+    );
+    act(() => {
+      allFilterBtn.props.onPress();
+    });
+
+    // 6. Wybór procedury spuszczonego oczka
+    const droppedStitchCard = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Spuszczone oczko')
+    );
+    act(() => {
+      droppedStitchCard.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Procedura ratunkowa krok po kroku:');
+    expect(text).toContain('Zabezpieczenie uciekającej pętelki');
+    expect(text).toContain('Podciąganie kolejnych poprzeczek');
+    expect(text).toContain('Potrzebne narzędzia:');
+    expect(text).toContain('Jak zapobiegać w przyszłości:');
+
+    // 7. Przetestuj powrót przyciskiem "← Wróć do listy problemów"
+    const backBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Wróć do listy problemów')
+    );
+    act(() => {
+      backBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Pogotowie Dziewiarskie');
+
+    // 8. Wybierz ponownie i kliknij "Zrozumiałam, usterka naprawiona!"
+    const lifelineCard = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('Linia ratunkowa (Lifeline)')
+    );
+    act(() => {
+      lifelineCard.props.onPress();
+    });
+
+    const doneBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('usterka naprawiona')
+    );
+    act(() => {
+      doneBtn.props.onPress();
+    });
+
+    text = extractAllStrings(tree.toJSON());
+    expect(text).toContain('Pogotowie Dziewiarskie');
+  });
 });
+

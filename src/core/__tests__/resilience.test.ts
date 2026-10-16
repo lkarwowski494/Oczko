@@ -63,6 +63,11 @@ import {
   shouldAutoPauseSession,
   calculateKnittingSpeed,
 } from '../time-tracking-service';
+import {
+  diagnoseEmergency,
+  getProcedureById,
+  listAllProcedures,
+} from '../knitting-doctor';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -789,6 +794,25 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(Number.isFinite(hugeResult.estimatedRemainingSeconds)).toBe(true);
     });
   });
+
+  describe('Odporność Doktora Błędów i Ratowania Dzianiny (knitting-doctor.ts)', () => {
+    test('Obsługa null, undefined, pustych stringów i znaków specjalnych w diagnoseEmergency', () => {
+      expect(diagnoseEmergency(null as any)).toHaveLength(6);
+      expect(diagnoseEmergency(undefined as any)).toHaveLength(6);
+      expect(diagnoseEmergency('   ')).toHaveLength(6);
+      expect(diagnoseEmergency('!@#$%^&*()_+{}|:"<>?')).toHaveLength(0);
+      expect(diagnoseEmergency('🧶 🪢 🚨 🩺')).toHaveLength(0);
+      expect(diagnoseEmergency('a'.repeat(1000))).toHaveLength(0);
+    });
+
+    test('Bezpieczne zapytania o nieistniejące identyfikatory i dyscypliny', () => {
+      expect(getProcedureById('' as any)).toBeUndefined();
+      expect(getProcedureById('non_existent_procedure' as any)).toBeUndefined();
+      expect(listAllProcedures(undefined)).toHaveLength(6);
+      expect(listAllProcedures('invalid_discipline' as any)).toHaveLength(0);
+    });
+  });
 });
+
 
 

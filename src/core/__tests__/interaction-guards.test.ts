@@ -76,6 +76,7 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'raglan-calculator.ts'),
         join(srcCoreDir, 'hat-calculator.ts'),
         join(srcCoreDir, 'time-tracking-service.ts'),
+        join(srcCoreDir, 'knitting-doctor.ts'),
       ];
 
       for (const filePath of pureDomainFiles) {

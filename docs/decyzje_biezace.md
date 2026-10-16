@@ -397,3 +397,26 @@
     - Zaktualizowano testy PBT (`property-based.test.ts`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 100 ms) oraz Resilience (`resilience.test.ts`).
 
 
+* **DEC-23 Implementacja: Doktor Błędów i Ratowanie Dzianiny (16.10.2026, BR-BIB-010..015):**
+  - **Architektura Domenowa (`src/core/knitting-doctor.ts`):**
+    - Czysto deterministyczny rejestr 6 procedur ratunkowych w kryzysach dziewiarskich i szydełkowych (ZP-05, zero generatywnego AI):
+      1. `dropped_stitch` (spuszczone oczko — drabinka, podnoszenie oczka szydełkiem rząd po rzędzie na prawej i lewej stronie).
+      2. `twisted_stitch` (przekręcone oczko — nóżka wschodnia vs zachodnia, odkręcanie pętli przed przerobieniem).
+      3. `accidental_yarnover` (przypadkowy narzut / niechciana dziurka — bezpieczne spuszczenie nadmiaru w rzędzie powrotnym lub redukcja `k2tog`).
+      4. `tink_unknitting` (prucie rzędu na drutach / Tink — cofanie oczko po oczku bez zsuwania dzianiny z drutów).
+      5. `lifeline_insertion` (linia ratunkowa / Lifeline — zabezpieczenie ażuru lub warkocza kontrastową nitką bawełnianą przed spuszczaniem rzędów).
+      6. `crochet_escaped_loop` (uciekająca pętla w szydełkowaniu — blokowanie pętli markerem i bezpieczny powrót do ostatniego poprawnego słupka).
+    - Silnik wyszukiwania objawów `diagnoseEmergency(query, craftType)` z normalizacją tekstu, wyszukiwaniem po słowach kluczowych i filtrowaniem wg techniki (`knitting`, `crochet`, `both`).
+    - Spójna struktura procedury: poziom krytyczności (`critical`, `moderate`, `low`), wymagane narzędzia (np. szydełko 2.5 mm, marker, kontrastowa nitka), sekwencja ponumerowanych kroków z poradami rzemieślniczymi oraz wskazówka profilaktyczna (`preventionTip`).
+  - **Interfejs Użytkownika (`app/(tabs)/learn.tsx`):**
+    - 4. dedykowana zakładka w module Nauki: `🩺 Doktor Błędów`.
+    - Pasek wyszukiwania objawów („drabinka”, „dziurka”, „prucie”, „pętla”, „przekręcone”) z natychmiastowym filtrowaniem.
+    - Przełącznik filtrów techniki: `Wszystkie`, `Druty`, `Szydełko`.
+    - Widok szczegółowy procedury ratunkowej krok po kroku z instrukcjami, poradami rzemieślniczymi i sekcją „Jak zapobiegać w przyszłości”.
+    - Spełnia Apple HIG ($\ge 44 \times 44\,\text{pt}$, VoiceOver accessibility, czytelna hierarchia typograficzna).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 59/59 zdanych (100% pass)**.
+    - **Tests: 496/496 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
+    - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+    - Zaktualizowano testy PBT (`property-based.test.ts`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 diagnoz w < 100 ms) oraz Resilience (`resilience.test.ts`).

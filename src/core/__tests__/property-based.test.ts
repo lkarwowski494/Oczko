@@ -60,6 +60,12 @@ import {
   shouldAutoPauseSession,
   calculateKnittingSpeed,
 } from '../time-tracking-service';
+import {
+  diagnoseEmergency,
+  getProcedureById,
+  listAllProcedures,
+  DOCTOR_PROCEDURES,
+} from '../knitting-doctor';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -933,7 +939,63 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
       );
     });
   });
+
+  describe('Niezmienniki Doktora Błędów i Ratowania Dzianiny (knitting-doctor.ts)', () => {
+    it('Niezmiennik totalności: dowolny string zapytania zwraca poprawną tablicę bez wyjątków', () => {
+      fc.assert(
+        fc.property(
+          fc.string(),
+          fc.constantFrom(undefined, 'both', 'knitting', 'crochet' as const),
+          (query, craft) => {
+            const results = diagnoseEmergency(query, craft);
+            expect(Array.isArray(results)).toBe(true);
+            expect(results.length).toBeLessThanOrEqual(DOCTOR_PROCEDURES.length);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Niezmiennik podzbioru: filtrowanie po dyscyplinie zwraca podzbiór wszystkich procedur', () => {
+      fc.assert(
+        fc.property(
+          fc.constantFrom('knitting', 'crochet' as const),
+          (craft) => {
+            const subset = listAllProcedures(craft);
+            const all = listAllProcedures('both');
+
+            expect(subset.length).toBeLessThanOrEqual(all.length);
+            for (const p of subset) {
+              expect(all.some((a) => a.id === p.id)).toBe(true);
+              expect(p.craftType === craft || p.craftType === 'both').toBe(true);
+            }
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+
+    it('Niezmiennik spójności kroków: każda procedura ma monotoniczną sekwencję kroków od 1 do N', () => {
+      fc.assert(
+        fc.property(
+          fc.constantFrom(...DOCTOR_PROCEDURES.map((p) => p.id)),
+          (procId) => {
+            const proc = getProcedureById(procId)!;
+            expect(proc).toBeDefined();
+            expect(proc.steps.length).toBeGreaterThanOrEqual(3);
+
+            proc.steps.forEach((step, idx) => {
+              expect(step.stepNumber).toBe(idx + 1);
+              expect(step.instruction.length).toBeGreaterThan(0);
+            });
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+  });
 });
+
 
 
 
