@@ -334,4 +334,23 @@
     - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
     - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
     - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 250 ms) oraz Resilience (`resilience.test.ts`).
+
+* **DEC-19 Implementacja: Kalkulator Konstrukcji Karczku Raglanowego i Rzędów Skróconych Dekoltu (16.10.2026):**
+  - **Architektura Domenowa (`src/core/raglan-calculator.ts`):**
+    - Matematyka bezszwowego reglanu od góry (Top-Down Seamless Raglan) z podziałem oczek dekoltu na przód, tył, rękawy i 4 linie raglanowe.
+    - Automatyczna kompensacja rzędów skróconych (*German Short Rows compensation*): tył pomniejszany o sumę punktów zwrotnych, przód powiększany o sumę punktów zwrotnych, gwarantując idealne wyrównanie liczby oczek po uformowaniu podkroju dekoltu.
+    - Deterministyczny rozkład punktów nawrotu GSR na rękawach i dekolcie przodu z zachowaniem bezpiecznej szerokości oczek centralnych.
+    - Kalkulator przyrostów karczku: podział oczek na korpus i rękawy, tempo raglanu (co 2 rzędy), wyliczenie wymaganej liczby rzędów do podziału na pachy oraz symetryczne oczka podkrojów pach (*underarm cast-on*).
+  - **Interfejs Użytkownika (`src/components/RaglanCalculatorModal.tsx`):**
+    - 2-zakładkowy modal: `Podział & GSR` oraz `Karczek & Pachy`.
+    - Rzemieślniczy schemat podziału oczek z dynamiczną kontrolą zachowania sumy oczek i wskaźnikami punktów zwrotnych.
+    - Krok po kroku rozpisana sekwencja rzędów skróconych (Rząd 1 RS, Rząd 2 WS...) z instrukcjami German Short Row (*DS*).
+    - Spełnia Apple HIG ($\ge 44 \times 44\,\text{pt}$, VoiceOver accessibility), natywny eksport raportu przez Share Sheet.
+    - Zintegrowany z ekranem robótek (`app/(tabs)/projects.tsx` — przycisk `🥋 Raglan`).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 54/54 zdanych (100% pass)**.
+    - **Tests: 442/442 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
+    - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+    - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 250 ms) oraz Resilience (`resilience.test.ts`).
 

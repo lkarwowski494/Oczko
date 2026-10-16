@@ -8,12 +8,12 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-100%25_Offline--First-003B57?style=flat&logo=sqlite)](https://sqlite.org/)
 [![Coverage](https://img.shields.io/badge/Coverage-100.00%25_Lines-brightgreen?style=flat)](docs/decyzje_biezace.md)
-[![Tests](https://img.shields.io/badge/Tests-420_Passed_(52_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
+[![Tests](https://img.shields.io/badge/Tests-442_Passed_(54_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
 [![CI](https://github.com/lkarwowski494/Oczko/actions/workflows/ci.yml/badge.svg)](https://github.com/lkarwowski494/Oczko/actions)
 
 > **„Precyzyjny, wolny od rozpraszaczy licznik rzędów i asystent dziewiarski stworzony dla dziewiarek i dziewiarzy — zawsze z Tobą, na iPhone, Apple Watch i Garminie.”**
 
-Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Garmin Connect IQ**, dedykowana pasjonatom dziewiarstwa i szydełkowania. Zbudowana w bezkompromisowej architekturze **100% Offline-First** na bazie lokalnego silnika SQLite i niezmiennego dziennika zdarzeń (Event Sourcing). Integruje precyzyjny, chroniony przed przypadkowymi stuknięciami licznik rzędów z obsługą warkoczy i ażurów, wbudowany czytnik wzorów PDF ze zsynchronizowaną pływającą linijką postępu, pełne asystenty smartwatchowe (Apple Watch z obsługą fizycznej Cyfrowej Koronki *Digital Crown* oraz Garmin z obsługą przycisków fizycznych i BLE), magazyn włóczek z kontrolą partii farbowania (*Dye Lot*), trenażer ściegów, wizualny identyfikator ściegu „Co widzisz?”, miarkę rozmiarów drutów oraz zaawansowane kalkulatory dziewiarskie (próbka ściegu, kształtowanie oczek, estymator zużycia włóczki).
+Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Garmin Connect IQ**, dedykowana pasjonatom dziewiarstwa i szydełkowania. Zbudowana w bezkompromisowej architekturze **100% Offline-First** na bazie lokalnego silnika SQLite i niezmiennego dziennika zdarzeń (Event Sourcing). Integruje precyzyjny, chroniony przed przypadkowymi stuknięciami licznik rzędów z obsługą warkoczy i ażurów, wbudowany czytnik wzorów PDF ze zsynchronizowaną pływającą linijką postępu, pełne asystenty smartwatchowe (Apple Watch z obsługą fizycznej Cyfrowej Koronki *Digital Crown* oraz Garmin z obsługą przycisków fizycznych i BLE), magazyn włóczek z kontrolą partii farbowania (*Dye Lot*), trenażer ściegów, wizualny identyfikator ściegu „Co widzisz?”, miarkę rozmiarów drutów oraz zaawansowane kalkulatory dziewiarskie (próbka ściegu, kształtowanie oczek, estymator zużycia włóczki, luz odzieżowy, konstrukcja raglanu).
 
 ---
 
@@ -26,7 +26,7 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
 - **Wzory PDF z Pływającą Linijką Postępu (DEC-09, BR-WZOR-001, NFR-DOST-009):** Czytnik dokumentów PDF ze zsynchronizowaną, pływającą linijką optyczną (`ruler_y_percent`), która automatycznie przesuwa się w dół wraz z każdym kolejnym rzędem i automatycznie przełącza strony po osiągnięciu dolnego marginesu. Spełnia wyśrubowane normy dostępności cyfrowej dla osób słabowidzących (WCAG AAA).
 - **Standaryzacja Craft Yarn Council (CYC) & Słownik Wielojęzyczny (DEC-07, DEC-18, DEC-24):** Matematyka dziewiarska, grubości włóczek (CYC 0–6: Lace, Fingering, Sport, DK, Worsted, Aran, Bulky, Super Bulky) oraz symbole diagramów oparte są o międzynarodowe normy branżowe. Słownik terminologii oferuje natychmiastowe tłumaczenia skrótów dziewiarskich (PL, EN-US, EN-UK, DE, FR) z własnymi glifami wektorowymi.
 - **Magazyn Włóczek & Narzędzi ze Śledzeniem Partii Farbowania (Dye Lot, BR-MAG-001 - 005):** Ewidencja zasobów dziewiarki z rozbiciem na składy surowcowe (Merino, Alpaka, Bawełna, Jedwab, Mohair, Len, Syntetyki), gramaturę, metraż oraz kluczowy dla odcieni dzianiny numer partii farbowania (*Dye Lot*).
-- **Deterministyczna Matematyka Dziewiarska bez Generatywnego AI (Inwariant ZP-05):** Zero halucynacji i zero generatywnego AI w logice produktu. Wszystkie algorytmy (drzewo decyzyjne identyfikacji ściegu DEC-16, euklidesowe kształtowanie oczek, kalkulator próbek, estymator zużycia, miarka drutów) opierają się na ścisłych regułach matematycznych.
+- **Deterministyczna Matematyka Dziewiarska bez Generatywnego AI (Inwariant ZP-05):** Zero halucynacji i zero generatywnego AI w logice produktu. Wszystkie algorytmy (drzewo decyzyjne identyfikacji ściegu DEC-16, euklidesowe kształtowanie oczek, kalkulator próbek, estymator zużycia, miarka drutów, kalkulator raglanu) opierają się na ścisłych regułach matematycznych.
 - **Pojedyncze Źródło Prawdy & Czysta Architektura Domenowa:** Cała logika obliczeniowa i biznesowa (`src/core/`) jest całkowicie odizolowana od komponentów React Native i bibliotek widokowych. Umożliwia to wykonywanie pełnych testów jednostkowych i integracyjnych bez potrzeby uruchamiania emulatora.
 
 ---
@@ -68,6 +68,8 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
 8. **📐 Zaawansowane Kalkulatory Dziewiarskie:**
    - **Kalkulator Próbki Ściegu (`GaugeCalculatorModal`):** Wylicza wymaganą liczbę oczek do nabrania i docelowych rzędów na podstawie wymiarów próbki i gotowego wyrobu (cm/cale), analizuje naprężenie dzianiny (Tension check) i oferuje bazę gotowych szablonów projektowych (czapki, szale, swetry, kocyki, skarpetki).
    - **Kalkulator Kształtowania Oczek (`ShapingCalculatorModal`):** Euklidesowy algorytm symetrycznego i równomiernego dodawania (M1L, M1R, kfb, yo) lub odejmowania oczek (k2tog, ssk, p2tog) bez widocznych skupisk, ochrona brzegów (`edgeStitches`) oraz kształtowanie wielorzędowe (rękawy, raglany, dekolty) z optymalizacją pod rzędy prawe (RS).
+   - **Kalkulator Luzu Odzieżowego i Rozmiaru (`EaseCalculatorModal`):** Dobór rozmiarów sylwetki dorosłych CYC/ISO (XS–5XL), 8 profili dopasowania (od -10 cm do +28 cm oversize) oraz adaptacja próbki z zachowaniem raportu wzoru.
+   - **Kalkulator Konstrukcji Raglanu i Rzędów Skróconych (`RaglanCalculatorModal`):** Podział dekoltu od góry (Top-Down Seamless Raglan) z kompensacją German Short Rows (GSR), schematem podziału, instrukcjami obrotów rzędów skróconych oraz wyliczaniem przyrostów karczku i oczek podkrojów pach.
    - **Kalkulator Zamienników Włóczki i WPI (`YarnSubstitutionModal`):** Precyzyjne przeliczanie zapotrzebowania na motki innej włóczki z uwzględnieniem marginesu bezpieczeństwa (0–20%), kalkulator łączenia wielu nitek (multi-strand, np. Fingering + Mohair) oraz identyfikator grubości WPI (Wraps Per Inch) ze standardami CYC 0–7.
    - **Estymator Zużycia Włóczki (`YarnUsageEstimatorModal`):** Dwa tryby obliczeń (w trakcie robótki na bazie zważonej części lub przed startem na bazie powierzchni i próbki), algorytm gry w cykora z włóczką (*Yarn Chicken*) ostrzegający przed deficytem, margines bezpieczeństwa oraz wskaźnik Yarn Grist (m/g).
 9. **🧶 Magazyn Włóczek & Narzędzi (`app/(tabs)/stash.tsx`):**
@@ -255,6 +257,7 @@ oczko/
 │   │   ├── PatternGuideViewer.tsx         # Przeglądarka diagramów ze standardem CYC
 │   │   ├── PatternPdfViewer.tsx           # Czytnik wzorów PDF ze zsynchronizowaną linijką
 │   │   ├── ProjectShareCardModal.tsx      # Generator wizytówek rzemieślniczych robótki (FO)
+│   │   ├── RaglanCalculatorModal.tsx      # Kalkulator podziału reglanu, rzędów skróconych GSR i karczku
 │   │   ├── ShapingCalculatorModal.tsx     # Kalkulator równomiernego kształtowania oczek
 │   │   ├── YarnSubstitutionModal.tsx      # Kalkulator zamienników włóczki, łączenia nitek i WPI
 │   │   └── YarnUsageEstimatorModal.tsx    # Kalkulator zużycia włóczki i test Yarn Chicken
@@ -282,6 +285,7 @@ oczko/
 │   │   ├── project-service.ts             # Serwis cyklu życia robótki i liczników powiązanych
 │   │   ├── project-structure.ts           # Definicje struktur części i liczników
 │   │   ├── project-summary.ts             # Agregator statystyk i formatowanie udostępniania
+│   │   ├── raglan-calculator.ts           # Matematyka bezszwowego reglanu od góry, GSR i podziału na pachy
 │   │   ├── repeats-schedule.ts            # Harmonogram powtórzeń i kalkulacja sekwencji
 │   │   ├── shaping-calculator.ts          # Algorytm równomiernego dodawania/odejmowania oczek
 │   │   ├── stash-filter-service.ts        # Filtrowanie włóczek, tagi surowcowe, standardy CYC, Dye Lot

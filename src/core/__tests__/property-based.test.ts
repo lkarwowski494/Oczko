@@ -53,6 +53,7 @@ import {
   recommendPatternSize,
   adaptStitchesWithRecommendation,
 } from '../ease-calculator-service';
+import { RaglanCalculator } from '../raglan-calculator';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -741,6 +742,55 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
             const chosen =
               res.chosenCandidate === 'lower' ? res.lowerCandidate : res.upperCandidate;
             expect(chosen.widthDifferenceCm).toBeLessThanOrEqual(repeatWidthCm + 0.1);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Kalkulatora Konstrukcji Raglanu (raglan-calculator.ts)', () => {
+    it('Zachowanie całkowitej liczby oczek: suma elementów podziału ściśle równa się nabranym oczkom', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 48, max: 200 }),
+          fc.integer({ min: 1, max: 4 }),
+          fc.integer({ min: 0, max: 6 }),
+          (totalCastOn, raglanLineWidth, shortRowTurns) => {
+            const res = RaglanCalculator.calculateCastOnDivision({
+              totalCastOnStitches: totalCastOn,
+              raglanLineStitches: raglanLineWidth,
+              shortRowTurnsPerSide: shortRowTurns,
+            });
+
+            const sum =
+              res.initialBackStitches +
+              res.initialFrontStitches +
+              2 * res.initialSleeveStitches +
+              res.totalRaglanStitches;
+
+            expect(sum).toBe(totalCastOn);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Balans dekoltu po rzędach skróconych: tył i przód mają identyczną liczbę oczek po wykonaniu GSR', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 64, max: 180 }),
+          fc.integer({ min: 1, max: 3 }),
+          fc.integer({ min: 1, max: 5 }),
+          (totalCastOn, raglanLineWidth, shortRowTurns) => {
+            const res = RaglanCalculator.calculateCastOnDivision({
+              totalCastOnStitches: totalCastOn,
+              raglanLineStitches: raglanLineWidth,
+              shortRowTurnsPerSide: shortRowTurns,
+            });
+
+            expect(Math.abs(res.finalBackAfterShortRows - res.finalFrontAfterShortRows)).toBeLessThanOrEqual(1);
+            expect(res.isBalancedAfterShortRows).toBe(true);
           }
         ),
         { numRuns: 100 }

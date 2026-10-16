@@ -5,6 +5,7 @@ import { ProjectProvider } from '../../core/project-context';
 import { createInMemoryDatabase } from '../../core/database';
 import { ShapingCalculatorModal } from '../../components/ShapingCalculatorModal';
 import { EaseCalculatorModal } from '../../components/EaseCalculatorModal';
+import { RaglanCalculatorModal } from '../../components/RaglanCalculatorModal';
 
 function extractAllStrings(node: any): string {
   if (!node) return '';
@@ -441,6 +442,21 @@ describe('ProjectsScreen — Pełne testy interakcji i formularzy (BR-PROJ-001..
     const easeModal = root.findByType(EaseCalculatorModal);
     await act(async () => {
       easeModal.props.onClose();
+    });
+
+    // Znajdź przycisk otwierania kalkulatora raglanu
+    const raglanBtn = root.find((node: any) =>
+      node.props?.onPress &&
+      extractAllStrings(node).includes('🥋 Raglan')
+    );
+    await act(async () => {
+      raglanBtn.props.onPress();
+    });
+
+    // Znajdź RaglanCalculatorModal i zamknij
+    const raglanModal = root.findByType(RaglanCalculatorModal);
+    await act(async () => {
+      raglanModal.props.onClose();
     });
   });
 

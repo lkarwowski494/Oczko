@@ -26,6 +26,7 @@ import ProjectShareCardModal from '../../src/components/ProjectShareCardModal';
 import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
 import { ShapingCalculatorModal } from '../../src/components/ShapingCalculatorModal';
 import { EaseCalculatorModal } from '../../src/components/EaseCalculatorModal';
+import { RaglanCalculatorModal } from '../../src/components/RaglanCalculatorModal';
 
 
 export default function ProjectsScreen() {
@@ -50,6 +51,9 @@ export default function ProjectsScreen() {
 
   // Modal kalkulatora luzu i doboru rozmiaru (Ease)
   const [easeModalVisible, setEaseModalVisible] = useState(false);
+
+  // Modal kalkulatora konstrukcji raglanu i GSR
+  const [raglanModalVisible, setRaglanModalVisible] = useState(false);
 
   // Modal karty podsumowania i udostępniania robótki
   const [selectedShareProject, setSelectedShareProject] = useState<EnrichedProject | null>(null);
@@ -302,6 +306,15 @@ export default function ProjectsScreen() {
             <Text style={styles.gaugeButtonText}>👕 Luz</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => setRaglanModalVisible(true)}
+            accessibilityLabel="Otwórz kalkulator konstrukcji raglanu i rzędów skróconych"
+            accessibilityRole="button"
+          >
+            <Text style={styles.gaugeButtonText}>🥋 Raglan</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.newButton}
             activeOpacity={0.8}
             onPress={() => setModalVisible(true)}
@@ -514,6 +527,12 @@ export default function ProjectsScreen() {
       <EaseCalculatorModal
         visible={easeModalVisible}
         onClose={() => setEaseModalVisible(false)}
+      />
+
+      {/* Modal kalkulatora konstrukcji raglanu i GSR */}
+      <RaglanCalculatorModal
+        visible={raglanModalVisible}
+        onClose={() => setRaglanModalVisible(false)}
       />
     </SafeAreaView>
   );

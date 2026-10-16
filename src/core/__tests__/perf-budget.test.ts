@@ -50,6 +50,7 @@ import {
   recommendPatternSize,
   adaptStitchesWithRecommendation,
 } from '../ease-calculator-service';
+import { RaglanCalculator } from '../raglan-calculator';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -336,6 +337,29 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
           myGaugePer10cm: 22,
           repeatMultiple: 4,
           edgeStitches: 2,
+        });
+      }
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(250);
+  });
+
+  test('10 000 kalkulacji podziału raglanu i rzędów skróconych GSR w < 250 ms', () => {
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      if (i % 2 === 0) {
+        RaglanCalculator.calculateCastOnDivision({
+          totalCastOnStitches: 70 + (i % 50),
+          raglanLineStitches: 2,
+          shortRowTurnsPerSide: 4,
+        });
+      } else {
+        RaglanCalculator.calculateGermanShortRows({
+          neckRiseCm: 3.0,
+          rowGaugePer10cm: 28,
+          sleeveStitches: 14,
+          frontStitches: 28,
         });
       }
     }

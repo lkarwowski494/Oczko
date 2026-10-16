@@ -56,6 +56,7 @@ import {
   recommendPatternSize,
   adaptStitchesWithRecommendation,
 } from '../ease-calculator-service';
+import { RaglanCalculator } from '../raglan-calculator';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -648,6 +649,65 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       });
       expect(big.recommendedStitches).toBeGreaterThan(600);
       expect(Number.isFinite(big.recommendedWidthCm)).toBe(true);
+    });
+  });
+
+  describe('Wstrzykiwanie Błędów do Kalkulatora Raglanu (raglan-calculator.ts)', () => {
+    test('Nieprawidłowe, ujemne i zbyt małe wartości rzucają błędy walidacji', () => {
+      expect(() => RaglanCalculator.calculateCastOnDivision({ totalCastOnStitches: -10 })).toThrow();
+      expect(() => RaglanCalculator.calculateCastOnDivision({ totalCastOnStitches: 10, raglanLineStitches: 2 })).toThrow();
+      expect(() => RaglanCalculator.calculateCastOnDivision({ totalCastOnStitches: 80, raglanLineStitches: -1 })).toThrow();
+      expect(() => RaglanCalculator.calculateCastOnDivision({ totalCastOnStitches: 80, shortRowTurnsPerSide: -4 })).toThrow();
+      expect(() => RaglanCalculator.calculateCastOnDivision({ totalCastOnStitches: 80, sleeveRatio: -0.1 })).toThrow();
+
+      expect(() =>
+        RaglanCalculator.calculateGermanShortRows({
+          neckRiseCm: -2,
+          rowGaugePer10cm: 28,
+          sleeveStitches: 14,
+          frontStitches: 28,
+        })
+      ).toThrow();
+
+      expect(() =>
+        RaglanCalculator.calculateYokeIncreases({
+          stitchGaugePer10cm: 20,
+          rowGaugePer10cm: 28,
+          desiredChestCircumferenceCm: 0,
+          desiredSleeveCircumferenceCm: 34,
+          yokeDepthCm: 22,
+          initialBackStitches: 20,
+          initialFrontStitches: 20,
+          initialSleeveStitches: 10,
+        })
+      ).toThrow();
+    });
+
+    test('Wielkie projekty (swetry oversize, 300 oczek) zachowują spójność numeryczną', () => {
+      const hugeDivision = RaglanCalculator.calculateCastOnDivision({
+        totalCastOnStitches: 320,
+        raglanLineStitches: 4,
+        shortRowTurnsPerSide: 6,
+      });
+
+      expect(hugeDivision.initialBackStitches).toBeGreaterThan(50);
+      expect(hugeDivision.isBalancedAfterShortRows).toBe(true);
+
+      const hugeYoke = RaglanCalculator.calculateYokeIncreases({
+        stitchGaugePer10cm: 28,
+        rowGaugePer10cm: 36,
+        desiredChestCircumferenceCm: 160,
+        desiredSleeveCircumferenceCm: 50,
+        yokeDepthCm: 30,
+        initialBackStitches: hugeDivision.initialBackStitches,
+        initialFrontStitches: hugeDivision.initialFrontStitches,
+        initialSleeveStitches: hugeDivision.initialSleeveStitches,
+        raglanLineStitches: 4,
+        underarmCastOnStitches: 16,
+      });
+
+      expect(hugeYoke.finalBodyStitches).toBeGreaterThan(400);
+      expect(Number.isFinite(hugeYoke.resultingChestCircumferenceCm)).toBe(true);
     });
   });
 });
