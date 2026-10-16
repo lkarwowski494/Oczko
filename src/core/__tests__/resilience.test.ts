@@ -50,6 +50,7 @@ import {
   convertCraftWeight,
   convertGaugeTension,
 } from '../needle-gauge-converter';
+import { YarnSubstitutionService } from '../yarn-substitution-service';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -529,6 +530,72 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(convertGaugeTension(-20, '10cm', '4inch')).toBe(0);
       expect(convertGaugeTension(NaN, '10cm', '4inch')).toBe(0);
       expect(convertGaugeTension(22, '10cm', '10cm')).toBe(22);
+    });
+  });
+
+  describe('Odporność Kalkulatora Zamienników Włóczki (yarn-substitution-service.ts)', () => {
+    test('Weryfikacja rzucania wyjątków dla wartości brzegowych i niepoprawnych', () => {
+      // 1. Zera i ujemne
+      expect(() =>
+        YarnSubstitutionService.calculateSubstitution({
+          patternBalls: -1,
+          patternBallLengthMeters: 100,
+          newBallLengthMeters: 100,
+        })
+      ).toThrow();
+
+      expect(() =>
+        YarnSubstitutionService.calculateSubstitution({
+          patternBalls: 5,
+          patternBallLengthMeters: 0,
+          newBallLengthMeters: 100,
+        })
+      ).toThrow();
+
+      expect(() =>
+        YarnSubstitutionService.calculateSubstitution({
+          patternBalls: 5,
+          patternBallLengthMeters: 100,
+          newBallLengthMeters: -50,
+        })
+      ).toThrow();
+
+      expect(() =>
+        YarnSubstitutionService.calculateSubstitution({
+          patternBalls: 5,
+          patternBallLengthMeters: 100,
+          newBallLengthMeters: 100,
+          strands: -1,
+        })
+      ).toThrow();
+
+      expect(() =>
+        YarnSubstitutionService.calculateSubstitution({
+          patternBalls: 5,
+          patternBallLengthMeters: 100,
+          newBallLengthMeters: 100,
+          safetyMarginPercent: -10,
+        })
+      ).toThrow();
+
+      // 2. WPI nieprawidłowe
+      expect(() => YarnSubstitutionService.classifyByWpi(0)).toThrow();
+      expect(() => YarnSubstitutionService.classifyByWpi(-10)).toThrow();
+    });
+
+    test('Ekstremalne wartości (wielkie projekty, koce, setki motków) nie powodują przepełnienia ani NaN', () => {
+      const hugeResult = YarnSubstitutionService.calculateSubstitution({
+        patternBalls: 1000,
+        patternBallLengthMeters: 500,
+        newBallLengthMeters: 120,
+        newBallWeightGrams: 50,
+        safetyMarginPercent: 20,
+      });
+
+      expect(hugeResult.ballsNeeded).toBeGreaterThan(0);
+      expect(Number.isFinite(hugeResult.totalRequiredMeters)).toBe(true);
+      expect(Number.isFinite(hugeResult.exactBalls)).toBe(true);
+      expect(hugeResult.totalEstimatedWeightGrams).toBeGreaterThan(0);
     });
   });
 });

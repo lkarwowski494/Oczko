@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-100%25_Offline--First-003B57?style=flat&logo=sqlite)](https://sqlite.org/)
 [![Coverage](https://img.shields.io/badge/Coverage-100.00%25_Lines-brightgreen?style=flat)](docs/decyzje_biezace.md)
-[![Tests](https://img.shields.io/badge/Tests-367_Passed_(48_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
+[![Tests](https://img.shields.io/badge/Tests-391_Passed_(50_suites)-brightgreen?style=flat)](docs/decyzje_biezace.md)
 [![CI](https://github.com/lkarwowski494/Oczko/actions/workflows/ci.yml/badge.svg)](https://github.com/lkarwowski494/Oczko/actions)
 
 > **„Precyzyjny, wolny od rozpraszaczy licznik rzędów i asystent dziewiarski stworzony dla dziewiarek i dziewiarzy — zawsze z Tobą, na iPhone, Apple Watch i Garminie.”**
@@ -68,6 +68,7 @@ Aplikacja mobilna na systemy **iOS 18+**, **watchOS 11+** oraz smartwatche **Gar
 8. **📐 Zaawansowane Kalkulatory Dziewiarskie:**
    - **Kalkulator Próbki Ściegu (`GaugeCalculatorModal`):** Wylicza wymaganą liczbę oczek do nabrania i docelowych rzędów na podstawie wymiarów próbki i gotowego wyrobu (cm/cale), analizuje naprężenie dzianiny (Tension check) i oferuje bazę gotowych szablonów projektowych (czapki, szale, swetry, kocyki, skarpetki).
    - **Kalkulator Kształtowania Oczek (`ShapingCalculatorModal`):** Euklidesowy algorytm symetrycznego i równomiernego dodawania (M1L, M1R, kfb, yo) lub odejmowania oczek (k2tog, ssk, p2tog) bez widocznych skupisk, ochrona brzegów (`edgeStitches`) oraz kształtowanie wielorzędowe (rękawy, raglany, dekolty) z optymalizacją pod rzędy prawe (RS).
+   - **Kalkulator Zamienników Włóczki i WPI (`YarnSubstitutionModal`):** Precyzyjne przeliczanie zapotrzebowania na motki innej włóczki z uwzględnieniem marginesu bezpieczeństwa (0–20%), kalkulator łączenia wielu nitek (multi-strand, np. Fingering + Mohair) oraz identyfikator grubości WPI (Wraps Per Inch) ze standardami CYC 0–7.
    - **Estymator Zużycia Włóczki (`YarnUsageEstimatorModal`):** Dwa tryby obliczeń (w trakcie robótki na bazie zważonej części lub przed startem na bazie powierzchni i próbki), algorytm gry w cykora z włóczką (*Yarn Chicken*) ostrzegający przed deficytem, margines bezpieczeństwa oraz wskaźnik Yarn Grist (m/g).
 9. **🧶 Magazyn Włóczek & Narzędzi (`app/(tabs)/stash.tsx`):**
    - Ewidencja włóczek: producent, nazwa, odcień, numer partii farbowania (`Dye Lot`), waga motka i metraż.
@@ -254,6 +255,7 @@ oczko/
 │   │   ├── PatternPdfViewer.tsx           # Czytnik wzorów PDF ze zsynchronizowaną linijką
 │   │   ├── ProjectShareCardModal.tsx      # Generator wizytówek rzemieślniczych robótki (FO)
 │   │   ├── ShapingCalculatorModal.tsx     # Kalkulator równomiernego kształtowania oczek
+│   │   ├── YarnSubstitutionModal.tsx      # Kalkulator zamienników włóczki, łączenia nitek i WPI
 │   │   └── YarnUsageEstimatorModal.tsx    # Kalkulator zużycia włóczki i test Yarn Chicken
 │   ├── core/                   # Czysta logika biznesowa i persistence (100% testów)
 │   │   ├── apple-watch-service.ts         # Integracja watchOS, WCSession, Cyfrowa Koronka
@@ -283,6 +285,7 @@ oczko/
 │   │   ├── stash-filter-service.ts        # Filtrowanie włóczek, tagi surowcowe, standardy CYC, Dye Lot
 │   │   ├── stash-repository.ts            # Repozytorium SQLite magazynu włóczek i drutów
 │   │   ├── stitch-identifier.ts           # Deterministyczny klucz identyfikacji ściegu „Co widzisz?”
+│   │   ├── yarn-substitution-service.ts   # Matematyka zamienników włóczki, łączenia nitek i WPI CYC 0-7
 │   │   └── yarn-usage-estimator.ts        # Szacowanie metrażu, wagi, marginesu i wskaźnika Grist
 │   └── screens/                # Ekrany aplikacji
 │       └── MainCounterScreen.tsx          # Główny ekran licznika z 3 trybami widoku

@@ -34,6 +34,7 @@ import {
 } from '../../src/core/stash-filter-service';
 import YarnUsageEstimatorModal from '../../src/components/YarnUsageEstimatorModal';
 import { NeedleGaugeModal } from '../../src/components/NeedleGaugeModal';
+import { YarnSubstitutionModal } from '../../src/components/YarnSubstitutionModal';
 
 type StashTab = 'yarn' | 'tools';
 
@@ -119,6 +120,8 @@ export default function StashScreen() {
   const [yarnEstimatorVisible, setYarnEstimatorVisible] = useState(false);
   // Modal miarki drutów i przelicznika jednostek
   const [needleGaugeVisible, setNeedleGaugeVisible] = useState(false);
+  // Modal kalkulatora zamienników włóczki i WPI
+  const [yarnSubstitutionVisible, setYarnSubstitutionVisible] = useState(false);
 
   // Pola dla włóczki
   const [yarnBrand, setYarnBrand] = useState('');
@@ -307,13 +310,26 @@ export default function StashScreen() {
         </Text>
         <View style={styles.topActionsGroup}>
           {activeTab === 'yarn' && (
-            <TouchableOpacity
-              style={styles.estimatorButton}
-              activeOpacity={0.8}
-              onPress={() => setYarnEstimatorVisible(true)}
-            >
-              <Text style={styles.estimatorButtonText}>⚖️ Zużycie</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                style={styles.estimatorButton}
+                activeOpacity={0.8}
+                onPress={() => setYarnSubstitutionVisible(true)}
+                accessibilityLabel="Otwórz kalkulator zamienników włóczek i WPI"
+                accessibilityRole="button"
+              >
+                <Text style={styles.estimatorButtonText}>🔄 Zamiennik</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.estimatorButton}
+                activeOpacity={0.8}
+                onPress={() => setYarnEstimatorVisible(true)}
+                accessibilityLabel="Otwórz kalkulator zużycia włóczki"
+                accessibilityRole="button"
+              >
+                <Text style={styles.estimatorButtonText}>⚖️ Zużycie</Text>
+              </TouchableOpacity>
+            </>
           )}
           {activeTab === 'tools' && (
             <TouchableOpacity
@@ -764,6 +780,12 @@ export default function StashScreen() {
       <NeedleGaugeModal
         visible={needleGaugeVisible}
         onClose={() => setNeedleGaugeVisible(false)}
+      />
+
+      {/* Modal kalkulatora zamienników włóczki i WPI */}
+      <YarnSubstitutionModal
+        visible={yarnSubstitutionVisible}
+        onClose={() => setYarnSubstitutionVisible(false)}
       />
     </SafeAreaView>
   );

@@ -71,6 +71,7 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'shaping-calculator.ts'),
         join(srcCoreDir, 'garmin-service.ts'),
         join(srcCoreDir, 'needle-gauge-converter.ts'),
+        join(srcCoreDir, 'yarn-substitution-service.ts'),
       ];
 
       for (const filePath of pureDomainFiles) {

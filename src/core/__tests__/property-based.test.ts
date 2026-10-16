@@ -47,6 +47,7 @@ import {
   convertCraftWeight,
   convertGaugeTension,
 } from '../needle-gauge-converter';
+import { YarnSubstitutionService } from '../yarn-substitution-service';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -620,5 +621,53 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
       );
     });
   });
+
+  describe('Niezmienniki Kalkulatora Zamienników Włóczki i WPI (yarn-substitution-service.ts)', () => {
+    it('Monotoniczność zapotrzebowania: większa liczba motków wzoru ściśle zwiększa wymagany metraż i liczbę motków zamiennika', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 1, max: 15 }),
+          fc.integer({ min: 16, max: 40 }),
+          fc.integer({ min: 50, max: 300 }),
+          fc.integer({ min: 50, max: 300 }),
+          (balls1, balls2, pLen, nLen) => {
+            const res1 = YarnSubstitutionService.calculateSubstitution({
+              patternBalls: balls1,
+              patternBallLengthMeters: pLen,
+              newBallLengthMeters: nLen,
+              safetyMarginPercent: 10,
+            });
+            const res2 = YarnSubstitutionService.calculateSubstitution({
+              patternBalls: balls2,
+              patternBallLengthMeters: pLen,
+              newBallLengthMeters: nLen,
+              safetyMarginPercent: 10,
+            });
+
+            expect(res2.totalRequiredMeters).toBeGreaterThan(res1.totalRequiredMeters);
+            expect(res2.ballsNeeded).toBeGreaterThanOrEqual(res1.ballsNeeded);
+            expect(res1.ballsNeeded).toBeGreaterThanOrEqual(res1.exactBalls);
+            expect(res2.ballsNeeded).toBeGreaterThanOrEqual(res2.exactBalls);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('Klasyfikacja WPI: dla każdego dodatniego WPI zwraca spójne kategorie mieszczące się w standardzie 0-7', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 1, max: 60 }), (wpi) => {
+          const res = YarnSubstitutionService.classifyByWpi(wpi);
+          expect(res.wpi).toBe(wpi);
+          for (const cat of res.matchedCategories) {
+            expect(cat).toBeGreaterThanOrEqual(0);
+            expect(cat).toBeLessThanOrEqual(7);
+          }
+        }),
+        { numRuns: 100 }
+      );
+    });
+  });
 });
+
 

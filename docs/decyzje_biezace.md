@@ -299,4 +299,21 @@
     - Kompletny wykaz 13 modułów i ekranów aplikacji wraz z najnowszymi kalkulatorami i protokołami ubieralnymi.
     - Architektura przepływu danych i zdarzeń (diagram Mermaid) z uwzględnieniem mostka BLE Garmin oraz Apple Watch.
     - Pełny opis 9 warstw rygoru jakościowego (DoD) wraz z konkretnymi metrykami czasu CPU i niezmienników.
-    - Wyczerpujące drzewo plików (`Architektura Kodu`) obejmujące 100% plików źródłowych, testowych i pomocniczych.
+    - Wyczerpujące drzewo plików (`Architektura Kodu`) obejmujące 100% plików źródłowych, testowych i pomocniczych.
+
+* **DEC-17 Implementacja: Kalkulator Zamienników Włóczki, Łączenia Nitek i Identyfikator WPI (16.10.2026):**
+  - **Architektura Domenowa (`src/core/yarn-substitution-service.ts`):**
+    - Precyzyjna kalkulacja liczby motków zamiennika z marginesem bezpieczeństwa (0–20%), wyliczeniem łącznego metrażu, szacunkowej wagi dzianiny, różnicy wagi oraz detekcją ryzykownego marginesu (Tight Margin).
+    - Matryca łączenia nitek (*multi-strand combination*): deterministyczne przeliczanie wypadkowej grubości CYC (np. Fingering + Mohair = DK/Worsted, 2x Lace = Fingering, 2x DK = Chunky) z zalecanym zakresem drutów (mm).
+    - Identyfikator WPI (*Wraps Per Inch*): przyporządkowanie liczby owinięć na cal do standardu CYC 0–7 (Lace do Jumbo) z zakresem próbki ściegu i rekomendowanymi drutami.
+  - **Interfejs Użytkownika (`src/components/YarnSubstitutionModal.tsx`):**
+    - 3-zakładkowy modal rzemieślniczy: `Zamiennik`, `Łączenie nitek`, `WPI`.
+    - Zgodność z Apple HIG ($\ge 44\,\text{pt}$ touch targets, VoiceOver a11y roles/labels), natywne udostępnianie raportu przez Share Sheet.
+    - Zintegrowany z nagłówkiem magazynu (`app/(tabs)/stash.tsx` — przycisk `🔄 Zamiennik`).
+  - **Zgodność z ZAS-QA-01 (Wielowymiarowa Matryca Jakości):**
+    - **Test Suites: 50/50 zdanych (100% pass)**.
+    - **Tests: 391/391 zdanych (100% pass)**.
+    - **Line Coverage: 100.00% w całym repozytorium** (`npm run test:coverage`).
+    - **TypeScript:** 0 błędów (`npx tsc --noEmit`).
+    - Zaktualizowano testy PBT (`property-based.test.ts`), A11y contracts (`a11y-contracts.test.tsx`), Architecture guards (`interaction-guards.test.ts`), Budżety wydajnościowe CPU (`perf-budget.test.ts` — 10 000 kalkulacji w < 150 ms) oraz Resilience (`resilience.test.ts`).
+

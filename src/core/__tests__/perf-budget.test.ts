@@ -44,6 +44,7 @@ import {
   convertCraftWeight,
   convertGaugeTension,
 } from '../needle-gauge-converter';
+import { YarnSubstitutionService } from '../yarn-substitution-service';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   const config: CounterConfig = {
@@ -288,5 +289,24 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     const durationMs = performance.now() - t0;
 
     expect(durationMs).toBeLessThan(120);
+  });
+
+  test('10 000 kalkulacji zamienników włóczki i klasyfikacji WPI w < 150 ms', () => {
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      if (i % 2 === 0) {
+        YarnSubstitutionService.calculateSubstitution({
+          patternBalls: 4 + (i % 10),
+          patternBallLengthMeters: 100 + (i % 50),
+          newBallLengthMeters: 150 + (i % 50),
+          safetyMarginPercent: 10,
+        });
+      } else {
+        YarnSubstitutionService.classifyByWpi(5 + (i % 30));
+      }
+    }
+    const durationMs = performance.now() - t0;
+
+    expect(durationMs).toBeLessThan(150);
   });
 });

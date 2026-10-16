@@ -560,4 +560,35 @@ describe('StashScreen — Pełne testy magazynu włóczek i narzędzi (BR-MAG-00
 
     expect(tree).toBeDefined();
   });
+
+  it('otwiera modal kalkulatora zamienników włóczek i zamyka go', async () => {
+    const { root, tree } = await renderStashScreen();
+
+    // 1. Znajdź przycisk Zamiennik
+    const subBtn = root.find(
+      (node: any) =>
+        node.props?.onPress &&
+        extractAllStrings(node).includes('Zamiennik')
+    );
+    expect(subBtn).toBeDefined();
+
+    // 2. Otwórz modal
+    await act(async () => {
+      subBtn.props.onPress();
+    });
+
+    const subModal = root.find(
+      (node: any) =>
+        typeof node.props?.onClose === 'function' &&
+        node.props?.visible === true
+    );
+    expect(subModal).toBeDefined();
+
+    // 3. Zamknij modal
+    await act(async () => {
+      subModal.props.onClose();
+    });
+
+    expect(tree).toBeDefined();
+  });
 });

@@ -16,6 +16,7 @@ import PatternPdfViewer from '../PatternPdfViewer';
 import { ShapingCalculatorModal } from '../ShapingCalculatorModal';
 import { GarminCompanionModal } from '../GarminCompanionModal';
 import { NeedleGaugeModal } from '../NeedleGaugeModal';
+import { YarnSubstitutionModal } from '../YarnSubstitutionModal';
 import LearnScreen from '../../../app/(tabs)/learn';
 import { createWatchCounterSnapshot } from '../../core/apple-watch-service';
 import { createGarminSyncPayload } from '../../core/garmin-service';
@@ -236,6 +237,22 @@ describe('Kontrakty Dostępności i Human Interface Guidelines (WCAG AAA & Apple
       const root = tree.root;
       const buttons = root.findAll((n: any) => n.props?.accessibilityRole === 'button' && n.props?.accessibilityLabel);
       expect(buttons.length).toBeGreaterThanOrEqual(2);
+
+      for (const btn of buttons) {
+        expect(typeof btn.props.accessibilityLabel).toBe('string');
+        expect(btn.props.accessibilityLabel.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('kontrolki i przełączniki w YarnSubstitutionModal spełniają wymóg >= 44 pt oraz posiadają etykiety VoiceOver', () => {
+      let tree: any;
+      act(() => {
+        tree = renderer.create(<YarnSubstitutionModal visible={true} onClose={() => {}} />);
+      });
+
+      const root = tree.root;
+      const buttons = root.findAll((n: any) => n.props?.accessibilityRole === 'button' && n.props?.accessibilityLabel);
+      expect(buttons.length).toBeGreaterThanOrEqual(4);
 
       for (const btn of buttons) {
         expect(typeof btn.props.accessibilityLabel).toBe('string');
