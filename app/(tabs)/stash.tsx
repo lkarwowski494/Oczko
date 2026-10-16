@@ -430,7 +430,7 @@ export default function StashScreen() {
           <View style={styles.searchBarRow}>
             <TextInput
               style={styles.searchInput}
-              placeholder="🔍 Szukaj marki, koloru, lotu (np. 1240)..."
+              placeholder={t('🔍 Szukaj marki, koloru, lotu (np. 1240)...')}
               placeholderTextColor="#999999"
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -441,7 +441,7 @@ export default function StashScreen() {
               <TouchableOpacity
                 style={styles.clearSearchBtn}
                 onPress={() => setSearchQuery('')}
-                accessibilityLabel="Wyczyść wyszukiwanie"
+                accessibilityLabel={t('Wyczyść wyszukiwanie')}
               >
                 <Text style={styles.clearSearchText}>✕</Text>
               </TouchableOpacity>
@@ -464,7 +464,7 @@ export default function StashScreen() {
                   selectedWeight === 'ALL' && styles.filterChipTextActive,
                 ]}
               >
-                Wszystkie grubości
+                {t('Wszystkie grubości')}
               </Text>
             </TouchableOpacity>
             {YARN_WEIGHT_STANDARDS.map((std) => (
@@ -501,7 +501,7 @@ export default function StashScreen() {
               <Text
                 style={[styles.stockToggleText, inStockOnly && styles.stockToggleTextActive]}
               >
-                {inStockOnly ? '✓ Tylko na stanie' : 'Wszystkie (w tym 0)'}
+                {inStockOnly ? t('✓ Tylko na stanie') : t('Wszystkie (w tym 0)')}
               </Text>
             </TouchableOpacity>
 
@@ -515,7 +515,7 @@ export default function StashScreen() {
                   selectedFiberTag === 'all' && styles.fiberChipTextActive,
                 ]}
               >
-                Wszystkie surowce
+                {t('Wszystkie surowce')}
               </Text>
             </TouchableOpacity>
 
@@ -644,7 +644,12 @@ export default function StashScreen() {
               </Text>
               {item.cableLengthCm && (
                 <Text style={styles.detailRow}>
-                  {t('Długość żyłki:')} <Text style={styles.detailBold}>{item.cableLengthCm} cm</Text>
+                  {t('Długość żyłki:')}{' '}
+                  <Text style={styles.detailBold}>
+                    {unitSystem === 'imperial'
+                      ? `${Math.round(item.cableLengthCm / 2.54)} in (${item.cableLengthCm} cm)`
+                      : `${item.cableLengthCm} cm`}
+                  </Text>
                 </Text>
               )}
 

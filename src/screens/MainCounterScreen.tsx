@@ -34,6 +34,7 @@ import {
 } from '../core/pattern-document-service';
 import { useAppAccess } from '../core/app-access-context';
 import { ImpulsePaywallModal } from '../components/ImpulsePaywallModal';
+import { autoBackup } from '../core/backup-service';
 
 let KeepAwakeModule: any = null;
 try {
@@ -268,7 +269,12 @@ export default function MainCounterScreen() {
             updatedDoc.currentPage
           );
         } else {
+          if (!evaluation.canCreateNewProject) {
+            openPaywall();
+            return;
+          }
           await insertPatternDocument(projectCtx.db, updatedDoc);
+          autoBackup(projectCtx.db).catch(() => {});
         }
       } catch (_err) {
         // błąd zapisu do bazy (np. mock)
@@ -280,6 +286,7 @@ export default function MainCounterScreen() {
     if (patternDoc && projectCtx?.db) {
       try {
         await deletePatternDocument(projectCtx.db, patternDoc.id);
+        autoBackup(projectCtx.db).catch(() => {});
       } catch (_err) {}
     }
     setPatternDoc(null);
@@ -441,14 +448,14 @@ export default function MainCounterScreen() {
                         <Text style={styles.linkedName}>🪢 {lc.name}</Text>
                         {lc.activeReminder && (
                           <View style={styles.linkedAlert}>
-                            <Text style={styles.linkedAlertText}>⚠️ Skrzyżuj / Operacja!</Text>
+                            <Text style={styles.linkedAlertText}>{t('⚠️ Skrzyżuj / Operacja!')}</Text>
                           </View>
                         )}
                       </View>
                       <Text style={styles.linkedValue}>
                         {lc.moduloCycle
-                          ? `Rząd ${lc.cycleStep ?? 0} z ${lc.moduloCycle} (Ukończono cykli: ${lc.completedCycles ?? 0})`
-                          : `Rząd: ${lc.rawValue}`}
+                          ? `${t('Rząd')} ${lc.cycleStep ?? 0} ${t('z')} ${lc.moduloCycle} (${t('Ukończono cykli:')} ${lc.completedCycles ?? 0})`
+                          : `${t('Rząd:')} ${lc.rawValue}`}
                       </Text>
                     </View>
                   ))}
@@ -476,8 +483,8 @@ export default function MainCounterScreen() {
                 >
                   <Text style={styles.intervalChipText}>
                     {intervalReminderRows > 0
-                      ? `🔔 Przypomnienie: co ${intervalReminderRows} rz. (${intervalReminderLabel})`
-                      : '🔔 Ustaw przypomnienie cykliczne'}
+                      ? `🔔 ${t('Przypomnienie: co')} ${intervalReminderRows} ${t('rz.')} (${intervalReminderLabel})`
+                      : `🔔 ${t('Ustaw przypomnienie cykliczne')}`}
                   </Text>
                 </TouchableOpacity>
 
@@ -493,7 +500,7 @@ export default function MainCounterScreen() {
                   style={styles.garminChip}
                   activeOpacity={0.8}
                   onPress={() => setGarminModalVisible(true)}
-                  accessibilityLabel="Otwórz symulator zegarka Garmin"
+                  accessibilityLabel={t('Otwórz symulator zegarka Garmin')}
                   accessibilityRole="button"
                 >
                   <Text style={styles.garminChipText}>🛰️ Garmin</Text>
@@ -557,21 +564,21 @@ export default function MainCounterScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Dodaj powiązany licznik wzoru</Text>
+            <Text style={styles.modalTitle}>{t('Dodaj powiązany licznik wzoru')}</Text>
             <Text style={styles.modalSubtitle}>
-              Licznik będzie automatycznie naliczał się wraz z rzędami części: {partName}
+              {t('Licznik będzie automatycznie naliczał się wraz z rzędami części:')} {partName}
             </Text>
 
-            <Text style={styles.inputLabel}>Nazwa wzoru (np. Warkocz C6F, Ażur)</Text>
+            <Text style={styles.inputLabel}>{t('Nazwa wzoru (np. Warkocz C6F, Ażur)')}</Text>
             <TextInput
               style={styles.textInput}
               value={newLinkedName}
               onChangeText={setNewLinkedName}
-              placeholder="np. Warkocz na rękawie"
+              placeholder={t('np. Warkocz na rękawie')}
               placeholderTextColor="#999"
             />
 
-            <Text style={styles.inputLabel}>Długość cyklu / powtórzenia (np. 6 rzędów)</Text>
+            <Text style={styles.inputLabel}>{t('Długość cyklu / powtórzenia (np. 6 rzędów)')}</Text>
             <TextInput
               style={styles.textInput}
               value={newModuloCycle}
@@ -581,7 +588,7 @@ export default function MainCounterScreen() {
               placeholderTextColor="#999"
             />
 
-            <Text style={styles.inputLabel}>Rząd z przypomnieniem o operacji</Text>
+            <Text style={styles.inputLabel}>{t('Rząd z przypomnieniem o operacji')}</Text>
             <TextInput
               style={styles.textInput}
               value={newReminderRow}
@@ -596,14 +603,14 @@ export default function MainCounterScreen() {
                 style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.cancelButtonText}>Anuluj</Text>
+                <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={handleCreateLinkedCounter}
               >
-                <Text style={styles.submitButtonText}>Dodaj licznik</Text>
+                <Text style={styles.submitButtonText}>{t('Dodaj licznik')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -619,12 +626,12 @@ export default function MainCounterScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Przypomnienie cykliczne (Interwał)</Text>
+            <Text style={styles.modalTitle}>{t('Przypomnienie cykliczne (Interwał)')}</Text>
             <Text style={styles.modalSubtitle}>
-              Otrzymasz wibrację i powiadomienie na ekranie co wybraną liczbę rzędów.
+              {t('Otrzymasz wibrację i powiadomienie na ekranie co wybraną liczbę rzędów.')}
             </Text>
 
-            <Text style={styles.inputLabel}>Szybki wybór interwału:</Text>
+            <Text style={styles.inputLabel}>{t('Szybki wybór interwału:')}</Text>
             <View style={styles.intervalPresetsRow}>
               {[0, 4, 6, 8, 10, 12].map((cnt) => {
                 const isSelected =
@@ -641,14 +648,14 @@ export default function MainCounterScreen() {
                         isSelected && styles.presetButtonTextActive,
                       ]}
                     >
-                      {cnt === 0 ? 'Wyłącz' : `co ${cnt}`}
+                      {cnt === 0 ? t('Wyłącz') : `${t('co')} ${cnt}`}
                     </Text>
                   </TouchableOpacity>
                 );
               })}
             </View>
 
-            <Text style={styles.inputLabel}>Liczba rzędów (własna wartość):</Text>
+            <Text style={styles.inputLabel}>{t('Liczba rzędów (własna wartość):')}</Text>
             <TextInput
               style={styles.textInput}
               value={tempIntervalInput}
@@ -658,12 +665,12 @@ export default function MainCounterScreen() {
               placeholderTextColor="#999"
             />
 
-            <Text style={styles.inputLabel}>Etykieta powiadomienia:</Text>
+            <Text style={styles.inputLabel}>{t('Etykieta powiadomienia:')}</Text>
             <TextInput
               style={styles.textInput}
               value={tempLabelInput}
               onChangeText={setTempLabelInput}
-              placeholder="np. Zmiana splotu / nitki"
+              placeholder={t('np. Zmiana splotu / nitki')}
               placeholderTextColor="#999"
             />
 
@@ -672,7 +679,7 @@ export default function MainCounterScreen() {
                 style={styles.cancelButton}
                 onPress={() => setIntervalModalVisible(false)}
               >
-                <Text style={styles.cancelButtonText}>Anuluj</Text>
+                <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -680,11 +687,11 @@ export default function MainCounterScreen() {
                 onPress={() => {
                   const parsed = parseInt(tempIntervalInput, 10);
                   setIntervalReminderRows(!isNaN(parsed) && parsed > 0 ? parsed : 0);
-                  setIntervalReminderLabel(tempLabelInput.trim() || 'Przypomnienie');
+                  setIntervalReminderLabel(tempLabelInput.trim() || t('Przypomnienie'));
                   setIntervalModalVisible(false);
                 }}
               >
-                <Text style={styles.submitButtonText}>Zapisz</Text>
+                <Text style={styles.submitButtonText}>{t('Zapisz')}</Text>
               </TouchableOpacity>
             </View>
           </View>

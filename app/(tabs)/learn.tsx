@@ -253,7 +253,7 @@ export default function LearnScreen() {
       {activeTab === 'trainer' && (
         <ScrollView contentContainerStyle={styles.trainerScrollContent}>
           {/* Wybór ćwiczenia */}
-          <Text style={styles.sectionHeader}>WYBIERZ WZORZEC DO ĆWICZENIA</Text>
+          <Text style={styles.sectionHeader}>{t('WYBIERZ WZORZEC DO ĆWICZENIA')}</Text>
           <View style={styles.exerciseChips}>
             {TRAINER_EXERCISES.map((ex) => (
               <TouchableOpacity
@@ -280,7 +280,7 @@ export default function LearnScreen() {
           <View style={styles.trainerHeaderCard}>
             <Text style={styles.trainerExerciseTitle}>{activeExercise.name}</Text>
             <Text style={styles.trainerExerciseDesc}>{activeExercise.description}</Text>
-            <Text style={styles.stitchesInfo}>Oczek w rzędzie: {activeExercise.totalStitches}</Text>
+            <Text style={styles.stitchesInfo}>{t('Oczek w rzędzie:')} {activeExercise.totalStitches}</Text>
           </View>
 
           {/* Główna interaktywna stacja trenażera */}
@@ -288,22 +288,22 @@ export default function LearnScreen() {
             {trainerState.isCompleted ? (
               <View style={styles.completedBox}>
                 <Text style={styles.completedIcon}>🎉</Text>
-                <Text style={styles.completedTitle}>Wzorzec ukończony!</Text>
+                <Text style={styles.completedTitle}>{t('Wzorzec ukończony!')}</Text>
                 <Text style={styles.completedDesc}>
-                  Wszystkie {trainerState.totalStepsCompleted} kroków sekwencji wykonane pomyślnie.
+                  {`${t('Wszystkie')} ${trainerState.totalStepsCompleted} ${t('kroków sekwencji wykonane pomyślnie.')}`}
                 </Text>
                 <TouchableOpacity style={styles.restartButton} onPress={handleTrainerReset}>
-                  <Text style={styles.restartButtonText}>Powtórz ćwiczenie</Text>
+                  <Text style={styles.restartButtonText}>{t('Powtórz ćwiczenie')}</Text>
                 </TouchableOpacity>
               </View>
             ) : (
               <>
                 <View style={styles.statusMetaRow}>
                   <Text style={styles.rowBadge}>
-                    Rząd {trainerState.currentRowNumber} ({trainerState.currentSide === 'RS' ? 'Prawa strona' : 'Lewa strona'})
+                    {`${t('Rząd')} ${trainerState.currentRowNumber} (${trainerState.currentSide === 'RS' ? t('Prawa strona') : t('Lewa strona')})`}
                   </Text>
                   <Text style={styles.repeatBadge}>
-                    Powtórzenie {trainerState.currentRepeatNumber} z {trainerState.totalRepeatsInRow}
+                    {`${t('Powtórzenie')} ${trainerState.currentRepeatNumber} ${t('z')} ${trainerState.totalRepeatsInRow}`}
                   </Text>
                 </View>
 
@@ -315,7 +315,7 @@ export default function LearnScreen() {
                   <Text style={styles.stepCode}>{trainerState.currentInstruction.code}</Text>
                   <Text style={styles.stepDesc}>{trainerState.currentInstruction.description}</Text>
                   <Text style={styles.stepCount}>
-                    ({trainerState.currentInstruction.stitchesCount} {trainerState.currentInstruction.stitchesCount === 1 ? 'oczko' : 'oczka'})
+                    {`(${trainerState.currentInstruction.stitchesCount} ${trainerState.currentInstruction.stitchesCount === 1 ? t('oczko') : t('oczka')})`}
                   </Text>
                 </View>
 
@@ -325,11 +325,11 @@ export default function LearnScreen() {
                   activeOpacity={0.85}
                   onPress={handleTrainerNextStep}
                 >
-                  <Text style={styles.stepButtonText}>Zalicz krok (+)</Text>
+                  <Text style={styles.stepButtonText}>{t('Zalicz krok (+)')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.resetButton} onPress={handleTrainerReset}>
-                  <Text style={styles.resetButtonText}>Zresetuj ćwiczenie</Text>
+                  <Text style={styles.resetButtonText}>{t('Zresetuj ćwiczenie')}</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -347,22 +347,22 @@ export default function LearnScreen() {
                 <View style={styles.identifierCard}>
                   <View style={styles.identifierHeaderRow}>
                     <Text style={styles.identifierStepBadge}>
-                      {`Krok ${currentQuestion.stepNumber} z ${currentQuestion.totalSteps}`}
+                      {`${t('Krok')} ${currentQuestion.stepNumber} ${t('z')} ${currentQuestion.totalSteps}`}
                     </Text>
                     {identifierStep > 0 && (
                       <TouchableOpacity
                         style={styles.identifierBackButton}
                         onPress={handleIdentifierBack}
                         accessibilityRole="button"
-                        accessibilityLabel="Cofnij do poprzedniego pytania"
+                        accessibilityLabel={t('Cofnij do poprzedniego pytania')}
                       >
-                        <Text style={styles.identifierBackButtonText}>◀ Cofnij</Text>
+                        <Text style={styles.identifierBackButtonText}>◀ {t('Cofnij')}</Text>
                       </TouchableOpacity>
                     )}
                   </View>
 
-                  <Text style={styles.identifierTitle}>{currentQuestion.title}</Text>
-                  <Text style={styles.identifierSubtitle}>{currentQuestion.subtitle}</Text>
+                  <Text style={styles.identifierTitle}>{t(currentQuestion.title)}</Text>
+                  <Text style={styles.identifierSubtitle}>{t(currentQuestion.subtitle)}</Text>
 
                   <View style={styles.optionsList}>
                     {currentQuestion.options.map((option) => (
@@ -375,13 +375,13 @@ export default function LearnScreen() {
                         activeOpacity={0.7}
                         onPress={() => handleSelectIdentifierOption(currentQuestion.id, option.id)}
                         accessibilityRole="button"
-                        accessibilityLabel={`${option.label}: ${option.description}`}
+                        accessibilityLabel={`${t(option.label)}: ${t(option.description)}`}
                       >
                         <View style={styles.optionHeader}>
-                          <Text style={styles.optionLabel}>{option.label}</Text>
-                          {option.badge && <Text style={styles.optionBadge}>{option.badge}</Text>}
+                          <Text style={styles.optionLabel}>{t(option.label)}</Text>
+                          {option.badge && <Text style={styles.optionBadge}>{t(option.badge)}</Text>}
                         </View>
-                        <Text style={styles.optionDescription}>{option.description}</Text>
+                        <Text style={styles.optionDescription}>{t(option.description)}</Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -390,9 +390,9 @@ export default function LearnScreen() {
                     style={styles.identifierResetButton}
                     onPress={handleIdentifierReset}
                     accessibilityRole="button"
-                    accessibilityLabel="Zresetuj identyfikację"
+                    accessibilityLabel={t('Zresetuj identyfikację')}
                   >
-                    <Text style={styles.identifierResetButtonText}>↺ Zacznij od początku</Text>
+                    <Text style={styles.identifierResetButtonText}>↺ {t('Zacznij od początku')}</Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -403,27 +403,27 @@ export default function LearnScreen() {
                 <View style={styles.resultHeaderCard}>
                   <View style={styles.resultBadgeRow}>
                     <Text style={styles.resultCategoryBadge}>
-                      {identifierResult.craftType === 'knitting' ? '🧶 Druty' : '🪡 Szydełko'} • {identifierResult.category.toUpperCase()}
+                      {identifierResult.craftType === 'knitting' ? `🧶 ${t('Druty')}` : `🪢 ${t('Szydełko')}`} • {identifierResult.category.toUpperCase()}
                     </Text>
-                    <Text style={styles.resultConfidenceBadge}>✓ Pewne dopasowanie</Text>
+                    <Text style={styles.resultConfidenceBadge}>✓ {t('Pewne dopasowanie')}</Text>
                   </View>
 
                   <Text style={styles.resultTitlePl}>{identifierResult.namePl}</Text>
                   <Text style={styles.resultTitleEn}>({identifierResult.nameEn})</Text>
-                  <Text style={styles.resultDescription}>{identifierResult.description}</Text>
+                  <Text style={styles.resultDescription}>{t(identifierResult.description)}</Text>
                 </View>
 
                 {/* Sekcja porad liczenia rzędów */}
                 <View style={styles.tipCard}>
-                  <Text style={styles.tipHeader}>🔢 Jak liczyć rzędy w tym ściegu?</Text>
-                  <Text style={styles.tipText}>{identifierResult.rowCountingTip}</Text>
+                  <Text style={styles.tipHeader}>🔢 {t('Jak liczyć rzędy w tym ściegu?')}</Text>
+                  <Text style={styles.tipText}>{t(identifierResult.rowCountingTip)}</Text>
                 </View>
 
                 {/* Sekcja rad dot. brzegów i blokowania */}
                 {identifierResult.curlingAdvice && (
                   <View style={styles.adviceCard}>
-                    <Text style={styles.adviceHeader}>💡 Wskazówka techniczna & brzegi</Text>
-                    <Text style={styles.adviceText}>{identifierResult.curlingAdvice}</Text>
+                    <Text style={styles.adviceHeader}>💡 {t('Wskazówka techniczna & brzegi')}</Text>
+                    <Text style={styles.adviceText}>{t(identifierResult.curlingAdvice)}</Text>
                   </View>
                 )}
 
@@ -437,9 +437,9 @@ export default function LearnScreen() {
                         setSearchQuery(identifierResult.glossaryTermQuery!);
                       }}
                       accessibilityRole="button"
-                      accessibilityLabel="Zobacz definicję w słowniku"
+                      accessibilityLabel={t('Zobacz definicję w słowniku')}
                     >
-                      <Text style={styles.actionPrimaryButtonText}>📖 Pokaż definicję w słowniku</Text>
+                      <Text style={styles.actionPrimaryButtonText}>📖 {t('Pokaż definicję w słowniku')}</Text>
                     </TouchableOpacity>
                   )}
 
@@ -454,9 +454,9 @@ export default function LearnScreen() {
                         }
                       }}
                       accessibilityRole="button"
-                      accessibilityLabel="Przejdź do ćwiczenia w trenażerze"
+                      accessibilityLabel={t('Przejdź do ćwiczenia w trenażerze')}
                     >
-                      <Text style={styles.actionSecondaryButtonText}>🎯 Poćwicz ten ścieg w trenażerze</Text>
+                      <Text style={styles.actionSecondaryButtonText}>🎯 {t('Poćwicz ten ścieg w trenażerze')}</Text>
                     </TouchableOpacity>
                   )}
 
@@ -464,9 +464,9 @@ export default function LearnScreen() {
                     style={styles.restartIdentifierButton}
                     onPress={handleIdentifierReset}
                     accessibilityRole="button"
-                    accessibilityLabel="Zidentyfikuj inny ścieg"
+                    accessibilityLabel={t('Zidentyfikuj inny ścieg')}
                   >
-                    <Text style={styles.restartIdentifierButtonText}>🔍 Zidentyfikuj inny ścieg</Text>
+                    <Text style={styles.restartIdentifierButtonText}>🔍 {t('Zidentyfikuj inny ścieg')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -483,9 +483,9 @@ export default function LearnScreen() {
                 style={styles.doctorBackButton}
                 onPress={() => setSelectedEmergency(null)}
                 accessibilityRole="button"
-                accessibilityLabel="Wróć do listy problemów"
+                accessibilityLabel={t('Wróć do listy problemów')}
               >
-                <Text style={styles.doctorBackButtonText}>← Wróć do listy problemów</Text>
+                <Text style={styles.doctorBackButtonText}>← {t('Wróć do listy problemów')}</Text>
               </TouchableOpacity>
 
               <View style={styles.procedureHeaderCard}>
@@ -501,45 +501,45 @@ export default function LearnScreen() {
                     ]}
                   >
                     {selectedEmergency.dangerLevel === 'critical'
-                      ? '🔴 Poziom: Krytyczny'
+                      ? t('🔴 Poziom: Krytyczny')
                       : selectedEmergency.dangerLevel === 'moderate'
-                      ? '🟠 Poziom: Umiarkowany'
-                      : '🟡 Poziom: Niski'}
+                      ? t('🟠 Poziom: Umiarkowany')
+                      : t('🟡 Poziom: Niski')}
                   </Text>
                   <Text style={styles.craftBadge}>
                     {selectedEmergency.craftType === 'knitting'
-                      ? '🧶 Druty'
+                      ? `🧶 ${t('Druty')}`
                       : selectedEmergency.craftType === 'crochet'
-                      ? '🪢 Szydełko'
-                      : '🧶 Druty & Szydełko'}
+                      ? `🪢 ${t('Szydełko')}`
+                      : `🧶 ${t('Druty')} & ${t('Szydełko')}`}
                   </Text>
                 </View>
 
-                <Text style={styles.procedureTitle}>{selectedEmergency.title}</Text>
-                <Text style={styles.procedureSummary}>{selectedEmergency.summary}</Text>
+                <Text style={styles.procedureTitle}>{t(selectedEmergency.title)}</Text>
+                <Text style={styles.procedureSummary}>{t(selectedEmergency.summary)}</Text>
 
                 <View style={styles.toolsCard}>
-                  <Text style={styles.toolsHeader}>🧰 Potrzebne narzędzia:</Text>
-                  {selectedEmergency.toolsNeeded.map((t, idx) => (
-                    <Text key={idx} style={styles.toolItemText}>• {t}</Text>
+                  <Text style={styles.toolsHeader}>🧰 {t('Potrzebne narzędzia:')}</Text>
+                  {selectedEmergency.toolsNeeded.map((tool, idx) => (
+                    <Text key={idx} style={styles.toolItemText}>• {t(tool)}</Text>
                   ))}
                 </View>
               </View>
 
               <View style={styles.stepsContainer}>
-                <Text style={styles.stepsSectionTitle}>Procedura ratunkowa krok po kroku:</Text>
+                <Text style={styles.stepsSectionTitle}>{t('Procedura ratunkowa krok po kroku:')}</Text>
                 {selectedEmergency.steps.map((st) => (
                   <View key={st.stepNumber} style={styles.stepCard}>
                     <View style={styles.stepHeader}>
                       <View style={styles.stepNumberBadge}>
                         <Text style={styles.stepNumberText}>{st.stepNumber}</Text>
                       </View>
-                      <Text style={styles.stepTitleText}>{st.title}</Text>
+                      <Text style={styles.stepTitleText}>{t(st.title)}</Text>
                     </View>
-                    <Text style={styles.stepInstructionText}>{st.instruction}</Text>
+                    <Text style={styles.stepInstructionText}>{t(st.instruction)}</Text>
                     {st.tip && (
                       <View style={styles.stepTipBox}>
-                        <Text style={styles.stepTipText}>💡 Porada: {st.tip}</Text>
+                        <Text style={styles.stepTipText}>💡 {t('Porada:')} {t(st.tip)}</Text>
                       </View>
                     )}
                   </View>
@@ -547,25 +547,25 @@ export default function LearnScreen() {
               </View>
 
               <View style={styles.preventionCard}>
-                <Text style={styles.preventionHeader}>🛡️ Jak zapobiegać w przyszłości:</Text>
-                <Text style={styles.preventionText}>{selectedEmergency.preventionTip}</Text>
+                <Text style={styles.preventionHeader}>🛡️ {t('Jak zapobiegać w przyszłości:')}</Text>
+                <Text style={styles.preventionText}>{t(selectedEmergency.preventionTip)}</Text>
               </View>
 
               <TouchableOpacity
                 style={styles.doneButton}
                 onPress={() => setSelectedEmergency(null)}
                 accessibilityRole="button"
-                accessibilityLabel="Zrozumiałam, usterka naprawiona"
+                accessibilityLabel={t('Zrozumiałam, usterka naprawiona')}
               >
-                <Text style={styles.doneButtonText}>✅ Zrozumiałam, usterka naprawiona!</Text>
+                <Text style={styles.doneButtonText}>✅ {t('Zrozumiałam, usterka naprawiona!')}</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.doctorHomeContainer}>
               <View style={styles.doctorIntroCard}>
-                <Text style={styles.doctorIntroTitle}>🩺 Pogotowie Dziewiarskie</Text>
+                <Text style={styles.doctorIntroTitle}>🩺 {t('Pogotowie Dziewiarskie')}</Text>
                 <Text style={styles.doctorIntroSubtitle}>
-                  Spokojnie! W rękodziele niemal każdy błąd można bezpiecznie naprawić bez prucia całej robótki.
+                  {t('Spokojnie! W rękodziele niemal każdy błąd można bezpiecznie naprawić bez prucia całej robótki.')}
                 </Text>
               </View>
 
@@ -573,7 +573,7 @@ export default function LearnScreen() {
               <View style={styles.searchBox}>
                 <TextInput
                   style={styles.searchInput}
-                  placeholder="Opisz problem (np. drabinka, dziura, pętla, spuszczone)..."
+                  placeholder={t('Opisz problem (np. drabinka, dziura, pętla, spuszczone)...')}
                   placeholderTextColor="#999999"
                   value={doctorQuery}
                   onChangeText={setDoctorQuery}
@@ -592,7 +592,7 @@ export default function LearnScreen() {
                     ]}
                     onPress={() => setDoctorCraftFilter(cf)}
                     accessibilityRole="button"
-                    accessibilityLabel={cf === 'both' ? 'Wszystkie techniki' : cf === 'knitting' ? 'Tylko druty' : 'Tylko szydełko'}
+                    accessibilityLabel={cf === 'both' ? t('Wszystkie techniki') : cf === 'knitting' ? t('Tylko druty') : t('Tylko szydełko')}
                   >
                     <Text
                       style={[
@@ -600,7 +600,7 @@ export default function LearnScreen() {
                         doctorCraftFilter === cf && styles.craftFilterTextActive,
                       ]}
                     >
-                      {cf === 'both' ? 'Wszystkie' : cf === 'knitting' ? '🧶 Druty' : '🪢 Szydełko'}
+                      {cf === 'both' ? t('Wszystkie') : cf === 'knitting' ? `🧶 ${t('Druty')}` : `🪢 ${t('Szydełko')}`}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -611,10 +611,10 @@ export default function LearnScreen() {
                 {diagnoseEmergency(doctorQuery, doctorCraftFilter).length === 0 ? (
                   <View style={styles.emptyDoctorBox}>
                     <Text style={styles.emptyDoctorText}>
-                      Nie znaleziono pasującej procedury awaryjnej.
+                      {t('Nie znaleziono pasującej procedury awaryjnej.')}
                     </Text>
                     <Text style={styles.emptyDoctorSubtext}>
-                      Spróbuj wyszukać inne słowo kluczowe (np. "oczko", "pętla", "drabinka").
+                      {t('Spróbuj wyszukać inne słowo kluczowe (np. "oczko", "pętla", "drabinka").')}
                     </Text>
                   </View>
                 ) : (
@@ -624,10 +624,10 @@ export default function LearnScreen() {
                       style={styles.emergencyCard}
                       onPress={() => setSelectedEmergency(proc)}
                       accessibilityRole="button"
-                      accessibilityLabel={`Procedura: ${proc.title}`}
+                      accessibilityLabel={`${t('Procedura:')} ${t(proc.title)}`}
                     >
                       <View style={styles.emergencyCardHeader}>
-                        <Text style={styles.emergencyTitle}>{proc.title}</Text>
+                        <Text style={styles.emergencyTitle}>{t(proc.title)}</Text>
                         <Text
                           style={[
                             styles.emergencyDangerBadge,
@@ -639,19 +639,19 @@ export default function LearnScreen() {
                           ]}
                         >
                           {proc.dangerLevel === 'critical'
-                            ? '🔴 Krytyczny'
+                            ? t('🔴 Krytyczny')
                             : proc.dangerLevel === 'moderate'
-                            ? '🟠 Umiarkowany'
-                            : '🟡 Niski'}
+                            ? t('🟠 Umiarkowany')
+                            : t('🟡 Niski')}
                         </Text>
                       </View>
                       <Text style={styles.emergencySummary} numberOfLines={2}>
-                        {proc.summary}
+                        {t(proc.summary)}
                       </Text>
                       <View style={styles.emergencySymptomsRow}>
                         {proc.symptoms.slice(0, 3).map((sym, sIdx) => (
                           <View key={sIdx} style={styles.symptomChip}>
-                            <Text style={styles.symptomChipText}>{sym}</Text>
+                            <Text style={styles.symptomChipText}>{t(sym)}</Text>
                           </View>
                         ))}
                       </View>

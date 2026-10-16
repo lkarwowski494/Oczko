@@ -30,6 +30,8 @@ import { RaglanCalculatorModal } from '../../src/components/RaglanCalculatorModa
 import { HatCalculatorModal } from '../../src/components/HatCalculatorModal';
 import { useAppAccess } from '../../src/core/app-access-context';
 import { useLang, t } from '../../src/core/i18n';
+import { useUnitSystem } from '../../src/core/use-unit-system';
+import { formatGauge } from '../../src/core/unit-converter';
 
 export default function ProjectsScreen() {
   const router = useRouter();
@@ -179,6 +181,7 @@ export default function ProjectsScreen() {
   };
 
   const currentLang = useLang();
+  const unitSystem = useUnitSystem();
 
   const renderProjectItem = ({ item }: { item: EnrichedProject }) => {
     const isSelected = item.id === activeProjectId;
@@ -220,7 +223,7 @@ export default function ProjectsScreen() {
               <View key={part.id} style={styles.partDetailRow}>
                 <Text style={styles.partDetailName}>• {part.name}</Text>
                 <Text style={styles.partDetailCount}>
-                  {count} {part.targetRows ? `/ ${part.targetRows} rz.` : 'rz.'}
+                  {count} {part.targetRows ? `/ ${part.targetRows} ${t('rz.')}` : t('rz.')}
                 </Text>
               </View>
             );

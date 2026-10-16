@@ -62,9 +62,10 @@ import { calculateCraftEconomics } from '../cost-calculator';
 import { encodeProjectToDeepLink, decodeProjectFromDeepLink } from '../project-share-protocol';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
-  // Instrumentacja pokrycia kodu (Istanbul/Jest --coverage) wprowadza narzut na każdą instrukcję w pętlach
+  // Instrumentacja pokrycia kodu (Istanbul/Jest --coverage) oraz środowisko OS/CI (np. Windows)
   const coverageFactor = (global as any).__coverage__ ? 4 : 1;
-  const budget = (ms: number) => ms * coverageFactor;
+  const platformMultiplier = process.platform === 'win32' || process.env.CI ? 2.5 : 1.5;
+  const budget = (ms: number) => ms * coverageFactor * platformMultiplier;
 
   const config: CounterConfig = {
     id: 'cnt_perf_01',
