@@ -59,6 +59,7 @@ import {
 } from '../time-tracking-service';
 import { diagnoseEmergency, getProcedureById } from '../knitting-doctor';
 import { encodeProjectToDeepLink, decodeProjectFromDeepLink } from '../project-share-protocol';
+import { calculateBlockingAnalysis } from '../blocking-calculator';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   // Instrumentacja pokrycia kodu (Istanbul/Jest --coverage) oraz środowisko OS/CI (np. Windows)
@@ -442,6 +443,19 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     }
     const durationMs = performance.now() - t0;
     expect(durationMs).toBeLessThan(budget(150));
+  });
+
+  test('10 000 kalkulacji blokowania próbki i kompensacji wymiarów w < 100 ms', () => {
+    const raw = { stitches: 20, rows: 28, width: 10, height: 10, unit: 'cm' as const };
+    const blocked = { width: 11, height: 10.5, unit: 'cm' as const };
+    const target = { targetWidth: 55, targetHeight: 65, unit: 'cm' as const };
+
+    const t0 = performance.now();
+    for (let i = 0; i < 10000; i++) {
+      calculateBlockingAnalysis(raw, blocked, target);
+    }
+    const durationMs = performance.now() - t0;
+    expect(durationMs).toBeLessThan(budget(100));
   });
 });
 

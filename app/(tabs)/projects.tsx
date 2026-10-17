@@ -28,6 +28,7 @@ import { ShapingCalculatorModal } from '../../src/components/ShapingCalculatorMo
 import { EaseCalculatorModal } from '../../src/components/EaseCalculatorModal';
 import { RaglanCalculatorModal } from '../../src/components/RaglanCalculatorModal';
 import { HatCalculatorModal } from '../../src/components/HatCalculatorModal';
+import { BlockingCalculatorModal } from '../../src/components/BlockingCalculatorModal';
 import { useAppAccess } from '../../src/core/app-access-context';
 import { useLang, t } from '../../src/core/i18n';
 import { useUnitSystem } from '../../src/core/use-unit-system';
@@ -62,6 +63,9 @@ export default function ProjectsScreen() {
 
   // Modal kalkulatora korony czapki
   const [hatModalVisible, setHatModalVisible] = useState(false);
+
+  // Modal kalkulatora blokowania próbki (DEC-34)
+  const [blockingModalVisible, setBlockingModalVisible] = useState(false);
 
   // Modal karty podsumowania i udostępniania robótki
   const [selectedShareProject, setSelectedShareProject] = useState<EnrichedProject | null>(null);
@@ -385,6 +389,21 @@ export default function ProjectsScreen() {
             <Text style={styles.gaugeButtonText}>{t('🧢 Czapka')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.gaugeButton}
+            activeOpacity={0.8}
+            onPress={() => {
+              if (!evaluation.canCreateNewProject) {
+                openPaywall();
+              } else {
+                setBlockingModalVisible(true);
+              }
+            }}
+            accessibilityLabel={t('Otwórz kalkulator blokowania próbki')}
+            accessibilityRole="button"
+          >
+            <Text style={styles.gaugeButtonText}>{t('🧼 Blokowanie')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.newButton}
             activeOpacity={0.8}
             onPress={() => {
@@ -645,6 +664,12 @@ export default function ProjectsScreen() {
       <HatCalculatorModal
         visible={hatModalVisible}
         onClose={() => setHatModalVisible(false)}
+      />
+
+      {/* Modal kalkulatora blokowania próbki (DEC-34) */}
+      <BlockingCalculatorModal
+        visible={blockingModalVisible}
+        onClose={() => setBlockingModalVisible(false)}
       />
     </SafeAreaView>
   );

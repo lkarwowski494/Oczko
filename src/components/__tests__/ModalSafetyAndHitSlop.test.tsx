@@ -15,6 +15,7 @@ import { ImpulsePaywallModal } from '../ImpulsePaywallModal';
 import { LinkedCounterModal } from '../LinkedCounterModal';
 import { IntervalConfigModal } from '../IntervalConfigModal';
 import { KnitProofOverlay } from '../KnitProofOverlay';
+import { BlockingCalculatorModal } from '../BlockingCalculatorModal';
 
 const mockSnapshot: any = {
   projectId: 'p1',
@@ -280,5 +281,17 @@ describe('Modal Safety, Safe Area and HitSlop Audits (Phase 2)', () => {
     expect(undoBtn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
     act(() => undoBtn.props.onPress());
     expect(onDecrement).toHaveBeenCalled();
+  });
+
+  it('BlockingCalculatorModal close button has hitSlop and triggers onClose', () => {
+    const onClose = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(<BlockingCalculatorModal visible={true} onClose={onClose} />);
+    });
+    const btn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Zamknij');
+    expect(btn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
+    act(() => btn.props.onPress());
+    expect(onClose).toHaveBeenCalled();
   });
 });

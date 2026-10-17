@@ -501,6 +501,16 @@
   - **Tag wydania:** Utworzono i opublikowano automatyczny tag wydania `v0.1.0-b1004`.
   - **Zgodność ze standardami:** Koszt 0 zł (0 PLN), zerowa zależność od kont czy chmury Expo (zero EAS CLI/build), pełna czystość testów i weryfikacji.
 
+* **DEC-34 Implementacja: Kalkulator Blokowania Próbki i Kompensacji Wymiarów (17.10.2026):**
+  - **Wybór:** Realizacja Opcji 1 — dedykowany silnik i modal do analizy zmiany wymiarów dzianiny przed i po praniu/blokowaniu na mokro (*wet blocking compensation*).
+  - **Architektura:**
+    - Czysty moduł domenowy `src/core/blocking-calculator.ts` bez zależności od React Native (inwariant ZP-05, deterministyczna matematyka dziewiarska).
+    - Obliczanie wskaźników procentowych $\Delta W\%, \Delta H\%$, gęstości surowej vs po blokowaniu, kompensacja wymiarów na drutach pod docelowy rozmiar wyrobu oraz porady technologiczne dla włókien (np. Superwash, alpaka, len).
+    - Modal rzemieślniczy `src/components/BlockingCalculatorModal.tsx` zgodny z Apple HIG ($\ge 44 \times 44$ pt, ceramiczna paleta Apps4Craft, eksport do Share Sheet).
+    - Integracja w zakładce Projekty (`app/(tabs)/projects.tsx` — przycisk `🧼 Blokowanie`).
+  - **Standard Jakości (ZAS-QA-01):** 100% pokrycia linii, testy PBT (`fast-check`), budżet wydajnościowy CPU, testy HIG/A11y, symetria słowników i18n (PL/EN).
+
+
 
 
 

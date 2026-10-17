@@ -81,6 +81,7 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'db-path.ts'),
         join(srcCoreDir, 'unit-converter.ts'),
         join(srcCoreDir, 'project-share-protocol.ts'),
+        join(srcCoreDir, 'blocking-calculator.ts'),
       ];
 
       for (const filePath of pureDomainFiles) {

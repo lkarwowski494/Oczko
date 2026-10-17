@@ -77,6 +77,7 @@ import {
   decodeProjectFromDeepLink,
   CompactProjectPayload,
 } from '../project-share-protocol';
+import { calculateBlockingAnalysis } from '../blocking-calculator';
 
 describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-check)', () => {
   describe('Niezmienniki Licznika i Event Sourcingu (counter-engine.ts)', () => {
@@ -1061,6 +1062,47 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
           }
         ),
         { numRuns: 60 }
+      );
+    });
+  });
+
+  describe('Niezmienniki Kalkulatora Blokowania Próbki (blocking-calculator.ts, DEC-34)', () => {
+    it('Niezmiennik proporcjonalności i zachowania wymiarów na drutach (on-needles scaling)', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 10, max: 40 }), // raw stitches
+          fc.integer({ min: 14, max: 60 }), // raw rows
+          fc.float({ min: 8, max: 15, noNaN: true }), // raw width cm
+          fc.float({ min: 8, max: 15, noNaN: true }), // raw height cm
+          fc.float({ min: 8, max: 20, noNaN: true }), // blocked width cm
+          fc.float({ min: 8, max: 20, noNaN: true }), // blocked height cm
+          fc.float({ min: 30, max: 120, noNaN: true }), // target width cm
+          fc.float({ min: 40, max: 140, noNaN: true }), // target height cm
+          (st, rows, rw, rh, bw, bh, tw, th) => {
+            const raw = { stitches: st, rows, width: rw, height: rh, unit: 'cm' as const };
+            const blocked = { width: bw, height: bh, unit: 'cm' as const };
+            const target = { targetWidth: tw, targetHeight: th, unit: 'cm' as const };
+
+            const res = calculateBlockingAnalysis(raw, blocked, target);
+
+            // Niezmiennik 1: Dodatnia liczba oczek do nabrania i rzędów
+            expect(res.requiredCastOnStitches).toBeGreaterThanOrEqual(0);
+            expect(res.requiredTotalRows).toBeGreaterThanOrEqual(0);
+
+            // Niezmiennik 2: Jeśli dzianina rośnie wszerz (bw > rw), szerokość na drutach musi być mniejsza od docelowej
+            if (bw > rw + 0.05) {
+              expect(res.widthChangePct).toBeGreaterThan(0);
+              expect(res.onNeedlesWidth).toBeLessThanOrEqual(tw + 0.1);
+            }
+
+            // Niezmiennik 3: Jeśli dzianina zbiega się wszerz (bw < rw), szerokość na drutach musi być większa od docelowej
+            if (bw < rw - 0.05) {
+              expect(res.widthChangePct).toBeLessThan(0);
+              expect(res.onNeedlesWidth).toBeGreaterThanOrEqual(tw - 0.1);
+            }
+          }
+        ),
+        { numRuns: 80 }
       );
     });
   });

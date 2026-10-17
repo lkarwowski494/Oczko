@@ -78,6 +78,7 @@ import {
   encodeProjectToDeepLink,
   decodeProjectFromDeepLink,
 } from '../project-share-protocol';
+import { calculateBlockingAnalysis } from '../blocking-calculator';
 
 describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)', () => {
   describe('Atomowość Transakcji i Wycofywanie Błędów (Transaction Rollbacks)', () => {
@@ -863,6 +864,28 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       // Brak części projektu
       const emptyParts = Buffer.from(JSON.stringify({ v: 1, n: 'Test', c: 'knitting', p: [] }), 'utf-8').toString('base64');
       expect(() => decodeProjectFromDeepLink(`oczko://project?v=1&d=${emptyParts}`)).toThrow('Projekt musi posiadać co najmniej jedną część ("p")');
+    });
+  });
+
+  describe('Odporność Kalkulatora Blokowania Próbki (blocking-calculator.ts, DEC-34)', () => {
+    test('Odporność na wartości ujemne, zero i skrajne wielkości próbek', () => {
+      const validRaw = { stitches: 20, rows: 28, width: 10, height: 10, unit: 'cm' as const };
+      const validBlocked = { width: 10, height: 10, unit: 'cm' as const };
+
+      expect(() => calculateBlockingAnalysis({ ...validRaw, stitches: -5 }, validBlocked)).toThrow();
+      expect(() => calculateBlockingAnalysis({ ...validRaw, width: 0 }, validBlocked)).toThrow();
+      expect(() => calculateBlockingAnalysis(validRaw, { ...validBlocked, width: -10 })).toThrow();
+      expect(() => calculateBlockingAnalysis(validRaw, validBlocked, { targetWidth: -50, targetHeight: 60, unit: 'cm' })).toThrow();
+
+      // Skrajnie duże próbki - brak przepełnień
+      const extremeRes = calculateBlockingAnalysis(
+        { stitches: 10000, rows: 14000, width: 500, height: 500, unit: 'cm' },
+        { width: 550, height: 550, unit: 'cm' },
+        { targetWidth: 2000, targetHeight: 2500, unit: 'cm' }
+      );
+      expect(extremeRes.widthChangePct).toBe(10);
+      expect(extremeRes.requiredCastOnStitches).toBeGreaterThan(0);
+      expect(Number.isFinite(extremeRes.onNeedlesWidth)).toBe(true);
     });
   });
 });
