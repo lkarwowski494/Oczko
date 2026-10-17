@@ -477,5 +477,9 @@
   - **Profile Budowania (`eas.json`):** Dodano konfigurację profili `development` (symulator), `preview` (dystrybucja wewnętrzna) oraz `production` (`autoIncrement: true` dla numeru buildu).
   - **Cel Dystrybucyjny (`submit`):** Zdefiniowano cel produkcyjny iOS powiązany z zespołem Apple Developer Team ID `8NQ9GHY8GF` pod automatyczny upload do TestFlight.
 
+* **DEC-30 Integracja Biblioteki Zasad i Ról oraz Audyt Zgodności (17.10.2026):**
+  - **Decyzja użytkownika:** Wybór Opcji C — wstrzymanie wdrożenia TestFlight na rzecz wklejenia modułu „Biblioteka zasad i ról” z Dysku, przypisania ról do projektu Oczko oraz wykonania pełnego, rygorystycznego audytu zgodności całej aplikacji z zasadami.
+
+
 
 
