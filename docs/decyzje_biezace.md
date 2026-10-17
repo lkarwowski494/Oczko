@@ -490,6 +490,11 @@
     - 15/15 testów modali w `ModalSafetyAndHitSlop.test.tsx` (100% zgodności z Apple HIG i Safe Area).
     - 0 błędów TypeScript (`tsc --noEmit`), 0 brakujących kluczy i18n (`check:i18n`).
 
+* **DEC-32 Rozpoczęcie Wdrożenia TestFlight (17.10.2026):**
+  - **Decyzja użytkownika:** Wybór Opcji 1 — przejście do dystrybucji na TestFlight za pośrednictwem EAS Build (`com.apps4brew.knitting`, Apple Team ID: `8NQ9GHY8GF`).
+  - **Wymogi operacyjne (Zasada 8):** Jednorazowe logowanie interaktywne w terminalu użytkownika (`npx eas-cli login`), inicjalizacja powiązania projektu (`npx eas-cli init`) oraz zlecenie kompilacji chmurowej (`npx eas-cli build --platform ios --profile production --auto-submit`).
+
+
 
 
 
