@@ -466,4 +466,16 @@
     - 100% testów zielonych we wszystkich 68 zestawach testowych (`app-access.test.ts`, `ImpulsePaywallModal.test.tsx`, `SettingsScreen.test.tsx`, `MainCounterScreen.test.tsx`, `ProjectsScreen.test.tsx`).
     - 100.00% Line Coverage w `src/core/` i całym repozytorium.
 
+* **DEC-28 Standaryzacja Front-Endu i Audyt Rzemieślniczy Apps4Craft Studio (17.10.2026):**
+  - **Faza 1 (The Craft Purge):** Usunięcie gadżetowego modułu kalkulatora oszczędności PLN (`cost-calculator.ts` i testów), rozszerzenie `ToolType` o `'accessory' | 'notion' | 'custom'` oraz redukcja dolnego paska nawigacji do 4 kluczowych zakładek (Licznik, Projekty, Magazyn, Warsztat; Ustawienia przeniesione do nagłówka).
+  - **Faza 2 (Bezpieczeństwo UI, Safe Area i Klikalność):** Zabezpieczenie wszystkich modali przed kolizją z iOS Safe Area (`SafeAreaView` / `useSafeAreaInsets`), wymuszenie min. $44 \times 44$ pt oraz `hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}` dla wszystkich przycisków wyjścia/anulowania, wdrożenie HUD-u „Sacred Numbers” w trybie skupienia (Knit-Proof).
+  - **Faza 3 (Onboarding Rytuału):** Jednoekranowy modal wyboru profilu rzemiosła (`OnboardingModal.tsx` – druty, szydełko, pełny warsztat) z persystencją w SQLite (`app_settings`) i możliwością zmiany w Ustawieniach.
+  - **Faza 4 (System Designu Apps4Craft Studio):** Ceramiczna estetyka bazaltowa (`#121214`), akcent terakoty (`#D46A43`) i różowego złota (`#D97B66`), wektorowe ikony SVG (`CraftIcons.tsx`, zero emoji w nawigacji), sekcja „Rodzina Apps4Craft Studio” w Ustawieniach (Napar, Piekarz, Słoik, Dym).
+  - **Faza 5 (Weryfikacja i Testy):** 70/70 zestawów testów zielonych (576 testów), 0 błędów TypeScript (`tsc --noEmit`), 100% symetria tłumaczeń i18n (248 w kodzie / 316 w słowniku EN).
+
+* **DEC-29 Konfiguracja EAS Build i Dystrybucji TestFlight (17.10.2026):**
+  - **Profile Budowania (`eas.json`):** Dodano konfigurację profili `development` (symulator), `preview` (dystrybucja wewnętrzna) oraz `production` (`autoIncrement: true` dla numeru buildu).
+  - **Cel Dystrybucyjny (`submit`):** Zdefiniowano cel produkcyjny iOS powiązany z zespołem Apple Developer Team ID `8NQ9GHY8GF` pod automatyczny upload do TestFlight.
+
+
 
