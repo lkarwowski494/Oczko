@@ -53,6 +53,8 @@ export interface ProjectContextValue {
   addLinkedCounter: (partId: string, parentCounterId: string, input: AddLinkedCounterInput) => Promise<void>;
   stepCounter: (direction: 'increment' | 'decrement') => Promise<void>;
   undoCounter: () => Promise<void>;
+  recovery: import('./backup-service').RecoveryInfo | null;
+  dismissRecoveryBanner: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextValue | null>(null);
@@ -71,6 +73,16 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
   const [activeCounterState, setActiveCounterState] = useState<ComputedCounterState | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [recovery, setRecoveryState] = useState<import('./backup-service').RecoveryInfo | null>(() => {
+    const { getRecovery } = require('./backup-service');
+    return getRecovery();
+  });
+
+  const dismissRecoveryBanner = useCallback(() => {
+    const { clearRecovery } = require('./backup-service');
+    clearRecovery();
+    setRecoveryState(null);
+  }, []);
 
   const activeProjectIdRef = useRef<string | null>(activeProjectId);
   activeProjectIdRef.current = activeProjectId;
@@ -324,6 +336,8 @@ export function ProjectProvider({ children, initialDb }: ProjectProviderProps) {
     addLinkedCounter,
     stepCounter,
     undoCounter,
+    recovery,
+    dismissRecoveryBanner,
   };
 
   return (

@@ -46,7 +46,7 @@ Muszą być zdefiniowane 3 sekrety (wspólne dla całego ekosystemu Apps4Brew):
 |---|---|---|
 | `ASC_KEY_ID` | **Users and Access → Integrations → Keys** | 10-znakowy identyfikator klucza (np. `2X9R4274HG`) |
 | `ASC_ISSUER_ID` | **Users and Access → Integrations → Keys** | Identyfikator wystawcy UUID (np. `57246542-96fe-1a63-e053-0824d011072a`) |
-| `ASC_KEY_P8` | Plik `.p8` pobrany jednorazowo przy tworzeniu klucza | Cała zawartość pliku tekstowego wraz z liniami `-----BEGIN PRIVATE KEY-----` i `-----END PRIVATE KEY-----` |
+| `ASC_KEY_P8` | Plik `.p8` pobrany jednorazowo przy tworzeniu klucza | Cała zawartość pliku tekstowego wraz z nagłówkiem `BEGIN PRIVATE KEY` i stopką `END PRIVATE KEY` |
 
 > [!NOTE]
 > Jeśli te sekrety dodałeś już na poziomie konta lub organizacji GitHub (`lkarwowski494`), repozytorium `Oczko` korzysta z nich automatycznie bez konieczności ponownego wpisywania.

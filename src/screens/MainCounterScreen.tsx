@@ -342,6 +342,44 @@ export default function MainCounterScreen() {
         />
       ) : (
         <>
+          {/* Baner odzyskiwania uszkodzonego stanu (BR-TEST-023) */}
+          {projectCtx?.recovery && (
+            <View
+              testID="recovery-banner"
+              accessibilityRole="alert"
+              style={{
+                backgroundColor: '#FEF3C7',
+                borderColor: '#F59E0B',
+                borderWidth: 1,
+                padding: 12,
+                borderRadius: 8,
+                marginHorizontal: 16,
+                marginBottom: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <View style={{ flex: 1, marginRight: 8 }}>
+                <Text style={{ color: '#92400E', fontWeight: 'bold', fontSize: 13 }}>
+                  ⚠️ Odzyskiwanie stanu
+                </Text>
+                <Text style={{ color: '#B45309', fontSize: 12 }}>
+                  Wykryto uszkodzone dane przy starcie. Zachowano kopię awaryjną.
+                </Text>
+              </View>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel="Zamknij baner odzyskiwania"
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                style={{ padding: 6, minWidth: 44, minHeight: 44, justifyContent: 'center', alignItems: 'center' }}
+                onPress={() => projectCtx?.dismissRecoveryBanner()}
+              >
+                <Text style={{ color: '#92400E', fontWeight: '600' }}>Zamknij</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* Nagłówek projektu */}
           <View style={styles.header}>
             <Text style={styles.projectTitle}>{projectName}</Text>

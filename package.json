@@ -16,7 +16,8 @@
     "check:corpus": "python scripts/gen-gauge-corpus.py",
     "typecheck": "tsc --noEmit",
     "check:i18n": "node scripts/check-i18n.mjs",
-    "verify": "npm run typecheck && npm run check:i18n && npm run test:coverage"
+    "check:licenses": "node scripts/licenses.mjs --check",
+    "verify": "npm run typecheck && npm run check:i18n && npm run check:licenses && node scripts/test-matrix.mjs --check && node scripts/verify-native.mjs && npm run test:coverage"
   },
   "dependencies": {
     "@types/qrcode": "^1.5.6",

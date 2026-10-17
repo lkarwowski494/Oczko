@@ -740,5 +740,43 @@ describe('Oczko UI — Test renderowania głównego ekranu i interakcji (BR-LICZ
     text = extractAllStrings(tree.toJSON());
     expect(text).toContain('Stuknij, aby dodać rząd');
   });
+
+  it('wyświetla nieinwazyjny baner odzyskiwania stanu (BR-TEST-023) i pozwala go zamknąć', async () => {
+    const backupService = require('../../core/backup-service');
+    backupService.setRecovery({ key: 'state_corrupt_test', at: Date.now(), raw: '{"corrupt": true}' });
+
+    const { ProjectProvider } = require('../../core/project-context');
+    const { createInMemoryDatabase } = require('../../core/database');
+    const db = createInMemoryDatabase();
+    let tree: any;
+    await act(async () => {
+      tree = renderer.create(
+        <ProjectProvider initialDb={db}>
+          <MainCounterScreen />
+        </ProjectProvider>
+      );
+    });
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 60));
+    });
+
+    const root = tree.root;
+    const banner = root.findByProps({ testID: 'recovery-banner' });
+    expect(banner).toBeDefined();
+    expect(extractAllStrings(banner)).toContain('Odzyskiwanie stanu');
+
+    // Zamknięcie banera
+    const closeBtn = root.find(
+      (n: any) => n.props?.accessibilityLabel === 'Zamknij baner odzyskiwania'
+    );
+    act(() => {
+      closeBtn.props.onPress();
+    });
+
+    expect(root.findAllByProps({ testID: 'recovery-banner' }).length).toBe(0);
+    backupService.clearRecovery();
+  });
 });
+
 

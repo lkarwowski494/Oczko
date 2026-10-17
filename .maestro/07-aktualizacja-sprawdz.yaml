@@ -1,0 +1,9 @@
+appId: com.apps4brew.knitting
+---
+- launchApp
+- tapOn: "Projekty"
+- assertVisible: "Szalik Przed Aktualizacją"
+- tapOn: "Licznik"
+- assertVisible: "3"
+- tapOn: "+1 Rząd"
+- assertVisible: "4"

@@ -5,16 +5,13 @@
 export const EN: Record<string, string> = {
   // Nawigacja i główne zakładki
   'Licznik': 'Counter',
-  'Robótki': 'Projects',
   'Magazyn': 'Stash',
-  'Nauka': 'Learn',
   'Ustawienia': 'Settings',
 
   // Główny licznik
   'Stuknij, aby dodać rząd': 'Tap to count row',
   '+1 Rząd': '+1 Row',
   'Cofnij': 'Undo',
-  'Cofnij (Undo)': 'Undo',
   'Schemat & Linijka': 'Chart & Ruler',
   'Wzór PDF': 'PDF Pattern',
   'Mój Sweter': 'My Sweater',
@@ -22,42 +19,18 @@ export const EN: Record<string, string> = {
   'Rękaw lewy': 'Left Sleeve',
   'Rękaw prawy': 'Right Sleeve',
   'Rząd': 'Row',
-  'Cel': 'Target',
-  'Zresetuj': 'Reset',
 
   // Stoper i czas
   'Sesja dziergania': 'Knitting Session',
   'Wstrzymano (brak ruchu)': 'Paused (Idle)',
   'Stoper zatrzymany': 'Timer Stopped',
-  'Rozpocznij': 'Start',
-  'Wznów': 'Resume',
-  'Wstrzymaj': 'Pause',
-  'Czas robótki': 'Knitting Time',
-  'Czas robótki: {time}': 'Knitting Time: {time}',
-  'Tempo': 'Speed',
-  'rz./h': 'rows/h',
 
   // Przypomnienia
-  'Przypomnienie cykliczne': 'Interval Reminder',
   'Przypomnienie cykliczne (Interwał)': 'Interval Reminder',
   'Szybki wybór interwału:': 'Quick interval selection:',
-  'co 4': 'every 4',
-  'co 6': 'every 6',
-  'co 8': 'every 8',
-  'co 10': 'every 10',
-  'co 12': 'every 12',
-  'Zapisz przypomnienie': 'Save Reminder',
 
   // Narzędzia i Modale
-  'Próbka': 'Gauge',
   'Kształtowanie': 'Shaping',
-  'Udostępnij': 'Share',
-  'Zamiennik': 'Yarn Sub',
-  'Luz': 'Ease',
-  'Raglan': 'Raglan',
-  'Czapka': 'Hat',
-  'Miarka drutów': 'Needle Gauge',
-  'Kopia zapasowa': 'Backup',
   'Zapisz': 'Save',
   'Anuluj': 'Cancel',
   'Zamknij': 'Close',
@@ -68,11 +41,6 @@ export const EN: Record<string, string> = {
   'Włóczki': 'Yarns',
   'Druty i szydełka': 'Needles & Hooks',
   'Dodaj włóczkę': 'Add Yarn',
-  'Dodaj narzędzie': 'Add Tool',
-  'Partia (Dye Lot)': 'Dye Lot',
-  'Skład': 'Fiber Content',
-  'Metraż': 'Yardage',
-  'Waga': 'Weight',
 
   // Monetyzacja i Apps4Brew Studio Pass
   'APPS4BREW STUDIO PASS & SUBSKRYPCJA': 'APPS4BREW STUDIO PASS & SUBSCRIPTION',
@@ -91,7 +59,6 @@ export const EN: Record<string, string> = {
   'Odblokuj pełny dostęp': 'Unlock Full Access',
   'Aktywny okres próbny': 'Active Trial',
   'Historia (Tylko do odczytu)': 'History (Read-Only)',
-  'Historia projektów': 'Projects History',
   'Okres próbny dobiegł końca. Wszystkie Twoje dotychczasowe robótki są bezpieczne. Aby tworzyć nowe, odblokuj Pass.': 'Trial period has ended. All your existing projects remain safe. Unlock Pass to create new ones.',
   'Pozostało dni: {days} | Dostępne nowe projekty: {projects}': 'Days left: {days} | Available new projects: {projects}',
   'Plan: {plan}': 'Plan: {plan}',
@@ -108,7 +75,6 @@ export const EN: Record<string, string> = {
   'Angielski': 'English',
 
   // Knit-Proof UI
-  'Tryb pełnoekranowy (Knit-Proof)': 'Full Screen Mode (Knit-Proof)',
   'Tryb Knit-Proof': 'Knit-Proof Mode',
   'Wyjdź z trybu Knit-Proof': 'Exit Knit-Proof Mode',
   'Dotknij w dowolnym miejscu': 'Tap anywhere to count',
@@ -116,8 +82,6 @@ export const EN: Record<string, string> = {
   '+ Licznik wzoru (warkocz/ażur)': '+ Pattern counter (cable/lace)',
 
   // Komunikaty
-  'Pomyślnie zapisano': 'Saved successfully',
-  'Operacja anulowana': 'Operation cancelled',
   'Sukces': 'Success',
   'Błąd': 'Error',
   'Nie udało się przywrócić zakupów.': 'Failed to restore purchases.',
@@ -126,8 +90,6 @@ export const EN: Record<string, string> = {
   'Zaimportuj swój własny plik PDF lub grafikę wzoru ze schematem. Aplikacja nałoży interaktywną, przesuwaną linijkę podświetlającą bieżący wiersz i zsynchronizuje postęp z głównym licznikiem.':
     'Import your own PDF or chart graphic. The app places an interactive, draggable ruler over the current row and syncs progress with the main counter.',
   'Wczytaj plik PDF': 'Load PDF file',
-  'Przytrzymaj, aby cofnąć': 'Hold to undo',
-  'Przytrzymaj, aby cofnąć (Safe Undo)': 'Hold to undo (Safe Undo)',
 
   // Nauka i słownik
   'Słownik i symbole': 'Glossary & Symbols',
@@ -152,11 +114,8 @@ export const EN: Record<string, string> = {
   'DRUTY': 'NEEDLES',
   'SZYDEŁKO': 'CROCHET',
   'Części': 'Parts',
-  'Karta': 'Card',
-  'Część': 'Part',
   'Twoje Robótki': 'Your Projects',
   'Otwórz kalkulator kształtowania i dodawania oczek': 'Open shaping and stitch calculator',
-  'Oczka': 'Stitches',
   'Otwórz kalkulator luzu odzieżowego i doboru rozmiaru': 'Open ease and sizing calculator',
   'Otwórz kalkulator konstrukcji raglanu i rzędów skróconych': 'Open raglan construction calculator',
   'Otwórz kalkulator korony czapki i ściągacza': 'Open hat crown and ribbing calculator',
@@ -189,7 +148,6 @@ export const EN: Record<string, string> = {
   '+ Nowy projekt': '+ New Project',
 
   // Magazyn i kalkulatory
-  'Zużycie': 'Usage',
   'Lifetime (Na zawsze)': 'Lifetime (Forever)',
   'Aktywny': 'Active',
   'Zostało': 'Remaining',
@@ -219,8 +177,6 @@ export const EN: Record<string, string> = {
   'Materiał:': 'Material:',
   'Długość żyłki:': 'Cord length:',
   'Usuń z magazynu': 'Remove from stash',
-  'Dodaj Nową Włóczkę': 'Add New Yarn',
-  'Dodaj Nowe Druty lub Szydełko': 'Add New Needles or Hook',
   'Marka': 'Brand',
   'np. Drops / Sandnes Garn': 'e.g. Drops / Sandnes Garn',
   'Nazwa włóczki': 'Yarn Name',
@@ -240,8 +196,6 @@ export const EN: Record<string, string> = {
   'np. KnitPro Zing na żyłce': 'e.g. KnitPro Zing Circular',
   'Rozmiar': 'Size',
   'Długość żyłki (opcjonalnie)': 'Cord length (optional)',
-  'Zapisz włóczkę': 'Save Yarn',
-  'Zapisz narzędzie': 'Save Tool',
   'Dodaj włóczkę do schowka': 'Add yarn to stash',
   'Dodaj druty / szydełko': 'Add needles / hook',
   'Zapisz w magazynie': 'Save to stash',
@@ -397,4 +351,12 @@ export const EN: Record<string, string> = {
   'Udostępnij raport blokowania': 'Share Blocking Report',
   'Otwórz kalkulator blokowania próbki': 'Open blocking & wet gauge calculator',
   '🧼 Blokowanie': '🧼 Blocking',
+
+  // UI Components & Safety
+  'Nie znaleziono': 'Not Found',
+  'Szukany rekord nie istnieje lub został usunięty.': 'The requested record does not exist or was deleted.',
+  'Szukaj...': 'Search...',
+  'Szukaj': 'Search',
+  'Baza danych niedostępna': 'Database Unavailable',
+  'Baza danych nie jest jeszcze zainicjalizowana.': 'Database is not initialized yet.',
 };

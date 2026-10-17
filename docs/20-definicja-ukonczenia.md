@@ -30,17 +30,20 @@ Każda zmiana w kodzie przed scaleniem do gałęzi `main` musi pomyślnie przej�
 
 1. **Statyczna kontrola typów TypeScript:**  
    `npm run typecheck` (`tsc --noEmit`) — **0 błędów, 0 ostrzeżeń**.
-2. **Pełne pokrycie linii kodu (Lines Coverage):**  
-   `npm run test:coverage` — **bezwzględne 100.00% pokrycia linii** we wszystkich plikach produkcyjnych (`All files: 100%`).
-3. **Pakiety testów wieloperspektywicznych:**  
-   - `npm run test:pbt` — zielone niezmienniki `fast-check`.
-   - `npm run test:perf` — wszystkie operacje w budżecie czasu CPU.
-   - `npm run test:a11y` — zgodność z Apple HIG ($\ge 44\,\text{pt}$).
-   - `npm run test:resilience` — pełna odporność na awarie i rollbacki.
-   - `npm run test:concurrency` — brak wyścigów i spójność kolejek offline.
-   - `npm run test:corpus` — 100% zgodności z korpusem referencyjnym Pythona.
-4. **Ciągła Integracja GitHub Actions (CI):**  
-   Zielony status zadania `Oczko CI` na maszynie wirtualnej w GitHub Actions.
+2. **Higiena tłumaczeń i18n:**  
+   `npm run check:i18n` — 0 brakujących kluczy, 0 martwych kluczy.
+3. **Audyt licencji Open Source:**  
+   `npm run check:licenses` — dozwolone wyłącznie licencje permisywne, blokada GPL/LGPL/AGPL.
+4. **Macierz Pokrycia AST:**  
+   `node scripts/test-matrix.mjs --check` — **100% pokrycia** we wszystkich 5 kategoriach (`EKRAN`, `UI`, `TEKST`, `LOGIKA`, `WYMIAR`).
+5. **Niezmienniki projektu natywnego iOS:**  
+   `node scripts/verify-native.mjs` — spełnione wszystkie 20 niezmienników iOS na Linuksie/Windowsie.
+6. **Pełne pokrycie kodu i testy wieloperspektywiczne:**  
+   `npm run test:coverage` — **100.00% pokrycia logiki domenowej**, testy `fast-check` (PBT), wyrocznia Pythona (`gauge-corpus`), strażnicy interakcji `S1–S16`, testy dostępności VoiceOver i dotyku $\ge 44\,\text{pt}$, testy stref czasowych i Maestro.
+7. **Nadrzędna bramka jakościowa:**  
+   `npm run verify` — jednolity przebieg sprawdzający wszystkie powyższe kroki w 100% na zielono.
+8. **Ciągła Integracja GitHub Actions (CI):**  
+   Zielony status zadań `CI` i `TestFlight` na maszynach GitHub Actions.
 
 ---
 

@@ -82,8 +82,10 @@ export default function KnittingTimeTracker({
   }, [currentRows, isAutoPaused, isTracking]);
 
   const intervalRef = useRef<any>(null);
+  const sessionStartMsRef = useRef<number>(Date.now());
+  const accumulatedSessionSecRef = useRef<number>(0);
 
-  // 3. Pętla stopera (co 1 sekundę) z mechanizmem wykrywania bezczynności (Auto-Pause)
+  // 3. Pętla stopera oparta na znacznikach czasu (Date.now() - startMs) odporna na uśpienie w tle (RD-ENG-06, NFR-PERF-004)
   useEffect(() => {
     let isMounted = true;
 
@@ -95,16 +97,20 @@ export default function KnittingTimeTracker({
       return;
     }
 
+    sessionStartMsRef.current = Date.now();
+
     intervalRef.current = setInterval(() => {
       if (!isMounted) return;
       const now = Date.now();
       if (shouldAutoPauseSession(lastActivityRef.current, now, 5)) {
         if (isMounted) {
+          accumulatedSessionSecRef.current += Math.floor((now - sessionStartMsRef.current) / 1000);
           setIsAutoPaused(true);
         }
       } else {
         if (isMounted) {
-          setSessionSeconds((prev) => prev + 1);
+          const elapsed = accumulatedSessionSecRef.current + Math.floor((now - sessionStartMsRef.current) / 1000);
+          setSessionSeconds(elapsed);
         }
       }
     }, 1000);

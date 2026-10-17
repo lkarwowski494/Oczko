@@ -32,9 +32,10 @@ describe('Apps4Brew i18n Standard (src/core/i18n.ts)', () => {
   });
 
   it('obsługuje interpolację parametrów {klucz}', () => {
-    expect(t('Czas robótki: {time}', { time: '1h 15m' })).toBe('Czas robótki: 1h 15m');
+    expect(t('Witaj {name}!', { name: 'Kasia' })).toBe('Witaj Kasia!');
+    expect(t('Plan: {plan}', { plan: 'Roczny' })).toBe('Plan: Roczny');
     setLang('en');
-    expect(t('Czas robótki: {time}', { time: '1h 15m' })).toBe('Knitting Time: 1h 15m');
+    expect(t('Plan: {plan}', { plan: 'Annual' })).toBe('Plan: Annual');
   });
 
   it('useLang reaguje na zmiany języka i odmontowuje listener', () => {

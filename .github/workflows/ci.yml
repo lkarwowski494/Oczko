@@ -1,23 +1,33 @@
-name: Oczko CI
+name: CI
 
 on:
   push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
+  verify:
+    name: Typecheck, Matrix, i18n, Native & Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NODE_OPTIONS: --max-old-space-size=3072
+      FORCE_COLOR: '1'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - name: Use Node.js
+      - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -26,5 +36,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run verification (typecheck & tests)
+      - name: Run verification suite
         run: npm run verify

@@ -363,7 +363,7 @@ describe('SettingsScreen — Pełne testy ustawień, kopii zapasowych i haptyki 
     await act(async () => {
       await exportBtn.props.onPress();
     });
-    expect(alertSpy).toHaveBeenCalledWith('Błąd', 'Baza danych nie jest jeszcze zainicjalizowana.');
+    expect(alertSpy).toHaveBeenCalledWith('Baza danych niedostępna', 'Baza danych nie jest jeszcze zainicjalizowana.');
 
     // 2. Przywracanie bez db (linie 92-93)
     const restoreBtn = root.find((node: any) =>

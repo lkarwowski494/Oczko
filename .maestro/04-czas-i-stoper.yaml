@@ -1,0 +1,10 @@
+appId: com.apps4brew.knitting
+---
+- launchApp
+- tapOn: "Licznik"
+- assertVisible: "Rozpocznij"
+- tapOn: "Rozpocznij"
+- assertVisible: "Wstrzymaj"
+- tapOn: "Wstrzymaj"
+- assertVisible: "Wznów"
+- tapOn: "Wznów"

@@ -274,3 +274,18 @@ export function DymSuiteIcon({ size = 22, color = '#C25A38' }: IconProps) {
     </Svg>
   );
 }
+
+export function ChevronBackIcon({ size = 24, color = '#F4EFEA', strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M15 18l-6-6 6-6"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oczko (Purlo) — Pomoc i Wsparcie Techniczne / Support</title>
+  <style>
+    :root { color-scheme: light dark; --bg: #FAF8F5; --fg: #1F2937; --accent: #C85A32; --muted: #6B7280; --border: #E5E7EB; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #111827; --fg: #F9FAFB; --accent: #E07A5F; --muted: #9CA3AF; --border: #374151; } }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 720px; margin: 30px auto 60px; padding: 0 20px; }
+    h1 { font-size: 28px; color: var(--accent); margin-bottom: 8px; }
+    h2 { font-size: 20px; color: var(--accent); margin-top: 32px; }
+    .faq-item { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .faq-q { font-weight: 600; margin-bottom: 6px; }
+    a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Pomoc i Wsparcie Techniczne</h1>
+    <p>Masz pytanie, sugestię lub potrzebujesz pomocy z aplikacją Oczko (Purlo)? Skontaktuj się bezpośrednio z naszym zespołem rzemieślniczym.</p>
+    <p><strong>Adres e-mail:</strong> <a href="mailto:support@apps4brew.com">support@apps4brew.com</a></p>
+
+    <h2>Często Zadawane Pytania (FAQ)</h2>
+    <div class="faq-item">
+      <div class="faq-q">Jak utworzyć kopię zapasową moich projektów?</div>
+      <div class="faq-a">Wejdź w Ustawienia → Kopia zapasowa → Utwórz kopię zapasową. Plik JSON zostanie bezpiecznie zapisany w systemowym katalogu aplikacji i może zostać wyeksportowany przez arkusz udostępniania iOS (np. do aplikacji Pliki, iCloud Drive lub AirDrop).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Czy aplikacja wymaga połączenia z internetem?</div>
+      <div class="faq-a">Nie! Oczko działa w 100% offline. Wszystkie liczniki, baza włóczek i narzędzi oraz kalkulatory działają bez dostępu do sieci.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Jak działa funkcja bezpiecznego cofania (Safe Undo)?</div>
+      <div class="faq-a">W przypadku przypadkowego stuknięcia w licznik, przycisk Cofnij pozwala natychmiast odwrócić ostatnie naliczenie rzędu w ramach logiki Event Sourcing.</div>
+    </div>
+  </main>
+</body>
+</html>

@@ -119,3 +119,30 @@ export function calculateKnittingSpeed(
     formattedRemainingTime,
   };
 }
+
+/**
+ * RD-ENG-06: Odliczanie czasu timera odporne na uśpienie w tle (remainingTimerSec).
+ * Przy starcie timera na D sekund w chwili t0: zapisz t_end = t0 + 1000 * D.
+ * W dowolnej chwili t_now (w tym po wybudzeniu aplikacji z tła):
+ * r = max(0, ceil((t_end - t_now) / 1000)).
+ */
+export function remainingTimerSec(endAtMs: number, nowMs: number = Date.now()): number {
+  if (endAtMs <= 0) return 0;
+  return Math.max(0, Math.ceil((endAtMs - nowMs) / 1000));
+}
+
+/**
+ * Przy pauzie timera w chwili tp: zapisz delta_left = max(0, t_end - tp).
+ */
+export function pauseTimer(endAtMs: number, pauseAtMs: number = Date.now()): number {
+  return Math.max(0, endAtMs - pauseAtMs);
+}
+
+/**
+ * Przy wznowieniu timera o t_resume z pozostałym czasem delta_left ms:
+ * nowe t_end = t_resume + delta_left.
+ */
+export function resumeTimer(remainingMs: number, resumeAtMs: number = Date.now()): number {
+  return resumeAtMs + Math.max(0, remainingMs);
+}
+

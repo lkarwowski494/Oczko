@@ -20,17 +20,31 @@ function extractAllStrings(node: any): string {
 }
 
 describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
+  let currentTree: any = null;
+
   beforeEach(() => {
-    setLang('pl');
+    act(() => {
+      setLang('pl');
+    });
+  });
+
+  afterEach(() => {
+    if (currentTree) {
+      try {
+        act(() => {
+          currentTree.unmount();
+        });
+      } catch (_e) {}
+      currentTree = null;
+    }
   });
 
   test('Ekran Projekty poprawnie renderuje nagłówek i przycisk tworzenia', () => {
-    let tree: any;
     act(() => {
-      tree = renderer.create(<ProjectsScreen />);
+      currentTree = renderer.create(<ProjectsScreen />);
     });
-    expect(tree).toBeDefined();
-    const allText = extractAllStrings(tree.toJSON());
+    expect(currentTree).toBeDefined();
+    const allText = extractAllStrings(currentTree.toJSON());
     expect(allText).toContain('Twoje Robótki');
     expect(allText).toContain('+ Nowy');
     expect(allText).toContain('Próbka');
@@ -39,12 +53,11 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
 
 
   test('Ekran Magazyn (Stash) poprawnie renderuje przełącznik i pozycje włóczek', () => {
-    let tree: any;
     act(() => {
-      tree = renderer.create(<StashScreen />);
+      currentTree = renderer.create(<StashScreen />);
     });
-    expect(tree).toBeDefined();
-    const allText = extractAllStrings(tree.toJSON());
+    expect(currentTree).toBeDefined();
+    const allText = extractAllStrings(currentTree.toJSON());
     expect(allText).toContain('Włóczki');
     expect(allText).toContain('Druty i szydełka');
     expect(allText).toContain('Zużycie');
@@ -54,12 +67,11 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
   });
 
   test('Ekran Magazyn obsługuje wyszukiwanie po partii farbowania (Dye Lot) oraz czyszczenie filtrów', () => {
-    let tree: any;
     act(() => {
-      tree = renderer.create(<StashScreen />);
+      currentTree = renderer.create(<StashScreen />);
     });
 
-    const root = tree.root;
+    const root = currentTree.root;
     // Znajdź pole wyszukiwania
     const searchInput = root.find((node: any) => {
       return (
@@ -74,7 +86,7 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
       searchInput.props.onChangeText('1240');
     });
 
-    let text = extractAllStrings(tree.toJSON());
+    let text = extractAllStrings(currentTree.toJSON());
     expect(text).toContain('Nord');
     expect(text).toContain('Lot: 1240');
     expect(text).not.toContain('Sunday');
@@ -84,7 +96,7 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
       searchInput.props.onChangeText('brak_takiej_wloczki_xyz');
     });
 
-    text = extractAllStrings(tree.toJSON());
+    text = extractAllStrings(currentTree.toJSON());
     expect(text).toContain('Brak pasujących włóczek');
     expect(text).toContain('Resetuj wszystkie filtry');
 
@@ -100,18 +112,17 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
       resetBtn.props.onPress();
     });
 
-    text = extractAllStrings(tree.toJSON());
+    text = extractAllStrings(currentTree.toJSON());
     expect(text).toContain('Nord');
     expect(text).toContain('Sunday');
   });
 
   test('Ekran Nauka poprawnie renderuje słownik i pozycje skrótów dziewiarskich', () => {
-    let tree: any;
     act(() => {
-      tree = renderer.create(<LearnScreen />);
+      currentTree = renderer.create(<LearnScreen />);
     });
-    expect(tree).toBeDefined();
-    const allText = extractAllStrings(tree.toJSON());
+    expect(currentTree).toBeDefined();
+    const allText = extractAllStrings(currentTree.toJSON());
     expect(allText).toContain('Słownik');
     expect(allText).toContain('Trenażer powtórzeń');
     expect(allText).toContain('k2tog');
@@ -119,12 +130,11 @@ describe('Oczko UI — Testy ekranów nawigacji zakładek (5 tabs)', () => {
   });
 
   test('Ekran Ustawienia poprawnie renderuje konfigurację debounce, kopię zapasową i sekcję o aplikacji', () => {
-    let tree: any;
     act(() => {
-      tree = renderer.create(<SettingsScreen />);
+      currentTree = renderer.create(<SettingsScreen />);
     });
-    expect(tree).toBeDefined();
-    const allText = extractAllStrings(tree.toJSON());
+    expect(currentTree).toBeDefined();
+    const allText = extractAllStrings(currentTree.toJSON());
     expect(allText).toContain('LICZNIK & STUKNIĘCIA');
     expect(allText).toContain('com.apps4brew.knitting');
     expect(allText).toMatch(/300\s*ms/);

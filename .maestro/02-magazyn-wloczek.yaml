@@ -1,0 +1,10 @@
+appId: com.apps4brew.knitting
+---
+- launchApp
+- tapOn: "Magazyn"
+- assertVisible: "Magazyn"
+- tapOn: "Dodaj włóczkę"
+- inputText: "Sandnes Garn Sunday"
+- tapOn: "Zapisz w magazynie"
+- assertVisible: "Sandnes Garn Sunday"
+- tapOn: "Zużyj 1 motek (-1)"

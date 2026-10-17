@@ -443,8 +443,72 @@ describe('Oczko Backup Service (DEC-10, ZP-06, BR-DANE-002)', () => {
     // autoBackup w razie błędu bezpiecznie zwraca null bez wywalania aplikacji
     await expect(autoBackup(db, failingFs)).resolves.toBeNull();
 
-    // Domyślne wywołanie bez customFs (zwraca null w autoBackup)
-    await expect(autoBackup(db)).resolves.toBeNull();
+    // Domyślne wywołanie bez customFs (zapisuje przez domyślny fs)
+    const defaultRes = await autoBackup(db);
+    expect(defaultRes).toMatch(/oczko-kopia-/);
+  });
+
+  describe('RD-ENG-12: rotateBackups & dwie rozdzielne pule po 10 kopii', () => {
+    const {
+      rotateBackups,
+      AUTO_BACKUP_RE,
+      SAFETY_BACKUP_RE,
+      getRecovery,
+      setRecovery,
+      clearRecovery,
+      readRecovery,
+    } = require('../backup-service');
+
+    it('spełnia wektory testowe z tabeli RD-ENG-12', () => {
+      // Wektor: 10 kopii przed-importem + 15 kopii kopia
+      const safetyFiles: string[] = [];
+      for (let i = 1; i <= 10; i++) {
+        const pad = String(i).padStart(2, '0');
+        safetyFiles.push(`oczko-przed-importem-2026-10-17-0800${pad}.json`);
+      }
+
+      const autoFiles: string[] = [];
+      for (let i = 1; i <= 15; i++) {
+        const pad = String(i).padStart(2, '0');
+        autoFiles.push(`oczko-kopia-2026-10-17-0900${pad}.json`);
+      }
+
+      const allFiles = [...safetyFiles, ...autoFiles];
+
+      // Rotacja puli bieżącej (kopia)
+      const resAuto = rotateBackups(allFiles, AUTO_BACKUP_RE, 10);
+      expect(resAuto.kept).toHaveLength(10);
+      expect(resAuto.deleted).toHaveLength(5);
+      // Wszystkie usunięte pliki należą do najstarszych z puli auto
+      expect(resAuto.deleted).toEqual([
+        'oczko-kopia-2026-10-17-090005.json',
+        'oczko-kopia-2026-10-17-090004.json',
+        'oczko-kopia-2026-10-17-090003.json',
+        'oczko-kopia-2026-10-17-090002.json',
+        'oczko-kopia-2026-10-17-090001.json',
+      ]);
+
+      // Pula bezpieczeństwa (przed-importem) NIE została naruszona
+      const resSafety = rotateBackups(allFiles, SAFETY_BACKUP_RE, 10);
+      expect(resSafety.kept).toHaveLength(10);
+      expect(resSafety.deleted).toHaveLength(0); // wszystkie 10 zostaje!
+    });
+
+    it('poprawnie zarządza stanem odzyskiwania awaryjnego (BR-TEST-023)', async () => {
+      clearRecovery();
+      expect(getRecovery()).toBeNull();
+
+      setRecovery({ key: 'state_corrupt_123', at: 1000, raw: '{"bad": true}' });
+      expect(getRecovery()).toEqual({ key: 'state_corrupt_123', at: 1000, raw: '{"bad": true}' });
+
+      const recovered = await readRecovery();
+      expect(recovered).toBe('{"bad": true}');
+
+      clearRecovery();
+      expect(getRecovery()).toBeNull();
+      expect(await readRecovery()).toBeNull();
+    });
   });
 });
+
 

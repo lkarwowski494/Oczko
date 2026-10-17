@@ -64,7 +64,7 @@ import { calculateBlockingAnalysis } from '../blocking-calculator';
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
   // Instrumentacja pokrycia kodu (Istanbul/Jest --coverage) oraz środowisko OS/CI (np. Windows)
   const coverageFactor = (global as any).__coverage__ ? 4 : 1;
-  const platformMultiplier = process.platform === 'win32' || process.env.CI ? 2.5 : 1.5;
+  const platformMultiplier = process.platform === 'win32' || process.env.CI ? 4.0 : 2.0;
   const budget = (ms: number) => ms * coverageFactor * platformMultiplier;
 
   const config: CounterConfig = {

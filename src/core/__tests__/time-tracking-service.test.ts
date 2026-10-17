@@ -88,4 +88,52 @@ describe('Time Tracking & Knitting Speed Service (src/core/time-tracking-service
       expect(noTarget.formattedRemainingTime).toBe('Brak celu');
     });
   });
+
+  describe('RD-ENG-06: remainingTimerSec, pauseTimer, resumeTimer (NFR-PERF-004)', () => {
+    const {
+      remainingTimerSec,
+      pauseTimer,
+      resumeTimer,
+    } = require('../time-tracking-service');
+
+    it('spełnia wektory testowe z tabeli RD-ENG-06', () => {
+      // Wektor 1: Start 180s o 10:00:00 (t0 = 0), uśpienie, wybudzenie o 10:02:15 (t_now = 135s = 135 000 ms) -> 45s
+      const t0 = 0;
+      const endAtMs = t0 + 180 * 1000; // 180 000 ms
+      const wakeAtMs = 135 * 1000;
+      expect(remainingTimerSec(endAtMs, wakeAtMs)).toBe(45);
+
+      // Wektor 2: Start 60s o 10:00:00 (t0 = 0), wybudzenie o 10:05:00 (t_now = 300s = 300 000 ms) -> 0s (zakończony)
+      const endAt60 = t0 + 60 * 1000;
+      const wakeAt300 = 300 * 1000;
+      expect(remainingTimerSec(endAt60, wakeAt300)).toBe(0);
+    });
+
+    it('obsługuje pauzę i wznowienie timera', () => {
+      // Pauza po 50s od startu (z 180s zostało 130s = 130 000 ms)
+      const endAtMs = 180 * 1000;
+      const pauseAtMs = 50 * 1000;
+      const deltaLeft = pauseTimer(endAtMs, pauseAtMs);
+      expect(deltaLeft).toBe(130000);
+
+      // Wznowienie po 10 minutach (t_resume = 650 000 ms)
+      const resumeAtMs = 650 * 1000;
+      const newEndAtMs = resumeTimer(deltaLeft, resumeAtMs);
+      expect(newEndAtMs).toBe(780000);
+
+      // Pozostały czas w chwili wznowienia = 130s
+      expect(remainingTimerSec(newEndAtMs, resumeAtMs)).toBe(130);
+    });
+
+    it('obsługuje przypadki brzegowe timera (endAt <= 0, delta <= 0, domyślny nowMs)', () => {
+      expect(remainingTimerSec(0)).toBe(0);
+      expect(remainingTimerSec(-100)).toBe(0);
+      expect(pauseTimer(100, 200)).toBe(0);
+      expect(resumeTimer(-50, 1000)).toBe(1000);
+      expect(remainingTimerSec(Date.now() + 5000)).toBeGreaterThanOrEqual(4);
+      expect(pauseTimer(Date.now() + 5000)).toBeGreaterThan(0);
+      expect(resumeTimer(5000)).toBeGreaterThan(0);
+    });
+  });
 });
+

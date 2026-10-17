@@ -79,3 +79,24 @@ export const theme = {
 } as const;
 
 export type Theme = typeof theme;
+export const THEME = theme;
+
+export function getLuminance(hex: string): number {
+  const clean = hex.replace('#', '');
+  const r = parseInt(clean.slice(0, 2), 16) / 255;
+  const g = parseInt(clean.slice(2, 4), 16) / 255;
+  const b = parseInt(clean.slice(4, 6), 16) / 255;
+  const a = [r, g, b].map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+}
+
+export function getContrastRatio(hex1: string, hex2: string): number {
+  const l1 = getLuminance(hex1);
+  const l2 = getLuminance(hex2);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+export * from './craft-suite-theme';
+

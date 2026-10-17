@@ -161,8 +161,64 @@ export interface OczkoBackupData {
 export const BACKUP_SCHEMA_VERSION = 1;
 export const AUTO_BACKUP_DIR = 'Backup/';
 export const AUTO_BACKUP_KEEP = 10;
-export const AUTO_BACKUP_RE = /^oczko-(\d{4}-\d{2}-\d{2}-\d{6})(?:-(\d{1,3}))?\.json$/;
+export const AUTO_BACKUP_RE = /^oczko(?:-kopia)?-(\d{4}-\d{2}-\d{2}-\d{6})(?:-(\d{1,3}))?\.json$/;
 export const SAFETY_BACKUP_RE = /^oczko-przed-(?:importem|czyszczeniem)-(\d{4}-\d{2}-\d{2}-\d{6})(?:-(\d{1,3}))?\.json$/;
+
+export interface RecoveryInfo {
+  key: string;
+  at: number;
+  raw?: string;
+}
+
+let activeRecovery: RecoveryInfo | null = null;
+
+export function getRecovery(): RecoveryInfo | null {
+  return activeRecovery;
+}
+
+export function setRecovery(rec: RecoveryInfo | null): void {
+  activeRecovery = rec;
+}
+
+export function clearRecovery(): void {
+  activeRecovery = null;
+}
+
+export async function readRecovery(db?: DatabaseClient): Promise<string | null> {
+  if (!activeRecovery) return null;
+  if (activeRecovery.raw) return activeRecovery.raw;
+  if (db) {
+    try {
+      const row = await db.getFirstAsync<{ value: string }>('SELECT value FROM app_settings WHERE key = ?', activeRecovery.key);
+      if (row) return row.value;
+    } catch {}
+  }
+  return null;
+}
+
+/**
+ * RD-ENG-12: Rotacja dwóch rozdzielnych pul kopii zapasowych (rotateBackups).
+ * Pliki w Backup/ dzielą się po nazwie na pulę bieżącą P_auto (*-kopia-*) oraz pulę bezpieczeństwa
+ * P_safe (*-przed-importem-* U *-przed-czyszczeniem-*). Po dodaniu pliku do P_k, jeśli |P_k| > 10,
+ * sortuj P_k malejąco po znaczniku czasu i usuń wyłącznie pliki o indeksach >= 10 w obrębie tej samej puli.
+ */
+export function rotateBackups(
+  files: string[],
+  poolRe: RegExp,
+  keepLimit: number = AUTO_BACKUP_KEEP
+): { kept: string[]; deleted: string[] } {
+  const pool = files
+    .map((f: string) => [f, poolRe.exec(f)] as const)
+    .filter((x: any): x is readonly [string, RegExpExecArray] => !!x[1]);
+
+  const sorted = pool
+    .map(([f, m]: any) => [f, poolKey(m)] as const)
+    .sort((a: any, b: any) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
+
+  const kept = sorted.slice(0, keepLimit).map(([f]) => f);
+  const deleted = sorted.slice(keepLimit).map(([f]) => f);
+  return { kept, deleted };
+}
 
 export interface OczkoBackupEnvelope {
   format: 'oczko-backup';
@@ -393,19 +449,12 @@ export async function writeBackupFile(
     throw e;
   }
 
-  // Rotacja puli kopii zapasowych
+  // Rotacja puli kopii zapasowych wg RD-ENG-12
   try {
     const files = await fs.readDirectoryAsync(dir);
-    const pool = files
-      .map((f: string) => [f, re.exec(f)] as const)
-      .filter((x: any): x is readonly [string, RegExpExecArray] => !!x[1]);
+    const { deleted } = rotateBackups(files, re, AUTO_BACKUP_KEEP);
 
-    const oldFiles = pool
-      .map(([f, m]: any) => [f, poolKey(m)] as const)
-      .sort((a: any, b: any) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0))
-      .slice(AUTO_BACKUP_KEEP);
-
-    for (const [f] of oldFiles) {
+    for (const f of deleted) {
       await fs.deleteAsync(`${dir}${f}`, { idempotent: true });
     }
   } catch {
@@ -424,7 +473,7 @@ export async function autoBackup(
 ): Promise<string | null> {
   try {
     const data = await exportDatabaseBackup(db);
-    return await writeBackupFile('oczko-', AUTO_BACKUP_RE, data, customFs);
+    return await writeBackupFile('oczko-kopia-', AUTO_BACKUP_RE, data, customFs);
   } catch {
     return null;
   }

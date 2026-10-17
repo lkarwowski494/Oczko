@@ -1,0 +1,16 @@
+# Konfiguracja gitleaks: domyślne reguły + reguły dla sekretów specyficznych dla projektu.
+# https://github.com/gitleaks/gitleaks#configuration
+[extend]
+useDefault = true
+
+[[rules]]
+id = "apple-p8-private-key"
+description = "Klucz prywatny Apple (.p8: APNs lub App Store Connect API)"
+regex = '''-----BEGIN PRIVATE KEY-----[\s\S]{40,}?-----END PRIVATE KEY-----'''
+keywords = ["BEGIN PRIVATE KEY"]
+
+[[rules]]
+id = "personal-email"
+description = "Prywatny adres e-mail (Gmail, Outlook, iCloud, polscy dostawcy) w treści pliku"
+regex = '''\b[A-Za-z0-9._%+-]+@(?:gmail|googlemail|outlook|hotmail|live|yahoo|icloud|me|proton|protonmail|aol|wp|o2|onet|interia|op|gazeta|tlen|vp|poczta\.onet|int)\.(?:com|pl|me|eu|ch|net)\b'''
+keywords = ["@"]

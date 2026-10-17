@@ -118,7 +118,7 @@ export default function SettingsScreen() {
 
   const handleExportBackup = async () => {
     if (!db) {
-      Alert.alert('Błąd', 'Baza danych nie jest jeszcze zainicjalizowana.');
+      Alert.alert(t('Baza danych niedostępna'), t('Baza danych nie jest jeszcze zainicjalizowana.'));
       return;
     }
     setIsExporting(true);
@@ -155,11 +155,8 @@ export default function SettingsScreen() {
     setRestoreError(null);
 
     try {
-      try {
-        await safetyBackup('import', db);
-      } catch (_e) {
-        // Bezpieczne pominięcie kopii bezpieczeństwa w środowisku testowym bez natywnego FileSystem
-      }
+      // RD-ENG-12: Natychmiastowe przerwanie importu w razie błędu zapisu kopii bezpieczeństwa
+      await safetyBackup('import', db);
       const result = await importDatabaseBackup(db, validation.data);
       if (result.success) {
         if (refreshProjects) {

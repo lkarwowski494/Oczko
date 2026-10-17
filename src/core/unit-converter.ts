@@ -137,3 +137,41 @@ export function formatNeedleSize(metricMm: number, system: UnitSystem = 'metric'
   }
   return entry.labelMetric;
 }
+
+/**
+ * RD-ENG-01: Konwersja bez dryfu zaokrągleń (wInKeep).
+ * Niech v_prev będzie wartością bazową (np. w kg, g, cm), u jednostką wyświetlania (lb, oz, in),
+ * f(v, u) = round_0.1(v * c_u) wartością wyświetlaną, a x_in nową liczbą wpisaną przez użytkownika po zamianie ',' -> '.'.
+ * Jeżeli v_prev > 0 oraz round_0.1(x_in) === f(v_prev, u), to funkcja zwraca dokładnie v_prev;
+ * w przeciwnym razie zwraca round_0.01(x_in / c_u).
+ */
+export function wInKeep(
+  rawInput: string | number,
+  unit: string,
+  prevBase?: number
+): number {
+  const str = typeof rawInput === 'number' ? String(rawInput) : rawInput;
+  const normalized = str.trim().replace(',', '.');
+  const xIn = parseFloat(normalized);
+  if (isNaN(xIn)) return 0;
+
+  let cu = 1.0;
+  if (unit === 'lb') cu = 1 / 0.45359237;
+  else if (unit === 'oz') cu = 1 / 28.349523125;
+  else if (unit === 'in') cu = 1 / 2.54;
+  else if (unit === 'yd') cu = 1.0936132983;
+  else cu = 1.0;
+
+  const round01 = (v: number) => Math.round(v * 10) / 10;
+  const round001 = (v: number) => Math.round(v * 100) / 100;
+
+  if (typeof prevBase === 'number' && prevBase > 0) {
+    const displayed = round01(prevBase * cu);
+    if (round01(xIn) === displayed) {
+      return prevBase;
+    }
+  }
+
+  return round001(xIn / cu);
+}
+
