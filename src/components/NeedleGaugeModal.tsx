@@ -8,6 +8,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   NEEDLE_SIZE_TABLE,
   NeedleSizeEntry,
@@ -60,7 +61,7 @@ export function NeedleGaugeModal({
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         {/* Pasek górny */}
         <View style={styles.header}>
           <View>
@@ -70,6 +71,7 @@ export function NeedleGaugeModal({
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityLabel="Zamknij miarkę drutów"
             accessibilityRole="button"
           >
@@ -238,7 +240,7 @@ export function NeedleGaugeModal({
             </>
           )}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

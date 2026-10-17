@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   GarminSyncPayload,
   GarminWatchEvent,
@@ -95,7 +96,7 @@ export function GarminCompanionModal({
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         {/* Pasek górny */}
         <View style={styles.header}>
           <View>
@@ -105,6 +106,7 @@ export function GarminCompanionModal({
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityLabel="Zamknij symulator Garmin"
             accessibilityRole="button"
           >
@@ -262,7 +264,7 @@ export function GarminCompanionModal({
             )}
           </View>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

@@ -68,7 +68,6 @@ import {
   getProcedureById,
   listAllProcedures,
 } from '../knitting-doctor';
-import { calculateCraftEconomics } from '../cost-calculator';
 import {
   swatch10cmTo4inch,
   swatch4inchTo10cm,
@@ -821,34 +820,6 @@ describe('Odporność i Wstrzykiwanie Błędów (Resilience & Fault Injection)',
       expect(getProcedureById('non_existent_procedure' as any)).toBeUndefined();
       expect(listAllProcedures(undefined)).toHaveLength(6);
       expect(listAllProcedures('invalid_discipline' as any)).toHaveLength(0);
-    });
-  });
-
-  describe('Odporność Kalkulatora Ekonomii Rzemiosła (cost-calculator.ts)', () => {
-    test('Obsługa zerowych, ujemnych i skrajnych danych wejściowych', () => {
-      const emptyResult = calculateCraftEconomics({
-        usedWeightGrams: 0,
-        skeinWeightGrams: 50,
-        pricePerSkein: 0,
-        notionsCost: -10,
-        laborHours: -5,
-        hourlyLaborRate: -20,
-      });
-      expect(emptyResult.materialCost).toBe(0);
-      expect(emptyResult.laborTotalCost).toBe(0);
-      expect(emptyResult.totalCraftCost).toBe(0);
-      expect(emptyResult.costPer100g).toBe(0);
-      expect(emptyResult.materialSavings).toBe(550); // benchmark defaultBoutiqueSweaterPrice
-
-      const zeroWeightResult = calculateCraftEconomics({
-        usedWeightGrams: 0,
-        skeinWeightGrams: 50,
-        pricePerSkein: 50,
-        skeinsCount: 2,
-      });
-      expect(zeroWeightResult.yarnTotalCost).toBe(100);
-      expect(zeroWeightResult.materialCost).toBe(100);
-      expect(zeroWeightResult.costPer100g).toBe(0);
     });
   });
 

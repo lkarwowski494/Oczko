@@ -9,6 +9,7 @@ import {
   TextInput,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   YarnSubstitutionService,
   DetailedYarnSubstitutionResult,
@@ -93,7 +94,7 @@ ${substitutionResult.totalEstimatedWeightGrams ? `Szacowana waga: ok. ${substitu
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         {/* Górny pasek */}
         <View style={styles.header}>
           <View>
@@ -103,6 +104,7 @@ ${substitutionResult.totalEstimatedWeightGrams ? `Szacowana waga: ok. ${substitu
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityLabel="Zamknij kalkulator zamienników"
             accessibilityRole="button"
           >
@@ -403,7 +405,7 @@ ${substitutionResult.totalEstimatedWeightGrams ? `Szacowana waga: ok. ${substitu
             </View>
           )}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

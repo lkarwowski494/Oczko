@@ -9,6 +9,7 @@ import {
   TextInput,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   EASE_PRESETS,
   EasePresetId,
@@ -167,7 +168,7 @@ export function EaseCalculatorModal({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.modalOverlay}>
         <View style={styles.container}>
           {/* Header */}
           <View style={styles.header}>
@@ -181,6 +182,7 @@ export function EaseCalculatorModal({
               <TouchableOpacity
                 style={styles.iconButton}
                 onPress={handleShare}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 accessibilityRole="button"
                 accessibilityLabel="Udostępnij raport dopasowania"
               >
@@ -189,6 +191,7 @@ export function EaseCalculatorModal({
               <TouchableOpacity
                 style={styles.iconButton}
                 onPress={onClose}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 accessibilityRole="button"
                 accessibilityLabel="Zamknij kalkulator luzu"
               >
@@ -571,7 +574,7 @@ export function EaseCalculatorModal({
             <View style={{ height: 40 }} />
           </ScrollView>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

@@ -330,4 +330,39 @@ export const EN: Record<string, string> = {
   '✓ Tylko na stanie': '✓ In stock only',
   'Wszystkie (w tym 0)': 'All (including 0)',
   'Wszystkie surowce': 'All fibers',
+
+  // Onboarding (First launch)
+  'Apps4Craft Studio • Rzemiosło Dziewiarskie': 'Apps4Craft Studio • Fiber Craft',
+  'Witaj w Oczku': 'Welcome to Oczko',
+  'Spokojna, 100% offline przestrzeń do liczenia rzędów, wzorów i zarządzania włóczkami.': 'A calm, 100% offline sanctuary for row counting, patterns, and stash management.',
+  'Wybierz swoją główną dziedzinę rzemiosła:': 'Choose your primary craft discipline:',
+  'Tylko Druty (Knitting)': 'Knitting Only',
+  'Oczka prawe/lewe, druty z żyłką, warkocze, raglan bezszwowy i kalkulator próbki.': 'Knit/purl, circular needles, cables, seamless raglan, and gauge calculator.',
+  'Tylko Szydełko (Crochet)': 'Crochet Only',
+  'Słupki, półsłupki, chusty, amigurumi i precyzyjne śledzenie okrążeń spiralnych.': 'Single/double crochet, shawls, amigurumi, and spiral round tracking.',
+  'Druty i Szydełko (Pełny warsztat)': 'Knitting & Crochet (Full Workshop)',
+  'Kompletny zestaw narzędzi, przeliczników miar i kalkulatorów bez ograniczeń.': 'Complete toolkit, unit converters, and all craft calculators without limits.',
+  '100% Offline-First. Twoje projekty i magazyn są przechowywane wyłącznie na tym urządzeniu (SQLite). Wybór możesz zmienić w każdej chwili w Ustawieniach.': '100% Offline-First. Your projects and stash live strictly on this device (SQLite). Change anytime in Settings.',
+  'Rozpocznij tworzenie': 'Start Crafting',
+
+  // Sacred Numbers (Active Focus)
+  'Bieżący': 'Current',
+  'Cel / Postęp': 'Target / Progress',
+  'Wzór / Krok': 'Pattern / Step',
+  'Pozostało': 'Remaining',
+
+  // Ustawienia: Profil rzemiosła & Rodzina Apps4Craft
+  'Profil rzemiosła': 'Craft Profile',
+  'Dostosowuje interfejs, narzędzia i kalkulatory do Twojej techniki.': 'Tailors UI, tools, and calculators to your preferred discipline.',
+  'Tylko Druty': 'Knitting Only',
+  'Tylko Szydełko': 'Crochet Only',
+  'Pełny warsztat': 'Full Workshop',
+  'RODZINA APPS4CRAFT STUDIO': 'APPS4CRAFT STUDIO SUITE',
+  'Kolekcja rzemieślniczych aplikacji skupionych na bezkompromisowej precyzji, 100% offline i szacunku dla prywatności twórcy.': 'A collection of artisan apps focused on uncompromising precision, 100% offline reliability, and privacy.',
+  'Zainstalowano': 'Installed',
+  'Rzemiosło dziewiarskie i szydełkowe, liczniki rzędów, warkocze i gospodarka motkami.': 'Knitting & crochet precision, row counters, cables, and skein inventory.',
+  'Kawa specialty, precyzyjne ekstrakcje pour-over, profilowanie wody mineralnej i sensoryka.': 'Specialty coffee, pour-over extraction, water mineral profiling, and cupping sensory.',
+  'Rzemieślniczy chleb na zakwasie, Baker’s Math, hydratacja ciasta i harmonogramy fermentacji.': 'Artisan sourdough baking, Baker’s Math, dough hydration, and fermentation timers.',
+  'Dzika fermentacja mlekowa, solanki wagowe, kimchi, kombucha i octy żywe.': 'Wild lacto-fermentation, baker’s brine salinity, kimchi, kombucha, and raw vinegars.',
+  'Wędzenie tradycyjne, solenie na sucho i mokro, charcuterie i kontrola wilgotności.': 'Traditional smoking, dry/wet curing, artisan charcuterie, and humidity tracking.',
 };

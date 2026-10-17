@@ -828,6 +828,9 @@ export default function StashScreen() {
               <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('Anuluj')}
               >
                 <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
@@ -1305,20 +1308,26 @@ const styles = StyleSheet.create({
     paddingTop: 14,
   },
   cancelButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 8,
     backgroundColor: '#F2F2F2',
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancelButtonText: {
     fontSize: 13,
     color: '#666666',
   },
   submitButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
     borderRadius: 8,
     backgroundColor: '#8B5E3C',
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   submitButtonText: {
     fontSize: 13,

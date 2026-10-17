@@ -72,7 +72,6 @@ import {
   cmToInches,
   inchesToCm,
 } from '../unit-converter';
-import { calculateCraftEconomics } from '../cost-calculator';
 import {
   encodeProjectToDeepLink,
   decodeProjectFromDeepLink,
@@ -1033,24 +1032,6 @@ describe('Property-Based Testing — Niezmienniki Matematyczne i Domenowe (fast-
           }
         ),
         { numRuns: 100 }
-      );
-    });
-  });
-
-  describe('Niezmienniki Ekonomii Rzemiosła (cost-calculator.ts)', () => {
-    it('Monotoniczność: wyższa cena za motek implikuje wyższy lub równy koszt materiałów', () => {
-      fc.assert(
-        fc.property(
-          fc.integer({ min: 50, max: 1000 }),
-          fc.float({ min: 5, max: 50, noNaN: true }),
-          fc.float({ min: 51, max: 100, noNaN: true }),
-          (usedGrams, price1, price2) => {
-            const res1 = calculateCraftEconomics({ usedWeightGrams: usedGrams, skeinWeightGrams: 50, pricePerSkein: price1 });
-            const res2 = calculateCraftEconomics({ usedWeightGrams: usedGrams, skeinWeightGrams: 50, pricePerSkein: price2 });
-            expect(res2.materialCost).toBeGreaterThan(res1.materialCost);
-          }
-        ),
-        { numRuns: 80 }
       );
     });
   });

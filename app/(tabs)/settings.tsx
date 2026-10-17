@@ -21,7 +21,7 @@ import {
   UnitSystem,
 } from '../../src/core/unit-converter';
 import { useUnitSystem } from '../../src/core/use-unit-system';
-import { setAppSetting } from '../../src/core/database';
+import { setAppSetting, CraftProfile, getCraftProfile, setCraftProfile } from '../../src/core/database';
 import {
   getDatabaseStats,
   exportBackupToJson,
@@ -35,6 +35,13 @@ import AppleWatchCompanionModal from '../../src/components/AppleWatchCompanionMo
 import { GarminCompanionModal } from '../../src/components/GarminCompanionModal';
 import { createWatchCounterSnapshot } from '../../src/core/apple-watch-service';
 import { createGarminSyncPayload } from '../../src/core/garmin-service';
+import {
+  NaparSuiteIcon,
+  PiekarzSuiteIcon,
+  SloikSuiteIcon,
+  DymSuiteIcon,
+  CounterIcon,
+} from '../../src/components/icons/CraftIcons';
 
 export default function SettingsScreen() {
   const projectContext = useOptionalProject();
@@ -77,6 +84,8 @@ export default function SettingsScreen() {
     }
   };
 
+  const [craftProfile, setCraftProfileState] = useState<CraftProfile>('both');
+
   const loadStats = useCallback(async () => {
     if (!db) return;
     try {
@@ -89,7 +98,23 @@ export default function SettingsScreen() {
 
   useEffect(() => {
     loadStats();
-  }, [loadStats]);
+    if (db) {
+      getCraftProfile(db).then((p) => {
+        setCraftProfileState(p);
+      }).catch(() => {});
+    }
+  }, [loadStats, db]);
+
+  const handleSelectCraftProfile = async (newProfile: CraftProfile) => {
+    setCraftProfileState(newProfile);
+    if (db) {
+      try {
+        await setCraftProfile(db, newProfile);
+      } catch (err) {
+        console.error('Błąd zapisu profilu rzemiosła:', err);
+      }
+    }
+  };
 
   const handleExportBackup = async () => {
     if (!db) {
@@ -331,6 +356,66 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             </View>
           </View>
+
+          <View style={[styles.unitSection, styles.borderTop]}>
+            <Text style={styles.settingTitle}>{t('Profil rzemiosła')}</Text>
+            <Text style={styles.settingDesc}>
+              {t('Dostosowuje interfejs, narzędzia i kalkulatory do Twojej techniki.')}
+            </Text>
+            <View style={styles.optionsRow}>
+              <TouchableOpacity
+                testID="settings-craft-profile-knitting"
+                style={[
+                  styles.optionChip,
+                  craftProfile === 'knitting' && styles.optionChipActive,
+                ]}
+                onPress={() => handleSelectCraftProfile('knitting')}
+              >
+                <Text
+                  style={[
+                    styles.optionChipText,
+                    craftProfile === 'knitting' && styles.optionChipTextActive,
+                  ]}
+                >
+                  {t('Tylko Druty')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="settings-craft-profile-crochet"
+                style={[
+                  styles.optionChip,
+                  craftProfile === 'crochet' && styles.optionChipActive,
+                ]}
+                onPress={() => handleSelectCraftProfile('crochet')}
+              >
+                <Text
+                  style={[
+                    styles.optionChipText,
+                    craftProfile === 'crochet' && styles.optionChipTextActive,
+                  ]}
+                >
+                  {t('Tylko Szydełko')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="settings-craft-profile-both"
+                style={[
+                  styles.optionChip,
+                  craftProfile === 'both' && styles.optionChipActive,
+                ]}
+                onPress={() => handleSelectCraftProfile('both')}
+              >
+                <Text
+                  style={[
+                    styles.optionChipText,
+                    craftProfile === 'both' && styles.optionChipTextActive,
+                  ]}
+                >
+                  {t('Pełny warsztat')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
 
         {/* Sekcja: Licznik & Interakcja */}
@@ -549,13 +634,86 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Sekcja: Rodzina Apps4Craft Studio */}
+        <Text style={styles.sectionHeader}>{t('RODZINA APPS4CRAFT STUDIO')}</Text>
+        <View style={styles.card}>
+          <Text style={styles.suiteIntro}>
+            {t('Kolekcja rzemieślniczych aplikacji skupionych na bezkompromisowej precyzji, 100% offline i szacunku dla prywatności twórcy.')}
+          </Text>
+
+          <View style={styles.suiteAppItem}>
+            <View style={[styles.suiteIconBadge, { backgroundColor: '#FBEFEA' }]}>
+              <CounterIcon size={22} color="#D46A43" />
+            </View>
+            <View style={styles.suiteAppInfo}>
+              <View style={styles.suiteAppHeader}>
+                <Text style={styles.suiteAppName}>Oczko (Purlo)</Text>
+                <View style={styles.currentAppTag}>
+                  <Text style={styles.currentAppTagText}>{t('Zainstalowano')}</Text>
+                </View>
+              </View>
+              <Text style={styles.suiteAppDesc}>
+                {t('Rzemiosło dziewiarskie i szydełkowe, liczniki rzędów, warkocze i gospodarka motkami.')}
+              </Text>
+            </View>
+          </View>
+
+          <View style={[styles.suiteAppItem, styles.borderTop]}>
+            <View style={[styles.suiteIconBadge, { backgroundColor: '#FDF3EB' }]}>
+              <NaparSuiteIcon size={22} color="#D97736" />
+            </View>
+            <View style={styles.suiteAppInfo}>
+              <Text style={styles.suiteAppName}>Napar (Steepwise)</Text>
+              <Text style={styles.suiteAppDesc}>
+                {t('Kawa specialty, precyzyjne ekstrakcje pour-over, profilowanie wody mineralnej i sensoryka.')}
+              </Text>
+            </View>
+          </View>
+
+          <View style={[styles.suiteAppItem, styles.borderTop]}>
+            <View style={[styles.suiteIconBadge, { backgroundColor: '#FEF8EA' }]}>
+              <PiekarzSuiteIcon size={22} color="#E5A93C" />
+            </View>
+            <View style={styles.suiteAppInfo}>
+              <Text style={styles.suiteAppName}>Piekarz (Crustwise)</Text>
+              <Text style={styles.suiteAppDesc}>
+                {t('Rzemieślniczy chleb na zakwasie, Baker’s Math, hydratacja ciasta i harmonogramy fermentacji.')}
+              </Text>
+            </View>
+          </View>
+
+          <View style={[styles.suiteAppItem, styles.borderTop]}>
+            <View style={[styles.suiteIconBadge, { backgroundColor: '#EDF5EB' }]}>
+              <SloikSuiteIcon size={22} color="#4E8D45" />
+            </View>
+            <View style={styles.suiteAppInfo}>
+              <Text style={styles.suiteAppName}>Słoik (Fermentwise)</Text>
+              <Text style={styles.suiteAppDesc}>
+                {t('Dzika fermentacja mlekowa, solanki wagowe, kimchi, kombucha i octy żywe.')}
+              </Text>
+            </View>
+          </View>
+
+          <View style={[styles.suiteAppItem, styles.borderTop]}>
+            <View style={[styles.suiteIconBadge, { backgroundColor: '#FBF0EB' }]}>
+              <DymSuiteIcon size={22} color="#C25A38" />
+            </View>
+            <View style={styles.suiteAppInfo}>
+              <Text style={styles.suiteAppName}>Dym (Smokewise)</Text>
+              <Text style={styles.suiteAppDesc}>
+                {t('Wędzenie tradycyjne, solenie na sucho i mokro, charcuterie i kontrola wilgotności.')}
+              </Text>
+            </View>
+          </View>
+        </View>
+
         {/* Informacje o aplikacji */}
         <Text style={styles.sectionHeader}>O APLIKACJI</Text>
         <View style={styles.card}>
           <Text style={styles.appTitle}>Oczko (Purlo)</Text>
           <Text style={styles.appMeta}>Wersja: 0.1.0 MVP (b+)</Text>
           <Text style={styles.appMeta}>Identyfikator: com.apps4brew.knitting</Text>
-          <Text style={styles.appMeta}>Wydawca: Apps4Brew</Text>
+          <Text style={styles.appMeta}>Wydawca: Apps4Craft Studio</Text>
         </View>
       </ScrollView>
 
@@ -572,6 +730,9 @@ export default function SettingsScreen() {
             <TouchableOpacity
               onPress={() => setIsRestoreModalVisible(false)}
               style={styles.modalCloseBtn}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              accessibilityRole="button"
+              accessibilityLabel={t('Zamknij')}
             >
               <Text style={styles.modalCloseText}>✕</Text>
             </TouchableOpacity>
@@ -877,11 +1038,66 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
   },
   modalCloseBtn: {
-    padding: 6,
+    minWidth: 44,
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalCloseText: {
     fontSize: 18,
     color: '#8E8E93',
+  },
+  suiteIntro: {
+    fontSize: 13,
+    color: '#666666',
+    lineHeight: 18,
+    marginBottom: 14,
+  },
+  suiteAppItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 12,
+  },
+  suiteIconBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  suiteAppInfo: {
+    flex: 1,
+  },
+  suiteAppHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  suiteAppName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  suiteAppDesc: {
+    fontSize: 12,
+    color: '#777777',
+    lineHeight: 16,
+    marginTop: 2,
+  },
+  currentAppTag: {
+    backgroundColor: '#FBEFEA',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#E8D2C4',
+  },
+  currentAppTagText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#D46A43',
   },
   modalBody: {
     padding: 16,

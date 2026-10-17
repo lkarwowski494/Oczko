@@ -518,6 +518,9 @@ export default function ProjectsScreen() {
               <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('Anuluj')}
               >
                 <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
@@ -571,6 +574,9 @@ export default function ProjectsScreen() {
               <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => setPartModalVisible(false)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('Anuluj')}
               >
                 <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
@@ -904,6 +910,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 10,
     backgroundColor: '#F2F2F2',
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancelButtonText: {
     fontSize: 14,
@@ -915,6 +924,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     backgroundColor: '#8B5E3C',
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   submitButtonDisabled: {
     opacity: 0.5,

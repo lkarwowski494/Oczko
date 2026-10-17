@@ -174,7 +174,13 @@ export default function GaugeCalculatorModal({
         {/* Nagłówek modala */}
         <View style={styles.modalHeader}>
           <Text style={styles.modalTitle}>Kalkulator Próbki & Wymiarów</Text>
-          <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={styles.closeBtn}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            accessibilityRole="button"
+            accessibilityLabel="Zamknij kalkulator próbki"
+          >
             <Text style={styles.closeBtnText}>✕</Text>
           </TouchableOpacity>
         </View>
@@ -505,7 +511,10 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
   },
   closeBtn: {
-    padding: 6,
+    minWidth: 44,
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   closeBtnText: {
     fontSize: 18,

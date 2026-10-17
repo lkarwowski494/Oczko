@@ -35,6 +35,13 @@ import {
 import { useAppAccess } from '../core/app-access-context';
 import { ImpulsePaywallModal } from '../components/ImpulsePaywallModal';
 import { autoBackup } from '../core/backup-service';
+import { OnboardingModal } from '../components/OnboardingModal';
+import {
+  isOnboardingCompleted,
+  setOnboardingCompleted,
+  CraftProfile,
+  setCraftProfile,
+} from '../core/database';
 
 let KeepAwakeModule: any = null;
 try {
@@ -112,6 +119,31 @@ export default function MainCounterScreen() {
   // Apple Watch & Live Activities (DEC-03, BR-SYS-003)
   const [watchModalVisible, setWatchModalVisible] = useState<boolean>(false);
   const [garminModalVisible, setGarminModalVisible] = useState<boolean>(false);
+  const [isOnboardingVisible, setIsOnboardingVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (projectCtx?.db) {
+      isOnboardingCompleted(projectCtx.db)
+        .then((completed) => {
+          if (!completed) {
+            setIsOnboardingVisible(true);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [projectCtx?.db]);
+
+  const handleOnboardingComplete = async (profile: CraftProfile) => {
+    setIsOnboardingVisible(false);
+    if (projectCtx?.db) {
+      try {
+        await setCraftProfile(projectCtx.db, profile);
+        await setOnboardingCompleted(projectCtx.db, true);
+      } catch (err) {
+        console.error('Błąd zapisu profilu onboarding:', err);
+      }
+    }
+  };
 
   // Ładowanie zaimportowanego wzoru PDF dla aktywnego projektu (BR-WZOR-001, DEC-09)
   useEffect(() => {
@@ -304,11 +336,47 @@ export default function MainCounterScreen() {
             <TouchableOpacity
               style={styles.exitKnitProofBtn}
               onPress={() => setIsKnitProof(false)}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               accessibilityRole="button"
-              accessibilityLabel="Wyjdź z trybu Knit-Proof"
+              accessibilityLabel={t('Wyjdź z trybu Knit-Proof')}
             >
               <Text style={styles.exitKnitProofBtnText}>✕ {t('Wyjdź z trybu Knit-Proof')}</Text>
             </TouchableOpacity>
+          </View>
+
+          {/* Sacred Numbers HUD (Ergonomia blatu rzemieślniczego) */}
+          <View style={styles.sacredNumbersBar}>
+            <View style={styles.sacredNumberItem}>
+              <Text style={styles.sacredNumberLabel}>{t('Bieżący')}</Text>
+              <Text style={styles.sacredNumberValue}>{counterValue}</Text>
+            </View>
+            <View style={styles.sacredDivider} />
+            <View style={styles.sacredNumberItem}>
+              <Text style={styles.sacredNumberLabel}>{t('Cel / Postęp')}</Text>
+              <Text style={styles.sacredNumberValue}>
+                {projectParts.find((p) => p.id === activePartId)?.targetRows
+                  ? `${Math.min(100, Math.round((counterValue / (projectParts.find((p) => p.id === activePartId)?.targetRows || 1)) * 100))}%`
+                  : '—'}
+              </Text>
+            </View>
+            <View style={styles.sacredDivider} />
+            <View style={styles.sacredNumberItem}>
+              <Text style={styles.sacredNumberLabel}>{t('Wzór / Krok')}</Text>
+              <Text style={styles.sacredNumberValue}>
+                {activeLinkedStates.length > 0 && activeLinkedStates[0].moduloCycle
+                  ? `${activeLinkedStates[0].cycleStep ?? 0}/${activeLinkedStates[0].moduloCycle}`
+                  : (activeLinkedStates.length > 0 ? `${activeLinkedStates[0].rawValue}` : '—')}
+              </Text>
+            </View>
+            <View style={styles.sacredDivider} />
+            <View style={styles.sacredNumberItem}>
+              <Text style={styles.sacredNumberLabel}>{t('Pozostało')}</Text>
+              <Text style={styles.sacredNumberValue}>
+                {projectParts.find((p) => p.id === activePartId)?.targetRows
+                  ? `${Math.max(0, (projectParts.find((p) => p.id === activePartId)?.targetRows || 0) - counterValue)}`
+                  : '∞'}
+              </Text>
+            </View>
           </View>
 
           <TouchableOpacity
@@ -333,6 +401,7 @@ export default function MainCounterScreen() {
               onPress={handleDecrement}
               onLongPress={handleDecrement}
               delayLongPress={500}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               accessibilityRole="button"
               accessibilityLabel={t('Cofnij ostatni (Undo)')}
             >
@@ -602,6 +671,9 @@ export default function MainCounterScreen() {
               <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => setModalVisible(false)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('Anuluj')}
               >
                 <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
@@ -678,6 +750,9 @@ export default function MainCounterScreen() {
               <TouchableOpacity
                 style={styles.cancelButton}
                 onPress={() => setIntervalModalVisible(false)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityRole="button"
+                accessibilityLabel={t('Anuluj')}
               >
                 <Text style={styles.cancelButtonText}>{t('Anuluj')}</Text>
               </TouchableOpacity>
@@ -724,6 +799,12 @@ export default function MainCounterScreen() {
       <ImpulsePaywallModal
         visible={isPaywallVisible}
         onClose={closePaywall}
+      />
+
+      {/* Modal powitalny personalizacji rzemiosła (First Launch Onboarding) */}
+      <OnboardingModal
+        visible={isOnboardingVisible}
+        onComplete={handleOnboardingComplete}
       />
     </SafeAreaView>
   );
@@ -928,20 +1009,26 @@ const styles = StyleSheet.create({
     paddingTop: 14,
   },
   cancelButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 8,
     backgroundColor: '#F2F2F2',
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancelButtonText: {
     fontSize: 13,
     color: '#666666',
   },
   submitButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
     borderRadius: 8,
     backgroundColor: '#8B5E3C',
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   submitButtonText: {
     fontSize: 13,
@@ -1081,14 +1168,56 @@ const styles = StyleSheet.create({
   },
   exitKnitProofBtn: {
     backgroundColor: '#E6D7CD',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    minHeight: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   exitKnitProofBtnText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     color: '#5C3E26',
+  },
+  sacredNumbersBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#E8DCD5',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  sacredNumberItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  sacredNumberLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#8A7D74',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  sacredNumberValue: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#3C2A1E',
+  },
+  sacredDivider: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#E8DCD5',
   },
   knitProofTapArea: {
     flex: 1,
@@ -1126,7 +1255,9 @@ const styles = StyleSheet.create({
     borderColor: '#D4A373',
     borderRadius: 14,
     paddingVertical: 14,
+    minHeight: 48,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   knitProofUndoBtnText: {
     fontSize: 15,

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   calculateHatCrown,
   HAT_STANDARD_SIZES,
@@ -99,7 +100,7 @@ export const HatCalculatorModal: React.FC<HatCalculatorModalProps> = ({
       transparent={false}
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerTitleContainer}>
@@ -109,6 +110,7 @@ export const HatCalculatorModal: React.FC<HatCalculatorModalProps> = ({
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityRole="button"
             accessibilityLabel="Zamknij kalkulator czapki"
           >
@@ -414,7 +416,7 @@ export const HatCalculatorModal: React.FC<HatCalculatorModalProps> = ({
             <Text style={styles.shareButtonText}>📤 Udostępnij wzór czapki</Text>
           </TouchableOpacity>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 };
@@ -429,7 +431,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 54,
+    paddingTop: 14,
     paddingBottom: 14,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,

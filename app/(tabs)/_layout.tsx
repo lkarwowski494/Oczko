@@ -1,32 +1,60 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
-import { Text, StyleSheet } from 'react-native';
-
-function TabIcon({ symbol, focused }: { symbol: string; focused: boolean }) {
-  return (
-    <Text style={[styles.icon, focused && styles.iconFocused]}>
-      {symbol}
-    </Text>
-  );
-}
+import { Tabs, useRouter } from 'expo-router';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { theme } from '../../src/core/theme';
+import {
+  CounterIcon,
+  ProjectsIcon,
+  StashIcon,
+  LearnIcon,
+  SettingsIcon,
+} from '../../src/components/icons/CraftIcons';
 
 export default function TabsLayout() {
+  const router = useRouter();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: '#FAFAFA',
+          backgroundColor: theme.colors.bgCard,
+          borderBottomColor: theme.colors.border,
+          borderBottomWidth: 1,
+          shadowOpacity: 0,
+          elevation: 0,
         },
         headerTitleStyle: {
-          fontWeight: '600',
-          color: '#1A1A1A',
+          fontWeight: '700',
+          color: theme.colors.textPrimary,
+          fontSize: 17,
         },
-        tabBarActiveTintColor: '#8B5E3C',
-        tabBarInactiveTintColor: '#8E8E93',
+        headerRight: () => (
+          <TouchableOpacity
+            testID="header-settings-button"
+            onPress={() => router.push('/settings')}
+            style={styles.headerSettingsBtn}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            accessibilityRole="button"
+            accessibilityLabel="Ustawienia aplikacji"
+          >
+            <SettingsIcon size={22} color={theme.colors.textSecondary} strokeWidth={1.8} />
+          </TouchableOpacity>
+        ),
+        tabBarActiveTintColor: theme.colors.terracotta,
+        tabBarInactiveTintColor: theme.colors.textMuted,
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopColor: '#E5E5EA',
+          backgroundColor: theme.colors.bgCard,
+          borderTopColor: theme.colors.border,
+          borderTopWidth: 1,
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 6,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          letterSpacing: 0.2,
         },
       }}
     >
@@ -36,7 +64,13 @@ export default function TabsLayout() {
           title: 'Licznik',
           tabBarLabel: 'Licznik',
           headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon symbol="🧶" focused={focused} />,
+          tabBarIcon: ({ color, focused }) => (
+            <CounterIcon
+              size={22}
+              color={color as string}
+              strokeWidth={focused ? 2.2 : 1.75}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -44,7 +78,13 @@ export default function TabsLayout() {
         options={{
           title: 'Projekty',
           tabBarLabel: 'Projekty',
-          tabBarIcon: ({ focused }) => <TabIcon symbol="📁" focused={focused} />,
+          tabBarIcon: ({ color, focused }) => (
+            <ProjectsIcon
+              size={22}
+              color={color as string}
+              strokeWidth={focused ? 2.2 : 1.75}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -52,23 +92,34 @@ export default function TabsLayout() {
         options={{
           title: 'Magazyn',
           tabBarLabel: 'Magazyn',
-          tabBarIcon: ({ focused }) => <TabIcon symbol="📦" focused={focused} />,
+          tabBarIcon: ({ color, focused }) => (
+            <StashIcon
+              size={22}
+              color={color as string}
+              strokeWidth={focused ? 2.2 : 1.75}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="learn"
         options={{
-          title: 'Nauka',
-          tabBarLabel: 'Nauka',
-          tabBarIcon: ({ focused }) => <TabIcon symbol="📖" focused={focused} />,
+          title: 'Warsztat',
+          tabBarLabel: 'Warsztat',
+          tabBarIcon: ({ color, focused }) => (
+            <LearnIcon
+              size={22}
+              color={color as string}
+              strokeWidth={focused ? 2.2 : 1.75}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Ustawienia',
-          tabBarLabel: 'Ustawienia',
-          tabBarIcon: ({ focused }) => <TabIcon symbol="⚙️" focused={focused} />,
+          href: null,
         }}
       />
     </Tabs>
@@ -76,12 +127,12 @@ export default function TabsLayout() {
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    fontSize: 20,
-    opacity: 0.7,
-  },
-  iconFocused: {
-    opacity: 1,
-    transform: [{ scale: 1.1 }],
+  headerSettingsBtn: {
+    marginRight: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

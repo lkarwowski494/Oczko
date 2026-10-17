@@ -21,9 +21,12 @@ export type ToolType =
   | 'dpn'
   | 'crochet_hook'
   | 'interchangeable_cable'
-  | 'interchangeable_tip';
+  | 'interchangeable_tip'
+  | 'accessory'
+  | 'notion'
+  | 'custom';
 
-export type ToolMaterial = 'bamboo' | 'wood' | 'metal' | 'plastic' | 'carbon';
+export type ToolMaterial = 'bamboo' | 'wood' | 'metal' | 'plastic' | 'carbon' | 'other';
 
 export interface StashYarnRecord {
   id: string;

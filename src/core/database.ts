@@ -471,11 +471,34 @@ export async function setAppSetting(
  */
 export async function loadPersistedSettings(
   db: DatabaseClient
-): Promise<{ language: string; unitSystem: string }> {
-  const [lang, unit] = await Promise.all([
+): Promise<{ language: string; unitSystem: string; craftProfile: CraftProfile }> {
+  const [lang, unit, profile] = await Promise.all([
     getAppSetting(db, 'language', 'pl'),
     getAppSetting(db, 'unit_system', 'metric'),
+    getCraftProfile(db),
   ]);
-  return { language: lang, unitSystem: unit };
+  return { language: lang, unitSystem: unit, craftProfile: profile };
 }
+
+export type CraftProfile = 'knitting' | 'crochet' | 'both';
+
+export async function getCraftProfile(db: DatabaseClient): Promise<CraftProfile> {
+  const val = await getAppSetting(db, 'craft_profile', 'both');
+  if (val === 'knitting' || val === 'crochet') return val;
+  return 'both';
+}
+
+export async function setCraftProfile(db: DatabaseClient, profile: CraftProfile): Promise<void> {
+  await setAppSetting(db, 'craft_profile', profile);
+}
+
+export async function isOnboardingCompleted(db: DatabaseClient): Promise<boolean> {
+  const val = await getAppSetting(db, 'onboarding_completed', '0');
+  return val === '1';
+}
+
+export async function setOnboardingCompleted(db: DatabaseClient, completed: boolean = true): Promise<void> {
+  await setAppSetting(db, 'onboarding_completed', completed ? '1' : '0');
+}
+
 

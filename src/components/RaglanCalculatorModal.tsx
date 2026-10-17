@@ -9,6 +9,7 @@ import {
   TextInput,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   RaglanCalculator,
   RaglanCastOnDivision,
@@ -166,7 +167,7 @@ export function RaglanCalculatorModal({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.modalOverlay}>
         <View style={styles.container}>
           {/* Header */}
           <View style={styles.header}>
@@ -180,6 +181,7 @@ export function RaglanCalculatorModal({
               <TouchableOpacity
                 style={styles.iconButton}
                 onPress={handleShare}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 accessibilityRole="button"
                 accessibilityLabel="Udostępnij raport konstrukcji raglanu"
               >
@@ -188,6 +190,7 @@ export function RaglanCalculatorModal({
               <TouchableOpacity
                 style={styles.iconButton}
                 onPress={onClose}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                 accessibilityRole="button"
                 accessibilityLabel="Zamknij kalkulator raglanu"
               >
@@ -543,7 +546,7 @@ export function RaglanCalculatorModal({
             <View style={{ height: 40 }} />
           </ScrollView>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

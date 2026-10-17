@@ -19,6 +19,7 @@ import {
   generateLiveActivityAttributes,
 } from '../core/apple-watch-service';
 import { triggerHaptic } from '../core/feedback-service';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface AppleWatchCompanionModalProps {
   visible: boolean;
@@ -67,7 +68,7 @@ export default function AppleWatchCompanionModal({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
+      <SafeAreaView style={styles.modalOverlay} edges={['top', 'bottom']}>
         <View style={styles.modalContent}>
           {/* Nagłówek modala */}
           <View style={styles.headerRow}>
@@ -78,6 +79,8 @@ export default function AppleWatchCompanionModal({
             <TouchableOpacity
               style={styles.closeButton}
               onPress={onClose}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              accessibilityRole="button"
               accessibilityLabel="Zamknij"
             >
               <Text style={styles.closeButtonText}>✕</Text>
@@ -224,7 +227,7 @@ export default function AppleWatchCompanionModal({
             </View>
           </ScrollView>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }
@@ -271,9 +274,9 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     backgroundColor: '#F5F3F0',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },

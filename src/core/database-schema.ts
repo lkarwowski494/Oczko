@@ -73,10 +73,10 @@ export const SQLITE_SCHEMA_STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS stash_tools (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    tool_type TEXT NOT NULL CHECK (tool_type IN ('circular', 'straight', 'dpn', 'crochet_hook', 'interchangeable_cable', 'interchangeable_tip')),
+    tool_type TEXT NOT NULL CHECK (tool_type IN ('circular', 'straight', 'dpn', 'crochet_hook', 'interchangeable_cable', 'interchangeable_tip', 'accessory', 'notion', 'custom')),
     size_mm REAL NOT NULL,
     us_size TEXT,
-    material TEXT NOT NULL CHECK (material IN ('bamboo', 'wood', 'metal', 'plastic', 'carbon')),
+    material TEXT NOT NULL CHECK (material IN ('bamboo', 'wood', 'metal', 'plastic', 'carbon', 'other')),
     cable_length_cm INTEGER,
     brand TEXT,
     notes TEXT,

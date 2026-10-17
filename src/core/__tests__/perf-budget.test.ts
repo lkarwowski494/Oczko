@@ -58,7 +58,6 @@ import {
   shouldAutoPauseSession,
 } from '../time-tracking-service';
 import { diagnoseEmergency, getProcedureById } from '../knitting-doctor';
-import { calculateCraftEconomics } from '../cost-calculator';
 import { encodeProjectToDeepLink, decodeProjectFromDeepLink } from '../project-share-protocol';
 
 describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () => {
@@ -426,23 +425,6 @@ describe('Budżety Wydajnościowe i Efektywność CPU (Performance Budget)', () 
     const durationMs = performance.now() - t0;
 
     expect(durationMs).toBeLessThan(budget(150));
-  });
-
-  test('10 000 kalkulacji ekonomii rzemiosła (calculateCraftEconomics) w < 100 ms', () => {
-    const t0 = performance.now();
-    for (let i = 0; i < 10000; i++) {
-      calculateCraftEconomics({
-        usedWeightGrams: 450,
-        skeinWeightGrams: 100,
-        pricePerSkein: 45,
-        notionsCost: 25,
-        laborHours: 18.5,
-        hourlyLaborRate: 35,
-        retailBoutiquePrice: 650,
-      });
-    }
-    const durationMs = performance.now() - t0;
-    expect(durationMs).toBeLessThan(budget(100));
   });
 
   test('1 000 cykli kodowania i dekodowania deep linku (encode/decodeProjectFromDeepLink) w < 150 ms', () => {

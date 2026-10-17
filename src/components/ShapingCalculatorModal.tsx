@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   calculateEvenIncreases,
   calculateEvenDecreases,
@@ -96,7 +97,7 @@ export function ShapingCalculatorModal({
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <View style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         {/* Nagłówek */}
         <View style={styles.header}>
           <View>
@@ -106,6 +107,7 @@ export function ShapingCalculatorModal({
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityLabel="Zamknij kalkulator kształtowania"
             accessibilityRole="button"
           >
@@ -439,7 +441,7 @@ export function ShapingCalculatorModal({
             </View>
           )}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </Modal>
   );
 }

@@ -80,7 +80,6 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         join(srcCoreDir, 'technique-library.ts'),
         join(srcCoreDir, 'db-path.ts'),
         join(srcCoreDir, 'unit-converter.ts'),
-        join(srcCoreDir, 'cost-calculator.ts'),
         join(srcCoreDir, 'project-share-protocol.ts'),
       ];
 
@@ -104,10 +103,11 @@ describe('Strażnicy Wzorców Architektury i Bezpieczeństwa (Architecture & Int
         const code = readFileSync(filePath, 'utf-8');
         if (code.includes('<Modal')) {
           expect(code).toContain('onRequestClose=');
-          // Modal musi mieć przynajmniej jedno wywołanie zamknięcia (onClose, Anuluj, setVisible(false))
+          // Modal musi mieć przynajmniej jedno wywołanie zamknięcia (onClose, onComplete, Anuluj, setVisible(false))
           const hasDismissal =
             code.includes('Anuluj') ||
             code.includes('onClose') ||
+            code.includes('onComplete') ||
             code.includes('setModalVisible(false)') ||
             code.includes('setIntervalModalVisible(false)') ||
             code.includes('setWatchModalVisible(false)') ||

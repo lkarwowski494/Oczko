@@ -178,7 +178,14 @@ export default function YarnUsageEstimatorModal({
             <Text style={styles.headerTitle}>⚖️ Kalkulator Zużycia Włóczki</Text>
             <Text style={styles.headerSubtitle}>Estymator wagi wyrobu i kontrola Yarn Chicken</Text>
           </View>
-          <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={styles.closeBtn}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Zamknij kalkulator zużycia"
+          >
             <Text style={styles.closeBtnText}>✕</Text>
           </TouchableOpacity>
         </View>
@@ -539,9 +546,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   closeBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: '#F0ECE8',
     justifyContent: 'center',
     alignItems: 'center',
