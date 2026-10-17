@@ -12,6 +12,9 @@ import { YarnSubstitutionModal } from '../YarnSubstitutionModal';
 import YarnUsageEstimatorModal from '../YarnUsageEstimatorModal';
 import ProjectShareCardModal from '../ProjectShareCardModal';
 import { ImpulsePaywallModal } from '../ImpulsePaywallModal';
+import { LinkedCounterModal } from '../LinkedCounterModal';
+import { IntervalConfigModal } from '../IntervalConfigModal';
+import { KnitProofOverlay } from '../KnitProofOverlay';
 
 const mockSnapshot: any = {
   projectId: 'p1',
@@ -197,5 +200,85 @@ describe('Modal Safety, Safe Area and HitSlop Audits (Phase 2)', () => {
     expect(btn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
     act(() => btn.props.onPress());
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('LinkedCounterModal cancel button has hitSlop and triggers onClose', () => {
+    const onClose = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <LinkedCounterModal
+          visible={true}
+          onClose={onClose}
+          partName="Body"
+          newLinkedName="Cable"
+          setNewLinkedName={jest.fn()}
+          newModuloCycle="6"
+          setNewModuloCycle={jest.fn()}
+          newReminderRow="6"
+          setNewReminderRow={jest.fn()}
+          onCreateLinkedCounter={jest.fn()}
+        />
+      );
+    });
+    const btn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Anuluj');
+    expect(btn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
+    act(() => btn.props.onPress());
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('IntervalConfigModal cancel button has hitSlop and triggers onClose', () => {
+    const onClose = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <IntervalConfigModal
+          visible={true}
+          onClose={onClose}
+          tempIntervalInput="6"
+          setTempIntervalInput={jest.fn()}
+          tempLabelInput="Test"
+          setTempLabelInput={jest.fn()}
+          onSave={jest.fn()}
+        />
+      );
+    });
+    const btn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Anuluj');
+    expect(btn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
+    act(() => btn.props.onPress());
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('KnitProofOverlay exit and undo buttons have hitSlop and trigger actions', () => {
+    const onExit = jest.fn();
+    const onIncrement = jest.fn();
+    const onDecrement = jest.fn();
+    let tree: any;
+    act(() => {
+      tree = renderer.create(
+        <KnitProofOverlay
+          projectName="Sweter"
+          partName="Rękaw"
+          counterValue={12}
+          targetRows={40}
+          activeLinkedStates={[]}
+          showReminder={true}
+          reminderMessage="Zmień kolor"
+          onExit={onExit}
+          onIncrement={onIncrement}
+          onDecrement={onDecrement}
+        />
+      );
+    });
+
+    const exitBtn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Wyjdź z trybu Knit-Proof');
+    expect(exitBtn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
+    act(() => exitBtn.props.onPress());
+    expect(onExit).toHaveBeenCalled();
+
+    const undoBtn = tree.root.find((n: any) => n.props?.accessibilityLabel === 'Cofnij ostatni (Undo)');
+    expect(undoBtn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
+    act(() => undoBtn.props.onPress());
+    expect(onDecrement).toHaveBeenCalled();
   });
 });

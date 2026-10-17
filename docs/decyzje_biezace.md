@@ -480,6 +480,17 @@
 * **DEC-30 Integracja Biblioteki Zasad i Ról oraz Audyt Zgodności (17.10.2026):**
   - **Decyzja użytkownika:** Wybór Opcji C — wstrzymanie wdrożenia TestFlight na rzecz wklejenia modułu „Biblioteka zasad i ról” z Dysku, przypisania ról do projektu Oczko oraz wykonania pełnego, rygorystycznego audytu zgodności całej aplikacji z zasadami.
 
+* **DEC-31 Wykonanie Audytu Zgodności, Formalizacja Ról i Modularyzacja UI (17.10.2026):**
+  - **Dokumentacja ról (`docs/standardy_i_role.md`):** Utworzono formalny rejestr ról (9 ról: Analityk, Badacz, Programista, Tłumacz, Tester E2E, Audytor, Wydawca, Sekretarz, Koordynator) oraz modułów (Aplikacje 100%, Research, 3 reguły z gier).
+  - **Jawny wyjątek EXC-01 (Zasada 7):** Słownik encyklopedyczny technik dziewiarskich (`src/core/technique-library.ts` 42.9 KB) uznany za dopuszczalny wyjątek od limitu $\le 20$ KB ze względu na integralność danych statycznych i 0 cykli zależności.
+  - **Modularyzacja ekranu licznika (AUD-01):** Z `MainCounterScreen.tsx` wyodrębniono komponenty `LinkedCounterModal.tsx`, `IntervalConfigModal.tsx`, `KnitProofOverlay.tsx` oraz arkusz `MainCounterScreen.styles.ts`, redukując rozmiar pliku z 40.8 KB do 23.5 KB.
+  - **Weryfikacja Jakości:**
+    - 0 zależności cyklicznych w 142 plikach (`madge --circular`).
+    - 70/70 zestawów testowych zielonych (579/579 zdanych testów).
+    - 15/15 testów modali w `ModalSafetyAndHitSlop.test.tsx` (100% zgodności z Apple HIG i Safe Area).
+    - 0 błędów TypeScript (`tsc --noEmit`), 0 brakujących kluczy i18n (`check:i18n`).
+
+
 
 
 
