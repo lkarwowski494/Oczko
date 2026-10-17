@@ -494,6 +494,14 @@
   - **Decyzja użytkownika:** Całkowite odrzucenie Expo Cloud / EAS. Wdrożenie i dystrybucja do Apple TestFlight realizowane w 100% natywnym potokiem CI Apps4Brew Studio opartym o GitHub Actions (`.github/workflows/testflight.yml`) oraz bezpośrednie API Apple App Store Connect (`ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8`).
   - **Zgodność z zasadą kosztu 0 zł:** Wykorzystanie darmowych runnerów macOS z preinstalowanym Xcode oraz bezpośredniego podpisywania kluczem API Apple bez pośredników. Plik `eas.json` został usunięty.
 
+* **DEC-33 Sukces Wdrożenia do Apple TestFlight: Build 1004 (17.10.2026):**
+  - **Pomyślne wdrożenie CI/CD:** Workflow `.github/workflows/testflight.yml` (Run ID: `39014291650`) zakończony 100% sukcesem w czasie 12m 47s na runnerze `macos-26`.
+  - **Kompilacja i eksport:** `xcodebuild archive` i `xcodebuild -exportArchive` z natywnym kluczem App Store Connect API (`ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8`).
+  - **Rezultat:** Paczka aplikacji `.ipa` (wersja `0.1.0`, build `1004`) pomyślnie wyeksportowana i przesłana bezpośrednio do Apple App Store Connect / TestFlight (`** EXPORT SUCCEEDED **`).
+  - **Tag wydania:** Utworzono i opublikowano automatyczny tag wydania `v0.1.0-b1004`.
+  - **Zgodność ze standardami:** Koszt 0 zł (0 PLN), zerowa zależność od kont czy chmury Expo (zero EAS CLI/build), pełna czystość testów i weryfikacji.
+
+
 
 
 
