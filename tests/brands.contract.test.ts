@@ -35,6 +35,7 @@ const SCANNED_ROOTS = [
   'app.json',
   'package.json',
   'README.md',
+  'archiwum',
 ];
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'coverage', '.expo', 'dist']);
@@ -54,7 +55,7 @@ const TEXT_EXTS = new Set([
 
 const ALLOWED_FILES = new Set([
   'tests/brands.contract.test.ts',
-  'docs/25-audyt-brd-qa-rel.md',
+  'archiwum/stara-wersja/docs/25-audyt-brd-qa-rel.md',
 ]);
 
 function getFiles(relPath: string): string[] {

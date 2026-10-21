@@ -247,7 +247,7 @@ describe('Dogrywka Weryfikacyjna — Testy Napraw Audytu (Runda 2)', () => {
   });
 
   test('TST-02: macierz testów AST pokrywa 100% we wszystkich 5 kategoriach', () => {
-    const matrixDoc = readFileSync(join(root, 'docs/22-macierz-testow.md'), 'utf8');
+    const matrixDoc = readFileSync(join(root, 'archiwum/stara-wersja/docs/22-macierz-testow.md'), 'utf8');
     expect(matrixDoc).toContain('| EKRAN | 5 | 5 | 0 | **100%** |');
     expect(matrixDoc).toContain('| UI | 43 | 43 | 0 | **100%** |');
     expect(matrixDoc).toContain('| TEKST | 235 | 235 | 0 | **100%** |');
@@ -367,9 +367,9 @@ describe('Dogrywka Weryfikacyjna — Testy Napraw Audytu (Runda 2)', () => {
   });
 
   test('LIVE-04: dokumentacja wydania i przewodnik CLAUDE.md są zaktualizowane', () => {
-    expect(existsSync(join(root, 'docs/15-app-store.md'))).toBe(true);
-    expect(existsSync(join(root, 'docs/18-przekazanie.md'))).toBe(true);
-    expect(existsSync(join(root, 'docs/20-definicja-ukonczenia.md'))).toBe(true);
+    expect(existsSync(join(root, 'archiwum/stara-wersja/docs/15-app-store.md'))).toBe(true);
+    expect(existsSync(join(root, 'archiwum/stara-wersja/docs/18-przekazanie.md'))).toBe(true);
+    expect(existsSync(join(root, 'archiwum/stara-wersja/docs/20-definicja-ukonczenia.md'))).toBe(true);
     expect(existsSync(join(root, 'CLAUDE.md'))).toBe(true);
   });
 });

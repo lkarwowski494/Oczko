@@ -6,7 +6,7 @@
 //   LOGIKA  — każda eksportowana funkcja z src/core/
 //   WYMIAR  — eksportowane tablice stałych i typy-unie z src/core/
 // Dowód liczy się tylko z KODU testu (AST TS: bez komentarzy, tytułów test/it/describe i importów; Maestro bez komentarzy YAML #).
-// Użycie: node scripts/test-matrix.mjs --write  (zapis do docs/22-macierz-testow.md)
+// Użycie: node scripts/test-matrix.mjs --write  (zapis do archiwum/stara-wersja/docs/22-macierz-testow.md)
 //         node scripts/test-matrix.mjs --check  (weryfikacja braku regresji)
 
 import { fileURLToPath } from 'node:url';
@@ -324,7 +324,7 @@ for (const k of kinds) {
   }
 }
 
-const docPath = join(root, 'docs/22-macierz-testow.md');
+const docPath = join(root, 'archiwum/stara-wersja/docs/22-macierz-testow.md');
 const mode = process.argv[2];
 
 if (mode === '--write') {
@@ -350,7 +350,7 @@ if (stale.length) {
 }
 
 if (mode === '--check' && !docOk) {
-  console.log('docs/22-macierz-testow.md nieaktualny — uruchom: node scripts/test-matrix.mjs --write');
+  console.log('archiwum/stara-wersja/docs/22-macierz-testow.md nieaktualny — uruchom: node scripts/test-matrix.mjs --write');
 }
 
 process.exit(missing.length || stale.length || (mode === '--check' && !docOk) ? 1 : 0);

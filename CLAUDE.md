@@ -1,27 +1,42 @@
-# Oczko (Purlo) — Zasady Projektu i Przewodnik Agenta
+# Oczko
+Aplikacja dla osób, które dziergają na drutach i szydełkują; w przebudowie od zera według biblioteki ról `prompts`. Stan i następny krok: `docs/sztafeta.md`.
 
-## 1. Repozytorium i Architektura
-- Repozytorium jest **PUBLICZNE**. Absolutny zakaz commitowania sekretów, tokenów, certyfikatów, kluczy `.p8`/`.p12` oraz plików `.env`.
-- Koszt stały: **0 PLN** (brak płatnych usług SaaS, Firebase Auth, EAS czy chmur zewnętrznych). Całość oparta o GitHub Actions i darmowy macOS dla publicznych repozytoriów.
-- **Offline-First:** Pełna logika i funkcjonalność działa w 100% lokalnie w SQLite i pamięci urządzenia bez sieci.
+## Przebudowa i kwarantanna (decyzje P-001–P-003 w `docs/decyzje.md`)
+- Poprzednia wersja powstała na słabszym modelu. Jej dokumenty leżą w `archiwum/stara-wersja/` i opisują zamiary, nie stan.
+- **Role 01, 02, 03 i 04 nie czytają** `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/` ani historii git sprzed 2026-10-21. Pracują tylko na `CLAUDE.md`, `docs/` i źródłach zewnętrznych. *Dlaczego:* stary BRD i README zakotwiczyłyby nowy projekt w starym kierunku.
+- Role 05, 06 i 07 projektują od zera; istniejący kod mogą czytać jako materiał do decyzji o ponownym użyciu, nie jako dowód działania (testy poprzedniej wersji sprawdzają też atrapy).
+- Porównanie z istniejącym kodem to osobny krok po roli 07; dopiero on i role 05, 08, 12 sięgają do `archiwum/stara-wersja/`.
 
-## 2. Standard Jakościowy Role-Model (trening + organizer)
-- **Logika domenowa:** Obowiązuje bezwzględne 100.00% pokrycia linii, gałęzi, instrukcji i funkcji (`src/core/`).
-- **Macierz Pokrycia AST (`docs/22-macierz-testow.md`):** Utrzymywana na poziomie 100% we wszystkich 5 kategoriach (`EKRAN`, `UI`, `TEKST`, `LOGIKA`, `WYMIAR`).
-- **Przepływy Maestro:** Scenariusze `.maestro/*.yaml` uruchamiane lokalnie i w Jest przez `tests/maestro-runner.ts` z testami skrajnych stref czasowych i przejścia przez północ (23:55 UTC).
-- **Trwałość danych:** Dwie niezależne pule po 10 kopii zapasowych (`kopia-*` oraz `przed-importem-*`/`przed-czyszczeniem-*`), ochrona stanu uszkodzonego `state_corrupt_*` z banerem odzyskiwania.
-- **Czystość i18n:** Bramka `npm run check:i18n` blokuje brakujące oraz martwe klucze. Zakaz polskich słów na ekranach w języku angielskim (`tests/i18n-no-polish-in-en.test.tsx`).
-- **Czystość marek:** Zakaz używania znaków towarowych innych firm (`tests/brands.contract.test.ts`).
+## Stan projektu (aktualizacja: 2026-10-21)
+- Etap: w budowie (przebudowa); poprzednia wersja 0.1.0 tylko w TestFlight (build 1004), dane użytkowników: [DO USTALENIA] (prawdopodobnie tylko właściciel)
+- Sklep (App Store Connect): częściowo (rekord aplikacji i TestFlight; umowa Paid Apps i produkty: [DO USTALENIA])
+- Rynek główny: globalny, 35 lokalizacji jak Trening; kolejność storefrontów wyznacza bramka 02 · repo treści prywatnych: `lkarwowski494/oczko-warsztat` (prywatne)
+- Standard marki: wysoki (zasady biblioteki); opłacalność obu pokazuje rola 02
+- Próg opłacalności: 500 USD netto/rok globalnie (domyślny, D-024)
+- Polityka języków: szeroka (35 jak Trening, D-026); mechanizm i18n wcześnie (09 E0–E1), tłumaczenia jak najpóźniej (09 E2–E4 po roli 08)
+- Przegląd treści krytycznych: zastępczy (D-027)
+- Cel: aplikacja, która robi dla dziergających to, co poprzednia wersja, i więcej, jeśli wykaże to research; bez atrap i bez kombajnu (zasada wspólna 18)
 
-## 3. Komenda Weryfikacyjna
-Przed każdym zatwierdzeniem zmian:
-```bash
-npm run verify
-```
-Narzędzie `npm run verify` wykonuje pełny łańcuch:
-1. `npm run typecheck`
-2. `npm run check:i18n`
-3. `npm run check:licenses`
-4. `node scripts/test-matrix.mjs --check`
-5. `node scripts/verify-native.mjs`
-6. `npm run test:coverage`
+## Stos
+Expo SDK 57, React Native, TypeScript, expo-sqlite (stan poprzedniej wersji); decyzje w `docs/adr/` (rola 05).
+
+## Komendy
+- instalacja: `npm ci` · testy: `npm test` · pełna bramka: `npm run verify`
+- typy: `npm run typecheck`
+
+## Dokumenty (źródło prawdy, rola)
+- `docs/decyzje.md`, `docs/zalozenia.md`, `docs/pomysl.md`, BRD `docs/brd/` (01)
+- `docs/monetyzacja.md` (02), kontrakt zakresu `docs/scope-contract.md` (03), projekt `docs/design/` (04)
+- ADR `docs/adr/` (05), treści i rejestr twierdzeń: `oczko-warsztat` (06)
+- materiały prywatne (wywiad, dane App Store Connect, raporty audytu): `oczko-warsztat`, nie to repo
+
+## Zasady
+- Repo publiczne: żadnych sekretów, kluczy, `.env`, danych osobowych; przed commitem `git diff --cached`.
+- Koszt stały 0 zł poza opłatą Apple Developer; CI na GitHub Actions (repo publiczne).
+- Zero utraty danych: migracja w transakcji, test na kopii bazy poprzedniej wersji.
+- Testy przed kodem; wygląd tylko z systemu w `docs/design/`.
+- Gałąź robocza przebudowy: `claude/jolly-thompson-paz6d8`; scalenie z `main` tylko za zgodą właściciela.
+- Hierarchia źródeł: [DO USTALENIA w E0 roli 01] (biblioteka: rachunek → normy → podręczniki → organizacje → praktyka).
+
+# Compact instructions
+Zachowaj rolę i tryb, ID zadań, wyniki testów, zmienione pliki, otwarte decyzje i regułę kwarantanny.

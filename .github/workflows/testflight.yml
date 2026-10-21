@@ -170,7 +170,7 @@ jobs:
           set +x
           for req in APPLE_TEAM_ID ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8_BASE64; do
             if [ -z "${!req:-}" ]; then
-              echo "::error::Brak wymaganego sekretu GitHub: $req (zobacz docs/15-app-store.md)"
+              echo "::error::Brak wymaganego sekretu GitHub: $req (zobacz archiwum/stara-wersja/docs/15-app-store.md)"
               exit 1
             fi
           done
