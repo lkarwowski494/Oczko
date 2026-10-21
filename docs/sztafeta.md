@@ -5,7 +5,7 @@
 |---|---|---|---|---|---|
 | koordynator | — | decyzje P-001–P-010, kwarantanna | b080940 | docs/decyzje.md, docs/pomysl.md, CLAUDE.md | — |
 | 02 Monetyzacja, sesja 1 (bramka) | build, `--moduly oplacalnosc,cena-i-rachunek` | zakończona 2026-10-21: **budować** (P-013) | (ten commit) | docs/monetyzacja.md (Opłacalność), docs/monetyzacja/, docs/zalozenia.md, P-011–P-016; surowe dane: oczko-warsztat/02-monetyzacja/2026-10-21-bramka/ | OP-05, OP-06 (fakty od właściciela, niepilne) |
-| 01 Odkrywanie | build | do uruchomienia | — | docs/brd/ | — |
+| 01 Odkrywanie | build | w toku: STOP E0 (2026-10-21) | (ten commit) | docs/brd/README.md (E0), P-017 | OP-01 roli 01 (kolizja ID P-) |
 | 02 Monetyzacja, sesja 2 | build (bez `--moduly`) | po 01 | — | docs/monetyzacja.md (model, kontrakt płatności) | — |
 
 ## Następny krok

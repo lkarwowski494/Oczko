@@ -36,7 +36,8 @@ Expo SDK 57, React Native, TypeScript, expo-sqlite (stan poprzedniej wersji); de
 - Zero utraty danych: migracja w transakcji, test na kopii bazy poprzedniej wersji.
 - Testy przed kodem; wygląd tylko z systemu w `docs/design/`.
 - Gałąź robocza przebudowy: `claude/jolly-thompson-paz6d8`; scalenie z `main` tylko za zgodą właściciela.
-- Hierarchia źródeł: [DO USTALENIA w E0 roli 01] (biblioteka: rachunek → normy → podręczniki → organizacje → praktyka).
+- Hierarchia źródeł: rachunek → normy (CYC, ISO) → podręczniki → organizacje → przewodniki → fora tylko jako wskazówka (P-017, rola 01 E0).
+- BRD: `docs/brd/` (01), dzielony; wektory reguł `tests/wektory/brd.json` generuje tylko rola 01.
 
 # Compact instructions
 Zachowaj rolę i tryb, ID zadań, wyniki testów, zmienione pliki, otwarte decyzje i regułę kwarantanny.
