@@ -20,3 +20,9 @@ Właściciel nie dzierga i nie szydełkuje (wywiad 2026-10-21, odp. 1); Oczko wy
 ### ZP-07: Najlepsza w klasie przy agresywnej cenie
 - „Chce zrobic best in class aplikacje w duchu mojego studia i bijaca funcjonalnosciami liderow ryynku, przy jednoczesnie bardzo agresywnej polityce cenowej.”
 - Napięcie do rozstrzygnięcia przez rolę 03 z właścicielem: „bijąca funkcjonalnościami” a zasada wspólna 18 („najlepsza w klasie to nie najwięcej funkcji”, bez kombajnu) i ZP-01 („małe”). Rola 01 spisze pełną listę funkcji z dowodami; przewagę nad liderami pokaże macierz funkcji w E2, a cięcie należy do roli 03.
+### ZP-08: Cel to zysk przez świetną aplikację
+- „moim celem jest maksymalziacja zysku ale do tego potrzeba swietnej aplikacji w cenie tanszej niz inni z efektem wow i funkcjami ktorych inni nie maja.” (wywiad 2026-10-21, odp. 2)
+- Dla E2: macierz funkcji liderów pokaże luki (funkcje, których nikt nie ma albo nikt nie robi dobrze); każda taka funkcja wchodzi jako kandydat z dowodem potrzeby, nie z samej nowości (zasada wspólna 18).
+### ZP-09: Bez błędów, także tych, na które skarżą się użytkownicy konkurencji
+- „I brakiem bledow nowych jak i tych na ktore w innych aplikacjach sie narzeka.” (wywiad 2026-10-21, odp. 2)
+- Dla E2: skargi z recenzji konkurencji (utrata danych, zakupu, zabrane funkcje, awarie) stają się dowodami potrzeby wymagań i kandydatami na blokery wydania.
