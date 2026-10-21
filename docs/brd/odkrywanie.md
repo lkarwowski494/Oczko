@@ -2,7 +2,7 @@
 Stan: E1 w toku · Aktualizacja: 2026-10-21 · Notatki z wywiadu: `oczko-warsztat/01-odkrywanie/wywiad-2026-10-21.md` (prywatne)
 
 ## Źródło wiedzy o użytkownikach
-Właściciel nie dzierga i nie szydełkuje (wywiad 2026-10-21, odp. 1); Oczko wybrał z analizy portfela. Wywiad z właścicielem daje zasady produktu, nie dowody o pracy użytkownika. Prace J i persony P powstaną z recenzji konkurencji, źródeł społeczności i ewentualnych rozmów z dziergającymi (sposób: pytanie 2 wywiadu).
+Właściciel nie dzierga i nie szydełkuje (wywiad 2026-10-21, odp. 1); Oczko wybrał z analizy portfela. Wywiad z właścicielem daje zasady produktu, nie dowody o pracy użytkownika. Właściciel nie ma osób do rozmów (odp. 3: „wybieram A”), więc prace J i persony P powstają tylko z recenzji konkurencji i źródeł społeczności. Ograniczenie: recenzje pokazują, co chwalą i na co skarżą się użytkownicy aplikacji, a nie przebieg pracy przy robótce; persony są oznaczone „z recenzji”, a funkcje bez odpowiednika u konkurencji to hipotezy H do sprawdzenia po wydaniu.
 
 ## Zasady produktu (słowa właściciela, 2026-10-21, wywiad odp. 1)
 ### ZP-01: Małe, dopracowane aplikacje
