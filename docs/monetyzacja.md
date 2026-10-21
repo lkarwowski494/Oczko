@@ -91,7 +91,7 @@ Oceny/rok = oceny ÷ lata od wydania (min. 1). Kolumna „Typ”: N narzędzie d
 **Przedziały cen narzędzi N (US):** subskrypcja miesięczna 1,49–4,99, mediana 2,52 (n = 6: My Row Counter, YarnBuddy, Crochet counter, StitchTally, Crochet Studio, kntd); roczna 9,99–29,99, mediana 19,49 (n = 6: bez kntd, które sprzedaje tylko brak reklam); dożywotni / jednorazowy pełnego narzędzia 19,99–44,99, mediana 32,49 (n = 4); małe narzędzia jednorazowe albo płatne z góry 1,99–6,99. Aplikacje W: roczna zwykle 39,99, tygodniowa 3,99. (Rachunek: aplikacja z kilkoma cenami jednego okresu wchodzi medianą swoich cen; okresy z nazw produktów.)
 
 ### Recenzje o cenie i modelu
-Próbka: 2026-10-21, do 500 najnowszych recenzji na sklep, US i GB, 11 aplikacji (razem 2845 recenzji). Liczby to automatyczna klasyfikacja słowami kluczowymi: przybliżenie, które łapie też wpisy nie na temat. Cytaty sprawdziłem ręcznie; adres: `itunes.apple.com/us/rss/customerreviews/id=<aplikacja>/sortby=mostrecent/json`, id recenzji w nawiasie.
+Próbka: 2026-10-21, do 500 najnowszych recenzji na sklep, US i GB, 11 aplikacji (razem 2818 recenzji). Liczby to automatyczna klasyfikacja słowami kluczowymi: przybliżenie, które łapie też wpisy nie na temat. Cytaty sprawdziłem ręcznie; adres: `itunes.apple.com/us/rss/customerreviews/id=<aplikacja>/sortby=mostrecent/json`, id recenzji w nawiasie.
 
 | Motyw | Wynik (n z m) | Cytaty |
 |---|---|---|
