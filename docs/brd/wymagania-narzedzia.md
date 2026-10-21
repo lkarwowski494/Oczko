@@ -1,0 +1,181 @@
+# Wymagania: zapas (ZAP), obliczenia (KAL), słownik (SLO)
+Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; reguły w `reguly.md`.
+
+Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i założenia oraz informację, że tabele CYC to wytyczne [FAKT S-19]. Wyniki oczek są niezaokrąglone, dopóki OP-02 nie jest rozstrzygnięte.
+
+## Zapas (ZAP)
+### BR-ZAP-001: Włóczka w zapasie
+- Przepływ: PR-10 · Reguła: RD-03, RD-10
+- Dowód potrzeby: J-08; „Add yarn details such as purchase location, fiber type, weight, gauge, care instructions” (opis YarnBuddy, S-17); metry i gramy (soczewka zaawansowana, Knitandnote id10901641452)
+- Kryteria akceptacji:
+  - Scenariusz: Dodanie włóczki z etykiety w jardach
+    - Zakładając, że etykieta podaje 437 yd
+    - Gdy użytkownik zapisuje włóczkę
+    - Wtedy zapas pokazuje 437 yd i 399,59 m (RD-03-W1)
+  - Scenariusz: Pielęgnacja
+    - Zakładając, że etykieta ma symbole pielęgnacji
+    - Gdy użytkownik zapisuje pielęgnację
+    - Wtedy aplikacja przechowuje opis tekstem albo zdjęcie etykiety i nie rysuje symboli (OG-13, OP-11)
+
+### BR-ZAP-002: Zużycie z projektu odjęte z zapasu
+- Przepływ: PR-10
+- Dowód potrzeby: J-08; „When you update yarn used in a project, it automatically updates your stash too” (opis CozyKnit, S-17); prośba w YarnBuddy (id13993192426, soczewka zaawansowana)
+- Kryteria akceptacji:
+  - Scenariusz: Zakończenie projektu
+    - Zakładając, że w zapasie jest 5 motków, a projekt zużył 3
+    - Gdy użytkownik kończy projekt i potwierdza zużycie
+    - Wtedy zapas pokazuje 2 motki
+
+### BR-ZAP-003: Narzędzia w milimetrach
+- Przepływ: PR-10 · Reguła: RD-11
+- Dowód potrzeby: J-08; „Tool stash for keeping track of your hooks, needles” (opis YarnBuddy, S-17); mm jako klucz [FAKT S-18]
+- Kryteria akceptacji:
+  - Scenariusz: Drut 3,25 mm
+    - Zakładając, że użytkownik dodaje drut 3,25 mm
+    - Gdy zapisuje
+    - Wtedy lista pokazuje „3,25 mm (US 3)” (RD-11-W2)
+
+### BR-ZAP-004: Wyszukiwanie w zapasie
+- Przepływ: PR-10
+- Dowód potrzeby: J-08; „filter yarns in your stash by different things, such as colour family, yarn weight, storage space” (YarnBuddy GB, id11026147292)
+- Kryteria akceptacji:
+  - Scenariusz: Filtr grubości
+    - Zakładając, że zapas ma włóczki kategorii 3 i 4
+    - Gdy użytkownik filtruje kategorię 4
+    - Wtedy widzi tylko włóczki kategorii 4
+  - Scenariusz: W sklepie bez zasięgu
+    - Zakładając, że telefon nie ma sieci
+    - Gdy użytkownik przegląda zapas
+    - Wtedy widzi cały zapas ze zdjęciami
+
+## Obliczenia (KAL)
+### BR-KAL-001: Liczba oczek z próbki
+- Przepływ: PR-11 · Reguła: RD-01
+- Dowód potrzeby: J-09; kalkulatory u 8 z 14; ułamkowa próbka (StashBot CA, id1176543796)
+- Kryteria akceptacji:
+  - Scenariusz: Typowa próbka
+    - Zakładając, że próbka to 22 o./10 cm
+    - Gdy użytkownik podaje szerokość 50 cm
+    - Wtedy wynik to 110 oczek wraz z danymi wejściowymi (RD-01-W1)
+  - Scenariusz: Brak próbki
+    - Zakładając, że pole próbki jest puste
+    - Gdy użytkownik podaje szerokość 50 cm
+    - Wtedy aplikacja prosi o próbkę i nie pokazuje wyniku (RD-01-W5)
+  - Scenariusz: Szerokość zero
+    - Zakładając, że próbka to 22 o./10 cm
+    - Gdy użytkownik podaje szerokość 0 cm
+    - Wtedy aplikacja pokazuje błąd danych (RD-01-W2)
+
+### BR-KAL-002: Przeliczenie wzoru na własną próbkę
+- Przepływ: PR-11 · Reguła: RD-02
+- Dowód potrzeby: J-09; obszar 5 `docs/pomysl.md`; dowód w recenzjach słaby (H-05)
+- Kryteria akceptacji:
+  - Scenariusz: Gęstsza próbka
+    - Zakładając, że wzór ma 100 oczek przy 20 o./10 cm
+    - Gdy użytkownik podaje własną próbkę 22 o./10 cm
+    - Wtedy wynik to 110 oczek (RD-02-W1)
+  - Scenariusz: Próbka wzoru zero
+    - Zakładając, że próbka wzoru to 0
+    - Gdy użytkownik liczy
+    - Wtedy aplikacja pokazuje błąd danych (RD-02-W6)
+
+### BR-KAL-003: Jednostki i próbka w calach
+- Przepływ: PR-11 · Reguła: RD-03, RD-04
+- Dowód potrzeby: J-09; „Please add centimeter conversion” (YarnBuddy, id11586030925); błąd 1,6% w źródłach (RD-04)
+- Kryteria akceptacji:
+  - Scenariusz: Próbka amerykańska
+    - Zakładając, że wzór podaje 20 o. na 4 in
+    - Gdy użytkownik przelicza na 10 cm
+    - Wtedy wynik to 19,685 o./10 cm (RD-04-W1), a sposób pokazania przybliżenia „4 in = 10 cm” zależy od OP-03
+  - Scenariusz: Masa
+    - Zakładając, że etykieta podaje 3,5 oz
+    - Gdy użytkownik przelicza na gramy
+    - Wtedy wynik to 99,22 g (RD-03-W3)
+
+### BR-KAL-004: Równomierne dodawanie i ujmowanie
+- Przepływ: PR-11 · Reguła: RD-05, RD-06
+- Dowód potrzeby: J-09; obszar 5 `docs/pomysl.md`; kalkulator dodawania i ujmowania (opis Knitandnote, S-17)
+- Kryteria akceptacji:
+  - Scenariusz: Dodanie 8 oczek na 100
+    - Zakładając okrążenie 100 oczek
+    - Gdy użytkownik chce dodać 8 oczek
+    - Wtedy aplikacja pokazuje 4 odcinki po 13 oczek i 4 odcinki po 12 oczek, każdy zakończony przyrostem (RD-05-W1)
+  - Scenariusz: Za dużo ujmowania
+    - Zakładając okrążenie 100 oczek
+    - Gdy użytkownik chce ująć 51 oczek
+    - Wtedy aplikacja pokazuje, że można ująć najwyżej 50 (RD-06-W3)
+  - Scenariusz: Rząd płaski
+    - Zakładając, że użytkownik pracuje w rzędach, nie w okrążeniu
+    - Gdy chce równomiernie dodać oczka
+    - Wtedy aplikacja informuje, że obliczenie dla rzędu płaskiego nie jest dostępne (OP-04)
+
+### BR-KAL-005: Zużycie włóczki z wagi próbki
+- Przepływ: PR-11 · Reguła: RD-07
+- Dowód potrzeby: J-08, J-09; „suggested yardage does not take into account the weight of the yarn” (StashBot, id12287394403, soczewka zaawansowana)
+- Kryteria akceptacji:
+  - Scenariusz: Typowy projekt
+    - Zakładając próbkę 6 g na 225 cm², projekt 6000 cm², zapas 10% wybrany przez użytkownika i motek 50 g
+    - Gdy użytkownik liczy zużycie
+    - Wtedy wynik to 160 g bez zapasu i 4 motki, z informacją o założeniu stałej gęstości (RD-07-W1)
+  - Scenariusz: Próg motka
+    - Zakładając, że zużycie bez zapasu wynosi dokładnie 150 g, a zapas 0%
+    - Gdy użytkownik liczy motki po 50 g
+    - Wtedy wynik to 3 motki (RD-07-W2)
+  - Scenariusz: Zapas niewybrany
+    - Zakładając, że użytkownik nie wybrał zapasu
+    - Gdy liczy zużycie
+    - Wtedy aplikacja prosi o wybór zapasu i nie podstawia wartości domyślnej (OP-05)
+
+### BR-KAL-006: Długość po blokowaniu
+- Przepływ: PR-11 · Reguła: RD-08
+- Dowód potrzeby: J-09; obszar 5 `docs/pomysl.md` („zmiana wymiarów po blokowaniu”); dzianina rośnie po praniu [FAKT S-26]
+- Kryteria akceptacji:
+  - Scenariusz: Próbka skraca się po blokowaniu
+    - Zakładając próbkę 24 rz./10 cm przed i 22 rz./10 cm po blokowaniu
+    - Gdy użytkownik chce 35 cm po blokowaniu
+    - Wtedy wynik to 77 rzędów i 32,08 cm na drutach (RD-08-W1)
+
+### BR-KAL-007: Luz w obwodzie
+- Przepływ: PR-11 · Reguła: RD-09
+- Dowód potrzeby: J-09; obszar 5 `docs/pomysl.md` („rozmiar i luz odzieży”); tabela CYC [FAKT S-23]
+- Kryteria akceptacji:
+  - Scenariusz: Luz klasyczny
+    - Zakładając obwód klatki 91,5 cm
+    - Gdy użytkownik podaje obwód gotowego swetra 99 cm
+    - Wtedy aplikacja pokazuje luz 7,5 cm i kategorię „klasyczny” według tabeli CYC (RD-09-W1)
+  - Scenariusz: Styk kategorii
+    - Zakładając obwód klatki 90 cm
+    - Gdy użytkownik podaje 100 cm
+    - Wtedy aplikacja pokazuje obie kategorie „klasyczny” i „luźny” (RD-09-W4)
+
+### BR-KAL-008: Grubość włóczki z próbki
+- Przepływ: PR-11 · Reguła: RD-10
+- Dowód potrzeby: J-08, J-09; „I have medium and light yarns (3, 4) that are 4 ply. Which to use?” (YarnPal, id14529076820, soczewka początkująca)
+- Kryteria akceptacji:
+  - Scenariusz: Zakres wspólny
+    - Zakładając próbkę 23 o. na 4 in
+    - Gdy użytkownik sprawdza kategorię
+    - Wtedy aplikacja pokazuje kategorie 2 i 3 oraz informację, że kategoria nie oznacza zamienności i trzeba zrobić próbkę [FAKT S-20] (RD-10-W2)
+
+## Słownik (SLO)
+### BR-SLO-001: Skróty z jawnym systemem terminologii
+- Przepływ: PR-12
+- Dowód potrzeby: J-10; RYZ-03; „Started the same project about 6 times before realising why it was going wrong” (YarnPal GB, id13435430165)
+- Kryteria akceptacji:
+  - Scenariusz: Wzór brytyjski
+    - Zakładając, że użytkownik wybrał system UK
+    - Gdy wyszukuje skrót „dc”
+    - Wtedy widzi znaczenie w systemie UK i odpowiednik w systemie US
+  - Scenariusz: System niewybrany
+    - Zakładając, że użytkownik nie wybrał systemu
+    - Gdy wyszukuje skrót „dc”
+    - Wtedy widzi oba znaczenia z oznaczeniem systemu i prośbę o sprawdzenie, w jakim systemie jest wzór
+
+### BR-SLO-002: Słownik bez sieci w języku użytkownika
+- Przepływ: PR-12
+- Dowód potrzeby: J-10; NFR-OFF-001; 35 lokalizacji (D-026) · zależy od: OP-12
+- Kryteria akceptacji:
+  - Scenariusz: Bez sieci
+    - Zakładając, że telefon jest w trybie samolotowym
+    - Gdy użytkownik wyszukuje skrót
+    - Wtedy widzi jego znaczenie

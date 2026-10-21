@@ -1,0 +1,1107 @@
+[
+  {
+    "regula": "RD-01",
+    "id": "RD-01-W1",
+    "wejscie": {
+      "W [cm]": 50,
+      "P [o./10 cm]": 22
+    },
+    "oczekiwane": {
+      "N [o.]": 110
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 50 × 22 / 10",
+    "miejsce": "docs/brd/reguly.md:19"
+  },
+  {
+    "regula": "RD-01",
+    "id": "RD-01-W2",
+    "wejscie": {
+      "W [cm]": 0,
+      "P [o./10 cm]": 22
+    },
+    "oczekiwane": {
+      "N [o.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: W = 0 poza W > 0",
+    "miejsce": "docs/brd/reguly.md:20"
+  },
+  {
+    "regula": "RD-01",
+    "id": "RD-01-W3",
+    "wejscie": {
+      "W [cm]": -1,
+      "P [o./10 cm]": 22
+    },
+    "oczekiwane": {
+      "N [o.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:21"
+  },
+  {
+    "regula": "RD-01",
+    "id": "RD-01-W4",
+    "wejscie": {
+      "W [cm]": 0.1,
+      "P [o./10 cm]": 22
+    },
+    "oczekiwane": {
+      "N [o.]": 0.22
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: 0,1 × 22 / 10",
+    "miejsce": "docs/brd/reguly.md:22"
+  },
+  {
+    "regula": "RD-01",
+    "id": "RD-01-W5",
+    "wejscie": {
+      "W [cm]": 50,
+      "P [o./10 cm]": "brak"
+    },
+    "oczekiwane": {
+      "N [o.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: brak próbki",
+    "miejsce": "docs/brd/reguly.md:23"
+  },
+  {
+    "regula": "RD-02",
+    "id": "RD-02-W1",
+    "wejscie": {
+      "N [o.]": 100,
+      "P_w [o./10 cm]": 20,
+      "P_u [o./10 cm]": 22
+    },
+    "oczekiwane": {
+      "N' [o.]": 110
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 100 × 22 / 20",
+    "miejsce": "docs/brd/reguly.md:35"
+  },
+  {
+    "regula": "RD-02",
+    "id": "RD-02-W2",
+    "wejscie": {
+      "N [o.]": 100,
+      "P_w [o./10 cm]": 20,
+      "P_u [o./10 cm]": 18
+    },
+    "oczekiwane": {
+      "N' [o.]": 90
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:36"
+  },
+  {
+    "regula": "RD-02",
+    "id": "RD-02-W3",
+    "wejscie": {
+      "N [o.]": 100,
+      "P_w [o./10 cm]": 20,
+      "P_u [o./10 cm]": 0
+    },
+    "oczekiwane": {
+      "N' [o.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: P_u = 0 poza P_u > 0",
+    "miejsce": "docs/brd/reguly.md:37"
+  },
+  {
+    "regula": "RD-02",
+    "id": "RD-02-W4",
+    "wejscie": {
+      "N [o.]": 100,
+      "P_w [o./10 cm]": 20,
+      "P_u [o./10 cm]": -2
+    },
+    "oczekiwane": {
+      "N' [o.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:38"
+  },
+  {
+    "regula": "RD-02",
+    "id": "RD-02-W5",
+    "wejscie": {
+      "N [o.]": 100,
+      "P_w [o./10 cm]": 20,
+      "P_u [o./10 cm]": 0.1
+    },
+    "oczekiwane": {
+      "N' [o.]": 0.5
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: 100 × 0,1 / 20",
+    "miejsce": "docs/brd/reguly.md:39"
+  },
+  {
+    "regula": "RD-02",
+    "id": "RD-02-W6",
+    "wejscie": {
+      "N [o.]": 100,
+      "P_w [o./10 cm]": 0,
+      "P_u [o./10 cm]": 22
+    },
+    "oczekiwane": {
+      "N' [o.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: dzielenie przez zero",
+    "miejsce": "docs/brd/reguly.md:40"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W1",
+    "wejscie": {
+      "Przelicznik [-]": "yd→m",
+      "Wartość [jedn. wejścia]": 437
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": 399.5928
+    },
+    "tolerancja": 0.0001,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-27: 437 × 0,9144",
+    "miejsce": "docs/brd/reguly.md:51"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W2",
+    "wejscie": {
+      "Przelicznik [-]": "in→cm",
+      "Wartość [jedn. wejścia]": 4
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": 10.16
+    },
+    "tolerancja": 0.0001,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-27: 4 × 2,54",
+    "miejsce": "docs/brd/reguly.md:52"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W3",
+    "wejscie": {
+      "Przelicznik [-]": "oz→g",
+      "Wartość [jedn. wejścia]": 3.5
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": 99.22332
+    },
+    "tolerancja": 0.0001,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-27: 3,5 × 28,34952",
+    "miejsce": "docs/brd/reguly.md:53"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W4",
+    "wejscie": {
+      "Przelicznik [-]": "yd→m",
+      "Wartość [jedn. wejścia]": 0
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": 0
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:54"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W5",
+    "wejscie": {
+      "Przelicznik [-]": "in→cm",
+      "Wartość [jedn. wejścia]": -1
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:55"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W6",
+    "wejscie": {
+      "Przelicznik [-]": "in→cm",
+      "Wartość [jedn. wejścia]": 0.01
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": 0.0254
+    },
+    "tolerancja": 0.0001,
+    "rodzaj": "powyżej",
+    "pochodzenie": "S-27",
+    "miejsce": "docs/brd/reguly.md:56"
+  },
+  {
+    "regula": "RD-03",
+    "id": "RD-03-W7",
+    "wejscie": {
+      "Przelicznik [-]": "oz→g",
+      "Wartość [jedn. wejścia]": "brak"
+    },
+    "oczekiwane": {
+      "wynik [jedn. wyjścia]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:57"
+  },
+  {
+    "regula": "RD-04",
+    "id": "RD-04-W1",
+    "wejscie": {
+      "P4 [o./4 in]": 20
+    },
+    "oczekiwane": {
+      "P10 [o./10 cm]": 19.685
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 20 × 10 / 10,16",
+    "miejsce": "docs/brd/reguly.md:69"
+  },
+  {
+    "regula": "RD-04",
+    "id": "RD-04-W2",
+    "wejscie": {
+      "P4 [o./4 in]": 22
+    },
+    "oczekiwane": {
+      "P10 [o./10 cm]": 21.654
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:70"
+  },
+  {
+    "regula": "RD-04",
+    "id": "RD-04-W3",
+    "wejscie": {
+      "P4 [o./4 in]": 0
+    },
+    "oczekiwane": {
+      "P10 [o./10 cm]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:71"
+  },
+  {
+    "regula": "RD-04",
+    "id": "RD-04-W4",
+    "wejscie": {
+      "P4 [o./4 in]": -5
+    },
+    "oczekiwane": {
+      "P10 [o./10 cm]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:72"
+  },
+  {
+    "regula": "RD-04",
+    "id": "RD-04-W5",
+    "wejscie": {
+      "P4 [o./4 in]": 0.1
+    },
+    "oczekiwane": {
+      "P10 [o./10 cm]": 0.098
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:73"
+  },
+  {
+    "regula": "RD-04",
+    "id": "RD-04-W6",
+    "wejscie": {
+      "P4 [o./4 in]": "brak"
+    },
+    "oczekiwane": {
+      "P10 [o./10 cm]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:74"
+  },
+  {
+    "regula": "RD-05",
+    "id": "RD-05-W1",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 8
+    },
+    "oczekiwane": {
+      "q [o.]": 12,
+      "r [-]": 4
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 4×13 + 4×12 = 100",
+    "miejsce": "docs/brd/reguly.md:85"
+  },
+  {
+    "regula": "RD-05",
+    "id": "RD-05-W2",
+    "wejscie": {
+      "N [o.]": 96,
+      "k [o.]": 12
+    },
+    "oczekiwane": {
+      "q [o.]": 8,
+      "r [-]": 0
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:86"
+  },
+  {
+    "regula": "RD-05",
+    "id": "RD-05-W3",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 100
+    },
+    "oczekiwane": {
+      "q [o.]": 1,
+      "r [-]": 0
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: k = N",
+    "miejsce": "docs/brd/reguly.md:87"
+  },
+  {
+    "regula": "RD-05",
+    "id": "RD-05-W4",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 101
+    },
+    "oczekiwane": {
+      "q [o.]": "błąd danych",
+      "r [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: k > N",
+    "miejsce": "docs/brd/reguly.md:88"
+  },
+  {
+    "regula": "RD-05",
+    "id": "RD-05-W5",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 0
+    },
+    "oczekiwane": {
+      "q [o.]": "błąd danych",
+      "r [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: k < 1",
+    "miejsce": "docs/brd/reguly.md:89"
+  },
+  {
+    "regula": "RD-05",
+    "id": "RD-05-W6",
+    "wejscie": {
+      "N [o.]": "brak",
+      "k [o.]": 8
+    },
+    "oczekiwane": {
+      "q [o.]": "błąd danych",
+      "r [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:90"
+  },
+  {
+    "regula": "RD-06",
+    "id": "RD-06-W1",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 8
+    },
+    "oczekiwane": {
+      "q [o.]": 12,
+      "r [-]": 4
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: wynik 92 o.",
+    "miejsce": "docs/brd/reguly.md:101"
+  },
+  {
+    "regula": "RD-06",
+    "id": "RD-06-W2",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 50
+    },
+    "oczekiwane": {
+      "q [o.]": 2,
+      "r [-]": 0
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: k = N/2, wynik 50 o.",
+    "miejsce": "docs/brd/reguly.md:102"
+  },
+  {
+    "regula": "RD-06",
+    "id": "RD-06-W3",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 51
+    },
+    "oczekiwane": {
+      "q [o.]": "błąd danych",
+      "r [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:103"
+  },
+  {
+    "regula": "RD-06",
+    "id": "RD-06-W4",
+    "wejscie": {
+      "N [o.]": 100,
+      "k [o.]": 0
+    },
+    "oczekiwane": {
+      "q [o.]": "błąd danych",
+      "r [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:104"
+  },
+  {
+    "regula": "RD-06",
+    "id": "RD-06-W5",
+    "wejscie": {
+      "N [o.]": 0,
+      "k [o.]": 1
+    },
+    "oczekiwane": {
+      "q [o.]": "błąd danych",
+      "r [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: brak oczek",
+    "miejsce": "docs/brd/reguly.md:105"
+  },
+  {
+    "regula": "RD-07",
+    "id": "RD-07-W1",
+    "wejscie": {
+      "m_p [g]": 6,
+      "A_p [cm²]": 225,
+      "A [cm²]": 6000,
+      "z [-]": 0.1,
+      "m_m [g]": 50
+    },
+    "oczekiwane": {
+      "M [g]": 160,
+      "motki [-]": 4
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 176 / 50 = 3,52",
+    "miejsce": "docs/brd/reguly.md:117"
+  },
+  {
+    "regula": "RD-07",
+    "id": "RD-07-W2",
+    "wejscie": {
+      "m_p [g]": 5.625,
+      "A_p [cm²]": 225,
+      "A [cm²]": 6000,
+      "z [-]": 0,
+      "m_m [g]": 50
+    },
+    "oczekiwane": {
+      "M [g]": 150,
+      "motki [-]": 3
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: 150 / 50 = 3",
+    "miejsce": "docs/brd/reguly.md:118"
+  },
+  {
+    "regula": "RD-07",
+    "id": "RD-07-W3",
+    "wejscie": {
+      "m_p [g]": 5.62875,
+      "A_p [cm²]": 225,
+      "A [cm²]": 6000,
+      "z [-]": 0,
+      "m_m [g]": 50
+    },
+    "oczekiwane": {
+      "M [g]": 150.1,
+      "motki [-]": 4
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:119"
+  },
+  {
+    "regula": "RD-07",
+    "id": "RD-07-W4",
+    "wejscie": {
+      "m_p [g]": 5.62125,
+      "A_p [cm²]": 225,
+      "A [cm²]": 6000,
+      "z [-]": 0,
+      "m_m [g]": 50
+    },
+    "oczekiwane": {
+      "M [g]": 149.9,
+      "motki [-]": 3
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:120"
+  },
+  {
+    "regula": "RD-07",
+    "id": "RD-07-W5",
+    "wejscie": {
+      "m_p [g]": 6,
+      "A_p [cm²]": 0,
+      "A [cm²]": 6000,
+      "z [-]": 0.1,
+      "m_m [g]": 50
+    },
+    "oczekiwane": {
+      "M [g]": "błąd danych",
+      "motki [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: A_p = 0",
+    "miejsce": "docs/brd/reguly.md:121"
+  },
+  {
+    "regula": "RD-08",
+    "id": "RD-08-W1",
+    "wejscie": {
+      "R_przed [rz./10 cm]": 24,
+      "R_po [rz./10 cm]": 22,
+      "L [cm]": 35
+    },
+    "oczekiwane": {
+      "rzędy [rz.]": 77,
+      "L_druty [cm]": 32.083
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 22 × 35 / 10; 77 × 10 / 24",
+    "miejsce": "docs/brd/reguly.md:132"
+  },
+  {
+    "regula": "RD-08",
+    "id": "RD-08-W2",
+    "wejscie": {
+      "R_przed [rz./10 cm]": 22,
+      "R_po [rz./10 cm]": 22,
+      "L [cm]": 35
+    },
+    "oczekiwane": {
+      "rzędy [rz.]": 77,
+      "L_druty [cm]": 35
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: brak zmiany",
+    "miejsce": "docs/brd/reguly.md:133"
+  },
+  {
+    "regula": "RD-08",
+    "id": "RD-08-W3",
+    "wejscie": {
+      "R_przed [rz./10 cm]": 24,
+      "R_po [rz./10 cm]": 0,
+      "L [cm]": 35
+    },
+    "oczekiwane": {
+      "rzędy [rz.]": "błąd danych",
+      "L_druty [cm]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:134"
+  },
+  {
+    "regula": "RD-08",
+    "id": "RD-08-W4",
+    "wejscie": {
+      "R_przed [rz./10 cm]": 24,
+      "R_po [rz./10 cm]": 0.1,
+      "L [cm]": 35
+    },
+    "oczekiwane": {
+      "rzędy [rz.]": 0.35,
+      "L_druty [cm]": 0.146
+    },
+    "tolerancja": 0.001,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:135"
+  },
+  {
+    "regula": "RD-08",
+    "id": "RD-08-W5",
+    "wejscie": {
+      "R_przed [rz./10 cm]": "brak",
+      "R_po [rz./10 cm]": 22,
+      "L [cm]": 35
+    },
+    "oczekiwane": {
+      "rzędy [rz.]": "błąd danych",
+      "L_druty [cm]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:136"
+  },
+  {
+    "regula": "RD-09",
+    "id": "RD-09-W1",
+    "wejscie": {
+      "luz [cm]": 7.5
+    },
+    "oczekiwane": {
+      "kategorie [-]": "klasyczny"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-23",
+    "miejsce": "docs/brd/reguly.md:147"
+  },
+  {
+    "regula": "RD-09",
+    "id": "RD-09-W2",
+    "wejscie": {
+      "luz [cm]": -10
+    },
+    "oczekiwane": {
+      "kategorie [-]": "bardzo dopasowany"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "S-23",
+    "miejsce": "docs/brd/reguly.md:148"
+  },
+  {
+    "regula": "RD-09",
+    "id": "RD-09-W3",
+    "wejscie": {
+      "luz [cm]": -11
+    },
+    "oczekiwane": {
+      "kategorie [-]": "poza tabelą"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "S-23",
+    "miejsce": "docs/brd/reguly.md:149"
+  },
+  {
+    "regula": "RD-09",
+    "id": "RD-09-W4",
+    "wejscie": {
+      "luz [cm]": 10
+    },
+    "oczekiwane": {
+      "kategorie [-]": "klasyczny, luźny"
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "S-23: styk przedziałów",
+    "miejsce": "docs/brd/reguly.md:150"
+  },
+  {
+    "regula": "RD-09",
+    "id": "RD-09-W5",
+    "wejscie": {
+      "luz [cm]": 2
+    },
+    "oczekiwane": {
+      "kategorie [-]": "między kategoriami"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-23: luka 0…5",
+    "miejsce": "docs/brd/reguly.md:151"
+  },
+  {
+    "regula": "RD-09",
+    "id": "RD-09-W6",
+    "wejscie": {
+      "luz [cm]": "brak"
+    },
+    "oczekiwane": {
+      "kategorie [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:152"
+  },
+  {
+    "regula": "RD-10",
+    "id": "RD-10-W1",
+    "wejscie": {
+      "P [o./4 in]": 18
+    },
+    "oczekiwane": {
+      "kategorie [-]": 4
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-19",
+    "miejsce": "docs/brd/reguly.md:163"
+  },
+  {
+    "regula": "RD-10",
+    "id": "RD-10-W2",
+    "wejscie": {
+      "P [o./4 in]": 23
+    },
+    "oczekiwane": {
+      "kategorie [-]": 2.3
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "S-19: nakładanie 23–24",
+    "miejsce": "docs/brd/reguly.md:164"
+  },
+  {
+    "regula": "RD-10",
+    "id": "RD-10-W3",
+    "wejscie": {
+      "P [o./4 in]": 26
+    },
+    "oczekiwane": {
+      "kategorie [-]": 2
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "S-19",
+    "miejsce": "docs/brd/reguly.md:165"
+  },
+  {
+    "regula": "RD-10",
+    "id": "RD-10-W4",
+    "wejscie": {
+      "P [o./4 in]": 41
+    },
+    "oczekiwane": {
+      "kategorie [-]": "poza tabelą"
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "S-19",
+    "miejsce": "docs/brd/reguly.md:166"
+  },
+  {
+    "regula": "RD-10",
+    "id": "RD-10-W5",
+    "wejscie": {
+      "P [o./4 in]": 6
+    },
+    "oczekiwane": {
+      "kategorie [-]": 7
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "S-19: „6 sts and fewer”",
+    "miejsce": "docs/brd/reguly.md:167"
+  },
+  {
+    "regula": "RD-10",
+    "id": "RD-10-W6",
+    "wejscie": {
+      "P [o./4 in]": 0
+    },
+    "oczekiwane": {
+      "kategorie [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:168"
+  },
+  {
+    "regula": "RD-11",
+    "id": "RD-11-W1",
+    "wejscie": {
+      "d [mm]": 4
+    },
+    "oczekiwane": {
+      "US [-]": 6
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18",
+    "miejsce": "docs/brd/reguly.md:179"
+  },
+  {
+    "regula": "RD-11",
+    "id": "RD-11-W2",
+    "wejscie": {
+      "d [mm]": 3.25
+    },
+    "oczekiwane": {
+      "US [-]": 3
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18",
+    "miejsce": "docs/brd/reguly.md:180"
+  },
+  {
+    "regula": "RD-11",
+    "id": "RD-11-W3",
+    "wejscie": {
+      "d [mm]": 3
+    },
+    "oczekiwane": {
+      "US [-]": "brak"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18: brak odpowiednika",
+    "miejsce": "docs/brd/reguly.md:181"
+  },
+  {
+    "regula": "RD-11",
+    "id": "RD-11-W4",
+    "wejscie": {
+      "d [mm]": -1
+    },
+    "oczekiwane": {
+      "US [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:182"
+  },
+  {
+    "regula": "RD-12",
+    "id": "RD-12-W1",
+    "wejscie": {
+      "r [rz.]": 17,
+      "n [rz.]": 8
+    },
+    "oczekiwane": {
+      "powtórzenie [-]": 3,
+      "rząd_w [rz.]": 1
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:193"
+  },
+  {
+    "regula": "RD-12",
+    "id": "RD-12-W2",
+    "wejscie": {
+      "r [rz.]": 8,
+      "n [rz.]": 8
+    },
+    "oczekiwane": {
+      "powtórzenie [-]": 1,
+      "rząd_w [rz.]": 8
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: koniec powtórzenia",
+    "miejsce": "docs/brd/reguly.md:194"
+  },
+  {
+    "regula": "RD-12",
+    "id": "RD-12-W3",
+    "wejscie": {
+      "r [rz.]": 9,
+      "n [rz.]": 8
+    },
+    "oczekiwane": {
+      "powtórzenie [-]": 2,
+      "rząd_w [rz.]": 1
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:195"
+  },
+  {
+    "regula": "RD-12",
+    "id": "RD-12-W4",
+    "wejscie": {
+      "r [rz.]": 0,
+      "n [rz.]": 8
+    },
+    "oczekiwane": {
+      "powtórzenie [-]": "błąd danych",
+      "rząd_w [rz.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: r < 1",
+    "miejsce": "docs/brd/reguly.md:196"
+  },
+  {
+    "regula": "RD-12",
+    "id": "RD-12-W5",
+    "wejscie": {
+      "r [rz.]": 5,
+      "n [rz.]": 0
+    },
+    "oczekiwane": {
+      "powtórzenie [-]": "błąd danych",
+      "rząd_w [rz.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: n < 1",
+    "miejsce": "docs/brd/reguly.md:197"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W1",
+    "wejscie": {
+      "r [rz.]": 12,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "przypomnienie [-]": "tak"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek",
+    "miejsce": "docs/brd/reguly.md:208"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W2",
+    "wejscie": {
+      "r [rz.]": 30,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "przypomnienie [-]": "tak"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: 6 + 4 × 6",
+    "miejsce": "docs/brd/reguly.md:209"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W3",
+    "wejscie": {
+      "r [rz.]": 36,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "przypomnienie [-]": "nie"
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: szóste wyzwolenie",
+    "miejsce": "docs/brd/reguly.md:210"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W4",
+    "wejscie": {
+      "r [rz.]": 5,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "przypomnienie [-]": "nie"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: przed s",
+    "miejsce": "docs/brd/reguly.md:211"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W5",
+    "wejscie": {
+      "r [rz.]": 12,
+      "s [rz.]": 6,
+      "N [rz.]": 0,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "przypomnienie [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: N < 1",
+    "miejsce": "docs/brd/reguly.md:212"
+  }
+]

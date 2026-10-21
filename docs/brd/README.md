@@ -1,18 +1,37 @@
 # BRD: Oczko
-Stan: STOP E2 (rynek, OG-01–13, RD-01–13, H-01–09, RYZ-01–08) · Aktualizacja: 2026-10-21 · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
+Stan: STOP E3 (PR-01–14, 59 wymagań BR w 7 modułach, 11 NFR, RD-01–13, blokery wydania) · Aktualizacja: 2026-10-21 · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
 
 BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P-015 (wyjątek nazwany od rdzenia roli, który każe czytać istniejące BRD i kod): nie czytano `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/`, historii git sprzed 2026-10-21, `oczko-warsztat/rozliczenie-2026-10-21/` ani karty portfela Oczka. Obszary z `docs/pomysl.md` to hipotezy.
 
 ## Spis
 | Plik | Zawartość |
 |---|---|
-| `README.md` | stan, rama E0, otwarte pytania, blokery (E3) |
+| `README.md` | stan, streszczenie, rama E0, otwarte pytania, blokery wydania |
 | `odkrywanie.md` | zasady ZP, prace J, persony P, kontekst, rynek, OG, RYZ, hipotezy H |
 | `reguly.md` | reguły RD z wektorami |
 | `zrodla.md` | źródła S |
-| `wymagania.md` | przepływy PR, wymagania BR i NFR (E3) |
+| `wymagania.md` | przepływy PR-01–PR-14, wymagania NFR |
+| `wymagania-licznik.md`, `wymagania-projekt.md`, `wymagania-dane.md`, `wymagania-narzedzia.md` | wymagania BR według modułów: LIC, PRJ, WZR, DAN, ZAK, ZAP, KAL, SLO |
+| `tests/wektory/brd.json` (repo) | wektory RD do testów, generowane skryptem; tylko do odczytu dla ról 07 i 08 |
 
 Materiały prywatne (wywiad, 4682 recenzje, cztery soczewki E2, kopie źródeł): `oczko-warsztat/01-odkrywanie/`.
+
+## Streszczenie
+Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kursami. Dowody (4682 recenzje 23 aplikacji, cztery soczewki, wytyczne Apple, CYC) wskazują dwie luki rynku: zaufanie do danych i uczciwe płacenie (H-03), oraz funkcje, których nikt nie robi dobrze: liczenie bez telefonu, widoczne przypomnienia z planem rzędów, ochrona przed przypadkowym stuknięciem (H-06). Zakres, kolejność i podział rozstrzyga rola 03 (H-04, H-05, H-07); model i ceny rola 02 (P-019, H-01, H-02).
+
+## Blokery wydania
+Wejście dla roli 07 (werdykt gotowości). Niespełnienie któregokolwiek blokuje wydanie.
+- NFR-DAN-001, BR-DAN-003: utrata danych przy aktualizacji.
+- NFR-DAN-002, BR-DAN-001: utrata zmian licznika (główny przepływ, offline).
+- NFR-DAN-003, BR-DAN-002: synchronizacja zmienia liczbę bez wiedzy użytkownika (RYZ-02).
+- BR-DAN-004, BR-DAN-005, BR-DAN-006: brak drogi przeniesienia danych na nowy telefon.
+- BR-LIC-001, BR-LIC-002, BR-LIC-003: główny przepływ liczenia.
+- BR-ZAK-001: utrata zakupu (OG-02).
+- BR-ZAK-002, NFR-PRY-001, BR-ZAK-004: obietnica prywatności i polityka sklepu (OG-04).
+- NFR-ZEG-001: rozbieżność zegarka (jeśli zegarek jest w wydaniu).
+- BR-KAL-001–BR-KAL-008, BR-SLO-001: reguły krytyczne i treść krytyczna bez przeglądu roli 06 (RD-01–RD-04, RD-07, RD-08, RD-10; RYZ-03).
+- BR-WZR-003: funkcja wzoru bez rozstrzygnięcia OP-08 (patent).
+- OG-05: opis w sklepie wymienia tylko funkcje obecne w wydaniu.
 
 ## E0: Rama i ograniczenia
 
@@ -81,3 +100,6 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 | OP-13 | [DO USTALENIA] Japońskie rozmiary drutów (号) na mm: źródło szczebla 1–3 | źródła | RD-11 |
 | OP-14 | [DO WYJAŚNIENIA] Czy dopuścić modele Apple w Private Cloud Compute (bez kosztu, dane poza urządzeniem) | właściciel | P-023, H-09, OG-11 |
 | OP-15 | [DO WYJAŚNIENIA] Czy aplikacja ma opcjonalne przypomnienie o przerwie (bez twierdzeń zdrowotnych) | właściciel, 03 | RYZ-08 |
+| OP-16 | [DO WYJAŚNIENIA] Podłoga dużego tekstu (Dynamic Type) na ekranach głównych przepływów | rola 04 | NFR-DOS-002 |
+| OP-17 | [DO WYJAŚNIENIA] Budżet czasu reakcji licznika | rola 05 | NFR-WYD-001 |
+| OP-18 | [DO WYJAŚNIENIA] Okres przechowywania usuniętych projektów | właściciel, 03 | BR-DAN-008 |
