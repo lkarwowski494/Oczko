@@ -225,12 +225,42 @@ Najwyższy wynik normalny w podłodze (bez ciemnych wzorców, zgodny z 3.1.1/3.1
 | roczna 19,99 USD | 24 949 zł | 6235 zł · budować | 2246 zł · budować |
 | właściciel 0,99 / 6,99 / 14,99 USD | 13 941 zł | 3493 zł · budować | 1258 zł · **odłożyć** |
 
-Próg: 1944,45 zł. Wynik zależy od ceny i udziału liniowo (konwersję przy niższej cenie zostawiłem bez zmian, ostrożnie). Werdykt „budować” przy cenach rynkowych wytrzymuje spadek cen i udziału o 70% naraz. Wariant właściciela wytrzymuje spadek do połowy, ale nie do 30%, bo zaczyna już od ok. ⅓ cen rynku.
+Próg: 1944,45 zł. Wynik zależy od ceny i udziału liniowo (konwersję przy niższej cenie zostawiłem bez zmian, ostrożnie). Werdykt „budować” przy cenach rynkowych wytrzymuje spadek cen i udziału o 70% naraz. **Korekta (2026-10-21, po pytaniu właściciela):** w wierszu „właściciel” scenariusz B obniża o 70% cenę, która już jest na poziomie rynku po takim spadku (19,49 USD/rok × 0,3 ≈ 5,85 USD wobec 6,99 USD), więc zaniża ten wariant. Bez obniżki jego ceny wynik B to 4182 zł (budować), więcej niż warianty rynkowe w B (2246–3209 zł). Szczegóły niżej.
 
 **Skutki dla dalszej pracy:**
 - Odświeżenie bramki co 6 miesięcy zamiast 12 (D-025 pozwala odświeżyć „na żądanie właściciela”): następne w 04.2027 (6 miesięcy od 2026-10-21) albo wcześniej, przy pierwszym spadku median cen narzędzi N o ponad 25%. Decyzja właściciela.
 - Największe ryzyko to widoczność (udział), nie cena. Dla roli 01 i M5: wyróżnik musi być widoczny w sklepie, np. uczciwy model (ZAL-009) i 35 języków. Większość konkurentów ma 1–3 języki (E1).
 - Jedna osoba to też ograniczenie: obsługa zgłoszeń i aktualizacje w 35 językach. Dla roli 03: mały zakres; model bez zobowiązania do stałych nowych treści jest tańszy w utrzymaniu niż subskrypcja (sesja 2, E2).
+
+### Cena właściciela a konwersja (pytanie właściciela, 2026-10-21)
+Teza właściciela: niska cena podniesie konwersję, ludzie przejdą z droższych aplikacji, a nowi wybiorą tańszą.
+
+**Co mówią dane (RevenueCat, szczebel 4; porównanie między aplikacjami, nie eksperyment cenowy):**
+| Za tezą | Przeciw tezie |
+|---|---|
+| 2025: „While lower-priced apps attract more downloads” | 2025: „2.66% median Download-to-Paying for high-priced apps versus 1.49% for low-priced” |
+| 2025: „lower price points are actually showing stronger trial-to-paid conversion (47.8% versus 28.4% for high-priced)” | 2026: „High-priced apps generate $35.89 monthly RLTV median, 5.4× higher than low-priced apps at $6.67” |
+| 2025: „Most apps with cheap annual plans keep up to 36.0% of users subscribed after a year. High-priced monthly plans? Just 6.7%” | 2026: D14 przychód na instalację „High-priced median: $0.61” wobec „Low-priced median: $0.08” |
+
+Wniosek: tania aplikacja zdobywa więcej pobrań i lepiej utrzymuje płacących, ale przy medianie zarabia mniej na instalacji. Dane mieszają różne aplikacje (tanie bywają słabsze), więc nie rozstrzygają tego dla Oczka. Recenzje z E1 dają słaby sygnał przejść z powodu ceny: w narzędziach N płacący chwalą ceny 10–30 USD/rok, a skargi na cenę dotyczą głównie aplikacji W (39,99 USD/rok). Przejście z innej aplikacji hamują też dane zostawione u konkurenta (projekty, wzory), więc pomógłby import.
+
+**Ile musiałaby urosnąć konwersja i udział** (`dowody/oplacalnosc-cena-wlasciciela-2026-10-21.txt`, kod 0; wariant właściciela ma już konwersję +20% wobec planu mieszanego):
+| Wariant | Wynik norm. (zł netto/rok) |
+|---|---|
+| właściciel, konwersja ×2 i udział ×1,5 | 41 824 |
+| jednorazowy 29,99 USD | 35 648 |
+| mies. + roczna + dożywotni (ceny rynkowe) | 32 094 |
+| **właściciel, konwersja ×1,5 i udział ×1,5** | **31 368** |
+| roczna 19,99 USD | 24 949 |
+| właściciel, konwersja ×1,5 | 20 912 |
+| właściciel (jak w macierzy) | 13 941 |
+| presja AI B: właściciel bez obniżki ceny, udział ×0,3 | 4182 |
+| presja AI B: jednorazowy 29,99 / roczna 19,99 | 3209 / 2246 |
+
+- Wariant właściciela dogania plan z cenami rynkowymi, gdy konwersja i udział rosną jednocześnie o ok. 50%. Taki wzrost jest możliwy, ale dziś nie ma na niego dowodu ([ZAŁOŻENIE], ZAL-016).
+- Przy spadku cen rynku (presja AI) wariant właściciela wygrywa, bo nie musi obniżać ceny. To zabezpieczenie na przyszłość, nie koszt.
+- Asymetria: obniżka ceny nikomu nie szkodzi. Podwyżka zraża użytkowników, a przy subskrypcjach wymaga zasad Apple, których dziś nie czytałem [DO SPRAWDZENIA w sesji 2]. Start od wyższej ceny zostawia więc więcej możliwości. Za startem od niskiej ceny przemawia z kolei szybsze zdobycie ocen i widoczności (ZAL-014).
+- Wybór ceny należy do sesji 2 (E2); bramka przechodzi w obu kierunkach.
 
 ### Rozbieżności z portfelem (D-023; `portfel-aplikacji` otwarty po zapisaniu własnego rachunku, karta `karty/24-oczko.md`, `dane/ranking.json`, commit e3cc4bb)
 | Wielkość | Moja | Portfel | Przyczyna |
@@ -262,6 +292,7 @@ Próg: 1944,45 zł. Wynik zależy od ceny i udziału liniowo (konwersję przy ni
 | MS-10 | itunes.apple.com/search, /lookup; apps.apple.com/{us,gb,pl,de}/app/id… | tabela rynku E1 | liczby i ceny jak w tabeli | 2026-10-21 | 1 (dane sklepu) |
 | MS-11 | itunes.apple.com/{us,gb}/rss/customerreviews/…/json | recenzje E1 (id w tabeli) | cytaty jak w tabeli | 2026-10-21 | 5 (opinie: dowód R płacenia, nie fakt) |
 | MS-12 | revenuecat.com/state-of-subscription-apps (State of Subscription Apps 2026) | definicje, „Hard paywalls…”, geografia | „Hard paywalls convert five times better than freemium (10.7% vs 2.1% download-to-paid by day 35)”; „North America’s median D35 download-to-paid rate is 2.6%” | 2026-10-21 | 4 (raport branżowy, próbka aplikacji RevenueCat) |
+| MS-12a | revenuecat.com/state-of-subscription-apps-2025 | „By price point”, retencja | cytaty w sekcji „Cena właściciela a konwersja” | 2026-10-21 | 4 |
 | MS-13 | gov.uk/vat-rates | tabela | „Standard rate 20%” | 2026-10-21 | 1 |
 | MS-14 | skatteetaten.no/en/rates/value-added-tax/ | tabela | „Normal rate 25 %” | 2026-10-21 | 1 |
 | MS-15 | taxsummaries.pwc.com/japan/corporate/other-taxes | Consumption tax („Last reviewed - 07 August 2026”) | „The general rate is 10%” | 2026-10-21 | 4 (jedno źródło) |
