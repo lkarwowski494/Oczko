@@ -179,7 +179,17 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 ### OG-06: Bez nazw konkurentów w metadanych
 - Słowa kluczowe i opis bez cudzych znaków towarowych i nazw popularnych aplikacji [FAKT S-07] (np. „Ravelry”, „knitCompanion”).
 ### OG-07: Patenty
-- Zakaz użycia opatentowanych rozwiązań bez zgody [FAKT S-08]. Patent US8506303 (knitCompanion) obejmuje m.in. śledzenie postępu w rzędach instrukcji złożonej z kilku źródeł; status według Google Patents „Active”, wygaśnięcie przewidywane 2032-07-13 [FAKT S-10]. Drugi patent (US8529263) nieodczytany (strona 503). RYZ-01.
+- Zakaz użycia opatentowanych rozwiązań bez zgody [FAKT S-08]. Patent US8506303 (knitCompanion) obejmuje m.in. śledzenie postępu w rzędach instrukcji złożonej z kilku źródeł; status według Google Patents „Active”, wygaśnięcie przewidywane 2032-07-13 [FAKT S-10]. Drugi patent US8529263 ma ten sam status i dodatkowo „companion instructions” zależne od postępu [FAKT S-32]. RYZ-01.
+- **Weryfikacja własna (P-024), stan 2026-10-21:** wszystkie niezależne zastrzeżenia (1, 9, 13 obu patentów) zawierają łącznie: pobranie treści z kilku instrukcji („a plurality of instructional manuals”), wybór części, ich edycję, złożenie w jeden zintegrowany zestaw instrukcji, prezentację i śledzenie postępu [FAKT S-10] [FAKT S-32].
+
+| Funkcja Oczka | Treść z kilku instrukcji | Edycja i złożenie w jeden zestaw | Śledzenie postępu | Uwaga |
+|---|---|---|---|---|
+| BR-WZR-001, BR-WZR-002 (jeden wzór w projekcie) | nie | nie | — | — |
+| BR-WZR-003 (znacznik rzędu) | nie | nie | tak | brak dwóch elementów |
+| BR-WZR-004 (pisanie po wzorze) | nie | nie (adnotacja, nie złożenie części) | — | — |
+| BR-LIC-009, BR-LIC-010 (przypomnienia, plan rzędów) | nie | nie | tak | brak dwóch elementów |
+
+- **Ograniczenie projektowe (kandydat dla 03 i 04):** Oczko nie łączy fragmentów kilku wzorów w jeden zestaw instrukcji (jak „JOIN CHARTS or WRITTEN” w opisie knitCompanion). Każda nowa funkcja wzoru przechodzi tę tabelę przed projektem i przed wydaniem. To ocena projektu, nie opinia prawna.
 ### OG-08: Usługi zewnętrzne tylko zgodnie z ich warunkami
 - Korzystanie z usługi zewnętrznej wymaga zgody jej warunków [FAKT S-09]; P-021 i tak wyklucza usługi. Import pliku, który użytkownik sam pobrał (PDF, arkusz zapasu z Ravelry [FAKT S-31]), nie korzysta z API.
 ### OG-09: CloudKit: koszt i sieć
@@ -195,7 +205,7 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 
 ## Ryzyka produktu (RYZ)
 ### RYZ-01: Patent na śledzenie postępu we wzorze (brzegowy)
-- OG-07. Większość liderów ma wzór z licznikiem, ale to nie jest ocena prawna. Krok właściciela: konsultacja prawna przed rolą 03 albo przed wydaniem funkcji wzoru (OP-08).
+- OG-07. Weryfikacja własna zamiast konsultacji prawnej (P-024); ryzyko szczątkowe: błędna interpretacja zastrzeżeń bez prawnika. Tańsza kontrola: tabela elementów zastrzeżeń przy każdej funkcji wzoru.
 ### RYZ-02: Synchronizacja myli liczbę rzędów (realny)
 - Najczęstsza skarga zaawansowanych, także przy iCloud (Loopsy). Dotyczy P-021, J-07; projektuje rola 12, testy konfliktów przed wydaniem.
 ### RYZ-03: Terminologia US/UK w szydełku (realny, mienie)
@@ -241,7 +251,7 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 - Rozstrzyga: 03.
 ### H-09: AI na urządzeniu bez dowodu potrzeby
 - Rodzaj: wartość · Rejestr: ZAL-024 · Za: odczyt danych z PDF (KNIT, opis); kandydaci „wow” (ZP-08). Przeciw: brak dowodu potrzeby u początkujących i zaawansowanych; niechęć do AI (Loopsy 14 z 437); OG-11 wyklucza część języków i starszych iPhone’ów.
-- Opcje: (a) AI tylko w funkcjach pomocniczych (np. wypełnienie danych wzoru z PDF), zawsze z możliwością pominięcia; (b) bez AI w pierwszej wersji. Rekomendacja: (a) po dowodzie z roli 03. Czy dopuścić Private Cloud Compute (OG-11): [DO WYJAŚNIENIA] (OP-14). Rozstrzyga: właściciel, 03.
+- Opcje: (a) AI tylko w funkcjach pomocniczych (np. wypełnienie danych wzoru z PDF), zawsze z możliwością pominięcia; (b) bez AI w pierwszej wersji. Rekomendacja: (a) po dowodzie z roli 03. Private Cloud Compute: nie (P-025). Rozstrzyga: 03 (zakres AI na urządzeniu).
 
 ## Sprawdzenie założeń (E2)
 | ZAL | Wynik E2 | Dowód |

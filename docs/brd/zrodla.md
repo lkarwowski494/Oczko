@@ -34,3 +34,4 @@ Stan: STOP E2 · Aktualizacja: 2026-10-21 · Hierarchia: P-017. Kopie tekstu str
 | S-29 | https://pubmed.ncbi.nlm.nih.gov/28350041/ | streszczenie (Zallmann i in., Acta Derm Venereol 2017) | „Current evidence does not suggest that wool-fibre is a cutaneous allergen.” | 2026-10-21 | 2 | — |
 | S-30 | https://www.nhs.uk/conditions/repetitive-strain-injury-rsi/ | Causes | „Repetitive strain injury (RSI) is caused by repeated use of a body part” (dziergania nie wymienia) | 2026-10-21 | 3 | — |
 | S-31 | https://www.ravelry.com/about/goodies | eksport danych | „You can save your stash data as a spreadsheet” | 2026-10-21 | 3 | 2027-04-21 |
+| S-32 | https://patents.google.com/patent/US8529263B1/en | US8529263B1 (Create2Thrive Inc.), zastrzeżenie 1; status | „presenting at least one set of companion instructions to the user to execute”; status „Active … 2032-07-13 Anticipated expiration” (Google Patents: data nie jest analizą prawną) | 2026-10-21 | 1 | 2027-04-21 |

@@ -91,10 +91,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
 - Kryteria akceptacji:
   - Scenariusz: Przywrócenie
     - Zakładając, że użytkownik usunął projekt
-    - Gdy w okresie przechowywania wybiera przywrócenie
+    - Gdy po 29 dniach wybiera przywrócenie (P-026)
     - Wtedy projekt wraca ze wszystkimi danymi
   - Scenariusz: Okres przechowywania
-    - Zakładając, że minął okres przechowywania [DO WYJAŚNIENIA] (OP-18)
+    - Zakładając, że minęło 30 dni od usunięcia (P-026)
     - Gdy użytkownik szuka usuniętego projektu
     - Wtedy projektu nie ma, a aplikacja informowała o terminie przy usuwaniu
 

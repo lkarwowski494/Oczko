@@ -101,7 +101,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Wtedy aplikacja pokazuje przypomnienie bez porad zdrowotnych
 
 ## Wzór (WZR)
-Funkcje wzoru zależą od oceny patentu (OG-07, RYZ-01, OP-08).
+Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed projektem i wydaniem (P-024, OG-07).
 
 ### BR-WZR-001: Import wzoru z pliku
 - Przepływ: PR-06, PR-13
@@ -127,7 +127,7 @@ Funkcje wzoru zależą od oceny patentu (OG-07, RYZ-01, OP-08).
 
 ### BR-WZR-003: Znacznik bieżącego rzędu we wzorze
 - Przepływ: PR-06
-- Dowód potrzeby: J-04; obejście z linijką w aplikacji Zdjęcia (編み物カウンター２, id14499518985); „For years I have struggled to remember where I am in a pattern” (My Row Counter GB, id8441435364) · zależy od: OP-08
+- Dowód potrzeby: J-04; obejście z linijką w aplikacji Zdjęcia (編み物カウンター２, id14499518985); „For years I have struggled to remember where I am in a pattern” (My Row Counter GB, id8441435364) · zależy od: P-024
 - Kryteria akceptacji:
   - Scenariusz: Znacznik idzie z licznikiem
     - Zakładając, że znacznik stoi na rzędzie 12 schematu, a licznik ma 12
