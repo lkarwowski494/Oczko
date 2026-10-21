@@ -207,6 +207,31 @@ Najwyższy wynik normalny w podłodze (bez ciemnych wzorców, zgodny z 3.1.1/3.1
 
 **Standard marki:** wysoki (karta): bez reklam i SDK śledzących; wariant reklamowy nie liczony.
 
+### Presja AI: spadek kosztów tworzenia aplikacji (pytanie właściciela, 2026-10-21)
+**Co już było w rachunku:** strona kosztów. Aplikacja ma koszt 0 zł, bo prowadzi ją jedna osoba z AI, więc próg to tylko 500 USD. Konkurenci z zespołami potrzebują wielokrotnie więcej. **Czego nie było:** wpływu taniego tworzenia aplikacji na ceny i na liczbę konkurentów. Biorę go teraz jako scenariusz.
+
+**Dowody trendu (odczyt 2026-10-21):**
+- RevenueCat 2026 (MS-12): „monthly new subscription app launches increased from ~2,000 in January 2022 to 14,700+ by January 2026”.
+- Ta kategoria: ze 100 lokalnych narzędzi N znalezionych w przesiewie 63 wydano w 2026, a 10 w 2025. 72 z 73 nowych ma mniej niż 10 ocen (`oczko-warsztat/…/lokalne-N.json`).
+- Ceny jeszcze nie spadły: nowe aplikacje W biorą 39,99 USD/rok. Jedyne nowe narzędzie N z ocenami (StitchTally, 11.2024) jest tańsze od median: 9,99 USD/rok, 24,99 USD dożywotnio. To tylko jeden przypadek, więc nie dowód spadku cen.
+- Wniosek (hipoteza ZAL-014): tanie tworzenie aplikacji uderza najpierw w widoczność. Nowych aplikacji przybywa, ale prawie żadna nie zdobywa użytkowników. W cenę uderzy później.
+
+**Scenariusze** (wynik `node oplacalnosc.mjs warianty-ai/*.json`, kod 0, `dowody/oplacalnosc-presja-ai-2026-10-21.txt`; ceny i udział nowej aplikacji przemnożone):
+| Wariant | Bez presji (norm.) | A: ceny ×0,5, udział ×0,5 | B: ceny ×0,3, udział ×0,3 |
+|---|---|---|---|
+| jednorazowy 29,99 USD | 35 648 zł | 8914 zł · budować | 3209 zł · budować |
+| mies. 2,99 + roczna 19,99 + dożywotni 39,99 USD | 32 094 zł | 8027 zł · budować | 2891 zł · budować |
+| jednorazowy 19,99 USD | 29 702 zł | 7423 zł · budować | 2674 zł · budować |
+| roczna 19,99 USD | 24 949 zł | 6235 zł · budować | 2246 zł · budować |
+| właściciel 0,99 / 6,99 / 14,99 USD | 13 941 zł | 3493 zł · budować | 1258 zł · **odłożyć** |
+
+Próg: 1944,45 zł. Wynik zależy od ceny i udziału liniowo (konwersję przy niższej cenie zostawiłem bez zmian, ostrożnie). Werdykt „budować” przy cenach rynkowych wytrzymuje spadek cen i udziału o 70% naraz. Wariant właściciela wytrzymuje spadek do połowy, ale nie do 30%, bo zaczyna już od ok. ⅓ cen rynku.
+
+**Skutki dla dalszej pracy:**
+- Odświeżenie bramki co 6 miesięcy zamiast 12 (D-025 pozwala odświeżyć „na żądanie właściciela”): następne w 04.2027 (6 miesięcy od 2026-10-21) albo wcześniej, przy pierwszym spadku median cen narzędzi N o ponad 25%. Decyzja właściciela.
+- Największe ryzyko to widoczność (udział), nie cena. Dla roli 01 i M5: wyróżnik musi być widoczny w sklepie, np. uczciwy model (ZAL-009) i 35 języków. Większość konkurentów ma 1–3 języki (E1).
+- Jedna osoba to też ograniczenie: obsługa zgłoszeń i aktualizacje w 35 językach. Dla roli 03: mały zakres; model bez zobowiązania do stałych nowych treści jest tańszy w utrzymaniu niż subskrypcja (sesja 2, E2).
+
 ### Rozbieżności z portfelem (D-023; `portfel-aplikacji` otwarty po zapisaniu własnego rachunku, karta `karty/24-oczko.md`, `dane/ranking.json`, commit e3cc4bb)
 | Wielkość | Moja | Portfel | Przyczyna |
 |---|---|---|---|

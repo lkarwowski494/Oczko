@@ -17,3 +17,5 @@ Jeden rejestr dla wszystkich ról. Założenie to twierdzenie, na którym stoją
 | ZAL-011 | 60 instalacji na ocenę (pes. 20, opt. 200) | 02 | hipoteza, bez źródła | E1b; sprawdzenie: App Analytics innych aplikacji właściciela (OP-06) | wynik bramki |
 | ZAL-012 | Oczko zdobędzie 6% (2–20%) rocznych instalacji narzędzi N bez płatnej reklamy | 02 | hipoteza, bez źródła | E1b | wynik bramki |
 | ZAL-013 | Konwersja pobranie → płacący ok. 2,1% (freemium) | 02 | hipoteza ze źródłem szczebla 4 | RevenueCat 2026 (MS-12) | wynik bramki, sesja 2 |
+| ZAL-014 | Tanie tworzenie aplikacji (AI) zwiększa liczbę konkurentów szybciej, niż obniża ceny; pierwsze ryzyko to widoczność | 02 | hipoteza (R częściowo) | RevenueCat 2026 (MS-12); przesiew E1b: 63 ze 100 lokalnych narzędzi N wydano w 2026, 72 z 73 nowych ma < 10 ocen; 2026-10-21 | udział nowej aplikacji, odświeżenie bramki, rola 01 (wyróżnik), M5 |
+| ZAL-015 | Ceny narzędzi N spadną w ciągu 1–2 lat (scenariusz właściciela) | właściciel / 02 | hipoteza | brak dowodu spadku na 2026-10-21; scenariusze A/B w `docs/monetyzacja.md` | cena (sesja 2, E2), odświeżenie |
