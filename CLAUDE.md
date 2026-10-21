@@ -10,7 +10,7 @@ Aplikacja dla osób, które dziergają na drutach i szydełkują; w przebudowie 
 ## Stan projektu (aktualizacja: 2026-10-21)
 - Etap: w budowie (przebudowa); poprzednia wersja 0.1.0 tylko w TestFlight (build 1004), dane użytkowników: [DO USTALENIA] (prawdopodobnie tylko właściciel)
 - Sklep (App Store Connect): częściowo (rekord aplikacji i TestFlight; umowa Paid Apps i produkty: [DO USTALENIA])
-- Rynek główny: globalny, 35 lokalizacji jak Trening; kolejność storefrontów wyznacza bramka 02 · repo treści prywatnych: `lkarwowski494/oczko-warsztat` (prywatne)
+- Rynek główny: globalny, 35 lokalizacji jak Trening; kolejność storefrontów wyznacza bramka 02 · repo treści prywatnych: `lkarwowski494/oczko-warsztat` (prywatne, zapis prosto na `main`, P-010)
 - Standard marki: wysoki (zasady biblioteki); opłacalność obu pokazuje rola 02
 - Próg opłacalności: 500 USD netto/rok globalnie (domyślny, D-024)
 - Polityka języków: szeroka (35 jak Trening, D-026); mechanizm i18n wcześnie (09 E0–E1), tłumaczenia jak najpóźniej (09 E2–E4 po roli 08)
