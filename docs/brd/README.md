@@ -1,5 +1,5 @@
 # BRD: Oczko
-Stan: E1 (wywiad: odp. 1, ZP-01–ZP-07 w `odkrywanie.md`) · Aktualizacja: 2026-10-21 · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
+Stan: STOP E1 (prace J-01–J-11, persony P-1–P-4, ZP-01–ZP-09 w `odkrywanie.md`) · Aktualizacja: 2026-10-21 · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
 
 BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P-015 (wyjątek nazwany od rdzenia roli, który każe czytać istniejące BRD i kod): nie czytano `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/`, historii git sprzed 2026-10-21, `oczko-warsztat/rozliczenie-2026-10-21/` ani karty portfela Oczka. Obszary z `docs/pomysl.md` to hipotezy.
 
