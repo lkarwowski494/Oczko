@@ -1,9 +1,73 @@
 # Monetyzacja: Oczko
-Stan: krok 0 zakończony (sesja 1: bramka „budować”, P-013); sesja 2 (E0, E1.3–E1.4, E2–E3) po BRD roli 01 · Aktualizacja: 2026-10-21 · Wejście: `docs/pomysl.md`, karta „Stan projektu” (`CLAUDE.md`), `docs/decyzje.md` P-001–P-009; BRD jeszcze nie ma (krok 0)
+Stan: sesja 2 · STOP E0 (2026-10-21) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-21 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
-## E0: Rama
+## Sesja 2, E0: Rama (2026-10-21)
+Rola 02-monetyzacja, tryb build bez `--moduly` (moduły domyślne: `cena-i-rachunek`, `rachunek`, `storekit-expo`, `audyt-paywalla`; prompt `prompts` @97ec212, 58 354 znaków). Kwarantanna P-003 i P-015 jak w sesji 1. Surowe teksty źródeł z dziś: `oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/`.
+
+### Środowisko (2026-10-21)
+| Sprawdzenie | Wynik | Skutek |
+|---|---|---|
+| System, Node, git | Linux x86_64 w chmurze, Node v22.22.0; gałąź `claude/jolly-thompson-paz6d8` zgodna z `origin` (62e58b8) | — |
+| GitHub | push przez git na gałąź roboczą; `oczko-warsztat` dołączone z prawem zapisu (P-010) | — |
+| Sieć | 200: `developer.apple.com` (wytyczne, subskrypcje, pomoc App Store Connect), `apps.apple.com` | — |
+| Mac z Xcode | brak (OP-03) | testy StoreKit tylko w piaskownicy przez TestFlight na telefonie właściciela; plik `.storekit` w Xcode niedostępny |
+| App Store Connect | konto jest, umowa Paid Apps i Small Business Program: tak (OP-01, sesja 1). Produkty jeszcze nie istnieją | dokładne ceny progów i wpływ w storefrontach odczyta właściciel (OP-19) |
+| Wysiłek sesji | nie da się sprawdzić narzędziem (`get_session` podaje tylko model `claude-opus-5-5`) | właściciel może wpisać `/effort high` |
+
+Rozbieżność do poprawy przez właściciela albo rolę 01: karta „Stan projektu” w `CLAUDE.md` ma „umowa Paid Apps i produkty: [DO USTALENIA]”, a OP-01 z sesji 1 zamyka umowę odpowiedzią „tak”. Linia nie należy do roli 02, więc jej nie zmieniam.
+
+### Wejście jako hipotezy
+| Wejście | Status dziś | Co z nim zrobię |
+|---|---|---|
+| P-019 ceny 0,99 USD/mies., 6,99 USD/rok, 14,99 USD dożywotnio | decyzja właściciela; stoi na ZAL-016 (hipoteza) | biorę jako ceny wyjściowe; w E2 pokazuję skutki (rachunek, podwyżki, progi) bez zmiany decyzji |
+| H-01 / ZAL-017 darmowy pierwszy projekt bez okresu próbnego | hipoteza (R) | rozstrzygam w E2: opcje zakresu darmowego i okresu próbnego |
+| H-02 / ZAL-018 zakup jednorazowy, dane i eksport nigdy za paywallem | hipoteza (R) | dane i eksport poza paywallem to zasada roli 6, nie opcja; w E2 rozstrzygam resztę (opłacona funkcja nie znika: BR-ZAK-003) |
+| H-03 / ZAL-009 uczciwość jako wyróżnik | potwierdzone (R) | podstawa ujawnień i zakazanych wzorców dla roli 04 |
+| ZAL-002 wartość stała | częściowo potwierdzone (R) | warunek subskrypcji („ongoing value”, MS-01b); sprawdzę na liście BR w E1.3 |
+| ZAL-003 koszt 0 zł | potwierdzone dla iCloud (OG-09) | zegarek, widżet i ekran blokady bez usług: bez kosztu (sprawdzi rola 05) |
+| ZAL-005 nikt nie zapłacił za poprzednią wersję | potwierdzone | model wybieram swobodnie |
+| ZAL-013 konwersja 2,1% | hipoteza, szczebel 4 | rachunek E2 w wariantach |
+| ZAL-015 spadek cen rynku | hipoteza | wariant cen w E2 |
+| OG-02 przywracanie, OG-03 subskrypcja na wszystkich urządzeniach | fakty S-03, S-04; dziś potwierdzone w MS-01 i MS-01b | kontrakt płatności E3 |
+| P-021 synchronizacja iCloud | decyzja warunkowa | pytanie w E2: czy synchronizacja to dane (zawsze darmowe), czy płatna wygoda |
+
+**Próbka tabeli rynku (2026-10-21, `apps.apple.com/us`):** StitchTally 0,99 / 1,99 / 9,99 / 24,99 USD; YarnBuddy 1,99 / 14,99 / 44,99 USD; Knitting Chart 19,99 USD. Zgodne z tabelą sesji 1.
+
+### Reguły sklepu na dziś
+Wytyczne App Review: „Last Updated: October 16, 2026”, bez zmian wobec sesji 1 (MS-01–MS-01f). Nowe odczyty: MS-02a, MS-18–MS-21.
+| Temat | Reguła (cytat, ID) | Skutek dla Oczka |
+|---|---|---|
+| Zakup w aplikacji, przywracanie | 3.1.1: „you should make sure you have a restore mechanism for any restorable in-app purchases” (MS-01g) | przycisk przywracania (BR-ZAK-001) |
+| Okres próbny bez subskrypcji | 3.1.1: produkt Non-Consumable „at Price Tier 0” o nazwie „XX-day Trial”, przed startem: długość, co przestanie działać, dalsze opłaty (MS-01) | jedyny dozwolony okres próbny dla dożywotniego |
+| Okres próbny subskrypcji | 3.1.2(a): „by providing the relevant information set forth in App Store Connect” (MS-01h) | oferta wprowadzająca w App Store Connect, nie licznik w aplikacji |
+| Subskrypcja obok zakupu jednorazowego | 3.1.2(a): „Subscriptions may be offered alongside à la carte offerings” (MS-01h) | trzy produkty P-019 są dozwolone |
+| Stała wartość | 3.1.2(a): „ongoing value”, okres ≥ 7 dni, „available across all of the user’s devices” (MS-01b) | subskrypcja wymaga planu aktualizacji (ZAL-002) |
+| Ekran zakupu | „Full renewal price, shown clearly and prominently”; „A way for current subscribers to sign in or restore purchases”; kwota do zapłaty „most prominent pricing element” (MS-02, MS-02a) | wymagania dla roli 04 |
+| Uczciwość | 5.6: nie „trick them into making unwanted purchases”, nie „raise prices in a tricky manner” (MS-01f) | zakazane wzorce; zmiany cen jawnie |
+| Family Sharing | „supported only by apps that offer auto-renewable subscriptions and non-consumable In-App Purchases”; „once you turn on Family Sharing … you can't turn it off” (MS-18) | decyzja właściciela w E2, nieodwracalna |
+| Progi cenowe | „Choose from up to 800 price points by default”; ceny w 174 innych storefrontach generowane z kraju bazowego (MS-19) | ceny z progów, kraj bazowy USA |
+| Obniżka i podwyżka subskrypcji | obniżka: „You don’t have the option to preserve the higher price for existing subscribers”; podwyżka powyżej progu wymaga zgody; US 5 USD (nie-roczne) / 50 USD (roczne), GB 5 / 50 GBP, JP 800 / 8000 JPY, NO 60 / 600 NOK, AU 8 / 80 AUD, CA 7 / 70 CAD, FR 5 / 50 EUR; DE i PL: „Consent required” (MS-20, MS-21) | niska cena startowa daje się podnieść bez zgody w większości listy krótkiej, ale nie w DE i PL; decyzja o zachowaniu ceny dla obecnych w E2 |
+| Podział darmowe/płatne | Apple nazywa „freemium” i „metered paywall” jako wzory (MS-02b) | obie formy dozwolone; limit użyć to nie okres próbny (kalibracja) |
+
+### Plan sesji 2 (zasada 9)
+| Etap | Co | Czas agenta | Na co się czeka | Właściciel |
+|---|---|---|---|---|
+| E1.3 | klasa WTP i poziom dowodu dla 59 BR (i NFR, które ktoś sprzedaje: eksport, synchronizacja, zegarek); dowody R z macierzy roli 01 i cen sesji 1; cztery soczewki z kontraktu jako niezależni subagenci (bez wglądu w siebie), potem porównanie | 1,5–2,5 h | — | — |
+| E1.4 | raport: WTP-X dla 03, statusy H-01/H-02/ZAL, ER do 01 przy sprzeczności | 0,5 h | — | STOP E1, ok. 10 min |
+| E2 | co najmniej dwa modele (np. A: darmowy rdzeń + 3 produkty P-019; B: darmowy rdzeń + tylko dożywotni; C: subskrypcja z okresem próbnym), reguły, ryzyko etyczne, koszt utrzymania; `rachunek.mjs` z dzisiejszym kursem; decyzje: zakres darmowy, okres próbny, Family Sharing, synchronizacja, zachowanie ceny | 1,5–2 h | — | STOP E2, 4–6 decyzji, ok. 20–30 min |
+| E3 | kontrakt płatności, szkic ADR biblioteki (expo-iap / RevenueCat / własny moduł; wersje npm z dziś), wektory dostępu, przekazanie 03/04/05/07/08, sztafeta | 2–3 h | npm i dokumentacja Expo | STOP E3, ok. 10 min; potem kroki w App Store Connect |
+
+Razem ok. 6–8 h pracy agenta (punkty czyszczenia na każdym STOP); od właściciela 3 odpowiedzi, ok. 45–60 min, i kroki w App Store Connect po E3.
+
+### Otwarte pytania sesji 2
+| ID | Pytanie | Rozstrzyga | Dotyczy |
+|---|---|---|---|
+| OP-19 | [DO USTALENIA] Czy 0,99 USD jest progiem dla subskrypcji odnawianej i jaki jest wpływ (`proceeds`) progów 0,99 / 6,99 / 14,99 USD w US, GB, DE, JP; odczyt w App Store Connect przy tworzeniu produktu (zastąpi szacunek w rachunku i zamknie OP-05) | właściciel | rachunek E2, kontrakt E3 |
+| OP-20 | [DO WYJAŚNIENIA] Rozbieżność karty „Stan projektu” (umowa Paid Apps: [DO USTALENIA]) z OP-01 („tak”) | właściciel / 01 | `CLAUDE.md` |
+
+## Sesja 1, E0: Rama
 
 ### Środowisko (2026-10-21)
 | Sprawdzenie | Wynik |
@@ -49,7 +113,7 @@ Cytaty w tabeli „Źródła” (MS-01–MS-12). Najważniejsze dla bramki:
 
 Razem: ok. 3–4,5 h pracy agenta; od właściciela 3 odpowiedzi (E0, E1, E1b), łącznie ok. 30–40 min.
 
-## E1: Dowody (odczyt 2026-10-21)
+## Sesja 1, E1: Dowody (odczyt 2026-10-21)
 
 Metoda: `itunes.apple.com/search` (22 frazy po angielsku, storefront US, po 25 wyników), `lookup` (oceny, wydanie, języki), strona `apps.apple.com/<kraj>/app/id<id>` (ceny zakupów w aplikacji: Apple pokazuje najwyżej 10 pozycji, bez okresu, więc okres biorę z nazwy produktu albo opisu), RSS recenzji (do 500 najnowszych na sklep). Odrzucone z wyników: gry „yarn puzzle” (inna praca), kalkulatory ogólne, haft i sklepy z włóczką (poza jedną aplikacją spoza kategorii). Surowe dane i skrypty zbierające: `oczko-warsztat/02-monetyzacja/2026-10-21-bramka/` (commit 85d2ab2).
 
@@ -299,6 +363,14 @@ Wniosek: tania aplikacja zdobywa więcej pobrań i lepiej utrzymuje płacących,
 | MS-16 | taxsummaries.pwc.com/australia/corporate/other-taxes | GST („Last reviewed - 12 October 2026”) | „The Federal Government levies GST at a rate of 10%” | 2026-10-21 | 4 (jedno źródło) |
 | MS-17 | gs.statcounter.com/os-market-share/mobile/… (CSV, wrzesień 2026); api.worldbank.org SP.POP.TOTL (2025) | przesiew | np. US: „iOS”,53.51; ludność 341 784 857 | 2026-10-21 | 3 (StatCounter: ruch w sieci) / 1 |
 | MS-09 | biblioteka `prompts`, `role/09-lokalizacja/wzorce.md:27` | 35 lokalizacji (D-026) | „bg, cs, da, de, el, en, es-419, es, et, fi, fr, hr, hu, id, it, ja, ko, lt, lv, ms, nb, nl, pl, pt-BR, pt, ro, ru, sk, sl, sr, sv, tr, uk, vi, zh-Hant” | 2026-10-21 | decyzja portfela |
+| MS-01g | developer.apple.com/app-store/review/guidelines/ | 3.1.1 | „you should make sure you have a restore mechanism for any restorable in-app purchases” | 2026-10-21 | 1 |
+| MS-01h | jw. | 3.1.2(a) | „Subscriptions may be offered alongside à la carte offerings”; „Auto-renewable subscription apps may offer a free trial period to customers by providing the relevant information set forth in App Store Connect.” | 2026-10-21 | 1 |
+| MS-02a | developer.apple.com/app-store/subscriptions/ | „Clearly describing subscriptions” | „Full renewal price, shown clearly and prominently, and localized in available currencies”; „A way for current subscribers to sign in or restore purchases” | 2026-10-21 | 1 |
+| MS-02b | jw. | freemium, metered paywall | „A freemium app allows customers to use the app at no cost, with the option to subscribe if they want to enhance their experience or engage more deeply.” | 2026-10-21 | 1 |
+| MS-18 | developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/turn-on-family-sharing-for-in-app-purchases | całość | „Family Sharing is a feature supported only by apps that offer auto-renewable subscriptions and non-consumable In-App Purchases”; „Keep in mind that once you turn on Family Sharing for an In-App Purchases in App Store Connect, you can't turn it off.” | 2026-10-21 | 1 |
+| MS-19 | developer.apple.com/help/app-store-connect/manage-in-app-purchases/set-a-price-for-an-in-app-purchase | całość | „Choose from up to 800 price points by default”; „Automatically generated prices account for foreign exchange rates and certain taxes” | 2026-10-21 | 1 |
+| MS-20 | developer.apple.com/help/app-store-connect/reference/in-app-purchases-and-subscriptions/auto-renewable-subscription-price-increase-thresholds | tabela | „Increases in auto-renewable subscription prices that exceed the below thresholds in each App Store country or region result in a request for subscribers to consent to the new price.”; wiersze USA, GBR, JPN, NOR, AUS, CAN, FRA, DEU, POL jak w E0 sesji 2 | 2026-10-21 | 1 |
+| MS-21 | developer.apple.com/app-store/subscriptions/ | „Price decreases”, „Price increases” | „You don’t have the option to preserve the higher price for existing subscribers.”; „You can keep an unlimited number of active subscribers at their existing price while increasing the price for new subscribers.” | 2026-10-21 | 1 |
 
 ## Otwarte pytania
 | ID | Pytanie | Rozstrzyga | Dotyczy |
