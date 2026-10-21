@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: E1b (sesja 1, bramka opłacalności, krok 0) · Aktualizacja: 2026-10-21 · Wejście: `docs/pomysl.md`, karta „Stan projektu” (`CLAUDE.md`), `docs/decyzje.md` P-001–P-009; BRD jeszcze nie ma (krok 0)
+Stan: krok 0 zakończony (sesja 1: bramka „budować”, P-013); sesja 2 (E0, E1.3–E1.4, E2–E3) po BRD roli 01 · Aktualizacja: 2026-10-21 · Wejście: `docs/pomysl.md`, karta „Stan projektu” (`CLAUDE.md`), `docs/decyzje.md` P-001–P-009; BRD jeszcze nie ma (krok 0)
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 

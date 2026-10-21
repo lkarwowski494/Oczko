@@ -3,7 +3,7 @@ Aplikacja dla osób, które dziergają na drutach i szydełkują; w przebudowie 
 
 ## Przebudowa i kwarantanna (decyzje P-001–P-003 w `docs/decyzje.md`)
 - Poprzednia wersja powstała na słabszym modelu. Jej dokumenty leżą w `archiwum/stara-wersja/` i opisują zamiary, nie stan.
-- **Role 01, 02, 03 i 04 nie czytają** `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/` ani historii git sprzed 2026-10-21. Pracują tylko na `CLAUDE.md`, `docs/` i źródłach zewnętrznych. *Dlaczego:* stary BRD i README zakotwiczyłyby nowy projekt w starym kierunku.
+- **Role 01, 02, 03 i 04 nie czytają** `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/` ani historii git sprzed 2026-10-21, a w `portfel-aplikacji` karty `karty/24-oczko.md` i wpisu Oczka w `dane/` (P-015). Pracują tylko na `CLAUDE.md`, `docs/` i źródłach zewnętrznych. *Dlaczego:* stary BRD i README zakotwiczyłyby nowy projekt w starym kierunku.
 - Role 05, 06 i 07 projektują od zera; istniejący kod mogą czytać jako materiał do decyzji o ponownym użyciu, nie jako dowód działania (testy poprzedniej wersji sprawdzają też atrapy).
 - Porównanie z istniejącym kodem to osobny krok po roli 07; dopiero on i role 05, 08, 12 sięgają do `archiwum/stara-wersja/`.
 
