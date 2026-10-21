@@ -1,7 +1,18 @@
 # BRD: Oczko
-Stan: STOP E1 (prace J-01–J-11, persony P-1–P-4, ZP-01–ZP-09 w `odkrywanie.md`) · Aktualizacja: 2026-10-21 · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
+Stan: STOP E2 (rynek, OG-01–13, RD-01–13, H-01–09, RYZ-01–08) · Aktualizacja: 2026-10-21 · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
 
 BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P-015 (wyjątek nazwany od rdzenia roli, który każe czytać istniejące BRD i kod): nie czytano `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/`, historii git sprzed 2026-10-21, `oczko-warsztat/rozliczenie-2026-10-21/` ani karty portfela Oczka. Obszary z `docs/pomysl.md` to hipotezy.
+
+## Spis
+| Plik | Zawartość |
+|---|---|
+| `README.md` | stan, rama E0, otwarte pytania, blokery (E3) |
+| `odkrywanie.md` | zasady ZP, prace J, persony P, kontekst, rynek, OG, RYZ, hipotezy H |
+| `reguly.md` | reguły RD z wektorami |
+| `zrodla.md` | źródła S |
+| `wymagania.md` | przepływy PR, wymagania BR i NFR (E3) |
+
+Materiały prywatne (wywiad, 4682 recenzje, cztery soczewki E2, kopie źródeł): `oczko-warsztat/01-odkrywanie/`.
 
 ## E0: Rama i ograniczenia
 
@@ -55,4 +66,18 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 ## Otwarte pytania
 | ID | Pytanie | Rozstrzyga | Dotyczy |
 |---|---|---|---|
-| OP-01 | Kolizja ID decyzji `P-nnn` z personami `P-n`: **zamknięte** decyzją P-018 (opcja a, poprawka skryptu) | właściciel | `kontrola-brd.mjs` |
+| OP-01 | Kolizja ID decyzji `P-nnn` z personami `P-n`: zamknięte decyzją P-018 | właściciel | `kontrola-brd.mjs` |
+| OP-02 | [DO USTALENIA] Reguła zaokrąglania liczby oczek (w górę, w dół, do krotności motywu, do parzystości) i jej źródło | źródła szczebla 1–3, rola 06 | RD-01, RD-02, RD-07 |
+| OP-03 | [DO WYJAŚNIENIA] Próbka na 4 in: przeliczać dokładnie (10,16 cm) czy jak źródła (10 cm), czy pokazać obie | właściciel, 03 | RD-04 |
+| OP-04 | [DO USTALENIA] Konwencja równomiernego dodawania w rzędzie płaskim (k+1 odcinków) | źródła szczebla 1–3 | RD-05 |
+| OP-05 | [DO USTALENIA] Domyślny zapas włóczki i jego źródło; czy użytkownik wybiera go zawsze sam | źródła (producenci, szczebel 3) | RD-07 |
+| OP-06 | [DO USTALENIA] Jak wzory zapisują „co N rzędów” (od rzędu N czy od 1); japońska notacja 2-1-5 | źródła szczebla 1–3 | RD-13 |
+| OP-07 | [DO USTALENIA] Głębokość karczka, ujemny luz czapki, średnie zużycie na rodzaj odzieży | źródła szczebla 1–3 | H-05 |
+| OP-08 | [DO WYJAŚNIENIA] Konsultacja prawna patentu US8506303 (i odczyt US8529263) przed funkcją wzoru | właściciel | OG-07, RYZ-01 |
+| OP-09 | [DO WYJAŚNIENIA] E-mail do Craft Yarn Council o użyciu tabel i symboli (krok właściciela) | właściciel | OG-12 |
+| OP-10 | [DO USTALENIA] Kategoria 1 szydełko: strona CYC 2,25–3,5 mm, PDF 2018 2,25–3,25 mm | źródła | RD-10 |
+| OP-11 | [DO WYJAŚNIENIA] Pielęgnacja włóczki: opis tekstem zamiast symboli (licencja GINETEX) | właściciel, 03 | OG-13 |
+| OP-12 | [DO USTALENIA] Źródła terminologii i skrótów w 35 językach (CYC daje tylko US, UK, Kanadę) | źródła szczebla 1–3, rola 09 | RYZ-03 |
+| OP-13 | [DO USTALENIA] Japońskie rozmiary drutów (号) na mm: źródło szczebla 1–3 | źródła | RD-11 |
+| OP-14 | [DO WYJAŚNIENIA] Czy dopuścić modele Apple w Private Cloud Compute (bez kosztu, dane poza urządzeniem) | właściciel | P-023, H-09, OG-11 |
+| OP-15 | [DO WYJAŚNIENIA] Czy aplikacja ma opcjonalne przypomnienie o przerwie (bez twierdzeń zdrowotnych) | właściciel, 03 | RYZ-08 |

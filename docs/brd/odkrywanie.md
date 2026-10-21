@@ -1,5 +1,5 @@
 # Odkrywanie: prace, persony, zasady, rynek
-Stan: STOP E1 · Aktualizacja: 2026-10-21 · Notatki z wywiadu: `oczko-warsztat/01-odkrywanie/wywiad-2026-10-21.md` (prywatne)
+Stan: STOP E2 · Aktualizacja: 2026-10-21 · Notatki z wywiadu: `oczko-warsztat/01-odkrywanie/wywiad-2026-10-21.md` (prywatne)
 
 ## Źródło wiedzy o użytkownikach
 Właściciel nie dzierga i nie szydełkuje (wywiad 2026-10-21, odp. 1); Oczko wybrał z analizy portfela. Wywiad z właścicielem daje zasady produktu, nie dowody o pracy użytkownika. Właściciel nie ma osób do rozmów (odp. 3: „wybieram A”), więc prace J i persony P powstają tylko z recenzji konkurencji i źródeł społeczności. Ograniczenie: recenzje pokazują, co chwalą i na co skarżą się użytkownicy aplikacji, a nie przebieg pracy przy robótce; persony są oznaczone „z recenzji”, a funkcje bez odpowiednika u konkurencji to hipotezy H do sprawdzenia po wydaniu.
@@ -131,3 +131,121 @@ Kontekst ryzykowny (pojazd, maszyna): brak. Dostępność: niewidoma osoba dzier
 ## Napięcia dla ról 02 i 03 (bez rozstrzygnięcia)
 - **Ravelry a P-021:** 249 recenzji wspomina Ravelry; liderzy łączą się z biblioteką wzorów. P-021 wyklucza usługi zewnętrzne. Import pliku wzoru przez arkusz udostępniania lub Pliki nie wymaga API (do sprawdzenia w E2).
 - **Prostota a zakres (ZP-07, zasada wspólna 18):** recenzje chwalą prostotę (560 w motywie, 65 ≤3★) i karzą zagracenie, np. funkcje społecznościowe w liczniku JP („SNSのような機能をどんどん拡張していて正直気が散る”, id13771088681).
+
+## Rynek (E2, odczyt 2026-10-21)
+Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona sklepu, id recenzji): `oczko-warsztat/01-odkrywanie/soczewki/konkurencja.md`. Ceny i modele: `docs/monetyzacja.md` (rola 02). Opisy funkcji to deklaracje twórców [FAKT S-17], nie test działania.
+
+| Funkcja | Ile z 14 ma (potwierdzone) | Najczęstsza skarga |
+|---|---|---|
+| wiele liczników | 13 | — |
+| liczniki powiązane i powtórzenia | 7 | konfiguracja („All I want is for the main counter to do a four-row repeat”, My Row Counter, id12586379913) |
+| przypomnienie w rzędzie | 5 | słabo widoczne (編み物カウンター２, 4 recenzje) |
+| blokada przed stuknięciem | 2 (jedna tylko dla schematu) | przypadkowe dodanie rzędów (J-01) |
+| historia stuknięć albo cofanie | 3 | — (funkcja chwalona) |
+| Apple Watch | 7 | zawiesza się, gubi liczbę: YarnBuddy 17 z 301, My Row Counter 6 z 917 |
+| ekran blokady (Live Activity) | 2 | brak („hate that I have to unlock my phone”, J-06) |
+| głos, Siri | 3 | „it doesn’t always response” (knitCompanion, id8988040462, pisownia oryginału) |
+| wzór PDF i znacznik miejsca | 9 | adnotacje Apple Pencil zawodne (Knitting Chart, id13583431468) |
+| magazyn włóczki | 5 | baza włóczek i skaner (YarnBuddy 10 z 301) |
+| eksport albo kopia | 3 (u My Row Counter płatna, 9,99 USD) | utrata danych u każdego lidera (J-07) |
+| synchronizacja | 10 | gubi postęp, także przez iCloud (Loopsy 16 z 437; knitCompanion id13110653811) |
+| słownik skrótów | 1 | — |
+| deklaracja dostępności w sklepie | 0 | — |
+| „Data Not Collected” w App Privacy | 6 | — |
+
+**Motywy recenzji płacących (≤3★):**
+- Utrata danych i rozjazd synchronizacji: YarnBuddy 26 z 301, Easy Knitty 20 z 156, Loopsy 16 + 16 z 437, knitCompanion 14 z 348.
+- Nieuczciwe płacenie: wymuszona „darmowa” próba (Loopsy 43 z 437), funkcje przeniesione za paywall (My Row Counter 18 z 917), odebrana opłacona funkcja AI „Smart Pattern” (Loopsy 15 z 437, wrzesień 2026), aplikacja zapomina o zakupie (Easy Knitty 14 z 156), reklamy po zapłacie (Easy Knitty 9).
+- Złożoność: knitCompanion 28 z 348, Knitting Chart 27 z 195 („you have to watch videos to figure out how to use it”, knitCompanion, id9511649618).
+- Niechęć do generatywnego AI i „kradzieży” wzorów: Loopsy 14 z 437.
+
+**Luki (praca, której nikt nie robi dobrze):** zaufanie do danych (J-07); uczciwe płacenie; niezawodne liczenie bez odblokowania telefonu (J-06); widoczne przypomnienia i zamiana instrukcji „co N rzędów M razy” na plan rzędów (J-03, nikt tego nie robi); ochrona przed przypadkowym stuknięciem (J-01); prosty start z opcjonalną głębią (nikt nie łączy obu); deklarowana dostępność.
+
+**Funkcje „wow” obecne tylko u jednej aplikacji:** historia stuknięć z godziną i konfetti przy celu (編み物カウンター２); reguły automatycznego przybierania, dziennik zmian z cofaniem, szacowany czas do celu, odejmowanie zużytej włóczki z magazynu (CozyKnit); licznik w Live Activity (Loopsy); sprawdzanie kontrastu kolorów do żakardu (Strikketeller); VoiceOver w całej aplikacji (Crochet and Knit Counter).
+
+**Tempo:** szybcy (Loopsy ≥ 25 wersji w 7 mies., CozyKnit 25 w 11 mies., My Row Counter ok. 2 na miesiąc) i zastygli (YarnBuddy 19 mies. bez wersji, Knitting Chart prawie 4 lata). Płacący zastygłych to grupa do przejęcia przez import danych (H-08).
+
+## Ograniczenia (OG)
+### OG-01: Więcej niż prosty licznik
+- Aplikacja nieodróżnialna od powszechnie dostępnych albo bez trwałej użyteczności może zostać odrzucona [FAKT S-01] [FAKT S-02]; sam licznik rzędów jest w kategorii powszechny (13 z 14 w macierzy). Dotyczy H-04.
+### OG-02: Przywracanie zakupów
+- Aplikacja powinna mieć mechanizm przywracania zakupów [FAKT S-03]. Dotyczy J-07 (skargi Easy Knitty).
+### OG-03: Subskrypcja na wszystkich urządzeniach
+- Subskrypcja ma być dostępna na wszystkich urządzeniach użytkownika [FAKT S-04]. Dotyczy P-019 (rola 02).
+### OG-04: Polityka prywatności w aplikacji
+- Link do polityki prywatności w metadanych i w aplikacji [FAKT S-05].
+### OG-05: Opis w sklepie tylko o istniejących funkcjach
+- Reklamowanie funkcji, których aplikacja nie ma, grozi usunięciem [FAKT S-06]. Zakaz atrap (ZP-09, zasada wspólna 18) jest więc także wymogiem sklepu.
+### OG-06: Bez nazw konkurentów w metadanych
+- Słowa kluczowe i opis bez cudzych znaków towarowych i nazw popularnych aplikacji [FAKT S-07] (np. „Ravelry”, „knitCompanion”).
+### OG-07: Patenty
+- Zakaz użycia opatentowanych rozwiązań bez zgody [FAKT S-08]. Patent US8506303 (knitCompanion) obejmuje m.in. śledzenie postępu w rzędach instrukcji złożonej z kilku źródeł; status według Google Patents „Active”, wygaśnięcie przewidywane 2032-07-13 [FAKT S-10]. Drugi patent (US8529263) nieodczytany (strona 503). RYZ-01.
+### OG-08: Usługi zewnętrzne tylko zgodnie z ich warunkami
+- Korzystanie z usługi zewnętrznej wymaga zgody jej warunków [FAKT S-09]; P-021 i tak wyklucza usługi. Import pliku, który użytkownik sam pobrał (PDF, arkusz zapasu z Ravelry [FAKT S-31]), nie korzysta z API.
+### OG-09: CloudKit: koszt i sieć
+- Dane prywatne są w iCloud użytkownika [FAKT S-12], a członkostwo daje do 1 PB darmowego miejsca na aplikację [FAKT S-11]: warunek kosztowy P-021 spełniony (0 zł). CloudKit ma minimalną pamięć podręczną offline i wymaga sieci [FAKT S-13], więc źródłem prawdy musi być baza na urządzeniu, a synchronizacja dodatkiem.
+### OG-10: Kopia iCloud obejmuje dane aplikacji
+- Kopia urządzenia obejmuje dane pobranych aplikacji [FAKT S-14]. Utrata danych po zmianie telefonu u konkurencji wynika z ich implementacji, nie z iOS.
+### OG-11: AI na urządzeniu: urządzenia i języki
+- Apple Intelligence działa na iPhone 15 Pro i nowszych oraz w 16 językach, bez m.in. polskiego, rosyjskiego, czeskiego i ukraińskiego [FAKT S-15]. Modele w Private Cloud Compute są bez kosztu API dla uczestników Small Business Program poniżej 2 mln pobrań [FAKT S-16]. Dotyczy P-023, H-09.
+### OG-12: Materiały Craft Yarn Council
+- CYC prosi o e-mail o zamiarze użycia i linię ze źródłem [FAKT S-24]; tabele to „GUIDELINES ONLY” [FAKT S-19]. Czy dotyczy tabel liczbowych: [DO USTALENIA] (OP-09).
+### OG-13: Symbole pielęgnacji
+- Pięć symboli pielęgnacji to chronione znaki towarowe [FAKT S-28]; bez licencji aplikacja ich nie rysuje (OP-11).
+
+## Ryzyka produktu (RYZ)
+### RYZ-01: Patent na śledzenie postępu we wzorze (brzegowy)
+- OG-07. Większość liderów ma wzór z licznikiem, ale to nie jest ocena prawna. Krok właściciela: konsultacja prawna przed rolą 03 albo przed wydaniem funkcji wzoru (OP-08).
+### RYZ-02: Synchronizacja myli liczbę rzędów (realny)
+- Najczęstsza skarga zaawansowanych, także przy iCloud (Loopsy). Dotyczy P-021, J-07; projektuje rola 12, testy konfliktów przed wydaniem.
+### RYZ-03: Terminologia US/UK w szydełku (realny, mienie)
+- Ta sama nazwa oznacza inny ścieg w US i UK; CYC opisuje terminologię US [FAKT S-21]. Skarga: „Started the same project about 6 times before realising why it was going wrong” (YarnPal GB, id13435430165). Dotyczy J-10.
+### RYZ-04: Fałszywa precyzja kalkulatorów (realny, mienie)
+- Tabele CYC to wytyczne [FAKT S-19]; próbka zmienia się po praniu [FAKT S-26]; źródła zrównują 4 in z 10 cm (RD-04). Dotyczy RD-01–RD-10.
+### RYZ-05: Stos Expo/React Native a funkcje natywne (realny)
+- CloudKit, Watch, widżety, Live Activities i Foundation Models wymagają kodu natywnego. Ocenia rola 05.
+### RYZ-06: Widoczność i tempo konkurencji (realny)
+- ZAL-014; Loopsy i CozyKnit dokładają funkcje co 2 tygodnie. Dotyczy H-03.
+### RYZ-07: Wsparcie w 35 językach przez jedną osobę (realny)
+- ZP-05 („czytamy każdą opinię”) w 35 językach; skargi na brak odpowiedzi u konkurencji (YarnBuddy 24 z 301).
+### RYZ-08: Zdrowie: przeciążenie rąk (teoretyczny)
+- RSI wynika z powtarzanych ruchów [FAKT S-30], ale źródło nie wymienia dziergania; brak badania o dziergających. Aplikacja nie składa obietnic zdrowotnych; przerwa to najwyżej opcjonalne przypomnienie (OP-15).
+
+## Hipotezy dla ról 02 i 03 (H)
+### H-01: Darmowy pierwszy projekt bez okresu próbnego
+- Rodzaj: monetyzacja · Rejestr: ZAL-017 · Za: początkujący odpadają przy zaporze płatności i próbie do pamiętania (soczewka początkująca; My Row Counter id10952769045); wymuszona próba to najczęstsza 1★ Loopsy (43 z 437). Przeciw: hojna wersja darmowa obniża konwersję [OCENA].
+- Opcje: (a) licznik z cofaniem i historią dla co najmniej jednego projektu za darmo, płatna głębia; (b) wszystko płatne z próbą. Rekomendacja: (a). Sprawdzenie: konwersja w pierwszych 3 miesiącach. Rozstrzyga: 02.
+### H-02: Zakup jednorazowy i nienaruszalność danych
+- Rodzaj: monetyzacja · Rejestr: ZAL-018 · Za: „I HATE subscription models so the fact that this is a one time purchase” (Ravit, id13490236648); skargi na odebrane funkcje i dane za paywallem (Knitandnote id13238171721). Przeciw: subskrypcja daje przychód stały (ZAL-002).
+- Opcje: zgodnie z P-019 dożywotni 14,99 USD obok subskrypcji; reguła: dane i eksport nigdy za paywallem, opłacona funkcja nie znika. Rozstrzyga: 02.
+### H-03: Zaufanie jako widoczny wyróżnik
+- Rodzaj: wartość · Rejestr: ZAL-009 · Za: luki rynku (dane, płacenie), 6 z 14 ma „Data Not Collected”, 0 z 14 deklaruje dostępność. Przeciw: obietnicę trzeba udowodnić, a jedna utrata danych ją przekreśla.
+- Opcje: (a) „bez utraty danych, bez reklam, bez śledzenia, 35 języków, dostępność” jako główny przekaz; (b) przekaz funkcyjny („najwięcej funkcji”). Rekomendacja: (a). Rozstrzyga: 02, 11.
+### H-04: Kandydaci na rdzeń według siły dowodu
+- Rodzaj: zakres · Rejestr: ZAL-019 · Mocne dowody: J-01, J-02, J-06, J-07, J-04; średnie: J-03, J-05, J-08, J-10; słabe: J-09, J-11. OG-01: sam licznik nie wystarczy.
+- Opcje: (a) rdzeń J-01, J-02, J-03, J-05, J-06, J-07, potem J-04 (po ocenie RYZ-01), J-08, J-10, J-09; (b) od razu wszystko. Rekomendacja: (a). Rozstrzyga: 03.
+### H-05: Kalkulatory swetrowe bez dowodu potrzeby
+- Rodzaj: zakres · Rejestr: ZAL-020 · Za odcięciem: 2 trafienia w recenzjach zaawansowanych, brak źródeł dla głębokości karczka i luzu czapki (OP-07). Przeciw: obszar 5 w `docs/pomysl.md` i kalkulatory u 8 z 14 konkurentów.
+- Opcje: (a) kalkulatory proste (RD-01–RD-08, RD-10) w pierwszej wersji, swetrowe po dowodzie; (b) wszystkie. Rekomendacja: (a). Rozstrzyga: 03.
+### H-06: Funkcje „wow” z luk
+- Rodzaj: wartość · Rejestr: ZAL-021 · Kandydaci: historia stuknięć z cofaniem (J-01), wyraźne przypomnienie z numerem powtórzenia (J-03, RD-13), plan rzędów z instrukcji „co N rzędów M razy” (J-03; nikt tego nie robi), licznik na ekranie blokady i zegarku bez telefonu (J-06), konfetti przy celu (J-11). Przeciw: żadna nie ma dowodu zakupu; Live Activity ma 1 pośredni ślad.
+- Rozstrzyga: 03 z właścicielem.
+### H-07: Podział na aplikacje
+- Rodzaj: podział · Rejestr: ZAL-022 · Opcje:
+  - (a) Jedna aplikacja z warstwami: prosty licznik od pierwszego uruchomienia, głębia (wzór, magazyn, kalkulatory) opcjonalna. Za: dane łączą się (magazyn → projekt, CozyKnit); „I don’t want a million knitting apps on my phone, I just want yours!” (Ravit, id7070443311); luka „prosty start z opcjonalną głębią”. Przeciw: ryzyko kombajnu (ZP-01, zasada 18).
+  - (b) Oczko (licznik, wzór, projekty) i osobna aplikacja portfela „magazyn i kalkulatory”. Za: dwie mniejsze aplikacje, dwa wejścia w wyszukiwaniu. Przeciw: dane magazynu i projektu w dwóch aplikacjach; 4.3 dopuszcza różne aplikacje, ale nie warianty tej samej [FAKT S-01].
+  - (c) Rodzina: licznik, wzory, magazyn. Przeciw: trzy razy utrzymanie w 35 językach (RYZ-07).
+- Rekomendacja: (a). Rozstrzyga: 03 z właścicielem.
+### H-08: Import danych od konkurencji
+- Rodzaj: zakres · Rejestr: ZAL-023 · Za: płacący zastygłych liderów odchodzą (YarnBuddy id13993192426); przejście hamują dane u konkurenta (`docs/monetyzacja.md`). Arkusz zapasu z Ravelry [FAKT S-31], PDF przez Pliki. Przeciw: każdy format to utrzymanie.
+- Rozstrzyga: 03.
+### H-09: AI na urządzeniu bez dowodu potrzeby
+- Rodzaj: wartość · Rejestr: ZAL-024 · Za: odczyt danych z PDF (KNIT, opis); kandydaci „wow” (ZP-08). Przeciw: brak dowodu potrzeby u początkujących i zaawansowanych; niechęć do AI (Loopsy 14 z 437); OG-11 wyklucza część języków i starszych iPhone’ów.
+- Opcje: (a) AI tylko w funkcjach pomocniczych (np. wypełnienie danych wzoru z PDF), zawsze z możliwością pominięcia; (b) bez AI w pierwszej wersji. Rekomendacja: (a) po dowodzie z roli 03. Czy dopuścić Private Cloud Compute (OG-11): [DO WYJAŚNIENIA] (OP-14). Rozstrzyga: właściciel, 03.
+
+## Sprawdzenie założeń (E2)
+| ZAL | Wynik E2 | Dowód |
+|---|---|---|
+| ZAL-003 koszt 0 zł | potwierdzone dla synchronizacji | OG-09 |
+| ZAL-009 uczciwość jako wyróżnik | potwierdzone (R) | motywy recenzji płacących, H-03 |
+| ZAL-008 Oczko to N | wspiera | macierz: luki leżą w narzędziach, nie w treści |
