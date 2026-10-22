@@ -60,9 +60,9 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 - Kto: P-2. Praca: J-11. Częstość: każda sesja.
 - Kroki: uruchamia stoper sesji; kontynuuje przy zablokowanym ekranie; widzi czas projektu, postęp do celu i szacowany czas do końca.
 - Kontekst: jak PR-02.
-### PR-15: Zgłoszenie problemu i stan danych
-- Kto: każdy użytkownik, częściej płacący z kilkoma urządzeniami. Prace: J-07, J-01. Częstość: rzadko, przy błędzie albo wątpliwości co do synchronizacji (ER-19).
-- Kroki: widzi stan synchronizacji i zegarka; gdy coś nie działa, wybiera „Zgłoś problem”; ogląda, co zostanie wysłane; wysyła wybranym kanałem albo rezygnuje.
+### PR-15: Zgłoszenie problemu, ocena i stan danych
+- Kto: każdy użytkownik, częściej płacący z kilkoma urządzeniami. Prace: J-07, J-01. Częstość: rzadko, przy błędzie albo wątpliwości co do synchronizacji (ER-19); prośba o ocenę najwyżej po ukończeniu projektu (ER-25).
+- Kroki: widzi stan synchronizacji i zegarka; gdy coś nie działa, wybiera „Zgłoś problem”; ogląda, co zostanie wysłane; wysyła wybranym kanałem albo rezygnuje. Po ukończeniu projektu może zobaczyć systemową prośbę o ocenę; kiedy chce, ocenia przez „Oceń” w Ustawieniach (pętla opinii wersji 1, P-052).
 - Kontekst: wolne ręce; bez sieci zgłoszenie czeka w wybranym kanale.
 ### PR-16: Dni z robótką, postęp i termin
 - Kto: P-2 (kilka projektów naraz), P-1. Prace: J-11, J-05. Częstość: co kilka dni; termin przy prezentach i zamówieniach (P-043, ER-11).

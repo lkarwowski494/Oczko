@@ -157,6 +157,24 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Gdy użytkownik otwiera stan danych na telefonie
     - Wtedy widzi, że zegarek ma zmiany czekające na połączenie, i co zrobić, żeby je przesłać
 
+### BR-DAN-012: Prośba o ocenę i odnośnik „Oceń”
+- Przepływ: PR-15, PR-07
+- Dowód potrzeby: pętla opinii wersji 1 w kontrakcie zakresu przyjętym przez właściciela (P-052; `docs/scope-contract.md`, „Główna praca i pętla”), obok „Zgłoś problem” (BR-DAN-010); P-059 (3a); OG-15. Przeciw natręctwu: „it keeps asking me to rate the app after I already rated and it’s like every other click!” (kntd, id14475942102); „As soon as I opened the app it asks me to rate it” (YarnPal AU, id13575008695, 1★) · ER-25
+- Dokładna chwila po ukończeniu i ewentualny własny limit poza systemowym: [DO WYJAŚNIENIA] (OP-33); teksty i miejsce „Oceń”: rola 04
+- Kryteria akceptacji:
+  - Scenariusz: Prośba po ukończeniu projektu
+    - Zakładając, że użytkownik oznacza projekt jako ukończony (BR-PRJ-006)
+    - Gdy zamyka kartę ukończenia (BR-PRJ-015)
+    - Wtedy aplikacja woła systemową prośbę o ocenę, którą system może pokazać albo pominąć (S-39), i nie pokazuje żadnego własnego okna z prośbą o ocenę (OG-15)
+  - Scenariusz: Nigdy w trakcie pracy ani przy płatnościach
+    - Zakładając, że użytkownik otwiera aplikację, liczy rzędy, cofa zmianę, widzi komunikat na limicie (BR-ZAK-006) albo ekran zakupu
+    - Gdy kończy tę czynność
+    - Wtedy aplikacja nie woła prośby o ocenę
+  - Scenariusz: „Oceń” w Ustawieniach
+    - Zakładając, że użytkownik jest w Ustawieniach
+    - Gdy stuka „Oceń”
+    - Wtedy aplikacja otwiera stronę Oczka w App Store z formularzem recenzji (`action=write-review`), a nie systemową prośbę (S-39)
+
 ## Zakup (ZAK)
 Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pierwszego uruchomienia w limicie dni limitu w miesiącu kalendarzowym; Pro (subskrypcja odnawiana miesięczna albo roczna, bez oferty wprowadzającej, albo zakup dożywotni) znosi limit. Produkty, ceny i wymagania KP-01–KP-15: kontrakt płatności `docs/monetyzacja.md`, „Sesja 3, E3”; obowiązują razem z BR-ZAK. Reguła liczenia dni limitu: `docs/monetyzacja/limit.mjs` i wektory L w `docs/monetyzacja/wektory-limitu.json` (rola 02); BRD odsyła do nich i ich nie kopiuje (P-059).
 
