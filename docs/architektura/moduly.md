@@ -120,7 +120,7 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `STRAZNIK_OKNO_S` (s) | 2 | RD-17, P-047 |
 | `KOSZ_DNI` (dni) | 30 | P-026 |
 | `KOPIA_PRZED_IMPORTEM_DNI` (dni) | 30 | ADR-0004 (jak F-33) |
-| `SESJA_MAKS_H` (h) | [DO USTALENIA] | decyzja produktowa (zapomniany stoper); Live Activity i tak kończy się po 8 h (rejestr Apple 1a) |
+| `SESJA_MAKS_H` (h) | 8 | P-072 (7a); limit Live Activity 8 h (rejestr Apple 1a) |
 | `WERSJA_SCHEMATU` (-) | 1 | `schemat.sql` |
 | `WERSJA_FORMATU_ARCHIWUM` (-) | 1 | ADR-0004 |
 | `ROZSZERZENIE_ARCHIWUM` | `.oczko` | ADR-0004 |

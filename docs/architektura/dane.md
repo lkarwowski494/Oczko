@@ -35,7 +35,7 @@ Każda funkcja zapisująca z kontraktu (05: F-01, F-02, F-04–F-06, F-08, F-14�
 | zdarzenia licznika, wartość, notatki, części, projekty | użytkownik | **nie** | zapis w kolejce → kopia urządzenia / iCloud / archiwum → „Ostatnio usunięte” 30 dni → kaskada |
 | wzory (PDF, oryginał), rysunki, zdjęcia | użytkownik | **nie** (oryginał może mieć użytkownik gdzie indziej) | plik + odwołanie → sprzątanie pliku bez odwołań po COMMIT usunięcia |
 | zapas, narzędzia, obliczenia | użytkownik | nie | jak wyżej (zapas: `usunieto_ms`, 30 dni) |
-| dni limitu | aplikacja | nie (dane użytkownika synchronizowane iCloud, KP-15) | dopisywane; scalenie z innym urządzeniem = suma zbiorów dat, nigdy nie odbiera rozpoczętego dnia (L-16); zostają po usunięciu licznika albo projektu (interpretacja roli 05: inaczej usunięcie licznika zwalniałoby dzień limitu); usuwane tylko przez „usuń wszystko” (F-34) |
+| dni limitu | aplikacja | nie (dane użytkownika synchronizowane iCloud, KP-15) | dopisywane; scalenie z innym urządzeniem = suma zbiorów dat, nigdy nie odbiera rozpoczętego dnia (L-16); zostają po usunięciu licznika albo projektu (P-072 (8a): inaczej usunięcie licznika zwalniałoby dzień limitu); usuwane tylko przez „usuń wszystko” (F-34) |
 | `licznik.wartosc`, `glowa`, `konflikt` | aplikacja | **tak** (`scal` nad zdarzeniami) | pamięć podręczna w tej samej transakcji co zdarzenie |
 | `ustawienie`, `blad` | aplikacja | tak / nie potrzeba | `blad` przycinany do `BLEDY_MAKS_WIERSZY` |
 | uprawnienie Pro | App Store | **tak** (StoreKit, ADR-0010) | nie przechowywane jako źródło prawdy; ostatni stan dla zegarka w `ustawienie` |
