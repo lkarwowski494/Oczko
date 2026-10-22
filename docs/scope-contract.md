@@ -1,5 +1,5 @@
 # Kontrakt zakresu: Oczko
-Stan: **STOP E0** (rama) · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212, złożony 2026-10-22, 55 540 znaków) · Wejście: BRD `docs/brd/` (E4 + poprawka ER-06–ER-08), `docs/monetyzacja.md` (sesja 2, E3), P-001–P-039, ZAL-001–026
+Stan: **STOP E1** (główna praca i pętla) · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212, złożony 2026-10-22, 55 540 znaków) · Wejście: BRD `docs/brd/` (E4 + poprawka ER-06–ER-08), `docs/monetyzacja.md` (sesja 2, E3), P-001–P-039, ZAL-001–026
 
 Kontrakt powstaje etapami E0–E3; tabele „Zakres” i „NIE robimy” w formacie `zakres.mjs` pojawią się w E3. Do tego czasu ID F-nn to kandydaci, nie decyzje.
 
@@ -143,3 +143,60 @@ Razem: 5–7,5 h pracy agenta; od właściciela ok. 1 h (bez apetytu wersji 1, k
 | ER-10 | Metody NFR zakładają test ręczny albo urządzenie: NFR-OFF-001 („test ręczny i automatyczny”), NFR-DOS-001 („audyt VoiceOver na urządzeniu”), NFR-WYD-001 („pomiar na najstarszym obsługiwanym iPhonie”), NFR-ZEG-001 („test na parze urządzeń”); po P-041 metoda automatyczna albo nazwane ryzyko szczątkowe. Uwaga dla 02 i 07: tabela „Testy, których nie zrobi Node (krok właściciela)” w `docs/monetyzacja.md` potrzebuje zamiennika automatycznego | P-041; `docs/brd/wymagania.md` (NFR) | otwarte |
 | ER-11 | Brak BR dla K-1–K-5 (kalendarz dni, dzień, podsumowanie okresu, postęp projektu w %, termin i cel dzienny; prace J-11, J-05) i reguły RD celu dziennego (czy dziś się liczy, zaokrąglenie, po terminie, prucie) oraz % z rzędów jako nazwanego przybliżenia; prefiks `KAL` w BRD Oczka jest zajęty przez obliczenia | P-043; `kalendarz-wzorce.md` | otwarte |
 | ER-12 | Brak BR dla I-1, I-2, I-3, I-4, I-6, I-7, I-9 (prace J-01, J-03, J-05, J-11 i terminy) | P-044; `pomysly-nowe.md` | otwarte |
+
+## E1: Główna praca i pętla (2026-10-22)
+Metoda: cztery soczewki jako niezależni subagenci bez kontekstu tej sesji (nowy użytkownik, pasjonat po roku, najlepsze aplikacje niszy, właściciel jako opiekun), wspólny brief, każda przez 9 wymiarów; raporty i surowe dane: `oczko-warsztat/03-zakres/2026-10-22-build/soczewki/`. Kluczowe tezy sprawdzone przez rolę 03 u źródła (2026-10-22): liczby ocen i opisy z Lookup (`wzorzec-surowe/lookup-us-wszyscy-2026-10-22.json`), patenty w opisie knitCompanion, brak słowa „calendar” w opisach 23 aplikacji, cytaty id 12450531949, 14375427685, 13712427204 zgodne z korpusem; RSS recenzji US dziś zwraca 0 wpisów (sprawdzone ponownie), więc recenzje z korpusu 2026-10-21 i strony App Store z dziś.
+
+**Skażenie kwarantanny w soczewkach (nazwane):** dwie soczewki przywołały treść spoza dozwolonego wejścia, najpewniej ze starego `CLAUDE.md` wczytanego do kontekstu na starcie sesji: „dwie pule po 10 kopii” (pasjonat, ER-P5) i narzędzie „Maestro” (nowy użytkownik, opiekun). Oba odrzucam jako uzasadnienie; ER-P5 nie idzie do roli 01 (pytanie o automatyczne kopie lokalne trafia do roli 12 z dowodem J-07), wybór narzędzi testów należy do 05 i 07.
+
+### Główna praca i pętla główna
+- Główna praca: J-01 „Wiedzieć, w którym rzędzie jestem, i ufać tej liczbie” z J-05 (powrót) i J-04 (miejsce we własnym wzorze). Wzorzec liderów w jednym zdaniu: „wiem dokładnie, gdzie skończyłem, w moim wzorze” (R 14615536466: „to be able to reliably know *exactly* where I left off in a pattern has been a game changer.”).
+- Pętla główna (zgodna u 4 soczewek, F-24–F-26 u 2 z 4): uruchomienie → ostatni licznik (F-01, F-18) → +1 z wibracją, ekran nie gaśnie (F-01, F-10) → pomyłka: −1 albo cofnięcie z historii, ochrona przed stuknięciem (F-02, F-03, I-1) → [warstwa] wzór obok licznika ze znacznikiem (F-24, F-25, F-26) i przypomnienie „co N rzędów” (F-06) → wyjście bez zapisywania (F-31) → powrót do tego samego miejsca z notatką (F-18, F-15).
+- Najkrótsza pętla, która wykonuje pracę: F-01 → F-10 → F-31 → F-18.
+
+### Wzorzec najlepszych (Lookup US 2026-10-22, kryterium: `userRatingCount` typu N, średnia drugim kluczem)
+| Aplikacja | Oceny, średnia | W pętli | Czego nie ma / co usunęła | Skargi |
+|---|---|---|---|---|
+| knitCompanion (id1058142783) | 6899, 4,83 | wzór → konfiguracja → znacznik i liczniki; śledzenie rzędu i iCloud za darmo | zegarek, zapas, kalkulatory; usunięta wersja dożywotnia (R 14338808883) | za trudno: „I have watched videos over and over” (R 13678678745) |
+| My Row Counter (id1342608792) | 3867, 4,83 | licznik bez konfiguracji, wzór (PDF, WWW, Word od 3.58), zakreślacz, przypomnienia | historia z cofnięciem, blokada, kalkulatory, kalendarz (0 ze 177 pochwał) | funkcje za paywall (R 14519247568), reklamy, licznik całości nad sekcjami (W 13712427204) |
+| Knitting Chart (id1251317736) | 1298, 4,35 | schemat → „Working Mode” z licznikiem | ostatnia wersja twórcy 2023-01-18 | „Is this an app? A document?” (R 13892775052), Pencil |
+
+Żaden z trzech nie ma kalendarza, kalkulatorów swetrowych ani słownika; wszyscy trzej mają głos (F-13, poza kierunkiem P-040).
+
+### Wymiary pokrycia
+| Wymiar | Wynik |
+|---|---|
+| 1 Główna praca od początku do końca | pierwsze liczenie bez projektu to najostrzejsze 1★ u liderów (R 12450531949: „deleted in 5 mins because I cannot figure out how to count the rows without creating a project”); po roku płacący odchodzą przez zaufanie (utracony zakup, zmiana warunków), nie przez brak funkcji (pasjonat: 12 z 32 recenzji płacących ≤3★, 0 o brak funkcji) |
+| 2 Pominięcia | ER-13–ER-24 niżej |
+| 3 Nadmiar | 4 z 4 soczewek: termin i cel (K-5, I-3, I-4), zapas F-37; 3 z 4: kalendarz jako osobna zakładka (K-1–K-3), kalkulatory F-38–F-43, karta I-6 → sprzeczność z P-043/P-044 do decyzji |
+| 4 Podłogi | bez zmian wobec E0; OG-07 blokuje F-25, F-26, F-28, I-2 (patenty w opisie knitCompanion dziś); I-6 udostępnia zdjęcia bez metadanych lokalizacji (ER-24) |
+| 5 Intuicyjność | bez nowego pojęcia: I-1, I-6, I-9, K-2; z nowym pojęciem albo pustym widokiem: K-4, K-5, I-2, I-3, I-4, I-7 → nie na pierwszym ekranie; gęstość znaków Pro (ok. 15 funkcji) czyta się jako „wszystko płatne” |
+| 6 Wartość | MRC, 177 pochwał z 12 mies. [OCENA, wyrażenia regularne]: import wzoru 37, notatki 15, zapas 4, kalkulator 1, kalendarz 0 |
+| 7 Koszt właściciela | [OCENA opiekuna, ×0,5–2]: ok. 50 h na wersję 1 i ok. 52 h/rok; 5 powierzchni natywnych (F-12, F-27, F-11, F-21, F-28) to ok. 56% rocznej opieki nad funkcjami; K i I razem ok. 7 h/rok (logika w pełni sprawdzalna automatem); F-27 najdroższy (ok. 10 h/rok) |
+| 8 Zależności i blokery | OG-07 dla funkcji wzoru; NFR-ZEG-001, NFR-DAN-003 bez pełnego sprawdzenia automatem (P-041); diagnoza awarii tylko ze zgłoszeń (ER-19) |
+| 9 Podział | 4 z 4: jedna aplikacja (iPhone, iPad, zegarek); zapas, kalkulatory, słownik jako warstwy poza głównym widokiem (wspiera ZAL-022) |
+
+**F-41 i obszar 10 (kontrola po wyjątku kwarantanny):** 4 z 4 soczewek niezależnie: F-41 PÓŹNIEJ albo NIE (0 próśb o przeliczenie po blokowaniu w 4682 recenzjach, RD-08 krytyczna); obszar 10 NIE (brak prośby; eksport F-32 obsługuje przypadek).
+
+### Pominięcia: ER do roli 01
+| ID | Zgłoszenie | Dowód | Soczewki |
+|---|---|---|---|
+| ER-13 | Wpisanie wartości licznika i wyzerowanie (w historii, z cofnięciem; zerowanie z potwierdzeniem); przeniesienie trwającej robótki | 86 recenzji, 44 ≤3★ (wzorzec reset/ustaw, sprawdzone 2026-10-22); „You should be able to enter the number.” (StitchTally, 14375427685) | nowy, pasjonat |
+| ER-14 | NFR pierwszego liczenia: najwyżej [DO USTALENIA, propozycja 2] stuknięcia do +1; nic przed licznikiem (powitanie, quiz, uprawnienia, zakup); offline | 12450531949; Loopsy 14441026601 | nowy |
+| ER-15 | Powrót do miejsca po starcie i z innej aplikacji: projekt, część, licznik, strona i powiększenie wzoru, osobno na urządzeniu | „it *does not save* my settings.” (MRC, R 14255514434) | pasjonat |
+| ER-16 | Licznik całości nad częściami jednego kawałka (sekcje zasilają całość) | W 13712427204, W 9711911250 | najlepsi, pasjonat |
+| ER-17 | Źródła wzoru poza PDF i zdjęciem: strona WWW (zapis offline), Word; link do filmu (tylko link) | listing MRC, nota 3.58; 14644150451 | najlepsi, nowy |
+| ER-18 | Zakreślanie i notatki na wzorze palcem na iPhonie (nie tylko Pencil); OG-07 | 13648606552; płatne „HIGHLIGHT” w knitCompanion | najlepsi, pasjonat |
+| ER-19 | „Zgłoś problem” z lokalną diagnostyką wysyłany przez użytkownika, bez śledzenia; widoczny stan synchronizacji i zegarka | YarnBuddy 8151431159, 8662495109; Loopsy 13620980670; pętla opinii w wersji 1 (kontrakt roli, E2 pkt 6) | opiekun |
+| ER-20 | Korekta czasu sesji (zapomniany stoper) i dat projektu | Loopsy 13728925552, 13535125970 | opiekun, pasjonat |
+| ER-21 | NFR: działanie po premierze nowego iOS/watchOS i minimalne wersje systemu | 12259939345, 10717526170 | opiekun |
+| ER-22 | Cofnięcie usunięcia licznika i części; import kopii na niepustej bazie (scalić albo zastąpić) | 編み物カウンター２ 10497670066 | opiekun, pasjonat |
+| ER-23 | Lista projektów po roku: w toku według ostatniej pracy, ukończone osobno, wyszukiwanie | pasjonat (dowody w raporcie) | pasjonat |
+| ER-24 | Doprecyzowania: BR-LIC-004 (stuknięcie w zablokowany licznik wyjaśnia; gest systemowy nie zmienia licznika: Knit Row Counter 4570617893), BR-PRJ-002 (długość notatki), ER-11 (dzień w strefie urządzenia: Easy Knitty 10008576789), ER-12 (I-1 tylko na licznikach rzędów; I-6 bez metadanych lokalizacji) | jw. | wszystkie |
+
+Uwagi dla roli 02: F-26 (znacznik) jako Pro jest ostrzejsze niż u knitCompanion (śledzenie rzędu darmowe); czy Pro obejmuje przyszłe funkcje Pro [DO USTALENIA]. Dla roli 12: automatyczne kopie lokalne z odtworzeniem w aplikacji (J-07; skażone uzasadnienie soczewki odrzucone).
+
+### Sprzeczności z wejściem
+- **ZAL-019 / H-04 podważone w części:** J-04 (miejsce we własnym wzorze) należy do rdzenia, nie „potem”: to główna praca liderów i najczęstsza pochwała (import wzoru 37 ze 177).
+- **Kierunek P-043/P-044 a sygnały kombajnu:** wszystkie soczewki wskazują termin i cel dzienny (K-5, I-3, I-4) oraz zapas; trzy z czterech kalendarz jako zakładkę, kalkulatory i kartę I-6. Koszt opieki tych funkcji jest mały (logika), ryzyko dotyczy zagracenia i pierwszego użycia.
+- **Opiekun:** F-27 (iCloud) najdroższy w opiece; I-7 (wibracje) bez sprawdzenia odczucia automatem.
