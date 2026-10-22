@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: **sesja 3 (P-051: V1, V2 wobec B), E1 w toku (STOP E0 przyjęty: P-053), 2026-10-22** · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **sesja 3 (P-051, P-053: V1, V2, V3 wobec B), E1 w toku (STOP E0 przyjęty: P-054), 2026-10-22** · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -55,6 +55,8 @@ Wytyczne App Review: „Last Updated: October 16, 2026”, bez zmian od sesji 2.
 | E2 | rachunek V1, V2, B w trzech scenariuszach z wrażliwością (próba → zakup, podział planów, kotwica 3 mies., powtórne zakupy, udział dożywotniego, wpływ zapory na oceny); `rachunek.mjs` bez zmian, nowe pliki wejściowe `docs/monetyzacja/warianty-s3/`, horyzont 1 i 3 lata; etyka i ryzyka; rekomendacja | 2–2,5 h | — | STOP E2: wybór modelu, ok. 20–30 min |
 | E3 | kontrakt płatności, wektory dostępu (wygaśnięcie, kumulacja, próba), ER do 01, uwaga dla 03, sztafeta | 2–3 h (dla B 0,5 h) | — | STOP E3, ok. 10 min |
 
+**Rozszerzenie zakresu (P-053, 2026-10-22, przez rolę 03):** dochodzi wariant **V3**: pełne Oczko z limitem 4–6 dni z robótką w miesiącu (4, 5 i 6 liczone osobno), potem subskrypcja odnawiana 0,99 USD/mies. i 6,99 USD/rok z ofertą wprowadzającą 14 dni włączaną przez użytkownika oraz dożywotni 14,99 USD. Do E1 dochodzi: ile dni w miesiącu dzierga osoba regularna i okazjonalna (źródło albo [OCENA] z metodą), recenzje limitów dziennych i liczonych (metered) w narzędziach, reguły oferty wprowadzającej (3.1.2(a), MS-23) i ujawnień subskrypcji odnawialnej; do E2 rachunek V3 obok V1, V2 i B. Dodatkowy czas agenta: ok. 1,5–2 h.
+
 Razem ok. 8–10 h pracy agenta; od Ciebie 3 odpowiedzi (40–60 min) i być może pytanie do App Review. E1b (bramka) nie powtarzam: V1 i V2 to warianty ceny i modelu tej samej aplikacji, a wynik bramki był odporny na każde pojedyncze założenie; wrócę do niej, jeśli rachunek E2 da wynik normalny poniżej progu 1944 zł.
 
 ### Otwarte pytania sesji 3 (stan E0)
@@ -63,8 +65,8 @@ Razem ok. 8–10 h pracy agenta; od Ciebie 3 odpowiedzi (40–60 min) i być mo�
 | OP-27 | [DO USTALENIA] Czy próba 0 zł z 3.1.1 („Non-subscription apps…”) obejmuje aplikację, która sprzedaje subskrypcje nieodnawialne | E1.1 u źródła; jeśli źródło milczy: App Review (krok właściciela) | V1, V2 |
 | OP-28 | [DO USTALENIA] Czy zakup nieodnawialny musi działać na wszystkich urządzeniach użytkownika i kto za to odpowiada (sklep czy aplikacja) | E1.1, E1.2 | V1, V2, BR-ZAK-001 |
 | OP-29 | [DO USTALENIA] Jak liczyć koniec dostępu przy kolejnych zakupach przed końcem okresu, skoro `currentEntitlements` daje tylko ostatnią transakcję | E1.2 | V1, V2, wektory |
-| OP-31 | Tekst ekranu ofert: **rozstrzygnięte** (P-053): nazwy planów z ceną, bez procentów i porównań; nagłówek „No subscriptions. Nothing renews by itself. You'll never be charged for something you forgot to cancel.” i tytuły planów z wariantu 1 właściciela (kopia: `oczko-warsztat/03-zakres/2026-10-22-build/oferty-tekst-wlasciciela.md`). Zostaje do sprawdzenia w E1.1: czy „No subscriptions” zgadza się z typem produktu Apple „Non-Renewing Subscription” (wprowadzenie w błąd?) i trwałość obietnicy „never charged” | 02 w E1.1 | ujawnienia, 04, 09 |
-| OP-30 | Synchronizacja iCloud po blokadzie: **działa** (P-053, 2a) | zamknięte | V1, V2, KP-02 |
+| OP-31 | Tekst ekranu ofert: **rozstrzygnięte** (P-054): nazwy planów z ceną, bez procentów i porównań; nagłówek „No subscriptions. Nothing renews by itself. You'll never be charged for something you forgot to cancel.” i tytuły planów z wariantu 1 właściciela (kopia: `oczko-warsztat/03-zakres/2026-10-22-build/oferty-tekst-wlasciciela.md`). Zostaje do sprawdzenia w E1.1: czy „No subscriptions” zgadza się z typem produktu Apple „Non-Renewing Subscription” (wprowadzenie w błąd?) i trwałość obietnicy „never charged” | 02 w E1.1 | ujawnienia, 04, 09 |
+| OP-30 | Synchronizacja iCloud po blokadzie: **działa** (P-054, 2a) | zamknięte | V1, V2, KP-02 |
 
 ## Sesja 2, E0: Rama (2026-10-21)
 Rola 02-monetyzacja, tryb build bez `--moduly` (moduły domyślne: `cena-i-rachunek`, `rachunek`, `storekit-expo`, `audyt-paywalla`; prompt `prompts` @97ec212, 58 354 znaków). Kwarantanna P-003 i P-015 jak w sesji 1. Surowe teksty źródeł z dziś: `oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/`.
