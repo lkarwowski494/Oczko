@@ -75,3 +75,14 @@ Stan: STOP E1 · 2026-10-22 · Rola 04, build. Źródła projektu (SD-nn) na ko�
 | SD-07 | https://www.clover-usa.com/products/swatch-ruler-and-needle-gauge | „The Swatch Ruler allows you to isolate a section of your work to easily count both stitches and rows.” | 3 |
 | SD-08 | https://www.craftyarncouncil.com/standards/yarn-weight-system | „Knit Gauge Range* in Stockinette Stitch to 4 inches” (tabela kategorii 0–7) | 3 (organizacja branżowa; S-19 w BRD) |
 | SD-09 | https://www.craftyarncouncil.com/standards/knit-chart-symbols | „For the most part each symbol represents a stitch as it looks on the right side of the work.”; „Always refer to the pattern key” | 3 |
+
+## Karty kontrolne testu generyczności (E2, napisane przed kartami kierunków)
+| Pole | (a) ta sama kategoria, bez wiedzy o dziedzinie | (b) inna dziedzina, podobny przepływ (licznik stuknięć: picie wody, licznik modlitw) |
+|---|---|---|
+| Paleta | róż albo koral z gradientem, białe karty, fioletowy drugi akcent | ciemne tło z jednym neonowym akcentem (zieleń albo cyjan) |
+| Krój tytułów | zaokrąglony bezszeryfowy (Nunito, Poppins) | Inter albo SF Pro Rounded |
+| Element firmowy | motek włóczki z uśmiechem; konfetti przy celu | pierścień postępu wokół liczby |
+| Układ | duża liczba w kole na środku, okrągłe −/+ pod spodem, pasek postępu, karty projektów | duża liczba w pierścieniu, jeden okrągły przycisk, statystyki serii pod spodem |
+| Ruch | podskok przycisku, konfetti | wypełnianie pierścienia, pulsowanie |
+
+Wynik testu generyczności (pole po polu, co zmieniono) i soczewek E2: `docs/design/porownanie.html` (zrzut `porownanie.png`).
