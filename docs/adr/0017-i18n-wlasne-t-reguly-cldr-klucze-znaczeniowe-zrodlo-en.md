@@ -1,5 +1,5 @@
 # 0017. Mechanizm i18n jak w Treningu: własne `t()` bez biblioteki, liczba mnoga z ręcznych reguł CLDR, klucze znaczeniowe, źródło en, wybór języka z systemu i z aplikacji
-Data: 2026-10-22 · Status: **proponowana** (do akceptacji właściciela na STOP E1; rola 05 zakończona, więc ADR przyjmuje właściciel) · Rola: 09 (E1) · Zależy od: ADR-0003, ADR-0016, P-009, P-075, P-076, NFR-JEZ-001, ZAL-031, ZAL-034
+Data: 2026-10-22 · Status: **przyjęta** (P-077, właściciel 2026-10-22: „tak”) · Rola: 09 (E1) · Zależy od: ADR-0003, ADR-0016, P-009, P-075, P-076, NFR-JEZ-001, ZAL-031, ZAL-034
 
 ## Kontekst i problem
 35 lokalizacji (D-026). Stary mechanizm Oczka 0.1.0 (`src/core/i18n.ts`): polski tekst jako klucz, 2 języki, bez liczby mnogiej. Hermes nie ma `Intl.PluralRules`, a i18next od v24 bez niego rozróżnia tylko `one`/`other` (odczyt 2026-10-22, i18next.com/translation-function/plurals: „Since i18next v24 there is no fallback: without Intl only English-style _one / _other forms resolve.”). Właściciel (2026-10-22) kazał sprawdzić, jak robi to Trening, i przestawić się na ten wzór (P-076).

@@ -1,5 +1,5 @@
-# E1 Mechanizm (rola 09-lokalizacja, build, wejście wczesne) · 2026-10-22 · czeka na akceptację ADR-0017
-Decyzje: P-075 (E0), P-076 (przestawienie na wzór Treningu). ADR: [`0017`](../adr/0017-i18n-wlasne-t-reguly-cldr-klucze-znaczeniowe-zrodlo-en.md) (proponowana), [`0016`](../adr/0016-zaleznosci-wersji-1.md) bez nowych pakietów. Dowody: [`dowody/e1-czerwone.txt`](dowody/e1-czerwone.txt) (efe4ff8, pierwsza wersja), [`dowody/e1-zielone.txt`](dowody/e1-zielone.txt).
+# E1 Mechanizm (rola 09-lokalizacja, build, wejście wczesne) · 2026-10-22 · STOP E1 przyjęty (P-077), ADR-0017 przyjęty
+Decyzje: P-075 (E0), P-076 (przestawienie na wzór Treningu). ADR: [`0017`](../adr/0017-i18n-wlasne-t-reguly-cldr-klucze-znaczeniowe-zrodlo-en.md) (przyjęta), [`0016`](../adr/0016-zaleznosci-wersji-1.md) bez nowych pakietów. Dowody: [`dowody/e1-czerwone.txt`](dowody/e1-czerwone.txt) (efe4ff8, pierwsza wersja), [`dowody/e1-zielone.txt`](dowody/e1-zielone.txt).
 
 ## Historia
 Pierwsza wersja E1 (2e93bd1): i18next + react-i18next + polyfill `Intl.PluralRules`. Po odczycie Treningu (837a850) właściciel kazał przestawić się na jego wzór (P-076). Obecna wersja: własne `t()`, zero nowych pakietów, ręczne reguły CLDR.
