@@ -215,7 +215,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 
 ### BR-LIC-017: Wpisanie wartości licznika i wyzerowanie
 - Przepływ: PR-01, PR-02, PR-13
-- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13 · ER-27: „praca” w statystykach (RD-15, P-048 (3)) i „start dnia” w limicie (D4 w P-057, KP-12) to dwa osobne pojęcia (P-059); zerowanie a strażnik: OP-32
+- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13 · ER-27: „praca” w statystykach (RD-15, P-048 (3)) i „start dnia” w limicie (D4 w P-057, KP-12) to dwa osobne pojęcia (P-059); zerowanie nie woła strażnika limitu i działa także na limicie (P-067 (1a), S-07)
 - Kryteria akceptacji:
   - Scenariusz: Przeniesienie trwającej robótki
     - Zakładając, że użytkownik zakłada licznik dla robótki, w której skończył 57 rzędów

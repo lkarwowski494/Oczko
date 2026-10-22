@@ -243,7 +243,7 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
 ### BR-ZAK-005: Limit dni i strażnik startu dnia
 - Przepływ: PR-02, PR-09
 - Dowód potrzeby: decyzja właściciela P-057 (D2–D5: limit 5 dni limitu w miesiącu kalendarzowym, przerwa 60 min, wpisanie jak +1, liczą się tylko dni bez Pro) i P-053 („rozpoczęta jednostka pracy zawsze do końca”); kontrakt płatności KP-12, KP-15; reguła i wektory L-01–L-15: `docs/monetyzacja/limit.mjs`, `docs/monetyzacja/wektory-limitu.json` (rola 02, P-059) · ER-26
-- Strażnik wołany tylko przy pierwszym +1 nowego dnia limitu i przy ręcznym wpisaniu numeru rzędu (KP-12, D4); zerowanie, −1, liczniki inne niż rzędów, zegarek i ekran blokady: [DO WYJAŚNIENIA] (OP-32)
+- Strażnik wołany przy zdarzeniach, dla których `wolaStraznika()` daje true (KP-12, P-067; wektory S-01–S-10 w `docs/monetyzacja/wektory-limitu.json`): każde +1 na dowolnym liczniku (rzędy, oczka, powtórzenia) i z każdego urządzenia (telefon, zegarek, ekran blokady) oraz ręczne wpisanie wartości (D4); zerowanie, −1 i edycja historii to korekty, które dnia nie zaczynają i nie są blokowane · ER-30
 - Kryteria akceptacji:
   - Scenariusz: Pierwszy dzień miesiąca (L-01)
     - Zakładając, że jest 1 listopada, a w listopadzie nie ma dni limitu i użytkownik nie ma Pro
@@ -286,6 +286,22 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
     - Zakładając, że użytkownik dodał dziś rząd na zegarku, a dane zsynchronizowały się z iPhonem
     - Gdy dodaje rząd na iPhonie
     - Wtedy to wciąż jeden dzień limitu
+  - Scenariusz: Licznik oczek zaczyna dzień (S-02)
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni, a dziś nie dodał nic na żadnym liczniku
+    - Gdy dodaje 1 na liczniku oczek
+    - Wtedy oczko nie zostaje dodane, tak jak rząd (P-067 (3a): typ licznika wybiera użytkownik, więc nie jest drogą obejścia)
+  - Scenariusz: Korekty na limicie (S-07, S-08)
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni, a dziś nie dodał rzędu, a licznik ma 61
+    - Gdy odejmuje 1 albo zeruje licznik z potwierdzeniem
+    - Wtedy licznik pokazuje 60 albo 0, liczba dni limitu się nie zmienia, a zmiana jest w historii (P-067 (1a), (2a))
+  - Scenariusz: Zegarek bez telefonu na limicie (L-18)
+    - Zakładając, że ostatnia synchronizacja przyniosła na zegarek 5 z 5 dni w listopadzie, a telefonu nie ma w zasięgu
+    - Gdy użytkownik nowego dnia chce dodać rząd na zegarku
+    - Wtedy zegarek nie pokazuje +1, tylko informację, że darmowe dni się skończyły (P-067 (4a)); z Pro dodaje rząd (BR-ZAK-001)
+  - Scenariusz: Dzień zaczęty przed synchronizacją nowego urządzenia (L-16, L-17)
+    - Zakładając, że użytkownik zaczął dziś dzień na nowym iPadzie, zanim iCloud przyniósł 5 dni z listopada z iPhone’a
+    - Gdy dane się scalą, a w listopadzie jest 6 dni limitu
+    - Wtedy dzisiejszy dzień zostaje do końca, a następny nowy dzień jest blokowany (P-067 (5a), KP-15)
   - Scenariusz: Zegar z przyszłości (L-15)
     - Zakładając, że ostatni zapisany rząd ma czas późniejszy niż bieżący czas telefonu, a użytkownik bez Pro zużył 5 z 5 dni
     - Gdy dodaje pierwszy rząd nowego dnia
@@ -301,7 +317,7 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
     - Zakładając, że użytkownik bez Pro zużył 5 z 5 darmowych dni w listopadzie, dziś jest 8 listopada, dziś nie dodał rzędu, a ostatni rząd dodał ponad 60 minut temu
     - Gdy otwiera licznik projektu
     - Wtedy zamiast przycisków +1 i −1 widzi komunikat, że darmowe dni w listopadzie się skończyły i liczenie wraca 1 grudnia, a jego rzędy i wszystkie dane zostają; odnośnik do Pro leży poza miejscem przycisku +1, a ekranu zakupu nie ma
-    - Oraz historia, menu projektu, wzór i eksport działają
+    - Oraz historia, menu projektu, wzór i eksport działają, a −1, zerowanie i cofnięcie zmiany z historii są dostępne z historii albo menu projektu, bo to korekty, nie start dnia (P-067 (1a), (2a), ER-30)
   - Scenariusz: Praca po północy bez przerwy (L-04)
     - Zakładając, że użytkownik zużył 5 z 5 dni i dodał rząd o 23:50
     - Gdy o 00:10 patrzy na licznik
