@@ -132,8 +132,8 @@ Razem: 5–7,5 h pracy agenta; od właściciela ok. 1 h (bez apetytu wersji 1, k
 ## Po E0: decyzje i zgłoszenia (2026-10-22)
 - **P-040:** kierunek wersji 1 = wariant B + F-11 (ekran blokady) + F-21 (stoper): „B plus 1, 3”. Linię i koszty potwierdza STOP E2.
 - **P-041:** bez testów ręcznych właściciela, tylko automatyczne. Koszt w rankingu E2 = przeglądy, decyzje, utrzymanie; ryzyko „kryterium niesprawdzalne automatem” liczone przy każdej funkcji.
-- **F-28 (pisanie Apple Pencil): czeka na decyzję.** Odrzucanie dłoni zapewnia system: tryb `PKCanvasViewDrawingPolicy.pencilOnly`, „Pencil touches are the only input that draw on the canvas.” (developer.apple.com/documentation/pencilkit/pkcanvasviewdrawingpolicy/pencilonly, odczyt 2026-10-22; od iOS 13); kryterium BR-WZR-004 sprawdza automat (dotyk palcem na płótnie → 0 kresek), a nasz kod (zapis adnotacji, położenie przy powiększeniu, eksport, tryb do odczytu po utracie Pro) testy jednostkowe i UI w symulatorze.
-- **Kalendarz (prośba właściciela): kandydaci K-1–K-3, czeka na decyzję;** wzorce Treningu i Piekarza i dowód z recenzji: `oczko-warsztat/03-zakres/2026-10-22-build/kalendarz-wzorce.md`.
+- **P-042: F-28 (pisanie Apple Pencil) w kierunku wersji 1** („1a”). Odrzucanie dłoni zapewnia system: tryb `PKCanvasViewDrawingPolicy.pencilOnly`, „Pencil touches are the only input that draw on the canvas.” (developer.apple.com/documentation/pencilkit/pkcanvasviewdrawingpolicy/pencilonly, odczyt 2026-10-22; od iOS 13); kryterium BR-WZR-004 sprawdza automat (dotyk palcem na płótnie → 0 kresek), a nasz kod (zapis adnotacji, położenie przy powiększeniu, eksport, tryb do odczytu po utracie Pro) testy jednostkowe i UI w symulatorze.
+- **Kalendarz, postęp projektu w % i termin z celem dziennym (prośby właściciela): kandydaci K-1–K-5, czeka na decyzję;** wzorce Treningu i Piekarza i dowód z recenzji: `oczko-warsztat/03-zakres/2026-10-22-build/kalendarz-wzorce.md`.
 
 ### Zgłoszenia do roli 01 (ER)
 | ID | Zgłoszenie | Dowód | Status |
