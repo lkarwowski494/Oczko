@@ -22,7 +22,7 @@ Stan: rola 01, tryb fix ER-09–ER-24 (2026-10-22, P-045, P-047) · Prośby o zm
 | ER-17 | źródła wzoru tylko PDF i zdjęcie (brak strony WWW, Worda, linku do filmu) | 03 (P-045) | otwarte | — |
 | ER-18 | zakreślanie i notatki na wzorze tylko Apple Pencil na iPadzie | 03 (P-045) | otwarte | — |
 | ER-19 | brak „Zgłoś problem” z lokalną diagnostyką i widocznego stanu synchronizacji i zegarka | 03 (P-045) | otwarte | — |
-| ER-20 | brak korekty czasu sesji i dat projektu | 03 (P-045) | otwarte | — |
+| ER-20 | brak korekty czasu sesji i dat projektu | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-PRJ-013 (korekta końca sesji, data ukończenia, koniec przed początkiem) |
 | ER-21 | brak NFR działania po premierze nowego iOS/watchOS i minimalnych wersji | 03 (P-045) | otwarte | — |
 | ER-22 | brak cofnięcia usunięcia licznika i części oraz importu na niepustej bazie | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-DAN-008: licznik i część 30 dni (P-047); BR-DAN-006: zastąp po pliku kopii, scal bez nadpisań, rezygnacja bez zmian |
 | ER-23 | brak listy projektów po roku (w toku według ostatniej pracy, ukończone osobno, wyszukiwanie) | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-PRJ-012 (w toku według ostatniej pracy, ukończone osobno, wyszukiwanie po nazwie offline) |

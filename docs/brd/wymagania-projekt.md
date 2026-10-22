@@ -138,6 +138,23 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Gdy użytkownik wpisuje „kamizelka”
     - Wtedy widzi informację, że nie ma takiego projektu, a lista po wyczyszczeniu wyszukiwania wraca
 
+### BR-PRJ-013: Korekta czasu sesji i dat projektu
+- Przepływ: PR-14, PR-07
+- Dowód potrzeby: J-11; „Please make it so I can correct my timer. If I forget to pause it when I walk away I can’t wind back the time.” (Loopsy, id13728925552); „I’ll pause it when I go to bed and wake up to it saying I’ve been crocheting for 8 hours.” (Loopsy, id13535125970); „The completion date on the projects I’ve done cannot be changed” (YarnBuddy, id13730696774) · ER-20
+- Kryteria akceptacji:
+  - Scenariusz: Zapomniany stoper
+    - Zakładając, że sesja trwa 8 godzin, bo stoper działał przez noc, a czas projektu wynosi 20 godzin
+    - Gdy użytkownik zmienia koniec sesji tak, że trwa 1 godzinę
+    - Wtedy sesja trwa 1 godzinę, a czas projektu 13 godzin
+  - Scenariusz: Data ukończenia
+    - Zakładając, że projekt oznaczono jako ukończony dziś, a skończono go 3 dni temu
+    - Gdy użytkownik zmienia datę ukończenia na dzień sprzed 3 dni
+    - Wtedy lista ukończonych i kalendarz pokazują ukończenie tego dnia
+  - Scenariusz: Koniec przed początkiem
+    - Zakładając, że sesja zaczęła się o 20:00
+    - Gdy użytkownik ustawia jej koniec na 19:30
+    - Wtedy aplikacja nie zapisuje zmiany i pokazuje, że koniec musi być po początku
+
 ## Wzór (WZR)
 Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed projektem i wydaniem (P-024, OG-07).
 
