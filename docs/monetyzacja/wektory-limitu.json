@@ -1,0 +1,501 @@
+{
+ "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08.",
+ "limit": 5,
+ "przerwa_ms": 3600000,
+ "startDnia": [
+  {
+   "id": "L-01",
+   "scenariusz": "1. dzień miesiąca, 0 dni użytych, pierwsze +1",
+   "wejscie": {
+    "dni": [],
+    "dzis": "2026-11-01",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-01",
+     "pro": false
+    },
+    "zostalo": 4
+   }
+  },
+  {
+   "id": "L-02",
+   "scenariusz": "dzień już policzony (5. z 5), kolejne +1 tego dnia w innym projekcie",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-07",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-07",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799982000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-03",
+   "scenariusz": "5 z 5 dni, nowy dzień, pierwsze +1, bez Pro: blokada (dane działają poza funkcją)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799880000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-04",
+   "scenariusz": "praca od 23:40, +1 o 00:10 bez przerwy (10 min): bez nowego dnia mimo limitu (D3)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-07",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799999400000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-04b",
+   "scenariusz": "jak L-04, ale przerwa 61 min: nowy dzień ponad limit, blokada (D3)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-07",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799996340000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-05",
+   "scenariusz": "1. dzień nowego miesiąca po miesiącu 5 z 5: licznik od zera",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-10-01",
+      "pro": false
+     },
+     {
+      "data": "2026-10-08",
+      "pro": false
+     },
+     {
+      "data": "2026-10-15",
+      "pro": false
+     },
+     {
+      "data": "2026-10-22",
+      "pro": false
+     },
+     {
+      "data": "2026-10-29",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-01",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799820000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-01",
+     "pro": false
+    },
+    "zostalo": 4
+   }
+  },
+  {
+   "id": "L-06",
+   "scenariusz": "+1, potem cofnięcie tego samego dnia: dzień zostaje policzony (lista dni się nie zmienia)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799994600000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-08",
+   "scenariusz": "ręczne wpisanie numeru rzędu w nowym dniu ponad limit: strażnik wołany jak przy +1 (D4)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-09",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-09",
+   "scenariusz": "Pro wygasło 20.11; 10 dni z Pro i 2 bez Pro w listopadzie: liczą się tylko 2 (D5)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": true
+     },
+     {
+      "data": "2026-11-02",
+      "pro": true
+     },
+     {
+      "data": "2026-11-03",
+      "pro": true
+     },
+     {
+      "data": "2026-11-04",
+      "pro": true
+     },
+     {
+      "data": "2026-11-05",
+      "pro": true
+     },
+     {
+      "data": "2026-11-06",
+      "pro": true
+     },
+     {
+      "data": "2026-11-07",
+      "pro": true
+     },
+     {
+      "data": "2026-11-08",
+      "pro": true
+     },
+     {
+      "data": "2026-11-09",
+      "pro": true
+     },
+     {
+      "data": "2026-11-10",
+      "pro": true
+     },
+     {
+      "data": "2026-11-12",
+      "pro": false
+     },
+     {
+      "data": "2026-11-15",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-21",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799820000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-21",
+     "pro": false
+    },
+    "zostalo": 2
+   }
+  },
+  {
+   "id": "L-10",
+   "scenariusz": "Pro aktywne przy wyczerpanym limicie: dozwolone, dzień zapisany jako dzień z Pro",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-09",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": true
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-09",
+     "pro": true
+    },
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-11",
+   "scenariusz": "ten sam dzień na zegarku i iPhonie: dzień już jest po synchronizacji",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-09",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-09",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799992800000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 3
+   }
+  },
+  {
+   "id": "L-12",
+   "scenariusz": "zegar cofnięty na wcześniejszy, niepoliczony dzień tego miesiąca: liczy się zwykle",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-10",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-03",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-03",
+     "pro": false
+    },
+    "zostalo": 3
+   }
+  },
+  {
+   "id": "L-14",
+   "scenariusz": "ponowna instalacja bez iCloud: pusta lista dni, licznik od zera (brzegowe, akceptowane)",
+   "wejscie": {
+    "dni": [],
+    "dzis": "2026-11-20",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-20",
+     "pro": false
+    },
+    "zostalo": 4
+   }
+  },
+  {
+   "id": "L-15",
+   "scenariusz": "ostatnie +1 ma czas z przyszłości (cofnięty zegar): to nie praca w toku",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-09",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1800001800000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  }
+ ]
+}

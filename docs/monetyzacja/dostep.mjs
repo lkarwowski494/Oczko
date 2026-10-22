@@ -8,8 +8,8 @@
 /** @typedef {{ zrodlo: 'sklep', uprawnienia: Uprawnienie[] } | { zrodlo: 'blad' }} Odczyt  blad: brak sieci, sklep niedostępny */
 /** @typedef {{ produkty: string[], wygasa: number | null } | null} Pamiec  ostatni udany odczyt sklepu */
 
-/** Produkty, które odblokowują Pro (kontrakt płatności, model B, P-029). */
-export const ODBLOKOWUJA = Object.freeze(['oczko.pro.lifetime']);
+/** Produkty, które odblokowują Pro (kontrakt płatności, model V4, P-057): dożywotni i dwie subskrypcje odnawiane; ID tymczasowe do konfiguracji App Store Connect (P-038, OP-24). */
+export const ODBLOKOWUJA = Object.freeze(['oczko.pro.lifetime', 'oczko.pro.monthly', 'oczko.pro.yearly']);
 
 /**
  * @param {Odczyt} odczyt

@@ -1,7 +1,79 @@
 # Monetyzacja: Oczko
-Stan: **sesja 3 (P-053, P-055: V3, V4 wobec B), STOP E1+E2, 2026-10-22** (V1/V2 odrzucone: P-056; STOP E0 przyjęty: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **sesja 3: model V4 bez próby (P-057), STOP E3, 2026-10-22** (V1/V2 odrzucone: P-056; STOP E0: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
+
+## Sesja 3, E3: Kontrakt płatności V4 (2026-10-22)
+Model: **V4 „wzorzec Treningu” bez próby** (P-057): cała aplikacja darmowa, limit **5 dni z robótką w miesiącu**, Pro zdejmuje limit. Zastępuje kontrakt sesji 2 (model B) w częściach: produkty, podział darmowe/Pro, okres próbny, KP-01–KP-03; KP-04–KP-11 obowiązują z dopiskami niżej. Wektory i wzorce: `docs/monetyzacja/limit.mjs` + `wektory-limitu.json` (`node docs/monetyzacja/limit-test.mjs`: „zgodne 14 z 14 wektorów”, kod 0, `dowody/limit-2026-10-22.txt`; kontrola: kopia bez reguły D5 i kopia bez reguły przerwy D3 dają kod 1), `dostep.mjs` + `wektory-dostepu.json` (W-15–W-18 dla subskrypcji; „zgodne 24 z 24 wektorów”, kod 0, `dowody/dostep-s3-2026-10-22.txt`).
+
+### Produkty
+| Produkt (ID tymczasowe, P-038, OP-24) | Typ | Cena (kraj bazowy USA) | Oferta wprowadzająca | Family Sharing (nieodwracalne, MS-18) | Odblokowuje |
+|---|---|---|---|---|---|
+| `oczko.pro.monthly` | subskrypcja odnawiana, grupa „Oczko Pro” | 0,99 USD / 1 mies. | **brak** (P-057) | kierunek: włączone (D6), włączenie przy konfiguracji | brak limitu dni |
+| `oczko.pro.yearly` | subskrypcja odnawiana, ta sama grupa | 6,99 USD / 1 rok | **brak** | jw. | jw. |
+| `oczko.pro.lifetime` (albo ID istniejącego produktu Oczka, P-038) | Non-Consumable | 14,99 USD | — | jw. | jw. |
+
+### Dostęp i limit
+| Sytuacja | Co działa | Co blokuje strażnik |
+|---|---|---|
+| Dni w limicie albo Pro | cała aplikacja | nic |
+| Na limicie (5 z 5), nowy dzień, bez Pro | podgląd projektów, historia, kalendarz, dopisanie wstecz, edycja historii i notatek, eksport, kopia, synchronizacja iCloud (P-031, P-054), usunięcie danych, ustawienia, „Przywróć zakupy”, „Zarządzaj subskrypcją”, polityka prywatności, kalkulatory i słownik (nie są „pracą przy robótce”) | pierwsze +1 nowego dnia i ręczne wpisanie numeru rzędu (D4); rozpoczęty dzień i praca w toku nigdy (L-02, L-04) |
+| Pro wygasa (subskrypcja bez odnowienia, zwrot) | jak wyżej; do limitu liczą się tylko dni bez Pro (D5, L-09) | jak wyżej |
+
+### Wymagania kontraktu (KP; zmiany wobec sesji 2)
+| ID | Wymaganie | Dlaczego / źródło |
+|---|---|---|
+| KP-01 (zmienione) | Limit darmowy raz wydany tylko się luzuje (N rośnie, nigdy nie maleje; nic darmowego nie przechodzi za zaporę); kontrola przed każdym wydaniem: `LIMIT_DNI` i lista „zawsze działa” wobec poprzedniego wydania (07) | ZAL-025 |
+| KP-02 (zmienione) | Utrata Pro (wygaśnięcie, zwrot, odebranie z rodziny): wraca limit dni; dane, historia, eksport i kopia zawsze dostępne | zasada roli 6; MS-27 |
+| KP-03 (pełne) | Przy aktywnej subskrypcji ekran zakupu nie oferuje tej samej subskrypcji; dożywotni tylko z informacją, że subskrypcję trzeba anulować samemu, i z przyciskiem „Zarządzaj subskrypcją”; przy dożywotnim stan „Masz Pro” | MS-22 (3.1.2(b)) |
+| KP-04 (zmienione) | Polityka prywatności i Terms of Use (standardowa EULA Apple) w aplikacji i w metadanych: przy subskrypcji wymagane | MS-02a, MS-32 |
+| KP-12 (nowe) | Strażnik limitu tylko w `startDnia()` (wzorzec `limit.mjs`), wołany przy pierwszym +1 nowego dnia i przy ręcznym wpisaniu numeru rzędu; nigdy przed licznikiem przy pierwszym uruchomieniu (NFR-PIE-001) | P-053 (doprecyzowanie), P-057 D3–D5 |
+| KP-13 (nowe) | Ekran zakupu tylko: przy próbie startu dnia ponad limit i w Ustawieniach; na ekranie licznika licznik dni („Zostały 3 z 5 darmowych dni w tym miesiącu”) zgodnie z zasadą P-046 (decyzja o miejscu: rola 04) | P-055, KP-10 |
+| KP-14 (nowe) | „Zarządzaj subskrypcją” w aplikacji (`showManageSubscriptions`) | strona subskrypcji Apple (wzorce, „Etyka”) |
+| KP-15 (nowe) | Dni z robótką zapisane w danych użytkownika (synchronizowane iCloud, jedna data = jeden dzień, L-11), nie w pamięci podręcznej uprawnień | P-021, L-11, L-14 |
+| KP-05–KP-11 | bez zmian (sesja 2); KP-10 zawężone przez KP-13 | — |
+
+### Ujawnienia dla roli 04 (ekran ofert)
+(1) nazwa planu, długość okresu i cena ze sklepu jako najwyraźniejszy element ceny (MS-02, KP-09); bez procentów i porównań (P-054); opisy bez liczb; (2) przy subskrypcji: „odnawia się automatycznie, anulujesz w ustawieniach Apple ID” i przycisk „Zarządzaj subskrypcją” (MS-02a, KP-14); **hasło z P-054 „No subscriptions. Nothing renews by itself…” odpada** (w V4 są subskrypcje odnawiane); (3) „Przywróć zakupy”; (4) linki do polityki prywatności i warunków (KP-04); (5) co daje Pro: brak limitu dni; co zostaje bez Pro: limit 5 dni i wszystkie dane; (6) widoczne zamknięcie, neutralna odmowa, bez fałszywej pilności i zawstydzania (wzorce, „Etyka”); (7) Family Sharing na ekranie tylko, gdy włączone w App Store Connect.
+
+**Opis w sklepie (dla 11 i 09):** „Free for 5 knitting days every month. Pro removes the limit.”; bez „free app” bez zastrzeżenia i bez „free trial” (MS-47, 2.3.2).
+
+### Test modelu (zastępuje test P-029)
+| Element | Ustalenie |
+|---|---|
+| Miara | konwersja = zakupy Pro (wszystkie produkty, Sales and Trends) / pierwsze pobrania (App Analytics), te same storefronty i okres |
+| Próg | **4,53%**: przy nim V4 daje tyle co B (rachunek: 3,0% × 14,99 / 9,92 USD brutto na płacącego z odnowieniami) |
+| Kiedy | odświeżenie 04.2027 (P-016) albo 3000 pierwszych pobrań, co nastąpi później |
+| Reguła | < 3,79%: decyzja właściciela (opcje: oferta wprowadzająca jak V3, wyższy limit nie, bo KP-01 pozwala tylko luzować, albo powrót do B); > 5,27%: V4 potwierdzone; pomiędzy: pomiar do następnego odświeżenia |
+| Skąd 3,79 / 5,27 | 95% przedział przybliżenia normalnego wokół 4,53% przy n = 3000: ±1,96 × √(0,0453 × 0,9547 / 3000) = ±0,74 pp |
+| Dodatkowo | średnia ocen w sklepie i odsetek recenzji o limicie (AK-05), po 3 miesiącach |
+
+### Zgłoszenia do roli 01 (ER, do poprawki BRD)
+| ID | Zgłoszenie | Dowód |
+|---|---|---|
+| ER-26 | Model z P-057: BRD opisuje model B (wstęp „Zakup (ZAK)”, H-01, H-02, OG-03 „dotyczy tylko powrotu do A albo C”, README). Nowe BR: limit dni z robótką (strażnik startu dnia, KP-12; reguła z wektorami `wektory-limitu.json`), komunikat na limicie (licznik dni, oferta, dane dostępne), wygaśnięcie subskrypcji (KP-02); OG-03 znowu obowiązuje (subskrypcja na wszystkich urządzeniach) | P-057; MS-01b |
+| ER-27 | BR-LIC-017 („wpisanie i zerowanie nie są pracą”, P-048 (3)) dotyczy statystyk; dla limitu ręczne wpisanie numeru rzędu w nowym dniu woła strażnika (D4). Rozdzielić „praca” w statystykach i „start dnia” w limicie, żeby nie było sprzeczności | P-057 D4 |
+| ER-28 | NFR-PIE-001: dopisać, że strażnik limitu nie działa przy pierwszym +1 świeżej instalacji (miesiąc zaczyna się od 5 dni) — zgodność już wynika z reguły, ale kryterium powinno to nazwać | KP-12 |
+
+### Uwaga dla roli 03
+Kolumna „Dostęp” kontraktu zakresu: **wszystkie funkcje darmowe w limicie 5 dni** (nie ma już podziału darmowe/Pro z P-032); funkcje „Pro” z W1 nie są zaporą. Zasada 18 bez zmian (wartość i intuicyjność). Kalkulatory, słownik i zapas nie są „pracą przy robótce” (nie zużywają dni) — jeśli 03 widzi to inaczej, ER do roli 02.
+
+### Przekazanie (kolejne role)
+- **04:** ekran ofert (ujawnienia 1–7), licznik dni (KP-13) zgodny z P-046, komunikat na limicie przy starcie dnia (bez przerywania pracy), stan „Masz Pro”, wpis „Zarządzaj subskrypcją”.
+- **05:** ADR biblioteki: `expo-iap` jak Trening (P-036), z subskrypcjami bez oferty wprowadzającej; KP-06–KP-09, KP-14, KP-15 (dni z robótką w danych synchronizowanych); czy Trening liczy D5 tak samo [DO USTALENIA] (spójność portfela).
+- **07:** wektory `wektory-limitu.json` (L-01–L-15) i `wektory-dostepu.json` (W-01–W-18); kontrola KP-01 przed wydaniem; scenariusze automatyczne (P-041).
+- **08:** `limit.mjs` i `dostep.mjs` jako wzorce; KP-01–KP-15.
+- **Właściciel (App Store Connect, po ADR 05):** grupa subskrypcji „Oczko Pro” z `monthly` 0,99 i `yearly` 6,99 USD **bez ofert wprowadzających**; dożywotni 14,99 USD (sprawdzić istniejący produkt Oczka, OP-24); Family Sharing (D6); konto testowe piaskownicy.
+
+### Definicja ukończenia (build, sesja 3)
+| Punkt kontraktu | Stan | Dowód |
+|---|---|---|
+| ceny, stawki i reguły sklepu z adresem, cytatem i datą | spełnione | „Sesja 3, E0/E1”: MS-39–MS-47 (odczyt 2026-10-22), soczewki z tabelami źródeł |
+| co najmniej dwa modele z regułą, kompromisem, ryzykiem etycznym i rachunkiem; wybór słowami właściciela | spełnione | E2 (V3, V4, B; V1/V2 odrzucone P-056); P-057 |
+| rachunek kod 0, liczby ze źródłem albo [OCENA] z metodą | spełnione | `dowody/s3-porownanie-2026-10-22.txt`, `dowody/s3-odnowienia-2026-10-22.txt` |
+| kontrakt: produkty, uprawnienia, bramki przy przepływach, przywracanie, bez sieci, okres próbny, Family Sharing, ujawnienia | spełnione | ta sekcja; okres próbny: brak (P-057) |
+| H i ZAL ze statusem; sprzeczności jako ER | spełnione | `docs/zalozenia.md` (ZAL-002, 017, 025, 026, 028, 029); ER-26–ER-28 |
+| WTP nowych funkcji | nie dotyczy po P-057 (wszystko darmowe w limicie) | — |
 
 ## Sesja 3, E2: Porównanie V3, V4 i B (2026-10-22)
 **Wyjątek nazwany (zasada wspólna 7):** STOP E1 połączony z STOP E2. Właściciel po raporcie E1: „V1 v2 odrzucamy” (P-056), potem „A to ciekawe, zrób porównanie.” Interpretacja roli 02 (do weta): zgoda na wariant (a), czyli jeden przystanek. Tańsza kontrola zamiast osobnego STOP E1: dowody E1 są zapisane (sekcja niżej) i przywołane przy każdej liczbie.
