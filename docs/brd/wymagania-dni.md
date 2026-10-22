@@ -15,6 +15,11 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając, że 19 października użytkownik tylko wpisał wartość licznika przy przeniesieniu robótki i cofnął przypadkowe dodania z historii
     - Gdy otwiera kalendarz
     - Wtedy 19 października nie ma znacznika dnia z robótką (RD-15: wpisania i cofnięte zmiany nie są pracą)
+  - Scenariusz: Dzień z robótką a dzień limitu (ER-27, P-059)
+    - Zakładając, że użytkownik bez Pro dziergał 21 października od 23:40 do 00:10 22 października bez przerwy, a 23 października tylko dodał rząd i go cofnął
+    - Gdy otwiera kalendarz października
+    - Wtedy 21 i 22 października mają znacznik dnia z robótką, a 23 października go nie ma (RD-15, RD-16)
+    - Oraz w limicie 21 października to jeden dzień limitu, a 23 października to drugi dzień limitu (BR-ZAK-005, L-04, L-06)
   - Scenariusz: Bez serii i ponagleń
     - Zakładając, że użytkownik nie dziergał od 10 dni
     - Gdy otwiera aplikację albo kalendarz

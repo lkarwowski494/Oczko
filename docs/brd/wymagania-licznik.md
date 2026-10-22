@@ -215,7 +215,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 
 ### BR-LIC-017: Wpisanie wartości licznika i wyzerowanie
 - Przepływ: PR-01, PR-02, PR-13
-- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13
+- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13 · ER-27: „praca” w statystykach (RD-15, P-048 (3)) i „start dnia” w limicie (D4 w P-057, KP-12) to dwa osobne pojęcia (P-059); zerowanie a strażnik: OP-32
 - Kryteria akceptacji:
   - Scenariusz: Przeniesienie trwającej robótki
     - Zakładając, że użytkownik zakłada licznik dla robótki, w której skończył 57 rzędów
@@ -225,10 +225,19 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że licznik ma 30
     - Gdy użytkownik wpisuje 35, a potem cofa tę zmianę z historii
     - Wtedy historia pokazuje wpisanie z godziną i wartością przed i po, a licznik po cofnięciu pokazuje 30
-  - Scenariusz: Wpisanie nie jest pracą
+  - Scenariusz: Wpisanie nie jest pracą w statystykach
     - Zakładając, że użytkownik wpisał 57 przy przeniesieniu robótki
     - Gdy otwiera dzień i postęp w module DNI
     - Wtedy wpisane 57 rzędów nie są rzędami zrobionymi tego dnia ani nie zmieniają tempa (RD-15)
+  - Scenariusz: Wpisanie w nowym dniu zaczyna dzień limitu (ER-27)
+    - Zakładając, że użytkownik bez Pro zużył 2 z 5 darmowych dni w miesiącu, a dziś nie dodał ani nie wpisał żadnego rzędu
+    - Gdy wpisuje wartość 57 przy przeniesieniu robótki
+    - Wtedy licznik pokazuje 57, dziś staje się dniem limitu i zostały 2 z 5 darmowych dni (D4 w P-057, KP-12)
+    - Oraz w kalendarzu dziś nie ma znacznika dnia z robótką (BR-DNI-001, RD-15)
+  - Scenariusz: Wpisanie w nowym dniu ponad limit (ER-27)
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 darmowych dni, a dziś nie dodał ani nie wpisał żadnego rzędu
+    - Gdy wpisuje wartość licznika
+    - Wtedy wartość nie zostaje zapisana, a aplikacja pokazuje komunikat na limicie (BR-ZAK-005, L-08)
   - Scenariusz: Zerowanie z potwierdzeniem
     - Zakładając, że licznik ma 42
     - Gdy użytkownik wybiera wyzerowanie
