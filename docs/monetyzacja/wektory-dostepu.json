@@ -1,5 +1,5 @@
 {
-  "opis": "Wektory logiki dostępu do Pro (rola 02, kontrakt płatności, 2026-10-22; model B, P-029). Scenariusze 1-8 z modułu storekit-expo biblioteki prompts @97ec212 przeniesione na produkt Oczka, 9-14 dodane dla Oczka. Zmienia je rola 02 (ER), czyta 07 i 08.",
+  "opis": "Wektory logiki dostępu do Pro (rola 02, kontrakt płatności, 2026-10-22; model B, P-029). Scenariusze 1-8 z modułu storekit-expo biblioteki prompts @97ec212 przeniesione na produkt Oczka, 9-14 dodane dla Oczka; W-10 i W-14 po P-038. ID produktu tymczasowe do konfiguracji App Store Connect (P-038, OP-24). Zmienia je rola 02 (ER), czyta 07 i 08.",
   "teraz": 1800000000000,
   "odblokowuja": ["oczko.pro.lifetime"],
   "decyzja": [
@@ -21,14 +21,16 @@
       "oczekiwane": { "dostep": false, "powod": "brak", "pamiec": null } },
     { "id": "W-09", "scenariusz": "iPad z tym samym kontem App Store: sklep zwraca zakup", "odczyt": { "zrodlo": "sklep", "uprawnienia": [{ "produkt": "oczko.pro.lifetime", "wygasa": null, "odebrane": false }] }, "pamiec": null,
       "oczekiwane": { "dostep": true, "powod": "sklep", "pamiec": { "produkty": ["oczko.pro.lifetime"], "wygasa": null } } },
-    { "id": "W-10", "scenariusz": "członek rodziny (Family Sharing wyłączone, D6a): sklep nie zwraca zakupu", "odczyt": { "zrodlo": "sklep", "uprawnienia": [] }, "pamiec": null,
-      "oczekiwane": { "dostep": false, "powod": "brak", "pamiec": null } },
+    { "id": "W-10", "scenariusz": "członek rodziny przy włączonym Family Sharing (P-038): sklep zwraca zakup", "odczyt": { "zrodlo": "sklep", "uprawnienia": [{ "produkt": "oczko.pro.lifetime", "wygasa": null, "odebrane": false }] }, "pamiec": null,
+      "oczekiwane": { "dostep": true, "powod": "sklep", "pamiec": { "produkty": ["oczko.pro.lifetime"], "wygasa": null } } },
     { "id": "W-11", "scenariusz": "sklep ma zakup, a pamięć była pusta po błędzie: pamięć się odtwarza", "odczyt": { "zrodlo": "sklep", "uprawnienia": [{ "produkt": "oczko.pro.lifetime", "wygasa": null, "odebrane": false }] }, "pamiec": null,
       "oczekiwane": { "dostep": true, "powod": "sklep", "pamiec": { "produkty": ["oczko.pro.lifetime"], "wygasa": null } } },
     { "id": "W-12", "scenariusz": "pamięć z wygasłym okresem (powrót do modelu A albo C), brak sieci", "odczyt": { "zrodlo": "blad" }, "pamiec": { "produkty": ["oczko.pro.lifetime"], "wygasa": 1799999999999 },
       "oczekiwane": { "dostep": false, "powod": "brak", "pamiec": { "produkty": ["oczko.pro.lifetime"], "wygasa": 1799999999999 } } },
     { "id": "W-13", "scenariusz": "pusta lista produktów w pamięci, brak sieci", "odczyt": { "zrodlo": "blad" }, "pamiec": { "produkty": [], "wygasa": null },
-      "oczekiwane": { "dostep": false, "powod": "brak", "pamiec": { "produkty": [], "wygasa": null } } }
+      "oczekiwane": { "dostep": false, "powod": "brak", "pamiec": { "produkty": [], "wygasa": null } } },
+    { "id": "W-14", "scenariusz": "odebranie z Family Sharing (revocationDate, MS-27): pamięć mówi inaczej", "odczyt": { "zrodlo": "sklep", "uprawnienia": [{ "produkt": "oczko.pro.lifetime", "wygasa": null, "odebrane": true }] }, "pamiec": { "produkty": ["oczko.pro.lifetime"], "wygasa": null },
+      "oczekiwane": { "dostep": false, "powod": "brak", "pamiec": null } }
   ],
   "odczytajPamiec": [
     { "id": "P-01", "scenariusz": "poprawny zapis", "wejscie": "{\"produkty\":[\"oczko.pro.lifetime\"],\"wygasa\":null}", "oczekiwane": { "produkty": ["oczko.pro.lifetime"], "wygasa": null } },

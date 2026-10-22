@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · **zakończona 2026-10-22** (STOP E3 przyjęty: P-036, P-037; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: sesja 2 · **zakończona 2026-10-22** (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -229,7 +229,7 @@ Model: **B, darmowy rdzeń + Pro dożywotni 14,99 USD** jako test modelu w jedne
 ### Kontrakt płatności
 | Produkt (ID) | Typ | Cena (próg, kraj bazowy) | Family Sharing | Odblokowuje |
 |---|---|---|---|---|
-| `oczko.pro.lifetime` (propozycja; ID nieodwracalne, MS-28) | Non-Consumable | 14,99 USD, kraj bazowy USA, ceny w pozostałych storefrontach generowane przez Apple (MS-19) | wyłączone (P-034) | uprawnienie „Pro”: wszystkie funkcje z wiersza „Pro” powyżej |
+| `oczko.pro.lifetime` albo ID istniejącego produktu Oczka (rozstrzyga właściciel przy konfiguracji App Store Connect, P-038; ID nieodwracalne, MS-28) | Non-Consumable | 14,99 USD, kraj bazowy USA, ceny w pozostałych storefrontach generowane przez Apple (MS-19) | kierunek: włączone; włączenie przy konfiguracji App Store Connect (P-038) | uprawnienie „Pro”: wszystkie funkcje z wiersza „Pro” powyżej |
 
 | Przepływ (PR) | Akcja Pro | Bez dostępu (co widzi użytkownik) | Dane zawsze dostępne |
 |---|---|---|---|
@@ -263,10 +263,10 @@ Model: **B, darmowy rdzeń + Pro dożywotni 14,99 USD** jako test modelu w jedne
 - **Bez sieci:** po zakupie Pro działa z pamięci (W-03); przed pierwszym udanym odczytem albo przy uszkodzonej pamięci brak Pro do odczytu ze sklepu (W-04, P-02): przypadek brzegowy, bo zakup i tak wymaga sieci.
 - **Przywracanie:** na ekranie zakupu i w ustawieniach (MS-01g, BR-ZAK-001); bez zakupu: komunikat „nie znaleziono zakupu na tym koncie App Store”, nigdy dostęp (W-07).
 - **Okres próbny:** brak (P-033). Darmowy rdzeń bez limitu czasu ani użyć, więc nie ma „okresu próbnego” w rozumieniu 3.1.1 (wzorce, „Kalibracja”).
-- **Ujawnienia dla roli 04 (ekran zakupu):** (1) kwota 14,99 USD w walucie storefrontu jako najwyraźniejszy element ceny (wymóg strony subskrypcji MS-02, stosowany też do zakupu jednorazowego) i słowa „jednorazowo, bez subskrypcji”; (2) lista funkcji Pro zgodna z tym kontraktem i zdanie, że darmowe zostaje darmowe, a dane i eksport są zawsze dostępne; (3) „Przywróć zakupy” na ekranie i w ustawieniach; (4) widoczne zamknięcie i neutralna odmowa; (5) zakup działa na urządzeniach z tym samym kontem App Store przez przywracanie (MS-26); bez obietnic o rodzinie (P-034); (6) odnośnik do polityki prywatności; (7) zakazane wzorce z tabeli „Etyka” (fałszywa pilność, „najpopularniejszy”, zawstydzanie, ekran w głównej pracy).
+- **Ujawnienia dla roli 04 (ekran zakupu):** (1) kwota 14,99 USD w walucie storefrontu jako najwyraźniejszy element ceny (wymóg strony subskrypcji MS-02, stosowany też do zakupu jednorazowego) i słowa „jednorazowo, bez subskrypcji”; (2) lista funkcji Pro zgodna z tym kontraktem i zdanie, że darmowe zostaje darmowe, a dane i eksport są zawsze dostępne; (3) „Przywróć zakupy” na ekranie i w ustawieniach; (4) widoczne zamknięcie i neutralna odmowa; (5) zakup działa na urządzeniach z tym samym kontem App Store przez przywracanie (MS-26); o rodzinie mówi tylko, gdy Family Sharing jest włączone w App Store Connect (P-038); (6) odnośnik do polityki prywatności; (7) zakazane wzorce z tabeli „Etyka” (fałszywa pilność, „najpopularniejszy”, zawstydzanie, ekran w głównej pracy).
 
 ### Logika dostępu i wektory (dla 07 i 08)
-Wzorzec z modułu `storekit-expo` przeniesiony 1:1 do `docs/monetyzacja/dostep.mjs` (JavaScript, żeby dało się go sprawdzić bez kompilacji); 08 przepisuje go na TypeScript w kodzie aplikacji. Wektory: `docs/monetyzacja/wektory-dostepu.json` (13 scenariuszy decyzji W-01–W-13, 6 odczytu pamięci P-01–P-06). Wynik `node docs/monetyzacja/dostep-test.mjs`: „zgodne 19 z 19 wektorów”, kod 0 (`dowody/dostep-2026-10-22.txt`). Kontrola testu: kopia funkcji bez sprawdzenia `odebrane` daje „NIEZGODNE 1 z 19” (W-05) i kod 1. Wektory są kontraktem: 07 i 08 czytają, zmienia rola 02 (ER).
+Wzorzec z modułu `storekit-expo` przeniesiony 1:1 do `docs/monetyzacja/dostep.mjs` (JavaScript, żeby dało się go sprawdzić bez kompilacji); 08 przepisuje go na TypeScript w kodzie aplikacji. Wektory: `docs/monetyzacja/wektory-dostepu.json` (14 scenariuszy decyzji W-01–W-14, 6 odczytu pamięci P-01–P-06). Wynik `node docs/monetyzacja/dostep-test.mjs`: „zgodne 20 z 20 wektorów”, kod 0 (`dowody/dostep-2026-10-22.txt`). Kontrola testu: kopia funkcji bez sprawdzenia `odebrane` daje „NIEZGODNE 2 z 20” (W-05, W-14) i kod 1. Wektory są kontraktem: 07 i 08 czytają, zmienia rola 02 (ER).
 
 ### Szkic ADR: biblioteka płatności (dla roli 05, decyzja w `docs/adr/`)
 Przewodnik Expo „Using in-app purchases” („Last updated on September 25, 2026”, MS-33) wymienia `expo-iap` i `react-native-purchases`; „Native code is not configurable when using Expo Go.” Wersje z npm z 2026-10-22; `expo` latest 58.0.17, projekt na SDK 57 (CLAUDE.md, stan poprzedniej wersji): zgodność sprawdza 05.
@@ -286,7 +286,7 @@ Przewodnik Expo „Using in-app purchases” („Last updated on September 25, 2
 | wersja co najmniej 14 dni od wydania, przypięta dokładnie | `docs/30-storekit-etap0.md:185` | 6.1.1 ma dziś 4 dni: 05 wybiera wersję w dniu wdrożenia, najlepiej wspólną z Treningiem |
 | cena tylko z App Store (`displayPrice`) | `lib/store-adapter.ts:13–18` | zgodne z KP-09 |
 
-Różnice nazwane: Family Sharing w Treningu włączone (S5), w Oczku wyłączone (P-034); Trening ma subskrypcje i okres próbny, Oczko jeden zakup jednorazowy (P-029, P-033), więc z adaptera odpadają oferty wprowadzające, karencja i zarządzanie subskrypcją. Kodu Treningu nie kopiuje rola 02; decyzję o ponownym użyciu podejmuje 05.
+Różnice nazwane: Family Sharing: kierunek jak w Treningu (S5), włączenie przy konfiguracji (P-038); Trening ma subskrypcje i okres próbny, Oczko jeden zakup jednorazowy (P-029, P-033), więc z adaptera odpadają oferty wprowadzające, karencja i zarządzanie subskrypcją. Kodu Treningu nie kopiuje rola 02; decyzję o ponownym użyciu podejmuje 05.
 
 Wymagania danych dla 05: pamięć podręczna uprawnień (JSON `Pamiec`, KP-06); licznik limitu: brak (P-030). Wpis do inwentarza prywatności: zakup przez StoreKit bez SDK zewnętrznego; czy transakcja obsługiwana przez Apple jest „collect” w rozumieniu App Privacy (MS-31: „transmitting data off the device in a way that allows you and/or your third-party partners to access it…”): [DO USTALENIA] przez 05 (OP-23). „Potwierdzenie” ADR: wektory w Node (kod 0) i scenariusze na telefonie niżej. Adapter izoluje bibliotekę za `Uprawnienie[]`, więc zamiana na własny moduł nie zmienia logiki dostępu.
 
@@ -300,6 +300,7 @@ Bez Maca (OP-03) testy StoreKit tylko przez TestFlight: „Apps downloaded from 
 | iPad z tym samym kontem App Store, „Przywróć” | Pro działa | W-09 |
 | inne konto piaskownicy bez zakupu, „Przywróć” | komunikat, brak Pro | W-07 |
 | „Usuń wszystkie dane”, potem „Przywróć” | Pro wraca (KP-05) | W-02 |
+| członek rodziny po włączeniu Family Sharing; potem odebranie z rodziny | Pro działa; po odebraniu Pro znika, dane do odczytu (KP-02) | W-10, W-14 |
 | zwrot | Pro znika, dane do odczytu (KP-02) | W-05, W-06; jak wywołać zwrot w piaskownicy bez Xcode: [DO USTALENIA] (OP-21) |
 | zegarek bez telefonu w pobliżu | [DO USTALENIA] przez 05: jak zegarek czyta uprawnienie (OP-22) | — |
 
@@ -321,9 +322,9 @@ Bez Maca (OP-03) testy StoreKit tylko przez TestFlight: „Apps downloaded from 
 | ZAL-003 | potwierdzone dla płatności przy `expo-iap` (bez opłat); RevenueCat do 2500 USD MTR też 0 zł, ale odrzucony z powodu prywatności | MS-34, MS-36 |
 
 ### Kroki właściciela w App Store Connect (po decyzji 05 i przed pierwszym buildem z zakupem)
-1. Utworzyć zakup Non-Consumable: nazwa referencyjna „Oczko Pro”, ID `oczko.pro.lifetime` (ID nie da się zmienić ani użyć ponownie, MS-28).
+1. Sprawdzić, czy jest już produkt Oczka (typ, ID, cena, Family Sharing, stan; OP-24). Jeśli jest Non-Consumable do użycia dla Pro: zostaje jego ID i rola 08 wpisuje je do `ODBLOKOWUJA`. Jeśli nie: utworzyć Non-Consumable „Oczko Pro”, ID `oczko.pro.lifetime` (ID nie da się zmienić ani użyć ponownie, MS-28) (P-038).
 2. Cena: 14,99 USD, kraj bazowy USA; pozostałe storefronty automatycznie (MS-19).
-3. Family Sharing: **nie włączać** (P-034).
+3. Family Sharing: **włączyć** (P-038; nieodwracalne, MS-18).
 4. Opis i nazwa wyświetlana: na start en-US; pozostałe języki z rolą 09.
 5. Konto testowe piaskownicy (Sandbox Apple Account) do scenariuszy wyżej.
 Umowa Paid Apps i Small Business Program: załatwione (OP-01, OP-20).
@@ -682,3 +683,4 @@ Wniosek: tania aplikacja zdobywa więcej pobrań i lepiej utrzymuje płacących,
 | OP-21 | [DO USTALENIA] Jak wywołać zwrot zakupu w piaskownicy przez TestFlight bez Xcode (scenariusz KP-02) | 07 / właściciel | testy „tylko telefon” |
 | OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje uprawnienie Pro bez telefonu w pobliżu | 05 | LIC-015, kontrakt płatności |
 | OP-23 | [DO USTALENIA] Czy zakup przez StoreKit bez SDK zewnętrznego wymaga wpisu „Purchases” w App Privacy (definicja „collect”, MS-31) | 05 | etykieta prywatności |
+| OP-24 | [DO USTALENIA] Czy w App Store Connect jest już produkt Oczka (typ, ID, cena, Family Sharing, stan) i czy da się go użyć dla Pro (P-038) | właściciel przy konfiguracji App Store Connect | ID w `ODBLOKOWUJA`, Family Sharing |
