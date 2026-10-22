@@ -1,5 +1,5 @@
 # BRD: Oczko
-Stan: zakończony (E4, 2026-10-21); poprawki zbiorcze ER-06–ER-08 i ER-09–ER-24 (tryb fix, 2026-10-22, `errata.md`) · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
+Stan: zakończony (E4, 2026-10-21); poprawki zbiorcze ER-06–ER-08, ER-09–ER-24 i ER-25–ER-28 (tryb fix, 2026-10-22, `errata.md`) · Rola 01-odkrywanie, tryb build (prompt `prompts` @97ec212, moduły kontrola-brd, rynek-i-polityki, wywiad; 59 458 znaków) · Hierarchia źródeł: P-017
 
 BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P-015 (wyjątek nazwany od rdzenia roli, który każe czytać istniejące BRD i kod): nie czytano `archiwum/`, `app/`, `src/`, `lib/`, `tests/`, `scripts/`, `site/`, `.maestro/`, `assets/`, historii git sprzed 2026-10-21, `oczko-warsztat/rozliczenie-2026-10-21/` ani karty portfela Oczka. Obszary z `docs/pomysl.md` to hipotezy.
 
@@ -18,7 +18,7 @@ BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P
 Materiały prywatne (wywiad, 4682 recenzje, cztery soczewki E2, kopie źródeł): `oczko-warsztat/01-odkrywanie/`.
 
 ## Streszczenie
-Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kursami. Dowody (4682 recenzje 23 aplikacji, cztery soczewki, wytyczne Apple, CYC) wskazują dwie luki rynku: zaufanie do danych i uczciwe płacenie (H-03), oraz funkcje, których nikt nie robi dobrze: liczenie bez telefonu, widoczne przypomnienia z planem rzędów, ochrona przed przypadkowym stuknięciem (H-06). Zakres, kolejność i podział rozstrzyga rola 03 (H-04, H-05, H-07); model i ceny rozstrzygnęła rola 02 (2026-10-22: P-029, darmowy rdzeń i jedno odblokowanie Pro 14,99 USD; H-01, H-02 rozstrzygnięte).
+Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kursami. Dowody (4682 recenzje 23 aplikacji, cztery soczewki, wytyczne Apple, CYC) wskazują dwie luki rynku: zaufanie do danych i uczciwe płacenie (H-03), oraz funkcje, których nikt nie robi dobrze: liczenie bez telefonu, widoczne przypomnienia z planem rzędów, ochrona przed przypadkowym stuknięciem (H-06). Zakres, kolejność i podział rozstrzyga rola 03 (H-04, H-05, H-07); model i ceny rozstrzygnęła rola 02 (2026-10-22: P-057, model V4: cała aplikacja darmowa w limicie 5 dni limitu w miesiącu, Pro jako subskrypcja albo zakup dożywotni znosi limit; H-01, H-02 rozstrzygnięte; ER-26).
 
 ## Definicja ukończenia (E4, 2026-10-21)
 | Punkt kontraktu | Wynik | Dowód |
@@ -28,7 +28,7 @@ Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kurs
 | RD: wzór, jednostki, granica, podstawa, ≥ 3 wektory z granicą i obiema stronami; krytyczne ze szczebla 1–3, oznaczone dla 06 | spełnione | `kontrola-brd.mjs docs/brd` bez `--szkic`: kod 0, 13 RD, 71 wektorów; krytyczne RD-01–RD-04, RD-07, RD-08, RD-10 |
 | BR z PR, PR z J; scenariusz główny z obserwowalnym wynikiem; liczby ze źródła, decyzji albo OP; NFR mierzalne | spełnione | skrypt: 59 BR z PR i „Wtedy”, 14 PR z J; liczby z wektorów RD albo decyzji (P-026); 11 NFR z miarą, progiem i metodą (2 progi w OP-16, OP-17) |
 | OG z polityk przypisane do wymagań | spełnione | OG-01–OG-13 w `odkrywanie.md`, przywołane w BR (np. OG-02 → BR-ZAK-001, OG-09 → BR-DAN-001) |
-| Cena, zakres MVP i podział tylko jako H | spełnione z wyjątkiem nazwanym | H-01–H-09; ceny to decyzja właściciela P-019 (podana w wywiadzie), nie propozycja roli 01; od 2026-10-22 model i cena według P-029 (ER-08) |
+| Cena, zakres MVP i podział tylko jako H | spełnione z wyjątkiem nazwanym | H-01–H-09; ceny to decyzja właściciela P-019 (podana w wywiadzie), nie propozycja roli 01; od 2026-10-22 model i cena według P-029 (ER-08), potem P-057 (ER-26) |
 | Kontrola bez `--szkic` kod 0; BRD w miejscu z `CLAUDE.md`; w publicznym repo brak danych rozmówców i cudzych materiałów | spełnione z uwagą | kod 0; `docs/brd/`; wywiad i surowe recenzje w prywatnym `oczko-warsztat`; w BRD tylko krótkie cytaty recenzji z id, bez autorów; liczby tabel CYC z odnośnikiem (zgoda CYC: OP-09) |
 | `tests/wektory/brd.json` z BRD | spełnione | wygenerowany skryptem, zgodny z BRD (porównanie plików 2026-10-21) |
 
@@ -39,7 +39,8 @@ Wejście dla roli 07 (werdykt gotowości). Niespełnienie któregokolwiek blokuj
 - NFR-DAN-003, BR-DAN-002: synchronizacja zmienia liczbę bez wiedzy użytkownika (RYZ-02).
 - BR-DAN-004, BR-DAN-005, BR-DAN-006: brak drogi przeniesienia danych na nowy telefon.
 - BR-LIC-001, BR-LIC-002, BR-LIC-003: główny przepływ liczenia.
-- BR-ZAK-001: utrata zakupu (OG-02).
+- BR-ZAK-001: utrata zakupu (OG-02, OG-03).
+- BR-ZAK-005, BR-ZAK-006, BR-ZAK-007: strażnik limitu przerywa pracę w toku, blokuje dane albo nie znosi limitu przy Pro (KP-01, KP-02, KP-12; ER-26).
 - BR-ZAK-002, NFR-PRY-001, BR-ZAK-004: obietnica prywatności i polityka sklepu (OG-04).
 - NFR-ZEG-001: rozbieżność zegarka (jeśli zegarek jest w wydaniu).
 - BR-KAL-001–BR-KAL-008, BR-SLO-001: reguły krytyczne i treść krytyczna bez przeglądu roli 06 (RD-01–RD-04, RD-07, RD-08, RD-10; RYZ-03).
@@ -116,6 +117,7 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 | OP-16 | [DO WYJAŚNIENIA] Podłoga dużego tekstu (Dynamic Type) na ekranach głównych przepływów | rola 04 | NFR-DOS-002 |
 | OP-17 | [DO WYJAŚNIENIA] Budżet czasu reakcji licznika | rola 05 | NFR-WYD-001 |
 | OP-18 | Okres przechowywania usuniętych projektów: zamknięte decyzją P-026 (30 dni) | właściciel | BR-DAN-008 |
-| OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje wersję płatną bez telefonu w pobliżu (wpis źródłowy: `docs/monetyzacja.md`, rola 02) | 05 | BR-ZAK-001, BR-LIC-015 |
+| OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje Pro bez telefonu w pobliżu (wpis źródłowy: `docs/monetyzacja.md`, rola 02) | 05 | BR-ZAK-001, BR-LIC-015 |
 | OP-25 | [DO USTALENIA] Czy zgłoszenie problemu wysłane arkuszem udostępniania spełnia kryteria „optional disclosure” (S-37), czy wymaga wpisu w etykiecie App Privacy (np. „Customer Support”, „Other Diagnostic Data”) | rola 10, 05 | OG-14, BR-DAN-010, NFR-PRY-001 |
 | OP-26 | [DO USTALENIA] Minimalne wersje iOS i watchOS oraz czas od premiery nowego systemu do poprawki (P-047) | rola 05 | NFR-SYS-001 |
+| OP-32 | [DO WYJAŚNIENIA] Czy strażnik limitu (KP-12) jest wołany przy zerowaniu licznika, −1 w nowym dniu ponad limit, +1 na liczniku oczek i powtórzeń (P-058: „liczenie rzędów”) oraz +1 z zegarka i ekranu blokady; jak zegarek pokazuje blokadę bez telefonu (ER-26, nowe znalezisko NZ-01, NZ-03) | rola 02 (reguła), 04 i 05 (zegarek) | BR-ZAK-005, BR-LIC-017, BR-LIC-015 |

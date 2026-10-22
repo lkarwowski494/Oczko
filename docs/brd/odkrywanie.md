@@ -172,7 +172,7 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 ### OG-02: Przywracanie zakupów
 - Aplikacja powinna mieć mechanizm przywracania zakupów [FAKT S-03]. Dotyczy J-07 (skargi Easy Knitty).
 ### OG-03: Subskrypcja na wszystkich urządzeniach
-- Subskrypcja ma być dostępna na wszystkich urządzeniach użytkownika [FAKT S-04]. Po P-029 (2026-10-22: jeden zakup nieodnawialny Pro, bez subskrypcji) dotyczy tylko powrotu do modelu A albo C (warunek testu P-029, `docs/monetyzacja.md`); przy jednym zakupie ten sam wynik dla użytkownika daje przywracanie na każdym urządzeniu (OG-02, BR-ZAK-001, S-33).
+- Subskrypcja ma być dostępna na wszystkich urządzeniach użytkownika [FAKT S-04]. Obowiązuje od P-057 (2026-10-22, ER-26): Pro jako subskrypcja odnawiana działa na iPhonie, iPadzie i zegarku z tym samym kontem Apple bez ponownej opłaty; dożywotni daje ten sam wynik przez przywracanie (OG-02, BR-ZAK-001, S-33).
 ### OG-04: Polityka prywatności w aplikacji
 - Link do polityki prywatności w metadanych i w aplikacji [FAKT S-05].
 ### OG-05: Opis w sklepie tylko o istniejących funkcjach
@@ -228,11 +228,11 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 ### H-01: Darmowy pierwszy projekt bez okresu próbnego
 - Rodzaj: monetyzacja · Rejestr: ZAL-017 · Za: początkujący odpadają przy zaporze płatności i próbie do pamiętania (soczewka początkująca; My Row Counter id10952769045); wymuszona próba to najczęstsza 1★ Loopsy (43 z 437). Przeciw: hojna wersja darmowa obniża konwersję [OCENA].
 - Opcje: (a) licznik z cofaniem i historią dla co najmniej jednego projektu za darmo, płatna głębia; (b) wszystko płatne z próbą. Rekomendacja: (a). Sprawdzenie: konwersja w pierwszych 3 miesiącach. Rozstrzyga: 02.
-- Status: rozstrzygnięta (2026-10-22, rola 02): darmowy rdzeń bez limitu projektów (P-030) i bez okresu próbnego (P-033); forma „jeden projekt za darmo” zastąpiona.
+- Status: rozstrzygnięta (2026-10-22, rola 02, P-057; ER-26): cała aplikacja darmowa od pierwszego uruchomienia, bez okresu próbnego i bez oferty wprowadzającej, w limicie 5 dni limitu w miesiącu (BR-ZAK-005); rozstrzygnięcie P-030 i P-033 zastąpione.
 ### H-02: Zakup jednorazowy i nienaruszalność danych
 - Rodzaj: monetyzacja · Rejestr: ZAL-018 · Za: „I HATE subscription models so the fact that this is a one time purchase” (Ravit, id13490236648); skargi na odebrane funkcje i dane za paywallem (Knitandnote id13238171721). Przeciw: subskrypcja daje przychód stały (ZAL-002).
 - Opcje (stan 2026-10-21): trzy produkty z P-019 albo sam zakup jednorazowy; reguła: dane i eksport nigdy za paywallem, opłacona funkcja nie znika. Rozstrzyga: 02.
-- Status: rozstrzygnięta (2026-10-22, rola 02): jedno odblokowanie Pro 14,99 USD jako jedyny produkt, bez subskrypcji, test modelu (P-029); dane i eksport poza zaporą, opłacona i darmowa funkcja nie znika (KP-01, KP-02 w `docs/monetyzacja.md`).
+- Status: rozstrzygnięta (2026-10-22, rola 02, P-057; ER-26): Pro jako subskrypcja odnawiana (miesięczna, roczna) albo zakup dożywotni, obok siebie; dane i eksport zawsze poza zaporą, darmowy limit raz wydany tylko się luzuje (KP-01, KP-02 w `docs/monetyzacja.md`; BR-ZAK-003, BR-ZAK-007); P-029 zastąpione.
 ### H-03: Zaufanie jako widoczny wyróżnik
 - Rodzaj: wartość · Rejestr: ZAL-009 · Za: luki rynku (dane, płacenie), 6 z 14 ma „Data Not Collected”, 0 z 14 deklaruje dostępność. Przeciw: obietnicę trzeba udowodnić, a jedna utrata danych ją przekreśla.
 - Opcje: (a) „bez utraty danych, bez reklam, bez śledzenia, 35 języków, dostępność” jako główny przekaz; (b) przekaz funkcyjny („najwięcej funkcji”). Rekomendacja: (a). Rozstrzyga: 02, 11.

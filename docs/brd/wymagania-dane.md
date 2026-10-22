@@ -58,8 +58,8 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Zakładając, że użytkownik ma projekty, wzory, zdjęcia i zapas
     - Gdy wybiera eksport
     - Wtedy dostaje plik w aplikacji Pliki, który zawiera wszystkie projekty, liczniki z historią, notatki, zapas, wzory i zdjęcia
-  - Scenariusz: Bez zakupu
-    - Zakładając, że użytkownik nie kupił wersji płatnej
+  - Scenariusz: Bez Pro, na limicie
+    - Zakładając, że użytkownik nie ma Pro i zużył 5 z 5 darmowych dni limitu (L-07, KP-02; ER-26)
     - Gdy wybiera eksport
     - Wtedy eksport działa tak samo
 
@@ -158,54 +158,60 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Wtedy widzi, że zegarek ma zmiany czekające na połączenie, i co zrobić, żeby je przesłać
 
 ## Zakup (ZAK)
-Model i ceny: P-029 (2026-10-22): darmowy rdzeń i jedno odblokowanie Pro, zakup nieodnawialny 14,99 USD; ceny P-019 tylko przy powrocie do modelu A. Wymagania kontraktu płatności KP-01–KP-05 w `docs/monetyzacja.md` (z ER-01–ER-05, P-028) obowiązują razem z BR-ZAK. Tu tylko wymagania z ograniczeń sklepu i skarg.
+Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pierwszego uruchomienia w limicie dni limitu w miesiącu kalendarzowym; Pro (subskrypcja odnawiana miesięczna albo roczna, bez oferty wprowadzającej, albo zakup dożywotni) znosi limit. Produkty, ceny i wymagania KP-01–KP-15: kontrakt płatności `docs/monetyzacja.md`, „Sesja 3, E3”; obowiązują razem z BR-ZAK. Reguła liczenia dni limitu: `docs/monetyzacja/limit.mjs` i wektory L w `docs/monetyzacja/wektory-limitu.json` (rola 02); BRD odsyła do nich i ich nie kopiuje (P-059).
+
+**Dzień limitu** (pojęcie z kontraktu, P-059): dzień, w którym strażnik limitu zapisał start pracy pierwszym +1 albo ręcznym wpisaniem numeru rzędu (D4 w P-057), z wyjątkiem pracy w toku (D3: +1 bez przerwy ≥ 60 min). To inne pojęcie niż **dzień z robótką** w kalendarzu i statystykach (BR-DNI-001, RD-15, RD-16): cofnięcie nie zwraca dnia limitu (L-06), wpisanie zużywa dzień limitu (D4), a praca od 23:40 do 00:10 to jeden dzień limitu i dwa dni z robótką (L-04, RD-16); w dniach brzegowych liczby mogą się różnić.
 
 ### BR-ZAK-001: Przywrócenie zakupu
 - Przepływ: PR-09
-- Dowód potrzeby: OG-02; „it’s prompting me to pay again after I updated” (Easy Knitty, id12782448883); 14 z 156 w próbce Easy Knitty. Inne urządzenie i rodzina (ER-06, 2026-10-22): „don’t want to pay twice to be able to work on a brioche pattern” (iPhone → iPad, Knitting Chart, id6190888819); „It’s a bit frustrating to find each family member must make the in app purchase individually.” (Knitting Chart, id4968890433). Na nowym urządzeniu transakcje są dostępne od pierwszego uruchomienia [FAKT S-33]; zwrot i odebranie z Family Sharing mają datę w transakcji [FAKT S-34]; Family Sharing działa dla zakupów nieodnawialnych i jest nieodwracalne [FAKT S-35]
+- Dowód potrzeby: OG-02, OG-03 (subskrypcja na wszystkich urządzeniach, ER-26); „it’s prompting me to pay again after I updated” (Easy Knitty, id12782448883); 14 z 156 w próbce Easy Knitty. Inne urządzenie i rodzina (ER-06, 2026-10-22): „don’t want to pay twice to be able to work on a brioche pattern” (iPhone → iPad, Knitting Chart, id6190888819); „It’s a bit frustrating to find each family member must make the in app purchase individually.” (Knitting Chart, id4968890433). Na nowym urządzeniu transakcje są dostępne od pierwszego uruchomienia [FAKT S-33]; zwrot i odebranie z Family Sharing mają datę w transakcji [FAKT S-34]; Family Sharing działa dla zakupów nieodnawialnych i jest nieodwracalne [FAKT S-35]
 - Kryteria akceptacji:
   - Scenariusz: Reinstalacja
-    - Zakładając, że użytkownik kupił wersję płatną i przeinstalował aplikację
+    - Zakładając, że użytkownik kupił Pro (subskrypcję albo dożywotni) i przeinstalował aplikację
     - Gdy wybiera przywrócenie zakupów
-    - Wtedy ma wersję płatną bez ponownej opłaty, a jego dane z kopii albo synchronizacji są na miejscu
+    - Wtedy ma Pro bez limitu dni i bez ponownej opłaty, a jego dane z kopii albo synchronizacji są na miejscu
   - Scenariusz: Brak sieci
-    - Zakładając, że użytkownik ma wersję płatną, a telefon jest bez sieci
-    - Gdy otwiera aplikację
-    - Wtedy funkcje płatne działają
+    - Zakładając, że użytkownik ma Pro, a telefon jest bez sieci
+    - Gdy zaczyna nowy dzień pierwszym dodanym rzędem
+    - Wtedy rząd zostaje dodany bez blokady limitu (KP-06, L-13)
   - Scenariusz: iPad z tym samym kontem Apple
-    - Zakładając, że użytkownik kupił wersję płatną na iPhonie
+    - Zakładając, że użytkownik kupił Pro na iPhonie (subskrypcję albo dożywotni)
     - Gdy instaluje Oczko na iPadzie z tym samym kontem Apple i otwiera aplikację
-    - Wtedy iPad pokazuje wersję płatną bez ponownej opłaty, także zanim użytkownik wybierze przywrócenie zakupów
+    - Wtedy iPad pokazuje Pro bez ponownej opłaty (subskrypcja: OG-03), także zanim użytkownik wybierze przywrócenie zakupów
   - Scenariusz: Zegarek bez telefonu w pobliżu (jeśli zegarek jest w wydaniu)
-    - Zakładając, że telefon potwierdził wersję płatną, a na zegarku jest Oczko
-    - Gdy użytkownik dodaje rząd funkcją płatną na zegarku, a telefonu nie ma w zasięgu
-    - Wtedy funkcja płatna na zegarku działa (P-039; sposób odczytu na zegarku: OP-22)
+    - Zakładając, że telefon potwierdził Pro, darmowe dni w miesiącu się skończyły, a na zegarku jest Oczko
+    - Gdy użytkownik zaczyna nowy dzień pierwszym dodanym rzędem na zegarku, a telefonu nie ma w zasięgu
+    - Wtedy rząd zostaje dodany bez blokady limitu (P-039; sposób odczytu na zegarku: OP-22)
   - Scenariusz: Członek rodziny w Family Sharing
-    - Zakładając, że dla produktu płatnego włączono Family Sharing (P-038), a członek rodziny nic nie kupował
+    - Zakładając, że dla produktów Pro włączono Family Sharing (P-038, P-057 D6), a członek rodziny nic nie kupował
     - Gdy członek rodziny otwiera Oczko na swoim urządzeniu
-    - Wtedy ma wersję płatną bez opłaty
+    - Wtedy ma Pro bez limitu dni i bez opłaty
   - Scenariusz: Odebranie z Family Sharing
-    - Zakładając, że członek rodziny miał wersję płatną z Family Sharing i utworzył dane funkcjami płatnymi
+    - Zakładając, że członek rodziny miał Pro z Family Sharing i ma projekty z historią
     - Gdy zakup przestaje być mu udostępniany i sklep podaje datę odebrania
-    - Wtedy członek rodziny traci funkcje płatne, a jego dane zostają widoczne i w eksporcie, funkcje płatne tylko do odczytu (KP-02 w `docs/monetyzacja.md`)
+    - Wtedy członek rodziny wraca do limitu dni (BR-ZAK-007), a jego projekty, historia i eksport zostają dostępne (KP-02 w `docs/monetyzacja.md`)
 
 ### BR-ZAK-002: Bez reklam i śledzenia
 - Przepływ: PR-09
 - Dowód potrzeby: ZP-03; „There are ADs even if you pay for the full version” (Easy Knitty, id10578656875); NFR-PRY-001
 - Kryteria akceptacji:
-  - Scenariusz: Wersja darmowa
-    - Zakładając, że użytkownik nie kupił wersji płatnej
+  - Scenariusz: Bez Pro
+    - Zakładając, że użytkownik nie ma Pro
     - Gdy korzysta z aplikacji
     - Wtedy nie widzi żadnej reklamy, a aplikacja nie łączy się z siecią reklamową ani analityczną
 
-### BR-ZAK-003: Opłacona funkcja nie znika
+### BR-ZAK-003: Aktualizacja nie zabiera Pro ani darmowego limitu
 - Przepływ: PR-09
-- Dowód potrzeby: H-02; usunięcie opłaconej funkcji „Smart Pattern” (Loopsy, id14598505817); funkcje przeniesione za paywall (My Row Counter 18 z 917) · zależy od: ZAL-018 · rozszerza: KP-01 (funkcja darmowa nie staje się płatna)
+- Dowód potrzeby: H-02; usunięcie opłaconej funkcji „Smart Pattern” (Loopsy, id14598505817); funkcje przeniesione za paywall (My Row Counter 18 z 917) · zależy od: ZAL-018, ZAL-025 · rozszerza: KP-01 (darmowy limit raz wydany tylko się luzuje; nic darmowego nie przechodzi za zaporę) · ER-26
 - Kryteria akceptacji:
-  - Scenariusz: Aktualizacja w okresie zakupu
-    - Zakładając, że użytkownik kupił dostęp do funkcji
+  - Scenariusz: Aktualizacja w okresie Pro
+    - Zakładając, że użytkownik ma Pro
     - Gdy instaluje nową wersję aplikacji
-    - Wtedy funkcja jest dostępna i działa na jego danych
+    - Wtedy ma Pro bez limitu dni, a każda funkcja działa na jego danych
+  - Scenariusz: Aktualizacja bez Pro
+    - Zakładając, że poprzednia wersja dawała 5 darmowych dni limitu w miesiącu (P-057 D2) i całą aplikację w tych dniach
+    - Gdy użytkownik bez Pro instaluje nową wersję
+    - Wtedy limit wynosi co najmniej 5 dni w miesiącu, a każda funkcja dostępna wcześniej bez Pro jest dostępna bez Pro (KP-01)
 
 ### BR-ZAK-004: Polityka prywatności w aplikacji
 - Przepływ: PR-09
@@ -215,3 +221,90 @@ Model i ceny: P-029 (2026-10-22): darmowy rdzeń i jedno odblokowanie Pro, zakup
     - Zakładając, że aplikacja jest otwarta
     - Gdy użytkownik otwiera ustawienia
     - Wtedy widzi odnośnik do polityki prywatności, który ją otwiera
+
+### BR-ZAK-005: Limit dni i strażnik startu dnia
+- Przepływ: PR-02, PR-09
+- Dowód potrzeby: decyzja właściciela P-057 (D2–D5: limit 5 dni limitu w miesiącu kalendarzowym, przerwa 60 min, wpisanie jak +1, liczą się tylko dni bez Pro) i P-053 („rozpoczęta jednostka pracy zawsze do końca”); kontrakt płatności KP-12, KP-15; reguła i wektory L-01–L-15: `docs/monetyzacja/limit.mjs`, `docs/monetyzacja/wektory-limitu.json` (rola 02, P-059) · ER-26
+- Strażnik wołany tylko przy pierwszym +1 nowego dnia limitu i przy ręcznym wpisaniu numeru rzędu (KP-12, D4); zerowanie, −1, liczniki inne niż rzędów, zegarek i ekran blokady: [DO WYJAŚNIENIA] (OP-32)
+- Kryteria akceptacji:
+  - Scenariusz: Pierwszy dzień miesiąca (L-01)
+    - Zakładając, że jest 1 listopada, a w listopadzie nie ma dni limitu i użytkownik nie ma Pro
+    - Gdy dodaje pierwszy rząd
+    - Wtedy rząd zostaje dodany, a w listopadzie zostały 4 z 5 darmowych dni
+  - Scenariusz: Rozpoczęty dzień do końca (L-02)
+    - Zakładając, że użytkownik zużył 5 z 5 dni, a dzisiejszy dzień jest jednym z nich
+    - Gdy dodaje rząd w innym projekcie
+    - Wtedy rząd zostaje dodany, a liczba dni limitu się nie zmienia
+  - Scenariusz: Praca po północy (L-04, L-04b)
+    - Zakładając, że użytkownik zużył 5 z 5 dni i dodał rząd o 23:50
+    - Gdy dodaje kolejny rząd o 00:00 po 10 minutach
+    - Wtedy rząd zostaje dodany jako praca w toku, bez nowego dnia limitu
+    - Ale gdy przerwa przed rzędem po północy trwa 61 minut, rząd nie zostaje dodany, a aplikacja pokazuje komunikat na limicie (BR-ZAK-006)
+  - Scenariusz: Nowy dzień ponad limit (L-03)
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni w listopadzie, a dziś jest 8 listopada
+    - Gdy dodaje pierwszy rząd
+    - Wtedy rząd nie zostaje dodany, licznik pokazuje poprzednią wartość, a aplikacja pokazuje komunikat na limicie (BR-ZAK-006)
+  - Scenariusz: Ręczne wpisanie w nowym dniu ponad limit (L-08)
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni, a dziś nie dodał jeszcze rzędu
+    - Gdy wpisuje numer rzędu ręcznie (BR-LIC-017)
+    - Wtedy wartość nie zostaje zapisana, a aplikacja pokazuje komunikat na limicie
+  - Scenariusz: Cofnięcie nie zwraca dnia (L-06)
+    - Zakładając, że użytkownik dziś dodał rząd i zużył nim dzień limitu
+    - Gdy cofa ten rząd z historii
+    - Wtedy liczba dni limitu się nie zmienia
+  - Scenariusz: Dane bez limitu (L-07)
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni
+    - Gdy dopisuje dzień wstecz, poprawia historię albo notatkę, eksportuje dane albo otwiera kalkulator
+    - Wtedy zmiana zostaje zapisana, a liczba dni limitu się nie zmienia
+  - Scenariusz: Nowy miesiąc (L-05)
+    - Zakładając, że w październiku użytkownik zużył 5 z 5 dni
+    - Gdy 1 listopada dodaje pierwszy rząd
+    - Wtedy rząd zostaje dodany, a w listopadzie zostały 4 z 5 darmowych dni
+  - Scenariusz: Pro (L-10)
+    - Zakładając, że użytkownik ma Pro, a darmowe dni w miesiącu się skończyły
+    - Gdy zaczyna nowy dzień pierwszym rzędem
+    - Wtedy rząd zostaje dodany, a dzień trafia do kalendarza (BR-DNI-001) bez blokady
+  - Scenariusz: Ten sam dzień na dwóch urządzeniach (L-11)
+    - Zakładając, że użytkownik dodał dziś rząd na zegarku, a dane zsynchronizowały się z iPhonem
+    - Gdy dodaje rząd na iPhonie
+    - Wtedy to wciąż jeden dzień limitu
+  - Scenariusz: Zegar z przyszłości (L-15)
+    - Zakładając, że ostatni zapisany rząd ma czas późniejszy niż bieżący czas telefonu, a użytkownik bez Pro zużył 5 z 5 dni
+    - Gdy dodaje pierwszy rząd nowego dnia
+    - Wtedy aplikacja nie traktuje tego jako pracy w toku i pokazuje komunikat na limicie
+
+### BR-ZAK-006: Komunikat na limicie i miejsca ekranu zakupu
+- Przepływ: PR-09, PR-02
+- Dowód potrzeby: P-055 i P-057 (ekran zakupu tylko przy starcie ponad limit i w Ustawieniach, bez arkusza zakupu na starcie); KP-03, KP-13, KP-14 i ujawnienia (5), (6) w `docs/monetyzacja.md`, „Sesja 3, E3”; NFR-PIE-001 · ER-26
+- Teksty, miejsce licznika dni i wygląd ustala rola 04 (KP-13, P-046)
+- Kryteria akceptacji:
+  - Scenariusz: Komunikat przy starcie dnia ponad limit
+    - Zakładając, że strażnik nie pozwolił zacząć nowego dnia (BR-ZAK-005)
+    - Gdy aplikacja pokazuje komunikat
+    - Wtedy komunikat mówi, że darmowe dni w tym miesiącu się skończyły i że wracają 1. dnia następnego miesiąca, pokazuje Pro z ceną ze sklepu i mówi, że projekty, historia i eksport działają dalej
+    - Oraz po zamknięciu komunikatu użytkownik widzi licznik z niezmienioną wartością
+  - Scenariusz: Bez oferty w trakcie pracy
+    - Zakładając, że użytkownik ma darmowe dni albo pracuje w rozpoczętym dniu
+    - Gdy liczy rzędy, otwiera projekty, wzór i kalendarz
+    - Wtedy nie widzi ekranu zakupu ani oferty Pro; ekran zakupu otwiera tylko z Ustawień
+  - Scenariusz: Licznik dni
+    - Zakładając, że użytkownik bez Pro zużył 2 z 5 dni w miesiącu
+    - Gdy patrzy na licznik dni w miejscu ustalonym przez rolę 04
+    - Wtedy widzi, że zostały 3 z 5 darmowych dni w tym miesiącu
+  - Scenariusz: Aktywna subskrypcja
+    - Zakładając, że użytkownik ma aktywną subskrypcję Pro
+    - Gdy otwiera Ustawienia
+    - Wtedy widzi stan Pro i „Zarządzaj subskrypcją”, które otwiera systemowe zarządzanie subskrypcją (KP-14), a ekran zakupu nie oferuje tej samej subskrypcji (KP-03)
+
+### BR-ZAK-007: Utrata Pro
+- Przepływ: PR-09
+- Dowód potrzeby: KP-02 (utrata Pro: wraca limit dni; dane, historia, eksport i kopia zawsze dostępne); P-057 D5 (liczą się tylko dni bez Pro); ZAL-018 · ER-26
+- Kryteria akceptacji:
+  - Scenariusz: Wygaśnięcie w trakcie miesiąca (L-09)
+    - Zakładając, że Pro wygasło 20 listopada, a w listopadzie użytkownik miał 10 dni limitu z Pro i 2 bez Pro
+    - Gdy 21 listopada dodaje pierwszy rząd
+    - Wtedy rząd zostaje dodany, a w listopadzie zostały 2 z 5 darmowych dni
+  - Scenariusz: Dane po utracie Pro
+    - Zakładając, że subskrypcja wygasła albo sklep zwrócił zakup, a użytkownik ma projekty z historią
+    - Gdy otwiera projekty, historię i eksport
+    - Wtedy wszystkie są dostępne i pełne, a synchronizacja iCloud działa dalej (P-054)

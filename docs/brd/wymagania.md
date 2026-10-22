@@ -37,8 +37,8 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 - Kroki: włącza synchronizację iCloud (opcjonalnie); na drugim urządzeniu widzi te same projekty; przy zmianie telefonu odtwarza dane z kopii urządzenia albo z pliku eksportu; po aktualizacji aplikacji zastaje wszystkie dane.
 - Kontekst: wolne ręce; synchronizacja wymaga sieci (OG-09).
 ### PR-09: Zakup i przywrócenie zakupu
-- Kto: każdy płacący. Praca: J-07. Częstość: zakup raz; przywrócenie przy nowym urządzeniu.
-- Kroki: kupuje wersję płatną; na nowym urządzeniu albo po reinstalacji przywraca zakup; na iPadzie i zegarku z tym samym kontem oraz jako członek rodziny (Family Sharing, P-038) ma wersję płatną bez ponownej opłaty; korzysta bez reklam.
+- Kto: każdy użytkownik bez Pro na limicie i każdy płacący. Praca: J-07. Częstość: komunikat na limicie najwyżej przy starcie dnia; zakup raz albo co okres subskrypcji; przywrócenie przy nowym urządzeniu (P-057, ER-26).
+- Kroki: liczy w darmowych dniach limitu; przy starcie dnia ponad limit widzi komunikat z liczbą dni i Pro; kupuje subskrypcję (miesięczną, roczną) albo dożywotni, albo czeka do nowego miesiąca; na nowym urządzeniu albo po reinstalacji przywraca zakup; na iPadzie i zegarku z tym samym kontem oraz jako członek rodziny (Family Sharing, P-038) ma Pro bez ponownej opłaty; zarządza subskrypcją w Ustawieniach; po utracie Pro wraca do limitu z pełnymi danymi; korzysta bez reklam.
 - Kontekst: wolne ręce, sieć.
 ### PR-10: Zapas włóczki
 - Kto: P-4. Praca: J-08. Częstość: zakupy, start i koniec projektu.
