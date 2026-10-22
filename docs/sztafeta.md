@@ -16,11 +16,11 @@
 | 01 Odkrywanie, fix ER-29 | fix (P-065) | zakończona 2026-10-22 (STOP E2 przyjęty, P-066): ER-29 naprawione-do-weryfikacji, **warunkowe** do potwierdzenia przez 02 | 3d64639 | BR-ZAK-006, BR-ZAK-005, errata ER-29; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er29/` | potwierdzenie P-065 (1a) przez 02 |
 | 02 Monetyzacja, fix NZ-01, NZ-02, P-065 | fix (P-060 (5b), P-065) | zakończona 2026-10-22 (E0: P-067, E2: P-068): naprawione-do-weryfikacji; P-065 (1a) potwierdzone, warunek P-066 spełniony | 90b2272 | `limit.mjs` (`wolaStraznika`, `mozeZaczacDzien`), wektory S, L-16–L-18, Z (35/35), KP-12, KP-13, KP-15; oczko-warsztat `02-monetyzacja/2026-10-22-fix-nz/` | ER-30 do 01 |
 | 01 Odkrywanie, fix ER-30 | fix (P-068) | zakończona 2026-10-22 (STOP E2 przyjęty, P-069): ER-30 naprawione-do-weryfikacji | 28a488b | BR-ZAK-005, BR-ZAK-006, BR-LIC-017, OP-32 zamknięte, errata; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er30/` | — |
-| 05 Architekt | build | **w toku: STOP E0** (2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/; ZAL-030 | Q1 minimalny iOS (OP-26), Q2 dane wersji 0.1.0, Q3 +1 z ekranu blokady (ZAL-030) |
+| 05 Architekt | build | **w toku: E1** (STOP E0 przyjęty P-070, 2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/; ZAL-030 | P-070: iOS 18, czysty start bez migracji 0.1.0, +1 z ekranu blokady z ryzykiem szczątkowym |
 
 ## Następny krok
 ### Stan roli 05 (2026-10-22, STOP E0)
-- 05-architekt, build: E0 gotowe (`docs/architektura/e0-rozpoznanie.md`); czeka na odpowiedź właściciela na Q1–Q3; potem E1 (15 ADR, eksperymenty) w tej samej albo nowej sesji: prompt `oczko-warsztat/05-architekt/2026-10-22-build/05-build-prompt-2026-10-22.md`.
+- 05-architekt, build: E0 gotowe (`docs/architektura/e0-rozpoznanie.md`); Q1–Q3 rozstrzygnięte (P-070); w toku E1 (15 ADR, eksperymenty) w tej samej albo nowej sesji: prompt `oczko-warsztat/05-architekt/2026-10-22-build/05-build-prompt-2026-10-22.md`.
 
 ### Stan po fixie roli 02 (2026-10-22)
 - Zakończono (STOP E2): 02-monetyzacja, fix NZ-01, NZ-02, P-065 (P-067); P-065 (1a) potwierdzone, więc P-066 (BR-ZAK-006) obowiązuje bez warunku. Dowody: `oczko-warsztat/02-monetyzacja/2026-10-22-fix-nz/E2-dowody.md`.

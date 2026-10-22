@@ -8,7 +8,7 @@ Aplikacja dla osób, które dziergają na drutach i szydełkują; w przebudowie 
 - Porównanie z istniejącym kodem to osobny krok po roli 07; dopiero on i role 05, 08, 12 sięgają do `archiwum/stara-wersja/`.
 
 ## Stan projektu (aktualizacja: 2026-10-21)
-- Etap: w budowie (przebudowa); poprzednia wersja 0.1.0 tylko w TestFlight (build 1004), dane użytkowników: [DO USTALENIA] (prawdopodobnie tylko właściciel)
+- Etap: w budowie (przebudowa); poprzednia wersja 0.1.0 tylko w TestFlight (build 1004), dane użytkowników: tylko właściciel (P-070, czysty start bez migracji 0.1.0)
 - Sklep (App Store Connect): częściowo (rekord aplikacji i TestFlight; umowa Paid Apps i produkty: [DO USTALENIA])
 - Rynek główny: globalny, 35 lokalizacji jak Trening; kolejność storefrontów wyznacza bramka 02 · repo treści prywatnych: `lkarwowski494/oczko-warsztat` (prywatne, zapis prosto na `main`, P-010)
 - Standard marki: wysoki (zasady biblioteki); opłacalność obu pokazuje rola 02
@@ -33,7 +33,7 @@ Expo SDK 57, React Native, TypeScript, expo-sqlite (stan poprzedniej wersji); de
 ## Zasady
 - Repo publiczne: żadnych sekretów, kluczy, `.env`, danych osobowych; przed commitem `git diff --cached`.
 - Koszt stały 0 zł poza opłatą Apple Developer; CI na GitHub Actions (repo publiczne).
-- Zero utraty danych: migracja w transakcji, test na kopii bazy poprzedniej wersji.
+- Zero utraty danych: migracja w transakcji, test na kopii bazy poprzedniej wersji (wyjątek nazwany P-070: dane 0.1.0 bez migracji, stary plik nietknięty).
 - Testy przed kodem; wygląd tylko z systemu w `docs/design/`.
 - Gałąź robocza przebudowy: `claude/jolly-thompson-paz6d8`; scalenie z `main` tylko za zgodą właściciela.
 - Hierarchia źródeł: rachunek → normy (CYC, ISO) → podręczniki → organizacje → przewodniki → fora tylko jako wskazówka (P-017, rola 01 E0).

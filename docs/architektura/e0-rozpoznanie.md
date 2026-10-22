@@ -1,4 +1,4 @@
-# E0 Rozpoznanie (rola 05-architekt, build) · 2026-10-22 · STOP E0
+# E0 Rozpoznanie (rola 05-architekt, build) · 2026-10-22 · STOP E0 przyjęty (P-070: Q1 a, Q2 c, Q3 a)
 Prompt: `prompts` @97ec212, `node tools/assemble.mjs 05-architekt --tryb build` (kopia: `oczko-warsztat/05-architekt/2026-10-22-build/05-build-prompt-2026-10-22.md`). Wejście: `docs/scope-contract.md` (P-052), `docs/design/design-spec.md` (04 E4), BRD `docs/brd/wymagania.md` (NFR), `docs/monetyzacja.md` (V4, P-057–P-068), `docs/decyzje.md` do P-069.
 
 ## 1. Środowisko (ETAP 0)
