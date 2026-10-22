@@ -1,5 +1,5 @@
 # Przepływy i wymagania niefunkcjonalne
-Stan: STOP E3 · Aktualizacja: 2026-10-21 · Wymagania funkcjonalne według modułów: `wymagania-licznik.md` (LIC), `wymagania-projekt.md` (PRJ, WZR), `wymagania-dane.md` (DAN, ZAK), `wymagania-narzedzia.md` (ZAP, KAL, SLO).
+Stan: STOP E3 · Aktualizacja: 2026-10-21; fix ER-09–ER-24: 2026-10-22 · Wymagania funkcjonalne według modułów: `wymagania-licznik.md` (LIC), `wymagania-projekt.md` (PRJ, WZR), `wymagania-dane.md` (DAN, ZAK), `wymagania-narzedzia.md` (ZAP, KAL, SLO).
 
 Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. Kolejność i cięcie należą do roli 03 (H-04, H-05). Ekrany projektuje rola 04; „ekran licznika” i podobne nazwy oznaczają miejsce w przepływie, nie układ.
 
@@ -73,11 +73,11 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 ### NFR-DAN-003: Synchronizacja nie zmienia liczby bez wiedzy użytkownika
 - Miara: liczba przypadków, w których po synchronizacji licznik ma wartość inną niż ostatnia ustawiona na którymkolwiek urządzeniu, bez pokazania konfliktu.
 - Próg: 0 (RYZ-02).
-- Metoda: test konfliktów na dwóch urządzeniach i zegarku, z przerwaną siecią (rola 12).
+- Metoda: test automatyczny konfliktów: dwie instancje magazynu i zegarek z symulowanym transportem (opóźnienie, przerwana sieć, odwrócona kolejność), rola 12 i 07. Ryzyko szczątkowe (P-041, ER-10): zachowanie iCloud między prawdziwymi urządzeniami.
 ### NFR-OFF-001: Działanie bez sieci
 - Miara: odsetek przepływów PR-01–PR-07, PR-10–PR-12, PR-14 wykonanych w trybie samolotowym.
 - Próg: 100% (`docs/pomysl.md`; P-021).
-- Metoda: test ręczny i automatyczny w trybie samolotowym.
+- Metoda: testy automatyczne (jednostkowe i UI w symulatorze) każdego przepływu z adapterem sieci w stanie „brak połączenia” (rola 07). Ryzyko szczątkowe (P-041, ER-10): zachowanie systemu w prawdziwym trybie samolotowym.
 ### NFR-PRY-001: Brak zbierania danych
 - Miara: kategorie danych w etykiecie App Privacy i lista SDK.
 - Próg: „Data Not Collected”, zero SDK reklamowych i analitycznych (ZP-03).
@@ -85,7 +85,7 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 ### NFR-DOS-001: VoiceOver w głównych przepływach
 - Miara: odsetek elementów sterujących PR-01–PR-05 z etykietą i akcją VoiceOver.
 - Próg: 100% (ZP-04; popyt: VoiceOver w Crochet and Knit Counter).
-- Metoda: audyt VoiceOver na urządzeniu (rola 04 ustala pozostałe podłogi dostępności).
+- Metoda: automatyczny audyt dostępności w testach UI na ekranach PR-01–PR-05 (`performAccessibilityAudit`, iOS 17.0+, typy m.in. `sufficientElementDescription` i `action` [FAKT S-36]) oraz test, że każdy element sterujący ma etykietę i akcję (rola 07); rola 04 ustala pozostałe podłogi dostępności. Ryzyko szczątkowe (P-041, ER-10): odbiór przez osobę używającą VoiceOver.
 ### NFR-DOS-002: Duży tekst
 - Miara: obcięty albo nakładający się tekst na ekranach PR-01–PR-06 przy największym rozmiarze tekstu.
 - Próg: [DO USTALENIA] (OP-16), podłogę ustala rola 04.
@@ -93,11 +93,11 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 ### NFR-WYD-001: Reakcja licznika
 - Miara: czas od dotknięcia do pokazania nowej wartości.
 - Próg: [DO USTALENIA] (OP-17), budżet ustala rola 05.
-- Metoda: pomiar na najstarszym obsługiwanym iPhonie.
+- Metoda: pomiar automatyczny w teście UI w CI (czas od zdarzenia dotknięcia do nowej wartości na ekranie), symulator najstarszego obsługiwanego iPhone’a (rola 05 i 07). Ryzyko szczątkowe (P-041, ER-10): symulator nie odwzorowuje szybkości urządzenia, więc budżet ma zapas ustalony przez 05.
 ### NFR-ZEG-001: Zgodność zegarka i telefonu
 - Miara: różnica wartości licznika między zegarkiem a telefonem po serii zmian na obu urządzeniach.
 - Próg: 0 po zakończeniu synchronizacji (skargi: YarnBuddy 17 z 301).
-- Metoda: test na parze urządzeń, także przy telefonie poza zasięgiem.
+- Metoda: test automatyczny logiki synchronizacji z symulowanym transportem (telefon poza zasięgiem, powrót, zmiany na obu stronach) i test UI na parze symulatorów telefon–zegarek, jeśli CI na to pozwala (rola 05 i 07). Ryzyko szczątkowe (P-041, ER-10): prawdziwy zegarek poza zasięgiem telefonu.
 ### NFR-JEZ-001: 35 lokalizacji
 - Miara: odsetek tekstów interfejsu przetłumaczonych w każdej z 35 lokalizacji.
 - Próg: 100% przed wydaniem w danym sklepie (D-026; P-009).

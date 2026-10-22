@@ -12,7 +12,7 @@ Stan: rola 01, tryb fix ER-09–ER-24 (2026-10-22, P-045, P-047) · Prośby o zm
 | ER-07 | H-06 „żadna nie ma dowodu zakupu” przeczy macierzy; knitCompanion „wzór PDF” bez $ | 02 | naprawione-do-weryfikacji (2026-10-22); rozstrzygnięte źródłem (listing knitCompanion, macierz) | H-06 „Dowód zakupu” i „Przeciw”; macierz w `oczko-warsztat` (przypis 17) |
 | ER-08 | BRD opisuje trzy produkty P-019 po P-029 | 02 | naprawione-do-weryfikacji (2026-10-22) | OG-03, H-01, H-02 (status), README, wstęp ZAK i BR-ZAK-003 z odsyłaczem do KP-01–KP-05 |
 | ER-09 | Tabela rynku w `odkrywanie.md` („wzór PDF i znacznik miejsca / 9”) nie zgadza się z macierzą: wzór PDF 10 z 14, znacznik 8 z 14, oba 8 | 01 (fix ER-06–ER-08, 2026-10-22) | naprawione-do-weryfikacji (2026-10-22); liczby policzone skryptem z macierzy `oczko-warsztat/01-odkrywanie/soczewki/konkurencja.md` | `odkrywanie.md` tabela rynku: wzór PDF 10, znacznik 8 (oba 8); BR-WZR-001 „10 z 14” |
-| ER-10 | metody NFR zakładają test ręczny albo urządzenie; po P-041 tylko automat | 03 (P-045) | otwarte | — |
+| ER-10 | metody NFR zakładają test ręczny albo urządzenie; po P-041 tylko automat | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | metody NFR-DAN-003, NFR-OFF-001, NFR-DOS-001, NFR-WYD-001, NFR-ZEG-001 automatyczne z ryzykiem szczątkowym (P-041); S-36 |
 | ER-11 | brak BR i RD dla kalendarza i postępu K-1–K-5 (P-043); prefiks `KAL` zajęty | 03 (P-045) | otwarte | — |
 | ER-12 | brak BR dla I-1, I-2, I-3, I-4, I-6, I-7, I-9 (P-044, P-046) | 03 (P-045) | otwarte | — |
 | ER-13 | brak wpisania wartości licznika, zerowania i przeniesienia trwającej robótki | 03 (P-045) | otwarte | — |
