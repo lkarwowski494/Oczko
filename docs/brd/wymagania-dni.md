@@ -87,3 +87,34 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając, że projekt nie ma terminu
     - Gdy użytkownik liczy rzędy
     - Wtedy ekran licznika nie pokazuje celu dziennego ani elementów kalendarza (P-046)
+
+### BR-DNI-006: Który projekt dziś: kolejność według terminu
+- Przepływ: PR-16 · Reguła: RD-15
+- Dowód potrzeby: J-11, J-02; „進捗を参照して隙間時間をどう使うか配分したい” (編み物カウンター２, id12060415068); kilka projektów naraz (P-2) · ER-12 (I-3, P-044); jako kolejność listy projektów, nie osobny ekran (P-046)
+- Kryteria akceptacji:
+  - Scenariusz: Projekty z terminem na górze
+    - Zakładając, że „Czapka” ma cel na dziś 20 rzędów, „Szal” 8 rzędów, a „Sweter” nie ma terminu
+    - Gdy użytkownik otwiera listę projektów w toku
+    - Wtedy kolejność to „Czapka”, „Szal”, „Sweter”, a przy projektach z terminem widać cel na dziś
+  - Scenariusz: Termin minął
+    - Zakładając, że termin „Szala” minął, a zostało 10 rzędów
+    - Gdy użytkownik otwiera listę
+    - Wtedy „Szal” stoi na górze z informacją „termin minął, zostało 10 rzędów” (RD-15-W4)
+  - Scenariusz: Bez terminów
+    - Zakładając, że żaden projekt nie ma terminu
+    - Gdy użytkownik otwiera listę
+    - Wtedy kolejność jest według ostatniej pracy (BR-PRJ-012)
+
+### BR-DNI-007: Zdążę? przed startem projektu
+- Status w zakresie: PÓŹNIEJ (P-046; powrót w wersji 1.1, gdy użytkownicy mają ukończone projekty z historią tempa); wymaganie zostaje na liście, cięcie należy do roli 03
+- Przepływ: PR-16 · Reguła: RD-18
+- Dowód potrzeby: J-11; termin projektu (BR-DNI-005); szacunek tylko w trakcie u CozyKnit (opis, S-17) · ER-12 (I-4, P-044)
+- Kryteria akceptacji:
+  - Scenariusz: Szacunek z historii
+    - Zakładając ukończone projekty: 600 rzędów w 20 godzin, średnio 1 godzina dziennie, a nowy projekt ma 320 rzędów
+    - Gdy użytkownik pyta „zdążę?” przy ustawianiu terminu
+    - Wtedy widzi około 10,7 godziny i 11 dni, oznaczone jako szacunek z własnego tempa (RD-18-W1)
+  - Scenariusz: Pierwszy projekt
+    - Zakładając, że użytkownik nie ma ukończonych projektów ze stoperem
+    - Gdy pyta „zdążę?”
+    - Wtedy aplikacja pokazuje, że szacunek będzie po pierwszym ukończonym projekcie ze stoperem, bez liczby (RD-18-W3)

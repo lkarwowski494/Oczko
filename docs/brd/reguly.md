@@ -263,3 +263,36 @@ Zasady wspólne reguł:
 | RD-16-W4 | 2026-10-22T21:59:59Z | Europe/Warsaw | 2026-10-22 | 0 | poniżej | rachunek: 23:59:59 lokalnie |
 | RD-16-W5 | 2026-10-22T22:00:01Z | Europe/Warsaw | 2026-10-23 | 0 | powyżej | rachunek: 00:00:01 lokalnie |
 | RD-16-W6 | brak | Europe/Warsaw | błąd danych | — | błąd | rachunek: zmiana bez chwili |
+
+### RD-17: Strażnik stuknięć: seria dodań do sprawdzenia
+- Wzór: pytanie „Dodano n rzędów w t s. Cofnąć?” pojawia się, gdy w liczniku rzędów istnieją 3 kolejne dodania z `t_(i+2) − t_i ≤ T`; T = 2 s; seria obejmuje wszystkie dodania z odstępem ≤ T od poprzedniego
+- Jednostki: t [s]; T [s]; n [-]
+- Granica: `t_(i+2) − t_i = 2 s` wyzwala (włącznie)
+- Podstawa: rachunek; parametr T i próg 3 dodań z decyzji P-047 (parametr produktowy, ocena roli 01 do korekty po wydaniu); potrzeba J-01 (P-044, I-1); tylko liczniki rzędów, nie oczek (ER-24)
+- Krytyczna: nie
+
+| ID | chwile dodań [s] | Oczekiwane: pytanie [-] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|
+| RD-17-W1 | 0; 0,4; 0,8; 1,2; 1,6 | tak | — | typowy | rachunek: 0,8 − 0 ≤ 2 |
+| RD-17-W2 | 0; 1; 2 | tak | — | granica | rachunek: 2 − 0 = 2, włącznie |
+| RD-17-W3 | 0; 1; 2,01 | nie | — | powyżej | rachunek: 2,01 > 2 |
+| RD-17-W4 | 0; 0,5 | nie | — | poniżej | rachunek: tylko 2 dodania (nadrobienie zapomnianego rzędu) |
+| RD-17-W5 | 0; 60; 120 | nie | — | typowy | rachunek: zwykłe dzierganie |
+| RD-17-W6 | 0; 1; 0,5 | błąd danych | — | błąd | rachunek: chwile nie rosną |
+
+### RD-18: Szacunek „zdążę?” z własnego tempa
+- Wzór: `h = C × H / R`; `dni = ⌈h / h_d⌉`; R i H z ukończonych projektów z sesjami stopera; h_d = średni czas stopera na dzień z robótką
+- Jednostki: C, R [rz.]; H, h, h_d [h]; dni [dni]
+- Granica: R > 0 i H > 0 (ostre); bez historii brak szacunku
+- Podstawa: rachunek; potrzeba J-11 (P-044, I-4; w zakresie PÓŹNIEJ, P-046)
+- Krytyczna: nie
+- Uproszczenie: tempo z poprzednich projektów nie uwzględnia innej techniki, włóczki ani grubości drutów; wynik oznaczony jako szacunek.
+
+| ID | C [rz.] | R [rz.] | H [h] | h_d [h] | Oczekiwane: h [h] | Oczekiwane: dni [dni] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|---|
+| RD-18-W1 | 320 | 600 | 20 | 1 | 10,67 | 11 | 0,01 | typowy | rachunek: 320 × 20 / 600; ⌈10,67 / 1⌉ |
+| RD-18-W2 | 320 | 600 | 20 | 2 | 10,67 | 6 | 0,01 | typowy | rachunek: ⌈10,67 / 2⌉ |
+| RD-18-W3 | 320 | 0 | 0 | 0 | brak szacunku | brak szacunku | — | granica | rachunek: R = 0, pierwszy projekt |
+| RD-18-W4 | 320 | 600 | 0 | 0 | brak szacunku | brak szacunku | — | poniżej | rachunek: H = 0, brak sesji stopera |
+| RD-18-W5 | 100 | 100 | 10 | 1 | 10 | 10 | 0,01 | powyżej | rachunek: tempo 10 rz./h |
+| RD-18-W6 | -5 | 600 | 20 | 1 | błąd danych | błąd danych | — | błąd | rachunek: C < 0 |

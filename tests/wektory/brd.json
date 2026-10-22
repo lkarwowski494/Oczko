@@ -1395,5 +1395,197 @@
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: zmiana bez chwili",
     "miejsce": "docs/brd/reguly.md:265"
+  },
+  {
+    "regula": "RD-17",
+    "id": "RD-17-W1",
+    "wejscie": {
+      "chwile dodań [s]": "0; 0,4; 0,8; 1,2; 1,6"
+    },
+    "oczekiwane": {
+      "pytanie [-]": "tak"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 0,8 − 0 ≤ 2",
+    "miejsce": "docs/brd/reguly.md:276"
+  },
+  {
+    "regula": "RD-17",
+    "id": "RD-17-W2",
+    "wejscie": {
+      "chwile dodań [s]": "0; 1; 2"
+    },
+    "oczekiwane": {
+      "pytanie [-]": "tak"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: 2 − 0 = 2, włącznie",
+    "miejsce": "docs/brd/reguly.md:277"
+  },
+  {
+    "regula": "RD-17",
+    "id": "RD-17-W3",
+    "wejscie": {
+      "chwile dodań [s]": "0; 1; 2,01"
+    },
+    "oczekiwane": {
+      "pytanie [-]": "nie"
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: 2,01 > 2",
+    "miejsce": "docs/brd/reguly.md:278"
+  },
+  {
+    "regula": "RD-17",
+    "id": "RD-17-W4",
+    "wejscie": {
+      "chwile dodań [s]": "0; 0,5"
+    },
+    "oczekiwane": {
+      "pytanie [-]": "nie"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: tylko 2 dodania (nadrobienie zapomnianego rzędu)",
+    "miejsce": "docs/brd/reguly.md:279"
+  },
+  {
+    "regula": "RD-17",
+    "id": "RD-17-W5",
+    "wejscie": {
+      "chwile dodań [s]": "0; 60; 120"
+    },
+    "oczekiwane": {
+      "pytanie [-]": "nie"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: zwykłe dzierganie",
+    "miejsce": "docs/brd/reguly.md:280"
+  },
+  {
+    "regula": "RD-17",
+    "id": "RD-17-W6",
+    "wejscie": {
+      "chwile dodań [s]": "0; 1; 0,5"
+    },
+    "oczekiwane": {
+      "pytanie [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: chwile nie rosną",
+    "miejsce": "docs/brd/reguly.md:281"
+  },
+  {
+    "regula": "RD-18",
+    "id": "RD-18-W1",
+    "wejscie": {
+      "C [rz.]": 320,
+      "R [rz.]": 600,
+      "H [h]": 20,
+      "h_d [h]": 1
+    },
+    "oczekiwane": {
+      "h [h]": 10.67,
+      "dni [dni]": 11
+    },
+    "tolerancja": 0.01,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 320 × 20 / 600; ⌈10,67 / 1⌉",
+    "miejsce": "docs/brd/reguly.md:293"
+  },
+  {
+    "regula": "RD-18",
+    "id": "RD-18-W2",
+    "wejscie": {
+      "C [rz.]": 320,
+      "R [rz.]": 600,
+      "H [h]": 20,
+      "h_d [h]": 2
+    },
+    "oczekiwane": {
+      "h [h]": 10.67,
+      "dni [dni]": 6
+    },
+    "tolerancja": 0.01,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: ⌈10,67 / 2⌉",
+    "miejsce": "docs/brd/reguly.md:294"
+  },
+  {
+    "regula": "RD-18",
+    "id": "RD-18-W3",
+    "wejscie": {
+      "C [rz.]": 320,
+      "R [rz.]": 0,
+      "H [h]": 0,
+      "h_d [h]": 0
+    },
+    "oczekiwane": {
+      "h [h]": "brak szacunku",
+      "dni [dni]": "brak szacunku"
+    },
+    "tolerancja": null,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: R = 0, pierwszy projekt",
+    "miejsce": "docs/brd/reguly.md:295"
+  },
+  {
+    "regula": "RD-18",
+    "id": "RD-18-W4",
+    "wejscie": {
+      "C [rz.]": 320,
+      "R [rz.]": 600,
+      "H [h]": 0,
+      "h_d [h]": 0
+    },
+    "oczekiwane": {
+      "h [h]": "brak szacunku",
+      "dni [dni]": "brak szacunku"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: H = 0, brak sesji stopera",
+    "miejsce": "docs/brd/reguly.md:296"
+  },
+  {
+    "regula": "RD-18",
+    "id": "RD-18-W5",
+    "wejscie": {
+      "C [rz.]": 100,
+      "R [rz.]": 100,
+      "H [h]": 10,
+      "h_d [h]": 1
+    },
+    "oczekiwane": {
+      "h [h]": 10,
+      "dni [dni]": 10
+    },
+    "tolerancja": 0.01,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: tempo 10 rz./h",
+    "miejsce": "docs/brd/reguly.md:297"
+  },
+  {
+    "regula": "RD-18",
+    "id": "RD-18-W6",
+    "wejscie": {
+      "C [rz.]": -5,
+      "R [rz.]": 600,
+      "H [h]": 20,
+      "h_d [h]": 1
+    },
+    "oczekiwane": {
+      "h [h]": "błąd danych",
+      "dni [dni]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: C < 0",
+    "miejsce": "docs/brd/reguly.md:298"
   }
 ]

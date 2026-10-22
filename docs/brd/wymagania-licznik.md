@@ -254,3 +254,41 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że projekt „Sweter” ma osobne kawałki przód i rękaw lewy (BR-PRJ-001)
     - Gdy użytkownik dodaje rząd w rękawie
     - Wtedy licznik całości przodu się nie zmienia
+
+### BR-LIC-019: Strażnik stuknięć z tempa
+- Przepływ: PR-02 · Reguła: RD-17
+- Dowód potrzeby: J-01; „Sat on phone and added 100 plus rows and now all my stats are stuffed.” (Easy Knitty GB, id8099185238); „if you knocked the screen it added or deleted rows!” (My Row Counter GB, id6489533147); blokada (BR-LIC-004) chroni tylko, gdy użytkownik ją włączy · ER-12 (I-1, P-044)
+- Kryteria akceptacji:
+  - Scenariusz: Seria przypadkowych dodań
+    - Zakładając, że licznik rzędów ma 30
+    - Gdy w ciągu 1,6 s dochodzi 5 dodań (RD-17-W1)
+    - Wtedy licznik pokazuje 35, a aplikacja pyta „Dodano 5 rzędów w 1,6 s. Cofnąć?”; po wybraniu „Cofnij” licznik pokazuje 30, a historia ma cofniętą serię
+  - Scenariusz: Nadrobienie zapomnianego rzędu
+    - Zakładając, że licznik rzędów ma 30
+    - Gdy użytkownik świadomie dodaje 2 rzędy w 0,5 s (RD-17-W4)
+    - Wtedy licznik pokazuje 32 bez pytania
+  - Scenariusz: Licznik oczek (ER-24)
+    - Zakładając, że projekt ma licznik oczek
+    - Gdy użytkownik dodaje 5 oczek w 1,6 s
+    - Wtedy aplikacja nie pyta o cofnięcie, bo strażnik działa tylko na licznikach rzędów
+  - Scenariusz: Brak nowego elementu na ekranie
+    - Zakładając, że nie było serii dodań
+    - Gdy użytkownik liczy rzędy
+    - Wtedy ekran licznika nie pokazuje nic związanego ze strażnikiem (P-046)
+
+### BR-LIC-020: Wibracje rozróżniane bez patrzenia
+- Przepływ: PR-02, PR-04
+- Dowód potrzeby: J-03, J-06; „もっと派手に” przy przeoczonym przypomnieniu (編み物カウンター２, id12476127028); prośba o inny sygnał dla przypomnienia niż dla zwykłego rzędu: „リマインドがある時にも（別の）音が鳴るようにできると、見逃しがより少なくなると思います” (編み物カウンター２, id13310860035); oczy na robótce (kontekst użycia) · ER-12 (I-7, P-044)
+- Kryteria akceptacji:
+  - Scenariusz: Przypomnienie inne niż rząd
+    - Zakładając instrukcję z BR-LIC-009 i licznik 11
+    - Gdy użytkownik dodaje rząd do 12, a potem do 13
+    - Wtedy przy 12 telefon wibruje wzorem przypomnienia, a przy 13 wzorem zwykłego rzędu, i te wzory się różnią
+  - Scenariusz: Koniec powtórzenia i cel dnia
+    - Zakładając powtórzenie 8 rzędów i cel dnia 13 rzędów (BR-DNI-005)
+    - Gdy licznik kończy powtórzenie albo osiąga cel dnia
+    - Wtedy telefon wibruje wzorem przypisanym do tego zdarzenia, innym niż wzór rzędu
+  - Scenariusz: Wibracje wyłączone
+    - Zakładając, że użytkownik wyłączył wibracje w aplikacji
+    - Gdy następuje dowolne z tych zdarzeń
+    - Wtedy telefon nie wibruje

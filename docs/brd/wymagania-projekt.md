@@ -155,6 +155,53 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Gdy użytkownik ustawia jej koniec na 19:30
     - Wtedy aplikacja nie zapisuje zmiany i pokazuje, że koniec musi być po początku
 
+### BR-PRJ-014: Druga część pary (bliźniak)
+- Przepływ: PR-07, PR-02
+- Dowód potrzeby: J-02, J-05; „when I make the second sock I can make sure they match row counts” (Crochet and Knit Counter, id5378098505); „I would like to keep notes for how many rows/sts the first sleeve was to have the second sleeve match” (Crochet and Knit Counter, id4956785470); BR-PRJ-007 · ER-12 (I-2, P-044); porównanie z zastrzeżeniami patentów (OG-07, P-024: treść zależna od postępu)
+- Kryteria akceptacji:
+  - Scenariusz: Cel z pierwszej części
+    - Zakładając, że pierwszy rękaw ma 96 rzędów i jest ukończony
+    - Gdy użytkownik zakłada drugi rękaw jako parę pierwszego
+    - Wtedy drugi rękaw ma cel 96 rzędów
+  - Scenariusz: To samo miejsce co w pierwszej
+    - Zakładając, że w pierwszym rękawie przy rzędzie 30 jest notatka „ujmowanie” i było przypomnienie
+    - Gdy licznik drugiego rękawa osiąga 30
+    - Wtedy aplikacja pokazuje, że w pierwszym rękawie w tym rzędzie była notatka „ujmowanie” i przypomnienie
+  - Scenariusz: Pierwsza bez rzędów
+    - Zakładając, że pierwsza część ma 0 rzędów
+    - Gdy użytkownik zakłada parę
+    - Wtedy druga część nie ma celu, a aplikacja pokazuje, że cel pojawi się, gdy pierwsza ma rzędy
+
+### BR-PRJ-015: Karta ukończenia projektu
+- Przepływ: PR-07
+- Dowód potrzeby: J-11; „編み終えた時に紙吹雪が出るのが地味に嬉しい” (編み物カウンター２, id13632559947); „I would love to have a running list of completed projects with the time it took to complete listed.” (knitCompanion, id13529266059) · ER-12 (I-6, P-044); tylko w chwili ukończenia, bez osi zdjęć (P-046)
+- Kryteria akceptacji:
+  - Scenariusz: Karta przy ukończeniu
+    - Zakładając, że projekt trwał od 1 do 21 października, ma 640 rzędów, 18 godzin ze stopera, włóczkę i zdjęcie
+    - Gdy użytkownik oznacza go jako ukończony
+    - Wtedy widzi kartę: 21 dni, 18 godzin, 640 rzędów, włóczkę i zdjęcie, z możliwością zapisania albo udostępnienia
+  - Scenariusz: Udostępnienie bez lokalizacji (ER-24)
+    - Zakładając, że zdjęcie projektu ma w metadanych położenie GPS
+    - Gdy użytkownik udostępnia kartę
+    - Wtedy plik karty nie zawiera metadanych położenia, a aplikacja nie wysyła niczego sama (arkusz udostępniania, ZP-03)
+  - Scenariusz: Bez stopera
+    - Zakładając, że projekt nie miał sesji stopera
+    - Gdy użytkownik oznacza go jako ukończony
+    - Wtedy karta nie pokazuje czasu pracy zamiast pokazywać 0 godzin
+
+### BR-PRJ-016: Projekty dawno nieruszane
+- Przepływ: PR-07
+- Dowód potrzeby: J-05; „come back to a languishing WIP years later and just pick up where I left off” (My Row Counter GB, id14614568294); „put one into “hibernation” for months, and still be able to pick up exactly where I left off” (Crochet and Knit Counter CA, id6825424556) · ER-12 (I-9, P-044); bez progu dni (P-047)
+- Kryteria akceptacji:
+  - Scenariusz: Ostatnia praca na liście
+    - Zakładając, że ostatnia zmiana licznika „Swetra” była 47 dni temu
+    - Gdy użytkownik otwiera listę projektów w toku
+    - Wtedy przy „Swetrze” widzi „ostatnia praca 47 dni temu”, a projekt stoi niżej niż nowsze (BR-PRJ-012)
+  - Scenariusz: Powrót jednym stuknięciem
+    - Zakładając ten sam projekt
+    - Gdy użytkownik stuka w niego na liście
+    - Wtedy otwiera się ostatnia część i licznik w miejscu pracy (BR-PRJ-011)
+
 ## Wzór (WZR)
 Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed projektem i wydaniem (P-024, OG-07).
 
