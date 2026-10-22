@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · STOP E1 (2026-10-22; STOP E0 przyjęty: plan „Ok”, soczewki „A”) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: sesja 2 · STOP E2 (2026-10-22; STOP E1 przyjęty: „1A 2A”, P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -162,6 +162,43 @@ Kolumna „Dowód”: liczba aplikacji z funkcją płatną (✓$) i darmową (�
 
 ### Do decyzji w E2 (zapowiedź)
 Rodzaj zapory (funkcje albo limit projektów), synchronizacja iCloud (dane czy płatna), import wzoru i zdjęcia (darmowe czy płatne), okres próbny (brak, „XX-day Trial”, oferta wprowadzająca), Family Sharing, zachowanie ceny dla obecnych przy podwyżce.
+
+**Decyzje na STOP E1 (2026-10-22):** „1A 2A”: tabela WTP przyjęta (P-027); ER-01–ER-05 wchodzą w E3 do kontraktu płatności, ER-06 i ER-07 czekają na poprawkę zbiorczą roli 01 przed rolą 03 (P-028).
+
+## Sesja 2, E2: Modele i rachunek (2026-10-22)
+**Odczyty z dziś** (surowe teksty: `oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/2026-10-22/`): wytyczne „Last Updated: October 16, 2026”, cytaty MS-01, MS-01b, MS-01h, 3.1.2(a) o odbieraniu funkcji bez zmian; nowe MS-22 (3.1.2(b)), MS-23 (oferty wprowadzające); strona subskrypcji (MS-02, MS-02a, MS-21), Family Sharing (MS-18) i Small Business Program (MS-03) bez zmian. Kurs: NBP nie opublikował jeszcze tabeli z 2026-10-22 (odczyt 06:30 UTC), najnowsza to 205/A/NBP/2026 z 2026-10-21 (USD 3,8889).
+
+### Opcje modelu
+Wspólne dla wszystkich opcji: darmowy rdzeń według tabeli WTP (P-027), jedno uprawnienie „Pro” (te same funkcje bez względu na produkt), dane i eksport zawsze darmowe, opłacona i darmowa funkcja nie znika (ER-01, ZAL-025), przywracanie na ekranie zakupu i w ustawieniach (MS-01g, MS-02a). Ceny w USD, kraj bazowy USA (MS-19).
+
+| | A: trzy produkty (P-019) | B: tylko dożywotni | C: tylko subskrypcja |
+|---|---|---|---|
+| Produkty | mies. 0,99 · rok 6,99 (subskrypcje, jedna grupa) · dożywotni 14,99 (Non-Consumable) | dożywotni 14,99 (Non-Consumable) | mies. 0,99 · rok 6,99 |
+| Reguła sklepu | 3.1.2(a): „Subscriptions may be offered alongside à la carte offerings” (MS-01h); „ongoing value … available across all of the user’s devices” (MS-01b); 3.1.2(b): „should not be able to inadvertently subscribe to multiple variations of the same thing” (MS-22) | 3.1.1: zakup w aplikacji z „restore mechanism” (MS-01g); okres próbny tylko „XX-day Trial” za Price Tier 0 (MS-01) | jak A bez dożywotniego |
+| Okres próbny (mechanizm) | oferta wprowadzająca subskrypcji w App Store Connect (MS-01h, MS-23: „each person is only eligible to redeem one introductory offer per subscription group”); dożywotni bez | „7-day Trial” 3.1.1 albo brak | oferta wprowadzająca |
+| Rachunek, 1. rok, 8 sklepów (zł netto, pes. / norm. / opt.) | 450 / 13 935 / 348 007 | 835 / **26 715** / 616 852 | 319 / 9169 / 239 948 |
+| Rachunek US, norm. (`rachunek.mjs`) | 2250 USD/rok: 95 mies. + 142 rok + 79 dożywotni płacących | 4313 USD/rok: 339 płacących | — |
+| Płacących do progu 500 USD (US, jeden produkt) | mies. 119 · rok 85 · dożywotni 40 | 40 | mies. 119 · rok 85 |
+| Ryzyko etyczne | podwójna opłata: dożywotni przy aktywnej subskrypcji (ER-03, MS-22); okres próbny zamieniany w opłatę to najczęstsza skarga (ZAL-009); podwyżka subskrypcji w DE i PL wymaga zgody (MS-20) | najmniejsze: jedna cena, brak odnowień; ryzyko tylko przy „7-day Trial” (ujawnienia 3.1.1) | jak A plus brak wyjścia dla osób, które chcą zapłacić raz (H-02, ZAL-018) |
+| Koszt utrzymania | zobowiązanie do stałej wartości (MS-01b), obsługa odnowień, karencji, anulowania, zarządzania subskrypcją w aplikacji, wektory dla 3 produktów | najniższy: jeden produkt, brak odnowień i stanu „subskrypcja wygasła” (ER-02 znika) | jak A |
+| Dla kogo dobra | ktoś chce wejść za 0,99 bez decyzji na lata | większość płacących w tej kategorii (H-02 potwierdzone) | stały przychód, ale wbrew dowodom H-02 |
+
+**Odrzucone na starcie (wynik bramki z 2026-10-21, `dowody/oplacalnosc-2026-10-21.txt`):** bez opłat (wpływ 0, koszt programu zostaje); napiwek 2,99 USD (1066 zł norm., poniżej progu 1944 zł: „odłożyć”); płatna z góry (4449 zł, wszyscy konkurenci N mają darmowe pobranie, bariera wypróbowania); reklamy (standard marki wysoki, P-009).
+
+**Jak czytać rachunek.** Liczby to [OCENA] z bramki, nie prognoza (wynik: `dowody/e2-modele-2026-10-22.txt` i `dowody/rachunek-2026-10-22.txt`, oba kod 0; pliki `warianty-e2/*.json`, `rachunek.json`). Przewaga B zależy od jednego założenia: konwersji dożywotniego 14,99 USD (3,0%, interpolacja między jednorazowym 9,99 i 19,99 z bramki) wobec planu A (2,8%). Rachunek progowy: A daje 8,38 USD brutto na płacącego w 1. roku (0,30 × 5 × 0,99 + 0,45 × 6,99 + 0,25 × 14,99), z odnowieniami rocznej przez 3 lata ok. 9,92 USD (retencja 36% po roku, górna granica z MS-12a „up to 36.0%”). B wygrywa, dopóki jego konwersja przekracza 2,8% × 9,92 / 14,99 ≈ **1,85%**, czyli gdy dożywotni bez tańszych planów traci mniej niż ⅓ płacących z A. Wynik A różni się od bramki (13 941 zł) o 6 zł, bo oceny na rok liczone są od dzisiejszej daty.
+
+### Decyzje dla właściciela
+| # | Decyzja | Opcje (kompromis) | Rekomendacja |
+|---|---|---|---|
+| D1 | Model | **A** trzy produkty P-019 (decyzja właściciela; niski próg wejścia 0,99; więcej kodu, ryzyk i ujawnień) · **B** tylko dożywotni 14,99 (najwyższy wynik, najmniej utrzymania; zmienia P-019; brak wejścia za 0,99) · **C** tylko subskrypcja (najniższy wynik, wbrew H-02) | **B**: wynik ok. 1,9× A przy tych samych założeniach, najmniejsze ryzyko etyczne i koszt utrzymania jednej osoby w 35 językach. A zostaje rozsądne, jeśli zależy Ci na wejściu za 0,99 |
+| D2 | Zapora | **a** tylko funkcje Pro, bez limitu projektów (3 z 4 soczewek; brak 1★ za skąpą wersję) · **b** funkcje + limit 3–5 aktywnych projektów (silniejszy bodziec, YarnBuddy: limit 10 przenosi długoletnich na płatną; limit raz ustalony nie może spaść, ZAL-025) | **a**; limitu nie da się później zaostrzyć, a poluzować można zawsze |
+| D3 | Synchronizacja iCloud (DAN-002) | **a** darmowa jako ochrona danych (ZP-09, P-021, antywzór „$10 just to see my patterns on my new phone”) · **b** w Pro (✓$ u 3 konkurentów; 3 z 4 soczewek) | **a**: dotyczy bezpieczeństwa danych (zasada 5), a nowy telefon i iPad bez opłaty to wyróżnik uczciwości (ZAL-009) |
+| D4 | Import wzoru (WZR-001, 002, 005), zdjęcia projektu (PRJ-003), kopia projektu (PRJ-007) | **a** darmowe; płatne narzędzia na wzorze (znacznik, pisanie: najmocniejsze WTP-1) · **b** import i zdjęcia w Pro | **a**: główna praca widoczna przed zakupem (kontrakt E1.3), a płaci się za narzędzia, nie za wejście danych |
+| D5 | Okres próbny | **a** brak (darmowy rdzeń pokazuje wartość; brak skarg typu „charged me for a free trial”) · **b** „7-day Trial” 3.1.1 dla Pro (B) albo oferta wprowadzająca (A, C) z ujawnieniami | **a**; przy cenie 14,99 i darmowym rdzeniu okres próbny dodaje kod i ryzyko skarg, a mało wartości |
+| D6 | Family Sharing (nieodwracalne, MS-18) | **a** wyłączone na start, decyzja przy odświeżeniu 04.2027 (P-016) · **b** włączone od startu (gest uczciwości; utracony przychód nieznany) | **a**: włączyć można zawsze, wyłączyć nigdy |
+| D7 | Zachowanie ceny (tylko A i C) | **a** przy podwyżce obecni zostają przy swojej cenie (MS-21: „unlimited number of active subscribers at their existing price”) · **b** podwyżka dla wszystkich (zgoda w DE, PL i powyżej progów, MS-20) | **a** |
+
+Po odpowiedzi: wpis w rejestrze decyzji Twoimi słowami; statusy ZAL-002, ZAL-016, ZAL-017 i H-01 w rejestrze założeń.
 
 ## Sesja 1, E0: Rama
 
@@ -467,6 +504,8 @@ Wniosek: tania aplikacja zdobywa więcej pobrań i lepiej utrzymuje płacących,
 | MS-19 | developer.apple.com/help/app-store-connect/manage-in-app-purchases/set-a-price-for-an-in-app-purchase | całość | „Choose from up to 800 price points by default”; „Automatically generated prices account for foreign exchange rates and certain taxes” | 2026-10-21 | 1 |
 | MS-20 | developer.apple.com/help/app-store-connect/reference/in-app-purchases-and-subscriptions/auto-renewable-subscription-price-increase-thresholds | tabela | „Increases in auto-renewable subscription prices that exceed the below thresholds in each App Store country or region result in a request for subscribers to consent to the new price.”; wiersze USA, GBR, JPN, NOR, AUS, CAN, FRA, DEU, POL jak w E0 sesji 2 | 2026-10-21 | 1 |
 | MS-21 | developer.apple.com/app-store/subscriptions/ | „Price decreases”, „Price increases” | „You don’t have the option to preserve the higher price for existing subscribers.”; „You can keep an unlimited number of active subscribers at their existing price while increasing the price for new subscribers.” | 2026-10-21 | 1 |
+| MS-22 | developer.apple.com/app-store/review/guidelines/ | 3.1.2(b) | „Users should have a seamless upgrade/downgrade experience and should not be able to inadvertently subscribe to multiple variations of the same thing.” | 2026-10-22 | 1 |
+| MS-23 | developer.apple.com/help/app-store-connect/manage-subscriptions/set-up-introductory-offers-for-auto-renewable-subscriptions | całość | „There are three types of introductory offers: free trial, pay up front, and pay as you go.”; „each person is only eligible to redeem one introductory offer per subscription group” | 2026-10-22 | 1 |
 
 ## Otwarte pytania
 | ID | Pytanie | Rozstrzyga | Dotyczy |
