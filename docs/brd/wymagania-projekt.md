@@ -104,6 +104,23 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Gdy stoper sesji osiąga ten czas
     - Wtedy aplikacja pokazuje przypomnienie bez porad zdrowotnych
 
+### BR-PRJ-011: Powrót do tego samego miejsca po starcie i z innej aplikacji
+- Przepływ: PR-02, PR-06, PR-07
+- Dowód potrzeby: J-05, J-04; „it *does not save* my settings.” (My Row Counter, id14255514434); „I feel like all of my pattens should automatically open right where I left off” (knitCompanion, id8240402281, pisownia oryginału); „If I am in it then move to my browser or another app, then come back to this app, it is gone.” (knitCompanion, id12667261449); „if I open different patterns on different devices they stay open on the specific device” (My Row Counter GB, id14633308306) · ER-15
+- Kryteria akceptacji:
+  - Scenariusz: Start po zamknięciu aplikacji
+    - Zakładając, że użytkownik pracował w projekcie „Sweter”, część „rękaw lewy”, licznik rzędów, wzór na stronie 3 w powiększeniu 200%, a system zamknął aplikację
+    - Gdy użytkownik uruchamia aplikację
+    - Wtedy widzi ten sam projekt, część i licznik oraz wzór na stronie 3 w powiększeniu 200%, bez ponownego wybierania
+  - Scenariusz: Powrót z innej aplikacji
+    - Zakładając, że wzór jest otwarty na stronie 3, a użytkownik przechodzi do przeglądarki
+    - Gdy wraca do Oczka
+    - Wtedy wzór jest otwarty na tej samej stronie i w tym samym powiększeniu, bez ponownego ładowania przez użytkownika
+  - Scenariusz: Dwa urządzenia
+    - Zakładając, że na iPadzie otwarty jest wzór projektu „Sweter”, a na iPhonie projekt „Skarpeta”
+    - Gdy użytkownik zmienia stronę wzoru na iPadzie
+    - Wtedy iPhone nadal pokazuje projekt „Skarpeta”, a wartości liczników obu projektów są na obu urządzeniach te same (stan widoku osobno na urządzeniu, dane wspólne)
+
 ## Wzór (WZR)
 Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed projektem i wydaniem (P-024, OG-07).
 
