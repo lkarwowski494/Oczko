@@ -1,5 +1,5 @@
 # Kontrakt zakresu: Oczko
-Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212) · Wejście: BRD `docs/brd/` (80 BR po poprawce roli 01: P-047, P-048), `docs/monetyzacja.md` (sesja 2), ZAL-001–027 · Decyzje zakresu: P-040–P-046, P-049; model: P-029 obowiązuje, kierunek P-051 w badaniu roli 02 (sesja 3) · Historia E0–E2 (rama, soczewki, pominięcia, warianty): `docs/scope-contract-historia.md`
+Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212) · Wejście: BRD `docs/brd/` (80 BR po poprawce roli 01: P-047, P-048), `docs/monetyzacja.md` (sesja 2), ZAL-001–027 · Decyzje zakresu: P-040–P-046, P-049, P-052; model: V4 (P-057, P-058) · Historia E0–E2 (rama, soczewki, pominięcia, warianty): `docs/scope-contract-historia.md`
 
 ## Główna praca i pętla
 - Główna praca: J-01 „Wiedzieć, w którym rzędzie jestem, i ufać tej liczbie” z J-05 (powrót) i J-04 (miejsce we własnym wzorze); ZAL-019 podważone w części (J-04 w rdzeniu, E1).
@@ -7,7 +7,7 @@ Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · A
 - Apetyt wersji 1: 45 h godzin właściciela na funkcje (W1 = 43,75 h [OCENA ×0,5–2]) plus ok. 15 h bramek ról (P-049). Podział: jedna aplikacja (iPhone, iPad, zegarek) z warstwami Narzędzia (F-37, F-38) i Historia (F-59) poza ekranem licznika (P-049, H-07 (a), ZAL-022).
 - Zasada ekranu licznika (P-046): nic z kalendarza, terminu ani nowych funkcji, dopóki użytkownik sam czegoś nie ustawi; wyjątki działające bez nowego elementu: F-47, F-48. Uproszczenia przepływów U-1–U-12: `oczko-warsztat/03-zakres/2026-10-22-build/przeplywy-mapa-szkic.md` (wejście dla 04).
 - Wzorzec najlepszych (Lookup US 2026-10-22): knitCompanion (6899 ocen), My Row Counter (3867), Knitting Chart (1298). W pętli: licznik + własny wzór ze znacznikiem + powrót; nie mają kalendarza, kalkulatorów swetrowych, słownika; skargi: złożoność, funkcje przeniesione za paywall, reklamy, synchronizacja. Szczegóły i cytaty: historia, sekcja „E1”.
-- Dostęp darmowe / płatne: **według kontraktu płatności roli 02.** Przy modelu B (P-029) obowiązuje podział z P-049 (4): nowe funkcje darmowe poza F-56 i F-61, reszta jak w „Podziale darmowe / Pro” roli 02. Jeśli właściciel przyjmie kierunek P-051 (próba 14 dni, zakupy nieodnawialne, blokada z podłogą danych), po próbie płatne jest wszystko poza podłogą danych (podgląd do odczytu, eksport, kopia, usunięcie, zakup, przywracanie, polityka). Rola 02 aktualizuje kontrakt płatności; zakres funkcji z tego kontraktu się nie zmienia.
+- Dostęp darmowe / płatne: **model V4 (P-057, kontrakt płatności `docs/monetyzacja.md`, „Sesja 3, E3”, P-058).** Wszystkie funkcje z tabeli „Zakres” są darmowe od pierwszego uruchomienia w limicie 5 dni z robótką w miesiącu kalendarzowym; dzień zużywa tylko praca przy robótce (liczenie rzędów), blokada tylko przy starcie nowego dnia ponad limit (strażnik startu), praca w toku nigdy nie przerwana; dane, eksport, przywracanie i polityka zawsze. Pro (0,99 USD/mies., 6,99 USD/rok bez oferty wprowadzającej, dożywotni 14,99 USD) znosi limit; podziału funkcji na darmowe i Pro nie ma, więc P-049 (4) i kolumna „Dostęp” z E2 tracą przedmiot.
 - Pętla opinii w wersji 1: F-57 „Zgłoś problem”; systemowa prośba o ocenę po ukończeniu projektu i odnośnik „Oceń” (specyfikacja: rola 11) bez BR: ER-25 do roli 01.
 
 ## Zakres
@@ -218,7 +218,7 @@ kod wyjścia: 0
 - **06 Treści:** potrzeby treści: F-38 (obliczenia: reguły krytyczne RD-01, RD-03, RD-04, RD-10, przegląd zastępczy D-027; OP-02, OP-03, OP-09 zgoda CYC), F-37 (RD-03, RD-10; pielęgnacja tekstem, OG-13), F-17 (RD-11), F-05 (RD-12), F-06 (RD-13, OP-06), F-60 (RD-14), F-61 (RD-15), F-59 (RD-16), F-47 (RD-17). Słownik (F-44) PÓŹNIEJ, więc bez treści terminologii w wersji 1.
 - **07 Jakość:** BR w zakresie: kolumna „Wymagania” tabeli „Zakres” dla decyzji MVP (scenariusze w `docs/brd/wymagania-*.md`, nagłówek `### BR-…`); blokery wydania z `docs/brd/README.md` w zakresie: BR-LIC-001–003 (F-01, F-02), BR-DAN-001–006 (F-31, F-32, F-27), BR-ZAK-001–004 (F-35, F-36), NFR-PRY-001, NFR-ZEG-001 (F-12), BR-KAL-001, BR-KAL-003, BR-KAL-008 (F-38, przegląd 06), funkcje wzoru F-24–F-26, F-28, F-55, F-56 (porównanie z zastrzeżeniami patentów OG-07, P-024), OG-05; poza zakresem: BR-SLO-001, BR-KAL-006. Testy tylko automatyczne (P-041, metody NFR po ER-10); kryteria intuicyjności, których nie zautomatyzuje (np. odczucie wibracji F-48, rysik F-28), jako ryzyko szczątkowe; kryterium bez sprawdzalnego wyniku: ER do roli 01.
 - **08 Programista:** kolejność budowy jak wyżej; zmiany kodu z trybów fix to zadania dla 08.
-- **02 Monetyzacja:** zmiany względem propozycji darmowe/Pro: P-049 (4) przy modelu B; uwaga: F-26 jako Pro ostrzejsze niż u knitCompanion; kierunek P-051 i tekst ofert (wariant 1) w sesji 3.
+- **02 Monetyzacja:** model V4 (P-057) przyjęty po kontrakcie zakresu; podział darmowe/Pro nie dotyczy (limit dni dla całej aplikacji).
 - **01 Odkrywanie:** ER-25: systemowa prośba o ocenę po ukończeniu projektu (w limitach API) i odnośnik „Oceń” (`action=write-review`) jako pętla opinii wersji 1 (kontrakt roli 03, E2 pkt 6; specyfikacja roli 11).
 
 ## Zmiany zakresu
@@ -236,4 +236,4 @@ kod wyjścia: 0
 | R, I, C, koszt i apetyt jako [OCENA] z metodą albo dane z datą | spełnione | „Ranking” (metoda w nagłówku); koszty z soczewki opiekuna |
 | właściciel wybrał wariant spośród co najmniej dwóch, apetyt i podział; słowa i data w rejestrze | spełnione | P-049 (W1 z W1–W3, apetyt 45 h, jedna aplikacja); P-040–P-046 |
 | przekazanie mówi, co dostaje każda z ról 04–08 | spełnione | „Kolejność i przekazanie” |
-| otwarte | — | model (P-051, rola 02 sesja 3); ER-25; WTP nowych funkcji (02) |
+| otwarte | — | ER-25 (rola 01 razem z ER-26–ER-28 roli 02); WTP nowych funkcji traci znaczenie dla podziału przy V4 (P-057) |
