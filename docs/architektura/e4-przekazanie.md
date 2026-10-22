@@ -1,4 +1,4 @@
-# E4 Przekazanie (rola 05-architekt, build) · 2026-10-22 · STOP E4
+# E4 Przekazanie (rola 05-architekt, build) · 2026-10-22 · STOP E4 przyjęty (P-074) przyjęty (P-074)
 Wejście: E0–E3 przyjęte (P-070–P-073). README architektury: [`README.md`](README.md). Dowody uruchomione razem: [`narzedzia/e4-dowody.out`](narzedzia/e4-dowody.out) (2026-10-22T19:29Z).
 
 ## Definicja ukończenia (build), punkt po punkcie

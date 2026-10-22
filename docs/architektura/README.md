@@ -1,5 +1,5 @@
 # Architektura Oczka (rola 05, build, 2026-10-22)
-Stan: E0–E3 przyjęte (P-070–P-073), E4 przekazanie. Krótko, z odnośnikami; szczegóły w plikach obok.
+Stan: zakończona, E0–E4 przyjęte (P-070–P-074). Krótko, z odnośnikami; szczegóły w plikach obok.
 
 ## 1. Cel i zakres
 - Obsługuje przepływy z [`docs/scope-contract.md`](../scope-contract.md) (PR-01–PR-11, PR-13 tylko wpisanie wartości, PR-14–PR-16 bez BR-DNI-007; 49 funkcji MVP) w modelu V4 (P-057) na iOS 18 / iPadOS 18 / watchOS 11 (P-070).
