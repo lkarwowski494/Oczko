@@ -1,12 +1,20 @@
 // limit.mjs — wzorzec reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22).
 // Czysta funkcja bez zależności: rola 08 przepisuje ją na TypeScript w kodzie aplikacji; wektory: wektory-limitu.json.
 // Dzień z robótką = data lokalna (strefa urządzenia w chwili zdarzenia, RD-16), w której praca zaczęła się pierwszym +1.
-// Strażnik woła startDnia() tylko przy +1 albo ręcznym wpisaniu numeru rzędu (D4); dopisanie wstecz i edycja historii go nie wołają.
+// Strażnik woła startDnia() tylko przy zdarzeniach, dla których wolaStraznika() daje true (P-067: +1 na każdym liczniku i urządzeniu, wpisanie; nie: zerowanie, −1, edycja historii).
 
 export const LIMIT_DNI = 5; // D2: „dzierganie raz w tygodniu zawsze darmowe” (miesiąc ma najwyżej 5 tych samych dni tygodnia)
 export const PRZERWA_MS = 60 * 60 * 1000; // D3: +1 po północy otwiera nowy dzień dopiero po przerwie ≥ 60 min
 
 const DATA = /^\d{4}-\d{2}-\d{2}$/;
+
+// Które zdarzenia wołają strażnika startDnia() (P-067): każde +1 na dowolnym liczniku i z każdego urządzenia
+// oraz ręczne wpisanie wartości (D4) zaczynają dzień; zerowanie, −1 i edycja historii to korekty danych (zawsze wolne, KP-02, L-07).
+const ZACZYNA_DZIEN = { plus: true, wpisanie: true, zerowanie: false, minus: false, 'edycja-historii': false };
+export function wolaStraznika({ rodzaj }) {
+  if (!(rodzaj in ZACZYNA_DZIEN)) throw new Error(`wolaStraznika: nieznany rodzaj zdarzenia ${rodzaj}`);
+  return ZACZYNA_DZIEN[rodzaj];
+}
 
 // dni: zapisane dni z robótką [{ data: 'RRRR-MM-DD', pro: boolean }] (pro: czy w chwili startu dnia Pro było aktywne).
 // dzis: data lokalna zdarzenia; teraz i ostatniPlus: ms (ostatniPlus = poprzednie +1 w dowolnym projekcie albo null).

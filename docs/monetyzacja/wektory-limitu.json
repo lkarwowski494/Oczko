@@ -1,5 +1,5 @@
 {
- "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08.",
+ "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia.",
  "limit": 5,
  "przerwa_ms": 3600000,
  "startDnia": [
@@ -496,6 +496,108 @@
     "zapis": null,
     "zostalo": 0
    }
+  }
+ ],
+ "wolaStraznika": [
+  {
+   "id": "S-01",
+   "scenariusz": "+1 na liczniku rzędów",
+   "wejscie": {
+    "rodzaj": "plus",
+    "licznik": "rzedy",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": true
+  },
+  {
+   "id": "S-02",
+   "scenariusz": "+1 na liczniku oczek (P-067 (3a))",
+   "wejscie": {
+    "rodzaj": "plus",
+    "licznik": "oczka",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": true
+  },
+  {
+   "id": "S-03",
+   "scenariusz": "+1 na liczniku powtórzeń liczonym osobno (P-067 (3a))",
+   "wejscie": {
+    "rodzaj": "plus",
+    "licznik": "powtorzenia",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": true
+  },
+  {
+   "id": "S-04",
+   "scenariusz": "+1 z zegarka (P-067 (4a))",
+   "wejscie": {
+    "rodzaj": "plus",
+    "licznik": "rzedy",
+    "urzadzenie": "zegarek"
+   },
+   "oczekiwane": true
+  },
+  {
+   "id": "S-05",
+   "scenariusz": "+1 z ekranu blokady, Live Activity (P-067 (4a))",
+   "wejscie": {
+    "rodzaj": "plus",
+    "licznik": "rzedy",
+    "urzadzenie": "ekran-blokady"
+   },
+   "oczekiwane": true
+  },
+  {
+   "id": "S-06",
+   "scenariusz": "ręczne wpisanie wartości (D4)",
+   "wejscie": {
+    "rodzaj": "wpisanie",
+    "licznik": "rzedy",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": true
+  },
+  {
+   "id": "S-07",
+   "scenariusz": "zerowanie: korekta, nie zaczyna dnia (P-067 (1a))",
+   "wejscie": {
+    "rodzaj": "zerowanie",
+    "licznik": "rzedy",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": false
+  },
+  {
+   "id": "S-08",
+   "scenariusz": "−1: korekta, nie zaczyna dnia (P-067 (2a))",
+   "wejscie": {
+    "rodzaj": "minus",
+    "licznik": "rzedy",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": false
+  },
+  {
+   "id": "S-09",
+   "scenariusz": "dopisanie wstecz, edycja historii, cofnięcie z historii (L-07)",
+   "wejscie": {
+    "rodzaj": "edycja-historii",
+    "licznik": "rzedy",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": false
+  },
+  {
+   "id": "S-10",
+   "scenariusz": "nieznany rodzaj zdarzenia: błąd danych",
+   "wejscie": {
+    "rodzaj": "skok",
+    "licznik": "rzedy",
+    "urzadzenie": "telefon"
+   },
+   "oczekiwane": "błąd"
   }
  ]
 }

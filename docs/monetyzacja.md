@@ -38,7 +38,7 @@ Model: **V4 „wzorzec Treningu” bez próby** (P-057): cała aplikacja darmowa
 | Sytuacja | Co działa | Co blokuje strażnik |
 |---|---|---|
 | Dni w limicie albo Pro | cała aplikacja | nic |
-| Na limicie (5 z 5), nowy dzień, bez Pro | podgląd projektów, historia, kalendarz, dopisanie wstecz, edycja historii i notatek, eksport, kopia, synchronizacja iCloud (P-031, P-054), usunięcie danych, ustawienia, „Przywróć zakupy”, „Zarządzaj subskrypcją”, polityka prywatności, kalkulatory i słownik (nie są „pracą przy robótce”) | pierwsze +1 nowego dnia i ręczne wpisanie numeru rzędu (D4); rozpoczęty dzień i praca w toku nigdy (L-02, L-04) |
+| Na limicie (5 z 5), nowy dzień, bez Pro | podgląd projektów, historia, kalendarz, dopisanie wstecz, edycja historii i notatek, zerowanie, −1, eksport, kopia, synchronizacja iCloud (P-031, P-054), usunięcie danych, ustawienia, „Przywróć zakupy”, „Zarządzaj subskrypcją”, polityka prywatności, kalkulatory i słownik (nie są „pracą przy robótce”) | pierwsze +1 nowego dnia na dowolnym liczniku i urządzeniu oraz ręczne wpisanie wartości (D4, P-067); rozpoczęty dzień i praca w toku nigdy (L-02, L-04) |
 | Pro wygasa (subskrypcja bez odnowienia, zwrot) | jak wyżej; do limitu liczą się tylko dni bez Pro (D5, L-09) | jak wyżej |
 
 ### Wymagania kontraktu (KP; zmiany wobec sesji 2)
@@ -48,7 +48,7 @@ Model: **V4 „wzorzec Treningu” bez próby** (P-057): cała aplikacja darmowa
 | KP-02 (zmienione) | Utrata Pro (wygaśnięcie, zwrot, odebranie z rodziny): wraca limit dni; dane, historia, eksport i kopia zawsze dostępne | zasada roli 6; MS-27 |
 | KP-03 (pełne) | Przy aktywnej subskrypcji ekran zakupu nie oferuje tej samej subskrypcji; dożywotni tylko z informacją, że subskrypcję trzeba anulować samemu, i z przyciskiem „Zarządzaj subskrypcją”; przy dożywotnim stan „Masz Pro” | MS-22 (3.1.2(b)) |
 | KP-04 (zmienione) | Polityka prywatności i Terms of Use (standardowa EULA Apple) w aplikacji i w metadanych: przy subskrypcji wymagane | MS-02a, MS-32 |
-| KP-12 (nowe) | Strażnik limitu tylko w `startDnia()` (wzorzec `limit.mjs`), wołany przy pierwszym +1 nowego dnia i przy ręcznym wpisaniu numeru rzędu; nigdy przed licznikiem przy pierwszym uruchomieniu (NFR-PIE-001) | P-053 (doprecyzowanie), P-057 D3–D5 |
+| KP-12 (nowe; fix 2026-10-22) | Strażnik limitu tylko w `startDnia()` (wzorzec `limit.mjs`), wołany przy zdarzeniach, dla których `wolaStraznika()` daje true: każde +1 na dowolnym liczniku (rzędy, oczka, powtórzenia) i z każdego urządzenia (telefon, zegarek, ekran blokady; zegarek liczy z ostatnio zsynchronizowanej listy dni) oraz ręczne wpisanie wartości; zerowanie, −1 i edycja historii nie wołają strażnika (wektory S-01–S-10); nigdy przed licznikiem przy pierwszym uruchomieniu (NFR-PIE-001) | P-053, P-057 D3–D5, P-067 (NZ-01) |
 | KP-13 (nowe) | Ekran zakupu tylko: przy próbie startu dnia ponad limit i w Ustawieniach; na ekranie licznika licznik dni („Zostały 3 z 5 darmowych dni w tym miesiącu”) zgodnie z zasadą P-046 (decyzja o miejscu: rola 04) | P-055, KP-10 |
 | KP-14 (nowe) | „Zarządzaj subskrypcją” w aplikacji (`showManageSubscriptions`) | strona subskrypcji Apple (wzorce, „Etyka”) |
 | KP-15 (nowe) | Dni z robótką zapisane w danych użytkownika (synchronizowane iCloud, jedna data = jeden dzień, L-11), nie w pamięci podręcznej uprawnień | P-021, L-11, L-14 |
