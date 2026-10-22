@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: **sesja 3 (P-051, P-053: V1, V2, V3 wobec B), E1 w toku (STOP E0 przyjęty: P-054), 2026-10-22** · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **sesja 3 (P-051, P-053, P-055: V1, V2, V3, V4 wobec B), E1 w toku (STOP E0 przyjęty: P-054), 2026-10-22** · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -56,6 +56,8 @@ Wytyczne App Review: „Last Updated: October 16, 2026”, bez zmian od sesji 2.
 | E3 | kontrakt płatności, wektory dostępu (wygaśnięcie, kumulacja, próba), ER do 01, uwaga dla 03, sztafeta | 2–3 h (dla B 0,5 h) | — | STOP E3, ok. 10 min |
 
 **Rozszerzenie zakresu (P-053, 2026-10-22, przez rolę 03):** dochodzi wariant **V3**: pełne Oczko z limitem 4–6 dni z robótką w miesiącu (4, 5 i 6 liczone osobno), potem subskrypcja odnawiana 0,99 USD/mies. i 6,99 USD/rok z ofertą wprowadzającą 14 dni włączaną przez użytkownika oraz dożywotni 14,99 USD. Do E1 dochodzi: ile dni w miesiącu dzierga osoba regularna i okazjonalna (źródło albo [OCENA] z metodą), recenzje limitów dziennych i liczonych (metered) w narzędziach, reguły oferty wprowadzającej (3.1.2(a), MS-23) i ujawnień subskrypcji odnawialnej; do E2 rachunek V3 obok V1, V2 i B. Dodatkowy czas agenta: ok. 1,5–2 h.
+
+**Rozszerzenie zakresu (P-055, 2026-10-22, notatka właściciela):** dochodzi wariant **V4 „wzorzec Treningu”**: cała aplikacja darmowa, limit dni z robótką w miesiącu (jednostka i N do propozycji: 4, 5, 6), Pro jako subskrypcja odnawiana 0,99 / 6,99 USD i dożywotni 14,99 USD **bez oferty wprowadzającej**. Na STOP E2: jednostka i N, rachunek wobec B, reguła liczenia z wektorami brzegowymi, lista zmian, decyzje.
 
 Razem ok. 8–10 h pracy agenta; od Ciebie 3 odpowiedzi (40–60 min) i być może pytanie do App Review. E1b (bramka) nie powtarzam: V1 i V2 to warianty ceny i modelu tej samej aplikacji, a wynik bramki był odporny na każde pojedyncze założenie; wrócę do niej, jeśli rachunek E2 da wynik normalny poniżej progu 1944 zł.
 
