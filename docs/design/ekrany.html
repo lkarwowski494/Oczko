@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Oczko · key screens (E3)</title>
+<!-- Kluczowe ekrany systemu (rola 04, E3). Kierunek A (P-063), Libre Franklin (P-064), tokeny: tokeny.json. Dane i teksty projektu: [PRZYKŁAD]. Ceny: P-057 (ze sklepu w aplikacji, KP-09). -->
+<style>
+@font-face { font-family: "Libre Franklin"; src: url("fonty/LibreFranklin.ttf"); font-weight: 100 900; }
+@font-face { font-family: "Source Sans 3"; src: url("fonty/SourceSans3.ttf"); font-weight: 200 900; }
+:root {
+  --papier: #FCFCFA; --grupa: #F2F3F0; --grafit: #26282C; --olowek: #5E626A; --linia: #D9DBDF;
+  --zakreslacz: #F6E04A; --na-zakreslaczu: #1B1C1F; --zakr-krawedz: #8C7A00;
+  --p-tlo: #26282C; --p-tekst: #FCFCFA; --p-obrys: #26282C; --m-obrys: #26282C; --blad: #B3261E; --kreska: #26282C;
+  --wloczka: #4F6F94; --arkusz: #FCFCFA;
+  --dt-tytul: 1; --dt-tresc: 1;
+  --tytul: "Libre Franklin"; --tresc: "Source Sans 3";
+}
+[data-theme="dark"] {
+  --papier: #1B1C1F; --grupa: #24262A; --grafit: #ECECE8; --olowek: #A9ACB2; --linia: #34363B;
+  --zakreslacz: #38351F; --na-zakreslaczu: #F4ECB4; --zakr-krawedz: #E2CB3A;
+  --p-tlo: #2E3136; --p-tekst: #ECECE8; --p-obrys: #8C9098; --m-obrys: #8C9098; --blad: #F2B8B5; --kreska: #ECECE8;
+  --wloczka: #7D9DC2; --arkusz: #2A2C31;
+}
+* { box-sizing: border-box; }
+main *, .uwagi * { font-feature-settings: "tnum" 1; }
+body { margin: 0; padding: 24px; background: #8A8D93; font-family: var(--tresc), sans-serif; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+main[data-ekran] { width: var(--w, 390px); min-height: 844px; background: var(--papier); color: var(--grafit); display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
+.status { height: 48px; display: flex; justify-content: space-between; align-items: center; padding: 0 28px; font: 600 calc(15px * var(--dt-tresc)) var(--tresc); }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 0; min-height: 44px; gap: 8px; }
+.nav a { color: var(--grafit); text-decoration: none; font-size: calc(17px * var(--dt-tresc)); min-height: 44px; display: flex; align-items: center; }
+.nav .ikony { display: flex; gap: 4px; flex-shrink: 0; } .nav .ikona { width: 44px; height: 44px; display: grid; place-items: center; }
+.nav svg { width: calc(24px * min(var(--dt-tresc), 1.8)); height: auto; }
+.tytul { padding: 4px 20px 0; }
+h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
+.pod { margin: 4px 0 0; align-items: baseline; color: var(--olowek); font-size: calc(17px * var(--dt-tresc)); line-height: 1.3; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.kropka { width: 12px; height: 12px; align-self: center; border-radius: 50%; background: var(--wloczka); box-shadow: 0 0 0 1.5px var(--papier), 0 0 0 2.5px var(--linia); flex-shrink: 0; }
+.kartka { margin: 16px 20px 0; border-top: 1px solid var(--linia); padding-top: 12px; }
+.liczba { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.liczba .n { font: 700 calc(96px * min(var(--dt-tytul), 1.3)) / 1 var(--tytul); letter-spacing: -0.02em; }
+.liczba .z { font-size: calc(20px * var(--dt-tresc)); color: var(--olowek); }
+.cel { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--olowek); font-size: calc(15px * var(--dt-tresc)); line-height: 1.3; margin-top: 4px; }
+.podpis { color: var(--olowek); font-size: calc(15px * var(--dt-tresc)); line-height: 1.3; margin: 12px 0 0; }
+.kreski svg { display: block; width: 100%; height: auto; margin-top: 4px; }
+.instr { margin-top: 16px; position: relative; padding: 12px 16px 12px 20px; }
+.instr::before { content: ""; position: absolute; inset: 0; background: var(--zakreslacz); transform: skewX(-4deg); border-radius: 2px; border-left: 4px solid var(--zakr-krawedz); }
+.instr > * { position: relative; color: var(--na-zakreslaczu); }
+.instr b { font: 700 calc(20px * var(--dt-tytul)) / 1.2 var(--tytul); display: block; }
+.instr span { font-size: calc(17px * var(--dt-tresc)); line-height: 1.3; }
+.wiersz { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--linia); padding: 8px 0; font-size: calc(17px * var(--dt-tresc)); line-height: 1.3; flex-wrap: wrap; }
+.wiersz .w { color: var(--olowek); }
+.spacer { flex: 1; min-height: 16px; }
+.dol { padding: 12px 16px 32px; display: flex; gap: 28px; align-items: flex-end; }
+.minus { width: 72px; height: 72px; flex-shrink: 0; border: 2px solid var(--m-obrys); background: transparent; color: var(--grafit); font: 700 calc(28px * min(var(--dt-tytul), 1.4)) var(--tytul); border-radius: 14px; }
+.plus { flex: 1; min-height: 168px; background: var(--p-tlo); color: var(--p-tekst); border: 2px solid var(--p-obrys); border-radius: 20px; font: 700 calc(28px * var(--dt-tytul)) / 1.2 var(--tytul); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; }
+.plus small { font: 400 calc(15px * var(--dt-tresc)) / 1.3 var(--tresc); opacity: .85; }
+.pusto { margin: 16px 0 0; color: var(--olowek); font-size: calc(17px * var(--dt-tresc)); line-height: 1.35; }
+/* arkusze i listy (komponenty systemowe iOS) */
+.przyciemnienie { position: absolute; inset: 0; background: rgba(0,0,0,.32); }
+/* Arkusz: przy dużym tekście sięga najwyżej pod pasek stanu, treść się przewija, przyciski zostają na dole. */
+.arkusz { position: absolute; left: 0; right: 0; bottom: 0; max-height: calc(100% - 56px); display: flex; flex-direction: column; background: var(--arkusz); border-radius: 12px 12px 0 0; padding: 8px 20px 32px; box-shadow: 0 -1px 0 var(--linia); }
+.uchwyt { width: 36px; height: 5px; border-radius: 3px; background: var(--linia); margin: 0 auto 12px; }
+.arkusz .tresc-arkusza { overflow-y: auto; min-height: 0; flex: 1 1 auto; }
+.arkusz .przyciski { flex-shrink: 0; padding-top: 4px; }
+.arkusz h2 { font: 700 calc(24px * var(--dt-tytul)) / 1.2 var(--tytul); margin: 4px 0 8px; }
+.arkusz p { font-size: calc(17px * var(--dt-tresc)); line-height: 1.35; margin: 0 0 12px; }
+.przycisk-pelny { width: 100%; min-height: 52px; border-radius: 14px; border: 2px solid var(--p-obrys); background: var(--p-tlo); color: var(--p-tekst); font: 700 calc(17px * var(--dt-tresc)) var(--tytul); margin-top: 8px; padding: 12px; }
+.przycisk-tekst { width: 100%; min-height: 44px; border: 0; background: transparent; color: var(--grafit); font: 600 calc(17px * var(--dt-tresc)) var(--tresc); margin-top: 4px; }
+.grupa { background: var(--grupa); border-radius: 12px; margin: 12px 16px 0; }
+.grupa .el { display: flex; gap: 12px; align-items: center; padding: 12px 16px; min-height: 44px; font-size: calc(17px * var(--dt-tresc)); line-height: 1.3; }
+.grupa .el + .el { border-top: 1px solid var(--linia); }
+.grupa .el .tx { flex: 1; min-width: 0; } .grupa .el .tx small { display: block; color: var(--olowek); font-size: calc(15px * var(--dt-tresc)); }
+.naglowek-grupy { margin: 20px 32px 0; color: var(--olowek); font-size: calc(13px * var(--dt-tresc)); line-height: 1.3; }
+.szukaj { margin: 12px 16px 0; background: var(--grupa); border-radius: 10px; min-height: 40px; display: flex; align-items: center; padding: 0 12px; color: var(--olowek); font-size: calc(17px * var(--dt-tresc)); }
+.pasek-narzedzi { display: flex; justify-content: space-around; border-top: 1px solid var(--linia); padding: 8px 0 28px; margin-top: 16px; }
+.pasek-narzedzi span { min-width: 64px; min-height: 44px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: calc(11px * min(var(--dt-tresc), 1.6)); color: var(--olowek); }
+.oferta { border: 2px solid var(--linia); border-radius: 14px; padding: 14px 16px; margin-top: 12px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.oferta.wybrana { border-color: var(--grafit); }
+.oferta .nazwa { font: 700 calc(20px * var(--dt-tytul)) / 1.2 var(--tytul); }
+.oferta .cena { font: 700 calc(20px * var(--dt-tytul)) / 1.2 var(--tytul); }
+.oferta .op { width: 100%; color: var(--olowek); font-size: calc(15px * var(--dt-tresc)); line-height: 1.3; }
+.linki { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; margin-top: 12px; font-size: calc(13px * var(--dt-tresc)); color: var(--olowek); }
+.linki span { min-height: 44px; display: flex; align-items: center; text-decoration: underline; }
+.uwagi { width: 390px; background: #fff; color: #222; padding: 20px; font: 15px/1.4 "Source Sans 3"; }
+.uwagi h2 { font: 700 20px "Libre Franklin"; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+
+<!-- 1. Licznik: pierwsze liczenie (NFR-PIE-001: nic przed licznikiem; P-046) -->
+<main data-ekran="licznik-start">
+  <div class="status"><span>9:41</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">Projects</a><div class="ikony"><span class="ikona" role="button" aria-label="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></div></div>
+  <div class="tytul"><h1>Counter</h1></div>
+  <div class="kartka">
+    <div class="liczba"><span class="n">0</span><span class="z">rows</span></div>
+    <p class="pusto">Tap the big button each time you finish a row. Each row gets a pencil mark here.</p>
+  </div>
+  <div class="spacer"></div>
+  <div class="dol"><button class="minus" aria-label="−1 row">−1</button><button class="plus" aria-label="+1 row">+1 row</button></div>
+</main>
+
+<!-- 2. Licznik w toku: rząd 48 z instrukcją; linijka celu i blokada z kierunku C (P-063); kropka koloru włóczki (wariant z B) -->
+<main data-ekran="licznik-w-toku">
+  <div class="status"><span>21:14</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Harbor Sweater</a><div class="ikony">
+    <span class="ikona" role="switch" aria-checked="false" aria-label="Lock counter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></span>
+    <span class="ikona" role="button" aria-label="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    <span class="ikona" role="button" aria-label="More">•••</span></div></div>
+  <div class="tytul"><h1>Left sleeve</h1><p class="pod"><span class="kropka" aria-hidden="true"></span>Rows finished · now on row 48</p></div>
+  <div class="kartka">
+    <div class="liczba"><span class="n">47</span><span class="z">of 96</span></div>
+    <div class="cel"><span>Goal 96 rows</span><span>49 to go</span></div>
+    <p class="podpis">Tonight’s marks: 14 rows since 19:52</p>
+    <div class="kreski" aria-hidden="true"><svg class="tally" data-n="14" viewBox="0 0 350 64"></svg></div>
+    <div class="instr" role="status"><b>Row 48: decrease at both ends</b><span>Decrease 7 of 8 · next on row 54</span></div>
+    <div class="wiersz"><span class="w">Cable pattern</span><b>repeat 6 · row 7 of 8</b></div>
+    <div class="wiersz"><span class="w">Note</span><span>Switch to 4 mm for the cuff</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="dol"><button class="minus" aria-label="−1 row">−1</button><button class="plus" aria-label="+1 row. Row 48 next: decrease at both ends">+1 row<small>row 48: decrease at both ends</small></button></div>
+</main>
+
+<!-- 3. Komunikat na limicie (BR-ZAK-005, BR-ZAK-006, L-03): rząd nie dodany, licznik bez zmian pod arkuszem -->
+<main data-ekran="limit">
+  <div class="status"><span>19:02</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Harbor Sweater</a><div class="ikony"><span class="ikona">•••</span></div></div>
+  <div class="tytul"><h1>Left sleeve</h1></div>
+  <div class="kartka"><div class="liczba"><span class="n">61</span><span class="z">of 96</span></div></div>
+  <div class="spacer"></div>
+  <div class="przyciemnienie"></div>
+  <div class="arkusz" role="dialog" aria-label="Free knitting days used">
+    <div class="uchwyt"></div>
+    <div class="tresc-arkusza">
+    <h2>Your 5 free knitting days for November are used</h2>
+    <p>They come back on December 1. Nothing is lost: your 61 rows, projects, history and export all stay.</p>
+    <p style="color:var(--olowek)">Oczko Pro removes the monthly limit.</p>
+    </div>
+    <div class="przyciski"><button class="przycisk-pelny">See Oczko Pro</button>
+    <button class="przycisk-tekst">Not now</button></div>
+  </div>
+</main>
+
+<!-- 4. Ekran ofert (ujawnienia (1)–(7), KP-03, KP-09, KP-14, P-054: bez procentów i porównań) -->
+<main data-ekran="oferty">
+  <div class="status"><span>19:02</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><span></span><div class="ikony"><span class="ikona" role="button" aria-label="Close">✕</span></div></div>
+  <div class="tytul"><h1>Oczko Pro</h1><p class="pod">Knit on as many days as you like. Everything else stays the same.</p></div>
+  <div style="padding: 0 20px">
+    <div class="oferta"><span class="nazwa">Monthly</span><span class="cena">$0.99 / month</span><span class="op">Renews every month until you cancel in your Apple ID settings.</span></div>
+    <div class="oferta wybrana"><span class="nazwa">Yearly</span><span class="cena">$6.99 / year</span><span class="op">Renews every year until you cancel in your Apple ID settings.</span></div>
+    <div class="oferta"><span class="nazwa">Lifetime</span><span class="cena">$14.99 once</span><span class="op">Pay once. Nothing renews.</span></div>
+    <p class="podpis">Without Pro: 5 knitting days every month, and all your projects and data, always. Shared with your family through Family Sharing.</p>
+    <button class="przycisk-pelny">Continue with Yearly</button>
+    <button class="przycisk-tekst">Restore purchases</button>
+    <div class="linki"><span>Privacy Policy</span><span>Terms of Use</span></div>
+  </div>
+</main>
+
+<!-- 5. Lista projektów (F-50, F-54, F-60; licznik dni: propozycja miejsca, decyzja STOP E3) -->
+<main data-ekran="projekty">
+  <div class="status"><span>21:30</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><span></span><div class="ikony"><span class="ikona" role="button" aria-label="New project">＋</span></div></div>
+  <div class="tytul"><h1>Projects</h1></div>
+  <div class="szukaj">⌕ Search</div>
+  <div class="naglowek-grupy">In progress, last worked first</div>
+  <div class="grupa">
+    <div class="el"><span class="kropka" style="--wloczka:#4F6F94"></span><div class="tx">Harbor Sweater<small>Left sleeve · row 47 of 96 · today</small></div><span aria-hidden="true">›</span></div>
+    <div class="el"><span class="kropka" style="--wloczka:#B5523B"></span><div class="tx">Socks for Ola<small>Second sock · row 12 · 3 days ago</small></div><span aria-hidden="true">›</span></div>
+    <div class="el"><span class="kropka" style="--wloczka:#6E8B4E"></span><div class="tx">Moss blanket<small>Square 9 of 20 · last worked 41 days ago</small></div><span aria-hidden="true">›</span></div>
+  </div>
+  <div class="naglowek-grupy">Finished</div>
+  <div class="grupa"><div class="el"><span class="kropka" style="--wloczka:#8A7FA8"></span><div class="tx">Lavender hat<small>Finished Oct 3 · 4 h 20 min</small></div><span aria-hidden="true">›</span></div></div>
+  <p class="podpis" style="margin: 16px 32px 0">3 of 5 free knitting days left in November</p>
+  <div class="spacer"></div>
+  <div class="pasek-narzedzi"><span>◷<br>History</span><span>⚒<br>Tools</span><span>⚙<br>Settings</span></div>
+</main>
+
+<!-- 6. Chwila ukończenia (U-9: ukończenie → zużycie włóczki → karta; BR-PRJ-015; prośba o ocenę po zamknięciu karty, BR-DAN-012) -->
+<main data-ekran="ukonczenie">
+  <div class="status"><span>20:05</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Projects</a><div class="ikony"><span class="ikona" role="button" aria-label="Share">⇪</span></div></div>
+  <div class="tytul"><h1>Harbor Sweater</h1><p class="pod"><span class="kropka"></span>Finished · Oct 1 – Nov 21</p></div>
+  <div class="kartka">
+    <div class="liczba"><span class="n">640</span><span class="z">rows</span></div>
+    <p class="podpis">18 h 10 min · 4 parts · 23 knitting days</p>
+    <div class="kreski" aria-hidden="true"><svg class="tally" data-n="25" viewBox="0 0 350 64"></svg></div>
+    <p class="podpis">The last 25 marks, from the final evening.</p>
+  </div>
+  <div class="grupa" style="margin-top:20px">
+    <div class="el"><div class="tx">Harbour Wool, Fjord<small>How much is left?</small></div><span>1 skein ▾</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div style="padding: 0 16px 32px"><button class="przycisk-pelny">Done</button></div>
+</main>
+
+<section class="uwagi">
+  <h2>Notes for the reviewer</h2>
+  <p>Body text: SF Pro on iOS; Source Sans 3 here as a stand-in. Lock, history, share: SF Symbols in the app. Prices come from the App Store product (KP-09); amounts here are the US base prices from P-057.</p>
+</section>
+
+<script>
+function kreski(svg, n) {
+  const ns = 'http://www.w3.org/2000/svg'; let x = 6; const h = 44, y = 8;
+  for (let i = 0; i < n; i++) {
+    const p = document.createElementNS(ns, 'path');
+    if (i % 5 < 4) { const j = ((i * 37) % 7 - 3) * 0.6; p.setAttribute('d', `M${x + j} ${y + 2} q 2 ${h / 2} ${-1 + j / 2} ${h}`); x += 12; }
+    else { p.setAttribute('d', `M${x - 54} ${y + h - 6} L ${x - 2} ${y + 8}`); x += 20; }
+    p.setAttribute('stroke', 'var(--kreska)'); p.setAttribute('stroke-width', '3.2'); p.setAttribute('fill', 'none'); p.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(p);
+  }
+}
+document.querySelectorAll('svg.tally').forEach((s) => kreski(s, +s.dataset.n));
+</script>
+</body>
+</html>

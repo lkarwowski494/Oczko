@@ -1,0 +1,151 @@
+{
+  "_opis": "Tokeny Oczka, kierunek A „Kreski na wzorze” (P-063), krój tytułowy Libre Franklin (P-064). Propozycja modułu motywu dla roli 08; zmiana tylko przez rolę 04. Kontrast: docs/design/kontrast-tabela.txt (generuje docs/design/narzedzia/tokeny-kontrast.mjs).",
+  "kolor": {
+    "jasny": {
+      "papier": "#FCFCFA",
+      "papierGrupa": "#F2F3F0",
+      "grafit": "#26282C",
+      "olowek": "#5E626A",
+      "linia": "#D9DBDF",
+      "zakreslacz": "#F6E04A",
+      "tekstNaZakreslaczu": "#1B1C1F",
+      "zakreslaczKrawedz": "#8C7A00",
+      "przyciskTlo": "#26282C",
+      "przyciskTekst": "#FCFCFA",
+      "przyciskObrys": "#26282C",
+      "drugiPrzyciskObrys": "#26282C",
+      "blad": "#B3261E",
+      "kreska": "#26282C",
+      "arkusz": "#FCFCFA"
+    },
+    "ciemny": {
+      "papier": "#1B1C1F",
+      "papierGrupa": "#24262A",
+      "grafit": "#ECECE8",
+      "olowek": "#A9ACB2",
+      "linia": "#34363B",
+      "zakreslacz": "#38351F",
+      "tekstNaZakreslaczu": "#F4ECB4",
+      "zakreslaczKrawedz": "#E2CB3A",
+      "przyciskTlo": "#2E3136",
+      "przyciskTekst": "#ECECE8",
+      "przyciskObrys": "#8C9098",
+      "drugiPrzyciskObrys": "#8C9098",
+      "blad": "#F2B8B5",
+      "kreska": "#ECECE8",
+      "arkusz": "#2A2C31"
+    },
+    "jasnyKontrast": {
+      "olowek": "#44474D",
+      "linia": "#8F939A",
+      "zakreslaczKrawedz": "#26282C"
+    },
+    "ciemnyKontrast": {
+      "olowek": "#CDD0D4",
+      "linia": "#7A7E85",
+      "przyciskObrys": "#CDD0D4",
+      "zakreslaczKrawedz": "#F4ECB4"
+    },
+    "_wloczka": "Kolor włóczki projektu (P-063, wariant): tylko kropka przy nazwie projektu i, jeśli użytkownik włączy, kolor kresek; gdy kontrast koloru do papieru < 3:1, kreski zostają grafitowe, a kolor tylko w kropce z obwódką."
+  },
+  "typografia": {
+    "_zasada": "Libre Franklin: liczba, tytuły, przyciski, instrukcja; treść: krój systemowy (SF Pro, Dynamic Type). Rozmiary w pt przy domyślnym rozmiarze tekstu; skala do AX5: tytuły ×1,8, treść ×3,1 (uproszczenie tabeli HIG); liczba licznika najwyżej ×1,3 (kluczowa liczba bez ucięcia).",
+    "liczba": {
+      "krój": "Libre Franklin",
+      "grubość": 700,
+      "rozmiar": 96,
+      "interlinia": 1.0,
+      "maxSkala": 1.3,
+      "cyfry": "tabelaryczne"
+    },
+    "tytul": {
+      "krój": "Libre Franklin",
+      "grubość": 700,
+      "rozmiar": 30,
+      "interlinia": 1.15,
+      "styl iOS": "largeTitle (skalowany)"
+    },
+    "instrukcja": {
+      "krój": "Libre Franklin",
+      "grubość": 700,
+      "rozmiar": 20,
+      "interlinia": 1.2
+    },
+    "przycisk": {
+      "krój": "Libre Franklin",
+      "grubość": 700,
+      "rozmiar": 28,
+      "interlinia": 1.2
+    },
+    "tresc": {
+      "krój": "system",
+      "rozmiar": 17,
+      "interlinia": 1.3,
+      "styl iOS": "body"
+    },
+    "podpis": {
+      "krój": "system",
+      "rozmiar": 15,
+      "interlinia": 1.3,
+      "styl iOS": "subheadline"
+    },
+    "drobny": {
+      "krój": "system",
+      "rozmiar": 13,
+      "interlinia": 1.3,
+      "styl iOS": "footnote"
+    }
+  },
+  "odstep": {
+    "_jednostka": 4,
+    "xs": 4,
+    "s": 8,
+    "m": 12,
+    "l": 16,
+    "xl": 20,
+    "xxl": 28,
+    "sekcja": 32
+  },
+  "promien": {
+    "_zasada": "Hierarchia: im większy i ważniejszy element, tym większy promień; zakreślacz prawie prosty (papier).",
+    "przyciskGlowny": 20,
+    "przyciskDrugi": 14,
+    "grupa": 12,
+    "pole": 10,
+    "zakreslacz": 2
+  },
+  "cel": {
+    "minimum": 44,
+    "przyciskMinus": 72,
+    "przyciskPlusWysokosc": 168,
+    "odstepMinusPlus": 28
+  },
+  "ruch": {
+    "_zasada": "Ruch tylko w odpowiedzi na działanie; przerywalny; „Ogranicz ruch” = bez rysowania (kreska pojawia się od razu).",
+    "kreska": {
+      "czas": 120,
+      "krzywa": "easeOut"
+    },
+    "piataKreska": {
+      "czas": 160,
+      "krzywa": "easeOut"
+    },
+    "zakreslenie": {
+      "czas": 200,
+      "krzywa": "easeOut"
+    },
+    "cofniecie": {
+      "czas": 120,
+      "krzywa": "easeIn"
+    }
+  },
+  "haptyka": {
+    "_zasada": "F-48: tylko dwa wzorce do rozpoznania (rząd i przypomnienie); reszta systemowa. Dźwięk domyślnie wyłączony; zawsze w parze z haptyką.",
+    "plus": "UIImpactFeedbackGenerator .light",
+    "piataKreska": "UIImpactFeedbackGenerator .medium",
+    "rzadZInstrukcja": "dwa uderzenia .medium co 90 ms (Core Haptics), inne niż rząd",
+    "minus": "UIImpactFeedbackGenerator .soft",
+    "blokadaStukniecie": "UIImpactFeedbackGenerator .rigid",
+    "bladZapisu": "UINotificationFeedbackGenerator .error"
+  }
+}
