@@ -240,3 +240,20 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Zakładając, że użytkownik dodaje do projektu link do filmu z instrukcją
     - Gdy otwiera link bez sieci
     - Wtedy aplikacja pokazuje, że film wymaga sieci; Oczko zapisuje tylko link, nie film
+
+### BR-WZR-008: Zakreślanie i notatki na wzorze palcem
+- Przepływ: PR-06
+- Dowód potrzeby: J-04; „I thought the highlighter pen would allow me to highlight for the size I’m making, it doesn’t :(” (My Row Counter GB, id6552766264, po zakupie); „I wanted to be able to write notes and highlight sizes for garment knitting. So with that in mind, I decided to upgrade.” (knitCompanion, id8179546053); „I love being able to highlight and mark on my patterns” (My Row Counter, id13648606552) · ER-18; płatne zakreślanie u lidera (H-06); porównanie z zastrzeżeniami patentów (OG-07, P-024)
+- Kryteria akceptacji:
+  - Scenariusz: Zakreślenie mojego rozmiaru na iPhonie
+    - Zakładając, że wzór jest otwarty na iPhonie, a użytkownik włączył zakreślacz
+    - Gdy przeciąga palcem po liczbach dla rozmiaru M
+    - Wtedy liczby rozmiaru M są zakreślone i zakreślenie jest tam po ponownym otwarciu wzoru bez sieci
+  - Scenariusz: Notatka w miejscu wzoru
+    - Zakładając, że wzór jest otwarty
+    - Gdy użytkownik dodaje notatkę „ujmowanie co 4 rzędy” przy rzędzie 30 schematu
+    - Wtedy notatka jest widoczna w tym miejscu wzoru i nie zmienia samego pliku wzoru
+  - Scenariusz: Przewijanie bez zakreślacza
+    - Zakładając, że zakreślacz jest wyłączony
+    - Gdy użytkownik przesuwa palcem po wzorze
+    - Wtedy wzór się przewija i nic się na nim nie rysuje (na iPadzie z Apple Pencil palec nie rysuje, BR-WZR-004)
