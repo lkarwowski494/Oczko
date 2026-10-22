@@ -6,7 +6,7 @@
 | koordynator | — | decyzje P-001–P-010, kwarantanna | b080940 | docs/decyzje.md, docs/pomysl.md, CLAUDE.md | — |
 | 02 Monetyzacja, sesja 1 (bramka) | build, `--moduly oplacalnosc,cena-i-rachunek` | zakończona 2026-10-21: **budować** (P-013) | (ten commit) | docs/monetyzacja.md (Opłacalność), docs/monetyzacja/, docs/zalozenia.md, P-011–P-016; surowe dane: oczko-warsztat/02-monetyzacja/2026-10-21-bramka/ | OP-05, OP-06 (fakty od właściciela, niepilne) |
 | 01 Odkrywanie | build | zakończona 2026-10-21 | (ten commit) | docs/brd/ (9 plików), tests/wektory/brd.json; P-017–P-026; ZAL-017–024 | OP-09 (e-mail do CYC), OP-03, OP-11, OP-15; OP źródłowe dla 06 |
-| 02 Monetyzacja, sesja 2 | build (bez `--moduly`) | w toku: STOP E0 (2026-10-21) | (ten commit) | docs/monetyzacja.md („Sesja 2, E0”); źródła: oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/ | OP-19, OP-20 |
+| 02 Monetyzacja, sesja 2 | build (bez `--moduly`) | w toku: STOP E1 (2026-10-22) | (ten commit) | docs/monetyzacja.md („Sesja 2, E0”, „Sesja 2, E1”), docs/zalozenia.md (ZAL-025); soczewki i źródła: oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/ | ER-01–ER-07 do roli 01; decyzje E2 |
 
 ## Następny krok
 ### Przekazanie do następnej roli

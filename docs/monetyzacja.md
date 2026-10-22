@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · E1 w toku (STOP E0 przyjęty 2026-10-22: plan „Ok”, soczewki „A”) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-21 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: sesja 2 · STOP E1 (2026-10-22; STOP E0 przyjęty: plan „Ok”, soczewki „A”) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -66,6 +66,102 @@ Razem ok. 6–8 h pracy agenta (punkty czyszczenia na każdym STOP); od właści
 |---|---|---|---|
 | OP-19 | Progi 0,99 / 6,99 / 14,99 USD dla subskrypcji i dożywotniego: **dostępne** (właściciel, 2026-10-22: „tak, mam to w innej aplikacji, mix subskrypcji i lifetime access w tych cenach. Dozwolone przez apple. Nie musimy tego badac ponownie.”). Wpływ w rachunku zostaje szacunkiem ze stawek (OP-05 bez zmian) | zamknięte | rachunek E2, kontrakt E3 |
 | OP-20 | Umowa Paid Apps i formalności: **załatwione** (właściciel, 2026-10-22: „umowa paid apps i wszystkie formalnosci juz zalatwione”). Linię karty w `CLAUDE.md` poprawia właściciel albo rola 01 | zamknięte | `CLAUDE.md` |
+
+## Sesja 2, E1: Wartość funkcji (2026-10-22)
+Metoda: cztery soczewki z kontraktu (oszczędny użytkownik, pasjonat po roku, recenzent App Store, analityk konkurencji) jako niezależni subagenci na wspólnym briefie, każdy bez wglądu w pozostałych (decyzja właściciela na STOP E0: „A”). Dowody: macierz 14 aplikacji roli 01 (`oczko-warsztat/01-odkrywanie/soczewki/konkurencja.md`; „✓$” = funkcja płatna u konkurenta), 4682 recenzje roli 01, listingi US odczytane 2026-10-22. Pełne tabele soczewek i skrypty: `oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/soczewki/`. **Kontrola cytatów (skrypt `cyt-rec.py`):** 190 cytatów zgodnych z recenzją o podanym id, 195 zgodnych z innym źródłem (listing, wytyczne, BRD), 6 sprawdzonych ręcznie na listingach z 2026-10-22 i w polach tytuł + treść recenzji; zero zmyślonych. Pozostałe „braki” skryptu to polskie propozycje tekstów, nie cytaty.
+
+**Zgodność soczewek:** 46 z 59 BR ma tę samą propozycję u wszystkich czterech; 13 rozbieżnych oznaczam „→ E2” (decyzja właściciela) albo „→ 03”.
+
+### Wartość funkcji
+Kolumna „Dowód”: liczba aplikacji z funkcją płatną (✓$) i darmową (✓) w macierzy 14 aplikacji, id recenzji (sklep US, chyba że podano inaczej). „Dane” = dane użytkownika, zawsze darmowe (zasada roli 6), bez klasy WTP.
+
+| BR | Funkcja | WTP | Dowód | Propozycja |
+|---|---|---|---|---|
+| LIC-001 | licznik od pierwszego uruchomienia | WTP-0 · R | ✓ bez opłaty u 12 z 14 | darmowa |
+| LIC-002 | dodawanie i odejmowanie | WTP-0 · B | J-01 | darmowa |
+| LIC-003 | historia z godziną i cofnięciem | WTP-1 · R (słaby) | ✓$ 1 (Strikketeller), ✓ 2 | darmowa: chroni liczbę, a bez niej darmowa część to „simple timer” (4.3(b), soczewka recenzenta) |
+| LIC-004 | blokada przed stuknięciem | WTP-2 · B | ✓ 2; 24 z 47 recenzji o stuknięciu ≤3★ | darmowa |
+| LIC-005 | potwierdzenie bez przerywania dźwięku | WTP-0 · B | J-01 | darmowa |
+| LIC-006 | kilka liczników w projekcie | WTP-1 · R | ✓$ 3, ✓ 10; „Paid for premium for 2nd counter and stopwatch function.” (Easy Knitty, id13261592468) | darmowa (3 z 4); limit liczników → E2 (zapora) |
+| LIC-007 | licznik powtórzeń | WTP-1 · R | ✓$ 1 (knitCompanion), ✓ 6 (YarnBuddy za darmo) | płatna (3 z 4) |
+| LIC-008 | zmiana ustawień licznika | WTP-0 · B | skarga na płatną zmianę: knitCompanion CA id2371488304 | darmowa |
+| LIC-009 | przypomnienie „co N rzędów, M razy” | WTP-1 · R | ✓$ 2 (knitCompanion, YarnBuddy) | płatna |
+| LIC-010 | plan rzędów z instrukcji | WTP-2 · H | luka rynku (nikt nie ma) | płatna z LIC-009 |
+| LIC-011 | cel rzędów i jego osiągnięcie | WTP-2 · B | StitchTally za darmo | darmowa |
+| LIC-012 | znaczenie liczby (rząd skończony / w trakcie) | WTP-2 · B | 編み物カウンター２ id12699699581 | darmowa |
+| LIC-013 | ekran nie gaśnie | WTP-0 · R | ✓$ 0, ✓ 6 | darmowa |
+| LIC-014 | liczenie z ekranu blokady | WTP-1 · R (słaby) | ✓$ 1 (Strikketeller), ✓ 1 | płatna |
+| LIC-015 | zegarek | WTP-1 · R (mocny) | ✓$ 3, ✓ 4; „I absolutely love the Apple Watch feature … Worth every penny!” (My Row Counter, id14675500870) | płatna |
+| LIC-016 | rząd głosem | WTP-1 · R | ✓$ 2, ✓ 1; „I would happily pay $4.99 for it if it would work with Siri!” (Knit Row Counter, id4845413552) | płatna |
+| PRJ-001 | projekt z częściami | WTP-1 · R | ✓$ 1, ✓ 8 | darmowa (3 z 4) |
+| PRJ-002 | notatka przy liczniku | WTP-1 · R (słaby) | ✓$ 2, ✓ 9 | darmowa (tekst) |
+| PRJ-003 | zdjęcia projektu i etykiety | WTP-1 · R | YarnBuddy za darmo | → E2 (2: płatne dodawanie, 2: darmowe); oglądanie i eksport zawsze darmowe |
+| PRJ-004 | dane techniczne projektu | WTP-2 · B | YarnBuddy, Easy Knitty za darmo | darmowa |
+| PRJ-005 | powrót po przerwie | WTP-0 · R | obietnica darmowej wersji YarnBuddy | darmowa (dane) |
+| PRJ-006 | stan projektu, archiwum | WTP-2 · R | antywzór: archiwum płatne w Easy Knitty, „Now I cannot access the details of my completed projects.” (id11131506863) | darmowa (dane) |
+| PRJ-007 | zrób ponownie (kopia) | WTP-2 · B | ✓$ 0 | → E2 (2: płatna, 1: darmowa, 1: do 03) |
+| PRJ-008 | stoper przy zablokowanym ekranie | WTP-1 · R | ✓$ 1, ✓ 7; „I needed the timer feature, so I paid for it.” (Easy Knitty, id9819100347) | płatna |
+| PRJ-009 | postęp i szacowany czas | WTP-2 · H | jeden płacący chwali statystyki (My Row Counter, id12140475342) | płatna z PRJ-008 |
+| PRJ-010 | przypomnienie o przerwie | WTP-2 · B | ✓$ 0; zależy od OP-15 | → 03 |
+| WZR-001 | import wzoru z pliku | WTP-1 · R | ✓$ 3 (w tym knitCompanion „Add PDF” w pakiecie płatnym), ✓ 8 | → E2 (2: darmowy, 2: płatny); otwieranie już zaimportowanych zawsze darmowe |
+| WZR-002 | wzór ze zdjęcia | WTP-1 · R | ✓$ 3, ✓ 3 | → E2 (jak WZR-001) |
+| WZR-003 | znacznik rzędu we wzorze | WTP-1 · R (mocny) | „I upgraded for 2.99 for the highlight tool. Very worth it.” (My Row Counter, id12653275134) | płatna |
+| WZR-004 | pisanie po wzorze | WTP-1 · R (najmocniejszy) | ✓$ 5 z 7 aplikacji, które to mają | płatna |
+| WZR-005 | wzór i licznik razem | WTP-2 · B | YarnBuddy za darmo | → E2 (z WZR-001) |
+| WZR-006 | siatka co 10 oczek | WTP-2 · B (pojedynczy) | ✓$ 0 | płatna z wzorem albo → 03 |
+| DAN-001 | baza na urządzeniu | — | J-07 | dane |
+| DAN-002 | synchronizacja iCloud | WTP-1 · R | ✓$ 3 (My Row Counter, Crochet row & stitch counter, Strikketeller), ✓ 7 (knitCompanion w „Free Basics”) | → E2 (3: płatna, 1: dane, darmowa) |
+| DAN-003–006 | aktualizacja, nowy telefon, eksport, import | — | antywzór: „This app wants $10 just to see my patterns on my new phone.” (id10843107781) | dane |
+| DAN-007 | import od konkurencji | WTP-2 · H | ✓$ 0 | darmowa (4 z 4): dane użytkownika na wejściu |
+| DAN-008–009 | kosz 30 dni, usunięcie wszystkiego | — | J-07, ZP-03 | dane |
+| ZAK-001–004 | przywracanie, bez reklam, opłacone nie znika, polityka | — | wymagania sklepu i uczciwości | dla wszystkich |
+| ZAP-001 | włóczka w zapasie | WTP-1 · R | ✓$ 1, ✓ 4; „yarn warehouse is premium” (Crochet row & stitch counter GB, id7646956808) | płatna (moduł); wpisy zawsze widoczne i w eksporcie |
+| ZAP-002–004 | zużycie, narzędzia, wyszukiwanie | WTP-1/2 · R/B | ✓$ 2 dla narzędzi | płatne z ZAP-001 |
+| KAL-001 | oczka z próbki | WTP-1 · R | ✓$ 2, ✓ 7 | darmowa (4 z 4) |
+| KAL-002 | przeliczenie wzoru na próbkę | WTP-1 · R (słaby) | Knitting Chart Pro „Adjust the gauge” | płatna (3 z 4) |
+| KAL-003 | jednostki, cale | WTP-0 · R | YarnBuddy za darmo | darmowa |
+| KAL-004 | równomierne dodawanie | WTP-1 · B | opis Knitandnote | płatna (3 z 4) |
+| KAL-005 | zużycie z wagi próbki | WTP-1 · R | StashBot płatny 4,99 USD | płatna (3 z 4) |
+| KAL-006 | długość po blokowaniu | WTP-2 · B | brak na rynku | → 03 |
+| KAL-007 | luz w obwodzie | WTP-2 · B (1 soczewka: WTP-X) | brak śladu potrzeby w recenzjach (H-05) | → 03 jako kandydat na odcięcie |
+| KAL-008 | grubość z próbki | WTP-2 · B | YarnPal id14529076820 | darmowa |
+| SLO-001 | skróty z systemem US/UK | WTP-2 · R | StitchTally i Crochet row & stitch counter za darmo | darmowa (bezpieczeństwo terminologii, RYZ-03) |
+| SLO-002 | słownik offline | WTP-2 · B | NFR-OFF-001 | darmowa |
+
+**Zestawienie (59 BR):** WTP-0: 7, WTP-1: 22, WTP-2: 19, ścisłe WTP-X: 0 (KAL-007 graniczne), dane i warunki bez klasy: 11 (DAN-001, DAN-003–006, DAN-008–009, ZAK-001–004). Płatne w zgodzie soczewek: liczenie bez telefonu (LIC-014–016), przypomnienia i plan rzędów (LIC-007, LIC-009, LIC-010), wzór z narzędziami (WZR-003, WZR-004), stoper i statystyki (PRJ-008, PRJ-009), zapas (ZAP-001–004), kalkulatory projektowe (KAL-002, KAL-004, KAL-005).
+
+### Zapory konkurencji (odczyt 2026-10-22, US; szczegóły w `soczewki/analityk.md`)
+| Typ zapory | Kto | Skutek w recenzjach |
+|---|---|---|
+| limit projektów lub plików | YarnBuddy („Add up to 10 projects in free version.”), Knitting Chart (1–2 pliki), Easy Knitty | YarnBuddy: długoletni darmowi przechodzą na płatną; Knitting Chart i Easy Knitty: 1★ za skąpą wersję darmową |
+| limit liczników | Easy Knitty (1) | „You start out with only one counter” (id9352595843) |
+| funkcja za zaporą | knitCompanion („Free Basics” z dowolną liczbą projektów i iCloud), zegarek, adnotacje, głos | pochwały płacących za konkretne funkcje (LIC-015, WZR-003) |
+| odebranie darmowej funkcji | My Row Counter, CozyKnit | „Don’t take away the features I already had and put them behind a paywall.” (My Row Counter, id14209707875) |
+| dane za zaporą | My Row Counter „Restore Backup” 9,99 USD, archiwum Easy Knitty | najostrzejsze 1★ (J-07) |
+
+### Wnioski E1 jako hipotezy
+| ID | Wniosek | Status | Dowód |
+|---|---|---|---|
+| H-01 / ZAL-017 | Kierunek potwierdzony: darmowy rdzeń bez wymuszonego okresu próbnego. Forma „jeden projekt za darmo” **podważona**: trzy soczewki proponują brak limitu liczby projektów (zapora na funkcjach), jedna limit 3–5 aktywnych projektów; skąpe zapory (1–2 pliki, 1 licznik) dostają 1★ | częściowo potwierdzone (R) | tabela zapór; oszczędny: limity uznawane za przynętę |
+| H-02 / ZAL-018 | Dane i eksport poza zaporą oraz „opłacona funkcja nie znika”: potwierdzone; płacący przechodzą na dożywotni („Just switched to lifetime subscription because I can’t live without it.”, YarnBuddy, id14628479189) | potwierdzone (R) | J-07, tabela zapór |
+| ZAL-002 | Wartość stała dotyczy funkcji używanych w każdej sesji (liczenie bez telefonu, przypomnienia, wzór, stoper, synchronizacja); kalkulatory i import dają wartość jednorazową. Subskrypcja spełnia 3.1.2(a), gdy otwiera funkcje sesyjne | potwierdzone dla zakresu płatnego (R) | soczewka recenzenta, MS-01b |
+| ZAL-025 (nowe) | Granica darmowe/płatne, raz opublikowana, nie przesuwa się w stronę płatną; odbieranie darmowych funkcji daje 1★ | hipoteza (R) | My Row Counter id14209707875, CozyKnit id13862846807 |
+
+**WTP-X dla roli 03:** brak ścisłych; KAL-007 (luz w obwodzie) jako kandydat na odcięcie (1 z 4 soczewek: WTP-X; H-05); graniczne: KAL-006, PRJ-010 (OP-15), WZR-006.
+
+### Zgłoszenia do roli 01 (ER, sprzeczności i luki BRD)
+| ID | Zgłoszenie | Dowód |
+|---|---|---|
+| ER-01 | BR-ZAK-003 obejmuje funkcje opłacone, ale nie darmowe: brak wymagania „funkcja darmowa nie staje się płatna” (ZAL-025) | tabela zapór |
+| ER-02 | Brak scenariusza „subskrypcja wygasła”: dane widoczne i w eksporcie, darmowy licznik działa, płatne funkcje tylko do odczytu | soczewki oszczędnego i pasjonata |
+| ER-03 | Brak wymagania przeciw podwójnej opłacie: zakup dożywotni przy aktywnej subskrypcji (3.1.2(b) „should not be able to inadvertently subscribe to multiple variations”) | soczewka recenzenta; Loopsy id13204972143 |
+| ER-04 | BR-ZAK-004 wymaga tylko polityki prywatności; strona subskrypcji Apple wymaga też Terms of Use („your app and App Store metadata must include links to your Terms of Use and Privacy Policy”) | MS-02a |
+| ER-05 | BR-DAN-009: usunięcie danych nie anuluje subskrypcji; użytkownik powinien to wiedzieć | soczewka recenzenta |
+| ER-06 | Brak scenariuszy iPad, zegarek i Family Sharing dla uprawnień (OG-03: „available across all of the user’s devices”) | soczewka pasjonata, MS-01b |
+| ER-07 | H-06 „żadna nie ma dowodu zakupu” jest za ostre: zegarek ma dowód R (✓$ 3, pochwały płacących); macierz: knitCompanion „Add PDF” jest w pakiecie płatnym, komórka „wzór PDF” bez $ | soczewka analityka, listing 2026-10-22 |
+
+### Do decyzji w E2 (zapowiedź)
+Rodzaj zapory (funkcje albo limit projektów), synchronizacja iCloud (dane czy płatna), import wzoru i zdjęcia (darmowe czy płatne), okres próbny (brak, „XX-day Trial”, oferta wprowadzająca), Family Sharing, zachowanie ceny dla obecnych przy podwyżce.
 
 ## Sesja 1, E0: Rama
 
