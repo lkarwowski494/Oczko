@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · STOP E3 (2026-10-22; STOP E2 przyjęty: „wszystkie decyzje zgodnie z twoim reko”, P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: sesja 2 · **zakończona 2026-10-22** (STOP E3 przyjęty: P-036, P-037; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -272,9 +272,21 @@ Wzorzec z modułu `storekit-expo` przeniesiony 1:1 do `docs/monetyzacja/dostep.m
 Przewodnik Expo „Using in-app purchases” („Last updated on September 25, 2026”, MS-33) wymienia `expo-iap` i `react-native-purchases`; „Native code is not configurable when using Expo Go.” Wersje z npm z 2026-10-22; `expo` latest 58.0.17, projekt na SDK 57 (CLAUDE.md, stan poprzedniej wersji): zgodność sprawdza 05.
 | Opcja | Koszt i prywatność | Bez sieci, przywracanie, nasłuch | Ryzyko | Ocena roli 02 |
 |---|---|---|---|---|
-| `expo-iap` 6.1.1, MIT (MS-34; wydana 2026-10-18, wcześniej 6.0.3 z 16.10 i 6.1.0 z 17.10) | bez usługi i opłat; dane zakupu tylko między urządzeniem a Apple | `getAvailablePurchases`, `restorePurchases`, `purchaseUpdatedListener`, `finishTransaction` (specyfikacja OpenIAP, MS-38, szczebel 4) | szybkie wydania (3 w 3 dni): przypiąć dokładną wersję, aktualizować świadomie | **rekomendacja** |
+| `expo-iap` (jak Trening, P-036) 6.1.1, MIT (MS-34; wydana 2026-10-18, wcześniej 6.0.3 z 16.10 i 6.1.0 z 17.10) | bez usługi i opłat; dane zakupu tylko między urządzeniem a Apple | `getAvailablePurchases`, `restorePurchases`, `purchaseUpdatedListener`, `finishTransaction` (specyfikacja OpenIAP, MS-38, szczebel 4) | szybkie wydania (3 w 3 dni): przypiąć dokładną wersję, aktualizować świadomie | **rekomendacja** |
 | `react-native-purchases` 10.15.0, MIT (MS-35) | RevenueCat: „Pay nothing for up to $2,500 in monthly tracked revenue. Then pay 1%” (MS-36); dane o zakupach wychodzą do usługi, więc wpis w App Privacy (MS-31) | usługa trzyma stan zakupów | sprzeczne z KP-11, ZP-03 i H-03 (uczciwość, brak śledzenia); zależność od firmy trzeciej | odrzucić |
 | własny moduł StoreKit 2 (Expo Modules API) | bez opłat i zależności | pełna kontrola (MS-24–MS-26) | kod Swift bez Maca (OP-03): budowanie tylko w CI, trudne debugowanie | zapasowa, gdy `expo-iap` zawiedzie |
+
+**Decyzja właściciela na STOP E3 (P-036):** „Chce zeby platnosci byly jak w innych moich aplikacjach - w treningu chyba mam store kit?” Trening (repo `lkarwowski494/trening` @8b2c14c, odczyt 2026-10-22) ma StoreKit 2 przez `expo-iap` **5.8.1** przypiętą dokładnie (`package.json`), wybraną opcją A spośród `expo-iap`, `react-native-iap` i własnego modułu (`docs/30-storekit-etap0.md`, decyzja S1 z 12.10.2026). Wzorzec do przeniesienia przez 05 i 08:
+| Element Treningu | Miejsce | Dla Oczka |
+|---|---|---|
+| dostęp wyłącznie z `getAvailablePurchases({ onlyIncludeActiveItemsIOS: true })` (= `Transaction.currentEntitlements`) | `lib/store-native.ts:6–7` | zgodne z KP-06 |
+| bez `verifyPurchaseWithProvider`, `kitApi`, `iapkit*` (jedyne wywołanie sieciowe biblioteki poza StoreKit), pilnowane testem | `lib/store-native.ts:8–9`; `docs/30-storekit-etap0.md:185` | zgodne z KP-11; rozstrzyga OP-23 w stronę „bez wysyłki poza Apple” |
+| błąd odczytu sklepu = stan „nieznany”, nigdy „darmowy” | `lib/store-adapter.ts:5–6` | zgodne z `Odczyt` `blad` (W-03, W-04) |
+| adapter sklepu z dwiema implementacjami: natywną i sztuczną (Jest i E2E na symulatorze) | `lib/store-adapter.ts:2–4` | test bez Maca (OP-03); sztuczny sklep tylko w buildzie E2E |
+| wersja co najmniej 14 dni od wydania, przypięta dokładnie | `docs/30-storekit-etap0.md:185` | 6.1.1 ma dziś 4 dni: 05 wybiera wersję w dniu wdrożenia, najlepiej wspólną z Treningiem |
+| cena tylko z App Store (`displayPrice`) | `lib/store-adapter.ts:13–18` | zgodne z KP-09 |
+
+Różnice nazwane: Family Sharing w Treningu włączone (S5), w Oczku wyłączone (P-034); Trening ma subskrypcje i okres próbny, Oczko jeden zakup jednorazowy (P-029, P-033), więc z adaptera odpadają oferty wprowadzające, karencja i zarządzanie subskrypcją. Kodu Treningu nie kopiuje rola 02; decyzję o ponownym użyciu podejmuje 05.
 
 Wymagania danych dla 05: pamięć podręczna uprawnień (JSON `Pamiec`, KP-06); licznik limitu: brak (P-030). Wpis do inwentarza prywatności: zakup przez StoreKit bez SDK zewnętrznego; czy transakcja obsługiwana przez Apple jest „collect” w rozumieniu App Privacy (MS-31: „transmitting data off the device in a way that allows you and/or your third-party partners to access it…”): [DO USTALENIA] przez 05 (OP-23). „Potwierdzenie” ADR: wektory w Node (kod 0) i scenariusze na telefonie niżej. Adapter izoluje bibliotekę za `Uprawnienie[]`, więc zamiana na własny moduł nie zmienia logiki dostępu.
 
