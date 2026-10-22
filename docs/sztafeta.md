@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 04, build, zakończona)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 01, fix ER-29, STOP E2)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -13,13 +13,15 @@
 | 02 Monetyzacja, sesja 3 | build, `--moduly cena-i-rachunek,storekit-expo` | zakończona 2026-10-22 (STOP E3 przyjęty, P-058): **model V4 bez próby** (P-057): cała aplikacja darmowa, limit 5 dni z robótką/mies., Pro 0,99 / 6,99 USD (subskrypcja bez oferty wprowadzającej) i 14,99 USD dożywotnio | (ten commit) | docs/monetyzacja.md („Sesja 3, E0–E3”: kontrakt KP-01–KP-15, test modelu), docs/monetyzacja/limit.mjs, wektory-limitu.json, limit-test.mjs, warianty-s3/, dostep.mjs (W-15–W-18); P-054–P-057; ZAL-028, ZAL-029; dowody: oczko-warsztat/02-monetyzacja/2026-10-22-sesja3/ | ER-26–ER-28 do roli 01; D6 Family Sharing i ID produktów przy konfiguracji App Store Connect (P-038, OP-24); czy Trening liczy D5 tak samo (05) |
 | 01 Odkrywanie, fix ER-25–ER-28 | fix (P-058) | zakończona 2026-10-22 (STOP E2 przyjęty, P-060): ER-25–ER-28 naprawione-do-weryfikacji (STOP E0: P-059) | 95a69eb | 84 BR (+4: BR-ZAK-005–007, BR-DAN-012), zmienione BR-ZAK-001–003, BR-DAN-005, BR-LIC-017, BR-DNI-001, NFR-PIE-001, PR-09, PR-15, OG-03, OG-15, H-01, H-02, S-38, S-39, OP-32, OP-33; `tests/wektory/brd.json` bez zmian; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er25-28/` | OP-32 (02), OP-33 (11), NZ-01–NZ-04; status „zweryfikowane” nadaje reaudit |
 | 04 Studio projektowe | build | zakończona 2026-10-22 (STOP E4; E0: P-061, E1: P-062, E2: P-063 kierunek A, P-064 Libre Franklin, E3: P-065; ta sama sesja co fix 01, wyjątek zasady 19) | (ten commit) | docs/design/ (design-spec.md, tokeny.json, kontrast-tabela.txt 44/44, ekrany.html + wzorce-zrzuty/ 84, prototyp.html + przejscie/, ikona/, fonty/, narzedzia/, porownanie, kroje) | P-065 (1a) do potwierdzenia przez 02; makiety wzoru, zegarka, ekranu blokady, kalendarza i Ustawień w audycie 04 |
+| 01 Odkrywanie, fix ER-29 | fix (P-065) | STOP E2 2026-10-22: ER-29 naprawione-do-weryfikacji, **warunkowe** do potwierdzenia przez 02 | 3d64639 | BR-ZAK-006, BR-ZAK-005, errata ER-29; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er29/` | potwierdzenie P-065 (1a) przez 02 |
 
 ## Następny krok
 ### Przekazanie roli 04 (2026-10-22)
 - Zakończono: 04-studio-projektowe, build (E0–E4: P-061–P-065), gałąź `claude/jolly-thompson-paz6d8`; artefakty w `docs/design/`: `design-spec.md` (system, komponenty, VoiceOver, limit, teksty ofert, reguła wzoru wobec OG-07, konfiguracja ikony, wpis do pamięci portfolio), `tokeny.json` + `kontrast-tabela.txt` (44/44, kod 0), `ekrany.html` + `wzorce-zrzuty/` (7 stanów × 12 wariantów, linia bazowa SP-13), `prototyp.html` + `przejscie/` (scenorys, `wynik.md` dla kolumny „Intuicyjność”), `ikona/` (pliki dla iOS, zegarka, Androida, ekranu startowego; `ikona.mjs` kod 0), `fonty/` (OFL), `narzedzia/`.
 - Najpierw (P-060 (5b), P-065 (1a)): **02-monetyzacja, tryb `fix`**: NZ-01 i NZ-02 (OP-32: zerowanie, −1, liczniki oczek i powtórzeń, zegarek; dni na nowym urządzeniu) oraz potwierdzenie, że limit pokazany zawczasu (komunikat zamiast +1 przed pierwszym rzędem nowego dnia, bez ekranu zakupu) jest zgodny z KP-12, KP-13; nowa sesja: opus, wysiłek high.
   - `node tools/assemble.mjs 02-monetyzacja --tryb fix --zadania NZ-01,NZ-02,P-065 --galaz claude/jolly-thompson-paz6d8`
-- Potem: **01-odkrywanie, fix** (ER: BR-ZAK-006 według P-065 (1a), po potwierdzeniu 02) i **05-architekt**, tryb `build`.
+- ER-29 (BR-ZAK-006 według P-065) zrobione wcześniej przez rolę 01 na prośbę właściciela, warunkowo (3d64639); 02 je potwierdza albo rola 01 cofa commit.
+- Potem: **05-architekt**, tryb `build`.
   - `node tools/assemble.mjs 05-architekt --tryb build --galaz claude/jolly-thompson-paz6d8`
   - `.\Get-Prompt.ps1 05-architekt -Tryb build -CopyToClipboard`
 - Paczka dla 05: `docs/design/design-spec.md` (komponenty systemowe a własne, `react-native-svg`, VoiceOver, Magic Tap, arkusze modalne, Dynamic Type z limitem ×1,3 dla liczby), `tokeny.json`, `ikona/` (wpisy konfiguracji), `prototyp.html` (zachowanie strażnika, limitu, przypomnienia).
