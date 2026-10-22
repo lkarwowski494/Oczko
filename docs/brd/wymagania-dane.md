@@ -261,7 +261,7 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
   - Scenariusz: Nowy dzień ponad limit (L-03)
     - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni w listopadzie, a dziś jest 8 listopada
     - Gdy dodaje pierwszy rząd
-    - Wtedy rząd nie zostaje dodany, licznik pokazuje poprzednią wartość, a aplikacja pokazuje komunikat na limicie (BR-ZAK-006)
+    - Wtedy rząd nie zostaje dodany, licznik pokazuje poprzednią wartość, a aplikacja pokazuje komunikat na limicie (BR-ZAK-006); zwykle użytkownik widzi ten stan zawczasu, zanim zacznie dziergać (BR-ZAK-006, P-065)
   - Scenariusz: Ręczne wpisanie w nowym dniu ponad limit (L-08)
     - Zakładając, że użytkownik bez Pro zużył 5 z 5 dni, a dziś nie dodał jeszcze rzędu
     - Gdy wpisuje numer rzędu ręcznie (BR-LIC-017)
@@ -293,22 +293,36 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
 
 ### BR-ZAK-006: Komunikat na limicie i miejsca ekranu zakupu
 - Przepływ: PR-09, PR-02
-- Dowód potrzeby: P-055 i P-057 (ekran zakupu tylko przy starcie ponad limit i w Ustawieniach, bez arkusza zakupu na starcie); KP-03, KP-13, KP-14 i ujawnienia (5), (6) w `docs/monetyzacja.md`, „Sesja 3, E3”; NFR-PIE-001 · ER-26
-- Teksty, miejsce licznika dni i wygląd ustala rola 04 (KP-13, P-046)
+- Dowód potrzeby: P-055 i P-057 (ekran zakupu tylko przy starcie ponad limit i w Ustawieniach, bez arkusza zakupu na starcie); KP-03, KP-13, KP-14 i ujawnienia (5), (6) w `docs/monetyzacja.md`, „Sesja 3, E3”; NFR-PIE-001 · ER-26. Komunikat zawczasu i miejsce licznika dni: P-065 (1a), (2a), bo w przejściu poznawczym roli 04 stuknięcie zatrzymane po zrobionym rzędzie przepadało po cichu, a dziergająca dalej robiła robótkę (`docs/design/przejscie/wynik.md`) · ER-29
+- zależy od: potwierdzenia roli 02, że komunikat przed pierwszym rzędem dnia (bez ekranu zakupu) jest zgodny z KP-12 i KP-13 (P-065 (1a), warunkowa)
+- Teksty i wygląd: `docs/design/design-spec.md`, „Limit dni na ekranach” (rola 04)
 - Kryteria akceptacji:
-  - Scenariusz: Komunikat przy starcie dnia ponad limit
-    - Zakładając, że strażnik nie pozwolił zacząć nowego dnia (BR-ZAK-005)
-    - Gdy aplikacja pokazuje komunikat
-    - Wtedy komunikat mówi, że darmowe dni w tym miesiącu się skończyły i że wracają 1. dnia następnego miesiąca, pokazuje Pro z ceną ze sklepu i mówi, że projekty, historia i eksport działają dalej
-    - Oraz po zamknięciu komunikatu użytkownik widzi licznik z niezmienioną wartością
+  - Scenariusz: Limit widoczny przed pierwszym rzędem dnia
+    - Zakładając, że użytkownik bez Pro zużył 5 z 5 darmowych dni w listopadzie, dziś jest 8 listopada, dziś nie dodał rzędu, a ostatni rząd dodał ponad 60 minut temu
+    - Gdy otwiera licznik projektu
+    - Wtedy zamiast przycisków +1 i −1 widzi komunikat, że darmowe dni w listopadzie się skończyły i liczenie wraca 1 grudnia, a jego rzędy i wszystkie dane zostają; odnośnik do Pro leży poza miejscem przycisku +1, a ekranu zakupu nie ma
+    - Oraz historia, menu projektu, wzór i eksport działają
+  - Scenariusz: Praca po północy bez przerwy (L-04)
+    - Zakładając, że użytkownik zużył 5 z 5 dni i dodał rząd o 23:50
+    - Gdy o 00:10 patrzy na licznik
+    - Wtedy widzi przyciski +1 i −1, a nie komunikat o limicie, bo to praca w toku tego samego dnia limitu
+  - Scenariusz: Nowy dzień zaczął się przy otwartej aplikacji (przypadek brzegowy)
+    - Zakładając, że licznik był otwarty z przyciskiem +1, a od ostatniego rzędu minęło ponad 60 minut i zaczął się nowy dzień ponad limit (BR-ZAK-005)
+    - Gdy użytkownik stuka +1
+    - Wtedy rząd nie zostaje dodany, a aplikacja mówi wprost, że rząd 62 nie został dodany („Row 62 wasn’t added”), że darmowe dni się skończyły i co znaczy dzień z robótką w limicie, oraz że dane zostają
+    - Oraz po zamknięciu komunikatu licznik pokazuje niezmienioną wartość i komunikat z pierwszego scenariusza zamiast przycisków
   - Scenariusz: Bez oferty w trakcie pracy
     - Zakładając, że użytkownik ma darmowe dni albo pracuje w rozpoczętym dniu
     - Gdy liczy rzędy, otwiera projekty, wzór i kalendarz
     - Wtedy nie widzi ekranu zakupu ani oferty Pro; ekran zakupu otwiera tylko z Ustawień
   - Scenariusz: Licznik dni
-    - Zakładając, że użytkownik bez Pro zużył 2 z 5 dni w miesiącu
-    - Gdy patrzy na licznik dni w miejscu ustalonym przez rolę 04
-    - Wtedy widzi, że zostały 3 z 5 darmowych dni w tym miesiącu
+    - Zakładając, że użytkownik bez Pro zużył 2 z 5 dni w listopadzie
+    - Gdy otwiera listę projektów albo Ustawienia
+    - Wtedy widzi, że zostały 3 z 5 darmowych dni w listopadzie, a ekran licznika nie pokazuje liczby dni (P-046)
+  - Scenariusz: Ostatni darmowy dzień
+    - Zakładając, że użytkownik bez Pro zużył 4 z 5 dni w listopadzie
+    - Gdy otwiera licznik
+    - Wtedy pod liczbą widzi jedną linię, że został 1 darmowy dzień w listopadzie (wyjątek od P-046, P-065 (2a))
   - Scenariusz: Aktywna subskrypcja
     - Zakładając, że użytkownik ma aktywną subskrypcję Pro
     - Gdy otwiera Ustawienia
