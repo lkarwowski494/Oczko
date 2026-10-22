@@ -219,3 +219,24 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Zakładając, że schemat jest otwarty
     - Gdy użytkownik włącza siatkę i ustawia jej początek
     - Wtedy na schemacie widać linie co 10 kratek od wskazanego miejsca
+
+### BR-WZR-007: Wzór ze strony WWW i z pliku Word, link do filmu
+- Przepływ: PR-06
+- Dowód potrzeby: J-04; „be it a webpage or a pdf” (opis My Row Counter, S-17); nota wersji My Row Counter 3.58 „Can now import Word files” (strona App Store, odczyt roli 03 2026-10-22); „The fact that I can load patterns in from websites and PDF’s is a game changer!!” (My Row Counter, id14644150451); film: dowód słaby, pojedynczy: „I use it to transcribe free videos” (My Row Counter, id14688038898) · ER-17; porównanie z zastrzeżeniami patentów jak cały moduł (OG-07, P-024)
+- Kryteria akceptacji:
+  - Scenariusz: Strona WWW zapisana bez sieci
+    - Zakładając, że użytkownik ma otwarty wzór na stronie WWW w przeglądarce
+    - Gdy udostępnia stronę do Oczka i wybiera projekt
+    - Wtedy wzór jest w projekcie i otwiera się później bez sieci
+  - Scenariusz: Plik Word
+    - Zakładając, że w Plikach jest wzór w pliku Word
+    - Gdy użytkownik udostępnia go do Oczka
+    - Wtedy wzór jest w projekcie i otwiera się bez sieci
+  - Scenariusz: Strona, której nie da się zapisać
+    - Zakładając, że strona wymaga logowania albo nie ma treści wzoru
+    - Gdy użytkownik udostępnia ją do Oczka
+    - Wtedy aplikacja pokazuje, że nie może zapisać strony, i nie tworzy pustego wzoru
+  - Scenariusz: Link do filmu
+    - Zakładając, że użytkownik dodaje do projektu link do filmu z instrukcją
+    - Gdy otwiera link bez sieci
+    - Wtedy aplikacja pokazuje, że film wymaga sieci; Oczko zapisuje tylko link, nie film
