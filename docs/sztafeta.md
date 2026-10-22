@@ -1,15 +1,21 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-21 (po roli 01)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 02 sesja 2, STOP E3)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
 | koordynator | — | decyzje P-001–P-010, kwarantanna | b080940 | docs/decyzje.md, docs/pomysl.md, CLAUDE.md | — |
 | 02 Monetyzacja, sesja 1 (bramka) | build, `--moduly oplacalnosc,cena-i-rachunek` | zakończona 2026-10-21: **budować** (P-013) | (ten commit) | docs/monetyzacja.md (Opłacalność), docs/monetyzacja/, docs/zalozenia.md, P-011–P-016; surowe dane: oczko-warsztat/02-monetyzacja/2026-10-21-bramka/ | OP-05, OP-06 (fakty od właściciela, niepilne) |
 | 01 Odkrywanie | build | zakończona 2026-10-21 | (ten commit) | docs/brd/ (9 plików), tests/wektory/brd.json; P-017–P-026; ZAL-017–024 | OP-09 (e-mail do CYC), OP-03, OP-11, OP-15; OP źródłowe dla 06 |
-| 02 Monetyzacja, sesja 2 | build (bez `--moduly`) | w toku: STOP E2 (2026-10-22) | (ten commit) | docs/monetyzacja.md („Sesja 2, E0–E2”), docs/monetyzacja/warianty-e2/, rachunek.json, docs/zalozenia.md (ZAL-025); P-027, P-028; soczewki i źródła: oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/ | D1–D7 (model, zapora, synchronizacja, import, okres próbny, Family Sharing, cena); ER-06, ER-07 do roli 01 |
+| 02 Monetyzacja, sesja 2 | build (bez `--moduly`) | w toku: STOP E3 (2026-10-22), czeka na akceptację kontraktu | (ten commit) | docs/monetyzacja.md („Sesja 2, E0–E3”: model B, kontrakt płatności KP-01–KP-11, szkic ADR, przekazanie), docs/monetyzacja/dostep.mjs, wektory-dostepu.json, dostep-test.mjs, docs/zalozenia.md (ZAL-026); P-027–P-035; źródła: oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/2026-10-22/e3/ | STOP E3: akceptacja kontraktu, ID produktu, ADR dla 05; ER-06–ER-08 do roli 01 |
 
 ## Następny krok
-### Przekazanie do następnej roli
+- Teraz: właściciel odpowiada na STOP E3 roli 02 (sesja 2) w tej sesji; po akceptacji rola 02 kończy sesję i wypisuje przekazanie do roli 03 (projekt w `docs/monetyzacja.md`, „Przekazanie”).
+- Potem (P-002): **03-zakres**, tryb `build`; nowa sesja: opus, wysiłek high; gałąź `claude/jolly-thompson-paz6d8`. Przed 03: poprawka zbiorcza BRD roli 01 (ER-06, ER-07, ER-08; P-028).
+  - `node tools/assemble.mjs 03-zakres --tryb build --galaz claude/jolly-thompson-paz6d8`
+  - `.\Get-Prompt.ps1 03-zakres -Tryb build -CopyToClipboard`
+- Gałąź: praca roli 02 z E3 jest na `claude/compassionate-shannon-ug7tqb` (sesja w chmurze z inną gałęzią przydzieloną); `claude/jolly-thompson-paz6d8` dostaje ją przez fast-forward za zgodą właściciela (STOP E3, pytanie 3).
+
+### Przekazanie roli 01 (archiwalne, 2026-10-21)
 - Zakończono: 01-odkrywanie, build, commit na gałęzi `claude/jolly-thompson-paz6d8`; artefakty: `docs/brd/` (README z definicją ukończenia i blokerami, odkrywanie, wymagania + 4 moduły, reguly, zrodla), `tests/wektory/brd.json`, `docs/zalozenia.md` (ZAL-017–024), decyzje P-017–P-026; materiały prywatne `oczko-warsztat/01-odkrywanie/`.
 - Następny krok ścieżki (P-002): **02-monetyzacja Monetyzacja, sesja 2**, tryb `build` (bez `--moduly`: model i kontrakt płatności); nowa sesja: opus, wysiłek high; gałąź `claude/jolly-thompson-paz6d8`.
 - Polecenie:

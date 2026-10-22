@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · STOP E2 (2026-10-22; STOP E1 przyjęty: „1A 2A”, P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: sesja 2 · STOP E3 (2026-10-22; STOP E2 przyjęty: „wszystkie decyzje zgodnie z twoim reko”, P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -199,6 +199,142 @@ Wspólne dla wszystkich opcji: darmowy rdzeń według tabeli WTP (P-027), jedno 
 | D7 | Zachowanie ceny (tylko A i C) | **a** przy podwyżce obecni zostają przy swojej cenie (MS-21: „unlimited number of active subscribers at their existing price”) · **b** podwyżka dla wszystkich (zgoda w DE, PL i powyżej progów, MS-20) | **a** |
 
 Po odpowiedzi: wpis w rejestrze decyzji Twoimi słowami; statusy ZAL-002, ZAL-016, ZAL-017 i H-01 w rejestrze założeń.
+
+**Decyzje na STOP E2 (2026-10-22):** „Ok sprobujemy tutaj z Twoimi rekomendacjami jako test modelu w jednej aplikacji. Wszystkie decyzje zgodnie z twoim reko.” D1 B (P-029), D2a (P-030), D3a (P-031), D4a (P-032), D5a (P-033), D6a (P-034), D7a warunkowo (P-035, tylko przy powrocie do A albo C).
+
+## Sesja 2, E3: Kontrakt płatności (2026-10-22)
+Model: **B, darmowy rdzeń + Pro dożywotni 14,99 USD** jako test modelu w jednej aplikacji (P-029). Odczyty z dziś (surowe teksty: `oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/2026-10-22/e3/`): StoreKit MS-24–MS-27, App Store Connect MS-28–MS-30, prywatność MS-31, umowa licencyjna MS-32, Expo, npm i OpenIAP MS-33–MS-38. Wytyczne z 2026-10-22 („Last Updated: October 16, 2026”) bez ponownego odczytu w E3.
+
+### Test modelu (P-029, ZAL-026)
+| Element | Ustalenie |
+|---|---|
+| Miara | konwersja = zakupy Pro (Sales and Trends) / pierwsze pobrania (App Analytics) w tym samym okresie i storefrontach; dane od właściciela, poza publicznym repo |
+| Próg | 1,85%: przy nim B daje tyle co A z odnowieniami (E2, „Jak czytać rachunek”) |
+| Kiedy | odświeżenie 04.2027 (P-016) albo 3000 pierwszych pobrań, co nastąpi później |
+| Reguła | < 1,37%: powrót do A (ceny P-019, zachowanie ceny P-035); > 2,33%: B potwierdzone; pomiędzy: pomiar do następnego odświeżenia |
+| Skąd 1,37 / 2,33 | rachunek: 95% przedział przybliżenia normalnego wokół 1,85% przy n = 3000, ±1,96 × √(0,0185 × 0,9815 / 3000) = ±0,48 pp; przy n = 1000 aż ±0,84 pp, dlatego nie wcześniej |
+| Ograniczenie | druga aplikacja właściciela ma model mieszany (OP-19); porównanie z nią to punkt odniesienia z innej kategorii, nie dowód przyczynowy |
+| Powrót do A | dożywotni `oczko.pro.lifetime` zostaje (nabywcy nie tracą niczego, BR-ZAK-003); dochodzą subskrypcje w jednej grupie i KP-03 w pełnej wersji |
+
+### Podział darmowe / Pro (propozycja dla roli 03; zakres rozstrzyga 03 z właścicielem)
+| Część | Wymagania | Podstawa |
+|---|---|---|
+| Darmowe, bez limitu projektów i liczników | LIC-001–006, LIC-008, LIC-011–013; PRJ-001–007; WZR-001, WZR-002, WZR-005; KAL-001, KAL-003, KAL-008; SLO-001, SLO-002; DAN-002 (synchronizacja iCloud), DAN-007 (import od konkurencji) | P-027, P-030, P-031, P-032 |
+| Dane i warunki, zawsze dla wszystkich | DAN-001, DAN-003–006, DAN-008–009; ZAK-001–004 | zasada roli 6, BR-ZAK-003 |
+| Pro (jedno uprawnienie) | liczenie bez telefonu: LIC-014, LIC-015, LIC-016 · przypomnienia i plan rzędów: LIC-007, LIC-009, LIC-010 · narzędzia na wzorze: WZR-003, WZR-004, WZR-006 · stoper i postęp: PRJ-008, PRJ-009 · zapas: ZAP-001–004 · kalkulatory projektowe: KAL-002, KAL-004, KAL-005 | P-027 (zgoda soczewek), P-032 |
+| Do roli 03 | PRJ-010 (OP-15), KAL-006, KAL-007 (kandydat na odcięcie, H-05), WZR-006 (czy w ogóle) | E1, „WTP-X dla roli 03” |
+
+**Zasada dla 03:** usunięcie funkcji z Pro w zakresie MVP jest swobodne; przeniesienie funkcji z części darmowej do Pro po wydaniu jest zakazane (KP-01). Lista darmowa w pierwszym wydaniu to zobowiązanie, więc 03 może ją zawęzić **przed** wydaniem.
+
+### Kontrakt płatności
+| Produkt (ID) | Typ | Cena (próg, kraj bazowy) | Family Sharing | Odblokowuje |
+|---|---|---|---|---|
+| `oczko.pro.lifetime` (propozycja; ID nieodwracalne, MS-28) | Non-Consumable | 14,99 USD, kraj bazowy USA, ceny w pozostałych storefrontach generowane przez Apple (MS-19) | wyłączone (P-034) | uprawnienie „Pro”: wszystkie funkcje z wiersza „Pro” powyżej |
+
+| Przepływ (PR) | Akcja Pro | Bez dostępu (co widzi użytkownik) | Dane zawsze dostępne |
+|---|---|---|---|
+| PR-01, PR-02 | — | wszystko działa; ekran zakupu nigdy nie przerywa liczenia | — |
+| PR-03 | licznik powtórzeń (LIC-007) | liczniki części działają; przy liczniku powtórzeń znak Pro, stuknięcie otwiera opis i ekran zakupu | liczniki i historia |
+| PR-04 | przypomnienie „co N rzędów”, plan rzędów (LIC-009, LIC-010) | jak wyżej | wpisane instrukcje jako tekst notatki |
+| PR-05 | zegarek, ekran blokady, głos (LIC-014–016) | ekran nie gaśnie (LIC-013, darmowe); opis funkcji Pro w ustawieniach liczenia | — |
+| PR-06 | znacznik rzędu, pisanie po wzorze (WZR-003, WZR-004, WZR-006) | import i czytanie wzoru działają (P-032); narzędzia ze znakiem Pro | zaimportowane wzory, wcześniejsze adnotacje (do odczytu) |
+| PR-07, PR-08, PR-12, PR-13 | — | wszystko działa (P-031, P-032) | wszystko |
+| PR-09 | zakup, przywrócenie | ekran zakupu jako stan przepływu (rola 04); przywracanie na ekranie zakupu i w ustawieniach | wszystko |
+| PR-10 | zapas (ZAP-001–004) | moduł ze znakiem Pro i opisem | wpisy zapasu widoczne i w eksporcie zawsze (KP-02) |
+| PR-11 | KAL-002, KAL-004, KAL-005 | KAL-001, 003, 008 działają; pozostałe ze znakiem Pro | zapisane wyniki w projekcie |
+| PR-14 | stoper i postęp (PRJ-008, PRJ-009) | znak Pro | zapisane czasy sesji (do odczytu) |
+
+**Wymagania kontraktu (KP).** KP-01–KP-05 to ER-01–ER-05 wpisane tu zgodnie z P-028; BRD odsyła do tej tabeli (ER-08).
+| ID | Wymaganie | Dlaczego / źródło |
+|---|---|---|
+| KP-01 (ER-01) | Funkcja darmowa w wydanej wersji nie staje się płatna; kontrola przed każdym wydaniem: lista darmowa z tej sekcji wobec poprzedniego wydania (07) | ZAL-025, P-030 |
+| KP-02 (ER-02) | Utrata Pro (zwrot): dane utworzone funkcjami Pro zostają widoczne i w eksporcie, funkcje Pro przechodzą w tryb do odczytu, darmowe działają; przy powrocie do A to samo dla wygasłej subskrypcji | zasada roli 6; MS-27: „The date that the App Store refunded the transaction or revoked it from Family Sharing.” |
+| KP-03 (ER-03) | Przy aktywnym Pro ekran zakupu nie oferuje zakupu (stan „Masz Pro” z przywracaniem); przy powrocie do A: dożywotni przy aktywnej subskrypcji tylko z ostrzeżeniem i drogą do anulowania subskrypcji | MS-22 (3.1.2(b)) |
+| KP-04 (ER-04) | Polityka prywatności w aplikacji i w metadanych (BR-ZAK-004); umowa licencyjna: standardowa EULA Apple, bez własnej. Odnośnik do Terms of Use na ekranie zakupu wymagany przy subskrypcji (MS-02a), przy B nie | MS-32: „If you don’t provide a custom EULA, the standard EULA is applied to your app” |
+| KP-05 (ER-05) | „Usuń wszystkie dane” (BR-DAN-009) nie usuwa zakupu; potwierdzenie mówi, że Pro wraca przez przywracanie | MS-26 |
+| KP-06 | Źródłem dostępu są transakcje sklepu na każdym urządzeniu; pamięć podręczna tylko jako ostatni udany odczyt, poza danymi synchronizowanymi przez iCloud | zasada roli 7; MS-24: „Products that the App Store has refunded or revoked don’t appear in the current entitlements.” |
+| KP-07 | Nasłuch transakcji od startu aplikacji, nie tylko na ekranie zakupu | MS-25: „Without the Task to listen for these transactions, your app may miss them.” |
+| KP-08 | Przywracanie (synchronizacja ze sklepem) tylko po stuknięciu użytkownika; przy starcie wystarczają bieżące uprawnienia | MS-26: „Call this function only in response to an explicit user action”; „When users reinstall your app or download it on a new device, the app automatically has all transactions available to it upon initial launch.” |
+| KP-09 | Cena na ekranie z obiektu produktu sklepu (waluta storefrontu), nigdy wpisana w kod ani w tłumaczenia | MS-19: ceny w 174 storefrontach generowane z kraju bazowego |
+| KP-10 | Ekran zakupu tylko po działaniu użytkownika (znak Pro, ustawienia); nigdy w trakcie PR-02 i PR-05, nigdy przy pierwszym uruchomieniu | wzorce „Etyka”; 5.6 (MS-01f) |
+| KP-11 | Bez SDK analityki i usług zewnętrznych w ścieżce zakupu | BR-ZAK-002, NFR-PRY-001, zasada roli 8 |
+
+- **Źródło dostępu:** transakcje sklepu (MS-24); pamięć podręczna: JSON `{ produkty, wygasa }` z ostatniego udanego odczytu, bez końca dla dożywotniego; miejsce wybiera 05 (poza synchronizowaną bazą, KP-06).
+- **Bez sieci:** po zakupie Pro działa z pamięci (W-03); przed pierwszym udanym odczytem albo przy uszkodzonej pamięci brak Pro do odczytu ze sklepu (W-04, P-02): przypadek brzegowy, bo zakup i tak wymaga sieci.
+- **Przywracanie:** na ekranie zakupu i w ustawieniach (MS-01g, BR-ZAK-001); bez zakupu: komunikat „nie znaleziono zakupu na tym koncie App Store”, nigdy dostęp (W-07).
+- **Okres próbny:** brak (P-033). Darmowy rdzeń bez limitu czasu ani użyć, więc nie ma „okresu próbnego” w rozumieniu 3.1.1 (wzorce, „Kalibracja”).
+- **Ujawnienia dla roli 04 (ekran zakupu):** (1) kwota 14,99 USD w walucie storefrontu jako najwyraźniejszy element ceny (wymóg strony subskrypcji MS-02, stosowany też do zakupu jednorazowego) i słowa „jednorazowo, bez subskrypcji”; (2) lista funkcji Pro zgodna z tym kontraktem i zdanie, że darmowe zostaje darmowe, a dane i eksport są zawsze dostępne; (3) „Przywróć zakupy” na ekranie i w ustawieniach; (4) widoczne zamknięcie i neutralna odmowa; (5) zakup działa na urządzeniach z tym samym kontem App Store przez przywracanie (MS-26); bez obietnic o rodzinie (P-034); (6) odnośnik do polityki prywatności; (7) zakazane wzorce z tabeli „Etyka” (fałszywa pilność, „najpopularniejszy”, zawstydzanie, ekran w głównej pracy).
+
+### Logika dostępu i wektory (dla 07 i 08)
+Wzorzec z modułu `storekit-expo` przeniesiony 1:1 do `docs/monetyzacja/dostep.mjs` (JavaScript, żeby dało się go sprawdzić bez kompilacji); 08 przepisuje go na TypeScript w kodzie aplikacji. Wektory: `docs/monetyzacja/wektory-dostepu.json` (13 scenariuszy decyzji W-01–W-13, 6 odczytu pamięci P-01–P-06). Wynik `node docs/monetyzacja/dostep-test.mjs`: „zgodne 19 z 19 wektorów”, kod 0 (`dowody/dostep-2026-10-22.txt`). Kontrola testu: kopia funkcji bez sprawdzenia `odebrane` daje „NIEZGODNE 1 z 19” (W-05) i kod 1. Wektory są kontraktem: 07 i 08 czytają, zmienia rola 02 (ER).
+
+### Szkic ADR: biblioteka płatności (dla roli 05, decyzja w `docs/adr/`)
+Przewodnik Expo „Using in-app purchases” („Last updated on September 25, 2026”, MS-33) wymienia `expo-iap` i `react-native-purchases`; „Native code is not configurable when using Expo Go.” Wersje z npm z 2026-10-22; `expo` latest 58.0.17, projekt na SDK 57 (CLAUDE.md, stan poprzedniej wersji): zgodność sprawdza 05.
+| Opcja | Koszt i prywatność | Bez sieci, przywracanie, nasłuch | Ryzyko | Ocena roli 02 |
+|---|---|---|---|---|
+| `expo-iap` 6.1.1, MIT (MS-34; wydana 2026-10-18, wcześniej 6.0.3 z 16.10 i 6.1.0 z 17.10) | bez usługi i opłat; dane zakupu tylko między urządzeniem a Apple | `getAvailablePurchases`, `restorePurchases`, `purchaseUpdatedListener`, `finishTransaction` (specyfikacja OpenIAP, MS-38, szczebel 4) | szybkie wydania (3 w 3 dni): przypiąć dokładną wersję, aktualizować świadomie | **rekomendacja** |
+| `react-native-purchases` 10.15.0, MIT (MS-35) | RevenueCat: „Pay nothing for up to $2,500 in monthly tracked revenue. Then pay 1%” (MS-36); dane o zakupach wychodzą do usługi, więc wpis w App Privacy (MS-31) | usługa trzyma stan zakupów | sprzeczne z KP-11, ZP-03 i H-03 (uczciwość, brak śledzenia); zależność od firmy trzeciej | odrzucić |
+| własny moduł StoreKit 2 (Expo Modules API) | bez opłat i zależności | pełna kontrola (MS-24–MS-26) | kod Swift bez Maca (OP-03): budowanie tylko w CI, trudne debugowanie | zapasowa, gdy `expo-iap` zawiedzie |
+
+Wymagania danych dla 05: pamięć podręczna uprawnień (JSON `Pamiec`, KP-06); licznik limitu: brak (P-030). Wpis do inwentarza prywatności: zakup przez StoreKit bez SDK zewnętrznego; czy transakcja obsługiwana przez Apple jest „collect” w rozumieniu App Privacy (MS-31: „transmitting data off the device in a way that allows you and/or your third-party partners to access it…”): [DO USTALENIA] przez 05 (OP-23). „Potwierdzenie” ADR: wektory w Node (kod 0) i scenariusze na telefonie niżej. Adapter izoluje bibliotekę za `Uprawnienie[]`, więc zamiana na własny moduł nie zmienia logiki dostępu.
+
+### Testy, których nie zrobi Node (krok właściciela, dla strategii 07)
+Bez Maca (OP-03) testy StoreKit tylko przez TestFlight: „Apps downloaded from TestFlight will automatically operate in a sandbox environment.” (MS-29); piaskownica pozwala testować zakupy „using test accounts without incurring charges” (MS-30).
+| Scenariusz | Oczekiwane | Wektor |
+|---|---|---|
+| zakup Pro w TestFlight | Pro działa od razu | W-01 |
+| usunięcie i ponowna instalacja, potem start bez stuknięcia „Przywróć” | Pro działa (bieżące uprawnienia) | W-02 |
+| tryb samolotowy po zakupie, zabicie i start aplikacji | Pro działa z pamięci | W-03 |
+| iPad z tym samym kontem App Store, „Przywróć” | Pro działa | W-09 |
+| inne konto piaskownicy bez zakupu, „Przywróć” | komunikat, brak Pro | W-07 |
+| „Usuń wszystkie dane”, potem „Przywróć” | Pro wraca (KP-05) | W-02 |
+| zwrot | Pro znika, dane do odczytu (KP-02) | W-05, W-06; jak wywołać zwrot w piaskownicy bez Xcode: [DO USTALENIA] (OP-21) |
+| zegarek bez telefonu w pobliżu | [DO USTALENIA] przez 05: jak zegarek czyta uprawnienie (OP-22) | — |
+
+### Zgłoszenie do roli 01 (do poprawki zbiorczej z ER-06 i ER-07, P-028)
+| ID | Zgłoszenie | Dowód |
+|---|---|---|
+| ER-08 | BRD opisuje trzy produkty P-019: H-02 („zgodnie z P-019 dożywotni 14,99 USD obok subskrypcji”), OG-03 („Dotyczy P-019”), `docs/brd/README.md` (ceny P-019). Po P-029: jeden produkt Pro; H-01 i H-02 rozstrzygnięte (niżej); BR-ZAK powinny odsyłać do KP-01–KP-05 | P-029–P-033 |
+
+### Statusy H i ZAL po roli 02
+| ID | Status | Dowód |
+|---|---|---|
+| H-01 / ZAL-017 | rozstrzygnięta: darmowy rdzeń bez limitu projektów i bez okresu próbnego (forma „jeden projekt” zastąpiona) | P-030, P-033 |
+| H-02 / ZAL-018 | rozstrzygnięta: zakup jednorazowy jako jedyny produkt; dane i eksport poza zaporą; KP-01, KP-02 | P-029 |
+| H-03 / ZAL-009 | potwierdzone (R); w kontrakcie: KP-10, KP-11, ujawnienia; przekaz sklepu dla roli 11 | E1 sesji 1 |
+| ZAL-002 | bez zmian; przy B nie jest warunkiem | P-029 |
+| ZAL-016 | hipoteza, teraz tylko dla 14,99 USD | test P-029 |
+| ZAL-025 | hipoteza (R), podstawa KP-01 | E1 |
+| ZAL-026 (nowe) | hipoteza: konwersja B ≥ 1,85% | test P-029 |
+| ZAL-003 | potwierdzone dla płatności przy `expo-iap` (bez opłat); RevenueCat do 2500 USD MTR też 0 zł, ale odrzucony z powodu prywatności | MS-34, MS-36 |
+
+### Kroki właściciela w App Store Connect (po decyzji 05 i przed pierwszym buildem z zakupem)
+1. Utworzyć zakup Non-Consumable: nazwa referencyjna „Oczko Pro”, ID `oczko.pro.lifetime` (ID nie da się zmienić ani użyć ponownie, MS-28).
+2. Cena: 14,99 USD, kraj bazowy USA; pozostałe storefronty automatycznie (MS-19).
+3. Family Sharing: **nie włączać** (P-034).
+4. Opis i nazwa wyświetlana: na start en-US; pozostałe języki z rolą 09.
+5. Konto testowe piaskownicy (Sandbox Apple Account) do scenariuszy wyżej.
+Umowa Paid Apps i Small Business Program: załatwione (OP-01, OP-20).
+
+### Przekazanie
+- **03:** tabela „Wartość funkcji” (E1, P-027) i „Podział darmowe / Pro”; WTP-X: brak ścisłych, KAL-007 kandydat na odcięcie; KP-01 jako ograniczenie zakresu.
+- **04:** ekran zakupu jako stan przepływu PR-09, wejścia tylko według KP-10, ujawnienia (1)–(7), stan „Masz Pro” (KP-03), tryb do odczytu po utracie Pro (KP-02), zakazane wzorce z „Etyki”.
+- **05:** szkic ADR (rekomendacja `expo-iap`, przypięta wersja), KP-06–KP-09, pamięć podręczna poza synchronizacją, OP-22 (zegarek), OP-23 (App Privacy).
+- **07:** wektory `docs/monetyzacja/wektory-dostepu.json`, scenariusze „tylko telefon”, kontrola KP-01 przed wydaniem.
+- **08:** `docs/monetyzacja/dostep.mjs` jako wzorzec logiki dostępu, kontrakt KP-01–KP-11.
+- **Właściciel:** kroki w App Store Connect; dane do testu P-029 po wydaniu.
+
+### Definicja ukończenia (build, sesja 2)
+| Punkt kontraktu | Stan | Dowód |
+|---|---|---|
+| ceny, stawki, kurs i reguły sklepu z adresem, cytatem i datą | spełnione | „Źródła” MS-01–MS-38; OP-05 (VAT US, CA) otwarte |
+| co najmniej dwa modele z regułą, kompromisem, ryzykiem etycznym i rachunkiem; rekomendacja; wybór słowami właściciela z datą | spełnione | E2 (A, B, C); P-029 |
+| `rachunek.mjs` kod 0, liczby ze źródłem albo [OCENA] | spełnione | powtórzone 2026-10-22 w E3: wynik identyczny z `dowody/rachunek-2026-10-22.txt` i `dowody/e2-modele-2026-10-22.txt`, kod 0 |
+| każda funkcja BR z klasą WTP i poziomem dowodu; WTP-X do 03 | spełnione | E1 (59 BR), P-027 |
+| kontrakt: produkty, uprawnienia, bramki przy przepływach, przywracanie, bez sieci, okres próbny, Family Sharing, ujawnienia | spełnione | „Kontrakt płatności” |
+| H i ZAL ze statusem; sprzeczności jako ER | spełnione | „Statusy H i ZAL”; ER-01–ER-08 |
+| bramka (krok 0) | spełnione w sesji 1 | P-013 |
+
 
 ## Sesja 1, E0: Rama
 
@@ -506,6 +642,21 @@ Wniosek: tania aplikacja zdobywa więcej pobrań i lepiej utrzymuje płacących,
 | MS-21 | developer.apple.com/app-store/subscriptions/ | „Price decreases”, „Price increases” | „You don’t have the option to preserve the higher price for existing subscribers.”; „You can keep an unlimited number of active subscribers at their existing price while increasing the price for new subscribers.” | 2026-10-21 | 1 |
 | MS-22 | developer.apple.com/app-store/review/guidelines/ | 3.1.2(b) | „Users should have a seamless upgrade/downgrade experience and should not be able to inadvertently subscribe to multiple variations of the same thing.” | 2026-10-22 | 1 |
 | MS-23 | developer.apple.com/help/app-store-connect/manage-subscriptions/set-up-introductory-offers-for-auto-renewable-subscriptions | całość | „There are three types of introductory offers: free trial, pay up front, and pay as you go.”; „each person is only eligible to redeem one introductory offer per subscription group” | 2026-10-22 | 1 |
+| MS-24 | developer.apple.com/documentation/storekit/transaction/currententitlements (surowy tekst: `/tutorials/data/documentation/storekit/transaction/currententitlements.json`) | opis | „A transaction for each non-consumable Apple In-App Purchase”; „Products that the App Store has refunded or revoked don’t appear in the current entitlements.” | 2026-10-22 | 1 |
+| MS-25 | jw. `transaction/updates` | opis | „Without the Task to listen for these transactions, your app may miss them.” | 2026-10-22 | 1 |
+| MS-26 | jw. `appstore/sync()` | opis | „Call this function only in response to an explicit user action, like tapping or clicking a button.”; „When users reinstall your app or download it on a new device, the app automatically has all transactions available to it upon initial launch.” | 2026-10-22 | 1 |
+| MS-27 | jw. `transaction/revocationdate` | opis | „The date that the App Store refunded the transaction or revoked it from Family Sharing.” | 2026-10-22 | 1 |
+| MS-28 | developer.apple.com/help/app-store-connect/reference/in-app-purchases-and-subscriptions/in-app-purchase-information | Product ID | „The product ID can contain letters, numbers, hyphens, periods, and underscores, and can be as long as 100 characters.”; „Once a product ID is assigned to an In-App Purchase, it can't be reused for another In-App Purchase within the same app, even if you delete the original In-App Purchase with that ID.” | 2026-10-22 | 1 |
+| MS-29 | developer.apple.com/help/app-store-connect/test-a-beta-version/testing-subscriptions-and-in-app-purchases-in-testflight | całość | „Apps downloaded from TestFlight will automatically operate in a sandbox environment.” | 2026-10-22 | 1 |
+| MS-30 | developer.apple.com/help/app-store-connect/test-in-app-purchases/overview-of-testing-in-sandbox | pierwsze zdanie | „Apple provides a sandbox environment that lets you test In-App Purchases and Apple Pay transactions using test accounts without incurring charges.” | 2026-10-22 | 1 |
+| MS-31 | developer.apple.com/app-store/app-privacy-details/ | definicja „collect”; „Purchases” | „“Collect” refers to transmitting data off the device in a way that allows you and/or your third-party partners to access it for a period longer than what is necessary to service the transmitted request in real time.”; „Purchase History”: „An account’s or individual’s purchases or purchase tendencies” | 2026-10-22 | 1 |
+| MS-32 | developer.apple.com/help/app-store-connect/manage-app-information/provide-a-custom-license-agreement | całość | „Apple provides a standard end-user license agreement (EULA) that applies in all countries and regions.”; „If you don’t provide a custom EULA, the standard EULA is applied to your app” | 2026-10-22 | 1 |
+| MS-33 | docs.expo.dev/guides/in-app-purchases/ | całość | „Last updated on September 25, 2026”; „expo-iap A React Native library for in-app purchases that conforms to the OpenIAP specification and works with development builds.”; „Native code is not configurable when using Expo Go.” | 2026-10-22 | 1 |
+| MS-34 | registry.npmjs.org/expo-iap | `latest`, `time` | 6.1.1, MIT, wydana 2026-10-18T14:34:56Z; 6.0.3 z 2026-10-16, 6.1.0 z 2026-10-17; peer `expo: *`, pakiety Amazon opcjonalne | 2026-10-22 | 1 (rejestr) |
+| MS-35 | registry.npmjs.org/react-native-purchases/latest | `version`, `license` | 10.15.0, MIT | 2026-10-22 | 1 (rejestr) |
+| MS-36 | revenuecat.com/pricing/ | Pro | „Pay nothing for up to $2,500 in monthly tracked revenue.”; „Then pay 1% of what you track once you hit $2,500 in MTR.” | 2026-10-22 | 1 (cennik dostawcy) |
+| MS-37 | registry.npmjs.org/expo/latest | `version` | 58.0.17 | 2026-10-22 | 1 (rejestr) |
+| MS-38 | openiap.dev/llms.txt | „OpenIAP Quick Reference” | `restorePurchases()`, `getAvailablePurchases()`, `purchaseUpdatedListener`, `finishTransaction` | 2026-10-22 | 4 (dokumentacja projektu biblioteki) |
 
 ## Otwarte pytania
 | ID | Pytanie | Rozstrzyga | Dotyczy |
@@ -516,3 +667,6 @@ Wniosek: tania aplikacja zdobywa więcej pobrań i lepiej utrzymuje płacących,
 | OP-04 | 30% poza UE (Schedule 2 DPLA): niepotrzebne po OP-01 (program aktywny) | zamknięte | — |
 | OP-05 | [DO SPRAWDZENIA] Czy ceny App Store w US i CA są bez podatku (przyjęte VAT 0)? Sprawdzenie: wpływ (`proceeds`) progu w App Store Connect | właściciel / 02 sesja 2 | VAT US, CA |
 | OP-06 | [DO USTALENIA] Stosunek instalacji do ocen w App Analytics innych aplikacji właściciela (zastąpi [ZAŁOŻENIE] 60) | właściciel | wrażliwość bramki |
+| OP-21 | [DO USTALENIA] Jak wywołać zwrot zakupu w piaskownicy przez TestFlight bez Xcode (scenariusz KP-02) | 07 / właściciel | testy „tylko telefon” |
+| OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje uprawnienie Pro bez telefonu w pobliżu | 05 | LIC-015, kontrakt płatności |
+| OP-23 | [DO USTALENIA] Czy zakup przez StoreKit bez SDK zewnętrznego wymaga wpisu „Purchases” w App Privacy (definicja „collect”, MS-31) | 05 | etykieta prywatności |
