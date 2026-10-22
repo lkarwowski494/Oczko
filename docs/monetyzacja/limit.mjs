@@ -36,3 +36,13 @@ export function startDnia({ dni, dzis, teraz, ostatniPlus, pro, limit = LIMIT_DN
   if (darmowe(dni) < limit) return wynik(true, { data: dzis, pro: false });
   return wynik(false, null); // L-03: na limicie; dane, historia, eksport działają dalej (poza tą funkcją)
 }
+
+// Stan zawczasu (P-065 (1a), (2a)): czy ekran licznika ma pokazać limit zamiast +1 i czy to ostatni darmowy dzień.
+// Ta sama reguła co startDnia(), ale bez zapisu dnia i bez zmiany wejścia; praca w toku po północy (L-04) nie pokazuje limitu.
+// zostalo: darmowe dni w miesiącu przed dzisiejszym startem (licznik dni na liście projektów i w Ustawieniach).
+export function mozeZaczacDzien({ dni, dzis, teraz, ostatniPlus, pro, limit = LIMIT_DNI, przerwa = PRZERWA_MS }) {
+  const start = startDnia({ dni, dzis, teraz, ostatniPlus, pro, limit, przerwa });
+  const miesiac = dzis.slice(0, 7);
+  const zostalo = Math.max(0, limit - dni.filter((d) => d.data.startsWith(miesiac) && !d.pro).length);
+  return { limitZawczasu: !start.dozwolone, ostatniDarmowy: !pro && zostalo === 1, zostalo };
+}

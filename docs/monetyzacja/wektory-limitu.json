@@ -1,5 +1,5 @@
 {
- "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia.",
+ "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu.",
  "limit": 5,
  "przerwa_ms": 3600000,
  "startDnia": [
@@ -715,6 +715,246 @@
     "rodzaj": "skok",
     "licznik": "rzedy",
     "urzadzenie": "telefon"
+   },
+   "oczekiwane": "błąd"
+  }
+ ],
+ "mozeZaczacDzien": [
+  {
+   "id": "Z-01",
+   "scenariusz": "świeża instalacja: bez komunikatu (NFR-PIE-001)",
+   "wejscie": {
+    "dni": [],
+    "dzis": "2026-11-01",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": false,
+    "zostalo": 5
+   }
+  },
+  {
+   "id": "Z-02",
+   "scenariusz": "5 z 5, nowy dzień, ostatni rząd ponad 60 min temu: limit zawczasu zamiast +1 (P-065 (1a))",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799992800000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "limitZawczasu": true,
+    "ostatniDarmowy": false,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "Z-03",
+   "scenariusz": "5 z 5, po północy 10 min od ostatniego rzędu: praca w toku, bez komunikatu (L-04)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799999400000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": false,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "Z-04",
+   "scenariusz": "Pro przy 5 z 5: bez komunikatu i bez licznika dni",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799992800000,
+    "pro": true
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": false,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "Z-05",
+   "scenariusz": "dziś jest 5. policzonym dniem: dzień do końca, bez komunikatu (L-02)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-05",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799992800000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": false,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "Z-06",
+   "scenariusz": "4 z 5 użyte, dziś bez rzędu: linia o ostatnim darmowym dniu (P-065 (2a))",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799992800000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": true,
+    "zostalo": 1
+   }
+  },
+  {
+   "id": "Z-07",
+   "scenariusz": "3 z 5 użyte: bez linii na liczniku (P-046)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799992800000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": false,
+    "zostalo": 2
+   }
+  },
+  {
+   "id": "Z-08",
+   "scenariusz": "złe dane: brak daty",
+   "wejscie": {
+    "dni": [],
+    "dzis": "",
+    "teraz": 1800000000000,
+    "ostatniPlus": null,
+    "pro": false
    },
    "oczekiwane": "błąd"
   }

@@ -19,6 +19,14 @@ for (const t of w.wolaStraznika || []) {
   try { wynik = typeof L.wolaStraznika === 'function' ? L.wolaStraznika(t.wejscie) : 'BRAK FUNKCJI wolaStraznika'; } catch { wynik = 'błąd'; }
   if (wynik !== t.oczekiwane) bledy.push(`${t.id} (${t.scenariusz}): ${JSON.stringify(wynik)} ≠ ${JSON.stringify(t.oczekiwane)}`);
 }
-const n = w.startDnia.length + (w.wolaStraznika || []).length;
+// Stan zawczasu (P-065 (1a)): ta sama reguła co startDnia, bez zapisu i bez zmiany wejścia.
+for (const t of w.mozeZaczacDzien || []) {
+  const kopia = structuredClone(t.wejscie);
+  let wynik;
+  try { wynik = typeof L.mozeZaczacDzien === 'function' ? L.mozeZaczacDzien(t.wejscie) : 'BRAK FUNKCJI mozeZaczacDzien'; } catch { wynik = 'błąd'; }
+  if (!isDeepStrictEqual(wynik, t.oczekiwane)) bledy.push(`${t.id} (${t.scenariusz}): ${JSON.stringify(wynik)} ≠ ${JSON.stringify(t.oczekiwane)}`);
+  if (!isDeepStrictEqual(kopia, t.wejscie)) bledy.push(`${t.id}: funkcja zmieniła wejście`);
+}
+const n = w.startDnia.length + (w.wolaStraznika || []).length + (w.mozeZaczacDzien || []).length;
 console.log(bledy.length ? `NIEZGODNE ${bledy.length} z ${n}:\n${bledy.join('\n')}` : `zgodne ${n} z ${n} wektorów`);
 process.exit(bledy.length ? 1 : 0);
