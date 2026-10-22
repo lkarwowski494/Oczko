@@ -496,6 +496,125 @@
     "zapis": null,
     "zostalo": 0
    }
+  },
+  {
+   "id": "L-16",
+   "scenariusz": "nowe urządzenie: dzień zaczęty przed synchronizacją; po scaleniu iCloud 6 dni w listopadzie, dziś jednym z nich; kolejne +1 dziś (P-067 (5a))",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     },
+     {
+      "data": "2026-11-06",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-06",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799990000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-17",
+   "scenariusz": "po scaleniu 6 dni w listopadzie, nowy dzień: blokada (P-067 (5a))",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     },
+     {
+      "data": "2026-11-06",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-07",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799800000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-18",
+   "scenariusz": "zegarek bez telefonu, lista dni z ostatniej synchronizacji 5 z 5, nowy dzień: blokada jak na telefonie (P-067 (4a))",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-09",
+    "teraz": 1800000000000,
+    "ostatniPlus": 1799700000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
   }
  ],
  "wolaStraznika": [

@@ -51,7 +51,7 @@ Model: **V4 „wzorzec Treningu” bez próby** (P-057): cała aplikacja darmowa
 | KP-12 (nowe; fix 2026-10-22) | Strażnik limitu tylko w `startDnia()` (wzorzec `limit.mjs`), wołany przy zdarzeniach, dla których `wolaStraznika()` daje true: każde +1 na dowolnym liczniku (rzędy, oczka, powtórzenia) i z każdego urządzenia (telefon, zegarek, ekran blokady; zegarek liczy z ostatnio zsynchronizowanej listy dni) oraz ręczne wpisanie wartości; zerowanie, −1 i edycja historii nie wołają strażnika (wektory S-01–S-10); nigdy przed licznikiem przy pierwszym uruchomieniu (NFR-PIE-001) | P-053, P-057 D3–D5, P-067 (NZ-01) |
 | KP-13 (nowe) | Ekran zakupu tylko: przy próbie startu dnia ponad limit i w Ustawieniach; na ekranie licznika licznik dni („Zostały 3 z 5 darmowych dni w tym miesiącu”) zgodnie z zasadą P-046 (decyzja o miejscu: rola 04) | P-055, KP-10 |
 | KP-14 (nowe) | „Zarządzaj subskrypcją” w aplikacji (`showManageSubscriptions`) | strona subskrypcji Apple (wzorce, „Etyka”) |
-| KP-15 (nowe) | Dni z robótką zapisane w danych użytkownika (synchronizowane iCloud, jedna data = jeden dzień, L-11), nie w pamięci podręcznej uprawnień | P-021, L-11, L-14 |
+| KP-15 (nowe; fix 2026-10-22) | Dni z robótką zapisane w danych użytkownika (synchronizowane iCloud, jedna data = jeden dzień, L-11), nie w pamięci podręcznej uprawnień; scalenie z innym urządzeniem nigdy nie odbiera rozpoczętego dnia, nawet gdy w miesiącu jest wtedy więcej dni niż limit (L-16), a następny nowy dzień jest blokowany (L-17); zegarek bez telefonu liczy z ostatnio zsynchronizowanej listy (L-18) | P-021, L-11, L-14, P-067 (NZ-02) |
 | KP-05–KP-11 | bez zmian (sesja 2); KP-10 zawężone przez KP-13 | — |
 
 ### Ujawnienia dla roli 04 (ekran ofert)
