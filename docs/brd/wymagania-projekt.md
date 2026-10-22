@@ -121,6 +121,23 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Gdy użytkownik zmienia stronę wzoru na iPadzie
     - Wtedy iPhone nadal pokazuje projekt „Skarpeta”, a wartości liczników obu projektów są na obu urządzeniach te same (stan widoku osobno na urządzeniu, dane wspólne)
 
+### BR-PRJ-012: Lista projektów po roku
+- Przepływ: PR-07
+- Dowód potrzeby: J-05; „rather than having to scroll through the hundreds of patterns I have stored on here” (knitCompanion GB, id5228080107); „I’d like to be able to only see current projects that aren’t completed but also aren’t archived.” (YarnBuddy, id13730696774); „would like a finished projects page instead of archiving” (YarnBuddy GB, id11278392542) · ER-23
+- Kryteria akceptacji:
+  - Scenariusz: W toku według ostatniej pracy
+    - Zakładając, że projekt „Skarpeta” miał ostatnią zmianę licznika wczoraj, a „Sweter” 3 tygodnie temu
+    - Gdy użytkownik otwiera listę projektów
+    - Wtedy „Skarpeta” jest nad „Swetrem”, a projekty ukończone są w osobnej grupie
+  - Scenariusz: Wyszukiwanie po nazwie
+    - Zakładając, że użytkownik ma 80 projektów, w tym ukończony „Sweter w warkocze”
+    - Gdy wpisuje w wyszukiwanie „warkocz”
+    - Wtedy widzi ten projekt z oznaczeniem, że jest ukończony, także bez sieci
+  - Scenariusz: Brak wyników
+    - Zakładając, że żaden projekt nie ma w nazwie „kamizelka”
+    - Gdy użytkownik wpisuje „kamizelka”
+    - Wtedy widzi informację, że nie ma takiego projektu, a lista po wyczyszczeniu wyszukiwania wraca
+
 ## Wzór (WZR)
 Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed projektem i wydaniem (P-024, OG-07).
 
