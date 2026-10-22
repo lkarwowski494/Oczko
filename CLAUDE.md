@@ -27,7 +27,7 @@ Expo SDK 57, React Native, TypeScript, expo-sqlite (stan poprzedniej wersji); de
 ## Dokumenty (źródło prawdy, rola)
 - `docs/decyzje.md`, `docs/zalozenia.md`, `docs/pomysl.md`, BRD `docs/brd/` (01)
 - `docs/monetyzacja.md` (02), kontrakt zakresu `docs/scope-contract.md` (03), projekt `docs/design/` (04)
-- ADR `docs/adr/` (05), treści i rejestr twierdzeń: `oczko-warsztat` (06)
+- ADR `docs/adr/` (05; 0018–0021: 12), niezawodność `docs/niezawodnosc/` (12), treści i rejestr twierdzeń: `oczko-warsztat` (06)
 - materiały prywatne (wywiad, dane App Store Connect, raporty audytu): `oczko-warsztat`, nie to repo
 
 ## Zasady

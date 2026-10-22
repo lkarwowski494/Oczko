@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 05, build, zakończona: P-074)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 12, build, wejście wczesne E0–E1 zakończone: P-079, P-080)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -17,8 +17,18 @@
 | 02 Monetyzacja, fix NZ-01, NZ-02, P-065 | fix (P-060 (5b), P-065) | zakończona 2026-10-22 (E0: P-067, E2: P-068): naprawione-do-weryfikacji; P-065 (1a) potwierdzone, warunek P-066 spełniony | 90b2272 | `limit.mjs` (`wolaStraznika`, `mozeZaczacDzien`), wektory S, L-16–L-18, Z (35/35), KP-12, KP-13, KP-15; oczko-warsztat `02-monetyzacja/2026-10-22-fix-nz/` | ER-30 do 01 |
 | 01 Odkrywanie, fix ER-30 | fix (P-068) | zakończona 2026-10-22 (STOP E2 przyjęty, P-069): ER-30 naprawione-do-weryfikacji | 28a488b | BR-ZAK-005, BR-ZAK-006, BR-LIC-017, OP-32 zamknięte, errata; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er30/` | — |
 | 05 Architekt | build | **zakończona 2026-10-22** (E0 P-070, E1 P-071, E2 P-072, E3 P-073, E4 P-074; 2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/, docs/architektura/e1-decyzje.md, docs/adr/0001–0015, eksperymenty/e1/, docs/architektura/e2-moduly-dane.md, moduly.md, dane.md, schemat.sql, stany.json, narzedzia/sprawdz-schemat.mjs, e3-tlo-bledy-prywatnosc-wydajnosc.md, prywatnosc.md, ADR-0016, narzedzia/granice.mjs, README.md, e4-przekazanie.md; ZAL-030 | dla 10: rola klucza ASC API, wariant podpisu, OP-25, „collected” dla CloudKit |
+| 12 Niezawodność, wejście wczesne | build, tylko E0–E1 (P-005) | **E0–E1 zakończone 2026-10-22** (E0: P-079, E1: P-080); E2–E3 po roli 08 | (ten commit) | docs/niezawodnosc/ (e0-rozpoznanie.md, e1-decyzje.md, eksperymenty/wal-kopia.*), ADR-0018–0021; kopie źródeł: oczko-warsztat/12-niezawodnosc/2026-10-22-build/zrodla/ | interpretacje P-080 do weta (próg 2, kopie 30 dni, „6a”, integralność po błędzie); ekran awaryjny do 04 |
 
 ## Następny krok
+### Przekazanie roli 12, wejście wczesne E0–E1 (2026-10-22)
+- Zakończono: 12-niezawodnosc, build, E0–E1 (P-079, P-080), gałąź `claude/jolly-thompson-paz6d8`; artefakty: `docs/niezawodnosc/e0-rozpoznanie.md`, `docs/niezawodnosc/e1-decyzje.md` (progi, zgłoszenia do 04, 05, 07, 08, 09, 10), `docs/niezawodnosc/eksperymenty/wal-kopia.*`, ADR-0018 (sygnał bez SDK, MetricKit lokalnie), ADR-0019 (strażnik startu, tryb awaryjny), ADR-0020 (kopia ratunkowa, ZIP, przywracanie), ADR-0021 (bez OTA); P-079, P-080 w `docs/decyzje.md`.
+- Następny krok (P-002): **06-tresci**, tryb `build`; nowa sesja: opus, wysiłek high.
+  - `node tools/assemble.mjs 06-tresci --tryb build --galaz claude/jolly-thompson-paz6d8`
+  - `.\Get-Prompt.ps1 06-tresci -Tryb build -CopyToClipboard`
+- Potem: 07 build (czyta `docs/niezawodnosc/e1-decyzje.md`, „Dla roli 07”: kontrole CI, testy na symulatorze zamiast ćwiczeń, lista „Nie sprawdzono”) → porównanie z kodem (03 audit, P-078) → 08 → 04 audit (ekran awaryjny) → 09 E2–E4 → **12 E2–E3** (testy czerwone i kod strażnika, kopii, sprawdzenia i przywrócenia; ćwiczenia automatem; runbook).
+- Dla 06: rola 12 nie dotyka treści; brak pakietów treści (moduł `pakiety-tresci` nie dotyczy).
+- Otwarte: interpretacje P-080 do weta; [DO USTALENIA] w ADR-0018 (awarie w `diagnosticSignatures`), ADR-0019 (montowanie korzenia przy starcie w tle, koszt `integrity_check`), ADR-0020 (wybór ZIP w ADR-0016).
+
 ### Przekazanie roli 09, wejście wczesne E0–E1 (2026-10-22)
 - Zakończono: 09-lokalizacja, build, E0–E1 (P-075, P-076, P-077), gałąź `claude/jolly-thompson-paz6d8`; artefakty: `docs/lokalizacja/` (`e0-rozpoznanie.md`, `e1-mechanizm.md`, `jezyki.md`, `dowody/`), ADR-0017 (przyjęta), `src/i18n/`, `src/platforma/lokalizacja.ts`, `scripts/sprawdz-i18n.mjs`, `tests/i18n/` (186 testów; cały zestaw 952/952), `locales/systemowe/en.json`, ZAL-031–ZAL-034.
 - Następny krok (P-002, P-005): **12-niezawodnosc E0–E1**, potem 06 build → 07 build → porównanie z kodem → 08 → 04 audit → **09 E2–E4 po audycie 04**.
