@@ -75,6 +75,18 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Zakładając, że plik nie jest eksportem Oczka
     - Gdy użytkownik próbuje go zaimportować
     - Wtedy aplikacja pokazuje, że nie rozpoznaje pliku, i nie zmienia istniejących danych
+  - Scenariusz: Zastąpienie danych na niepustej bazie (ER-22)
+    - Zakładając, że w aplikacji są projekty, a użytkownik importuje plik eksportu
+    - Gdy wybiera „zastąp”
+    - Wtedy aplikacja najpierw zapisuje plik kopii obecnych danych i pokazuje, gdzie on jest, a dopiero potem zastępuje dane zawartością pliku (P-047)
+  - Scenariusz: Scalenie bez nadpisania (ER-22)
+    - Zakładając, że w aplikacji jest projekt „Skarpeta” z licznikiem 40, a plik ma ten sam projekt z licznikiem 25 oraz projekt „Czapka”
+    - Gdy użytkownik wybiera „scal”
+    - Wtedy aplikacja ma „Czapkę” oraz obie wersje „Skarpety”: istniejącą z 40 i importowaną z 25, oznaczoną jako import (P-047)
+  - Scenariusz: Rezygnacja z importu (ER-22)
+    - Zakładając, że w aplikacji są projekty
+    - Gdy użytkownik otwiera plik eksportu i rezygnuje przy wyborze „zastąp” albo „scal”
+    - Wtedy dane w aplikacji się nie zmieniają
 
 ### BR-DAN-007: Import od konkurencji
 - Przepływ: PR-13
@@ -87,7 +99,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
 
 ### BR-DAN-008: Usunięcie z możliwością przywrócenia
 - Przepływ: PR-07
-- Dowód potrzeby: J-07; „if you archive a project you cannot get it back” (Easy Knitty GB, id8099185238); przypadkowe usunięcie (Easy Knitty CA, id11235965435)
+- Dowód potrzeby: J-07; „if you archive a project you cannot get it back” (Easy Knitty GB, id8099185238); przypadkowe usunięcie (Easy Knitty CA, id11235965435); usunięcie licznika jednym stuknięciem: „「削除」を間違えて押すと一瞬で消えるのが大変困ります” (編み物カウンター２, id10497670066, ER-22)
 - Kryteria akceptacji:
   - Scenariusz: Przywrócenie
     - Zakładając, że użytkownik usunął projekt
@@ -97,6 +109,14 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Zakładając, że minęło 30 dni od usunięcia (P-026)
     - Gdy użytkownik szuka usuniętego projektu
     - Wtedy projektu nie ma, a aplikacja informowała o terminie przy usuwaniu
+  - Scenariusz: Usunięty licznik (ER-22)
+    - Zakładając, że użytkownik przez pomyłkę usunął licznik oczek z wartością 18 w projekcie „Sweter”
+    - Gdy w ciągu 30 dni wybiera przywrócenie (P-047, jak P-026)
+    - Wtedy licznik wraca do projektu z wartością 18 i historią
+  - Scenariusz: Usunięta część (ER-22)
+    - Zakładając, że użytkownik usunął część „rękaw lewy” z licznikami
+    - Gdy w ciągu 30 dni wybiera przywrócenie
+    - Wtedy część wraca z licznikami, wartościami i historią
 
 ### BR-DAN-009: Usunięcie wszystkich danych
 - Przepływ: PR-08
