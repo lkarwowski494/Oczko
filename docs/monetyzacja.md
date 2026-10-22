@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: **sesja 3: model V4 bez próby (P-057), STOP E3, 2026-10-22** (V1/V2 odrzucone: P-056; STOP E0: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **sesja 3 zakończona 2026-10-22: model V4 bez próby (P-057; STOP E3 przyjęty: P-058)** (V1/V2 odrzucone: P-056; STOP E0: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
