@@ -1,5 +1,5 @@
 # Kontrakt zakresu: Oczko
-Stan: **STOP E1** (główna praca i pętla) · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212, złożony 2026-10-22, 55 540 znaków) · Wejście: BRD `docs/brd/` (E4 + poprawka ER-06–ER-08), `docs/monetyzacja.md` (sesja 2, E3), P-001–P-039, ZAL-001–026
+Stan: **E1 przyjęty (P-045)**; czeka na rolę 01 (ER-09–ER-24), potem E2 · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212, złożony 2026-10-22, 55 540 znaków) · Wejście: BRD `docs/brd/` (E4 + poprawka ER-06–ER-08), `docs/monetyzacja.md` (sesja 2, E3), P-001–P-039, ZAL-001–026
 
 Kontrakt powstaje etapami E0–E3; tabele „Zakres” i „NIE robimy” w formacie `zakres.mjs` pojawią się w E3. Do tego czasu ID F-nn to kandydaci, nie decyzje.
 
