@@ -1,5 +1,5 @@
 // Prototyp czystej funkcji domeny (ADR-0005, 0008, 0009): scalanie zdarzeń licznika z wielu źródeł.
-// Zdarzenie: { id, licznik, rodzaj: plus|minus|wpisanie|zerowanie|rozstrzygniecie, wartosc?, rodzice: [id] }
+// Zdarzenie: { id, licznik, rodzaj: plus|minus|wpisanie|zerowanie|cofniecie|rozstrzygniecie, wartosc?, rodzice: [id] }
 // rodzice = ostatnie zdarzenia, które źródło znało (jak commit w git). Rozwidlenie = praca równoległa.
 export function scal(zdarzenia) {
   const mapa = new Map();
@@ -13,7 +13,7 @@ export function scal(zdarzenia) {
   const wartoscW = (id, pamiec = new Map()) => { // wartość po zdarzeniu id, liczona wzdłuż jego przodków
     if (pamiec.has(id)) return pamiec.get(id);
     const z = mapa.get(id); let w;
-    if (z.rodzaj === 'wpisanie' || z.rodzaj === 'rozstrzygniecie') w = z.wartosc;
+    if (z.rodzaj === 'wpisanie' || z.rodzaj === 'cofniecie' || z.rodzaj === 'rozstrzygniecie') w = z.wartosc;
     else if (z.rodzaj === 'zerowanie') w = 0;
     else { const baza = z.rodzice.length ? wartoscW(z.rodzice[0], pamiec) : 0; w = Math.max(0, baza + (z.rodzaj === 'plus' ? 1 : -1)); }
     pamiec.set(id, w); return w;

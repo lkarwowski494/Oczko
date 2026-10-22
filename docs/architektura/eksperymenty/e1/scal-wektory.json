@@ -1,9 +1,256 @@
 [
- {"id":"M-01","opis":"jedno urządzenie, liniowo","zdarzenia":[{"id":"a","rodzaj":"plus","rodzice":[]},{"id":"b","rodzaj":"plus","rodzice":["a"]},{"id":"c","rodzaj":"minus","rodzice":["b"]}],"oczekiwane":{"stan":"zgodny","wartosc":1}},
- {"id":"M-02","opis":"duplikat dostarczenia (transferUserInfo powtórzony, dziennik Live Activity scalony dwa razy)","zdarzenia":[{"id":"a","rodzaj":"plus","rodzice":[]},{"id":"b","rodzaj":"plus","rodzice":["a"]},{"id":"b","rodzaj":"plus","rodzice":["a"]}],"oczekiwane":{"stan":"zgodny","wartosc":2}},
- {"id":"M-03","opis":"odwrócona kolejność: dziecko przed rodzicem","zdarzenia":[{"id":"b","rodzaj":"plus","rodzice":["a"]}],"oczekiwane":{"stan":"czeka"}},
- {"id":"M-04","opis":"zegarek bez telefonu i telefon równolegle od tej samej wartości: konflikt pokazany, nie zsumowany po cichu","zdarzenia":[{"id":"a","rodzaj":"wpisanie","wartosc":10,"rodzice":[]},{"id":"t1","rodzaj":"plus","rodzice":["a"]},{"id":"z1","rodzaj":"plus","rodzice":["a"]},{"id":"z2","rodzaj":"plus","rodzice":["z1"]}],"oczekiwane":{"stan":"konflikt","wartosci":[11,12]}},
- {"id":"M-05","opis":"rozstrzygnięcie użytkownika łączy gałęzie","zdarzenia":[{"id":"a","rodzaj":"wpisanie","wartosc":10,"rodzice":[]},{"id":"t1","rodzaj":"plus","rodzice":["a"]},{"id":"z1","rodzaj":"plus","rodzice":["a"]},{"id":"r","rodzaj":"rozstrzygniecie","wartosc":12,"rodzice":["t1","z1"]},{"id":"p","rodzaj":"plus","rodzice":["r"]}],"oczekiwane":{"stan":"zgodny","wartosc":13}},
- {"id":"M-06","opis":"−1 nie schodzi poniżej zera","zdarzenia":[{"id":"a","rodzaj":"minus","rodzice":[]}],"oczekiwane":{"stan":"zgodny","wartosc":0}},
- {"id":"M-07","opis":"zerowanie po serii, potem +1 z ekranu blokady znającego zerowanie","zdarzenia":[{"id":"a","rodzaj":"plus","rodzice":[]},{"id":"b","rodzaj":"zerowanie","rodzice":["a"]},{"id":"l","rodzaj":"plus","rodzice":["b"]}],"oczekiwane":{"stan":"zgodny","wartosc":1}}
+ {
+  "id": "M-01",
+  "opis": "jedno urządzenie, liniowo",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "c",
+    "rodzaj": "minus",
+    "rodzice": [
+     "b"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 1
+  }
+ },
+ {
+  "id": "M-02",
+  "opis": "duplikat dostarczenia (transferUserInfo powtórzony, dziennik Live Activity scalony dwa razy)",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 2
+  }
+ },
+ {
+  "id": "M-03",
+  "opis": "odwrócona kolejność: dziecko przed rodzicem",
+  "zdarzenia": [
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "czeka"
+  }
+ },
+ {
+  "id": "M-04",
+  "opis": "zegarek bez telefonu i telefon równolegle od tej samej wartości: konflikt pokazany, nie zsumowany po cichu",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 10,
+    "rodzice": []
+   },
+   {
+    "id": "t1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "z1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "z2",
+    "rodzaj": "plus",
+    "rodzice": [
+     "z1"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "konflikt",
+   "wartosci": [
+    11,
+    12
+   ]
+  }
+ },
+ {
+  "id": "M-05",
+  "opis": "rozstrzygnięcie użytkownika łączy gałęzie",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 10,
+    "rodzice": []
+   },
+   {
+    "id": "t1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "z1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "r",
+    "rodzaj": "rozstrzygniecie",
+    "wartosc": 12,
+    "rodzice": [
+     "t1",
+     "z1"
+    ]
+   },
+   {
+    "id": "p",
+    "rodzaj": "plus",
+    "rodzice": [
+     "r"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 13
+  }
+ },
+ {
+  "id": "M-06",
+  "opis": "−1 nie schodzi poniżej zera",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "minus",
+    "rodzice": []
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 0
+  }
+ },
+ {
+  "id": "M-07",
+  "opis": "zerowanie po serii, potem +1 z ekranu blokady znającego zerowanie",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "zerowanie",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "l",
+    "rodzaj": "plus",
+    "rodzice": [
+     "b"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 1
+  }
+ },
+ {
+  "id": "M-08",
+  "opis": "cofnięcie serii stuknięć (F-47) przywraca wartość sprzed serii",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 20,
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "c",
+    "rodzaj": "plus",
+    "rodzice": [
+     "b"
+    ]
+   },
+   {
+    "id": "d",
+    "rodzaj": "plus",
+    "rodzice": [
+     "c"
+    ]
+   },
+   {
+    "id": "u",
+    "rodzaj": "cofniecie",
+    "wartosc": 20,
+    "cofa": [
+     "b",
+     "c",
+     "d"
+    ],
+    "rodzice": [
+     "d"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 20
+  }
+ }
 ]

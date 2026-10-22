@@ -5,5 +5,6 @@ M-04 OK — zegarek bez telefonu i telefon równolegle od tej samej wartości: k
 M-05 OK — rozstrzygnięcie użytkownika łączy gałęzie → {"stan":"zgodny","wartosc":13,"glowy":["p"]}
 M-06 OK — −1 nie schodzi poniżej zera → {"stan":"zgodny","wartosc":0,"glowy":["a"]}
 M-07 OK — zerowanie po serii, potem +1 z ekranu blokady znającego zerowanie → {"stan":"zgodny","wartosc":1,"glowy":["l"]}
-7/7
+M-08 OK — cofnięcie serii stuknięć (F-47) przywraca wartość sprzed serii → {"stan":"zgodny","wartosc":20,"glowy":["u"]}
+8/8
 kod wyjścia: 0
