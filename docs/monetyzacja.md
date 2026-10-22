@@ -1,7 +1,69 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · **zakończona 2026-10-22** (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **sesja 3 (P-051: V1, V2 wobec B), STOP E0, 2026-10-22** · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
+
+## Sesja 3, E0: Rama (2026-10-22)
+Rola 02-monetyzacja, tryb build, moduły `cena-i-rachunek,storekit-expo` (prompt `prompts` @97ec212; zlecenie: `oczko-warsztat/03-zakres/2026-10-22-build/02-sesja3-prompt-2026-10-22.md`, cb97008). Zadanie: P-051, czyli V1 i V2 wobec modelu B (P-029). Kwarantanna P-003 i P-015 obowiązuje. Surowe teksty źródeł z dziś: `oczko-warsztat/02-monetyzacja/2026-10-22-sesja3/zrodla/e0/`.
+
+### Środowisko (2026-10-22)
+| Sprawdzenie | Wynik | Skutek |
+|---|---|---|
+| System, Node, git | Linux x86_64 w chmurze (`CLAUDE_CODE_REMOTE=true`), Node v22.22.0, npm 10.9.4. Lokalna gałąź `claude/jolly-thompson-paz6d8` była nieaktualna (płytki klon, „ahead 50, behind 50”), więc ustawiłem ją na `origin` (76c0ec0, P-051). Drzewo było czyste, nic nie przepadło | praca na stanie z `origin` |
+| GitHub | push przez git na gałąź roboczą; `oczko-warsztat` dołączone z prawem zapisu (P-010) | — |
+| Sieć | 200: `developer.apple.com` (wytyczne, subskrypcje, pomoc App Store Connect, StoreKit JSON), `itunes.apple.com/search`, `api.nbp.pl` | odczyty z dnia możliwe |
+| Kurs | NBP 206/A/NBP/2026 z 2026-10-22: USD 3,8886 | rachunek E2 |
+| Playwright | 1.56.1 | zrzuty niepotrzebne w tej roli |
+| Mac z Xcode | brak (OP-03); właściciel nie robi testów ręcznych (P-041) | StoreKit tylko przez wektory w Node i testy automatyczne (05, 07) |
+| App Store Connect | konto, umowa Paid Apps i Small Business Program są (OP-01, OP-20); produkty nie istnieją (OP-24) | dokładny próg 2,49 USD i ceny w storefrontach odczyta właściciel albo dam przybliżenie z rynku |
+| Wysiłek sesji | nie da się go sprawdzić narzędziem | właściciel może wpisać `/effort high` |
+
+### Wejście jako hipotezy
+| Wejście | Status dziś | Co z nim zrobię |
+|---|---|---|
+| P-051: próba 14 dni (Non-Consumable „14-day Trial”) → zakupy nieodnawialne 0,99 / [2,49] / 6,99 USD + dożywotni 14,99 USD, potem blokada z podłogą danych | kierunek właściciela, warunkowy do wyniku tej sesji | badam V1 i V2 wobec B; nie zmieniam P-029, dopóki nie wybierzesz na STOP E2 |
+| P-029 model B, ZAL-026 (konwersja B ≥ 1,85%) | obowiązuje; hipoteza bez pomiaru | punkt odniesienia rachunku |
+| ZAL-017, ZAL-025, P-030, P-031 (darmowy rdzeń; granica nie przesuwa się w stronę płatną) | ZAL-025 hipoteza (R). P-051 nie łamie KP-01, bo nic nie jest jeszcze wydane, ale łamie kierunek z E1 sesji 2 („skąpe zapory dostają 1★”) | E1: recenzje modeli z twardą zaporą po próbie |
+| ZAL-013 konwersja 2,1% (freemium), MS-12 „Hard paywalls convert five times better than freemium (10.7% vs 2.1%)” | hipoteza, szczebel 4; liczba 10,7% dotyczy subskrypcji odnawialnych z RevenueCat | E1: czy da się ją przenieść na próbę bez odnawiania; w rachunku tylko jako [OCENA] z metodą |
+| ZAL-014 widoczność jako pierwsze ryzyko | hipoteza (R częściowo) | E2: wpływ twardej zapory na oceny i widoczność |
+| ZAL-018 płacący wolą zakup jednorazowy | potwierdzone (R) | E2: udział dożywotniego w V1 i V2 |
+| NFR-PIE-001, BR-ZAK-001, KP-01–KP-11 | obowiązują | E3: nowe scenariusze wygaśnięcia |
+
+**Próbka tabeli rynku:** odczyt cen narzędzi N z dziś zrobię w E1.3 (P-051 każe zestawić dane z 2026-10-21 z odczytem z dziś).
+
+### Reguły sklepu na dziś (odczyt 2026-10-22, pierwsze ustalenia)
+Wytyczne App Review: „Last Updated: October 16, 2026”, bez zmian od sesji 2.
+
+| Temat | Reguła (cytat, źródło) | Wstępny skutek dla V1/V2 |
+|---|---|---|
+| Okres próbny bez subskrypcji | 3.1.1: „Non-subscription apps may offer a free time-based trial period before presenting a full unlock option by setting up a Non-Consumable IAP item at Price Tier 0 that follows the naming convention: “XX-day Trial.” Prior to the start of the trial, your app must clearly identify its duration, the content or services that will no longer be accessible when the trial ends, and any downstream charges the user would need to pay for full functionality.” Zdanie dalej: „Learn more about managing content access and the duration of the trial period using Receipts and DeviceCheck.” | **Otwarte pytanie (E1.1):** czy aplikacja z subskrypcjami nieodnawialnymi to „non-subscription app”. Za: wytyczne 3.1.2 dotyczą tylko odnawialnych („Apps may offer auto-renewable in-app purchase subscriptions…”). Przeciw: Apple nazywa ten typ „Non-Renewing Subscription”, a „full unlock option” brzmi jak dożywotni. Jeśli źródło tego nie rozstrzygnie: `[DO USTALENIA]` i krok właściciela (pytanie do App Review) |
+| Typ produktu | „Non-Renewing Subscription: A product that allows users to purchase a service with a limited duration. The content of this In-App Purchase can be static. This type of Subscription does not renew automatically.” (App Store Connect, „In-App Purchase types”) | typ pasuje do dostępu na 1, 3 albo 12 miesięcy przy statycznej treści |
+| 3.1.2 (stała wartość, ≥ 7 dni, wszystkie urządzenia) | „Apps may offer auto-renewable in-app purchase subscriptions… When incorporating auto-renewable subscriptions into your app, be sure to follow the guidelines below.” | dosłownie 3.1.2(a) dotyczy subskrypcji odnawialnych. Do sprawdzenia w E1: czy Apple wymaga dostępu na wszystkich urządzeniach także przy nieodnawialnych |
+| Family Sharing | „Family Sharing is a feature supported only by apps that offer auto-renewable subscriptions and non-consumable In-App Purchases” (pomoc App Store Connect, odczyt dziś) | **Nowe:** zakupów czasowych 1/3/12 mies. nie da się udostępnić rodzinie, dożywotni (Non-Consumable) tak. P-038 („włączamy”) obejmie tylko dożywotni. Różnica do ujawnienia (E3) |
+| StoreKit: bieżące uprawnienia | `Transaction.currentEntitlements`: „The latest transaction for each non-renewing subscription, including finished ones” | **Nowe:** zwraca tylko *ostatnią* transakcję każdego produktu nieodnawialnego. Gdy ktoś kupi „1 miesiąc” dwa razy, koniec dostępu policzony z samej ostatniej transakcji może skrócić opłacony okres. E1.2: `Transaction.all` i reguła sumowania okresów |
+| Ekran zakupu | strona subskrypcji: „In the purchase flow for a free trial, clearly indicate how long the free trial lasts and the price billed once the free trial is over.”; „the amount that will be billed must be the most prominent pricing element in the layout” | ujawnienia przed próbą (3.1.1) i na ekranie zakupu (E3, rola 04) |
+| Prowizja | strona subskrypcji: 85% po roku dotyczy „auto-renewable subscriptions”; Small Business Program 15% (MS-03) | nieodnawialne: 15% (program). Przewaga roku z 85% nie dotyczy V1/V2 i nie ma znaczenia przy 15% |
+| 4.2, 5.6 | „lasting entertainment value or adequate utility”; „Repeated manipulative or misleading behavior…” | bez zmian; twarda blokada sama w sobie nie łamie 4.2, ryzyko jest w ujawnieniach (E1) |
+
+### Plan sesji 3 (zasada 9)
+| Etap | Co | Czas agenta | Na co się czeka | Właściciel |
+|---|---|---|---|---|
+| E1.1 Reguły | pełne strony Apple o subskrypcjach nieodnawialnych (tworzenie, przywracanie, dostęp na urządzeniach, zwrot), zakres próby z 3.1.1, ujawnienia, progi cen (2,49 USD: rynek albo App Store Connect), Family Sharing; cytaty z surowego tekstu | 1–1,5 h | — | ewentualnie pytanie do App Review (dni czekania) |
+| E1.2 StoreKit | `currentEntitlements`, `Transaction.all`, `purchaseDate`, `revocationDate`, kolejne zakupy przed końcem okresu, przywracanie na innym urządzeniu; `expo-iap` (typy OpenIAP dla nieodnawialnych, wersja) i wzorzec Treningu (tylko odczyt) | 1 h | npm, dokumentacja | — |
+| E1.3 Rynek | ceny narzędzi N dziś wobec 2026-10-21; kto sprzedaje 3 miesiące i dostęp bez odnawiania; aplikacje z twardą zaporą po próbie i ich recenzje (cytaty, „n z m”) | 1–1,5 h | limity iTunes API (ok. 20 wywołań/min) | — |
+| STOP E1 | raport dowodów, statusy ZAL, sprzeczności (ER) | 0,3 h | — | ok. 10–15 min |
+| E2 | rachunek V1, V2, B w trzech scenariuszach z wrażliwością (próba → zakup, podział planów, kotwica 3 mies., powtórne zakupy, udział dożywotniego, wpływ zapory na oceny); `rachunek.mjs` bez zmian, nowe pliki wejściowe `docs/monetyzacja/warianty-s3/`, horyzont 1 i 3 lata; etyka i ryzyka; rekomendacja | 2–2,5 h | — | STOP E2: wybór modelu, ok. 20–30 min |
+| E3 | kontrakt płatności, wektory dostępu (wygaśnięcie, kumulacja, próba), ER do 01, uwaga dla 03, sztafeta | 2–3 h (dla B 0,5 h) | — | STOP E3, ok. 10 min |
+
+Razem ok. 8–10 h pracy agenta; od Ciebie 3 odpowiedzi (40–60 min) i być może pytanie do App Review. E1b (bramka) nie powtarzam: V1 i V2 to warianty ceny i modelu tej samej aplikacji, a wynik bramki był odporny na każde pojedyncze założenie; wrócę do niej, jeśli rachunek E2 da wynik normalny poniżej progu 1944 zł.
+
+### Otwarte pytania sesji 3 (stan E0)
+| ID | Pytanie | Rozstrzyga | Dotyczy |
+|---|---|---|---|
+| OP-27 | [DO USTALENIA] Czy próba 0 zł z 3.1.1 („Non-subscription apps…”) obejmuje aplikację, która sprzedaje subskrypcje nieodnawialne | E1.1 u źródła; jeśli źródło milczy: App Review (krok właściciela) | V1, V2 |
+| OP-28 | [DO USTALENIA] Czy zakup nieodnawialny musi działać na wszystkich urządzeniach użytkownika i kto za to odpowiada (sklep czy aplikacja) | E1.1, E1.2 | V1, V2, BR-ZAK-001 |
+| OP-29 | [DO USTALENIA] Jak liczyć koniec dostępu przy kolejnych zakupach przed końcem okresu, skoro `currentEntitlements` daje tylko ostatnią transakcję | E1.2 | V1, V2, wektory |
+| OP-30 | [DO USTALENIA] Czy po blokadzie (P-051) działa synchronizacja iCloud (P-031). P-051 wymienia podgląd do odczytu, eksport i kopię, ale nie mówi o synchronizacji | właściciel na STOP E2 (moja rekomendacja: tak, bo dane to nie zakładnik, zasada roli 6) | V1, V2, KP-02 |
 
 ## Sesja 2, E0: Rama (2026-10-21)
 Rola 02-monetyzacja, tryb build bez `--moduly` (moduły domyślne: `cena-i-rachunek`, `rachunek`, `storekit-expo`, `audyt-paywalla`; prompt `prompts` @97ec212, 58 354 znaków). Kwarantanna P-003 i P-015 jak w sesji 1. Surowe teksty źródeł z dziś: `oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/`.
