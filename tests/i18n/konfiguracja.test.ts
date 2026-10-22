@@ -1,6 +1,9 @@
 // Konfiguracja Expo i zależności: supportedLocales = słowniki, pliki systemowe, przypięcie wersji.
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 
 const root = join(__dirname, '..', '..');
 const czytaj = (p: string) => JSON.parse(readFileSync(join(root, p), 'utf8'));
@@ -42,12 +45,11 @@ describe('zależności i18n (ADR-0017, P-036: dokładne wersje)', () => {
 });
 
 describe('pseudolokalizacja wygenerowana skryptem', () => {
-  it('src/i18n/pseudo/en-XA.json zgodny z en.json (npm run i18n:pseudo)', async () => {
-    const { pseudo, splaszcz } = await import('../../scripts/sprawdz-i18n.mjs');
-    const en = splaszcz(czytaj('src/i18n/slowniki/en.json'));
-    const xa = splaszcz(czytaj('src/i18n/pseudo/en-XA.json'));
-    expect(Object.keys(xa).sort()).toEqual(Object.keys(en).sort());
-    for (const k of Object.keys(en)) expect(xa[k]).toBe(pseudo(en[k]));
+  it('src/i18n/pseudo/en-XA.json zgodny ze skryptem na en.json (npm run i18n:pseudo)', () => {
+    const tmp = join(mkdtempSync(join(tmpdir(), 'xa-')), 'xa.json');
+    const r = spawnSync(process.execPath, ['scripts/sprawdz-i18n.mjs', 'src/i18n/slowniki', '--zrodlo', 'en', '--pseudo', tmp], { cwd: root, encoding: 'utf8' });
+    expect(r.status).toBe(0);
+    expect(readFileSync(join(root, 'src/i18n/pseudo/en-XA.json'), 'utf8')).toBe(readFileSync(tmp, 'utf8'));
   });
   it('plik pseudo nie leży w katalogu słowników', () => {
     expect(slowniki).not.toContain('en-XA');

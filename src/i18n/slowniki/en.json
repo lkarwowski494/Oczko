@@ -1,0 +1,20 @@
+{
+  "licznik": {
+    "po_dodaniu": "{{zrobione}} done. Now row {{nastepny}}.",
+    "seria_one": "Added {{count}} row in 1 second. Undo is available.",
+    "seria_other": "Added {{count}} rows in 1 second. Undo is available.",
+    "cofnij_one": "Undo {{count}} row",
+    "cofnij_other": "Undo {{count}} rows"
+  },
+  "limit": {
+    "zawczasu_one": "No free knitting days left in {{miesiac}}. Counting is paused until {{data}}. Your {{count}} row and everything else are kept.",
+    "zawczasu_other": "No free knitting days left in {{miesiac}}. Counting is paused until {{data}}. Your {{count}} rows and everything else are kept."
+  },
+  "ustawienia": {
+    "jezyk": "Language",
+    "jezyk_automatyczny": "Automatic (system)",
+    "uklad_miar": "Units",
+    "jakosc_tlumaczenia": "Translation quality",
+    "zglos_tlumaczenie": "Report a translation problem"
+  }
+}

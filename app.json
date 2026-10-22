@@ -75,7 +75,17 @@
         {
           "enableFTS": true
         }
+      ],
+      [
+        "expo-localization",
+        {
+          "supportedLocales": { "ios": ["en"], "android": ["en"] },
+          "supportsRTL": false
+        }
       ]
-    ]
+    ],
+    "locales": {
+      "en": "./locales/systemowe/en.json"
+    }
   }
 }

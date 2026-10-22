@@ -74,8 +74,7 @@ describe('sprawdz-i18n.mjs', () => {
     const r = uruchom(['locales', '--zrodlo', 'en', '--pseudo', out], d);
     expect(r.kod).toBe(0);
     const xa = JSON.parse(readFileSync(out, 'utf8'));
-    expect(xa['a.b']).toBeUndefined();
-    expect(xa.a.b).toMatch(/^⟦.*⟧$/);
-    expect(xa.a.n_other).toContain('{{count}}');
+    expect(xa['a.b']).toMatch(/^⟦.*⟧$/); // plik płaski: klucz z kropkami
+    expect(xa['a.n_other']).toContain('{{count}}');
   });
 });

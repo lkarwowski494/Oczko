@@ -17,7 +17,10 @@
     "typecheck": "tsc --noEmit",
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:licenses": "node scripts/licenses.mjs --check",
-    "verify": "npm run typecheck && npm run check:i18n && npm run check:licenses && node scripts/test-matrix.mjs --check && node scripts/verify-native.mjs && npm run test:coverage"
+    "verify": "npm run typecheck && npm run check:i18n && npm run check:licenses && node scripts/test-matrix.mjs --check && node scripts/verify-native.mjs && npm run test:coverage",
+    "i18n": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en",
+    "i18n:kod": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en --kod src/ekrany,src/komponenty,app",
+    "i18n:pseudo": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en --pseudo src/i18n/pseudo/en-XA.json"
   },
   "dependencies": {
     "@formatjs/intl-locale": "5.3.12",

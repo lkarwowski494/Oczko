@@ -18,8 +18,9 @@ describe('sprawdzIntl: samosprawdzenie przy starcie (lista pusta = w porządku)'
     expect(sprawdzIntl(['pl'])).toEqual(['brak Intl.PluralRules: polyfill nie został załadowany']);
   });
   it('język bez reguł: komunikat z kodem języka', () => {
-    expect(sprawdzIntl(['pl', 'qq-zz-invalid-x'])).toEqual(expect.any(Array));
-    const fake = { PluralRules: { supportedLocalesOf: (l: string[]) => l.filter((x) => x !== 'lv') } };
+    expect(sprawdzIntl(['pl', 'qq-zz-invalid-x'])).toEqual(['brak reguł liczby mnogiej dla qq-zz-invalid-x']); // RangeError nie wychodzi na zewnątrz
+    const PluralRules = Object.assign(function () {}, { supportedLocalesOf: (l: string[]) => l.filter((x) => x !== 'lv') });
+    const fake = { PluralRules };
     (globalThis as { Intl?: unknown }).Intl = fake;
     expect(sprawdzIntl(['pl', 'lv'])).toEqual(['brak reguł liczby mnogiej dla lv']);
   });

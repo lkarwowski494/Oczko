@@ -95,4 +95,8 @@ describe('utworzI18n', () => {
     expect(i.jezyk()).toBe('en-XA');
     expect(i.t('a.hello')).toBe('⟦Hèllö~⟧');
   });
+  it('plik pseudo ze skryptu (płaski, klucze z kropkami) działa jak zasób zagnieżdżony', async () => {
+    const i = await utworzI18n({ magazyn: magazyn(null), systemowe: () => ['en-US'], zasoby, pseudo: { translation: { 'a.hello': '⟦Hèllö~⟧' } } });
+    expect(i.t('a.hello')).toBe('⟦Hèllö~⟧');
+  });
 });

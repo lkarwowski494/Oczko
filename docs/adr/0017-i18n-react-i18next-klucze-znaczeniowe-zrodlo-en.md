@@ -1,0 +1,45 @@
+# 0017. Mechanizm i18n: i18next + react-i18next, JSON v4, klucze znaczeniowe, źródło en, polyfill `Intl.PluralRules`, wybór języka z systemu i z aplikacji
+Data: 2026-10-22 · Status: **proponowana** (do akceptacji właściciela na STOP E1; rola 05 zakończona, więc ADR przyjmuje właściciel) · Rola: 09 (E1) · Zależy od: ADR-0003, ADR-0016, P-009, P-075, NFR-JEZ-001, ZAL-031, ZAL-033, ZAL-034
+
+## Kontekst i problem
+35 lokalizacji (D-026). Stary mechanizm 0.1.0 (`src/core/i18n.ts`): polski tekst jako klucz, 2 języki, bez liczby mnogiej i bez `Intl`; nie nadaje się do 35 języków (polski: cztery formy liczby mnogiej, lv: `zero`, sl: `two`). Hermes nie ma `Intl.PluralRules`, a i18next od v24 bez niego rozróżnia tylko `one`/`other` (odczyt 2026-10-22, i18next.com/translation-function/plurals: „Since i18next v24 there is no fallback: without Intl only English-style _one / _other forms resolve.”). Test w Jest tego nie wykryje, bo Node ma pełne ICU.
+
+## Czynniki decyzji
+Skrypt kontroli (`scripts/sprawdz-i18n.mjs`) czyta format i18next v4 · liczba mnoga z CLDR · tekst w kodzie tylko przez `t()` z kluczem znaczeniowym (DEV-12) · kontekst dla tłumacza · zero kosztu (NFR-KOS-001) · dokładne wersje, wiek ≥ 14 dni (P-036) · przełącznik języka w aplikacji (P-075, 3b) · 0 ekranów, bo ekrany buduje 08.
+
+## Rozważane opcje
+A. react-i18next (i18next 26.4.2, react-i18next 17.0.16), słowniki JSON v4, formy `_one`/`_few`/`_many`/`_other` z `Intl.PluralRules` plus polyfill formatjs.
+B. Lingui, ICU MessageFormat: `plural`/`select` w komunikacie, kategorie wybiera tłumacz.
+C. Własny `t()` projektu (stan 0.1.0), rozbudowany o liczbę mnogą.
+
+## Decyzja
+Opcja A. Pozostałe ustalenia:
+- **Źródło `en`** (P-075, 1a). Klucze znaczeniowe bez polskich liter: `ekran.element[.stan]` (`licznik.po_dodaniu`); parametry `{{nazwa}}`, liczba mnoga przez `count`. Kontekst dla tłumacza: `src/i18n/slowniki/en.kontekst.json` (po polsku, opis miejsca, parametrów i długości; klucz liczby mnogiej raz, bez przyrostka).
+- **Zestaw języków:** `src/i18n/jezyki.ts` (35 tagów). **Odchylenie od listy wzorca:** Portugalia to `pt-PT`, nie `pt`, bo reguły CLDR dla `pt` są brazylijskie (0 → `one`), a portugalskie dla `pt-PT` mają 0 → `other` (sprawdzone w Node/ICU; wektory w `tests/i18n/liczba-mnoga.test.ts`). Łańcuch zastępczy: wariant → pokrewny → `en` (`es-419`→`es`, `pt-BR`↔`pt-PT`), nigdy klucz ani pusty tekst. Dopasowanie języka systemu: `dopasujJezyk` (np. `zh-Hant-TW`/`zh-HK` → `zh-Hant`; `zh-Hans` brak → następny język użytkownika albo `en`; `no`/`nn` → `nb`; `in` → `id`; `es-MX`/`es-US` → `es-419`).
+- **Wybór języka (P-075, 3b):** język per aplikacja z ustawień systemu (`supportedLocales` w pluginie `expo-localization`) **i** przełącznik w aplikacji: ustawienie `jezyk` w tabeli `ustawienie` (`"auto"` albo tag; bez nowej tabeli i migracji) przez port `MagazynPreferencji` (adapter w `src/dane/repozytoria`, rola 08). Jawny wybór wygrywa z systemem; `auto` idzie za systemem; Android: `odswiezJezykSystemowy()` przy powrocie na pierwszy plan (aplikacja nie restartuje się przy zmianie języka). Uszkodzony odczyt ustawień = `auto`.
+- **Polyfill** (`src/i18n/polyfille.ts`, import przed inicjalizacją i18n): `@formatjs/intl-locale/polyfill.js` (tylko gdy brak `Intl.Locale`), `@formatjs/intl-pluralrules/polyfill-force.js` i dane reguł 34 języków (`locale-data/<język>.js`, poziom języka; `pt-PT` osobno). Samosprawdzenie `sprawdzIntl` przy starcie (build deweloperski: błąd na ekranie). Odczyt 2026-10-22, formatjs.github.io/docs/polyfills/intl-pluralrules: „Since React Native uses Hermes which does not support Intl.PluralRules, import /polyfill-force instead for much better performance”.
+- **Formaty:** `Intl.NumberFormat`/`DateTimeFormat` z językiem aplikacji (`src/i18n/format.ts`); godzina 12/24 z `uses24hourClock`, pierwszy dzień tygodnia z `firstWeekday` (`src/platforma/lokalizacja.ts`, jedyny import `expo-localization`); data i godzina w strefie urządzenia (RD-16). Hermes: `NumberFormat` bez `notation: 'compact'` i `signDisplay` na iOS, `formatToParts` tylko na Androidzie, styl `unit` z usterkami (github.com/facebook/hermes, `doc/IntlAPIs.md`, odczyt 2026-10-22 przez rolę 09 z wzorca; **[DO USTALENIA]** ponowny odczyt przed użyciem w 08): kod ich nie używa.
+- **Jednostki (P-075, 4a):** preferencja `uklad_miar` (`"auto"`|`"metric"`|`"imperial"`) w `ustawienie`; `auto` z `measurementSystem` (`us`/`uk` → imperial, `null` na web → metric). Jednostki kanoniczne w danych (nie zależą od języka): długość drutu i obwody w **mm**, długość włóczki i nitki w **m**, masa w **g**, temperatura w **°C**; przeliczenie przy wyświetlaniu stałymi definicyjnymi (1 in = 25,4 mm, 1 yd = 0,9144 m, 1 oz = 28,349523125 g); reguły zaokrągleń wartości dziedzinowych, rozmiary drutów US/UK i etykiety: rola 06 (F-38, RD-11), `[DO USTALENIA]` do jej E-bramki. Ceny tylko ze sklepu (KP-09), nigdy w tłumaczeniach.
+- **Dane jako kody:** w bazie kody i identyfikatory, tłumaczenie przy wyświetlaniu (zasada 8 roli 09).
+- **Teksty w celach Swift (Live Activity, zegarek, rozszerzenie dziennika +1):** słowniki generowane z tych samych JSON do `Localizable.xcstrings` celu (skrypt w CI, rola 07/08), bo `i18next` nie działa w Swift; klucze współdzielone, parametry mapowane `{{x}}` → `%1$@`. Kształt generatora i kontrola zgodności: **[DO USTALENIA z 08 w ADR-0007 przy pierwszym tekście natywnym]**; do tego czasu cele natywne nie mają własnych tekstów oprócz tych z `locales/systemowe` (nazwa, uprawnienia).
+- **Pliki systemowe:** `locales/systemowe/<język>.json` (`ios.CFBundleDisplayName`, `ios.NSCameraUsageDescription`); `app.json`: `supportedLocales`, `locales` i `CFBundleAllowMixedLocalizations`. Zasada: `supportedLocales` = słowniki = pliki systemowe (test `tests/i18n/konfiguracja.test.ts`); język dochodzi razem z falą tłumaczeń (E3), nie wcześniej. `supportsRTL: false` (żaden z 35 języków nie jest pismem od prawej do lewej).
+- **Pseudolokalizacja:** `npm run i18n:pseudo` generuje `src/i18n/pseudo/en-XA.json`; ładowana tylko gdy `EXPO_PUBLIC_PSEUDO` w buildzie deweloperskim (`opcje.pseudo`), poza katalogiem słowników i poza `supportedLocales`.
+- **Typowane klucze:** `src/i18n/typy.d.ts` (`CustomTypeOptions` z `en.json`): literówka w kluczu to błąd `tsc`.
+- **Bramka:** `npm run i18n` (słowniki), `npm run i18n:kod` (z `--kod src/ekrany,src/komponenty,app`; do czasu powstania katalogów kończy się kodem 2 „skan kodu niewykonany”, czyli „nie sprawdzono”, nie „w porządku”). Stary `check:i18n` i testy `i18n-*.test` dotyczą kodu 0.1.0 i znikają razem z nim przy kroku porównania/08.
+
+### Konsekwencje
+- Dobre: 35 języków z poprawną liczbą mnogą na Hermes po polyfillu; jeden format dla skryptu, tłumaczy i narzędzi; klucze typowane; przełącznik i system w jednym miejscu; zero kosztu.
+- Złe: polyfill i dane reguł 34 języków w pakiecie (zmierzone 2026-10-22, pliki źródłowe bez minifikacji: `polyfill-force.js` 46 791 B + 34 pliki `locale-data` 60 408 B ≈ 107 KB; rozmiar w pakiecie i budżet `e3-…md` §3 sprawdza 07); jakość przekładu maszynowego (oznaczenie w Ustawieniach, P-075 2a); przełącznik w aplikacji dodaje stan i ekran (04); teksty Swift osobnym potokiem; rodzaj i przypadek osobnymi kluczami (brak `select` jak w ICU).
+- Prywatność: żaden z czterech nowych pakietów JS nie zawiera `PrivacyInfo.xcprivacy` (`find node_modules/i18next node_modules/react-i18next node_modules/@formatjs`, 0 plików); `expo-localization` ma własny manifest (już w ADR-0016).
+- Ryzyko szczątkowe: **działanie `Intl.PluralRules` z polyfillem na prawdziwym Hermes nie jest sprawdzone** (brak Xcode/symulatora; hermesc w `node_modules` nie uruchamia kodu); sprawdza je krok CI na macOS (rola 07), ZAL-033 pozostaje hipotezą do tego czasu.
+
+### Potwierdzenie
+- `npx jest tests/i18n`: wektory liczby mnogiej ze wzorców na polyfillu, wybór i łańcuch języków, mechanizm (zmiana w trakcie, Android, uszkodzone ustawienia), formaty, konfiguracja `app.json`, zgodność pseudo, skrypt (kody 0/1/2).
+- `npm run i18n` kod 0; `npm run i18n:kod` kod 0 po powstaniu katalogów 08; `tsc --noEmit`.
+- CI macOS (07): uruchomienie `sprawdzIntl(JEZYKI)` w aplikacji na symulatorze, wynik `[]`; test liczby mnogiej `pl` (1, 2, 5, 22) w aplikacji, nie w Jest.
+- CI: `package.json` bez `^`/`~` dla pięciu pakietów i18n (test `konfiguracja.test.ts`).
+
+## Opcje: zalety i wady
+### A — zalety: format czytany przez skrypt bez dodatkowych narzędzi; typowane klucze; Expo wymienia React i18next wśród gotowych rozwiązań · wady: rodzaj i przypadek osobnymi kluczami; zależność od polyfillu na Hermes.
+### B — zalety: `plural`/`select` w komunikacie, tłumacz widzi całość · wady: konfiguracja kompilacji katalogów i zgodność z Expo SDK 57 **nieprzebadane w tej sesji**; skrypt roli nie czyta katalogów ICU, więc kontrola liczby mnogiej wymagałaby przeróbki.
+### C — zalety: brak nowej zależności, brak migracji · wady: nic z wymagań (liczba mnoga, kontekst, 35 języków) nie jest zrobione; stary mechanizm używa polskiego tekstu jako klucza, więc i tak trzeba go zastąpić.

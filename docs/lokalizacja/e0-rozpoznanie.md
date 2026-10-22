@@ -1,4 +1,4 @@
-# E0 Rozpoznanie (rola 09-lokalizacja, build, wejście wczesne) · 2026-10-22 · czeka na STOP E0
+# E0 Rozpoznanie (rola 09-lokalizacja, build, wejście wczesne) · 2026-10-22 · STOP E0 przyjęty (P-075: 1a 2a 3b 4a 5b)
 Wejście: P-074; `docs/architektura/e4-przekazanie.md` („09”), `docs/adr/0016-…`, `docs/design/design-spec.md`, `docs/decyzje.md` (P-009), `docs/scope-contract.md`, `docs/monetyzacja.md`, `docs/brd/wymagania.md` (NFR-JEZ-001). Prompt: `oczko-warsztat/09-lokalizacja/2026-10-22-build/` (cf05c5d). Biblioteki zasad z Dysku nie czytano (polecenie właściciela).
 
 ## 1. Środowisko
@@ -7,7 +7,7 @@ Wejście: P-074; `docs/architektura/e4-przekazanie.md` („09”), `docs/adr/001
 | System, Node, git | Linux x86_64, Node v22.22.0, gałąź `claude/jolly-thompson-paz6d8` @2501dc5, czysta |
 | GitHub | narzędzia MCP; repo `oczko-warsztat` dodane z dostępem push (P-010) |
 | Przeglądarka do zrzutów | Chromium z systemu (Playwright skonfigurowany); `npx playwright --version` nie zwróciło wersji w tej sesji [niesprawdzone] |
-| Xcode / symulator iOS | brak (Linux): sprawdzenie `Intl` w aplikacji (E1 pkt 2) i Maestro iOS są krokiem właściciela albo CI na macOS (rola 07) |
+| Xcode / symulator iOS | brak (Linux): sprawdzenie `Intl` w aplikacji (E1 pkt 2) i Maestro iOS tylko w CI na macOS (rola 07; P-041) |
 | Sieć | działa: developer.apple.com, docs.expo.dev, raw.githubusercontent.com (odczyty niżej) |
 | Repo | publiczne: bez sekretów; materiały prywatne w `oczko-warsztat` |
 
@@ -79,7 +79,7 @@ Polityka „szeroka”: zestaw jest dany (35 ze wzorca, D-026), więc tabeli war
 ## 8. Szacunek czasu
 | Co | Czas agenta | Czekanie | Czas właściciela |
 |---|---|---|---|
-| E1 (ADR, testy czerwone, `expo-localization`, polyfille, słownik źródłowy, skrypt) | 4–6 h [OCENA] | — | decyzje 1–5 (kilka minut); test `Intl` w aplikacji na urządzeniu/symulatorze (E1 pkt 2) ok. 20 min |
+| E1 (ADR, testy czerwone, `expo-localization`, polyfille, słownik źródłowy, skrypt) | 4–6 h [OCENA] | — | decyzje 1–5 (kilka minut); nic poza decyzjami (P-041: właściciel nie testuje ręcznie; test `Intl` w aplikacji to krok CI na macOS, rola 07) [poprawione po P-041] |
 | E2–E4 (po 08 i audycie 04) | poza tą sesją | 08 | — |
 | Fale tłumaczeń E3 | 6–10 h na falę [OCENA] | recenzenci | wskazanie recenzentów |
 

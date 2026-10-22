@@ -1,0 +1,17 @@
+{
+  "licznik": {
+    "po_dodaniu": "Ogłoszenie VoiceOver po +1 (design-spec, VoiceOver). {{zrobione}} = liczba wykonanych rzędów, {{nastepny}} = numer następnego rzędu. Krótkie zdanie, czytane na głos; ok. 30 znaków.",
+    "seria": "Baner strażnika tempa pod tytułem (F-47, RD-17) i ogłoszenie VoiceOver; {{count}} = liczba rzędów dodanych w serii (>= 2 w praktyce, ale forma pojedyncza istnieje dla reguł języka). Nie znika po czasie. Ok. 50 znaków.",
+    "cofnij": "Przycisk w banerze strażnika, cofa całą serię; {{count}} = liczba rzędów serii. Ok. 15 znaków, musi się mieścić na 320 pt."
+  },
+  "limit": {
+    "zawczasu": "Komunikat zamiast przycisków +1 i −1 po wyczerpaniu darmowych dni (BR-ZAK-006, design-spec „Limit dni”). {{miesiac}} = nazwa miesiąca w języku aplikacji, {{data}} = data wznowienia w formacie języka, {{count}} = liczba rzędów zachowanych w projekcie. Ton: spokojnie, bez straszenia; nie wolno użyć „unlock”, „upgrade”. Ok. 110 znaków."
+  },
+  "ustawienia": {
+    "jezyk": "Etykieta wiersza w Ustawieniach, otwiera listę języków (P-075, 3b). Propozycja roli 09, tekst zatwierdza rola 04. Ok. 12 znaków.",
+    "jezyk_automatyczny": "Pierwsza pozycja listy języków: język jak w systemie telefonu. Propozycja roli 09, zatwierdza 04. Ok. 25 znaków.",
+    "uklad_miar": "Etykieta wiersza w Ustawieniach: metryczne czy imperialne (P-075, 4a). Propozycja roli 09, zatwierdza 04. Ok. 10 znaków.",
+    "jakosc_tlumaczenia": "Etykieta wiersza informującego, że przekład jest maszynowy (P-075, 2a). Propozycja roli 09, zatwierdza 04. Ok. 20 znaków.",
+    "zglos_tlumaczenie": "Odnośnik pod wierszem jakości przekładu: otwiera zgłoszenie błędu (F-57) z kodem języka. Propozycja roli 09, zatwierdza 04. Ok. 30 znaków."
+  }
+}
