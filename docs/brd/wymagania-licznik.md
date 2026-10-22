@@ -46,7 +46,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 
 ### BR-LIC-004: Blokada przed przypadkowym stuknięciem
 - Przepływ: PR-02
-- Dowód potrzeby: J-01; 24 z 47 recenzji o przypadkowym stuknięciu ma ≤3★; „Just moving my phone to get back to the pattern caused row jumps” (Knit Row Counter, id1532433389)
+- Dowód potrzeby: J-01; 24 z 47 recenzji o przypadkowym stuknięciu ma ≤3★; „Just moving my phone to get back to the pattern caused row jumps” (Knit Row Counter, id1532433389); „The motion of swiping up increases the count every single time” (Knit Row Counter CA, id4570617893)
 - Kryteria akceptacji:
   - Scenariusz: Licznik zablokowany
     - Zakładając, że licznik ma wartość 15 i jest zablokowany
@@ -56,6 +56,14 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że licznik jest zablokowany
     - Gdy użytkownik odblokowuje go świadomym gestem
     - Wtedy dodanie rzędu znów zmienia wartość
+  - Scenariusz: Stuknięcie w zablokowany licznik (ER-24)
+    - Zakładając, że licznik ma wartość 15 i jest zablokowany
+    - Gdy użytkownik świadomie stuka w przycisk dodawania
+    - Wtedy licznik nadal pokazuje 15, a aplikacja pokazuje, że licznik jest zablokowany i jak go odblokować
+  - Scenariusz: Gest systemowy (ER-24)
+    - Zakładając, że licznik ma wartość 15 i nie jest zablokowany
+    - Gdy użytkownik przesuwa palcem od dolnej krawędzi, żeby przejść do innej aplikacji
+    - Wtedy licznik nadal pokazuje 15, a historia nie ma nowej zmiany
 
 ### BR-LIC-005: Potwierdzenie zmiany bez przerywania dźwięku
 - Przepływ: PR-02

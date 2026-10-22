@@ -19,6 +19,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Zakładając, że użytkownik zapisał notatkę „następne: 3 oczka prawe, potem warkocz”
     - Gdy wraca do ekranu licznika tego projektu
     - Wtedy widzi notatkę obok licznika bez otwierania innego ekranu
+  - Scenariusz: Długa notatka (ER-24)
+    - Zakładając, że użytkownik wkleja do notatki całą stronę wzoru, ok. 5000 znaków (przykład testu, nie limit: P-047)
+    - Gdy zapisuje notatkę i otwiera ją ponownie
+    - Wtedy notatka ma cały wklejony tekst, bez obcięcia i bez komunikatu o limicie
 
 ### BR-PRJ-003: Zdjęcia projektu i etykiety
 - Przepływ: PR-07
