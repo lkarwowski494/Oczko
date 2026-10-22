@@ -233,3 +233,20 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że licznik ma 42
     - Gdy użytkownik wpisuje wartość ujemną albo tekst
     - Wtedy aplikacja nie zmienia licznika i pokazuje, że wartość musi być liczbą całkowitą od 0
+
+### BR-LIC-018: Licznik całości zasilany przez sekcje jednego kawałka
+- Przepływ: PR-03
+- Dowód potrzeby: J-01, J-02; „The individual sections, when you update the row count, should automatically update the global counter.” (My Row Counter, id13712427204); „a row counter feature that allows you to break it down to multiple parts of the pattern, all rolling up to a global counter so you never lose your place” (My Row Counter, id9711911250, strona App Store US, odczyt roli 03 2026-10-22) · ER-16
+- Kryteria akceptacji:
+  - Scenariusz: Sekcja zasila całość
+    - Zakładając, że kawałek „korpus” ma sekcje „ściągacz” z 20 rzędami i „gładki” z 5 rzędami, a licznik całości pokazuje 25
+    - Gdy użytkownik dodaje rząd w sekcji „gładki”
+    - Wtedy sekcja „gładki” pokazuje 6, a licznik całości 26
+  - Scenariusz: Prucie w sekcji
+    - Zakładając ten sam stan
+    - Gdy użytkownik odejmuje rząd w sekcji „gładki”
+    - Wtedy sekcja pokazuje 4, a licznik całości 24
+  - Scenariusz: Części osobnych kawałków
+    - Zakładając, że projekt „Sweter” ma osobne kawałki przód i rękaw lewy (BR-PRJ-001)
+    - Gdy użytkownik dodaje rząd w rękawie
+    - Wtedy licznik całości przodu się nie zmienia
