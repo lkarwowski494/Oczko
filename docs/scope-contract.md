@@ -128,3 +128,15 @@ Razem: 5–7,5 h pracy agenta; od właściciela ok. 1 h (bez apetytu wersji 1, k
 ### Dowody E0
 - Prompt roli: `node tools/assemble.mjs 03-zakres --tryb build --galaz claude/jolly-thompson-paz6d8` w `prompts` @97ec212, kod 0, 587 linii.
 - Przypisanie BR: `node kontrola-e0.mjs docs/scope-contract.md docs/brd` (funkcje `tabele` i `wymaganiaBrd` ze skryptu `zakres.mjs` roli) → „BR w BRD: 59 · kandydatów F: 44 · BR przypisanych: 59 · błędów: 0”, kod 0. Kontrola negatywna na kopii z BR-LIC-003 zamienionym na BR-LIC-004: 2 błędy („BR-LIC-003 bez kandydata”, „BR-LIC-004 w F-02, F-03”), kod 1. Skrypty i wynik: `oczko-warsztat/03-zakres/2026-10-22-build/`.
+
+## Po E0: decyzje i zgłoszenia (2026-10-22)
+- **P-040:** kierunek wersji 1 = wariant B + F-11 (ekran blokady) + F-21 (stoper): „B plus 1, 3”. Linię i koszty potwierdza STOP E2.
+- **P-041:** bez testów ręcznych właściciela, tylko automatyczne. Koszt w rankingu E2 = przeglądy, decyzje, utrzymanie; ryzyko „kryterium niesprawdzalne automatem” liczone przy każdej funkcji.
+- **F-28 (pisanie Apple Pencil): czeka na decyzję.** Odrzucanie dłoni zapewnia system: tryb `PKCanvasViewDrawingPolicy.pencilOnly`, „Pencil touches are the only input that draw on the canvas.” (developer.apple.com/documentation/pencilkit/pkcanvasviewdrawingpolicy/pencilonly, odczyt 2026-10-22; od iOS 13); kryterium BR-WZR-004 sprawdza automat (dotyk palcem na płótnie → 0 kresek), a nasz kod (zapis adnotacji, położenie przy powiększeniu, eksport, tryb do odczytu po utracie Pro) testy jednostkowe i UI w symulatorze.
+- **Kalendarz (prośba właściciela): kandydaci K-1–K-3, czeka na decyzję;** wzorce Treningu i Piekarza i dowód z recenzji: `oczko-warsztat/03-zakres/2026-10-22-build/kalendarz-wzorce.md`.
+
+### Zgłoszenia do roli 01 (ER)
+| ID | Zgłoszenie | Dowód | Status |
+|---|---|---|---|
+| ER-10 | Metody NFR zakładają test ręczny albo urządzenie: NFR-OFF-001 („test ręczny i automatyczny”), NFR-DOS-001 („audyt VoiceOver na urządzeniu”), NFR-WYD-001 („pomiar na najstarszym obsługiwanym iPhonie”), NFR-ZEG-001 („test na parze urządzeń”); po P-041 metoda automatyczna albo nazwane ryzyko szczątkowe. Uwaga dla 02 i 07: tabela „Testy, których nie zrobi Node (krok właściciela)” w `docs/monetyzacja.md` potrzebuje zamiennika automatycznego | P-041; `docs/brd/wymagania.md` (NFR) | otwarte |
+| ER-11 | (jeśli właściciel wybierze kalendarz) brak BR dla kalendarza dni z robótką (praca J-11, J-05); prefiks `KAL` w BRD Oczka jest zajęty przez obliczenia | prośba właściciela 2026-10-22; `kalendarz-wzorce.md` | czeka na decyzję właściciela |
