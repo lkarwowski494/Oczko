@@ -1,5 +1,5 @@
 # Kontrakt zakresu: Oczko
-Stan: **E3, STOP** (kontrakt i przekazanie) · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212) · Wejście: BRD `docs/brd/` (80 BR po poprawce roli 01: P-047, P-048), `docs/monetyzacja.md` (sesja 2), ZAL-001–027 · Decyzje zakresu: P-040–P-046, P-049; model: P-029 obowiązuje, kierunek P-051 w badaniu roli 02 (sesja 3) · Historia E0–E2 (rama, soczewki, pominięcia, warianty): `docs/scope-contract-historia.md`
+Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212) · Wejście: BRD `docs/brd/` (80 BR po poprawce roli 01: P-047, P-048), `docs/monetyzacja.md` (sesja 2), ZAL-001–027 · Decyzje zakresu: P-040–P-046, P-049; model: P-029 obowiązuje, kierunek P-051 w badaniu roli 02 (sesja 3) · Historia E0–E2 (rama, soczewki, pominięcia, warianty): `docs/scope-contract-historia.md`
 
 ## Główna praca i pętla
 - Główna praca: J-01 „Wiedzieć, w którym rzędzie jestem, i ufać tej liczbie” z J-05 (powrót) i J-04 (miejsce we własnym wzorze); ZAL-019 podważone w części (J-04 w rdzeniu, E1).
@@ -210,7 +210,7 @@ kod wyjścia: 0
 - **04 Studio projektowe:**
   - Przepływy w zakresie: PR-01–PR-11, PR-13 (tylko przeniesienie trwającej robótki, BR-LIC-017; import od konkurencji PÓŹNIEJ), PR-14, PR-15, PR-16 (bez BR-DNI-007). PR-12 (słownik) poza zakresem. Kto, cel, kroki, częstość, kontekst: `docs/brd/wymagania.md`.
   - Kryteria intuicyjności: kolumna „Intuicyjność” (każde `wynik: czeka na 04`); przejście poznawcze (cztery pytania NN/g) na prototypie; wynik wraca do kolumny jako `wynik: <pozytywny|negatywny>, <data, plik>` przez bramkę `zmiany-zakresu`; wynik negatywny: przebudowa w 04 albo NIE.
-  - Testy z ludźmi: właściciel nie testuje (P-041) i nie ma osób do rozmów; test z 3–5 osobami dziergającymi (np. publiczny link TestFlight) to działanie zewnętrzne tylko za zgodą właściciela (pytanie otwarte). Bez niego: przejście poznawcze jako [OCENA], z niezależnymi subagentami w roli nowej osoby na zrzutach z Expo web.
+  - Testy z ludźmi: nie (P-052 (2)). Intuicyjność sprawdza 04 przejściem poznawczym (cztery pytania NN/g) jako [OCENA], z niezależnymi subagentami w roli nowej osoby na zrzutach z Expo web; ryzyko szczątkowe: brak obserwacji ludzi (P-041), sprawdzenie po wydaniu przez F-57 i recenzje.
   - Zasada P-046 i uproszczenia U-1–U-12; NFR-PIE-001 (pierwsze +1 jednym stuknięciem, nic przed licznikiem); KP-10 (zakup nigdy w trakcie liczenia).
   - „NIE robimy” to czego nie projektować; PÓŹNIEJ bez miejsca w nawigacji na zapas (bez pustych zakładek).
   - Tekst ekranu ofert wybrany przez właściciela (wariant 1): `oczko-warsztat/03-zakres/2026-10-22-build/oferty-tekst-wlasciciela.md`; ostateczny kształt ekranu zakupu po kontrakcie płatności roli 02.
@@ -236,4 +236,4 @@ kod wyjścia: 0
 | R, I, C, koszt i apetyt jako [OCENA] z metodą albo dane z datą | spełnione | „Ranking” (metoda w nagłówku); koszty z soczewki opiekuna |
 | właściciel wybrał wariant spośród co najmniej dwóch, apetyt i podział; słowa i data w rejestrze | spełnione | P-049 (W1 z W1–W3, apetyt 45 h, jedna aplikacja); P-040–P-046 |
 | przekazanie mówi, co dostaje każda z ról 04–08 | spełnione | „Kolejność i przekazanie” |
-| otwarte | — | model (P-051, rola 02 sesja 3); ER-25; testy z ludźmi (zgoda właściciela); WTP nowych funkcji (02) |
+| otwarte | — | model (P-051, rola 02 sesja 3); ER-25; WTP nowych funkcji (02) |
