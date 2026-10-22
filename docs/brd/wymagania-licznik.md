@@ -7,8 +7,12 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 - Kryteria akceptacji:
   - Scenariusz: Pierwsze uruchomienie
     - Zakładając, że aplikacja jest uruchomiona pierwszy raz
-    - Gdy użytkownik wybiera rozpoczęcie liczenia
-    - Wtedy widzi licznik z wartością 0, bez prośby o konto, nazwę projektu, wzór ani zakup
+    - Gdy otwiera się pierwszy ekran
+    - Wtedy jest nim licznik z wartością 0, bez powitania, quizu, prośby o uprawnienie, konto, nazwę projektu, wzór ani zakup (NFR-PIE-001, ER-14)
+  - Scenariusz: Pierwszy rząd jednym stuknięciem
+    - Zakładając, że aplikacja jest uruchomiona pierwszy raz, bez sieci
+    - Gdy użytkownik stuka raz w przycisk dodawania
+    - Wtedy licznik pokazuje 1
   - Scenariusz: Nazwanie później
     - Zakładając, że użytkownik policzył 12 rzędów w liczniku bez nazwy
     - Gdy nadaje mu nazwę projektu

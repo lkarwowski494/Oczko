@@ -78,6 +78,10 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 - Miara: odsetek przepływów PR-01–PR-07, PR-10–PR-12, PR-14 wykonanych w trybie samolotowym.
 - Próg: 100% (`docs/pomysl.md`; P-021).
 - Metoda: testy automatyczne (jednostkowe i UI w symulatorze) każdego przepływu z adapterem sieci w stanie „brak połączenia” (rola 07). Ryzyko szczątkowe (P-041, ER-10): zachowanie systemu w prawdziwym trybie samolotowym.
+### NFR-PIE-001: Pierwsze liczenie bez przeszkód
+- Miara: liczba stuknięć od otwarcia świeżo zainstalowanej aplikacji do pierwszego dodanego rzędu; liczba ekranów przed licznikiem (powitanie, quiz, prośba o uprawnienie, zakup, konto); działanie bez sieci.
+- Próg: 1 stuknięcie (P-047); 0 ekranów przed licznikiem; to samo w trybie bez sieci. Dowód: „deleted in 5 mins because I cannot figure out how to count the rows without creating a project” (My Row Counter GB, id12450531949); „I don’t want to take a quiz about how the app can help me improve. I want a stitch counter” (Loopsy, id14441026601) · ER-14
+- Metoda: test UI automatyczny w symulatorze na świeżej instalacji, z siecią i z adapterem sieci w stanie „brak połączenia” (rola 07).
 ### NFR-PRY-001: Brak zbierania danych
 - Miara: kategorie danych w etykiecie App Privacy i lista SDK.
 - Próg: „Data Not Collected”, zero SDK reklamowych i analitycznych (ZP-03).

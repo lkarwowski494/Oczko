@@ -16,7 +16,7 @@ Stan: rola 01, tryb fix ER-09–ER-24 (2026-10-22, P-045, P-047) · Prośby o zm
 | ER-11 | brak BR i RD dla kalendarza i postępu K-1–K-5 (P-043); prefiks `KAL` zajęty | 03 (P-045) | otwarte | — |
 | ER-12 | brak BR dla I-1, I-2, I-3, I-4, I-6, I-7, I-9 (P-044, P-046) | 03 (P-045) | otwarte | — |
 | ER-13 | brak wpisania wartości licznika, zerowania i przeniesienia trwającej robótki | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-LIC-017 (wpisanie, przeniesienie, zerowanie z potwierdzeniem, historia z cofnięciem; wpisanie nie jest pracą dla statystyk dnia i tempa) |
-| ER-14 | brak NFR pierwszego liczenia (stuknięcia do +1, nic przed licznikiem, offline) | 03 (P-045) | otwarte | — |
+| ER-14 | brak NFR pierwszego liczenia (stuknięcia do +1, nic przed licznikiem, offline) | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | NFR-PIE-001 (1 stuknięcie, 0 ekranów przed licznikiem, bez sieci; P-047); BR-LIC-001 pierwszy ekran to licznik |
 | ER-15 | brak powrotu do miejsca po starcie i z innej aplikacji | 03 (P-045) | otwarte | — |
 | ER-16 | brak licznika całości zasilanego przez części jednego kawałka | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-LIC-018 (sekcje zasilają licznik całości kawałka; osobne kawałki niezależne) |
 | ER-17 | źródła wzoru tylko PDF i zdjęcie (brak strony WWW, Worda, linku do filmu) | 03 (P-045) | otwarte | — |
