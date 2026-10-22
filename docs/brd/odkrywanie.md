@@ -203,6 +203,8 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 - CYC prosi o e-mail o zamiarze użycia i linię ze źródłem [FAKT S-24]; tabele to „GUIDELINES ONLY” [FAKT S-19]. Czy dotyczy tabel liczbowych: [DO USTALENIA] (OP-09).
 ### OG-13: Symbole pielęgnacji
 - Pięć symboli pielęgnacji to chronione znaki towarowe [FAKT S-28]; bez licencji aplikacja ich nie rysuje (OP-11).
+### OG-14: Zgłoszenie problemu a etykieta „Data Not Collected”
+- Dane wysłane przez użytkownika do twórcy (zgłoszenie z diagnostyką) nie zmieniają etykiety tylko wtedy, gdy spełniają wszystkie kryteria „optional disclosure”: opcjonalne, rzadkie, poza główną funkcją, podane w interfejsie aplikacji, jasne co jest wysyłane, z imieniem albo nazwą konta widoczną w formularzu i wybierane za każdym razem [FAKT S-37]. Czy wiadomość z arkusza udostępniania spełnia warunek „submission form”: [DO USTALENIA] (OP-25). Dotyczy BR-DAN-010 i NFR-PRY-001 (ER-19).
 
 ## Ryzyka produktu (RYZ)
 ### RYZ-01: Patent na śledzenie postępu we wzorze (brzegowy)

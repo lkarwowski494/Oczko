@@ -10,7 +10,7 @@ BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P
 | `odkrywanie.md` | zasady ZP, prace J, persony P, kontekst, rynek, OG, RYZ, hipotezy H |
 | `reguly.md` | reguły RD z wektorami |
 | `zrodla.md` | źródła S |
-| `wymagania.md` | przepływy PR-01–PR-14, wymagania NFR |
+| `wymagania.md` | przepływy PR-01–PR-15, wymagania NFR |
 | `wymagania-licznik.md`, `wymagania-projekt.md`, `wymagania-dane.md`, `wymagania-narzedzia.md`, `wymagania-dni.md` | wymagania BR według modułów: LIC, PRJ, WZR, DAN, ZAK, ZAP, KAL, SLO, DNI |
 | `errata.md` | prośby o zmianę od innych ról (ER) ze statusem |
 | `tests/wektory/brd.json` (repo) | wektory RD do testów, generowane skryptem; tylko do odczytu dla ról 07 i 08 |
@@ -117,3 +117,4 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 | OP-17 | [DO WYJAŚNIENIA] Budżet czasu reakcji licznika | rola 05 | NFR-WYD-001 |
 | OP-18 | Okres przechowywania usuniętych projektów: zamknięte decyzją P-026 (30 dni) | właściciel | BR-DAN-008 |
 | OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje wersję płatną bez telefonu w pobliżu (wpis źródłowy: `docs/monetyzacja.md`, rola 02) | 05 | BR-ZAK-001, BR-LIC-015 |
+| OP-25 | [DO USTALENIA] Czy zgłoszenie problemu wysłane arkuszem udostępniania spełnia kryteria „optional disclosure” (S-37), czy wymaga wpisu w etykiecie App Privacy (np. „Customer Support”, „Other Diagnostic Data”) | rola 10, 05 | OG-14, BR-DAN-010, NFR-PRY-001 |

@@ -127,6 +127,36 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Gdy potwierdza usunięcie wszystkich danych
     - Wtedy aplikacja nie ma żadnych projektów, a dane Oczka w iCloud użytkownika są usunięte
 
+### BR-DAN-010: Zgłoś problem z diagnostyką lokalną
+- Przepływ: PR-15
+- Dowód potrzeby: J-07; „I don’t know where else to report bugs.” (YarnBuddy, id8151431159); „No email link posted just a direct link to a mail app I don’t have.” (Loopsy, id13620980670) · ER-19; prywatność OG-14, NFR-PRY-001, ZP-03
+- Kryteria akceptacji:
+  - Scenariusz: Podgląd przed wysłaniem
+    - Zakładając, że użytkownik wybiera „Zgłoś problem”
+    - Gdy aplikacja przygotowuje zgłoszenie
+    - Wtedy użytkownik widzi pełną treść diagnostyki (wersja aplikacji i systemu, model urządzenia, stan synchronizacji i zegarka, ostatnie błędy) bez nazw projektów, notatek, zdjęć i wzorów, zanim cokolwiek opuści telefon
+  - Scenariusz: Wysyłka wybranym kanałem
+    - Zakładając, że na telefonie nie ma skonfigurowanej aplikacji Mail
+    - Gdy użytkownik zatwierdza zgłoszenie
+    - Wtedy może je wysłać albo zapisać dowolnym kanałem z arkusza udostępniania, a aplikacja nie wysyła niczego sama
+  - Scenariusz: Rezygnacja
+    - Zakładając, że użytkownik obejrzał treść zgłoszenia
+    - Gdy rezygnuje
+    - Wtedy nic nie opuszcza telefonu, a aplikacja nie zapisuje, że zgłoszenie było przygotowane
+
+### BR-DAN-011: Widoczny stan synchronizacji i zegarka
+- Przepływ: PR-15, PR-08
+- Dowód potrzeby: J-07; „On my ipad I have an error telling me that sync hasn’t updated to the cloud, but no help as to why or how to fix it.” (YarnBuddy, id8662495109); zegarek bez synchronizacji z telefonem (YarnBuddy, id8151431159) · ER-19
+- Kryteria akceptacji:
+  - Scenariusz: Synchronizacja wstrzymana
+    - Zakładając, że synchronizacja iCloud jest włączona, a telefon nie ma sieci od 2 godzin
+    - Gdy użytkownik otwiera stan danych
+    - Wtedy widzi, kiedy była ostatnia udana synchronizacja, że czeka na sieć i że dane na telefonie są zapisane
+  - Scenariusz: Zegarek nie odpowiada
+    - Zakładając, że zegarek ma zmiany niewysłane do telefonu
+    - Gdy użytkownik otwiera stan danych na telefonie
+    - Wtedy widzi, że zegarek ma zmiany czekające na połączenie, i co zrobić, żeby je przesłać
+
 ## Zakup (ZAK)
 Model i ceny: P-029 (2026-10-22): darmowy rdzeń i jedno odblokowanie Pro, zakup nieodnawialny 14,99 USD; ceny P-019 tylko przy powrocie do modelu A. Wymagania kontraktu płatności KP-01–KP-05 w `docs/monetyzacja.md` (z ER-01–ER-05, P-028) obowiązują razem z BR-ZAK. Tu tylko wymagania z ograniczeń sklepu i skarg.
 
