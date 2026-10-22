@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 01, fix ER-25–ER-28, STOP E2)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 01, fix ER-25–ER-28 zakończona, P-060)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -11,16 +11,17 @@
 | 01 Odkrywanie, fix ER-09–ER-24 | fix (P-045) | zakończona 2026-10-22 (STOP E2 przyjęty, P-048): ER-09–ER-24 naprawione-do-weryfikacji | 8ffe2b6 | 80 BR (+21: BR-LIC-017–020, BR-PRJ-011–016, BR-WZR-007–008, BR-DAN-010–011, BR-DNI-001–007), NFR-PIE-001, NFR-SYS-001, PR-15, PR-16, RD-14–RD-18 (+31 wektorów w `tests/wektory/brd.json`), OG-14, S-36, S-37, OP-25, OP-26, P-047; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er09-24/` | OP-25 (10, 05), OP-26 (05); status „zweryfikowane” nadaje reaudit |
 | 03 Zakres | build | zakończona 2026-10-22 (P-052): kontrakt W1 (61 funkcji, 49 MVP, 80 BR, `zakres-oczko.mjs` kod 0); P-040–P-046, P-049, P-052; model P-051 w badaniu roli 02 | 2679029 | docs/scope-contract.md, docs/scope-contract-historia.md; oczko-warsztat `03-zakres/2026-10-22-build/` (soczewki, mapa przepływów U-1–U-12, teksty ofert) | P-051 (02, sesja 3), ER-25 (01), WTP nowych funkcji (02) |
 | 02 Monetyzacja, sesja 3 | build, `--moduly cena-i-rachunek,storekit-expo` | zakończona 2026-10-22 (STOP E3 przyjęty, P-058): **model V4 bez próby** (P-057): cała aplikacja darmowa, limit 5 dni z robótką/mies., Pro 0,99 / 6,99 USD (subskrypcja bez oferty wprowadzającej) i 14,99 USD dożywotnio | (ten commit) | docs/monetyzacja.md („Sesja 3, E0–E3”: kontrakt KP-01–KP-15, test modelu), docs/monetyzacja/limit.mjs, wektory-limitu.json, limit-test.mjs, warianty-s3/, dostep.mjs (W-15–W-18); P-054–P-057; ZAL-028, ZAL-029; dowody: oczko-warsztat/02-monetyzacja/2026-10-22-sesja3/ | ER-26–ER-28 do roli 01; D6 Family Sharing i ID produktów przy konfiguracji App Store Connect (P-038, OP-24); czy Trening liczy D5 tak samo (05) |
-| 01 Odkrywanie, fix ER-25–ER-28 | fix (P-058) | STOP E2 2026-10-22: ER-25–ER-28 naprawione-do-weryfikacji (decyzje STOP E0: P-059) | 95a69eb | 84 BR (+4: BR-ZAK-005–007, BR-DAN-012), zmienione BR-ZAK-001–003, BR-DAN-005, BR-LIC-017, BR-DNI-001, NFR-PIE-001, PR-09, PR-15, OG-03, OG-15, H-01, H-02, S-38, S-39, OP-32, OP-33; `tests/wektory/brd.json` bez zmian; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er25-28/` | OP-32 (02), OP-33 (11), NZ-01–NZ-04; status „zweryfikowane” nadaje reaudit |
+| 01 Odkrywanie, fix ER-25–ER-28 | fix (P-058) | zakończona 2026-10-22 (STOP E2 przyjęty, P-060): ER-25–ER-28 naprawione-do-weryfikacji (STOP E0: P-059) | 95a69eb | 84 BR (+4: BR-ZAK-005–007, BR-DAN-012), zmienione BR-ZAK-001–003, BR-DAN-005, BR-LIC-017, BR-DNI-001, NFR-PIE-001, PR-09, PR-15, OG-03, OG-15, H-01, H-02, S-38, S-39, OP-32, OP-33; `tests/wektory/brd.json` bez zmian; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er25-28/` | OP-32 (02), OP-33 (11), NZ-01–NZ-04; status „zweryfikowane” nadaje reaudit |
 
 ## Następny krok
 ### Przekazanie roli 01, fix ER-25–ER-28 (2026-10-22)
-- Zakończono: 01-odkrywanie, fix ER-25–ER-28 (P-058; STOP E0: P-059), jeden commit na ID na `claude/jolly-thompson-paz6d8` (a09acc4..95a69eb). Dowody: `oczko-warsztat/01-odkrywanie/fix-2026-10-22-er25-28/` (E0-plan, kontrola-er.mjs, przed.txt 0/21, po.txt 21/21, kontrola-brd-po.txt, E2-dowody.md, sprawdz-raport.txt).
+- Zakończono: 01-odkrywanie, fix ER-25–ER-28 (P-058; STOP E0: P-059; STOP E2: P-060), jeden commit na ID na `claude/jolly-thompson-paz6d8` (a09acc4..95a69eb). Dowody: `oczko-warsztat/01-odkrywanie/fix-2026-10-22-er25-28/` (E0-plan, kontrola-er.mjs, przed.txt 0/21, po.txt 21/21, kontrola-brd-po.txt, E2-dowody.md, sprawdz-raport.txt).
 - Następny krok (P-002): **04-studio-projektowe**, tryb `build`; nowa sesja: opus, wysiłek high.
   - `node tools/assemble.mjs 04-studio-projektowe --tryb build --galaz claude/jolly-thompson-paz6d8`
   - `.\Get-Prompt.ps1 04-studio-projektowe -Tryb build -CopyToClipboard`
 - Paczka 04: jak w przekazaniu roli 03 i roli 02, sesja 3 (niżej), plus BR-ZAK-005–007 i BR-DAN-012 (`docs/brd/wymagania-dane.md`), „dzień limitu” a „dzień z robótką” (P-059 (2a): licznik dni bez sprzeczności z kalendarzem), miejsce „Oceń” w Ustawieniach, NZ-03 (blokada na zegarku).
 - Dla innych ról (E2-dowody, „Polecenia dla ról”): 07 nowe i zmienione scenariusze, bloker BR-ZAK-005–007; 05 prośba o ocenę w Expo, NZ-02, NZ-03; 11 OP-33; 02 NZ-01 (OP-32), NZ-02; 03 NZ-04 (BR-ZAK-005–007 i BR-DAN-012 bez F w kontrakcie, lista blokerów dla 07).
+- Potem, przed rolą 05 (P-060 (5b)): **02-monetyzacja, tryb `fix`** dla NZ-01 i NZ-02 (OP-32: zerowanie, −1, liczniki oczek i powtórzeń, zegarek; synchronizacja dni na nowym urządzeniu); rola 04 przyjmuje te przypadki jako założenia z odsyłaczem do OP-32.
 - Kwarantanna (P-003, P-015) obowiązuje role 01–04.
 
 ### Przekazanie roli 02, sesja 3 (archiwalne, 2026-10-22)
