@@ -1,7 +1,89 @@
 # Monetyzacja: Oczko
-Stan: **sesja 3 (P-051, P-053, P-055: V1, V2, V3, V4 wobec B), E1 zebrane, czeka na wybór trybu STOP (STOP E0 przyjęty: P-054), 2026-10-22** · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **sesja 3 (P-053, P-055: V3, V4 wobec B), STOP E1+E2, 2026-10-22** (V1/V2 odrzucone: P-056; STOP E0 przyjęty: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
+
+## Sesja 3, E2: Porównanie V3, V4 i B (2026-10-22)
+**Wyjątek nazwany (zasada wspólna 7):** STOP E1 połączony z STOP E2. Właściciel po raporcie E1: „V1 v2 odrzucamy” (P-056), potem „A to ciekawe, zrób porównanie.” Interpretacja roli 02 (do weta): zgoda na wariant (a), czyli jeden przystanek. Tańsza kontrola zamiast osobnego STOP E1: dowody E1 są zapisane (sekcja niżej) i przywołane przy każdej liczbie.
+
+### Czym różnią się warianty
+| | B (obowiązuje, P-029) | V3 (P-053) | V4 „wzorzec Treningu” (P-055) |
+|---|---|---|---|
+| Pierwsze uruchomienie | licznik, darmowy rdzeń bez limitu | licznik, cała aplikacja | licznik, cała aplikacja |
+| Co jest ograniczone | funkcje Pro (zegarek, wzór z narzędziami, przypomnienia, zapas, kalkulatory) | liczba dni z robótką w miesiącu (N) | jak V3 |
+| Pro | dożywotni 14,99 USD | subskrypcja 0,99 / 6,99 USD (odnawiana) **z ofertą wprowadzającą 14 dni** + dożywotni 14,99 | subskrypcja 0,99 / 6,99 USD (odnawiana) **bez próby** + dożywotni 14,99 |
+| Pierwszy zakup | świadomy | często zapis na próbę, która po 14 dniach sama staje się płatna | świadomy |
+| Reguła sklepu | 3.1.1 (MS-01g) | 3.1.2(a), oferta wprowadzająca (MS-46), metered paywall (MS-45) | 3.1.2(a), metered paywall (MS-45) |
+
+### Rachunek (`node oplacalnosc.mjs warianty-s3/*.json`, kod 0: `dowody/s3-porownanie-2026-10-22.txt`; odnowienia: `dowody/s3-odnowienia-2026-10-22.mjs`, kod 0)
+Ta sama metoda i dane co bramka i sesja 2 (8 storefrontów, instalacje z ocen konkurentów N, prowizja 15%, VAT krajów, kursy NBP 205/A z 2026-10-21). Zmieniają się tylko konwersja, podział planów i wpływ zapory na widoczność; każda zmiana to [OCENA] z metodą w polu `zrodlo` pliku.
+
+| Wariant | 1. rok, zł netto (pes. / norm. / opt.) | Stan ustalony z odnowieniami rocznej, norm. | Wobec B (norm., z odnowieniami) |
+|---|---|---|---|
+| B | 835 / **26 715** / 616 852 | 26 715 | — |
+| V4, limit 4 dni | 480 / 27 706 / 696 015 | 32 804 | +23% |
+| **V4, limit 5 dni** | 459 / **26 477** / 696 015 | **31 348** | **+17%** |
+| V4, limit 6 dni | 436 / 25 058 / 696 015 | 29 669 | +11% |
+| V3, limit 5 dni | 404 / **31 676** / 656 664 | 37 884 | +42% |
+
+Próg opłacalności: 1944 zł/rok (P-013). Wszystkie warianty normalnie ok. 13–19× nad progiem, pesymistycznie wszystkie poniżej (jak w bramce).
+
+**Założenia [OCENA] (metoda):**
+- Konwersja V4 = konwersja planu mieszanego z darmowym rdzeniem z sesji 2 (1,3% / 2,8% / 5,0%) × mnożnik limitu **1,2 / 2,0 / 3,0** × udział trafiających na limit H(N)/H(5) (V3-3: 0,775 / 0,74 / 0,70). Mnożnik: limit to wzór pośredni między freemium 2,1% a twardą zaporą 10,7% („Hard paywalls convert five times better than freemium”, MS-12, szczebel 4); norm. ≈ √5,1 ≈ 2,3, zaokrąglone ostrożnie do 2,0; opt. ograniczony do 10% (dlatego opt. V4 jest równe dla N = 4, 5, 6).
+- V3 = V4 × mnożnik oferty wprowadzającej **1,0 / 1,3 / 1,6**; podział planów przesunięty o 5 pp. z dożywotniego do miesięcznej (próba prowadzi do subskrypcji). Dla tej kategorii brak danych o konwersji z próby.
+- Wpływ zapory na oceny i widoczność (udział nowej aplikacji): B ×1; V4 ×0,85 / 0,95 / 1,0; V3 ×0,80 / 0,93 / 1,0 (AK-05: Knitandnote po zaporze średnia recenzji 1,5–1,6; skargi „free trial charged me”, ZAL-009).
+- Odnowienia: roczna z retencją 36% przez 2 kolejne lata (MS-12a, górna granica), jak w sesji 2; mnożnik V4 1,184, V3 1,196, B 1,0.
+
+**Jak czytać:**
+1. **V4 wobec B:** w pierwszym roku równo (−1%), z odnowieniami +17%. Różnica mieści się w rozrzucie założeń. V4 wygrywa z B, gdy limit konwertuje co najmniej **1,7×** lepiej niż darmowy rdzeń (próg zrównania z odnowieniami; bez odnowień 2,0×). B ma za to najwyższy wynik pesymistyczny (835 zł wobec 459 zł): mniej zależy od tego, czy zapora zadziała.
+2. **V3 wobec V4:** V3 daje więcej (norm. +21%), jeśli próba doda co najmniej ok. **8%** płacących (próg zrównania 1,08 przy założonym 1,3). Część tej przewagi pochodzi od osób, które zapomniały anulować; to dokładnie mechanizm, który właściciel nazwał „największym red flag” (P-055), i źródło skarg 1★ (ZAL-009).
+3. **N = 4 / 5 / 6:** różnica ±5–6% wobec N = 5, mniejsza niż rozrzut każdego założenia. N wybiera się z uzasadnienia dla użytkownika, nie z rachunku: przy N = 5 dzierganie raz w tygodniu jest zawsze darmowe (V3-2), tak jak w Treningu.
+4. Największa niewiadoma dla V3/V4: konwersja limitu dni w tej kategorii (brak danych, AK-03, V3-3). Pomiar po wydaniu: App Analytics i Sales and Trends (jak test P-029).
+
+### Reguła liczenia dla V4 (propozycja; wektory do `docs/monetyzacja/wektory-limitu.json` w E3)
+Jednostka: **dzień z robótką** = data (strefa urządzenia w chwili zdarzenia, RD-16), w której użytkownik zaczął pracę pierwszym +1. Miesiąc kalendarzowy według telefonu; licznik od zera 1. dnia o północy. Strażnik sprawdza limit **tylko przy pierwszym +1 nowego dnia** (NFR-PIE-001: bez ekranu przed licznikiem; doprecyzowanie właściciela z P-053). Pro (subskrypcja aktywna albo dożywotni) zdejmuje limit.
+
+| Wektor | Sytuacja | Oczekiwane |
+|---|---|---|
+| L-01 | 1. dzień miesiąca, 0 dni użytych, pierwsze +1 | dozwolone; dzień 1 z 5 |
+| L-02 | dzień już policzony (np. 5. z 5), kolejne +1 tego dnia, inny projekt | dozwolone; bez nowego dnia |
+| L-03 | 5 z 5 dni, nowy dzień, pierwsze +1, bez Pro | zablokowane; komunikat z licznikiem i ofertą; projekt, historia, eksport działają |
+| L-04 | praca od 23:40, kolejne +1 o 00:10 bez przerwy | dozwolone; bez nowego dnia (sesja w toku; definicja przerwy: decyzja D3) |
+| L-05 | 1. dzień nowego miesiąca o 00:00 po miesiącu 5 z 5 | licznik 0 z 5; +1 dozwolone |
+| L-06 | +1, potem cofnięcie (−1) tego samego dnia | dzień zostaje policzony (cofnięcie nie zwraca dnia; bez obejścia limitu) |
+| L-07 | dopisanie wstecz, edycja historii, zmiana notatki, eksport | nie liczą się i nie są blokowane (dane zawsze dostępne) |
+| L-08 | ręczne wpisanie numeru rzędu w nowym dniu ponad limit | decyzja D4 |
+| L-09 | Pro wygasa 20. dnia, w miesiącu już 12 dni z robótką | decyzja D5 |
+| L-10 | Pro aktywne (subskrypcja albo dożywotni) | brak limitu; dni nadal zapisywane w kalendarzu (F-59) |
+| L-11 | ten sam dzień na iPhonie i zegarku | jeden dzień (synchronizacja łączy po dacie) |
+| L-12 | cofnięcie zegara telefonu na wcześniejszy dzień | dzień już policzony się nie dubluje; nowy dzień liczy się według zapisanej daty (ryzyko brzegowe: obejście przez zmianę daty, zysk mały) |
+| L-13 | brak sieci, Pro z pamięci podręcznej | jak W-03 (KP-06); limit liczony lokalnie |
+| L-14 | ponowna instalacja bez iCloud w trakcie miesiąca | licznik od zera (brzegowe obejście; akceptowane, bo dane i tak giną bez kopii) |
+
+### Co się zmienia przy V4 (lista; nic nie wdrażam przed wyborem)
+| Obszar | Zmiana | Kto | Czas agenta |
+|---|---|---|---|
+| Rejestr decyzji | V4 zastępuje P-029 (model B), P-030 (zapora na funkcjach), P-033/P-050 (próba), zmienia P-031/P-032 (podział darmowe/Pro znika: wszystko darmowe w limicie) | 02 | 0,3 h |
+| Kontrakt płatności (`docs/monetyzacja.md`, E3) | produkty: grupa subskrypcji (mies., rok) + dożywotni; KP-01 → „limit raz wydany tylko luzowany” (ZAL-025); KP-02, KP-03 w pełnej wersji (dożywotni przy aktywnej subskrypcji, MS-22); zarządzanie subskrypcją w aplikacji; ujawnienia 3.1.2(a); `dostep.mjs` + funkcja limitu, wektory W i L | 02 | 2–3 h |
+| BRD (ER do roli 01) | nowe BR-ZAK: limit dni, strażnik startu, komunikat na limicie, wygaśnięcie subskrypcji; OG-03 wraca (subskrypcja na wszystkich urządzeniach) | 01 | sesja fix ok. 1–2 h |
+| Kontrakt zakresu (03) | kolumna „Dostęp”: wszystko darmowe w limicie; funkcje Pro w W1 przestają być zaporą | 03 | ok. 0,5–1 h |
+| Projekt (04) | licznik dni na ekranie startu („Zostały 3 z 5 dni w tym miesiącu”), ekran ofert tylko na limicie i w Ustawieniach, teksty bez procentów (P-054) | 04 | w ramach roli 04 |
+| ADR (05) | `expo-iap` z subskrypcjami (jak Trening), bez oferty wprowadzającej | 05 | w ramach roli 05 |
+| App Store Connect (właściciel) | grupa subskrypcji z 2 produktami (0,99 / 6,99 USD), dożywotni 14,99 USD (P-038, OP-24), bez ofert wprowadzających, Family Sharing (D6) | właściciel | ok. 30–45 min, po ADR 05 |
+| Opis w sklepie (11) | „Free for N knitting days a month. Pro: no limit.”; bez „free app” bez zastrzeżenia (MS-47) | 11, 09 | później |
+
+Kod Oczka nie istnieje jeszcze w nowej wersji (przebudowa, P-001), więc zmiana modelu teraz nie kosztuje przepisywania kodu. Oczekiwanie: brak (bez pytania do App Review: V4 nie używa 3.1.1 ani nieodnawialnych).
+
+### Decyzje dla właściciela
+| # | Decyzja | Opcje (kompromis) | Rekomendacja |
+|---|---|---|---|
+| D1 | Model | **V4** (bez próby; świadomy zakup; jak Trening; +17% wobec B w normalnym z odnowieniami, ale najniższy pesymistyczny) · **V3** (najwyższy wynik, +42%, częściowo z zapomnianych anulowań; „red flag”) · **B** (bez zmian; najbezpieczniejszy pesymistycznie; obawa „Pro nikt nie kupi”, P-050) | **V4**: spójny z Treningiem, uczciwy, bez ryzyk regułowych; przewaga nad B w granicach rozrzutu, więc decyduje zasada, nie liczba |
+| D2 | Limit N | **4** (więcej konwersji, ale raz w tygodniu trafia na limit w ok. 35% miesięcy) · **5** (raz w tygodniu zawsze darmowe) · **6** (najłagodniejszy) | **5**: jedno zdanie dla użytkownika i to samo co w Treningu |
+| D3 | Kiedy zaczyna się nowy dzień przy pracy po północy | **a** +1 po północy otwiera nowy dzień tylko po przerwie ≥ 60 min od poprzedniego +1 (parametr [OCENA]) · **b** zawsze o północy | **a**: wieczór nie zjada dwóch dni |
+| D4 | Ręczne wpisanie numeru rzędu w nowym dniu ponad limit | **a** traktowane jak +1 (blokada) · **b** dozwolone jako edycja danych (furtka do obejścia limitu) | **a**: dopisywanie wstecz i edycja historii zostają wolne, zmiana bieżącej liczby to praca |
+| D5 | Pro wygasa w trakcie miesiąca | **a** liczą się wszystkie dni z robótką w miesiącu (proste; po wygaśnięciu zwykle limit już wyczerpany) · **b** liczą się tylko dni bez Pro | **b**: kto płacił, nie traci od razu darmowych dni; [DO USTALENIA], jak robi Trening, żeby było spójnie |
+| D6 | Family Sharing (nieodwracalne, MS-18) | **a** dożywotni i subskrypcje (jak Trening, P-038) · **b** tylko dożywotni | **a**: spójnie z Treningiem i P-038 |
+| D7 | Ceny | **a** 0,99 / 6,99 / 14,99 USD (P-019; poniżej całego przedziału N, AK-02) · **b** ceny rynkowe (mediany N: 2,52 / 19,49 / 32,49 USD) | **a**: decyzja portfela i test; podnieść później można (subskrypcje: zgoda w DE i PL, MS-20) |
 
 ## Sesja 3, E1: Dowody (2026-10-22)
 Warianty: **V1/V2** (P-051: próba „14-day Trial” → nieodnawialne 30 dni / [3 mies.] / rok + dożywotni, potem blokada z podłogą danych), **V3** (P-053: pełne Oczko z limitem dni z robótką w miesiącu, subskrypcja odnawiana z ofertą wprowadzającą 14 dni + dożywotni), **V4** (P-055, wzorzec Treningu: jak V3, ale bez oferty wprowadzającej), **B** (P-029, obowiązuje). Metoda: dwa niezależne spojrzenia (analityk konkurencji, recenzent App Store) i badanie V3 jako osobni agenci (P-054, 1A); StoreKit rola 02. Kluczowe cytaty sprawdzone przez rolę 02 na surowym tekście (`curl` + `grep`). Raporty i surowe dane: `oczko-warsztat/02-monetyzacja/2026-10-22-sesja3/` (`soczewki/recenzent.md`, `soczewki/analityk.md`, `soczewki/v3.md`, `E1-2-storekit.md`, `E1-v3-reguly.md`).
