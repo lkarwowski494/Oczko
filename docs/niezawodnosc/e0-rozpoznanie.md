@@ -102,3 +102,42 @@ Progi do decyzji właściciela w E1: liczba nieudanych startów strażnika (prop
 | E2 (po 08): testy czerwone, strażnik, kopia, sprawdzenie, przywrócenie, ekran awaryjny | ok. 4–5 h | CI macOS (symulator), ekran od 04 | ok. 10 min |
 | E3 (po 08): ćwiczenia, runbook, przekazanie | ok. 2 h | build TestFlight w CI | 0 min (Q2a) albo ok. 10 min (Q2b) |
 Po STOP E1 ta sesja kończy pracę (P-005) i aktualizuje `docs/sztafeta.md`: następny krok 06-tresci build.
+
+## Odpowiedzi właściciela (P-079, 2026-10-22)
+Q1: brak Maca. Q2: (a) tylko automat. Q3: prośba o więcej informacji — niżej.
+
+## Q3 rozpisane: co rozstrzyga E1
+Każdy punkt: problem w jednym zdaniu, opcje, rekomendacja. Decyzje zapadną w E1 (STOP E1); teraz właściciel przyjmuje tylko listę tematów.
+
+**1. ADR-0018 — skąd dowiesz się o awarii.** Bez Maca nie widzisz awarii z App Store w Xcode Organizerze.
+- (a) Bez dodatków: TestFlight w przeglądarce (tylko testerzy) + „Zgłoś problem” z listą obsłużonych błędów. 0 h kodu. Awarie z App Store widzisz dopiero w recenzjach albo zgłoszeniach.
+- (b) (a) + MetricKit: iOS sam przekazuje aplikacji raport po awarii, aplikacja trzyma go na telefonie i dołącza do „Zgłoś problem” po podglądzie. Nic nie wysyła sama, etykieta „Data Not Collected” bez zmian. Ok. 2–3 h agenta (moduł Swift). **Kierunek rekomendacji po Q1.**
+- (c) (a) + skrypt czytający App Store Connect API. Wymaga klucza API poza chronionym środowiskiem albo Twojego zatwierdzenia przy każdym uruchomieniu; czy API w ogóle zwraca awarie z App Store, nie wiadomo (sprzeczność w dokumentacji Apple).
+- (d) SDK zewnętrzne (np. Sentry, darmowe do 5k błędów): pełny obraz awarii, ale dane wychodzą z telefonu, więc etykieta App Privacy zmienia się z „Data Not Collected” (NFR-PRY-001) i potrzebna jest zgoda w aplikacji.
+
+**2. ADR-0019 — strażnik startu i tryb awaryjny.** Przykład: aktualizacja ma błąd i aplikacja zamyka się przy każdym starcie; osoba ma w niej 3 lata projektów.
+- (a) Po N nieudanych startach z rzędu aplikacja otwiera prosty ekran awaryjny: „Zapisz kopię danych”, „Spróbuj normalnie”, „Zgłoś problem”. Nie uruchamia migracji, niczego nie kasuje. **Rekomendacja.**
+- (b) Bez ekranu: po N nieudanych startach aplikacja tylko pomija ryzykowny krok i od razu proponuje eksport. Mniej kodu, mniej wyjaśnienia dla użytkownika.
+- Próg N do Twojej decyzji: propozycja **2** (jedno zamknięcie bywa przypadkiem, dwa z rzędu przed pierwszym ekranem rzadko).
+- Technicznie w tym samym ADR: start w tle (ekran blokady, zegarek, iCloud) nie liczy się jako nieudany; czy sprawdzać integralność bazy przy każdym starcie (koszt czasu) czy dopiero po błędzie.
+- Ekran awaryjny projektuje rola 04 (dziś go nie ma).
+
+**3. ADR-0020 — kopia ratunkowa i przywracanie.** Przykład: baza na telefonie się uszkodziła.
+- Zawsze (zasada, nie opcja): zanim cokolwiek dotknie bazy w trybie awaryjnym, aplikacja kopiuje ją w całości (3 pliki); naprawa tylko na kopii; oryginał nietknięty.
+- Do wyboru: jak osoba przekaże Ci uszkodzoną bazę — (a) trzy pliki po kolei w arkuszu udostępniania; (b) jeden plik ZIP (ten sam kod co archiwum `.oczko`, ADR-0004 — **kierunek rekomendacji**); (c) folder widoczny w aplikacji Pliki.
+- Do wyboru: jak długo trzymać kopie ratunkowe — do pierwszego udanego startu, 30 dni (jak „Ostatnio usunięte”) albo do potwierdzenia przez użytkownika. Kierunek: 30 dni.
+- Naprawę robi agent na kopii, na komputerze, poza repo; o zwrocie danych decydujesz Ty z tą osobą.
+
+**4. ADR-0021 — poprawki bez App Store (OTA).** Czy błąd w kodzie JS da się poprawić „w locie”, bez nowej wersji w sklepie.
+- (a) expo-updates + EAS Update (darmowe do 1 000 aktywnych użytkowników miesięcznie, potem plan płatny albo brak aktualizacji dla nadmiaru): poprawka w minuty, ale konto Expo, ryzyko wytycznej 2.5.2 i ryzyko, że wycofanie złej poprawki zepsuje dane.
+- (b) expo-updates + własny serwer: bez limitu, ale serwer do utrzymania (łamie „koszt stały 0 zł” albo wymaga darmowego hostingu, niesprawdzone).
+- (c) **Bez OTA:** każda poprawka to nowy build (CI na GitHub, bez limitu) i recenzja Apple (dziś: 50% w 24 h, 90% w 48 h, przy krytycznym błędzie można prosić o przyspieszenie). **Kierunek rekomendacji:** najprostsze, zero usług, strażnik z punktu 2 chroni dostęp do danych w czasie oczekiwania.
+
+**5. Wydanie stopniowe (decyzja razem z rolą 10).** Apple daje nową wersję przez 7 dni coraz większej części osób z automatycznymi aktualizacjami (1% → 100%); można je wstrzymać.
+- (a) zawsze; (b) tylko gdy wersja zmienia dane albo części natywne; (c) nigdy.
+- Kiedy wstrzymać: (i) każda potwierdzona awaria z utratą albo odcięciem od danych; (ii) „wyraźnie więcej awarii niż poprzednio” — bez Maca nie zobaczysz tych liczb, więc odpada.
+- **Kierunek rekomendacji:** (a) zawsze + (i). Bez kosztu, a błąd trafia najpierw do 1–2% osób.
+
+**6. Kiedy patrzysz na sygnały.** Nie norma, tylko Twój wybór, np. dzień wydania i trzy kolejne dni: TestFlight, recenzje, zgłoszenia „Zgłoś problem”. Agent przygotuje listę kontrolną w runbooku (E3).
+
+Twój czas w E1: przeczytanie ADR i jedna odpowiedź w rodzaju „1b 2a próg 2 3b 30 dni 4c 5a”.
