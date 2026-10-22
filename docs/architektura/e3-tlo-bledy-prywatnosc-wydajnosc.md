@@ -1,4 +1,4 @@
-# E3 Praca w tle, błędy, prywatność, wydajność (rola 05-architekt, build) · 2026-10-22 · STOP E3
+# E3 Praca w tle, błędy, prywatność, wydajność (rola 05-architekt, build) · 2026-10-22 · STOP E3 przyjęty (P-073: 9a, 10a; ADR-0016 bez weta)
 Wejście: E2 przyjęte (P-072). Nowe pliki: [`prywatnosc.md`](prywatnosc.md), [`../adr/0016-zaleznosci-wersji-1.md`](../adr/0016-zaleznosci-wersji-1.md), [`narzedzia/granice.mjs`](narzedzia/granice.mjs) z testem, rejestr Apple 19a–19d, 20.
 
 ## 1. Praca w tle (moduł `tlo-i-sensory-ios`, w części)

@@ -1,5 +1,5 @@
 # 0016. Zależności wersji 1: tylko pakiety Expo SDK 57 dla przepływów z kontraktu, `expo-iap` 5.8.1, `@bacons/apple-targets`; resztę piszemy jako moduły Swift
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E3) · Zależy od: ADR-0001–0015, P-036, NFR-PRY-001, NFR-KOS-001
+Data: 2026-10-22 · Status: **przyjęta** (P-073) · Rola: 05 (E3) · Zależy od: ADR-0001–0015, P-036, NFR-PRY-001, NFR-KOS-001
 
 ## Kontekst i problem
 Każda biblioteka natywna to utrzymanie, rozmiar i manifest prywatności (obszar „Zależności zewnętrzne”). Poprzednia wersja miała m.in. `qrcode`, `react-native-svg`, `expo-router` (`package.json`, materiał P-004). Manifesty kandydatów odczytane 2026-10-22 (`docs/architektura/prywatnosc.md`): żaden nie deklaruje śledzenia ani zbierania danych.
