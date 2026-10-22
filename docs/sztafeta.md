@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 04, build, STOP E2)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 04, build, STOP E3)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -12,7 +12,7 @@
 | 03 Zakres | build | zakończona 2026-10-22 (P-052): kontrakt W1 (61 funkcji, 49 MVP, 80 BR, `zakres-oczko.mjs` kod 0); P-040–P-046, P-049, P-052; model P-051 w badaniu roli 02 | 2679029 | docs/scope-contract.md, docs/scope-contract-historia.md; oczko-warsztat `03-zakres/2026-10-22-build/` (soczewki, mapa przepływów U-1–U-12, teksty ofert) | P-051 (02, sesja 3), ER-25 (01), WTP nowych funkcji (02) |
 | 02 Monetyzacja, sesja 3 | build, `--moduly cena-i-rachunek,storekit-expo` | zakończona 2026-10-22 (STOP E3 przyjęty, P-058): **model V4 bez próby** (P-057): cała aplikacja darmowa, limit 5 dni z robótką/mies., Pro 0,99 / 6,99 USD (subskrypcja bez oferty wprowadzającej) i 14,99 USD dożywotnio | (ten commit) | docs/monetyzacja.md („Sesja 3, E0–E3”: kontrakt KP-01–KP-15, test modelu), docs/monetyzacja/limit.mjs, wektory-limitu.json, limit-test.mjs, warianty-s3/, dostep.mjs (W-15–W-18); P-054–P-057; ZAL-028, ZAL-029; dowody: oczko-warsztat/02-monetyzacja/2026-10-22-sesja3/ | ER-26–ER-28 do roli 01; D6 Family Sharing i ID produktów przy konfiguracji App Store Connect (P-038, OP-24); czy Trening liczy D5 tak samo (05) |
 | 01 Odkrywanie, fix ER-25–ER-28 | fix (P-058) | zakończona 2026-10-22 (STOP E2 przyjęty, P-060): ER-25–ER-28 naprawione-do-weryfikacji (STOP E0: P-059) | 95a69eb | 84 BR (+4: BR-ZAK-005–007, BR-DAN-012), zmienione BR-ZAK-001–003, BR-DAN-005, BR-LIC-017, BR-DNI-001, NFR-PIE-001, PR-09, PR-15, OG-03, OG-15, H-01, H-02, S-38, S-39, OP-32, OP-33; `tests/wektory/brd.json` bez zmian; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er25-28/` | OP-32 (02), OP-33 (11), NZ-01–NZ-04; status „zweryfikowane” nadaje reaudit |
-| 04 Studio projektowe | build | wybór kroju 2026-10-22 (E0: P-061, E1: P-062, E2: P-063 kierunek A; ta sama sesja co fix 01, wyjątek zasady 19) | (ten commit) | docs/design/ (00-rozpoznanie, 01-swiat, kierunki/, porownanie.html + .png, fonty/, narzedzia/) | krój tytułowy (E2 pkt 6) |
+| 04 Studio projektowe | build | STOP E3 2026-10-22 (E0: P-061, E1: P-062, E2: P-063 kierunek A, P-064 Libre Franklin; ta sama sesja co fix 01, wyjątek zasady 19) | (ten commit) | docs/design/ (00-rozpoznanie, 01-swiat, kierunki/, porownanie.html + .png, fonty/, narzedzia/) | decyzje E3 1–5 (limit zawczasu, licznik dni, teksty ofert, ikona, cofanie serii) |
 
 ## Następny krok
 ### Przekazanie roli 01, fix ER-25–ER-28 (2026-10-22)
