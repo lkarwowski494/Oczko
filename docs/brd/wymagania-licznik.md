@@ -228,7 +228,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
   - Scenariusz: Wpisanie nie jest pracą
     - Zakładając, że użytkownik wpisał 57 przy przeniesieniu robótki
     - Gdy otwiera dzień i postęp w module DNI
-    - Wtedy wpisane 57 rzędów nie są rzędami zrobionymi tego dnia ani nie zmieniają tempa
+    - Wtedy wpisane 57 rzędów nie są rzędami zrobionymi tego dnia ani nie zmieniają tempa (RD-15)
   - Scenariusz: Zerowanie z potwierdzeniem
     - Zakładając, że licznik ma 42
     - Gdy użytkownik wybiera wyzerowanie

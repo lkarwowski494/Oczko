@@ -212,3 +212,54 @@ Zasady wspólne reguł:
 | RD-13-W5 | 12 | 6 | 0 | 5 | błąd danych | — | błąd | rachunek: N < 1 |
 
 **Bez reguły (OP):** karczek raglanowy i czapka. Rachunek jest prosty, ale głębokość karczka, ujemny luz czapki i średnie zużycie na rodzaj odzieży nie mają przeczytanego źródła szczebla 1–3, a recenzje nie dają dowodu potrzeby (soczewka zaawansowana: 2 trafienia). OP-07.
+
+### RD-14: Postęp projektu w procentach
+- Wzór: `p = ⌊100 × Σ min(r_i, c_i) / Σ c_i⌋` po częściach i z celem c_i > 0 (BR-LIC-011); części bez celu nie wchodzą do sumy
+- Jednostki: r_i, c_i [rz.]; p [%]
+- Granica: Σ c_i > 0 (ostre); p = 100 tylko, gdy każda część z celem osiągnęła cel
+- Podstawa: rachunek; potrzeba J-11 (P-043, ER-11). Zaokrąglenie w dół, żeby 100% znaczyło „skończone”; część ponad cel nie podnosi postępu innych części
+- Krytyczna: nie
+- Uproszczenie: rzędy nie są równą pracą (rękaw a korpus, ujmowanie w karczku), więc p to przybliżenie postępu, nie czasu ani włóczki; cel podany długością („do 40 cm”) wymaga rzędów z próbki rzędów (RD-04) przed użyciem w tej regule.
+
+| ID | r_i [rz.] | c_i [rz.] | Oczekiwane: p [%] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|
+| RD-14-W1 | 100; 40; 0; 0 | 100; 100; 60; 60 | 43 | 0 | typowy | rachunek: ⌊100 × 140 / 320⌋ = ⌊43,75⌋ |
+| RD-14-W2 | 100; 100; 60; 60 | 100; 100; 60; 60 | 100 | 0 | granica | rachunek: wszystkie cele osiągnięte |
+| RD-14-W3 | 99 | 100 | 99 | 0 | poniżej | rachunek: ⌊99⌋, brak 100% przed końcem |
+| RD-14-W4 | 120; 0; 0; 0 | 100; 100; 60; 60 | 31 | 0 | powyżej | rachunek: min(120, 100) = 100; ⌊31,25⌋ |
+| RD-14-W5 | 40 | 100 | 40 | 0 | typowy | rachunek: zgodnie z BR-PRJ-009 |
+| RD-14-W6 | 0; 0 | brak; brak | błąd danych | — | błąd | rachunek: Σ c_i = 0, postęp nieokreślony |
+
+### RD-15: Cel dzienny do terminu i wykonanie dnia
+- Wzór: `d = (termin − dziś) + 1` [dni, daty lokalne RD-16]; `R = C − Z_przed`; cel dnia `g = ⌈R / d⌉` dla d ≥ 1 i R > 0; `g = 0` dla R ≤ 0 („cel osiągnięty”); dla d < 1 brak celu i komunikat „termin minął, zostało R rzędów”. C = Σ c_i, Z_przed = Σ min(r_i, c_i) na koniec wczoraj (jak RD-14). Wykonanie dnia = suma zmian +1 i −1 liczników rzędów z dniem zmiany = dziś (RD-16), bez zmian cofniętych z historii (BR-LIC-003) i bez wpisań wartości (BR-LIC-017); prucie zmniejsza wykonanie
+- Jednostki: C, Z_przed, R, g [rz.]; d [dni]
+- Granica: d = 1 (termin dziś, włącznie); d < 1 po terminie; C > 0 (ostre)
+- Podstawa: decyzja P-047 (cel stały w ciągu dnia), rachunek; potrzeba J-11 (P-043, ZAL-027: cel dzienny to hipoteza)
+- Krytyczna: nie
+- Uproszczenie: równy podział rzędów na dni, bez dni wolnych i bez różnicy pracy między rzędami (RD-14).
+
+| ID | C [rz.] | Z_przed [rz.] | d [dni] | Oczekiwane: g [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|
+| RD-15-W1 | 320 | 140 | 14 | 13 | 0 | typowy | rachunek: ⌈180 / 14⌉ = ⌈12,86⌉; d dla 2026-10-22 → 2026-11-04 |
+| RD-15-W2 | 320 | 140 | 12 | 15 | 0 | typowy | rachunek: 180 / 12 = 15 bez zaokrąglenia |
+| RD-15-W3 | 320 | 300 | 1 | 20 | 0 | granica | rachunek: termin dziś, całe R dziś |
+| RD-15-W4 | 320 | 300 | 0 | brak celu, zostało 20 | — | poniżej | rachunek: d < 1; zasada po terminie z P-047 |
+| RD-15-W5 | 320 | 300 | 2 | 10 | 0 | powyżej | rachunek: ⌈20 / 2⌉ |
+| RD-15-W6 | 320 | 320 | 5 | 0 | 0 | granica | rachunek: R = 0, cel osiągnięty |
+| RD-15-W7 | 0 | 0 | 5 | błąd danych | — | błąd | rachunek: brak celów części |
+
+### RD-16: Dzień zmiany w strefie czasowej urządzenia
+- Wzór: dzień zmiany = data lokalna w strefie czasowej urządzenia w chwili zmiany, zapisanej razem ze zmianą; późniejsza zmiana strefy nie przenosi dawnych zmian między dniami
+- Jednostki: chwila [UTC, ISO 8601]; strefa [IANA]; dzień [data]
+- Granica: 00:00:00 czasu lokalnego należy do nowego dnia (włącznie)
+- Podstawa: rachunek (baza stref IANA); potrzeba: „I worked about 20 rows Sunday and the counter says they were all Saturday” (Easy Knitty, id10008576789), ER-24
+- Krytyczna: nie
+
+| ID | chwila [UTC] | strefa [IANA] | Oczekiwane: dzień [data] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|
+| RD-16-W1 | 2023-06-04T01:30:00Z | America/New_York | 2023-06-03 | 0 | typowy | rachunek: UTC−4 (czas letni), 21:30 lokalnie |
+| RD-16-W2 | 2023-06-04T01:30:00Z | Europe/Warsaw | 2023-06-04 | 0 | typowy | rachunek: UTC+2, 03:30 lokalnie |
+| RD-16-W3 | 2026-10-22T22:00:00Z | Europe/Warsaw | 2026-10-23 | 0 | granica | rachunek: 00:00:00 lokalnie |
+| RD-16-W4 | 2026-10-22T21:59:59Z | Europe/Warsaw | 2026-10-22 | 0 | poniżej | rachunek: 23:59:59 lokalnie |
+| RD-16-W5 | 2026-10-22T22:00:01Z | Europe/Warsaw | 2026-10-23 | 0 | powyżej | rachunek: 00:00:01 lokalnie |
+| RD-16-W6 | brak | Europe/Warsaw | błąd danych | — | błąd | rachunek: zmiana bez chwili |

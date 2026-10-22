@@ -1103,5 +1103,297 @@
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: N < 1",
     "miejsce": "docs/brd/reguly.md:212"
+  },
+  {
+    "regula": "RD-14",
+    "id": "RD-14-W1",
+    "wejscie": {
+      "r_i [rz.]": "100; 40; 0; 0",
+      "c_i [rz.]": "100; 100; 60; 60"
+    },
+    "oczekiwane": {
+      "p [%]": 43
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: ⌊100 × 140 / 320⌋ = ⌊43,75⌋",
+    "miejsce": "docs/brd/reguly.md:226"
+  },
+  {
+    "regula": "RD-14",
+    "id": "RD-14-W2",
+    "wejscie": {
+      "r_i [rz.]": "100; 100; 60; 60",
+      "c_i [rz.]": "100; 100; 60; 60"
+    },
+    "oczekiwane": {
+      "p [%]": 100
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: wszystkie cele osiągnięte",
+    "miejsce": "docs/brd/reguly.md:227"
+  },
+  {
+    "regula": "RD-14",
+    "id": "RD-14-W3",
+    "wejscie": {
+      "r_i [rz.]": 99,
+      "c_i [rz.]": 100
+    },
+    "oczekiwane": {
+      "p [%]": 99
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: ⌊99⌋, brak 100% przed końcem",
+    "miejsce": "docs/brd/reguly.md:228"
+  },
+  {
+    "regula": "RD-14",
+    "id": "RD-14-W4",
+    "wejscie": {
+      "r_i [rz.]": "120; 0; 0; 0",
+      "c_i [rz.]": "100; 100; 60; 60"
+    },
+    "oczekiwane": {
+      "p [%]": 31
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: min(120, 100) = 100; ⌊31,25⌋",
+    "miejsce": "docs/brd/reguly.md:229"
+  },
+  {
+    "regula": "RD-14",
+    "id": "RD-14-W5",
+    "wejscie": {
+      "r_i [rz.]": 40,
+      "c_i [rz.]": 100
+    },
+    "oczekiwane": {
+      "p [%]": 40
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: zgodnie z BR-PRJ-009",
+    "miejsce": "docs/brd/reguly.md:230"
+  },
+  {
+    "regula": "RD-14",
+    "id": "RD-14-W6",
+    "wejscie": {
+      "r_i [rz.]": "0; 0",
+      "c_i [rz.]": "brak; brak"
+    },
+    "oczekiwane": {
+      "p [%]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: Σ c_i = 0, postęp nieokreślony",
+    "miejsce": "docs/brd/reguly.md:231"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W1",
+    "wejscie": {
+      "C [rz.]": 320,
+      "Z_przed [rz.]": 140,
+      "d [dni]": 14
+    },
+    "oczekiwane": {
+      "g [rz.]": 13
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: ⌈180 / 14⌉ = ⌈12,86⌉; d dla 2026-10-22 → 2026-11-04",
+    "miejsce": "docs/brd/reguly.md:243"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W2",
+    "wejscie": {
+      "C [rz.]": 320,
+      "Z_przed [rz.]": 140,
+      "d [dni]": 12
+    },
+    "oczekiwane": {
+      "g [rz.]": 15
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 180 / 12 = 15 bez zaokrąglenia",
+    "miejsce": "docs/brd/reguly.md:244"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W3",
+    "wejscie": {
+      "C [rz.]": 320,
+      "Z_przed [rz.]": 300,
+      "d [dni]": 1
+    },
+    "oczekiwane": {
+      "g [rz.]": 20
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: termin dziś, całe R dziś",
+    "miejsce": "docs/brd/reguly.md:245"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W4",
+    "wejscie": {
+      "C [rz.]": 320,
+      "Z_przed [rz.]": 300,
+      "d [dni]": 0
+    },
+    "oczekiwane": {
+      "g [rz.]": "brak celu, zostało 20"
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: d < 1; zasada po terminie z P-047",
+    "miejsce": "docs/brd/reguly.md:246"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W5",
+    "wejscie": {
+      "C [rz.]": 320,
+      "Z_przed [rz.]": 300,
+      "d [dni]": 2
+    },
+    "oczekiwane": {
+      "g [rz.]": 10
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: ⌈20 / 2⌉",
+    "miejsce": "docs/brd/reguly.md:247"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W6",
+    "wejscie": {
+      "C [rz.]": 320,
+      "Z_przed [rz.]": 320,
+      "d [dni]": 5
+    },
+    "oczekiwane": {
+      "g [rz.]": 0
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: R = 0, cel osiągnięty",
+    "miejsce": "docs/brd/reguly.md:248"
+  },
+  {
+    "regula": "RD-15",
+    "id": "RD-15-W7",
+    "wejscie": {
+      "C [rz.]": 0,
+      "Z_przed [rz.]": 0,
+      "d [dni]": 5
+    },
+    "oczekiwane": {
+      "g [rz.]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: brak celów części",
+    "miejsce": "docs/brd/reguly.md:249"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W1",
+    "wejscie": {
+      "chwila [UTC]": "2023-06-04T01:30:00Z",
+      "strefa [IANA]": "America/New_York"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2023-06-03"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: UTC−4 (czas letni), 21:30 lokalnie",
+    "miejsce": "docs/brd/reguly.md:260"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W2",
+    "wejscie": {
+      "chwila [UTC]": "2023-06-04T01:30:00Z",
+      "strefa [IANA]": "Europe/Warsaw"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2023-06-04"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: UTC+2, 03:30 lokalnie",
+    "miejsce": "docs/brd/reguly.md:261"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W3",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T22:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: 00:00:00 lokalnie",
+    "miejsce": "docs/brd/reguly.md:262"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W4",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T21:59:59Z",
+      "strefa [IANA]": "Europe/Warsaw"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-22"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: 23:59:59 lokalnie",
+    "miejsce": "docs/brd/reguly.md:263"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W5",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T22:00:01Z",
+      "strefa [IANA]": "Europe/Warsaw"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: 00:00:01 lokalnie",
+    "miejsce": "docs/brd/reguly.md:264"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W6",
+    "wejscie": {
+      "chwila [UTC]": "brak",
+      "strefa [IANA]": "Europe/Warsaw"
+    },
+    "oczekiwane": {
+      "dzień [data]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: zmiana bez chwili",
+    "miejsce": "docs/brd/reguly.md:265"
   }
 ]

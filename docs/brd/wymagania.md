@@ -64,6 +64,10 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 - Kto: każdy użytkownik, częściej płacący z kilkoma urządzeniami. Prace: J-07, J-01. Częstość: rzadko, przy błędzie albo wątpliwości co do synchronizacji (ER-19).
 - Kroki: widzi stan synchronizacji i zegarka; gdy coś nie działa, wybiera „Zgłoś problem”; ogląda, co zostanie wysłane; wysyła wybranym kanałem albo rezygnuje.
 - Kontekst: wolne ręce; bez sieci zgłoszenie czeka w wybranym kanale.
+### PR-16: Dni z robótką, postęp i termin
+- Kto: P-2 (kilka projektów naraz), P-1. Prace: J-11, J-05. Częstość: co kilka dni; termin przy prezentach i zamówieniach (P-043, ER-11).
+- Kroki: patrzy, kiedy dziergał i ile; otwiera dzień albo podsumowanie okresu; widzi postęp projektu w %; ustawia termin i sprawdza cel na dziś; wybiera, który projekt zrobić dziś.
+- Kontekst: wolne ręce, przerwa w robótce; poza ekranem licznika (P-046).
 
 ## Wymagania niefunkcjonalne (NFR)
 ### NFR-DAN-001: Zero utraty danych przy aktualizacji
