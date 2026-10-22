@@ -133,10 +133,13 @@ Razem: 5–7,5 h pracy agenta; od właściciela ok. 1 h (bez apetytu wersji 1, k
 - **P-040:** kierunek wersji 1 = wariant B + F-11 (ekran blokady) + F-21 (stoper): „B plus 1, 3”. Linię i koszty potwierdza STOP E2.
 - **P-041:** bez testów ręcznych właściciela, tylko automatyczne. Koszt w rankingu E2 = przeglądy, decyzje, utrzymanie; ryzyko „kryterium niesprawdzalne automatem” liczone przy każdej funkcji.
 - **P-042: F-28 (pisanie Apple Pencil) w kierunku wersji 1** („1a”). Odrzucanie dłoni zapewnia system: tryb `PKCanvasViewDrawingPolicy.pencilOnly`, „Pencil touches are the only input that draw on the canvas.” (developer.apple.com/documentation/pencilkit/pkcanvasviewdrawingpolicy/pencilonly, odczyt 2026-10-22; od iOS 13); kryterium BR-WZR-004 sprawdza automat (dotyk palcem na płótnie → 0 kresek), a nasz kod (zapis adnotacji, położenie przy powiększeniu, eksport, tryb do odczytu po utracie Pro) testy jednostkowe i UI w symulatorze.
-- **Kalendarz, postęp projektu w % i termin z celem dziennym (prośby właściciela): kandydaci K-1–K-5, czeka na decyzję;** wzorce Treningu i Piekarza i dowód z recenzji: `oczko-warsztat/03-zakres/2026-10-22-build/kalendarz-wzorce.md`.
+- **P-043: kalendarz i postęp K-1–K-5** (K-5 jako wyjątek właściciela, ZAL-027) i **P-044: nowe funkcje I-1, I-2, I-3, I-4, I-6, I-7, I-9**; I-5 i I-8 na liście „później”. Notatki: `oczko-warsztat/03-zakres/2026-10-22-build/kalendarz-wzorce.md`, `pomysly-nowe.md`.
+- **Uwaga dla roli 02:** BR-PRJ-009 (postęp) ma teraz dowód R (K-4), nie tylko H; nowe funkcje K-1–K-5 i I-nn potrzebują podziału darmowe/Pro (propozycja w E2).
+- **Skala:** po P-040–P-044 zakres jest szerszy niż wariant B (ok. 15 funkcji ponad B). W E2 każda przechodzi test zasady 18 i sygnałów kombajnu (ZP-01 „małe”); wynik idzie do decyzji właściciela, bez cichego cięcia.
 
 ### Zgłoszenia do roli 01 (ER)
 | ID | Zgłoszenie | Dowód | Status |
 |---|---|---|---|
 | ER-10 | Metody NFR zakładają test ręczny albo urządzenie: NFR-OFF-001 („test ręczny i automatyczny”), NFR-DOS-001 („audyt VoiceOver na urządzeniu”), NFR-WYD-001 („pomiar na najstarszym obsługiwanym iPhonie”), NFR-ZEG-001 („test na parze urządzeń”); po P-041 metoda automatyczna albo nazwane ryzyko szczątkowe. Uwaga dla 02 i 07: tabela „Testy, których nie zrobi Node (krok właściciela)” w `docs/monetyzacja.md` potrzebuje zamiennika automatycznego | P-041; `docs/brd/wymagania.md` (NFR) | otwarte |
-| ER-11 | (jeśli właściciel wybierze kalendarz) brak BR dla kalendarza dni z robótką (praca J-11, J-05); prefiks `KAL` w BRD Oczka jest zajęty przez obliczenia | prośba właściciela 2026-10-22; `kalendarz-wzorce.md` | czeka na decyzję właściciela |
+| ER-11 | Brak BR dla K-1–K-5 (kalendarz dni, dzień, podsumowanie okresu, postęp projektu w %, termin i cel dzienny; prace J-11, J-05) i reguły RD celu dziennego (czy dziś się liczy, zaokrąglenie, po terminie, prucie) oraz % z rzędów jako nazwanego przybliżenia; prefiks `KAL` w BRD Oczka jest zajęty przez obliczenia | P-043; `kalendarz-wzorce.md` | otwarte |
+| ER-12 | Brak BR dla I-1, I-2, I-3, I-4, I-6, I-7, I-9 (prace J-01, J-03, J-05, J-11 i terminy) | P-044; `pomysly-nowe.md` | otwarte |
