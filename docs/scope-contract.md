@@ -1,5 +1,5 @@
 # Kontrakt zakresu: Oczko
-Stan: **E1 przyjęty (P-045)**; czeka na rolę 01 (ER-09–ER-24), potem E2 · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212, złożony 2026-10-22, 55 540 znaków) · Wejście: BRD `docs/brd/` (E4 + poprawka ER-06–ER-08), `docs/monetyzacja.md` (sesja 2, E3), P-001–P-039, ZAL-001–026
+Stan: **STOP E2** (cięcie, warianty) · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212, złożony 2026-10-22, 55 540 znaków) · Wejście: BRD `docs/brd/` (E4 + poprawka ER-06–ER-08), `docs/monetyzacja.md` (sesja 2, E3), P-001–P-039, ZAL-001–026
 
 Kontrakt powstaje etapami E0–E3; tabele „Zakres” i „NIE robimy” w formacie `zakres.mjs` pojawią się w E3. Do tego czasu ID F-nn to kandydaci, nie decyzje.
 
@@ -200,3 +200,214 @@ Uwagi dla roli 02: F-26 (znacznik) jako Pro jest ostrzejsze niż u knitCompanion
 - **ZAL-019 / H-04 podważone w części:** J-04 (miejsce we własnym wzorze) należy do rdzenia, nie „potem”: to główna praca liderów i najczęstsza pochwała (import wzoru 37 ze 177).
 - **Kierunek P-043/P-044 a sygnały kombajnu:** wszystkie soczewki wskazują termin i cel dzienny (K-5, I-3, I-4) oraz zapas; trzy z czterech kalendarz jako zakładkę, kalkulatory i kartę I-6. Koszt opieki tych funkcji jest mały (logika), ryzyko dotyczy zagracenia i pierwszego użycia.
 - **Opiekun:** F-27 (iCloud) najdroższy w opiece; I-7 (wibracje) bez sprawdzenia odczucia automatem.
+
+## E2: Cięcie i warianty (2026-10-22)
+Wejście: BRD po poprawce roli 01 (80 BR, P-047, P-048), kierunek właściciela P-040–P-046, pętla E1 (P-045), koszty z soczewki opiekuna (`oczko-warsztat/03-zakres/2026-10-22-build/soczewki/opiekun.md`; ślad kwarantanny „23:55 UTC (`CLAUDE.md`)” w tym pliku pominięty). Kolejność cięcia według modułu `ciecie`: podłoga → podstawa WTP-0 → test zasady 18 → ranking RICE w godzinach właściciela → apetyt. Skrypt: `zakres-oczko.mjs` (wyjątek nazwany: obok D-nnn przyjmuje P-nnn, bo rejestr Oczka numeruje decyzje P-nnn; różnica dwóch wyrażeń w nagłówku pliku, `oczko-warsztat/03-zakres/2026-10-22-build/`).
+
+### Główna praca i pętla (do kontraktu)
+- Główna praca: J-01 „Wiedzieć, w którym rzędzie jestem, i ufać tej liczbie” z J-05 i J-04 (miejsce we własnym wzorze).
+- Pętla główna: uruchomienie w ostatnim miejscu (F-49, F-18) → +1 z wibracją, ekran nie gaśnie (F-01, F-10) → pomyłka: −1, cofnięcie, strażnik, opcjonalna blokada, wpisanie wartości (F-02, F-47, F-03, F-45) → [warstwa] części z celem (F-14, F-08), wzór obok licznika ze znacznikiem (F-24, F-25, F-26) i przypomnienie (F-06) → wyjście bez zapisywania (F-31) → powrót z notatką (F-15).
+- Podział: jedna aplikacja (iPhone, iPad, zegarek) z warstwami: Narzędzia (zapas F-37, obliczenia F-38) i Historia (F-59) poza ekranem licznika (H-07 (a); 4 z 4 soczewek E1; ZAL-022).
+- Pętla opinii w wersji 1: „Zgłoś problem” (F-57); systemowa prośba o ocenę po ukończeniu projektu i odnośnik „Oceń” według kontraktu roli (specyfikacja: rola 11) nie mają BR: zgłoszenie ER-25 do roli 01 przy następnej poprawce.
+
+### Test zasady 18 i kombajn (wynik)
+- Wartość: każda funkcja MVP ma dowód B albo R, poza F-61 (cel dzienny H: wyjątek właściciela P-043, ZAL-027). F-07 scalone z F-06 (U-3), ID wycofane.
+- Intuicyjność: kryterium w kolumnie „Intuicyjność”; wynik każdego czeka na przejście poznawcze roli 04 (P-041: bez testów z ludźmi, chyba że właściciel zgodzi się na testerów zewnętrznych).
+- Sygnały kombajnu (soczewki E1) złagodzone warstwami i scaleniami (P-046, U-1–U-12): ekran licznika bez K i I, kalendarz jako widok historii, termin jako pole projektu, karta tylko w chwili ukończenia.
+- Wycięte albo odłożone z powodem i warunkiem powrotu: F-13, F-22, F-23, F-29, F-30, F-39–F-44, F-62.
+
+### Warianty dla właściciela ([OCENA] godzin właściciela ×0,5–2; bramki ról ok. 15 h osobno)
+| Wariant | Co zawiera | Wersja 1 (funkcje) | Opieka / rok | Ryzyko | Co wypada względem W1 |
+|---|---|---|---|---|---|
+| **W1 (rekomendacja): kierunek P-040–P-046 + pominięcia E1** | 49 funkcji MVP z tabeli niżej | ok. 44 h | ok. 48 h | 5 powierzchni natywnych (zegarek, iCloud, ekran blokady, stoper, Pencil) bez pełnego sprawdzenia automatem (P-041); szerokość złagodzona warstwami | — |
+| W2: węższy, mniej powierzchni natywnych | W1 bez F-27 (iCloud → 1.1; nowy telefon przez kopię urządzenia i eksport), F-11 i F-21 (sesja ekranu blokady, stoper), F-37 (zapas), F-61 (termin i cel) | ok. 34 h | ok. 32 h | sprzeczne z P-031, P-040, P-043; Pro bez ekranu blokady, stopera, zapasu i terminu (zostają: powtórzenia, przypomnienia, zegarek, znacznik, Pencil, zakreślacz) | 5 funkcji, ok. 10 h i ok. 16 h/rok |
+| W3: szerszy | W1 + F-13 (Siri, 3 z 3 liderów), F-42 (zużycie), F-39 (przeliczenie), F-44 zawężony do tabeli US↔UK z CYC | ok. 49 h | ok. 52 h | głos w 35 językach, dwie reguły krytyczne i treść krytyczna do przeglądu 06 | dochodzą 4 funkcje |
+
+Rekomendacja: **W1**. Wykonuje kierunek właściciela z dowodami dla każdej funkcji (poza nazwanym wyjątkiem F-61) i odpowiada na główne 1★ liderów (zaufanie, prostota). W2 to rozsądna obrona, jeśli roczna opieka ma być niższa: tnie to, czego automat nie sprawdzi. W3 dokłada funkcje o słabszym dowodzie.
+
+**Apetyt (propozycja do decyzji):** 45 h godzin właściciela na funkcje wersji 1 (W1 = 43,75 h) plus ok. 15 h bramek ról.
+
+**Darmowe / Pro:** lista darmowa W1 to zobowiązanie po wydaniu (KP-01). Nowe funkcje bez klasy roli 02: proponuję darmowe wszystkie poza F-56 (zakreślanie palcem, przy narzędziach wzoru Pro) i F-61 (termin i cel dzienny). Uwaga dla roli 02: F-26 jako Pro jest ostrzejsze niż u knitCompanion (śledzenie rzędu darmowe).
+
+### Zakres (wariant W1)
+| ID | Funkcja | Wymagania | Decyzja | Dowód wartości | WTP | Intuicyjność | Podłoga | Zależy od | Uzasadnienie |
+|---|---|---|---|---|---|---|---|---|---|
+| F-01 | Licznik od pierwszego uruchomienia, +1/−1, wibracja | BR-LIC-001, BR-LIC-002, BR-LIC-005 | MVP | J-01 (R: 12 z 14 konkurencji, BRD) | WTP-0 (R) | pierwsze +1 jednym stuknięciem, nic przed licznikiem (NFR-PIE-001); wynik: czeka na 04 | dane: BR-LIC-001, BR-LIC-002 (blok.) | F-31 | rdzeń pętli |
+| F-02 | Historia zmian z godziną i cofnięciem | BR-LIC-003 | MVP | J-01 (R: 編み物カウンター２ id13252701149) | WTP-1 (R) | historia jednym stuknięciem z ekranu licznika; zmiana z godziną i wartością; wynik: czeka na 04 | dane: BR-LIC-003 → F-01 | F-01 | rdzeń pętli |
+| F-03 | Blokada przed przypadkowym stuknięciem (opcja) | BR-LIC-004 | MVP | J-01 (B: 24 z 47 recenzji ≤3★) | WTP-2 (B) | opcja domyślnie wyłączona (U-1); stuknięcie w zablokowany licznik mówi, jak odblokować; wynik: czeka na 04 | — | F-01 | ochrona liczby; domyślną ochroną jest F-47 (U-1) |
+| F-04 | Kilka liczników, zmiana ustawień w trakcie | BR-LIC-006, BR-LIC-008 | MVP | J-02 (R: 13 z 14) | WTP-1 (R) | „dodaj licznik” w projekcie; typ nazwany słowem pracy (rzędy, oczka); wynik: czeka na 04 | — | F-01 | J-02; P-030 (bez limitu) |
+| F-05 | Licznik powtórzeń powiązany z rzędami | BR-LIC-007 | MVP | J-02 (R: id14113087501) | WTP-1 (R) | długość powtórzenia jednym polem; licznik pokazuje „powtórzenie 3, rząd 1”; wynik: czeka na 04 | — | F-04 | J-02; Pro (P-027) |
+| F-06 | Przypomnienie „co N rzędów, M razy” z podglądem planu rzędów | BR-LIC-009, BR-LIC-010 | MVP | J-03 (R: ✓$ 2; luka: plan rzędów) | WTP-1 (R) | jeden formularz „od rzędu, co N, M razy” z listą rzędów przed zapisem (U-3); przypomnienie zmienia cały ekran; wynik: czeka na 04 | — | F-01 | BR-LIC-010 scalone z F-06 jako podgląd (U-3, P-046); ID F-07 wycofane |
+| F-08 | Cel rzędów części i jego osiągnięcie | BR-LIC-011 | MVP | J-11 (B: id13666644359) | WTP-2 (B) | cel jednym polem; po osiągnięciu „Następna część / Druga taka sama” (U-11); wynik: czeka na 04 | — | F-14 | cel zasila postęp F-60 i bliźniaka F-52 |
+| F-09 | Znaczenie liczby: rząd skończony / w trakcie | BR-LIC-012 | MVP | J-01 (B: id12699699581) | WTP-2 (B) | domyślnie „skończone rzędy”; zmiana w ustawieniach licznika, bez pytania na starcie; wynik: czeka na 04 | — | F-01 | P-040 (wariant B); ustawienie zamiast pytania (sygnał kombajnu złagodzony domyślną wartością) |
+| F-10 | Ekran nie gaśnie podczas liczenia | BR-LIC-013 | MVP | J-06 (R: ✓ 6 z 14) | WTP-0 (R) | domyślnie włączone na ekranie licznika; wynik: czeka na 04 | — | F-01 | pętla |
+| F-11 | Sesja na ekranie blokady: rząd (+1) i czas razem | BR-LIC-014 | MVP | J-06 (R słaby: ✓$ 1) | WTP-1 (R) | jedna sesja na ekranie blokady z rzędem i czasem (U-4); wynik: czeka na 04 | — | F-01 | P-040; wspólny mechanizm z F-21 |
+| F-12 | Liczenie na zegarku | BR-LIC-015 | MVP | J-06 (R mocny: ✓$ 3, id14675500870) | WTP-1 (R) | +1 jednym stuknięciem na zegarku, ten sam licznik co w telefonie; wynik: czeka na 04 | dane: NFR-ZEG-001 (blok.) | F-01, F-35 | P-040 (wariant B); P-039 |
+| F-13 | Rząd głosem (Siri) | BR-LIC-016 | PÓŹNIEJ | J-06 (R: ✓$ 2; 3 z 3 liderów) | WTP-1 (R) | — | — | F-01 | poza kierunkiem P-040; frazy i rozpoznawanie w 35 językach, 1,5 h + 2 h/rok. Powrót: wersja 1.1 albo ≥3 prośby o sterowanie głosem w recenzjach Oczka |
+| F-14 | Projekt z częściami (powstaje z pierwszego licznika) | BR-PRJ-001 | MVP | J-02, J-05 (R: 10 z 14) | WTP-1 (R) | projekt powstaje sam z pierwszego licznika, części dodawane w razie potrzeby (U-5); wynik: czeka na 04 | — | F-01 | pętla (swetry, części) |
+| F-15 | Notatka widoczna przy liczniku | BR-PRJ-002 | MVP | J-05 (R: id3713410970) | WTP-1 (R) | notatka obok licznika bez otwierania innego ekranu; wynik: czeka na 04 | — | F-14 | pętla (powrót z notatką) |
+| F-16 | Zdjęcia projektu i etykiet | BR-PRJ-003 | MVP | J-05 (R: id3998353222) | WTP-1 (R) | zdjęcie z projektu aparatem albo z biblioteki; wynik: czeka na 04 | — | F-14 | P-040, P-032 |
+| F-17 | Dane techniczne projektu (drut mm i US) | BR-PRJ-004 | MVP | J-05 (B: id12656086541) | WTP-2 (B) | drut w mm, numer US dopisany sam; próbka wpisana raz wypełnia obliczenia (U-10); wynik: czeka na 04 | — | F-14 | P-040; źródło danych dla F-38 |
+| F-18 | Powrót do projektu po przerwie | BR-PRJ-005 | MVP | J-05 (R) | WTP-0 (R) | otwarcie projektu pokazuje liczniki, notatkę, miejsce we wzorze i datę; wynik: czeka na 04 | dane: odczyt | F-14 | pętla |
+| F-19 | Stan projektu i archiwum ukończonych | BR-PRJ-006 | MVP | J-05 (R: id13584919414) | WTP-2 (R) | „Ukończony” jako jedna akcja w jednej chwili ukończenia (U-9); wynik: czeka na 04 | dane: odczyt | F-14 | dane użytkownika |
+| F-20 | Zrób taką samą: cały projekt | BR-PRJ-007 | MVP | J-05 (B: id13648606552) | WTP-2 (B) | „Zrób taką samą” → cały projekt (U-2); wynik: czeka na 04 | — | F-14 | P-040, P-032; jedno pojęcie z F-52 |
+| F-21 | Stoper sesji przy zablokowanym ekranie | BR-PRJ-008 | MVP | J-11 (R: id9819100347) | WTP-1 (R) | start sesji jednym stuknięciem; czas na ekranie blokady razem z rzędem (U-4); wynik: czeka na 04 | — | F-11 | P-040 |
+| F-22 | Szacunek czasu do celu z tempa | BR-PRJ-009 | PÓŹNIEJ | J-11 (H) | WTP-2 (H) | — | — | F-60 | procent z rzędów daje F-60 (BR-DNI-004); szacunek z tempa to hipoteza. Powrót: razem z F-62 w wersji 1.1 |
+| F-24 | Import wzoru z pliku i ze zdjęcia | BR-WZR-001, BR-WZR-002 | MVP | J-04 (R: wzór PDF 10 z 14; MRC 37 ze 177 pochwał) | WTP-1 (R) | import z arkusza udostępniania do bieżącego projektu; wynik: czeka na 04 | prawo: OG-07 (blok.) | F-14 | pętla (J-04 w rdzeniu, ZAL-019); P-032 |
+| F-25 | Wzór i licznik na jednym ekranie | BR-WZR-005 | MVP | J-04 (B: id14597301969) | WTP-2 (B) | telefon poziomo: wzór i licznik razem, bez ustawienia; wynik: czeka na 04 | prawo: OG-07 (blok.) | F-24 | pętla; P-032 |
+| F-26 | Znacznik bieżącego rzędu we wzorze | BR-WZR-003 | MVP | J-04 (R mocny: id12653275134) | WTP-1 (R) | znacznik ustawiany raz stuknięciem w rząd, potem idzie z licznikiem; wynik: czeka na 04 | prawo: OG-07 (blok.) | F-25 | pętla; Pro (uwaga dla 02: u knitCompanion darmowe) |
+| F-27 | Synchronizacja przez iCloud (opcjonalna) | BR-DAN-002 | MVP | J-07 (R: ✓$ 3, ✓ 7) | WTP-1 (R) | włączenie jednym przełącznikiem; stan widoczny (F-58); wynik: czeka na 04 | dane: NFR-DAN-003 (blok.) | F-31 | P-031, P-021 |
+| F-28 | Pisanie po wzorze Apple Pencil | BR-WZR-004 | MVP | J-04 (R: ✓$ 5 z 7) | WTP-1 (R) | rysik pisze od razu, palec przewija (pencilOnly); wynik: czeka na 04 | prawo: OG-07 (blok.) | F-24 | P-042 |
+| F-29 | Import od innej aplikacji (zapas z Ravelry) | BR-DAN-007 | PÓŹNIEJ | H-08 (H) | WTP-2 (H) | — | — | F-32 | hipoteza, cudze formaty się zmieniają (1,5 h + 1,5 h/rok). Powrót: ≥3 prośby o import z konkretnej aplikacji |
+| F-31 | Baza na urządzeniu, trwały zapis, dane po aktualizacji | BR-DAN-001, BR-DAN-003 | MVP | J-07 (R: id12528635347) | dane | bez przycisku „Zapisz”; wynik: czeka na 04 | dane: NFR-DAN-001, NFR-DAN-002 (blok.) | — | podłoga |
+| F-32 | Nowy telefon, eksport i import własnej kopii (także na niepustej bazie) | BR-DAN-004, BR-DAN-005, BR-DAN-006 | MVP | J-07 (R: id10843107781) | dane | eksport jednym przyciskiem do Plików; import rozpoznaje plik Oczka i pyta „scal / zastąp”; wynik: czeka na 04 | dane: eksport, odczyt (blok.) | F-31 | podłoga |
+| F-33 | Ostatnio usunięte (projekt, licznik, część) 30 dni | BR-DAN-008 | MVP | J-07 (R: id11235965435) | dane | „Ostatnio usunięte” z terminem przy usuwaniu; wynik: czeka na 04 | dane: usunięcie | F-31 | podłoga; P-026, P-047 |
+| F-34 | Usunięcie wszystkich danych | BR-DAN-009 | MVP | ZP-03 | dane | w ustawieniach, z potwierdzeniem i zdaniem o zakupie (KP-05); wynik: czeka na 04 | dane: usunięcie; prawo: OG-04 | F-31 | podłoga |
+| F-35 | Zakup Pro, przywracanie, opłacone nie znika | BR-ZAK-001, BR-ZAK-003 | MVP | OG-02 (R: id12782448883) | warunek | „Przywróć zakupy” na ekranie zakupu i w ustawieniach; zakup tylko po działaniu użytkownika (KP-10); wynik: czeka na 04 | prawo: OG-02 (blok.) | F-31 | podłoga; P-029 |
+| F-36 | Bez reklam i śledzenia, polityka prywatności | BR-ZAK-002, BR-ZAK-004 | MVP | ZP-03 (R: id10578656875) | warunek | polityka prywatności w ustawieniach; wynik: czeka na 04 | prawo: OG-04, NFR-PRY-001 (blok.) | — | podłoga |
+| F-37 | Zapas włóczki i narzędzi (warstwa Narzędzia) | BR-ZAP-001, BR-ZAP-002, BR-ZAP-003, BR-ZAP-004 | MVP | J-08 (R: id7646956808) | WTP-1 (R) | Narzędzia → Zapas; zużycie pytane w chwili ukończenia projektu (U-9); wynik: czeka na 04 | prawo: OG-13; bezpieczeństwo: RD-03, RD-10 | F-19 | P-040, P-046 (warstwa poza pętlą) |
+| F-38 | Obliczenia podstawowe: oczka z próbki, jednostki, grubość (warstwa Narzędzia) | BR-KAL-001, BR-KAL-003, BR-KAL-008 | MVP | J-09 (R: ✓$ 2, ✓ 7) | WTP-1 (R) | Narzędzia → Obliczenia albo z projektu z próbką wpisaną raz (U-10); wynik z danymi wejściowymi; wynik: czeka na 04 | bezpieczeństwo: RD-01, RD-03, RD-04, RD-10 (blok.) | F-17 | P-040, P-046 (warstwa poza pętlą); przegląd 06 (D-027) |
+| F-39 | Przeliczenie wzoru na własną próbkę | BR-KAL-002 | PÓŹNIEJ | J-09 (R słaby) | WTP-1 (R) | — | bezpieczeństwo: RD-02 | F-38 | 1 pochwała kalkulatora na 177 (MRC). Powrót: wersja 1.1 albo ≥3 prośby o przeliczenie na własną próbkę |
+| F-40 | Równomierne dodawanie i ujmowanie | BR-KAL-004 | PÓŹNIEJ | J-09 (B) | WTP-1 (B) | — | — | F-38 | bez rzędu płaskiego (OP-04) funkcja połowiczna. Powrót: OP-04 rozstrzygnięte u źródła i ≥3 prośby |
+| F-42 | Zużycie włóczki z wagi próbki | BR-KAL-005 | PÓŹNIEJ | J-08, J-09 (R: StashBot 4,99 USD) | WTP-1 (R) | — | bezpieczeństwo: RD-07 | F-37 | OP-05 (zapas domyślny) otwarte; RD-07 krytyczna. Powrót: wersja 1.1 razem z zapasem, po rozstrzygnięciu OP-05 |
+| F-44 | Słownik skrótów US/UK bez sieci | BR-SLO-001, BR-SLO-002 | PÓŹNIEJ | J-10 (R: RYZ-03) | WTP-2 (R) | — | bezpieczeństwo: RYZ-03 | — | OP-12: brak źródeł terminologii w 35 językach; 6 h + 3 h/rok przeglądu treści krytycznej. Powrót: źródło terminologii (OP-12) albo zawężenie do tabeli US↔UK z CYC |
+| F-45 | Wpisanie wartości licznika i wyzerowanie | BR-LIC-017 | MVP | J-01, J-07 (R: 86 recenzji, 44 ≤3★; id14375427685) | WTP-0 (R) | stuknięcie w liczbę otwiera pole wartości; zerowanie z potwierdzeniem i cofnięciem; wynik: czeka na 04 | — | F-02 | pętla (przeniesienie trwającej robótki); E1 ER-13 |
+| F-46 | Licznik całości nad sekcjami kawałka | BR-LIC-018 | MVP | J-01, J-02 (R: id13712427204) | WTP-1 (R) | licznik całości widoczny nad sekcjami bez ustawienia; wynik: czeka na 04 | — | F-14 | E1 ER-16; P-045 |
+| F-47 | Strażnik stuknięć z tempa | BR-LIC-019 | MVP | J-01 (R: 47 recenzji, id8099185238) | WTP-1 (R) | baner „Cofnąć?” przy serii (RD-17), bez ustawienia; wynik: czeka na 04 | dane: ochrona liczby → F-01 | F-02 | pętla; P-044 (I-1) |
+| F-48 | Wibracja przypomnienia inna niż wibracja rzędu | BR-LIC-020 | MVP | J-03 (B: id12476127028) | WTP-2 (B) | tylko dwa wzorce (rząd, przypomnienie), bez kodu do nauki; wynik: czeka na 04 | — | F-01, F-06 | P-044 (I-7) zawężone do dwóch wzorców (soczewka opiekuna) |
+| F-49 | Powrót do tego samego miejsca | BR-PRJ-011 | MVP | J-05, J-04 (R: id14255514434) | WTP-0 (R) | aplikacja otwiera się tam, gdzie użytkownik skończył, bez ustawienia; wynik: czeka na 04 | dane: odczyt | F-18 | pętla; E1 ER-15 |
+| F-50 | Lista projektów po roku | BR-PRJ-012 | MVP | J-05 (R: id13730696774) | WTP-2 (R) | w toku według ostatniej pracy, ukończone osobno, wyszukiwanie; wynik: czeka na 04 | dane: odczyt | F-19 | E1 ER-23 |
+| F-51 | Korekta czasu sesji i dat projektu | BR-PRJ-013 | MVP | J-11 (R: id13728925552) | WTP-2 (R) | korekta w szczegółach sesji i projektu; wynik: czeka na 04 | dane: korekta | F-21 | E1 ER-20 |
+| F-52 | Druga część pary (bliźniak) | BR-PRJ-014 | MVP | J-02, J-05 (B: id5378098505, id4956785470) | WTP-2 (B) | „Druga taka sama” przy celu części (U-11) i w „Zrób taką samą” (U-2); wynik: czeka na 04 | — | F-08, F-14 | P-044 (I-2) |
+| F-53 | Karta ukończenia projektu | BR-PRJ-015 | MVP | J-11 (B: id13632559947, id13529266059) | WTP-2 (B) | karta pojawia się sama w chwili ukończenia; udostępnienie arkuszem systemowym; wynik: czeka na 04 | prawo: NFR-PRY-001 (zdjęcia bez lokalizacji) | F-19 | P-044 (I-6), P-046 (tylko w chwili ukończenia) |
+| F-54 | Projekty dawno nieruszane | BR-PRJ-016 | MVP | J-05 (R: id14614568294) | WTP-2 (R) | „ostatnia praca N dni temu” na liście, bez ustawienia; wynik: czeka na 04 | — | F-50 | P-044 (I-9), P-047 |
+| F-55 | Wzór ze strony WWW i z Worda, link do filmu | BR-WZR-007 | MVP | J-04 (R: listing MRC, id14644150451) | WTP-1 (R) | strona z Safari udostępniona do Oczka zapisuje się offline; Word jak PDF; wynik: czeka na 04 | prawo: OG-07, OG-08 | F-24 | E1 ER-17; wykonalność 05 |
+| F-56 | Zakreślanie i notatki na wzorze palcem | BR-WZR-008 | MVP | J-04 (R: id6552766264, po zakupie) | WTP-1 (R) | zakreślacz palcem na iPhonie jednym narzędziem; wynik: czeka na 04 | prawo: OG-07 (blok.) | F-24 | E1 ER-18 |
+| F-57 | Zgłoś problem z diagnostyką lokalną | BR-DAN-010 | MVP | J-07 (R: id8151431159, id13620980670) | warunek | „Zgłoś problem” w ustawieniach otwiera arkusz udostępniania z diagnostyką do podglądu; wynik: czeka na 04 | prawo: NFR-PRY-001 (bez treści projektów) | F-31 | pętla opinii w wersji 1 (kontrakt roli); P-041 |
+| F-58 | Widoczny stan synchronizacji i zegarka | BR-DAN-011 | MVP | J-07 (R: id8662495109) | dane | stan jednym zdaniem w ustawieniach i przy błędzie; wynik: czeka na 04 | dane: NFR-DAN-003 → F-27 | F-27 | E1 ER-19 |
+| F-59 | Kalendarz dni, dzień i podsumowanie okresu (jeden widok) | BR-DNI-001, BR-DNI-002, BR-DNI-003 | MVP | J-11 (B: id12699699581, id10575864934) | WTP-2 (B) | jeden widok w historii: miesiąc, dzień po stuknięciu, podsumowanie pod spodem (U-7); nic na ekranie licznika; wynik: czeka na 04 | — | F-02 | P-043, P-046 |
+| F-60 | Postęp projektu w procentach | BR-DNI-004 | MVP | J-11 (R: id13632559947, id12304022403) | WTP-2 (R) | % pokazuje się sam, gdy części mają cele (U-8); część bez celu oznaczona; wynik: czeka na 04 | — | F-08 | P-043 |
+| F-61 | Termin projektu, cel dzienny i kolejność „który projekt dziś” | BR-DNI-005, BR-DNI-006 | MVP | termin (R: listing YarnBuddy, id13818450106); cel dzienny (H) | WTP-2 (H) | jedno pole „Gotowe do”; cel na dziś i kolejność listy liczą się same (U-6); bez terminu nic się nie pokazuje; wynik: czeka na 04 | — | F-60 | wyjątek właściciela P-043, ZAL-027 (cel dzienny); P-044, P-046 |
+| F-62 | „Zdążę?” przed startem projektu | BR-DNI-007 | PÓŹNIEJ | J-11 (H) | WTP-2 (H) | — | — | F-61 | P-046: przy pierwszym projekcie brak historii tempa. Powrót: wersja 1.1, gdy użytkownicy mają ukończone projekty |
+
+### NIE robimy
+| ID | Funkcja | Wymagania | Decyzja | Dowód wartości | WTP | Intuicyjność | Podłoga | Zależy od | Uzasadnienie |
+|---|---|---|---|---|---|---|---|---|---|
+| F-23 | Przypomnienie o przerwie | BR-PRJ-010 | NIE | J-11 (B pojedynczy) | WTP-2 (B) | — | — | — | OP-15 bez decyzji, RYZ-08 (obietnica zdrowotna), 1 recenzja. Powrót: ≥3 prośby o przypomnienie o przerwie w recenzjach Oczka |
+| F-30 | Siatka co 10 oczek na schemacie | BR-WZR-006 | NIE | J-04 (B pojedynczy) | WTP-2 (B) | — | prawo: OG-07 | — | 1 recenzja, żaden z 3 liderów. Powrót: ≥3 prośby o siatkę na schemacie |
+| F-41 | Długość po blokowaniu | BR-KAL-006 | NIE | J-09 (B; 0 próśb w 4682 recenzjach) | WTP-2 (B) | — | bezpieczeństwo: RD-08 | — | 4 z 4 soczewek E1: brak dowodu potrzeby; RD-08 krytyczna. Powrót: ≥3 prośby o przeliczenie po blokowaniu |
+| F-43 | Luz w obwodzie | BR-KAL-007 | NIE | H-05 (brak śladu) | WTP-2 (B), 1 soczewka WTP-X | — | — | — | H-05: brak dowodu potrzeby. Powrót: ≥3 prośby o luz odzieży |
+
+### Dostęp darmowe / Pro (propozycja 03; nowe funkcje bez klasy roli 02)
+| ID | Dostęp |
+|---|---|
+| F-01 | darmowa |
+| F-02 | darmowa |
+| F-03 | darmowa |
+| F-04 | darmowa |
+| F-05 | Pro |
+| F-06 | Pro |
+| F-08 | darmowa |
+| F-09 | darmowa |
+| F-10 | darmowa |
+| F-11 | Pro |
+| F-12 | Pro |
+| F-14 | darmowa |
+| F-15 | darmowa |
+| F-16 | darmowa |
+| F-17 | darmowa |
+| F-18 | darmowa |
+| F-19 | darmowa |
+| F-20 | darmowa |
+| F-21 | Pro |
+| F-24 | darmowa |
+| F-25 | darmowa |
+| F-26 | Pro |
+| F-27 | darmowa |
+| F-28 | Pro |
+| F-31 | dla wszystkich |
+| F-32 | dla wszystkich |
+| F-33 | dla wszystkich |
+| F-34 | dla wszystkich |
+| F-35 | dla wszystkich |
+| F-36 | dla wszystkich |
+| F-37 | Pro |
+| F-38 | darmowa |
+| F-45 | darmowa |
+| F-46 | darmowa |
+| F-47 | darmowa |
+| F-48 | darmowa |
+| F-49 | darmowa |
+| F-50 | darmowa |
+| F-51 | darmowa |
+| F-52 | darmowa |
+| F-53 | darmowa |
+| F-54 | darmowa |
+| F-55 | darmowa |
+| F-56 | Pro |
+| F-57 | dla wszystkich |
+| F-58 | dla wszystkich |
+| F-59 | darmowa (czas ze stopera Pro) |
+| F-60 | darmowa |
+| F-61 | Pro |
+
+### Ranking ([OCENA]: R = % użytkowników pętli w miesiącu, I według RICE, C bez telemetrii ≤ 80 przy dowodzie R, koszt = godziny właściciela na wersję 1 z soczewki opiekuna, ×0,5–2)
+| ID | R | I | C | Koszt [h] | Metoda |
+|---|---|---|---|---|---|
+| F-01 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-02 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-03 | 20 | 1 | 50 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-04 | 50 | 2 | 80 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-05 | 30 | 2 | 80 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-06 | 40 | 2 | 80 | 1 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-08 | 40 | 1 | 50 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-09 | 10 | 0,5 | 50 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-10 | — | — | — | 0,25 | stała (podłoga albo WTP-0) |
+| F-11 | 30 | 1 | 50 | 2 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-12 | — | — | — | 3,5 | stała (podłoga albo WTP-0) |
+| F-13 | 15 | 1 | 50 | 1,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-14 | 60 | 2 | 80 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-15 | 50 | 1 | 80 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-16 | 30 | 0,5 | 80 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-17 | 30 | 0,5 | 50 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-18 | — | — | — | 0,25 | stała (podłoga albo WTP-0) |
+| F-19 | — | — | — | 0,25 | stała (podłoga albo WTP-0) |
+| F-20 | 10 | 1 | 50 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-21 | 25 | 1 | 80 | 1 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-22 | 20 | 0,5 | 50 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-24 | — | — | — | 1 | stała (podłoga albo WTP-0) |
+| F-25 | — | — | — | 0,75 | stała (podłoga albo WTP-0) |
+| F-26 | — | — | — | 0,75 | stała (podłoga albo WTP-0) |
+| F-27 | — | — | — | 3,5 | stała (podłoga albo WTP-0) |
+| F-28 | — | — | — | 2 | stała (podłoga albo WTP-0) |
+| F-29 | 5 | 1 | 50 | 1,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-31 | — | — | — | 1 | stała (podłoga albo WTP-0) |
+| F-32 | — | — | — | 0,75 | stała (podłoga albo WTP-0) |
+| F-33 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-34 | — | — | — | 0,25 | stała (podłoga albo WTP-0) |
+| F-35 | — | — | — | 2,5 | stała (podłoga albo WTP-0) |
+| F-36 | — | — | — | 1,5 | stała (podłoga albo WTP-0) |
+| F-37 | — | — | — | 2,25 | stała (podłoga albo WTP-0) |
+| F-38 | — | — | — | 2,5 | stała (podłoga albo WTP-0) |
+| F-39 | — | — | — | 0,75 | stała (podłoga albo WTP-0) |
+| F-40 | 5 | 1 | 50 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-42 | — | — | — | 1 | stała (podłoga albo WTP-0) |
+| F-44 | — | — | — | 6 | stała (podłoga albo WTP-0) |
+| F-45 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-46 | 20 | 1 | 80 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-47 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-48 | 40 | 0,5 | 50 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-49 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-50 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-51 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-52 | 10 | 1 | 50 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-53 | — | — | — | 0,75 | stała (podłoga albo WTP-0) |
+| F-54 | 15 | 0,5 | 80 | 0,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-55 | — | — | — | 1,5 | stała (podłoga albo WTP-0) |
+| F-56 | — | — | — | 0,75 | stała (podłoga albo WTP-0) |
+| F-57 | — | — | — | 1 | stała (podłoga albo WTP-0) |
+| F-58 | — | — | — | 0,5 | stała (podłoga albo WTP-0) |
+| F-59 | 20 | 0,5 | 50 | 1,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-60 | 30 | 1 | 80 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-61 | 10 | 1 | 50 | 1,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-62 | 5 | 0,5 | 50 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
