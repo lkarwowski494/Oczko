@@ -12,6 +12,7 @@ BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P
 | `zrodla.md` | źródła S |
 | `wymagania.md` | przepływy PR-01–PR-14, wymagania NFR |
 | `wymagania-licznik.md`, `wymagania-projekt.md`, `wymagania-dane.md`, `wymagania-narzedzia.md` | wymagania BR według modułów: LIC, PRJ, WZR, DAN, ZAK, ZAP, KAL, SLO |
+| `errata.md` | prośby o zmianę od innych ról (ER) ze statusem |
 | `tests/wektory/brd.json` (repo) | wektory RD do testów, generowane skryptem; tylko do odczytu dla ról 07 i 08 |
 
 Materiały prywatne (wywiad, 4682 recenzje, cztery soczewki E2, kopie źródeł): `oczko-warsztat/01-odkrywanie/`.
