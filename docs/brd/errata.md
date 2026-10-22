@@ -1,5 +1,5 @@
 # Errata BRD
-Stan: rola 01, tryb fix ER-09–ER-24 (2026-10-22, P-045, P-047) · Prośby o zmianę i sprzeczności od innych ról. Wpis źródłowy ER-01–ER-08: `docs/monetyzacja.md` (rola 02, sesja 2: E1 „Zgłoszenia do roli 01”, E3 „Zgłoszenie do roli 01”); ER-10–ER-12: `docs/scope-contract.md` („Po E0”); ER-13–ER-24: `docs/scope-contract.md` (E1, „Pominięcia”).
+Stan: rola 01, tryb fix ER-25–ER-28 (2026-10-22, P-058, P-059) · Prośby o zmianę i sprzeczności od innych ról. Wpis źródłowy ER-01–ER-08: `docs/monetyzacja.md` (rola 02, sesja 2: E1 „Zgłoszenia do roli 01”, E3 „Zgłoszenie do roli 01”); ER-10–ER-12: `docs/scope-contract.md` („Po E0”); ER-13–ER-24: `docs/scope-contract.md` (E1, „Pominięcia”); ER-25: `docs/scope-contract.md` („Kolejność i przekazanie”, 01); ER-26–ER-28: `docs/monetyzacja.md` („Sesja 3, E3”, „Zgłoszenia do roli 01”).
 
 | ID | Zgłoszenie (skrót) | Od | Status | Zmiana w BRD |
 |---|---|---|---|---|
@@ -27,3 +27,7 @@ Stan: rola 01, tryb fix ER-09–ER-24 (2026-10-22, P-045, P-047) · Prośby o zm
 | ER-22 | brak cofnięcia usunięcia licznika i części oraz importu na niepustej bazie | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-DAN-008: licznik i część 30 dni (P-047); BR-DAN-006: zastąp po pliku kopii, scal bez nadpisań, rezygnacja bez zmian |
 | ER-23 | brak listy projektów po roku (w toku według ostatniej pracy, ukończone osobno, wyszukiwanie) | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-PRJ-012 (w toku według ostatniej pracy, ukończone osobno, wyszukiwanie po nazwie offline) |
 | ER-24 | doprecyzowania BR-LIC-004, BR-PRJ-002 oraz ER-11 (dzień w strefie urządzenia) i ER-12 (I-1, I-6) | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-LIC-004 (stuknięcie w blokadę, gest systemowy), BR-PRJ-002 (długa notatka, P-047), RD-16 i BR-DNI-002 (dzień w strefie urządzenia), BR-LIC-019 (I-1 tylko liczniki rzędów), BR-PRJ-015 (I-6 bez metadanych lokalizacji) |
+| ER-25 | brak BR dla systemowej prośby o ocenę po ukończeniu projektu i odnośnika „Oceń” (`action=write-review`), pętla opinii wersji 1 | 03 | otwarte | — |
+| ER-26 | BRD opisuje model B; brak BR limitu dni, komunikatu na limicie i utraty Pro według V4; OG-03 znowu obowiązuje | 02 (sesja 3) | otwarte | — |
+| ER-27 | „wpisanie nie jest pracą” (statystyki, P-048) a start dnia limitu przy ręcznym wpisaniu (D4) | 02 (sesja 3) | otwarte | — |
+| ER-28 | NFR-PIE-001 nie nazywa strażnika limitu przy pierwszym +1 świeżej instalacji | 02 (sesja 3) | otwarte | — |
