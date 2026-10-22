@@ -1,8 +1,8 @@
 # E2 Moduły, dane, konfiguracja (rola 05-architekt, build) · 2026-10-22 · STOP E2
 Wejście: E1 przyjęte (P-071). Wyniki:
-- [`moduly.md`](moduly.md): drzewo katalogów, kierunek zależności, porty domeny (sygnatury), ścieżka zapisu +1 w jednej transakcji, mapowanie rodzajów zdarzeń na `wolaStraznika` (P-067), maszyny stanów (projekt, sesja, synchronizacja, import) z tabelami przejść, lista konfiguracji (16 pozycji, 4 × [DO USTALENIA], 2 × [OCENA]).
+- [`moduly.md`](moduly.md): drzewo katalogów, kierunek zależności, porty domeny (sygnatury), ścieżka zapisu +1 w jednej transakcji, mapowanie rodzajów zdarzeń na `wolaStraznika` (P-067), maszyny stanów (projekt, sesja, synchronizacja, import) z tabelami przejść, lista konfiguracji (16 pozycji, 3 × [DO USTALENIA], 2 × [OCENA]).
 - [`dane.md`](dane.md): ERD (Mermaid), krytyczność i cykl życia danych, polityka migracji (12 kroków, test na kopii każdej wydanej wersji), kopie i archiwum `.oczko`, **tabela 22 ścieżek utraty danych** (ścieżka → zabezpieczenie → test).
-- [`schemat.sql`](schemat.sql) v1: 20 tabel STRICT, czas ms UTC + strefa IANA + dzień lokalny (RD-16), JSON jako `TEXT CHECK (json_valid)`, listy stanów z [`stany.json`](stany.json).
+- [`schemat.sql`](schemat.sql) v1: 18 tabel STRICT, czas ms UTC + strefa IANA + dzień lokalny (RD-16), JSON jako `TEXT CHECK (json_valid)`, listy stanów z [`stany.json`](stany.json).
 
 ## Dowód uruchomienia schematu
 `node --no-warnings docs/architektura/narzedzia/sprawdz-schemat.mjs` → **32/32 OK, kod wyjścia 0** (`narzedzia/sprawdz-schemat.out`; SQLite 3.50.4, Node v22.22.0; połączenie otwierane z `enableForeignKeyConstraints: false` i `PRAGMA foreign_keys = ON`, jak w aplikacji):
