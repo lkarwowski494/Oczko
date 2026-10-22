@@ -15,7 +15,7 @@
 | 04 Studio projektowe | build | zakończona 2026-10-22 (STOP E4; E0: P-061, E1: P-062, E2: P-063 kierunek A, P-064 Libre Franklin, E3: P-065; ta sama sesja co fix 01, wyjątek zasady 19) | (ten commit) | docs/design/ (design-spec.md, tokeny.json, kontrast-tabela.txt 44/44, ekrany.html + wzorce-zrzuty/ 84, prototyp.html + przejscie/, ikona/, fonty/, narzedzia/, porownanie, kroje) | P-065 (1a) do potwierdzenia przez 02; makiety wzoru, zegarka, ekranu blokady, kalendarza i Ustawień w audycie 04 |
 | 01 Odkrywanie, fix ER-29 | fix (P-065) | zakończona 2026-10-22 (STOP E2 przyjęty, P-066): ER-29 naprawione-do-weryfikacji, **warunkowe** do potwierdzenia przez 02 | 3d64639 | BR-ZAK-006, BR-ZAK-005, errata ER-29; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er29/` | potwierdzenie P-065 (1a) przez 02 |
 | 02 Monetyzacja, fix NZ-01, NZ-02, P-065 | fix (P-060 (5b), P-065) | zakończona 2026-10-22 (E0: P-067, E2: P-068): naprawione-do-weryfikacji; P-065 (1a) potwierdzone, warunek P-066 spełniony | 90b2272 | `limit.mjs` (`wolaStraznika`, `mozeZaczacDzien`), wektory S, L-16–L-18, Z (35/35), KP-12, KP-13, KP-15; oczko-warsztat `02-monetyzacja/2026-10-22-fix-nz/` | ER-30 do 01 |
-| 01 Odkrywanie, fix ER-30 | fix (P-068) | STOP E2 2026-10-22: ER-30 naprawione-do-weryfikacji | 28a488b | BR-ZAK-005, BR-ZAK-006, BR-LIC-017, OP-32 zamknięte, errata; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er30/` | — |
+| 01 Odkrywanie, fix ER-30 | fix (P-068) | zakończona 2026-10-22 (STOP E2 przyjęty, P-069): ER-30 naprawione-do-weryfikacji | 28a488b | BR-ZAK-005, BR-ZAK-006, BR-LIC-017, OP-32 zamknięte, errata; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er30/` | — |
 
 ## Następny krok
 ### Stan po fixie roli 02 (2026-10-22)
