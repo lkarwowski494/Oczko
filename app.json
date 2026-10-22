@@ -53,6 +53,7 @@
         "UIFileSharingEnabled": true,
         "LSSupportsOpeningDocumentsInPlace": true,
         "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleLocalizations": ["en"],
         "CFBundleAllowMixedLocalizations": true,
         "CFBundleDisplayName": "Oczko"
       }

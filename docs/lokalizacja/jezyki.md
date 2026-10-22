@@ -9,11 +9,11 @@ Kolejność przeglądów rodzimych (przesiew 02, `docs/monetyzacja.md` „Przesi
 | en | planowany | język makiet 04 i listingu `en-US` (`monetyzacja.md`); rynek główny US | English (U.S.), (U.K.), (Canada), (Australia) | źródło albo maszynowe (pyt. 1) | — | — | — | — |
 | ja, nb, de, fr, nl, sv, da, ko, es, ru, it, fi | planowany | kolejność przesiewu 02; wszystkie są w ASC | tak (nb = „Norwegian”; es = „Spanish (Spain)”) | maszynowe (E3) | — | — | — | — |
 | pl | planowany | język właściciela | tak | maszynowe albo źródło (pyt. 1) | — | właściciel | — | — |
-| cs, el, hr, hu, id, ms, pt-PT, pt-BR, ro, sk, sl, tr, uk, vi, zh-Hant | planowany | „szeroka” | tak (pt-BR = „Portuguese (Brazil)”, pt-PT = „Portuguese (Portugal)”, sl = „Slovenia”) | maszynowe (E3) | — | — | — | — |
+| cs, el, hr, hu, id, ms, pt, pt-BR, ro, sk, sl, tr, uk, vi, zh-Hant | planowany | „szeroka” | tak (pt-BR = „Portuguese (Brazil)”, pt = „Portuguese (Portugal)”, sl = „Slovenia”) | maszynowe (E3) | — | — | — | — |
 | es-419 | planowany | „szeroka” | tylko „Spanish (Mexico)” (kod sklepu ≠ kod interfejsu) | maszynowe (E3) | — | — | — | — |
 | bg, et, lt, lv, sr | planowany | „szeroka” | **brak** w liście ASC: tylko interfejs; strona sklepu po angielsku (kontrola (c)) | maszynowe (E3) | — | — | — | — |
 
 Kontrole polityki „szeroka” ((a)–(e)) zostaną rozliczone w E3 i E4; w E0–E1 żaden język nie jest „w wydaniu”.
 Wyjątki: `wyjatki.json` powstaje przy pierwszej uwadze skryptu (E1).
 
-Stan na STOP E1: słownik źródłowy `en` (9 kluczy), `supportedLocales` = `en`; pozostałe języki dochodzą z falami E3. **Odchylenie od listy wzorca: Portugalia = `pt-PT`, nie `pt`** (reguły liczby mnogiej CLDR, ADR-0017; do akceptacji na STOP E1).
+Stan na STOP E1: słownik źródłowy `en` (9 kluczy), `supportedLocales` = `CFBundleLocalizations` = `locales` = `en`; pozostałe języki dochodzą z falami E3. `pt` = Portugalia, `pt-BR` = Brazylia (nakładka na `pt`), jak w Treningu (P-076).

@@ -22,6 +22,9 @@ describe('app.json', () => {
     expect([...plugin![1].supportedLocales.android].sort()).toEqual(slowniki);
   });
   it('bez RTL (żaden z 35 języków nie jest pismem od prawej)', () => expect(plugin![1].supportsRTL).toBe(false));
+  it('CFBundleLocalizations = słowniki (jak w Treningu)', () => {
+    expect([...expo.ios.infoPlist.CFBundleLocalizations].sort()).toEqual(slowniki);
+  });
   it('CFBundleAllowMixedLocalizations włączone', () => expect(expo.ios.infoPlist.CFBundleAllowMixedLocalizations).toBe(true));
   it('locales: plik systemowy dla każdego słownika, z nazwą pod ikoną i opisem aparatu', () => {
     expect(Object.keys(expo.locales).sort()).toEqual(slowniki);
@@ -37,11 +40,11 @@ describe('app.json', () => {
   });
 });
 
-describe('zależności i18n (ADR-0017, P-036: dokładne wersje)', () => {
+describe('zależności i18n (ADR-0017: bez biblioteki i polyfilla, wzór z Treningu)', () => {
   const dep = czytaj('package.json').dependencies as Record<string, string>;
-  it.each(['i18next', 'react-i18next', '@formatjs/intl-pluralrules', '@formatjs/intl-locale', 'expo-localization'])(
-    '%s przypięty bez ^ i ~', (p) => expect(dep[p]).toMatch(/^\d+\.\d+\.\d+$/),
-  );
+  it('expo-localization przypięty bez ^ i ~ (P-036)', () => expect(dep['expo-localization']).toMatch(/^\d+\.\d+\.\d+$/));
+  it.each(['i18next', 'react-i18next', '@formatjs/intl-pluralrules', '@formatjs/intl-locale'])('%s nie jest zależnością', (p) =>
+    expect(dep[p]).toBeUndefined());
 });
 
 describe('pseudolokalizacja wygenerowana skryptem', () => {

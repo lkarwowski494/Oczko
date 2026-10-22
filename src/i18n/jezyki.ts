@@ -3,17 +3,17 @@ export const ZRODLO = 'en';
 
 export const JEZYKI = [
   'bg', 'cs', 'da', 'de', 'el', 'en', 'es-419', 'es', 'et', 'fi', 'fr', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lt', 'lv',
-  'ms', 'nb', 'nl', 'pl', 'pt-BR', 'pt-PT', 'ro', 'ru', 'sk', 'sl', 'sr', 'sv', 'tr', 'uk', 'vi', 'zh-Hant',
+  'ms', 'nb', 'nl', 'pl', 'pt-BR', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sv', 'tr', 'uk', 'vi', 'zh-Hant',
 ] as const;
 export type Jezyk = (typeof JEZYKI)[number];
 export type PreferencjaJezyka = 'auto' | Jezyk;
 
 const jestJezykiem = (x: string): x is Jezyk => (JEZYKI as readonly string[]).includes(x);
 
+// Regiony, w których hiszpański dziedziczy po es-419 (CLDR supplementalData.xml, parentLocales; ta sama lista co w Treningu, lib/i18n.ts).
 const AMERYKA_LACINSKA = new Set([
-  '419', 'MX', 'AR', 'BO', 'CL', 'CO', 'CR', 'CU', 'DO', 'EC', 'GT', 'HN', 'NI', 'PA', 'PE', 'PR', 'PY', 'SV', 'US', 'UY', 'VE',
+  '419', 'AR', 'BO', 'BR', 'BZ', 'CL', 'CO', 'CR', 'CU', 'DO', 'EC', 'GT', 'HN', 'JP', 'MX', 'NI', 'PA', 'PE', 'PR', 'PY', 'SV', 'US', 'UY', 'VE',
 ]);
-const PORTUGALIA = new Set(['PT', 'AO', 'MZ', 'CV', 'GW', 'ST', 'TL', 'MO']);
 const CHINY_TRADYCYJNE = new Set(['TW', 'HK', 'MO']);
 const STARE_KODY: Record<string, string> = { in: 'id', no: 'nb', nn: 'nb' };
 
@@ -25,7 +25,8 @@ function dopasujTag(tag: string): Jezyk | null {
   const region = cz.slice(1).find((x) => /^([A-Za-z]{2}|\d{3})$/.test(x))?.toUpperCase();
   if (jezyk === 'zh') return skrypt?.toLowerCase() === 'hant' || (!skrypt && region && CHINY_TRADYCYJNE.has(region)) ? 'zh-Hant' : null;
   if (jezyk === 'es') return region && AMERYKA_LACINSKA.has(region) ? 'es-419' : 'es';
-  if (jezyk === 'pt') return region && PORTUGALIA.has(region) ? 'pt-PT' : 'pt-BR';
+  // Jak w Treningu (CLDR likelySubtags: pt → pt_BR): brak regionu lub BR → pt-BR; każdy inny region (PT, AO, MZ…) → pt (Portugalia).
+  if (jezyk === 'pt') return !region || region === 'BR' ? 'pt-BR' : 'pt';
   return jestJezykiem(jezyk) ? jezyk : null;
 }
 
@@ -43,9 +44,10 @@ export function wybierzJezyk(preferencja: string | null, tagiSystemowe: string[]
   return preferencja && preferencja !== 'auto' && jestJezykiem(preferencja) ? preferencja : dopasujJezyk(tagiSystemowe);
 }
 
-const ZASTEPCZY: Partial<Record<Jezyk, Jezyk>> = { 'es-419': 'es', 'pt-BR': 'pt-PT', 'pt-PT': 'pt-BR' };
+// Wariant regionalny = nakładka na język bazowy (jak w Treningu: słownik wariantu ma tylko teksty różne od bazy).
+const ZASTEPCZY: Partial<Record<Jezyk, Jezyk>> = { 'es-419': 'es', 'pt-BR': 'pt' };
 
-/** Wariant → język pokrewny → źródło; nigdy klucz. */
+/** Wariant → język bazowy → źródło; nigdy klucz. */
 export function lancuchZastepczy(j: Jezyk): Jezyk[] {
   const bliski = ZASTEPCZY[j];
   return [...new Set<Jezyk>([j, ...(bliski ? [bliski] : []), ZRODLO])];

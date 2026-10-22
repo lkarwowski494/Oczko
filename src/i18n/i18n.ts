@@ -1,7 +1,8 @@
-// Mechanizm i18n (ADR-0017): i18next + react-i18next, klucze znaczeniowe, źródło en, wybór z ustawień i z systemu.
-import i18next, { type i18n as I18n, type TFunction } from 'i18next';
-import { initReactI18next } from 'react-i18next';
+// Mechanizm i18n (ADR-0017), wzór z Treningu: własne t() bez biblioteki, słowniki JSON, liczba mnoga z plural.ts.
+// Klucze znaczeniowe, źródło en; wybór języka z ustawień aplikacji ('auto' = za systemem).
 import { ZRODLO, JEZYKI, lancuchZastepczy, wybierzJezyk, type PreferencjaJezyka } from './jezyki';
+import { kategoriaLiczby } from './plural';
+import type { Klucz } from './typy';
 
 export type Zasoby = Record<string, { translation: Record<string, unknown> }>;
 /** Port na tabelę `ustawienie` (klucze `jezyk`, `uklad_miar`); adapter w src/dane/repozytoria (rola 08). */
@@ -10,6 +11,7 @@ export interface MagazynPreferencji {
   zapisz(klucz: string, wartosc: string): Promise<void>;
 }
 export const JEZYK_PSEUDO = 'en-XA';
+export type Parametry = Record<string, string | number>;
 
 export interface OpcjeI18n {
   magazyn: MagazynPreferencji;
@@ -20,6 +22,19 @@ export interface OpcjeI18n {
   pseudo?: Zasoby[string];
 }
 
+type Plaski = Record<string, string>;
+const splaszcz = (o: Record<string, unknown>, p = '', w: Plaski = {}): Plaski => {
+  for (const [k, v] of Object.entries(o)) {
+    if (v && typeof v === 'object') splaszcz(v as Record<string, unknown>, `${p}${k}.`, w);
+    else if (v !== null && v !== undefined) w[p + k] = String(v);
+  }
+  return w;
+};
+const wlasny = (d: Plaski | undefined, k: string): string | undefined =>
+  d && Object.prototype.hasOwnProperty.call(d, k) ? d[k] : undefined;
+const wstaw = (tekst: string, p?: Parametry) =>
+  p ? Object.keys(p).reduce((s, k) => s.split(`{{${k}}}`).join(String(p[k])), tekst) : tekst;
+
 async function bezpiecznyOdczyt(m: MagazynPreferencji, klucz: string): Promise<string | null> {
   try {
     return await m.odczytaj(klucz);
@@ -29,36 +44,41 @@ async function bezpiecznyOdczyt(m: MagazynPreferencji, klucz: string): Promise<s
 }
 
 export async function utworzI18n(opcje: OpcjeI18n) {
-  const instancja: I18n = i18next.createInstance();
+  const slowniki: Record<string, Plaski> = {};
+  for (const [j, z] of Object.entries(opcje.zasoby)) slowniki[j] = splaszcz(z.translation);
+  if (opcje.pseudo) slowniki[JEZYK_PSEUDO] = splaszcz(opcje.pseudo.translation);
   const nasluchujacy = new Set<(j: string) => void>();
   let preferencja: string | null = await bezpiecznyOdczyt(opcje.magazyn, 'jezyk');
-  const zasoby: Zasoby = opcje.pseudo ? { ...opcje.zasoby, [JEZYK_PSEUDO]: opcje.pseudo } : opcje.zasoby;
-  const wybierz = () => (opcje.pseudo ? JEZYK_PSEUDO : wybierzJezyk(preferencja, opcje.systemowe()));
-  const fallbackLng = Object.fromEntries([
-    ...JEZYKI.map((j) => [j, lancuchZastepczy(j).slice(1)] as const),
-    [JEZYK_PSEUDO, [ZRODLO]],
-    ['default', [ZRODLO]],
-  ]);
-  await instancja.use(initReactI18next).init({
-    resources: zasoby,
-    lng: wybierz(),
-    fallbackLng,
-    supportedLngs: false,
-    interpolation: { escapeValue: false },
-    returnEmptyString: false,
-    initAsync: false,
-  });
+  const wybierz = (): string => (opcje.pseudo ? JEZYK_PSEUDO : wybierzJezyk(preferencja, opcje.systemowe()));
+  let biezacy = wybierz();
+
+  const lancuch = (j: string): string[] =>
+    j === JEZYK_PSEUDO ? [j, ZRODLO] : (JEZYKI as readonly string[]).includes(j) ? lancuchZastepczy(j as never) : [j, ZRODLO];
+
+  /** Klucz → tekst: język, język bazowy, źródło; przy `count` forma wg CLDR języka, w którym znaleziono tekst, potem `_other`. */
+  function t(klucz: Klucz | string, p?: Parametry & { count?: number }): string {
+    for (const j of lancuch(biezacy)) {
+      const s = slowniki[j];
+      if (!s) continue;
+      const tekst = p && typeof p.count === 'number'
+        ? wlasny(s, `${klucz}_${kategoriaLiczby(j === JEZYK_PSEUDO ? ZRODLO : j, p.count)}`) ?? wlasny(s, `${klucz}_other`) ?? wlasny(s, klucz)
+        : wlasny(s, klucz);
+      if (tekst !== undefined && tekst !== '') return wstaw(tekst, p);
+    }
+    return klucz;
+  }
+
   const zmien = async () => {
     const j = wybierz();
-    if (j !== instancja.language) {
-      await instancja.changeLanguage(j);
+    if (j !== biezacy) {
+      biezacy = j;
       nasluchujacy.forEach((f) => f(j));
     }
   };
+
   return {
-    i18n: instancja,
-    t: instancja.t.bind(instancja) as TFunction,
-    jezyk: () => instancja.language,
+    t,
+    jezyk: () => biezacy,
     /** `'auto'` = za systemem; zapis w ustawieniach przed zmianą (P-075, 3b). */
     async ustawJezyk(p: PreferencjaJezyka) {
       await opcje.magazyn.zapisz('jezyk', p);

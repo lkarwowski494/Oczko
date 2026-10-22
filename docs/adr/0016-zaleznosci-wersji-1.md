@@ -26,8 +26,7 @@ Opcja A.
 | `expo-document-picker` 57.0.3 | F-24 (Pliki), F-32 (import archiwum) | — |
 | `expo-sharing` 57.0.24 | F-32 eksport, F-53 karta, F-57 zgłoszenie | — |
 | `expo-store-review` 57.0.3 | BR-DAN-012 (prośba o ocenę) | własny `SKStoreReview` w Swift |
-| `expo-localization` 57.0.2 | 35 lokalizacji (NFR-JEZ-001; mechanizm: ADR-0017) | — |
-| `i18next` 26.4.2, `react-i18next` 17.0.16, `@formatjs/intl-pluralrules` 6.3.15, `@formatjs/intl-locale` 5.3.12 (przypięte dokładnie; wiek ≥ 14 dni, P-036; dodane przez rolę 09, ADR-0017) | NFR-JEZ-001, P-075 | własny `t()` (stan 0.1.0), Lingui |
+| `expo-localization` 57.0.2 | 35 lokalizacji (NFR-JEZ-001; mechanizm bez biblioteki: ADR-0017, wzór z Treningu) | — |
 | `expo-iap` 5.8.1 | F-35 (ADR-0010) | 6.x, własny StoreKit |
 | `@bacons/apple-targets` 5.0.0 (narzędzie buildu) | cele Live Activity, zegarek, rozszerzenie (ADR-0007) | `expo-widgets` (bez intencji, rejestr Expo 6d) |
 | Moduły Swift w `modules/` | CloudKit (ADR-0005), PencilKit + PDFKit (ADR-0011, ADR-0012), dziennik +1 (ADR-0008), WatchConnectivity (ADR-0009), `beginBackgroundTask` (ADR-0004) | biblioteki społeczności (opcja B) |
@@ -35,7 +34,7 @@ Opcja A.
 Nawigacja (np. `expo-router`) i `react-native-svg`: decyzja roli 08 przy ekranach, jeśli projekt 04 ich wymaga (nowy wiersz tej tabeli). Bez `qrcode`, bez SDK analityki, raportowania awarii (rola 12 decyduje osobno) i reklam.
 
 ### Konsekwencje
-- Dobre: 18 pakietów runtime (z czterema pakietami i18n, ADR-0017), wszystkie z Expo SDK albo P-036; manifesty znane.
+- Dobre: 14 pakietów runtime, wszystkie z Expo SDK albo P-036; manifesty znane.
 - Złe: pięć modułów Swift do utrzymania; ZIP nierozstrzygnięty do próby.
 
 ### Potwierdzenie

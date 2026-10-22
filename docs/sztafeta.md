@@ -19,9 +19,9 @@
 | 05 Architekt | build | **zakończona 2026-10-22** (E0 P-070, E1 P-071, E2 P-072, E3 P-073, E4 P-074; 2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/, docs/architektura/e1-decyzje.md, docs/adr/0001–0015, eksperymenty/e1/, docs/architektura/e2-moduly-dane.md, moduly.md, dane.md, schemat.sql, stany.json, narzedzia/sprawdz-schemat.mjs, e3-tlo-bledy-prywatnosc-wydajnosc.md, prywatnosc.md, ADR-0016, narzedzia/granice.mjs, README.md, e4-przekazanie.md; ZAL-030 | dla 10: rola klucza ASC API, wariant podpisu, OP-25, „collected” dla CloudKit |
 
 ## Następny krok
-### Stan roli 09, E1 (2026-10-22, czeka na STOP E1)
-- 09-lokalizacja, build, wejście wczesne: E0 przyjęty (P-075), E1 gotowy do decyzji: `docs/lokalizacja/e1-mechanizm.md`, ADR-0017 (proponowana), `src/i18n/`, `scripts/sprawdz-i18n.mjs`, `tests/i18n/` (116 testów, cały zestaw 882/882), `npm run i18n` kod 0. Nie sprawdzono: `Intl.PluralRules` na prawdziwym Hermes (krok CI macOS, rola 07). Pytania 1–4 w raporcie.
-- Po STOP E1 (bez E2–E4): **09 E2–E4 po audycie 04**; następny krok ścieżki (P-002, P-005): **12 E0–E1** → 06 build → 07 build → porównanie z kodem → 08 → 04 audit → 09 E2–E4.
+### Stan roli 09, E1 (2026-10-22, czeka na akceptację ADR-0017)
+- 09-lokalizacja, build, wejście wczesne: E0 przyjęty (P-075), E1 przestawiony na wzór Treningu (P-076): `docs/lokalizacja/e1-mechanizm.md`, ADR-0017 (proponowana), `src/i18n/`, `scripts/sprawdz-i18n.mjs`, `tests/i18n/` (186 testów, cały zestaw 952/952), `npm run i18n` kod 0. Zero nowych pakietów. Nie sprawdzono: `Intl.NumberFormat`/`DateTimeFormat` na Hermes (CI macOS, rola 07).
+- Po akceptacji (bez E2–E4): **09 E2–E4 po audycie 04**; następny krok ścieżki (P-002, P-005): **12 E0–E1** → 06 build → 07 build → porównanie z kodem → 08 → 04 audit → 09 E2–E4.
 
 ### Przekazanie roli 05 (2026-10-22, STOP E4)
 - Zakończono (P-074): 05-architekt, build; `docs/architektura/README.md`, definicja ukończenia z dowodami i przekazanie dla 09, 12, 06, 07, 08, 10: `docs/architektura/e4-przekazanie.md`; ADR 0001–0016 przyjęte (P-070–P-073).
