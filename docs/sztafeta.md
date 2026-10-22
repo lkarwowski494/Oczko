@@ -19,6 +19,9 @@
 | 05 Architekt | build | **zakończona 2026-10-22** (E0 P-070, E1 P-071, E2 P-072, E3 P-073, E4 P-074; 2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/, docs/architektura/e1-decyzje.md, docs/adr/0001–0015, eksperymenty/e1/, docs/architektura/e2-moduly-dane.md, moduly.md, dane.md, schemat.sql, stany.json, narzedzia/sprawdz-schemat.mjs, e3-tlo-bledy-prywatnosc-wydajnosc.md, prywatnosc.md, ADR-0016, narzedzia/granice.mjs, README.md, e4-przekazanie.md; ZAL-030 | dla 10: rola klucza ASC API, wariant podpisu, OP-25, „collected” dla CloudKit |
 
 ## Następny krok
+### Stan roli 09, E0 (2026-10-22, czeka na STOP E0)
+- 09-lokalizacja, build, wejście wczesne (E0–E1): E0 gotowe do decyzji właściciela: `docs/lokalizacja/e0-rozpoznanie.md`, `jezyki.md`, ZAL-031–ZAL-034. Pytania 1–5 (język źródłowy, oznaczenie przekładu maszynowego, wybór języka, jednostki, treści krytyczne) czekają. Po odpowiedzi: wpis w `docs/decyzje.md` (P-075) i E1.
+
 ### Przekazanie roli 05 (2026-10-22, STOP E4)
 - Zakończono (P-074): 05-architekt, build; `docs/architektura/README.md`, definicja ukończenia z dowodami i przekazanie dla 09, 12, 06, 07, 08, 10: `docs/architektura/e4-przekazanie.md`; ADR 0001–0016 przyjęte (P-070–P-073).
 - Następny krok (P-002): **09-lokalizacja**, tryb `build`, tylko E0–E1; nowa sesja: sonnet, wysiłek medium.
