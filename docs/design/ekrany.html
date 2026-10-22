@@ -34,6 +34,7 @@ main[data-ekran] { width: var(--w, 390px); min-height: 844px; background: var(--
 h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .pod { margin: 4px 0 0; align-items: baseline; color: var(--olowek); font-size: calc(17px * var(--dt-tresc)); line-height: 1.3; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .kropka { width: 12px; height: 12px; align-self: center; border-radius: 50%; background: var(--wloczka); box-shadow: 0 0 0 1.5px var(--papier), 0 0 0 2.5px var(--linia); flex-shrink: 0; }
+.teraz { margin: 4px 0 0; font: 600 calc(20px * var(--dt-tresc)) / 1.2 var(--tresc); }
 .kartka { margin: 16px 20px 0; border-top: 1px solid var(--linia); padding-top: 12px; }
 .liczba { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .liczba .n { font: 700 calc(96px * min(var(--dt-tytul), 1.3)) / 1 var(--tytul); letter-spacing: -0.02em; }
@@ -103,10 +104,9 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 <main data-ekran="licznik-w-toku">
   <div class="status"><span>21:14</span><span>▂▄▆ ▭</span></div>
   <div class="nav"><a href="#">‹ Harbor Sweater</a><div class="ikony">
-    <span class="ikona" role="switch" aria-checked="false" aria-label="Lock counter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg></span>
     <span class="ikona" role="button" aria-label="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-    <span class="ikona" role="button" aria-label="More">•••</span></div></div>
-  <div class="tytul"><h1>Left sleeve</h1><p class="pod"><span class="kropka" aria-hidden="true"></span>Rows finished · now on row 48</p></div>
+    <span class="ikona" role="button" aria-label="Project options: name, goal, reminder, lock, finish">•••</span></div></div>
+  <div class="tytul"><p class="pod" style="margin:0"><span class="kropka" aria-hidden="true"></span>Harbor Sweater</p><h1>Left sleeve</h1><p class="teraz">Now knitting row 48</p></div>
   <div class="kartka">
     <div class="liczba"><span class="n">47</span><span class="z">of 96</span></div>
     <div class="cel"><span>Goal 96 rows</span><span>49 to go</span></div>
@@ -117,7 +117,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
     <div class="wiersz"><span class="w">Note</span><span>Switch to 4 mm for the cuff</span></div>
   </div>
   <div class="spacer"></div>
-  <div class="dol"><button class="minus" aria-label="−1 row">−1</button><button class="plus" aria-label="+1 row. Row 48 next: decrease at both ends">+1 row<small>row 48: decrease at both ends</small></button></div>
+  <div class="dol"><button class="minus" aria-label="−1 row">−1</button><button class="plus" aria-label="+1 row, when row 48 is done. Row 48: decrease at both ends">+1 row<small>tap when row 48 is done</small></button></div>
 </main>
 
 <!-- 3. Komunikat na limicie (BR-ZAK-005, BR-ZAK-006, L-03): rząd nie dodany, licznik bez zmian pod arkuszem -->
@@ -128,11 +128,12 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="kartka"><div class="liczba"><span class="n">61</span><span class="z">of 96</span></div></div>
   <div class="spacer"></div>
   <div class="przyciemnienie"></div>
-  <div class="arkusz" role="dialog" aria-label="Free knitting days used">
+  <div class="arkusz" role="dialog" aria-modal="true" aria-label="Row 62 wasn’t added">
     <div class="uchwyt"></div>
     <div class="tresc-arkusza">
-    <h2>Your 5 free knitting days for November are used</h2>
-    <p>They come back on December 1. Nothing is lost: your 61 rows, projects, history and export all stay.</p>
+    <h2>Row 62 wasn’t added</h2>
+    <p>Your 5 free knitting days for November are used. A knitting day starts with your first row that day; they come back on December 1.</p>
+    <p>Nothing is lost: your 61 rows, projects, history and export all stay.</p>
     <p style="color:var(--olowek)">Oczko Pro removes the monthly limit.</p>
     </div>
     <div class="przyciski"><button class="przycisk-pelny">See Oczko Pro</button>
@@ -146,13 +147,15 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="nav"><span></span><div class="ikony"><span class="ikona" role="button" aria-label="Close">✕</span></div></div>
   <div class="tytul"><h1>Oczko Pro</h1><p class="pod">Knit on as many days as you like. Everything else stays the same.</p></div>
   <div style="padding: 0 20px">
-    <div class="oferta"><span class="nazwa">Monthly</span><span class="cena">$0.99 / month</span><span class="op">Renews every month until you cancel in your Apple ID settings.</span></div>
-    <div class="oferta wybrana"><span class="nazwa">Yearly</span><span class="cena">$6.99 / year</span><span class="op">Renews every year until you cancel in your Apple ID settings.</span></div>
-    <div class="oferta"><span class="nazwa">Lifetime</span><span class="cena">$14.99 once</span><span class="op">Pay once. Nothing renews.</span></div>
+    <div role="radiogroup" aria-label="Plans">
+    <div class="oferta" role="radio" aria-checked="false"><span class="nazwa">Monthly</span><span class="cena">$0.99 / month</span><span class="op">Renews every month until you cancel in your Apple ID settings.</span></div>
+    <div class="oferta wybrana" role="radio" aria-checked="true"><span class="nazwa">Yearly</span><span class="cena">$6.99 / year</span><span class="op">Renews every year until you cancel in your Apple ID settings.</span></div>
+    <div class="oferta" role="radio" aria-checked="false"><span class="nazwa">Lifetime</span><span class="cena">$14.99 once</span><span class="op">Pay once. Nothing renews.</span></div>
+    </div>
     <p class="podpis">Without Pro: 5 knitting days every month, and all your projects and data, always. Shared with your family through Family Sharing.</p>
     <button class="przycisk-pelny">Continue with Yearly</button>
     <button class="przycisk-tekst">Restore purchases</button>
-    <div class="linki"><span>Privacy Policy</span><span>Terms of Use</span></div>
+    <div class="linki"><span role="link">Privacy Policy</span><span role="link">Terms of Use</span></div>
   </div>
 </main>
 
@@ -187,7 +190,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
     <p class="podpis">The last 25 marks, from the final evening.</p>
   </div>
   <div class="grupa" style="margin-top:20px">
-    <div class="el"><div class="tx">Harbour Wool, Fjord<small>How much is left?</small></div><span>1 skein ▾</span></div>
+    <div class="el"><div class="tx">Harbour Wool, Fjord<small>How much is left? (skeins or grams)</small></div><span role="button" aria-label="Enter yarn left over for Harbour Wool, Fjord" style="color:var(--olowek)">Enter ›</span></div>
   </div>
   <div class="spacer"></div>
   <div style="padding: 0 16px 32px"><button class="przycisk-pelny">Done</button></div>

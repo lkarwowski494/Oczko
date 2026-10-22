@@ -10,12 +10,14 @@ przejscie/z3-k2.png	formularz nazwy
 przejscie/z3-k3.png	formularz celu
 przejscie/z3-k4.png	wpisanie numeru rzędu 46
 przejscie/z3-k5.png	formularz przypomnienia z podglądem rzędów
-przejscie/z3-k6.png	ekran po zapisaniu (rząd 46 skończony)
-przejscie/z3-k7.png	po +1: skończony 47, teraz rząd 48 z instrukcją
+przejscie/z3-k6.png	potwierdzenie przypomnienia
+przejscie/z3-k7.png	ekran po zapisaniu (rząd 46 skończony)
+przejscie/z3-k8.png	po +1: skończony 47, teraz rząd 48 z instrukcją
 # Zadanie 4: Następny wieczór, darmowe dni wykorzystane: dodaj rząd (PR-09, BR-ZAK-006)
 przejscie/z4-k1.png	nowy wieczór
 przejscie/z4-k2.png	po stuknięciu +1 row na limicie
 przejscie/z4-k3.png	See Oczko Pro
+przejscie/z4-k4.png	wariant do decyzji: limit pokazany zawczasu, zamiast przycisku +1
 # Zadanie 5: Skończ projekt i zapisz, ile włóczki zostało (PR-07, U-9)
 przejscie/z5-k1.png	potwierdzenie ukończenia
 przejscie/z5-k2.png	karta ukończenia z pytaniem o włóczkę

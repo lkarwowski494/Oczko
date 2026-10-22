@@ -21,11 +21,12 @@ Stan: E3 (STOP) · 2026-10-22 · Rola 04, build · Decyzje: P-061 (E0), P-062 (m
 ## Komponenty
 | Komponent | Systemowy czy własny | Uwagi |
 |---|---|---|
-| Pasek nawigacji, wstecz, duży tytuł | systemowy | tytuł w Libre Franklin, reszta systemowa |
+| Pasek nawigacji, wstecz, duży tytuł | systemowy | nad tytułem części nazwa projektu; pod tytułem „Now knitting row 48” (20 pt): duża liczba to rzędy skończone; stuknięcie w tytuł otwiera menu projektu |
+| Przycisk +1: podpis | własny | „tap when row 48 is done” (soczewki: niejasne, czy +1 zaczyna, czy kończy rząd) |
 | Przycisk +1 (strefa na dole, ≥ 168 pt wysokości) i −1 (72 × 72 pt, 28 pt odstępu) | własny kształt, zachowanie przycisku systemowego | etykieta zawiera widoczny tekst („+1 row …”, WCAG 2.5.3) |
 | Kreski sesji, zakreślenie instrukcji | własne (SVG → `react-native-svg`) | opis tekstowy w podpisie |
-| Blokada licznika | przełącznik w pasku (`accessibilityRole="switch"`) | stuknięcie w zablokowany licznik: baner „Counter is locked. Tap the lock to unlock.” (BR-LIC-004) |
-| Baner strażnika „Added 3 rows in 1 s. Undo?” | własny, nad przyciskiem +1 | F-47, RD-17; znika po 6 s albo przy kolejnym +1 |
+| Blokada licznika | pozycja w menu ••• („Lock counter (ignore taps)”); w stanie zablokowanym pasek „Counter locked · Unlock” pod paskiem nawigacji | przeniesiona z paska: kłódka czytała się jak znak płatnej funkcji (przejście poznawcze, nowa osoba); stuknięcie w zablokowany licznik: „Counter is locked. Unlock it at the top.” (BR-LIC-004) |
+| Baner strażnika „Added 3 rows in 1 s. Undo?” | własny, w układzie pod tytułem (z dala od +1, rośnie z tekstem) | F-47, RD-17; nie znika po czasie (WCAG 2.2.1), znika przy kolejnym zwykłym +1; po Undo potwierdzenie „Removed 3 rows. Back to 30.” |
 | Arkusze (historia, menu •••, formularze, limit, oferty, ukończenie) | systemowe arkusze | przy dużym tekście sięgają pod pasek stanu, treść się przewija, przyciski zawsze widoczne |
 | Listy (projekty, ustawienia) | systemowe listy grupowane | nagłówki sekcji zwykłą wielką literą na początku (nie wersalikami) |
 | Symbole | SF Symbols, waga jak sąsiedni tekst | skalują się z tekstem |
@@ -48,6 +49,18 @@ Rutynowe usuwanie: potwierdzenie (rekomendacja; [DO WYJAŚNIENIA] w E4, jak w Tr
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o włóczkę (`ukonczenie`, prototyp z5); bez włóczki w zapasie: pytanie pominięte |
+
+## VoiceOver: komunikaty i zachowanie (dla 08; z przejścia poznawczego E3)
+| Chwila | Ogłoszenie (`announceForAccessibility`) | Zachowanie |
+|---|---|---|
+| +1 | „47 done. Now row 48.” | fokus zostaje na +1; Magic Tap (`onMagicTap`) = +1 |
+| wejście w rząd z instrukcją | „Row 48: decrease at both ends, 7 of 8.” (raz, po +1, które w niego wprowadza) | etykieta +1 zawiera instrukcję |
+| seria stuknięć (F-47) | „Added 3 rows in 1 second. Undo is available.” | przycisk „Undo 3 rows”; baner bez limitu czasu |
+| limit (BR-ZAK-006) | „Row 48 wasn’t added. Free knitting days for November are used. Nothing is lost.” | arkusz jako modal (`accessibilityViewIsModal`), fokus na nagłówku |
+| ukończenie | „Harbor Sweater moved to Finished.” | — |
+| arkusze i formularze | — | fokus na nagłówku; każde pole z `accessibilityLabel` (nie sam tekst obok); podgląd planu rzędów dołączony do etykiety „Save reminder” |
+| oferty | — | plany: `accessibilityRole="radio"` + `accessibilityState.selected`; Privacy Policy i Terms of Use: rola link |
+| grafika | — | kreski i zakreślenie `accessibilityElementsHidden`; dane w podpisach |
 
 ## Głos
 - Słowa dziergających: row, part, decrease, skein; nie „item”, „entry”, „session data”.
