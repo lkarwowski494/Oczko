@@ -145,7 +145,8 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 | Apple Watch | 7 | zawiesza się, gubi liczbę: YarnBuddy 17 z 301, My Row Counter 6 z 917 |
 | ekran blokady (Live Activity) | 2 | brak („hate that I have to unlock my phone”, J-06) |
 | głos, Siri | 3 | „it doesn’t always response” (knitCompanion, id8988040462, pisownia oryginału) |
-| wzór PDF i znacznik miejsca | 9 | adnotacje Apple Pencil zawodne (Knitting Chart, id13583431468) |
+| wzór PDF | 10 | adnotacje Apple Pencil zawodne (Knitting Chart, id13583431468) |
+| znacznik miejsca we wzorze (wszystkie także z wzorem PDF; ER-09) | 8 | jw. |
 | magazyn włóczki | 5 | baza włóczek i skaner (YarnBuddy 10 z 301) |
 | eksport albo kopia | 3 (u My Row Counter płatna, 9,99 USD) | utrata danych u każdego lidera (J-07) |
 | synchronizacja | 10 | gubi postęp, także przez iCloud (Loopsy 16 z 437; knitCompanion id13110653811) |

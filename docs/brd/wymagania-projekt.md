@@ -105,7 +105,7 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
 
 ### BR-WZR-001: Import wzoru z pliku
 - Przepływ: PR-06, PR-13
-- Dowód potrzeby: J-04; wzór PDF ma 9 z 14; import z Plików bez API (OG-08)
+- Dowód potrzeby: J-04; wzór PDF ma 10 z 14 (ER-09); import z Plików bez API (OG-08)
 - Kryteria akceptacji:
   - Scenariusz: PDF z aplikacji Pliki
     - Zakładając, że w Plikach jest wzór PDF
