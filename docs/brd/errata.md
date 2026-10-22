@@ -11,3 +11,4 @@ Stan: rola 01, tryb fix (2026-10-22) · Prośby o zmianę i sprzeczności od inn
 | ER-06 | brak scenariuszy iPad, zegarek i Family Sharing dla zakupu | 02 | naprawione-do-weryfikacji (2026-10-22) | BR-ZAK-001: 4 scenariusze; PR-09; S-33–S-35; OP-22; P-039 |
 | ER-07 | H-06 „żadna nie ma dowodu zakupu” przeczy macierzy; knitCompanion „wzór PDF” bez $ | 02 | naprawione-do-weryfikacji (2026-10-22); rozstrzygnięte źródłem (listing knitCompanion, macierz) | H-06 „Dowód zakupu” i „Przeciw”; macierz w `oczko-warsztat` (przypis 17) |
 | ER-08 | BRD opisuje trzy produkty P-019 po P-029 | 02 | naprawione-do-weryfikacji (2026-10-22) | OG-03, H-01, H-02 (status), README, wstęp ZAK i BR-ZAK-003 z odsyłaczem do KP-01–KP-05 |
+| ER-09 | Tabela rynku w `odkrywanie.md` („wzór PDF i znacznik miejsca / 9”) nie zgadza się z macierzą: wzór PDF 10 z 14, znacznik 8 z 14, oba 8 | 01 (fix ER-06–ER-08, 2026-10-22) | otwarte (do następnej poprawki roli 01; nie zmienia decyzji ról 02 i 03) | — |
