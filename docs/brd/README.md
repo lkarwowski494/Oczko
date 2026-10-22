@@ -18,7 +18,7 @@ BRD powstaje od zera: z wywiadu i przeczytanych źródeł. Kwarantanna P-003 i P
 Materiały prywatne (wywiad, 4682 recenzje, cztery soczewki E2, kopie źródeł): `oczko-warsztat/01-odkrywanie/`.
 
 ## Streszczenie
-Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kursami. Dowody (4682 recenzje 23 aplikacji, cztery soczewki, wytyczne Apple, CYC) wskazują dwie luki rynku: zaufanie do danych i uczciwe płacenie (H-03), oraz funkcje, których nikt nie robi dobrze: liczenie bez telefonu, widoczne przypomnienia z planem rzędów, ochrona przed przypadkowym stuknięciem (H-06). Zakres, kolejność i podział rozstrzyga rola 03 (H-04, H-05, H-07); model i ceny rola 02 (P-019, H-01, H-02).
+Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kursami. Dowody (4682 recenzje 23 aplikacji, cztery soczewki, wytyczne Apple, CYC) wskazują dwie luki rynku: zaufanie do danych i uczciwe płacenie (H-03), oraz funkcje, których nikt nie robi dobrze: liczenie bez telefonu, widoczne przypomnienia z planem rzędów, ochrona przed przypadkowym stuknięciem (H-06). Zakres, kolejność i podział rozstrzyga rola 03 (H-04, H-05, H-07); model i ceny rozstrzygnęła rola 02 (2026-10-22: P-029, darmowy rdzeń i jedno odblokowanie Pro 14,99 USD; H-01, H-02 rozstrzygnięte).
 
 ## Definicja ukończenia (E4, 2026-10-21)
 | Punkt kontraktu | Wynik | Dowód |
@@ -28,7 +28,7 @@ Oczko to narzędzie do własnych robótek (typ N, ZAL-008), nie aplikacja z kurs
 | RD: wzór, jednostki, granica, podstawa, ≥ 3 wektory z granicą i obiema stronami; krytyczne ze szczebla 1–3, oznaczone dla 06 | spełnione | `kontrola-brd.mjs docs/brd` bez `--szkic`: kod 0, 13 RD, 71 wektorów; krytyczne RD-01–RD-04, RD-07, RD-08, RD-10 |
 | BR z PR, PR z J; scenariusz główny z obserwowalnym wynikiem; liczby ze źródła, decyzji albo OP; NFR mierzalne | spełnione | skrypt: 59 BR z PR i „Wtedy”, 14 PR z J; liczby z wektorów RD albo decyzji (P-026); 11 NFR z miarą, progiem i metodą (2 progi w OP-16, OP-17) |
 | OG z polityk przypisane do wymagań | spełnione | OG-01–OG-13 w `odkrywanie.md`, przywołane w BR (np. OG-02 → BR-ZAK-001, OG-09 → BR-DAN-001) |
-| Cena, zakres MVP i podział tylko jako H | spełnione z wyjątkiem nazwanym | H-01–H-09; ceny to decyzja właściciela P-019 (podana w wywiadzie), nie propozycja roli 01 |
+| Cena, zakres MVP i podział tylko jako H | spełnione z wyjątkiem nazwanym | H-01–H-09; ceny to decyzja właściciela P-019 (podana w wywiadzie), nie propozycja roli 01; od 2026-10-22 model i cena według P-029 (ER-08) |
 | Kontrola bez `--szkic` kod 0; BRD w miejscu z `CLAUDE.md`; w publicznym repo brak danych rozmówców i cudzych materiałów | spełnione z uwagą | kod 0; `docs/brd/`; wywiad i surowe recenzje w prywatnym `oczko-warsztat`; w BRD tylko krótkie cytaty recenzji z id, bez autorów; liczby tabel CYC z odnośnikiem (zgoda CYC: OP-09) |
 | `tests/wektory/brd.json` z BRD | spełnione | wygenerowany skryptem, zgodny z BRD (porównanie plików 2026-10-21) |
 

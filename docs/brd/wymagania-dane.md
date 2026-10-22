@@ -108,7 +108,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Wtedy aplikacja nie ma żadnych projektów, a dane Oczka w iCloud użytkownika są usunięte
 
 ## Zakup (ZAK)
-Model i ceny: P-019 i rola 02 (sesja 2). Tu tylko wymagania z ograniczeń sklepu i skarg.
+Model i ceny: P-029 (2026-10-22): darmowy rdzeń i jedno odblokowanie Pro, zakup nieodnawialny 14,99 USD; ceny P-019 tylko przy powrocie do modelu A. Wymagania kontraktu płatności KP-01–KP-05 w `docs/monetyzacja.md` (z ER-01–ER-05, P-028) obowiązują razem z BR-ZAK. Tu tylko wymagania z ograniczeń sklepu i skarg.
 
 ### BR-ZAK-001: Przywrócenie zakupu
 - Przepływ: PR-09
@@ -150,7 +150,7 @@ Model i ceny: P-019 i rola 02 (sesja 2). Tu tylko wymagania z ograniczeń sklepu
 
 ### BR-ZAK-003: Opłacona funkcja nie znika
 - Przepływ: PR-09
-- Dowód potrzeby: H-02; usunięcie opłaconej funkcji „Smart Pattern” (Loopsy, id14598505817); funkcje przeniesione za paywall (My Row Counter 18 z 917) · zależy od: ZAL-018
+- Dowód potrzeby: H-02; usunięcie opłaconej funkcji „Smart Pattern” (Loopsy, id14598505817); funkcje przeniesione za paywall (My Row Counter 18 z 917) · zależy od: ZAL-018 · rozszerza: KP-01 (funkcja darmowa nie staje się płatna)
 - Kryteria akceptacji:
   - Scenariusz: Aktualizacja w okresie zakupu
     - Zakładając, że użytkownik kupił dostęp do funkcji
