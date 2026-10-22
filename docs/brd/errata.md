@@ -8,6 +8,6 @@ Stan: rola 01, tryb fix (2026-10-22) · Prośby o zmianę i sprzeczności od inn
 | ER-03 | brak wymagania przeciw podwójnej opłacie | 02 | przeniesione jako KP-03 (P-028) | jw. |
 | ER-04 | Terms of Use obok polityki prywatności | 02 | przeniesione jako KP-04 (P-028) | jw. |
 | ER-05 | usunięcie danych a zakup | 02 | przeniesione jako KP-05 (P-028) | jw. |
-| ER-06 | brak scenariuszy iPad, zegarek i Family Sharing dla zakupu | 02 | otwarte | — |
+| ER-06 | brak scenariuszy iPad, zegarek i Family Sharing dla zakupu | 02 | naprawione-do-weryfikacji (2026-10-22) | BR-ZAK-001: 4 scenariusze; PR-09; S-33–S-35; OP-22; P-039 |
 | ER-07 | H-06 „żadna nie ma dowodu zakupu” przeczy macierzy; knitCompanion „wzór PDF” bez $ | 02 | otwarte | — |
 | ER-08 | BRD opisuje trzy produkty P-019 po P-029 | 02 | otwarte | — |

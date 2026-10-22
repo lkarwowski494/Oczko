@@ -116,3 +116,4 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 | OP-16 | [DO WYJAŚNIENIA] Podłoga dużego tekstu (Dynamic Type) na ekranach głównych przepływów | rola 04 | NFR-DOS-002 |
 | OP-17 | [DO WYJAŚNIENIA] Budżet czasu reakcji licznika | rola 05 | NFR-WYD-001 |
 | OP-18 | Okres przechowywania usuniętych projektów: zamknięte decyzją P-026 (30 dni) | właściciel | BR-DAN-008 |
+| OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje wersję płatną bez telefonu w pobliżu (wpis źródłowy: `docs/monetyzacja.md`, rola 02) | 05 | BR-ZAK-001, BR-LIC-015 |

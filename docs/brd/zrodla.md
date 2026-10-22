@@ -1,5 +1,5 @@
 # Źródła BRD
-Stan: STOP E2 · Aktualizacja: 2026-10-21 · Hierarchia: P-017. Kopie tekstu stron z dnia odczytu: `oczko-warsztat/01-odkrywanie/zrodla/` (prywatne). Cytaty sprawdzone dosłownie na surowym tekście (`curl` + porównanie ciągów). Recenzje App Store to dowody potrzeby (szczebel 5), cytowane w `odkrywanie.md` z id, nie fakty.
+Stan: STOP E2 · Aktualizacja: 2026-10-21; S-33–S-35: 2026-10-22 (fix ER-06) · Hierarchia: P-017. Kopie tekstu stron z dnia odczytu: `oczko-warsztat/01-odkrywanie/zrodla/` (prywatne). Cytaty sprawdzone dosłownie na surowym tekście (`curl` + porównanie ciągów). Recenzje App Store to dowody potrzeby (szczebel 5), cytowane w `odkrywanie.md` z id, nie fakty.
 
 | ID | Adres | Miejsce | Cytat | Odczyt | Szczebel | Przegląd |
 |---|---|---|---|---|---|---|
@@ -35,3 +35,6 @@ Stan: STOP E2 · Aktualizacja: 2026-10-21 · Hierarchia: P-017. Kopie tekstu str
 | S-30 | https://www.nhs.uk/conditions/repetitive-strain-injury-rsi/ | Causes | „Repetitive strain injury (RSI) is caused by repeated use of a body part” (dziergania nie wymienia) | 2026-10-21 | 3 | — |
 | S-31 | https://www.ravelry.com/about/goodies | eksport danych | „You can save your stash data as a spreadsheet” | 2026-10-21 | 3 | 2027-04-21 |
 | S-32 | https://patents.google.com/patent/US8529263B1/en | US8529263B1 (Create2Thrive Inc.), zastrzeżenie 1; status | „presenting at least one set of companion instructions to the user to execute”; status „Active … 2032-07-13 Anticipated expiration” (Google Patents: data nie jest analizą prawną) | 2026-10-21 | 1 | 2027-04-21 |
+| S-33 | https://developer.apple.com/documentation/storekit/appstore/sync() (surowy tekst: `/tutorials/data/documentation/storekit/appstore/sync().json`) | opis | „When users reinstall your app or download it on a new device, the app automatically has all transactions available to it upon initial launch.” | 2026-10-22 | 1 | 2027-04-22 |
+| S-34 | https://developer.apple.com/documentation/storekit/transaction/revocationdate (surowy tekst: `/tutorials/data/documentation/storekit/transaction/revocationdate.json`) | opis | „The date that the App Store refunded the transaction or revoked it from Family Sharing.” | 2026-10-22 | 1 | 2027-04-22 |
+| S-35 | https://developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/turn-on-family-sharing-for-in-app-purchases | całość | „Family Sharing is a feature supported only by apps that offer auto-renewable subscriptions and non-consumable In-App Purchases”; „once you turn on Family Sharing for an In-App Purchases in App Store Connect, you can't turn it off.” | 2026-10-22 | 1 | 2027-04-22 |

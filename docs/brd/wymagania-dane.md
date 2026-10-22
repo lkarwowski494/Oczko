@@ -112,7 +112,7 @@ Model i ceny: P-019 i rola 02 (sesja 2). Tu tylko wymagania z ograniczeń sklepu
 
 ### BR-ZAK-001: Przywrócenie zakupu
 - Przepływ: PR-09
-- Dowód potrzeby: OG-02; „it’s prompting me to pay again after I updated” (Easy Knitty, id12782448883); 14 z 156 w próbce Easy Knitty
+- Dowód potrzeby: OG-02; „it’s prompting me to pay again after I updated” (Easy Knitty, id12782448883); 14 z 156 w próbce Easy Knitty. Inne urządzenie i rodzina (ER-06, 2026-10-22): „don’t want to pay twice to be able to work on a brioche pattern” (iPhone → iPad, Knitting Chart, id6190888819); „It’s a bit frustrating to find each family member must make the in app purchase individually.” (Knitting Chart, id4968890433). Na nowym urządzeniu transakcje są dostępne od pierwszego uruchomienia [FAKT S-33]; zwrot i odebranie z Family Sharing mają datę w transakcji [FAKT S-34]; Family Sharing działa dla zakupów nieodnawialnych i jest nieodwracalne [FAKT S-35]
 - Kryteria akceptacji:
   - Scenariusz: Reinstalacja
     - Zakładając, że użytkownik kupił wersję płatną i przeinstalował aplikację
@@ -122,6 +122,22 @@ Model i ceny: P-019 i rola 02 (sesja 2). Tu tylko wymagania z ograniczeń sklepu
     - Zakładając, że użytkownik ma wersję płatną, a telefon jest bez sieci
     - Gdy otwiera aplikację
     - Wtedy funkcje płatne działają
+  - Scenariusz: iPad z tym samym kontem Apple
+    - Zakładając, że użytkownik kupił wersję płatną na iPhonie
+    - Gdy instaluje Oczko na iPadzie z tym samym kontem Apple i otwiera aplikację
+    - Wtedy iPad pokazuje wersję płatną bez ponownej opłaty, także zanim użytkownik wybierze przywrócenie zakupów
+  - Scenariusz: Zegarek bez telefonu w pobliżu (jeśli zegarek jest w wydaniu)
+    - Zakładając, że telefon potwierdził wersję płatną, a na zegarku jest Oczko
+    - Gdy użytkownik dodaje rząd funkcją płatną na zegarku, a telefonu nie ma w zasięgu
+    - Wtedy funkcja płatna na zegarku działa (P-039; sposób odczytu na zegarku: OP-22)
+  - Scenariusz: Członek rodziny w Family Sharing
+    - Zakładając, że dla produktu płatnego włączono Family Sharing (P-038), a członek rodziny nic nie kupował
+    - Gdy członek rodziny otwiera Oczko na swoim urządzeniu
+    - Wtedy ma wersję płatną bez opłaty
+  - Scenariusz: Odebranie z Family Sharing
+    - Zakładając, że członek rodziny miał wersję płatną z Family Sharing i utworzył dane funkcjami płatnymi
+    - Gdy zakup przestaje być mu udostępniany i sklep podaje datę odebrania
+    - Wtedy członek rodziny traci funkcje płatne, a jego dane zostają widoczne i w eksporcie, funkcje płatne tylko do odczytu (KP-02 w `docs/monetyzacja.md`)
 
 ### BR-ZAK-002: Bez reklam i śledzenia
 - Przepływ: PR-09

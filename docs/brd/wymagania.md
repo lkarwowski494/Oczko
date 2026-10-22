@@ -38,7 +38,7 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 - Kontekst: wolne ręce; synchronizacja wymaga sieci (OG-09).
 ### PR-09: Zakup i przywrócenie zakupu
 - Kto: każdy płacący. Praca: J-07. Częstość: zakup raz; przywrócenie przy nowym urządzeniu.
-- Kroki: kupuje wersję płatną; na nowym urządzeniu albo po reinstalacji przywraca zakup; korzysta bez reklam.
+- Kroki: kupuje wersję płatną; na nowym urządzeniu albo po reinstalacji przywraca zakup; na iPadzie i zegarku z tym samym kontem oraz jako członek rodziny (Family Sharing, P-038) ma wersję płatną bez ponownej opłaty; korzysta bez reklam.
 - Kontekst: wolne ręce, sieć.
 ### PR-10: Zapas włóczki
 - Kto: P-4. Praca: J-08. Częstość: zakupy, start i koniec projektu.
