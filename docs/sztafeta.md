@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (po roli 01, tryb fix)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (po roli 01, tryb fix ER-09–ER-24)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -8,9 +8,18 @@
 | 01 Odkrywanie | build | zakończona 2026-10-21 | (ten commit) | docs/brd/ (9 plików), tests/wektory/brd.json; P-017–P-026; ZAL-017–024 | OP-09 (e-mail do CYC), OP-03, OP-11, OP-15; OP źródłowe dla 06 |
 | 02 Monetyzacja, sesja 2 | build (bez `--moduly`) | zakończona 2026-10-22: model B, Pro dożywotni 14,99 USD (P-029), płatności jak w Treningu (P-036) | (ten commit) | docs/monetyzacja.md („Sesja 2, E0–E3”: kontrakt płatności KP-01–KP-11, szkic ADR, przekazanie), docs/monetyzacja/dostep.mjs, wektory-dostepu.json, dostep-test.mjs, docs/zalozenia.md (ZAL-026); P-027–P-038; źródła: oczko-warsztat/02-monetyzacja/2026-10-21-sesja2/zrodla/2026-10-22/e3/ | ER-06–ER-08 do roli 01; OP-21 (07), OP-22, OP-23 (05); przy konfiguracji App Store Connect: Family Sharing (kierunek: włączamy) i ID produktu (OP-24, P-038); test P-029 w 04.2027 |
 | 01 Odkrywanie, fix ER-06–ER-08 | fix | zakończona 2026-10-22 (STOP E2): ER-06–ER-08 naprawione-do-weryfikacji | d5b08b8 (gałąź `claude/bold-meitner-5psv0z`) | docs/brd/errata.md (nowy), BR-ZAK-001, PR-09, OG-03, H-01, H-02, H-06, S-33–S-35, OP-22, P-039; oczko-warsztat `01-odkrywanie/fix-2026-10-22/`, macierz `soczewki/konkurencja.md` | ER-09 (otwarte, rola 01); status „zweryfikowane” nadaje reaudit |
+| 01 Odkrywanie, fix ER-09–ER-24 | fix (P-045) | E1 zakończone 2026-10-22, STOP E2: ER-09–ER-24 naprawione-do-weryfikacji | 8ffe2b6 | 80 BR (+21: BR-LIC-017–020, BR-PRJ-011–016, BR-WZR-007–008, BR-DAN-010–011, BR-DNI-001–007), NFR-PIE-001, NFR-SYS-001, PR-15, PR-16, RD-14–RD-18 (+31 wektorów w `tests/wektory/brd.json`), OG-14, S-36, S-37, OP-25, OP-26, P-047; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er09-24/` | OP-25 (10, 05), OP-26 (05); status „zweryfikowane” nadaje reaudit |
 
 ## Następny krok
-### Przekazanie roli 01, fix (2026-10-22)
+### Przekazanie roli 01, fix ER-09–ER-24 (2026-10-22)
+- Zakończono: 01-odkrywanie, fix ER-09–ER-24 (P-045, decyzje STOP E0: P-047), jeden commit na ID na `claude/jolly-thompson-paz6d8` (355fef1..8ffe2b6). Dowody: `oczko-warsztat/01-odkrywanie/fix-2026-10-22-er09-24/` (E0-plan, kontrola-er.mjs, przed.txt 0/33, po.txt 33/33, E2-dowody.md).
+- Następny krok: **powrót do sesji roli 03-zakres** (E2: cięcie i warianty) z BRD po poprawce: nowe BR-DNI-001–007 (BR-DNI-007 „PÓŹNIEJ”, P-046), BR-LIC-017–020, BR-PRJ-011–016, BR-WZR-007–008, BR-DAN-010–011, NFR-PIE-001, NFR-SYS-001.
+- Dla 02: podział darmowe/Pro dla nowych BR; tabela „Testy, których nie zrobi Node (krok właściciela)” w `docs/monetyzacja.md` potrzebuje zamiennika automatycznego (ER-10, P-041).
+- Dla 04: P-046 (nic z K i I na ekranie licznika bez ustawienia użytkownika), BR-DNI-005 scenariusz „Bez terminu”, BR-LIC-019 „Brak nowego elementu”; mapa U-1–U-12 roli 03.
+- Dla 05: OP-25 (z 10), OP-26; wykonalność BR-WZR-007 (Word, strona offline), RD-16 (zapis strefy ze zmianą), audyt dostępności S-36 w CI. Dla 07: nowe RD-14–RD-18 i zmienione kryteria BR-LIC-001, BR-LIC-004, BR-DAN-006, BR-DAN-008. Dla 06: brak nowych reguł krytycznych.
+- Kwarantanna (P-003, P-015) obowiązuje role 01–04.
+
+### Przekazanie roli 01, fix (archiwalne, 2026-10-22)
 - Zakończono: 01-odkrywanie, fix ER-06, ER-07, ER-08 (P-028), commity na `claude/bold-meitner-5psv0z` (gałąź sesji); `claude/jolly-thompson-paz6d8` przewinięta do `fc88fcd` 2026-10-22 za zgodą właściciela (szybkie przewinięcie 92309ca..fc88fcd, bez scalania). Dowody: `oczko-warsztat/01-odkrywanie/fix-2026-10-22/` (E0-plan, kontrola-er.mjs, przed.txt 0/11, po.txt 11/11, E2-dowody.md).
 - Następny krok (P-002): **03-zakres Zakres i kontrakt MVP**, tryb `build`; nowa sesja: opus, wysiłek high.
   - `node tools/assemble.mjs 03-zakres --tryb build --galaz claude/jolly-thompson-paz6d8`
