@@ -15,7 +15,7 @@ Stan: rola 01, tryb fix ER-09–ER-24 (2026-10-22, P-045, P-047) · Prośby o zm
 | ER-10 | metody NFR zakładają test ręczny albo urządzenie; po P-041 tylko automat | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | metody NFR-DAN-003, NFR-OFF-001, NFR-DOS-001, NFR-WYD-001, NFR-ZEG-001 automatyczne z ryzykiem szczątkowym (P-041); S-36 |
 | ER-11 | brak BR i RD dla kalendarza i postępu K-1–K-5 (P-043); prefiks `KAL` zajęty | 03 (P-045) | otwarte | — |
 | ER-12 | brak BR dla I-1, I-2, I-3, I-4, I-6, I-7, I-9 (P-044, P-046) | 03 (P-045) | otwarte | — |
-| ER-13 | brak wpisania wartości licznika, zerowania i przeniesienia trwającej robótki | 03 (P-045) | otwarte | — |
+| ER-13 | brak wpisania wartości licznika, zerowania i przeniesienia trwającej robótki | 03 (P-045) | naprawione-do-weryfikacji (2026-10-22) | BR-LIC-017 (wpisanie, przeniesienie, zerowanie z potwierdzeniem, historia z cofnięciem; wpisanie nie jest pracą dla statystyk dnia i tempa) |
 | ER-14 | brak NFR pierwszego liczenia (stuknięcia do +1, nic przed licznikiem, offline) | 03 (P-045) | otwarte | — |
 | ER-15 | brak powrotu do miejsca po starcie i z innej aplikacji | 03 (P-045) | otwarte | — |
 | ER-16 | brak licznika całości zasilanego przez części jednego kawałka | 03 (P-045) | otwarte | — |

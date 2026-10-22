@@ -208,3 +208,28 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że licznik bieżącego projektu ma 7
     - Gdy użytkownik wypowiada polecenie dodania rzędu przez Siri
     - Wtedy licznik ma 8, a Siri odpowiada nową wartością
+
+### BR-LIC-017: Wpisanie wartości licznika i wyzerowanie
+- Przepływ: PR-01, PR-02, PR-13
+- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13
+- Kryteria akceptacji:
+  - Scenariusz: Przeniesienie trwającej robótki
+    - Zakładając, że użytkownik zakłada licznik dla robótki, w której skończył 57 rzędów
+    - Gdy wpisuje wartość 57
+    - Wtedy licznik pokazuje 57, a następne dodanie rzędu daje 58
+  - Scenariusz: Wpisanie w historii z cofnięciem
+    - Zakładając, że licznik ma 30
+    - Gdy użytkownik wpisuje 35, a potem cofa tę zmianę z historii
+    - Wtedy historia pokazuje wpisanie z godziną i wartością przed i po, a licznik po cofnięciu pokazuje 30
+  - Scenariusz: Wpisanie nie jest pracą
+    - Zakładając, że użytkownik wpisał 57 przy przeniesieniu robótki
+    - Gdy otwiera dzień i postęp w module DNI
+    - Wtedy wpisane 57 rzędów nie są rzędami zrobionymi tego dnia ani nie zmieniają tempa
+  - Scenariusz: Zerowanie z potwierdzeniem
+    - Zakładając, że licznik ma 42
+    - Gdy użytkownik wybiera wyzerowanie
+    - Wtedy aplikacja prosi o potwierdzenie, a dopiero po nim licznik pokazuje 0 i historia ma zmianę z 42 na 0, którą można cofnąć
+  - Scenariusz: Błędna wartość
+    - Zakładając, że licznik ma 42
+    - Gdy użytkownik wpisuje wartość ujemną albo tekst
+    - Wtedy aplikacja nie zmienia licznika i pokazuje, że wartość musi być liczbą całkowitą od 0
