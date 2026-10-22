@@ -55,6 +55,8 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .plus { flex: 1; min-height: 168px; background: var(--p-tlo); color: var(--p-tekst); border: 2px solid var(--p-obrys); border-radius: 20px; font: 700 calc(28px * var(--dt-tytul)) / 1.2 var(--tytul); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; }
 .plus small { font: 400 calc(15px * var(--dt-tresc)) / 1.3 var(--tresc); opacity: .85; }
 .pusto { margin: 16px 0 0; color: var(--olowek); font-size: calc(17px * var(--dt-tresc)); line-height: 1.35; }
+.limit-zawczasu { margin: 0 16px 32px; padding: 16px; border-radius: 20px; border: 2px solid var(--p-obrys); display: flex; flex-direction: column; gap: 6px; font-size: calc(17px * var(--dt-tresc)); line-height: 1.35; }
+.limit-zawczasu b { font: 700 calc(20px * var(--dt-tytul)) / 1.2 var(--tytul); }
 /* arkusze i listy (komponenty systemowe iOS) */
 .przyciemnienie { position: absolute; inset: 0; background: rgba(0,0,0,.32); }
 /* Arkusz: przy dużym tekście sięga najwyżej pod pasek stanu, treść się przewija, przyciski zostają na dole. */
@@ -120,7 +122,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="dol"><button class="minus" aria-label="−1 row">−1</button><button class="plus" aria-label="+1 row, when row 48 is done. Row 48: decrease at both ends">+1 row<small>tap when row 48 is done</small></button></div>
 </main>
 
-<!-- 3. Komunikat na limicie (BR-ZAK-005, BR-ZAK-006, L-03): rząd nie dodany, licznik bez zmian pod arkuszem -->
+<!-- 3. Przypadek brzegowy (P-065 (1a)): nowy dzień zaczął się przy otwartej aplikacji, stuknięcie zatrzymane; arkusz mówi, że rząd nie został dodany (BR-ZAK-006, L-03) -->
 <main data-ekran="limit">
   <div class="status"><span>19:02</span><span>▂▄▆ ▭</span></div>
   <div class="nav"><a href="#">‹ Harbor Sweater</a><div class="ikony"><span class="ikona">•••</span></div></div>
@@ -139,6 +141,17 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
     <div class="przyciski"><button class="przycisk-pelny">See Oczko Pro</button>
     <button class="przycisk-tekst">Not now</button></div>
   </div>
+</main>
+
+<!-- 3b. Limit zawczasu (P-065 (1a)): nowy dzień ponad limit, zamiast przycisku +1 komunikat; żadne stuknięcie nie przepada -->
+<main data-ekran="limit-zawczasu">
+  <div class="status"><span>19:02</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Projects</a><div class="ikony"><span class="ikona" role="button" aria-label="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="ikona" role="button" aria-label="Project options">•••</span></div></div>
+  <div class="tytul"><p class="pod" style="margin:0"><span class="kropka" aria-hidden="true"></span>Harbor Sweater</p><h1>Left sleeve</h1><p class="teraz">Next: row 62</p></div>
+  <div class="kartka"><div class="liczba"><span class="n">61</span><span class="z">of 96</span></div><div class="cel"><span>Goal 96 rows</span><span>35 to go</span></div>
+    <p class="podpis"><span style="text-decoration:underline" role="link">Oczko Pro removes the limit</span></p></div>
+  <div class="spacer"></div>
+  <div class="limit-zawczasu" role="status"><b>No free knitting days left in November</b><span>Counting is paused until December 1. Your 61 rows and everything else are kept.</span></div>
 </main>
 
 <!-- 4. Ekran ofert (ujawnienia (1)–(7), KP-03, KP-09, KP-14, P-054: bez procentów i porównań) -->

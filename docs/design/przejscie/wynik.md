@@ -21,10 +21,10 @@ Runda 1 (przed poprawkami): zadania 2, 4, 5 negatywne w części perspektyw; pop
 | F-03 (blokada) | wynik: pozytywny po przeniesieniu do menu ••• z widocznym stanem (kłódka w pasku czytana jako znak płatnej funkcji), 2026-10-22, jw. |
 | F-06, F-08, F-14, F-45 (przypomnienie z podglądem, cel, projekt z pierwszego licznika, wpisanie wartości) | wynik: pozytywny, 2026-10-22, jw. (VoiceOver: po poprawce etykiet bez ponownej oceny) |
 | F-19, F-37, F-53 (ukończenie, zużycie włóczki, karta) | wynik: pozytywny, 2026-10-22, jw. |
-| F-35 i BR-ZAK-005/006 (limit, oferty) | wynik: pozytywny tylko w wariancie „zawczasu”; wariant kontraktu (blokada przy stuknięciu) negatywny dla rąk zajętych i płacącego; decyzja STOP E3 |
+| F-35 i BR-ZAK-005/006 (limit, oferty) | wynik: pozytywny w wariancie „zawczasu” wybranym przez właściciela (P-065 (1a)), 2026-10-22, docs/design/przejscie/wynik.md; wariant kontraktu negatywny (ręce zajęte, płacący); zgodność z KP-12, KP-13 do potwierdzenia przez 02 |
 | pozostałe F | czeka na 04 (wzór poziomo F-25/F-26, zegarek F-12, ekran blokady F-11/F-21, kalendarz F-59: makiety w E4 albo audycie) |
 
 ## Zgłoszenia do innych ról
 - **02 (kontrakt płatności):** wariant „zawczasu” pokazuje stan limitu na ekranie licznika przed pierwszym +1 nowego dnia (zamiast przycisku +1, bez ekranu zakupu) — zgodność z KP-12, KP-13 do potwierdzenia, jeśli właściciel go wybierze. OP-32: −1 na limicie (prototyp pozwala, wpisanie blokuje jak D4).
-- **01 (BRD):** BR-LIC-019 cofa całą serię, także zamierzone pierwsze stuknięcie (soczewka „ręce zajęte”); decyzja STOP E3, ewentualnie ER.
+- **01 (BRD):** BR-LIC-019 bez zmian (P-065 (5a)); BR-ZAK-006 opisuje komunikat przy stuknięciu, a P-065 (1a) przesuwa go zawczasu: ER do 01 po potwierdzeniu przez 02.
 - **11 (OP-33):** prośba o ocenę tuż po ukończeniu bywa odbierana jako wymuszanie (soczewka płacącego); rozważyć kolejne uruchomienie po ukończeniu.

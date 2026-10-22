@@ -1,16 +1,22 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E3 (STOP) · 2026-10-22 · Rola 04, build · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
 |---|---|
 | Tokeny (moduł motywu, propozycja) | `tokeny.json` |
 | Tabela kontrastu (44 pary, kod 0) | `kontrast-tabela.txt` (z `narzedzia/tokeny-kontrast.mjs` + `narzedzia/kontrast.mjs`) |
-| Kluczowe ekrany (6 stanów) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (72 pliki, linia bazowa SP-13) |
+| Kluczowe ekrany (7 stanów) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (84 pliki, linia bazowa SP-13) |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
 | Historia kierunków | `01-swiat.md`, `kierunki/`, `porownanie.html`, `kroje.html` |
+
+## Limit dni na ekranach (P-065, warunkowo do potwierdzenia przez 02)
+- **Nowy dzień ponad limit (`limit-zawczasu`):** zamiast przycisków +1 i −1 komunikat „No free knitting days left in {month}. Counting is paused until {date}. Your {n} rows and everything else are kept.”; pod liczbą odnośnik „Oczko Pro removes the limit” (poza strefą +1). Historia, menu, wzór, eksport działają.
+- **Przypadek brzegowy (`limit`):** nowy dzień zaczął się przy otwartej aplikacji (po przerwie ≥ 60 min, D3): stuknięcie zatrzymane, arkusz „Row {n} wasn’t added” z definicją dnia; potem ekran przechodzi w stan zawczasu.
+- **Licznik darmowych dni:** lista projektów („3 of 5 free knitting days left in November”) i Ustawienia; na ekranie licznika tylko w ostatnim darmowym dniu cicha linia „1 free knitting day left in November” pod liczbą (wyjątek nazwany od P-046).
+- Ekran ofert tylko z odnośnika na limicie i z Ustawień (KP-13); przy Pro żadnej z tych linii.
 
 ## Element firmowy
 - **Kreski sesji:** rzędy dodane dziś w projekcie, w piątkach (piąta przekreśla cztery), grafitem na papierze; najwyżej 25 widocznych, liczba zawsze w podpisie nad kreskami („Tonight’s marks: 14 rows since 19:52”). Grafika `aria-hidden`; dane niesie podpis (soczewka VoiceOver, E2).
@@ -40,7 +46,7 @@ Stan: E3 (STOP) · 2026-10-22 · Rola 04, build · Decyzje: P-061 (E0), P-062 (m
 | **Mark as finished** | ukończenie (U-9), potem karta i pytanie o włóczkę |
 | **Delete {object}** | z potwierdzeniem; trafia do „Recently deleted” na 30 dni (P-026, BR-DAN-008) |
 | **Not now** | neutralna odmowa na komunikacie limitu |
-Rutynowe usuwanie: potwierdzenie (rekomendacja; [DO WYJAŚNIENIA] w E4, jak w Treningu).
+Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofnięcie serii stuknięć bez pytania (baner, P-065 (5a)).
 
 ## Macierz stanów kluczowych ekranów
 | Ekran | Stany (wzorcowe zrzuty albo prototyp) |
@@ -68,9 +74,9 @@ Rutynowe usuwanie: potwierdzenie (rekomendacja; [DO WYJAŚNIENIA] w E4, jak w Tr
 - Zakazane: „Oops”, „Upgrade now”, „Unlock”, „free trial”, procenty i porównania cen (P-054), straszenie utratą danych.
 - Teksty dziedzinowe (instrukcje, nazwy ściegów) pisze użytkownik; aplikacja ich nie uczy.
 
-## Teksty ofert (propozycja; wybór właściciela na STOP E3)
+## Teksty ofert (P-065 (3a): wariant 1)
 - Wariant 1 (w makiecie): nazwy planów „Monthly · $0.99 / month”, „Yearly · $6.99 / year”, „Lifetime · $14.99 once”; nagłówek „Oczko Pro”, „Knit on as many days as you like. Everything else stays the same.”; pod planami: „Without Pro: 5 knitting days every month, and all your projects and data, always.”
-- Wariant 2: te same nazwy i ceny jako najwyraźniejszy element, plus podpisy właściciela z wariantu 1 roli 03 bez liczb: „Still finding my rhythm” (miesięczny), „Knitting is part of my week” (roczny), „Knitting is my life” (dożywotni).
+- Odrzucony wariant 2: podpisy właściciela przy planach (P-065).
 - Ujawnienia (1)–(7) z `docs/monetyzacja.md` „Sesja 3, E3”: nazwa, okres, cena ze sklepu (KP-09); odnawianie i anulowanie w ustawieniach Apple ID; „Restore purchases”; Privacy Policy, Terms of Use; co daje Pro i co zostaje; zamknięcie i „Not now”; Family Sharing tylko, gdy włączone.
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
@@ -84,3 +90,11 @@ Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF,
   "plugins": [["expo-splash-screen", { "image": "./assets/splash-icon.png", "backgroundColor": "#FCFCFA", "dark": { "backgroundColor": "#1B1C1F" } }]] }
 ```
 Zegarek: `ikona/watch.png` (1088 × 1088). Ikona warstwowa `.icon` (Liquid Glass) wymaga Icon Composer na macOS: warstwy `ikona/tlo.svg` i `ikona/pierwszy-plan*.svg` to paczka dla kroku właściciela; PNG działają bez `.icon`.
+
+## Poza tym etapem (dla audytu roli 04 po roli 08 albo osobnej sesji)
+Makiety nienarysowane w build: wzór i licznik poziomo (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), zegarek (F-12), sesja na ekranie blokady (F-11, F-21), kalendarz i podsumowanie (F-59), Ustawienia (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
+
+## Propozycja wpisu do pamięci portfolio (repo `prompts`, dopisuje właściciel)
+| Aplikacja | Metafora / element firmowy | Paleta (rdzeń) | Kroje | Uwagi właściciela |
+|---|---|---|---|---|
+| Oczko („Kreski na wzorze”) | Wydruk wzoru z ołówkiem: kreski rzędów sesji w piątkach, zakreślacz na rzędzie z instrukcją, linijka celu; ikona: cztery kreski z przekreśleniem na pasie zakreślacza | papier `#FCFCFA`, grafit `#26282C`, ołówek HB `#5E626A`, zakreślacz `#F6E04A` (nocą `#38351F` z krawędzią `#E2CB3A`); kolor włóczki projektu tylko jako kropka | Libre Franklin (tytuły, liczba, przyciski), treść systemowa | 2026-10-22: „Zgodnie z rekomendacja” (kierunek A z linijką celu z C i kolorem włóczki z B); Libre Franklin wybrany zamiast rekomendowanego Archivo wąskiego; ikona zatwierdzona. Kreski + zakreślacz należą do Oczka. |
