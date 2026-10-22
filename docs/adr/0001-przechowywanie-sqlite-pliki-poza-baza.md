@@ -1,5 +1,5 @@
 # 0001. Dane użytkownika w SQLite (`expo-sqlite`), pliki wzorów i zdjęć poza bazą
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: P-021, P-070, NFR-DAN-001, NFR-DAN-002
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-021, P-070, NFR-DAN-001, NFR-DAN-002
 
 ## Kontekst i problem
 Aplikacja zapisuje każdą zmianę licznika z godziną (BR-LIC-003), projekty z częściami, sesje stopera, zapas, dni limitu (`docs/monetyzacja/limit.mjs`) i agregaty po dniach (F-59). Szacunek 3-letni (E0 §3): 150 000 zdarzeń, ok. 18 MB danych i ok. 415 MB plików. Każde +1 ma być trwałe po zabiciu procesu (NFR-DAN-002).

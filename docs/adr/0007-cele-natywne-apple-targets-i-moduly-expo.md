@@ -1,5 +1,5 @@
 # 0007. Cele natywne (Live Activity, zegarek, rozszerzenie udostępniania) jako własny Swift przez `@bacons/apple-targets`, mosty przez Expo Modules API
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: ADR-0006, ADR-0008, ADR-0009, ADR-0011, ADR-0012
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: ADR-0006, ADR-0008, ADR-0009, ADR-0011, ADR-0012
 
 ## Kontekst i problem
 Kontrakt (05) wymaga: sesji na ekranie blokady z +1 i stoperem (F-11, F-21), aplikacji na zegarku (F-12), rozszerzenia udostępniania (F-24, F-55), PencilKit (F-28), CloudKit (F-27), StoreKit na zegarku. Expo: oficjalny `expo-widgets` (SDK 57) renderuje Live Activity z JS w izolowanym środowisku, a przycisk zmienia tylko właściwości widżetu „with no running app process required” (rejestr Expo 6d) — nie ma intencji, więc +1 nie trafiłby do bazy. Rozszerzenia w CNG: „experimental” (6b). `@bacons/apple-targets` 5.0.0 obsługuje m.in. watch, widget, share (6c), z zastrzeżeniem autora „I haven't tested all of these”.

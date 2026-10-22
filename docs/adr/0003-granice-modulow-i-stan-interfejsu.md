@@ -1,5 +1,5 @@
 # 0003. Domena w czystym TypeScript z portami; stan interfejsu w komponentach i kontekście, baza jedynym źródłem prawdy
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1)
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1)
 
 ## Kontekst i problem
 Reguły (limit dni `startDnia`/`wolaStraznika`/`mozeZaczacDzien`, strażnik tempa F-47, plan „co N rzędów” F-06, scalanie zdarzeń, procent postępu, obliczenia F-38) muszą być testowane w Node przed kodem (zasada architekta 6, P-041: tylko testy automatyczne). Poprzednia wersja miała logikę w ekranach (`app/(tabs)/settings.tsx` 40 KB, `stash.tsx` 41 KB; materiał P-004).

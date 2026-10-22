@@ -1,5 +1,5 @@
 # 0012. Rysik i zakreślacz palcem: jeden natywny widok PencilKit nad stroną PDF (Expo Modules API), zapis `PKDrawing` jako plik na stronę
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: P-042, F-28, F-56, F-26, ADR-0001, ADR-0007, ADR-0011
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-042, F-28, F-56, F-26, ADR-0001, ADR-0007, ADR-0011
 
 ## Kontekst i problem
 Na iPadzie rysik pisze od razu, a palec przewija (`PKCanvasViewDrawingPolicy.pencilOnly`: „Pencil touches are the only input that draw on the canvas”, P-042); na iPhonie zakreślacz palcem jednym narzędziem (F-56). `anyInput`: „Allows drawing on the canvas from any input source” (iOS 13+; rejestr Apple 16). `PKDrawing.dataRepresentation()` serializuje rysunek (rejestr Apple 6).

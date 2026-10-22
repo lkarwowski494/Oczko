@@ -1,5 +1,5 @@
 # 0005. Synchronizacja iCloud: prywatna baza CloudKit przez `CKSyncEngine`, rekordy jako dziennik zdarzeń, konflikt pokazywany użytkownikowi
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: P-021, P-031, P-070 (iOS 18), F-27, F-58, NFR-DAN-003, ADR-0006
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-021, P-031, P-070 (iOS 18), F-27, F-58, NFR-DAN-003, ADR-0006
 
 ## Kontekst i problem
 Synchronizacja jest opcjonalna i darmowa (P-021, P-031), działa bez naszego serwera, a po niej licznik nie może mieć wartości innej niż ostatnio ustawiona na którymkolwiek urządzeniu bez pokazania konfliktu (NFR-DAN-003, RYZ-02). Prywatna baza CloudKit liczy się do iCloud użytkownika (rejestr Apple 8a), `CKSyncEngine` wymaga iOS 17 / watchOS 10 (8c) — przy iOS 18 (P-070) dostępny. Oficjalnego modułu Expo dla CloudKit nie ma (rejestr Expo 10).

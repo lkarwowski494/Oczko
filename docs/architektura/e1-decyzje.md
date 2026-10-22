@@ -1,23 +1,23 @@
-# E1 Decyzje (rola 05-architekt, build) · 2026-10-22 · STOP E1
+# E1 Decyzje (rola 05-architekt, build) · 2026-10-22 · STOP E1 przyjęty (P-071: 4a, 5a, 6b; pozostałe ADR bez weta)
 Wejście: E0 (`e0-rozpoznanie.md`) przyjęte P-070. ADR w `docs/adr/` (format MADR, szablon roli). Kontrola formalna: `eksperymenty/e1/kontrola-adr.mjs docs/adr` → 15/15 OK, kod wyjścia 0 (`kontrola-adr.out`); próba negatywna (ADR bez „Potwierdzenia”, ADR z jedną opcją) → 2 błędy, kod wyjścia 1.
 
 ## Indeks ADR
 | ADR | Decyzja (skrót) | Status |
 |---|---|---|
-| [0001](../adr/0001-przechowywanie-sqlite-pliki-poza-baza.md) | SQLite w `Application Support`, WAL, pliki poza bazą z SHA-256; warianty JSON, klucz-wartość, BLOB rozważone | proponowana |
-| [0002](../adr/0002-sciezka-zapisu-jedna-kolejka.md) | jedna kolejka zapisów na połączeniu z `foreign_keys = ON`; zakaz `withExclusiveTransactionAsync` | proponowana |
-| [0003](../adr/0003-granice-modulow-i-stan-interfejsu.md) | domena w czystym TS z portami; stan UI w komponentach i kontekście, baza jedynym źródłem prawdy | proponowana |
-| [0004](../adr/0004-kopia-eksport-import.md) | archiwum `.oczko` (`VACUUM INTO` + pliki + manifest), import scal/zastąp, nowsza wersja odrzucona | proponowana (Q4) |
-| [0005](../adr/0005-synchronizacja-icloud-cloudkit-dziennik.md) | CloudKit prywatny przez `CKSyncEngine`, zdarzenia z rodzicami, konflikt pokazany | proponowana |
+| [0001](../adr/0001-przechowywanie-sqlite-pliki-poza-baza.md) | SQLite w `Application Support`, WAL, pliki poza bazą z SHA-256; warianty JSON, klucz-wartość, BLOB rozważone | **przyjęta** (P-071) |
+| [0002](../adr/0002-sciezka-zapisu-jedna-kolejka.md) | jedna kolejka zapisów na połączeniu z `foreign_keys = ON`; zakaz `withExclusiveTransactionAsync` | **przyjęta** (P-071) |
+| [0003](../adr/0003-granice-modulow-i-stan-interfejsu.md) | domena w czystym TS z portami; stan UI w komponentach i kontekście, baza jedynym źródłem prawdy | **przyjęta** (P-071) |
+| [0004](../adr/0004-kopia-eksport-import.md) | archiwum `.oczko` (`VACUUM INTO` + pliki + manifest), import scal/zastąp, nowsza wersja odrzucona | **przyjęta** (P-071 (4a)) |
+| [0005](../adr/0005-synchronizacja-icloud-cloudkit-dziennik.md) | CloudKit prywatny przez `CKSyncEngine`, zdarzenia z rodzicami, konflikt pokazany | **przyjęta** (P-071) |
 | [0006](../adr/0006-minimalne-wersje-ios-18-watchos-11.md) | iOS 18 / watchOS 11 | **przyjęta** (P-070) |
-| [0007](../adr/0007-cele-natywne-apple-targets-i-moduly-expo.md) | cele Swift przez `@bacons/apple-targets`, mosty Expo Modules API; wspólne wektory Swift/TS | proponowana |
-| [0008](../adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md) | `LiveActivityIntent` dopisuje do dziennika `.jsonl`, aplikacja scala; limit na ekranie blokady | proponowana |
-| [0009](../adr/0009-zegarek-transport-limit-pro.md) | `transferUserInfo` + kontekst; Pro z telefonu i StoreKit na zegarku (zamyka OP-22) | proponowana |
-| [0010](../adr/0010-zakupy-expo-iap-5-8-1.md) | `expo-iap` 5.8.1 przypięte jak Trening (6.x nie spełnia reguły 14 dni) | proponowana |
-| [0011](../adr/0011-import-wzorow-rozszerzenie-pdf.md) | rozszerzenie → skrzynka w App Group → PDF na urządzeniu, oryginał zachowany | proponowana (Q5) |
-| [0012](../adr/0012-rysik-i-zakreslacz-pencilkit.md) | PencilKit nad PDFKit, `pencilOnly` / `anyInput` | proponowana |
-| [0013](../adr/0013-maszyny-stanow-w-domenie.md) | maszyny stanów w domenie, lista stanów w `CHECK` | proponowana |
-| [0014](../adr/0014-build-i-ci.md) | testy na runnerze macOS GitHub Actions; buildy TestFlight do wyboru | proponowana (Q6) |
+| [0007](../adr/0007-cele-natywne-apple-targets-i-moduly-expo.md) | cele Swift przez `@bacons/apple-targets`, mosty Expo Modules API; wspólne wektory Swift/TS | **przyjęta** (P-071) |
+| [0008](../adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md) | `LiveActivityIntent` dopisuje do dziennika `.jsonl`, aplikacja scala; limit na ekranie blokady | **przyjęta** (P-071) |
+| [0009](../adr/0009-zegarek-transport-limit-pro.md) | `transferUserInfo` + kontekst; Pro z telefonu i StoreKit na zegarku (zamyka OP-22) | **przyjęta** (P-071) |
+| [0010](../adr/0010-zakupy-expo-iap-5-8-1.md) | `expo-iap` 5.8.1 przypięte jak Trening (6.x nie spełnia reguły 14 dni) | **przyjęta** (P-071) |
+| [0011](../adr/0011-import-wzorow-rozszerzenie-pdf.md) | rozszerzenie → skrzynka w App Group → PDF na urządzeniu, oryginał zachowany | **przyjęta** (P-071 (5a)) |
+| [0012](../adr/0012-rysik-i-zakreslacz-pencilkit.md) | PencilKit nad PDFKit, `pencilOnly` / `anyInput` | **przyjęta** (P-071) |
+| [0013](../adr/0013-maszyny-stanow-w-domenie.md) | maszyny stanów w domenie, lista stanów w `CHECK` | **przyjęta** (P-071) |
+| [0014](../adr/0014-build-i-ci.md) | testy i buildy TestFlight na runnerze macOS GitHub Actions, sekrety w środowisku `testflight` z zatwierdzeniem | **przyjęta** (P-071 (6b): GitHub Actions) |
 | [0015](../adr/0015-dane-wersji-0-1-0-czysty-start.md) | czysty start, stary plik nietknięty | **przyjęta** (P-070) |
 
 ## Eksperymenty (zasada E1 pkt 2)

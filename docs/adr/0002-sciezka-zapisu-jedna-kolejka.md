@@ -1,5 +1,5 @@
 # 0002. Jedna kolejka zapisów na jednym połączeniu z `foreign_keys = ON`
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: ADR-0001
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: ADR-0001
 
 ## Kontekst i problem
 `expo-sqlite` 57 daje dwa rodzaje transakcji. `withTransactionAsync`: „not exclusive and can be interrupted by other async queries”, a każde zapytanie wykonane w tym czasie wchodzi do transakcji (rejestr Expo 2a). `withExclusiveTransactionAsync` otwiera nowe połączenie (`useNewConnection: true`, `src/SQLiteDatabase.ts:789` w `expo-sqlite@57.0.4`, sprawdzone 2026-10-22), na którym klucze obce są wyłączone (rejestr SQLite 1a), więc kaskady nie działają (G-07).

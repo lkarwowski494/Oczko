@@ -1,5 +1,5 @@
 # 0008. +1 z ekranu blokady: `LiveActivityIntent` dopisuje zdarzenie do dziennika w kontenerze aplikacji, aplikacja scala dziennik do bazy
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: P-070 (3a), ZAL-030, ADR-0002, ADR-0005, ADR-0007, F-11, F-21, U-4, KP-12, KP-13, P-067
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-070 (3a), ZAL-030, ADR-0002, ADR-0005, ADR-0007, F-11, F-21, U-4, KP-12, KP-13, P-067
 
 ## Kontekst i problem
 `LiveActivityIntent.perform()` działa „in the app’s process”, a system uruchamia aplikację „without opening the app” (rejestr Apple 1e, 1f); JS może wtedy nie działać. `expo-sqlite` ma własną kopię SQLite (rejestr Expo 13), a dwie kopie SQLite w jednym procesie mogą uszkodzić bazę (rejestr SQLite 9c). Zapis musi się zamknąć przed zawieszeniem (`0xdead10cc`, rejestr Apple 2b). Live Activity: dane ≤ 4 KB, do 8 h aktywna, do 12 h na ekranie blokady (1a, 1b). Czy przycisk działa bez odblokowania: dokumentacja sprzeczna (1g, ZAL-030) — ryzyko przyjęte (P-070 (3a)). Strażnik limitu: +1 z każdego urządzenia zaczyna dzień (P-067), a w nowym dniu ponad limit +1 jest zastąpione komunikatem (P-065 (1a), KP-12, KP-13).

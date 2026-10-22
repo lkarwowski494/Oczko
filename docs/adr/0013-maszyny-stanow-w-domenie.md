@@ -1,5 +1,5 @@
 # 0013. Procesy wieloetapowe jako maszyny stanów w domenie z tabelą przejść; ta sama lista stanów w `CHECK` bazy
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: ADR-0003
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: ADR-0003
 
 ## Kontekst i problem
 Stany zmieniające się w czasie: projekt (w toku → ukończony → zarchiwizowany; usunięty 30 dni → przywrócony albo trwale usunięty, F-19, F-33), sesja stopera (brak → trwa → wstrzymana → zakończona; korekta F-51; zabicie procesu w trakcie), dzień limitu (`startDnia`), synchronizacja (wyłączona → aktywna → błąd/brak konta → aktywna; F-58), import (sprawdzanie → scalanie → gotowe/odrzucony).

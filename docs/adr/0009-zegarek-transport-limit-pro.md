@@ -1,5 +1,5 @@
 # 0009. Zegarek: zdarzenia przez `transferUserInfo`, stan przez kontekst aplikacji, Pro i limit z ostatniego stanu od telefonu oraz z StoreKit na zegarku
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: P-039, P-067, OP-22, F-12, F-58, NFR-ZEG-001, ADR-0005, ADR-0007
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-039, P-067, OP-22, F-12, F-58, NFR-ZEG-001, ADR-0005, ADR-0007
 
 ## Kontekst i problem
 Ten sam licznik na zegarku i telefonie (F-12), zgodność po synchronizacji (NFR-ZEG-001), Pro na zegarku bez telefonu, gdy telefon wcześniej potwierdził zakup (P-039), a +1 z zegarka zaczyna dzień limitu (P-067). `transferUserInfo` kolejkuje i dostarcza wszystko po kolei, także przy zawieszonej aplikacji (symulator nie obsługuje); `updateApplicationContext` przekazuje tylko ostatni stan; `sendMessage` wymaga osiągalności (rejestr Apple 4a–4c). `expo-iap` nie wspiera watchOS (rejestr Expo 5b). `Transaction.currentEntitlements` jest na watchOS 8+ (Apple 4d), a czy zakup z iPhone'a jest tam widoczny bez telefonu, dokumentacja nie mówi (4e).

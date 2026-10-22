@@ -1,5 +1,5 @@
 # 0010. Zakupy: `expo-iap` 5.8.1 przypięte dokładnie (jak Trening), adapter sklepu ze sztucznym sklepem, uprawnienia tylko z bieżących transakcji
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: P-036, P-038, P-057, KP-01–KP-15, F-35
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-036, P-038, P-057, KP-01–KP-15, F-35
 
 ## Kontekst i problem
 P-036: StoreKit 2 przez `expo-iap`, wersja przypięta dokładnie, bez usługi weryfikacji, reguła wieku wersji ≥ 14 dni, wzorzec Treningu (`"expo-iap": "5.8.1"`). npm 2026-10-22: 5.8.1 z 2026-09-26, 6.0.0 z 2026-10-09, 6.1.1 z 2026-10-18 (rejestr Expo 5a); dokumentacja OpenIAP: „SDK 57 / React Native 0.86 is the validated baseline”. Model V4: subskrypcje miesięczna i roczna + dożywotni (P-057).

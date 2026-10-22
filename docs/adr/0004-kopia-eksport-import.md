@@ -1,5 +1,5 @@
 # 0004. Eksport jako archiwum `.oczko` (baza z `VACUUM INTO` + pliki + manifest), import „scal / zastąp” z odrzuceniem nowszej wersji
-Data: 2026-10-22 · Status: proponowana · Rola: 05 (E1) · Zależy od: ADR-0001, ADR-0002, F-32 (BR-DAN-004–006), F-33, F-34
+Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: ADR-0001, ADR-0002, F-32 (BR-DAN-004–006), F-33, F-34
 
 ## Kontekst i problem
 Użytkownik przenosi dane na nowy telefon z kopii urządzenia albo z pliku eksportu i importuje kopię także na niepustą bazę („scal / zastąp”, BR-DAN-006). Kopia samego pliku `.db` w trybie WAL zgubiła w eksperymencie 100 ze 100 świeżych wierszy, a `integrity_check` zwrócił `ok`; `VACUUM INTO` zachował wszystkie (G-08, eksperyment D). Pliki wzorów i zdjęć po 3 latach to do ok. 415 MB (E0 §3).
@@ -14,7 +14,7 @@ C. Tylko kopia systemowa urządzenia (bez eksportu).
 
 ## Decyzja
 Opcja A. Scalenie po stałych identyfikatorach (UUID wierszy i zdarzeń) z funkcją domeny `scal` (ADR-0005), więc import tego samego pliku dwa razy niczego nie dubluje. „Zastąp” robi najpierw `VACUUM INTO` bieżącej bazy do „kopii przed importem” (do 30 dni, jak F-33) i dopiero potem podmienia. Plik z `wersja_schematu` wyższą niż aplikacja: odrzucony z komunikatem „zaktualizuj aplikację” bez żadnego zapisu. Eksport i import tylko na pierwszym planie z ochroną czasu w tle (`beginBackgroundTask` w module natywnym, ADR-0007; rejestr Apple 2b, 2c); przed zapisem sprawdzenie wolnego miejsca (required reason E174.1).
-- Wariant rozmiaru: Q4 w raporcie E1 (pliki zawsze w archiwum czy do wyboru).
+- Pliki zawsze w archiwum, bez wariantu „tylko dane” (właściciel: „4a”, P-071).
 
 ### Konsekwencje
 - Dobre: jedna kopia zawiera wszystko; ta sama ścieżka migracji co aktualizacja aplikacji; brak duplikatów przy powtórnym imporcie.
