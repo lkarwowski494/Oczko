@@ -1,0 +1,10 @@
+$ node granice.mjs granice-test/dobre
+OK: 3 plików, bez naruszeń
+kod wyjścia: 0
+$ node granice.mjs granice-test/zle (z duzy.ts 21 KB)
+ROZMIAR dane/duzy.ts: 21.0 KB > 20 KB
+DOMENA domena/limit.ts importuje 'expo-sqlite'
+DOMENA domena/limit.ts importuje '../dane/repo'
+CYKL dane/repo.ts -> domena/limit.ts -> dane/repo.ts
+4 naruszeń w 4 plikach
+kod wyjścia: 1

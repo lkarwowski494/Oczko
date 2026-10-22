@@ -126,6 +126,7 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `ROZSZERZENIE_ARCHIWUM` | `.oczko` | ADR-0004 |
 | `ZAPAS_MIEJSCA_EKSPORTU` (×rozmiar) | 2 | [OCENA] roli 05: archiwum + plik tymczasowy; do korekty po pomiarze |
 | `BLEDY_MAKS_WIERSZY` (wiersze) | 200 | [OCENA] roli 05 (F-57: ostatnie błędy bez treści) |
+| `PARTIA_SYNCHRONIZACJI` (wiersze na transakcję) | 200 | [OCENA] roli 05: krótkie transakcje przy scalaniu iCloud i importu (E3 §1); do korekty po pomiarze |
 | `MIN_IOS` / `MIN_WATCHOS` | 18.0 / 11.0 | P-070, ADR-0006 |
 | `PRODUKTY_PRO` (ID) | [DO USTALENIA] | P-038 (przy konfiguracji App Store Connect) |
 | `CENY` | z App Store (StoreKit), nie z kodu | P-057, KP-* |
