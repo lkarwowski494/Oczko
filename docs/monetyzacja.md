@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: sesja 2 · STOP E0 (2026-10-21) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-21 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: sesja 2 · E1 w toku (STOP E0 przyjęty 2026-10-22: plan „Ok”, soczewki „A”) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-21 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -64,8 +64,8 @@ Razem ok. 6–8 h pracy agenta (punkty czyszczenia na każdym STOP); od właści
 ### Otwarte pytania sesji 2
 | ID | Pytanie | Rozstrzyga | Dotyczy |
 |---|---|---|---|
-| OP-19 | [DO USTALENIA] Czy 0,99 USD jest progiem dla subskrypcji odnawianej i jaki jest wpływ (`proceeds`) progów 0,99 / 6,99 / 14,99 USD w US, GB, DE, JP; odczyt w App Store Connect przy tworzeniu produktu (zastąpi szacunek w rachunku i zamknie OP-05) | właściciel | rachunek E2, kontrakt E3 |
-| OP-20 | [DO WYJAŚNIENIA] Rozbieżność karty „Stan projektu” (umowa Paid Apps: [DO USTALENIA]) z OP-01 („tak”) | właściciel / 01 | `CLAUDE.md` |
+| OP-19 | Progi 0,99 / 6,99 / 14,99 USD dla subskrypcji i dożywotniego: **dostępne** (właściciel, 2026-10-22: „tak, mam to w innej aplikacji, mix subskrypcji i lifetime access w tych cenach. Dozwolone przez apple. Nie musimy tego badac ponownie.”). Wpływ w rachunku zostaje szacunkiem ze stawek (OP-05 bez zmian) | zamknięte | rachunek E2, kontrakt E3 |
+| OP-20 | Umowa Paid Apps i formalności: **załatwione** (właściciel, 2026-10-22: „umowa paid apps i wszystkie formalnosci juz zalatwione”). Linię karty w `CLAUDE.md` poprawia właściciel albo rola 01 | zamknięte | `CLAUDE.md` |
 
 ## Sesja 1, E0: Rama
 
