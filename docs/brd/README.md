@@ -118,3 +118,4 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 | OP-18 | Okres przechowywania usuniętych projektów: zamknięte decyzją P-026 (30 dni) | właściciel | BR-DAN-008 |
 | OP-22 | [DO USTALENIA] Jak aplikacja na zegarku odczytuje wersję płatną bez telefonu w pobliżu (wpis źródłowy: `docs/monetyzacja.md`, rola 02) | 05 | BR-ZAK-001, BR-LIC-015 |
 | OP-25 | [DO USTALENIA] Czy zgłoszenie problemu wysłane arkuszem udostępniania spełnia kryteria „optional disclosure” (S-37), czy wymaga wpisu w etykiecie App Privacy (np. „Customer Support”, „Other Diagnostic Data”) | rola 10, 05 | OG-14, BR-DAN-010, NFR-PRY-001 |
+| OP-26 | [DO USTALENIA] Minimalne wersje iOS i watchOS oraz czas od premiery nowego systemu do poprawki (P-047) | rola 05 | NFR-SYS-001 |

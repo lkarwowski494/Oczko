@@ -106,6 +106,10 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 - Miara: różnica wartości licznika między zegarkiem a telefonem po serii zmian na obu urządzeniach.
 - Próg: 0 po zakończeniu synchronizacji (skargi: YarnBuddy 17 z 301).
 - Metoda: test automatyczny logiki synchronizacji z symulowanym transportem (telefon poza zasięgiem, powrót, zmiany na obu stronach) i test UI na parze symulatorów telefon–zegarek, jeśli CI na to pozwala (rola 05 i 07). Ryzyko szczątkowe (P-041, ER-10): prawdziwy zegarek poza zasięgiem telefonu.
+### NFR-SYS-001: Działanie po premierze nowego iOS i watchOS
+- Miara: liczba przepływów PR-01–PR-05 i PR-08, które nie działają na nowej głównej wersji iOS albo watchOS; czas od publicznej premiery systemu do wydania poprawki.
+- Próg: 0 przepływów; czas i minimalne obsługiwane wersje systemu [DO USTALENIA] (OP-26), P-047. Dowód: „Since the most recent iOS update, the watch app has been glitchy (crashing or not opening at all).” (YarnBuddy, id12259939345); „since the latest updates, the complications on my watch face won’t show the current row count” (YarnBuddy, id10717526170) · ER-21
+- Metoda: testy automatyczne w CI na symulatorach najnowszej dostępnej wersji iOS i watchOS, także beta przed premierą, jeśli runner ją ma (rola 05 i 07). Ryzyko szczątkowe (P-041): różnice prawdziwego urządzenia.
 ### NFR-JEZ-001: 35 lokalizacji
 - Miara: odsetek tekstów interfejsu przetłumaczonych w każdej z 35 lokalizacji.
 - Próg: 100% przed wydaniem w danym sklepie (D-026; P-009).
