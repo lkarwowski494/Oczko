@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 02, fix NZ-01, NZ-02, P-065, STOP E2)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 01, fix ER-30, STOP E2)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -14,12 +14,13 @@
 | 01 Odkrywanie, fix ER-25–ER-28 | fix (P-058) | zakończona 2026-10-22 (STOP E2 przyjęty, P-060): ER-25–ER-28 naprawione-do-weryfikacji (STOP E0: P-059) | 95a69eb | 84 BR (+4: BR-ZAK-005–007, BR-DAN-012), zmienione BR-ZAK-001–003, BR-DAN-005, BR-LIC-017, BR-DNI-001, NFR-PIE-001, PR-09, PR-15, OG-03, OG-15, H-01, H-02, S-38, S-39, OP-32, OP-33; `tests/wektory/brd.json` bez zmian; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er25-28/` | OP-32 (02), OP-33 (11), NZ-01–NZ-04; status „zweryfikowane” nadaje reaudit |
 | 04 Studio projektowe | build | zakończona 2026-10-22 (STOP E4; E0: P-061, E1: P-062, E2: P-063 kierunek A, P-064 Libre Franklin, E3: P-065; ta sama sesja co fix 01, wyjątek zasady 19) | (ten commit) | docs/design/ (design-spec.md, tokeny.json, kontrast-tabela.txt 44/44, ekrany.html + wzorce-zrzuty/ 84, prototyp.html + przejscie/, ikona/, fonty/, narzedzia/, porownanie, kroje) | P-065 (1a) do potwierdzenia przez 02; makiety wzoru, zegarka, ekranu blokady, kalendarza i Ustawień w audycie 04 |
 | 01 Odkrywanie, fix ER-29 | fix (P-065) | zakończona 2026-10-22 (STOP E2 przyjęty, P-066): ER-29 naprawione-do-weryfikacji, **warunkowe** do potwierdzenia przez 02 | 3d64639 | BR-ZAK-006, BR-ZAK-005, errata ER-29; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er29/` | potwierdzenie P-065 (1a) przez 02 |
-| 02 Monetyzacja, fix NZ-01, NZ-02, P-065 | fix (P-060 (5b), P-065) | STOP E2 2026-10-22 (E0: P-067): naprawione-do-weryfikacji; P-065 (1a) potwierdzone, warunek P-066 spełniony | 90b2272 | `limit.mjs` (`wolaStraznika`, `mozeZaczacDzien`), wektory S, L-16–L-18, Z (35/35), KP-12, KP-13, KP-15; oczko-warsztat `02-monetyzacja/2026-10-22-fix-nz/` | ER-30 do 01 |
+| 02 Monetyzacja, fix NZ-01, NZ-02, P-065 | fix (P-060 (5b), P-065) | zakończona 2026-10-22 (E0: P-067, E2: P-068): naprawione-do-weryfikacji; P-065 (1a) potwierdzone, warunek P-066 spełniony | 90b2272 | `limit.mjs` (`wolaStraznika`, `mozeZaczacDzien`), wektory S, L-16–L-18, Z (35/35), KP-12, KP-13, KP-15; oczko-warsztat `02-monetyzacja/2026-10-22-fix-nz/` | ER-30 do 01 |
+| 01 Odkrywanie, fix ER-30 | fix (P-068) | STOP E2 2026-10-22: ER-30 naprawione-do-weryfikacji | 28a488b | BR-ZAK-005, BR-ZAK-006, BR-LIC-017, OP-32 zamknięte, errata; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er30/` | — |
 
 ## Następny krok
 ### Stan po fixie roli 02 (2026-10-22)
 - Zakończono (STOP E2): 02-monetyzacja, fix NZ-01, NZ-02, P-065 (P-067); P-065 (1a) potwierdzone, więc P-066 (BR-ZAK-006) obowiązuje bez warunku. Dowody: `oczko-warsztat/02-monetyzacja/2026-10-22-fix-nz/E2-dowody.md`.
-- Następny krok: **01-odkrywanie, fix ER-30** (−1, zerowanie i cofnięcie z historii na limicie w BR-ZAK-006; BR-ZAK-005 i OP-32 według P-067), potem **05-architekt**, build (paczka niżej w przekazaniu roli 04 plus `limit.mjs` z `mozeZaczacDzien` i KP-15).
+- ER-30 zrobione (28a488b, STOP E2). Następny krok: **05-architekt**, build; nowa sesja: opus, wysiłek high; `node tools/assemble.mjs 05-architekt --tryb build --galaz claude/jolly-thompson-paz6d8` (paczka niżej w przekazaniu roli 04 plus `limit.mjs` z `mozeZaczacDzien` i KP-15).
 
 ### Przekazanie roli 04 (2026-10-22)
 - Zakończono: 04-studio-projektowe, build (E0–E4: P-061–P-065), gałąź `claude/jolly-thompson-paz6d8`; artefakty w `docs/design/`: `design-spec.md` (system, komponenty, VoiceOver, limit, teksty ofert, reguła wzoru wobec OG-07, konfiguracja ikony, wpis do pamięci portfolio), `tokeny.json` + `kontrast-tabela.txt` (44/44, kod 0), `ekrany.html` + `wzorce-zrzuty/` (7 stanów × 12 wariantów, linia bazowa SP-13), `prototyp.html` + `przejscie/` (scenorys, `wynik.md` dla kolumny „Intuicyjność”), `ikona/` (pliki dla iOS, zegarka, Androida, ekranu startowego; `ikona.mjs` kod 0), `fonty/` (OFL), `narzedzia/`.
