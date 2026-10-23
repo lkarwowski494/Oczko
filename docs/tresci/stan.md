@@ -1,5 +1,5 @@
 # Rola 06-tresci: stan (build)
-Aktualizacja: 2026-10-23 · Etap: **STOP E2** (treści gotowe do weryfikacji; czeka na właściciela: STOP E2 i decyzja po odpowiedzi automatycznej CYC)
+Aktualizacja: 2026-10-23 · Etap: **E3** (STOP E2 przyjęty: P-083; OP-09 zamknięte)
 
 - Raport E0: `oczko-warsztat/06-tresci/2026-10-22-build/E0-rozpoznanie.md` (prywatne; rejestr, kopie źródeł i teksty robocze też tam, P-006).
 - To repo dostanie od roli 06 tylko parametry z ID twierdzeń i wektory testowe (po E1–E3).
