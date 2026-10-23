@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-22 (rola 12, build, wejście wczesne E0–E1 zakończone: P-079, P-080)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-23 (rola 06, build zakończony: P-081–P-086)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -18,8 +18,16 @@
 | 01 Odkrywanie, fix ER-30 | fix (P-068) | zakończona 2026-10-22 (STOP E2 przyjęty, P-069): ER-30 naprawione-do-weryfikacji | 28a488b | BR-ZAK-005, BR-ZAK-006, BR-LIC-017, OP-32 zamknięte, errata; oczko-warsztat `01-odkrywanie/fix-2026-10-22-er30/` | — |
 | 05 Architekt | build | **zakończona 2026-10-22** (E0 P-070, E1 P-071, E2 P-072, E3 P-073, E4 P-074; 2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/, docs/architektura/e1-decyzje.md, docs/adr/0001–0015, eksperymenty/e1/, docs/architektura/e2-moduly-dane.md, moduly.md, dane.md, schemat.sql, stany.json, narzedzia/sprawdz-schemat.mjs, e3-tlo-bledy-prywatnosc-wydajnosc.md, prywatnosc.md, ADR-0016, narzedzia/granice.mjs, README.md, e4-przekazanie.md; ZAL-030 | dla 10: rola klucza ASC API, wariant podpisu, OP-25, „collected” dla CloudKit |
 | 12 Niezawodność, wejście wczesne | build, tylko E0–E1 (P-005) | **E0–E1 zakończone 2026-10-22** (E0: P-079, E1: P-080); E2–E3 po roli 08 | (ten commit) | docs/niezawodnosc/ (e0-rozpoznanie.md, e1-decyzje.md, eksperymenty/wal-kopia.*), ADR-0018–0021; kopie źródeł: oczko-warsztat/12-niezawodnosc/2026-10-22-build/zrodla/ | interpretacje P-080 do weta (próg 2, kopie 30 dni, „6a”, integralność po błędzie); ekran awaryjny do 04 |
+| 06 Treści | build | **zakończona 2026-10-23** (E0 P-081, E1 P-082, E2 P-083, E3 P-084–P-086; przegląd zastępczy D-027; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/tresci/ (README.md, parametry.json, wektory.json, nazwy-zrodel.json, stan.md), scripts/sprawdz-nazwy-zrodel.mjs, tests/tresci/nazwy-zrodel.test.ts; rejestr 103 twierdzeń, treści en, kopie źródeł, 3 weryfikacje: oczko-warsztat/06-tresci/2026-10-22-build/ | ER-31–ER-33 do 01; warunki wyświetlania i rozdzielczość wpisu próbki do 04/05; zestaw przekładu do 09 (po 08 i audycie 04); kategoria 8 CYC: ponowny odczyt do 2027-01-23 |
 
 ## Następny krok
+### Przekazanie roli 06, build (2026-10-23, STOP E3)
+- Zakończono: 06-tresci, build, E0–E3 (P-081–P-086), gałąź `claude/jolly-thompson-paz6d8`; publiczne: `docs/tresci/README.md` (reguły i warunki wyświetlania), `parametry.json`, `wektory.json`, `nazwy-zrodel.json`, strażnik nazw źródeł (P-085); prywatne: `oczko-warsztat/06-tresci/2026-10-22-build/` (rejestr 103 twierdzeń, wszystkie POPARTE w weryfikacji 3; kontrola z `--przeglad zastępczy` kod 0).
+- Następny krok (P-002): **07-jakosc**, tryb `build` (wektory `docs/tresci/wektory.json`, `tests/wektory/brd.json`, „Dla roli 07” w `docs/niezawodnosc/e1-decyzje.md`); nowa sesja.
+  - `node tools/assemble.mjs 07-jakosc --tryb build --galaz claude/jolly-thompson-paz6d8`
+- Potem: porównanie z kodem (03 audit, P-078) → 08 → 04 audit → 09 E2–E4 (z zestawem przekładu roli 06).
+- Dla 05/08: `parametry.json` zamyka „[DO USTALENIA]” liczb F-38 i tabeli RD-11 w `docs/architektura/moduly.md`.
+
 ### Przekazanie roli 12, wejście wczesne E0–E1 (2026-10-22)
 - Zakończono: 12-niezawodnosc, build, E0–E1 (P-079, P-080), gałąź `claude/jolly-thompson-paz6d8`; artefakty: `docs/niezawodnosc/e0-rozpoznanie.md`, `docs/niezawodnosc/e1-decyzje.md` (progi, zgłoszenia do 04, 05, 07, 08, 09, 10), `docs/niezawodnosc/eksperymenty/wal-kopia.*`, ADR-0018 (sygnał bez SDK, MetricKit lokalnie), ADR-0019 (strażnik startu, tryb awaryjny), ADR-0020 (kopia ratunkowa, ZIP, przywracanie), ADR-0021 (bez OTA); P-079, P-080 w `docs/decyzje.md`.
 - Następny krok (P-002): **06-tresci**, tryb `build`; nowa sesja: opus, wysiłek high.
