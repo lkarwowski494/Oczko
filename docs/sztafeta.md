@@ -21,6 +21,10 @@
 | 06 Treści | build | **zakończona 2026-10-23** (E0 P-081, E1 P-082, E2 P-083, E3 P-084–P-086; przegląd zastępczy D-027; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/tresci/ (README.md, parametry.json, wektory.json, nazwy-zrodel.json, stan.md), scripts/sprawdz-nazwy-zrodel.mjs, tests/tresci/nazwy-zrodel.test.ts; rejestr 103 twierdzeń, treści en, kopie źródeł, 3 weryfikacje: oczko-warsztat/06-tresci/2026-10-22-build/ | ER-31–ER-33 do 01; warunki wyświetlania i rozdzielczość wpisu próbki do 04/05; zestaw przekładu do 09 (po 08 i audycie 04); kategoria 8 CYC: ponowny odczyt do 2027-01-23 |
 
 ## Następny krok
+### Koordynacja (2026-10-23)
+- Sesja koordynująca przeszła na inne konto Claude (limit tygodniowy). Sposób koordynacji, szablon startu roli i otwarte sprawy: `oczko-warsztat/koordynacja/przekazanie-koordynatora-2026-10-23.md`.
+- Otwarte przed rolą 07: akceptacja STOP E3 roli 06 przez właściciela.
+
 ### Przekazanie roli 06, build (2026-10-23, STOP E3)
 - Zakończono: 06-tresci, build, E0–E3 (P-081–P-086), gałąź `claude/jolly-thompson-paz6d8`; publiczne: `docs/tresci/README.md` (reguły i warunki wyświetlania), `parametry.json`, `wektory.json`, `nazwy-zrodel.json`, strażnik nazw źródeł (P-085); prywatne: `oczko-warsztat/06-tresci/2026-10-22-build/` (rejestr 103 twierdzeń, wszystkie POPARTE w weryfikacji 3; kontrola z `--przeglad zastępczy` kod 0).
 - Następny krok (P-002): **07-jakosc**, tryb `build` (wektory `docs/tresci/wektory.json`, `tests/wektory/brd.json`, „Dla roli 07” w `docs/niezawodnosc/e1-decyzje.md`); nowa sesja.
