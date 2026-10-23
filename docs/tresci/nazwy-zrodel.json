@@ -1,0 +1,6 @@
+{
+  "opis": "Nazwy źródeł wiedzy (rejestr roli 06, oczko-warsztat). Wolno je pokazać tylko na ekranie Ustawienia → „Źródła wiedzy” (P-085). Lista rośnie razem z rejestrem.",
+  "nazwy": ["Craft Yarn Council", "YarnStandards", "CYC", "Knitting Guild", "TKGA", "NIST", "Handbook 44", "Special Publication 811", "SP 811"],
+  "dozwolone_klucze": ["ustawienia.zrodla_wiedzy"],
+  "dozwolone_pliki": ["zrodla-wiedzy.md"]
+}
