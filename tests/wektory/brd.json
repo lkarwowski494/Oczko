@@ -1639,7 +1639,8 @@
     "id": "RD-16-W1",
     "wejscie": {
       "chwila [UTC]": "2023-06-04T01:30:00Z",
-      "strefa [IANA]": "America/New_York"
+      "strefa [IANA]": "America/New_York",
+      "region [BCP 47]": null
     },
     "oczekiwane": {
       "dzień [data]": "2023-06-03"
@@ -1654,7 +1655,8 @@
     "id": "RD-16-W2",
     "wejscie": {
       "chwila [UTC]": "2023-06-04T01:30:00Z",
-      "strefa [IANA]": "Europe/Warsaw"
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
     },
     "oczekiwane": {
       "dzień [data]": "2023-06-04"
@@ -1669,7 +1671,8 @@
     "id": "RD-16-W3",
     "wejscie": {
       "chwila [UTC]": "2026-10-22T22:00:00Z",
-      "strefa [IANA]": "Europe/Warsaw"
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
     },
     "oczekiwane": {
       "dzień [data]": "2026-10-23"
@@ -1684,7 +1687,8 @@
     "id": "RD-16-W4",
     "wejscie": {
       "chwila [UTC]": "2026-10-22T21:59:59Z",
-      "strefa [IANA]": "Europe/Warsaw"
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
     },
     "oczekiwane": {
       "dzień [data]": "2026-10-22"
@@ -1699,7 +1703,8 @@
     "id": "RD-16-W5",
     "wejscie": {
       "chwila [UTC]": "2026-10-22T22:00:01Z",
-      "strefa [IANA]": "Europe/Warsaw"
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
     },
     "oczekiwane": {
       "dzień [data]": "2026-10-23"
@@ -1714,7 +1719,8 @@
     "id": "RD-16-W6",
     "wejscie": {
       "chwila [UTC]": "brak",
-      "strefa [IANA]": "Europe/Warsaw"
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
     },
     "oczekiwane": {
       "dzień [data]": "błąd danych"
@@ -1723,6 +1729,326 @@
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: zmiana bez chwili",
     "miejsce": "docs/brd/reguly.md:289"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W7",
+    "wejscie": {
+      "chwila [UTC]": "2027-01-15T22:59:59Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2027-01-15"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: UTC+1 (zima), 23:59:59 lokalnie (ER-37)",
+    "miejsce": "docs/brd/reguly.md:290"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W8",
+    "wejscie": {
+      "chwila [UTC]": "2027-01-15T23:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2027-01-16"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: UTC+1, 00:00:00 lokalnie",
+    "miejsce": "docs/brd/reguly.md:291"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W9",
+    "wejscie": {
+      "chwila [UTC]": "2026-03-28T23:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-03-29"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: 00:00 UTC+1 w dniu wiosennej zmiany czasu",
+    "miejsce": "docs/brd/reguly.md:292"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W10",
+    "wejscie": {
+      "chwila [UTC]": "2026-03-29T01:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-03-29"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 02:00 UTC+1 → 03:00 UTC+2, ta sama data",
+    "miejsce": "docs/brd/reguly.md:293"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W11",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-24T21:59:59Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-24"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: 23:59:59 UTC+2 przed jesienną zmianą",
+    "miejsce": "docs/brd/reguly.md:294"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W12",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-24T22:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-25"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: 00:00 UTC+2",
+    "miejsce": "docs/brd/reguly.md:295"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W13",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-25T00:59:59Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-25"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 02:59:59 UTC+2, przed cofnięciem zegara",
+    "miejsce": "docs/brd/reguly.md:296"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W14",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-25T01:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-25"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: 02:00:00 UTC+1, po cofnięciu zegara",
+    "miejsce": "docs/brd/reguly.md:297"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W15",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T18:29:59Z",
+      "strefa [IANA]": "Asia/Kolkata",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-22"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: UTC+5:30, 23:59:59 lokalnie",
+    "miejsce": "docs/brd/reguly.md:298"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W16",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T18:30:00Z",
+      "strefa [IANA]": "Asia/Kolkata",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: UTC+5:30, 00:00 lokalnie",
+    "miejsce": "docs/brd/reguly.md:299"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W17",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T09:59:59Z",
+      "strefa [IANA]": "Pacific/Kiritimati",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-22"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: UTC+14, 23:59:59 lokalnie",
+    "miejsce": "docs/brd/reguly.md:300"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W18",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T10:00:00Z",
+      "strefa [IANA]": "Pacific/Kiritimati",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: UTC+14, 00:00 lokalnie",
+    "miejsce": "docs/brd/reguly.md:301"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W19",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T13:00:00Z",
+      "strefa [IANA]": "Australia/Lord_Howe",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: UTC+11 (czas letni, zmiana o 30 min), 00:00 lokalnie",
+    "miejsce": "docs/brd/reguly.md:302"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W20",
+    "wejscie": {
+      "chwila [UTC]": "2026-06-22T13:30:00Z",
+      "strefa [IANA]": "Australia/Lord_Howe",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-06-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: UTC+10:30 (czas zimowy), 00:00 lokalnie",
+    "miejsce": "docs/brd/reguly.md:303"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W21",
+    "wejscie": {
+      "chwila [UTC]": "2011-12-30T09:59:59Z",
+      "strefa [IANA]": "Pacific/Apia",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2011-12-29"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: UTC−10, 23:59:59 lokalnie",
+    "miejsce": "docs/brd/reguly.md:304"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W22",
+    "wejscie": {
+      "chwila [UTC]": "2011-12-30T10:00:00Z",
+      "strefa [IANA]": "Pacific/Apia",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2011-12-31"
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: przejście na UTC+14, 2011-12-30 pominięty",
+    "miejsce": "docs/brd/reguly.md:305"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W23",
+    "wejscie": {
+      "chwila [UTC]": "2026-09-06T03:59:59Z",
+      "strefa [IANA]": "America/Santiago",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-09-05"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: UTC−4, 23:59:59 lokalnie",
+    "miejsce": "docs/brd/reguly.md:306"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W24",
+    "wejscie": {
+      "chwila [UTC]": "2026-09-06T04:00:00Z",
+      "strefa [IANA]": "America/Santiago",
+      "region [BCP 47]": null
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-09-06"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: zmiana czasu o 00:00, północy nie ma; 01:00 UTC−3",
+    "miejsce": "docs/brd/reguly.md:307"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W25",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T22:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": "ja-JP-u-ca-japanese"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: zapis gregoriański mimo kalendarza japońskiego (Intl daje „R8/10/23”)",
+    "miejsce": "docs/brd/reguly.md:308"
+  },
+  {
+    "regula": "RD-16",
+    "id": "RD-16-W26",
+    "wejscie": {
+      "chwila [UTC]": "2026-10-22T22:00:00Z",
+      "strefa [IANA]": "Europe/Warsaw",
+      "region [BCP 47]": "ar-EG"
+    },
+    "oczekiwane": {
+      "dzień [data]": "2026-10-23"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: cyfry ASCII mimo cyfr arabsko-indyjskich regionu (Intl daje „٢٣‏/١٠‏/٢٠٢٦”)",
+    "miejsce": "docs/brd/reguly.md:309"
   },
   {
     "regula": "RD-17",
@@ -1742,7 +2068,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 0,8 − 0 ≤ 2",
-    "miejsce": "docs/brd/reguly.md:300"
+    "miejsce": "docs/brd/reguly.md:320"
   },
   {
     "regula": "RD-17",
@@ -1760,7 +2086,7 @@
     "tolerancja": null,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 2 − 0 = 2, włącznie",
-    "miejsce": "docs/brd/reguly.md:301"
+    "miejsce": "docs/brd/reguly.md:321"
   },
   {
     "regula": "RD-17",
@@ -1778,7 +2104,7 @@
     "tolerancja": null,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: 2,01 > 2",
-    "miejsce": "docs/brd/reguly.md:302"
+    "miejsce": "docs/brd/reguly.md:322"
   },
   {
     "regula": "RD-17",
@@ -1795,7 +2121,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: tylko 2 dodania (nadrobienie zapomnianego rzędu)",
-    "miejsce": "docs/brd/reguly.md:303"
+    "miejsce": "docs/brd/reguly.md:323"
   },
   {
     "regula": "RD-17",
@@ -1813,7 +2139,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: zwykłe dzierganie",
-    "miejsce": "docs/brd/reguly.md:304"
+    "miejsce": "docs/brd/reguly.md:324"
   },
   {
     "regula": "RD-17",
@@ -1831,7 +2157,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: chwile nie rosną",
-    "miejsce": "docs/brd/reguly.md:305"
+    "miejsce": "docs/brd/reguly.md:325"
   },
   {
     "regula": "RD-18",
@@ -1849,7 +2175,7 @@
     "tolerancja": 0.01,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 320 × 20 / 600; ⌈10,67 / 1⌉",
-    "miejsce": "docs/brd/reguly.md:317"
+    "miejsce": "docs/brd/reguly.md:337"
   },
   {
     "regula": "RD-18",
@@ -1867,7 +2193,7 @@
     "tolerancja": 0.01,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: ⌈10,67 / 2⌉",
-    "miejsce": "docs/brd/reguly.md:318"
+    "miejsce": "docs/brd/reguly.md:338"
   },
   {
     "regula": "RD-18",
@@ -1885,7 +2211,7 @@
     "tolerancja": null,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: R = 0, pierwszy projekt",
-    "miejsce": "docs/brd/reguly.md:319"
+    "miejsce": "docs/brd/reguly.md:339"
   },
   {
     "regula": "RD-18",
@@ -1903,7 +2229,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: H = 0, brak sesji stopera",
-    "miejsce": "docs/brd/reguly.md:320"
+    "miejsce": "docs/brd/reguly.md:340"
   },
   {
     "regula": "RD-18",
@@ -1921,7 +2247,7 @@
     "tolerancja": 0.01,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: tempo 10 rz./h",
-    "miejsce": "docs/brd/reguly.md:321"
+    "miejsce": "docs/brd/reguly.md:341"
   },
   {
     "regula": "RD-18",
@@ -1939,6 +2265,6 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: C < 0",
-    "miejsce": "docs/brd/reguly.md:322"
+    "miejsce": "docs/brd/reguly.md:342"
   }
 ]

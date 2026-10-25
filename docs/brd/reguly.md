@@ -273,20 +273,40 @@ Liczba dni d z dat (ER-38):
 | RD-15-W10 | 2026-10-25 | 2026-10-25 | Europe/Warsaw | 1 | 0 | granica | rachunek: termin dziś w dniu zmiany czasu |
 
 ### RD-16: Dzień zmiany w strefie czasowej urządzenia
-- Wzór: dzień zmiany = data lokalna w strefie czasowej urządzenia w chwili zmiany, zapisanej razem ze zmianą; późniejsza zmiana strefy nie przenosi dawnych zmian między dniami
+- Wzór: dzień zmiany = data lokalna w strefie czasowej urządzenia w chwili zmiany, zapisanej razem ze zmianą; późniejsza zmiana strefy nie przenosi dawnych zmian między dniami. Dzień zapisuje się jako `RRRR-MM-DD` w kalendarzu gregoriańskim, cyframi ASCII, niezależnie od języka, regionu i kalendarza urządzenia (ER-37)
 - Jednostki: chwila [UTC, ISO 8601]; strefa [IANA]; dzień [data]
-- Granica: 00:00:00 czasu lokalnego należy do nowego dnia (włącznie)
-- Podstawa: rachunek (baza stref IANA); potrzeba: „I worked about 20 rows Sunday and the counter says they were all Saturday” (Easy Knitty, id10008576789), ER-24
+- Granica: 00:00:00 czasu lokalnego należy do nowego dnia (włącznie); gdy północy nie ma (zmiana czasu o 00:00), nowy dzień zaczyna pierwsza chwila nowej daty; dzień pominięty przy zmianie strefy (Pacific/Apia 2011-12-30) nie dostaje żadnej zmiany
+- Podstawa: rachunek (baza stref IANA, tzdata 2026e; wektory W7–W26: `zoneinfo` Pythona, `oczko-warsztat/01-odkrywanie/fix-2026-10-25-er34-44/rd16.py`, sprawdzone `Intl` w Node 22); potrzeba: „I worked about 20 rows Sunday and the counter says they were all Saturday” (Easy Knitty, id10008576789), ER-24
 - Krytyczna: nie
 
-| ID | chwila [UTC] | strefa [IANA] | Oczekiwane: dzień [data] | Tolerancja | Rodzaj | Pochodzenie |
-|---|---|---|---|---|---|---|
-| RD-16-W1 | 2023-06-04T01:30:00Z | America/New_York | 2023-06-03 | 0 | typowy | rachunek: UTC−4 (czas letni), 21:30 lokalnie |
-| RD-16-W2 | 2023-06-04T01:30:00Z | Europe/Warsaw | 2023-06-04 | 0 | typowy | rachunek: UTC+2, 03:30 lokalnie |
-| RD-16-W3 | 2026-10-22T22:00:00Z | Europe/Warsaw | 2026-10-23 | 0 | granica | rachunek: 00:00:00 lokalnie |
-| RD-16-W4 | 2026-10-22T21:59:59Z | Europe/Warsaw | 2026-10-22 | 0 | poniżej | rachunek: 23:59:59 lokalnie |
-| RD-16-W5 | 2026-10-22T22:00:01Z | Europe/Warsaw | 2026-10-23 | 0 | powyżej | rachunek: 00:00:01 lokalnie |
-| RD-16-W6 | brak | Europe/Warsaw | błąd danych | — | błąd | rachunek: zmiana bez chwili |
+| ID | chwila [UTC] | strefa [IANA] | region [BCP 47] | Oczekiwane: dzień [data] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|
+| RD-16-W1 | 2023-06-04T01:30:00Z | America/New_York | — | 2023-06-03 | 0 | typowy | rachunek: UTC−4 (czas letni), 21:30 lokalnie |
+| RD-16-W2 | 2023-06-04T01:30:00Z | Europe/Warsaw | — | 2023-06-04 | 0 | typowy | rachunek: UTC+2, 03:30 lokalnie |
+| RD-16-W3 | 2026-10-22T22:00:00Z | Europe/Warsaw | — | 2026-10-23 | 0 | granica | rachunek: 00:00:00 lokalnie |
+| RD-16-W4 | 2026-10-22T21:59:59Z | Europe/Warsaw | — | 2026-10-22 | 0 | poniżej | rachunek: 23:59:59 lokalnie |
+| RD-16-W5 | 2026-10-22T22:00:01Z | Europe/Warsaw | — | 2026-10-23 | 0 | powyżej | rachunek: 00:00:01 lokalnie |
+| RD-16-W6 | brak | Europe/Warsaw | — | błąd danych | — | błąd | rachunek: zmiana bez chwili |
+| RD-16-W7 | 2027-01-15T22:59:59Z | Europe/Warsaw | — | 2027-01-15 | 0 | poniżej | rachunek: UTC+1 (zima), 23:59:59 lokalnie (ER-37) |
+| RD-16-W8 | 2027-01-15T23:00:00Z | Europe/Warsaw | — | 2027-01-16 | 0 | granica | rachunek: UTC+1, 00:00:00 lokalnie |
+| RD-16-W9 | 2026-03-28T23:00:00Z | Europe/Warsaw | — | 2026-03-29 | 0 | granica | rachunek: 00:00 UTC+1 w dniu wiosennej zmiany czasu |
+| RD-16-W10 | 2026-03-29T01:00:00Z | Europe/Warsaw | — | 2026-03-29 | 0 | typowy | rachunek: 02:00 UTC+1 → 03:00 UTC+2, ta sama data |
+| RD-16-W11 | 2026-10-24T21:59:59Z | Europe/Warsaw | — | 2026-10-24 | 0 | poniżej | rachunek: 23:59:59 UTC+2 przed jesienną zmianą |
+| RD-16-W12 | 2026-10-24T22:00:00Z | Europe/Warsaw | — | 2026-10-25 | 0 | granica | rachunek: 00:00 UTC+2 |
+| RD-16-W13 | 2026-10-25T00:59:59Z | Europe/Warsaw | — | 2026-10-25 | 0 | typowy | rachunek: 02:59:59 UTC+2, przed cofnięciem zegara |
+| RD-16-W14 | 2026-10-25T01:00:00Z | Europe/Warsaw | — | 2026-10-25 | 0 | typowy | rachunek: 02:00:00 UTC+1, po cofnięciu zegara |
+| RD-16-W15 | 2026-10-22T18:29:59Z | Asia/Kolkata | — | 2026-10-22 | 0 | poniżej | rachunek: UTC+5:30, 23:59:59 lokalnie |
+| RD-16-W16 | 2026-10-22T18:30:00Z | Asia/Kolkata | — | 2026-10-23 | 0 | granica | rachunek: UTC+5:30, 00:00 lokalnie |
+| RD-16-W17 | 2026-10-22T09:59:59Z | Pacific/Kiritimati | — | 2026-10-22 | 0 | poniżej | rachunek: UTC+14, 23:59:59 lokalnie |
+| RD-16-W18 | 2026-10-22T10:00:00Z | Pacific/Kiritimati | — | 2026-10-23 | 0 | granica | rachunek: UTC+14, 00:00 lokalnie |
+| RD-16-W19 | 2026-10-22T13:00:00Z | Australia/Lord_Howe | — | 2026-10-23 | 0 | granica | rachunek: UTC+11 (czas letni, zmiana o 30 min), 00:00 lokalnie |
+| RD-16-W20 | 2026-06-22T13:30:00Z | Australia/Lord_Howe | — | 2026-06-23 | 0 | granica | rachunek: UTC+10:30 (czas zimowy), 00:00 lokalnie |
+| RD-16-W21 | 2011-12-30T09:59:59Z | Pacific/Apia | — | 2011-12-29 | 0 | poniżej | rachunek: UTC−10, 23:59:59 lokalnie |
+| RD-16-W22 | 2011-12-30T10:00:00Z | Pacific/Apia | — | 2011-12-31 | 0 | powyżej | rachunek: przejście na UTC+14, 2011-12-30 pominięty |
+| RD-16-W23 | 2026-09-06T03:59:59Z | America/Santiago | — | 2026-09-05 | 0 | poniżej | rachunek: UTC−4, 23:59:59 lokalnie |
+| RD-16-W24 | 2026-09-06T04:00:00Z | America/Santiago | — | 2026-09-06 | 0 | granica | rachunek: zmiana czasu o 00:00, północy nie ma; 01:00 UTC−3 |
+| RD-16-W25 | 2026-10-22T22:00:00Z | Europe/Warsaw | ja-JP-u-ca-japanese | 2026-10-23 | 0 | typowy | rachunek: zapis gregoriański mimo kalendarza japońskiego (Intl daje „R8/10/23”) |
+| RD-16-W26 | 2026-10-22T22:00:00Z | Europe/Warsaw | ar-EG | 2026-10-23 | 0 | typowy | rachunek: cyfry ASCII mimo cyfr arabsko-indyjskich regionu (Intl daje „٢٣‏/١٠‏/٢٠٢٦”) |
 
 ### RD-17: Strażnik stuknięć: seria dodań do sprawdzenia
 - Wzór: pytanie „Dodano n rzędów w t s. Cofnąć?” pojawia się, gdy w liczniku rzędów istnieją 3 kolejne dodania z `t_(i+2) − t_i ≤ T`; T = 2 s; seria obejmuje wszystkie dodania z odstępem ≤ T od poprzedniego
