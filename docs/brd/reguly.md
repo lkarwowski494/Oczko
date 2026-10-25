@@ -5,6 +5,7 @@ Zasady wspólne reguł:
 - Wynik obliczenia pokazuje dane wejściowe i założenia; tabele CYC to „GUIDELINES ONLY” [FAKT S-19], więc aplikacja nie przedstawia ich jako normy.
 - Zaokrąglanie liczby oczek do całości (w górę, w dół, do krotności motywu, do parzystości) nie jest rozstrzygnięte: [DO USTALENIA] (OP-02). Reguły RD-01, RD-02 i RD-07 zwracają wartość niezaokrągloną.
 - Reguły krytyczne (błąd = zmarnowana włóczka albo pieniądze) idą do przeglądu roli 06; przegląd zastępczy (D-027).
+- Zapis w tabelach wektorów (ER-39, P-097): `{a, b}` to zbiór (kolejność bez znaczenia), `a; b` to lista w kolejności, `tak`/`nie` to wartość logiczna, `—` to brak wartości; pozostałe słowa (`błąd danych`, `brak`, `poza tabelą`, `między kategoriami`) to wynik nazwany. Generator `docs/brd/narzedzia/kontrola-brd.mjs` zamienia je na typy JSON według `docs/brd/wektory.schema.json` i sprawdza, że zapis md → json → md nie traci informacji (`--zgodnosc=tests/wektory/brd.json`).
 
 ### RD-01: Liczba oczek na szerokość z próbki
 - Wzór: `N = W × P / 10`
@@ -136,20 +137,20 @@ Zasady wspólne reguł:
 | RD-08-W5 | brak | 22 | 35 | błąd danych | błąd danych | — | błąd | rachunek |
 
 ### RD-09: Kategoria dopasowania z luzu w obwodzie klatki
-- Wzór: `luz = obwód gotowy − obwód ciała`; kategorie S-23: bardzo dopasowany −10…−5 cm, dopasowany 0, klasyczny +5…+10, luźny +10…+15, oversize ≥ +15; wynik to zbiór kategorii (granice się stykają), a luz między przedziałami daje „między kategoriami”
+- Wzór: `luz = obwód gotowy − obwód ciała`; kategorie S-23: bardzo dopasowany −10…−5 cm, dopasowany 0, klasyczny +5…+10, luźny +10…+15, oversize ≥ +15; wynik to rodzaj (`kategorie`, `między kategoriami`, `poza tabelą`) i zbiór kategorii: przy stykających się granicach zbiór ma dwie kategorie, a luz między przedziałami daje „między kategoriami” ze zbiorem dwóch sąsiednich kategorii (ER-39)
 - Jednostki: luz [cm]
 - Granica: −10 cm (włączna, dół tabeli); poniżej to „poza tabelą”
 - Podstawa: S-23 („Approximately”, więc przybliżenie)
 - Krytyczna: nie (opis, nie obliczenie oczek)
 
-| ID | luz [cm] | Oczekiwane: kategorie [-] | Tolerancja | Rodzaj | Pochodzenie |
-|---|---|---|---|---|---|
-| RD-09-W1 | 7,5 | klasyczny | — | typowy | S-23 |
-| RD-09-W2 | -10 | bardzo dopasowany | — | granica | S-23 |
-| RD-09-W3 | -11 | poza tabelą | — | poniżej | S-23 |
-| RD-09-W4 | 10 | klasyczny, luźny | — | powyżej | S-23: styk przedziałów |
-| RD-09-W5 | 2 | między kategoriami | — | typowy | S-23: luka 0…5 |
-| RD-09-W6 | brak | błąd danych | — | błąd | rachunek |
+| ID | luz [cm] | Oczekiwane: wynik [-] | Oczekiwane: kategorie [-] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|
+| RD-09-W1 | 7,5 | kategorie | {klasyczny} | — | typowy | S-23 |
+| RD-09-W2 | -10 | kategorie | {bardzo dopasowany} | — | granica | S-23 |
+| RD-09-W3 | -11 | poza tabelą | — | — | poniżej | S-23 |
+| RD-09-W4 | 10 | kategorie | {klasyczny, luźny} | — | powyżej | S-23: styk przedziałów |
+| RD-09-W5 | 2 | między kategoriami | {dopasowany, klasyczny} | — | typowy | S-23: luka 0…5 |
+| RD-09-W6 | brak | błąd danych | — | — | błąd | rachunek |
 
 ### RD-10: Kategoria grubości włóczki z próbki dżersejowej
 - Wzór: kategorie c ∈ {0…7}, dla których P mieści się w zakresie S-19 (na 4 in): 0: 33–40, 1: 27–32, 2: 23–26, 3: 21–24, 4: 16–20, 5: 12–15, 6: 7–11, 7: ≤ 6; wynik to zbiór
@@ -160,11 +161,11 @@ Zasady wspólne reguł:
 
 | ID | P [o./4 in] | Oczekiwane: kategorie [-] | Tolerancja | Rodzaj | Pochodzenie |
 |---|---|---|---|---|---|
-| RD-10-W1 | 18 | 4 | — | typowy | S-19 |
-| RD-10-W2 | 23 | 2, 3 | — | granica | S-19: nakładanie 23–24 |
-| RD-10-W3 | 26 | 2 | — | granica | S-19 |
+| RD-10-W1 | 18 | {4} | — | typowy | S-19 |
+| RD-10-W2 | 23 | {2, 3} | — | granica | S-19: nakładanie 23–24 |
+| RD-10-W3 | 26 | {2} | — | granica | S-19 |
 | RD-10-W4 | 41 | poza tabelą | — | powyżej | S-19 |
-| RD-10-W5 | 6 | 7 | — | poniżej | S-19: „6 sts and fewer” |
+| RD-10-W5 | 6 | {7} | — | poniżej | S-19: „6 sts and fewer” |
 | RD-10-W6 | 0 | błąd danych | — | błąd | rachunek |
 
 ### RD-11: Rozmiar drutu w mm na numer US

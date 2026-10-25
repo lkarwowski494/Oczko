@@ -1,5 +1,7 @@
 // kontrola-brd.mjs — kontrola mechaniczna BRD (rola 01-odkrywanie).
-// node kontrola-brd.mjs <katalog|plik.md>... [--szkic] [--wektory]
+// node kontrola-brd.mjs <katalog|plik.md>... [--szkic] [--wektory] [--zgodnosc=<brd.json>]
+// Typy w wektorach (ER-39, P-097): `{a, b}` → zbiór (tablica), `a; b` → lista (tablica), `tak`/`nie` → true/false,
+// `—` albo pusta → null, liczba z przecinkiem → liczba, reszta → tekst. --zgodnosc: plik = generator(BRD) i md → json → md bez strat.
 // Wyjątek Oczko (P-018): persona to P-1…P-99; trzycyfrowe P-0nn to decyzje rejestru projektu, nie odwołania BRD.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -11,6 +13,28 @@ const RE_WIERSZ = /^\|\s*(S-\d{2}|OP-\d{2}|ER-\d{2}|RD-\d{2}-W\d+)\s*\|/;
 const kom = (l) => l.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
 const norm = (l) => l.replace(/\*\*/g, '').replace(/^[\s>*-]*/, '').trim();
 const liczba = (s = '') => { const t = s.replace(/\s/g, '').replace('−', '-'); return /^-?\d+([.,]\d+)?$/.test(t) ? Number(t.replace(',', '.')) : ['', '—'].includes(s) ? null : s; };
+export const wartosc = (s = '') => {
+  const t = s.trim();
+  if (t === 'tak') return true;
+  if (t === 'nie') return false;
+  const z = t.match(/^\{(.*)\}$/);
+  if (z) return z[1].trim() ? z[1].split(/,\s+/).map((x) => liczba(x.trim())) : [];
+  if (/;\s/.test(t)) return t.split(/;\s+/).map((x) => liczba(x.trim()));
+  return liczba(t);
+};
+// Odwrotność `wartosc` do kontroli md → json → md (zapis kanoniczny komórki).
+export const zapis = (v) => {
+  if (v === null) return '—';
+  if (v === true) return 'tak';
+  if (v === false) return 'nie';
+  if (typeof v === 'number') return String(v).replace('.', ',');
+  return String(v);
+};
+const kanon = (s = '') => s.trim().replace('−', '-').replace(/^(-?)\s+/, '$1');
+function zapisKomorki(v, surowa) {
+  if (Array.isArray(v)) return /^\{/.test(surowa.trim()) ? `{${v.map(zapis).join(', ')}}` : v.map(zapis).join('; ');
+  return zapis(v);
+}
 
 export function parsuj(pliki) {
   const defs = new Map(), dup = [], refs = [], wiersze = [], zle = [];
@@ -122,20 +146,67 @@ export function wektory(pliki) {
     const n = d.nagl, ocz = n.findIndex((k) => k.startsWith('Oczekiwane'));
     const wejscie = {}, oczekiwane = {};
     n.forEach((k, i) => {
-      if (i > 0 && i < ocz) wejscie[k] = liczba(d.k[i]);
-      if (k.startsWith('Oczekiwane')) oczekiwane[k.replace(/^Oczekiwane:?\s*/, '')] = liczba(d.k[i]);
+      if (i > 0 && i < ocz) wejscie[k] = wartosc(d.k[i]);
+      if (k.startsWith('Oczekiwane')) oczekiwane[k.replace(/^Oczekiwane:?\s*/, '')] = wartosc(d.k[i]);
     });
     const c = (k) => d.k[n.indexOf(k)];
     return { regula: d.id.replace(/-W\d+$/, ''), id: d.id, wejscie, oczekiwane, tolerancja: liczba(c('Tolerancja')), rodzaj: c('Rodzaj'), pochodzenie: c('Pochodzenie'), miejsce: d.miejsce };
   });
 }
 
+// Te same warunki co docs/brd/wektory.schema.json, bez zależności od walidatora (CI i chmura bez sieci).
+export function bledySchematu(lista) {
+  const b = [], skalar = (x) => x === null || ['number', 'string', 'boolean'].includes(typeof x);
+  const wart = (x) => skalar(x) || (Array.isArray(x) && x.every((e) => ['number', 'string'].includes(typeof e)));
+  const pola = ['regula', 'id', 'wejscie', 'oczekiwane', 'tolerancja', 'rodzaj', 'pochodzenie', 'miejsce'];
+  if (!Array.isArray(lista)) return ['brd.json nie jest tablicą'];
+  for (const v of lista) {
+    const gdzie = v?.id ?? '?';
+    if (Object.keys(v).sort().join() !== [...pola].sort().join()) b.push(`${gdzie}: pola ${Object.keys(v).join(', ')}`);
+    if (!/^RD-\d{2}$/.test(v.regula) || !/^RD-\d{2}-W\d+$/.test(v.id) || !v.id.startsWith(`${v.regula}-`)) b.push(`${gdzie}: regula/id`);
+    for (const k of ['wejscie', 'oczekiwane']) if (typeof v[k] !== 'object' || v[k] === null || !Object.values(v[k]).every(wart)) b.push(`${gdzie}: ${k} poza schematem`);
+    if (!Object.keys(v.oczekiwane || {}).length) b.push(`${gdzie}: brak wyniku`);
+    if (!(v.tolerancja === null || (typeof v.tolerancja === 'number' && v.tolerancja >= 0))) b.push(`${gdzie}: tolerancja`);
+    if (!['typowy', 'granica', 'poniżej', 'powyżej', 'błąd'].includes(v.rodzaj)) b.push(`${gdzie}: rodzaj „${v.rodzaj}”`);
+    if (typeof v.pochodzenie !== 'string' || !v.pochodzenie) b.push(`${gdzie}: pochodzenie`);
+    if (!/^docs\/brd\/[^:]+\.md:\d+$/.test(v.miejsce || '')) b.push(`${gdzie}: miejsce`);
+  }
+  return b;
+}
+
+// Kontrola bez strat: każda komórka wejścia i wyniku po md → json → md daje ten sam zapis (np. zbiór „2, 3” nie staje się liczbą 2.3).
+export function stratyZapisu(pliki) {
+  const bledy = [];
+  for (const d of parsuj(pliki).defs.values()) {
+    if (!/^RD-\d\d-W/.test(d.id) || !d.nagl) continue;
+    const ocz = d.nagl.findIndex((k) => k.startsWith('Oczekiwane'));
+    d.nagl.forEach((k, i) => {
+      if (!(i > 0 && (i < ocz || k.startsWith('Oczekiwane') || k === 'Tolerancja'))) return;
+      const surowa = d.k[i] ?? '', v = wartosc(surowa), z = zapisKomorki(v, surowa);
+      if (kanon(z) !== kanon(surowa) && !(v === null && kanon(surowa) === '')) bledy.push(`${d.miejsce}: ${d.id} „${k}”: „${surowa}” → ${JSON.stringify(v)} → „${z}”`);
+    });
+  }
+  return bledy;
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2), sciezki = args.filter((a) => !a.startsWith('--'));
-  if (!sciezki.length) { console.error('Użycie: node kontrola-brd.mjs <katalog|plik.md>... [--szkic] [--wektory]'); process.exit(2); }
+  if (!sciezki.length) { console.error('Użycie: node kontrola-brd.mjs <katalog|plik.md>... [--szkic] [--wektory] [--zgodnosc=<brd.json>]'); process.exit(2); }
   const pliki = sciezki.flatMap((s) => (statSync(s).isDirectory() ? readdirSync(s).filter((f) => f.endsWith('.md')).sort().map((f) => join(s, f)) : [s]))
     .map((p) => ({ plik: p, tekst: readFileSync(p, 'utf8') }));
   const { bledy, uwagi, podsumowanie } = sprawdz(pliki, { szkic: args.includes('--szkic') });
+  const zg = args.find((a) => a.startsWith('--zgodnosc='));
+  if (zg) {
+    const plik = zg.slice('--zgodnosc='.length), straty = stratyZapisu(pliki);
+    const oczek = JSON.stringify(wektory(pliki), null, 2) + '\n', jest = readFileSync(plik, 'utf8');
+    let schemat;
+    try { schemat = bledySchematu(JSON.parse(jest)); } catch (e) { schemat = [`${plik}: ${e.message}`]; }
+    for (const b of [...bledy, ...straty, ...schemat]) console.log(`BŁĄD ${b}`);
+    if (oczek !== jest) console.log(`BŁĄD ${plik} różni się od generatora; odtwórz: node docs/brd/narzedzia/kontrola-brd.mjs docs/brd --wektory > ${plik}`);
+    const ok = !bledy.length && !straty.length && !schemat.length && oczek === jest;
+    console.log(ok ? `zgodność brd.json: OK (${wektory(pliki).length} wektorów, bez strat zapisu, schemat spełniony)` : 'zgodność brd.json: BŁĘDY');
+    process.exit(ok ? 0 : 1);
+  }
   if (args.includes('--wektory')) {
     for (const b of bledy) console.error(`BŁĄD ${b}`);
     if (!bledy.length) console.log(JSON.stringify(wektory(pliki), null, 2));
