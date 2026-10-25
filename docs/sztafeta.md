@@ -29,6 +29,7 @@
 - Zakończono: jeden commit na ID (99bdc4d, a3adcc6, 39bbecf); dowody: `oczko-warsztat/03-zakres/2026-10-25-fix/E2-dowody.md`.
 - Kolejność budowy dla 08: F-35 → F-63 → F-11 → F-12 (strażnik przed zegarkiem i ekranem blokady); F-64 na końcu (po F-53).
 - Dla 01: ER-45 (kryteria: język w aplikacji, „Translation quality”, jednostki, „Źródła wiedzy”), ER-46 (BR-ZAK-006: okno „Uczciwe zasady”, karta po imporcie). Dla 02: ZM-05 a KP-10, KP-14. Dla 04: okna i ekrany z ZM-03–ZM-05; 37 MVP bez wyniku przejścia do audytu 04. Dla 07: testy BR-ZAK-005–007 i BR-DAN-012 z F-63, F-64 (Z07-03).
+- STOP E2 przyjęty (P-105). NZ-04: nazwy aplikacji i serwisów w `docs/scope-contract.md` zastąpione opisem (jak NZ-08); nazwy zostają w oczko-warsztat `03-zakres/2026-10-22-build/`. **Dla 07:** test marek `tests/brands.contract.test.ts` nie obejmuje `docs/` — rozszerzyć (dziś nazwy zostają m.in. w `docs/scope-contract-historia.md`, 11 wierszy).
 - Następny krok bez zmian: sesje fix 02 i 05, potem 08-programista.
 
 ### Przekazanie roli 01, fix ER-31–ER-44 (2026-10-25, STOP E2)
