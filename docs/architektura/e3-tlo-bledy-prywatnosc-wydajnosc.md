@@ -20,7 +20,12 @@ Lokalizacja, dźwięk, `expo-background-task`: nie dotyczy (żaden przepływ kon
 | Uszkodzona baza (`integrity_check ≠ ok` przy starcie) | awaria nośnika | aplikacja nie zapisuje; ekran „Dane wymagają naprawy” z eksportem kopii surowego pliku przez `VACUUM INTO` (jeśli możliwe) i importem ostatniego archiwum; wpis w `blad` [ekran: 04] |
 | Baza nowsza niż aplikacja | powrót do starszej wersji z TestFlight | odmowa otwarcia do zapisu, komunikat „Zaktualizuj aplikację” (dane.md) |
 | Nieoczekiwany | wyjątek w logice | granica błędu na poziomie ekranu (licznik zawsze odtwarzalny z bazy), wpis w `blad` bez treści projektów; raportowanie awarii: rola 12 |
-Błędy domeny są wartościami `Wynik<T>` (`moduly.md`), adaptery tłumaczą wyjątki bibliotek.
+Błędy domeny według **granicy walidacji** (fix-2 2026-10-25, P-118 Q1a, jak Trening: `MoveResult`/`ParseResult` jako wynik, wyjątek przy niezmienniku):
+- **Wejście, które w normalnym działaniu może być złe** — wpis użytkowniczki, plik importu, rekord synchronizacji, linia dziennika +1, odpowiedź sklepu — daje **wartość**: `Wynik<T>` z `powod` albo nazwany wariant wyniku dziedzinowego (`blad` w `WynikScalenia`, `blad_danych` w `Klasyfikacja`). Taka funkcja nie rzuca.
+- **Wejście, które z kontraktu nie może być złe** — wiersze bazy pod CHECK, stałe, dane już sprawdzone przez adapter albo przez funkcję z poprzedniego punktu — przy naruszeniu rzuca **`BladDanych`** (`src/domena/bledy.ts`, `kod = 'BLAD_DANYCH'`): to błąd programu, nie stan ekranu. Przypadek użycia łapie go po `kod`: w transakcji `ROLLBACK`, wpis w `blad`, ekran „Couldn’t save that row…”; poza zapisem granica błędu ekranu.
+- `throw new Error` tylko dla stanu niemożliwego z konstrukcji (np. brak zdarzenia w mapie po sprawdzeniu w `scal`).
+- Adaptery (`src/dane`, `src/platforma`) tłumaczą wyjątki bibliotek (SQLite, system plików, sklep) na `Wynik` z powodem (`zapis`, `brak_miejsca`, `uszkodzony`…); przypadek użycia nie przepuszcza wyjątku biblioteki do ekranu.
+- Pytanie przy przeglądzie nowej funkcji: „skąd przychodzi wejście?”. Tabela funkcji partii 1: `moduly.md` „Funkcje domeny (sygnatury)”.
 
 ## 3. Budżety wydajności (pierwsza wartość = pomiar bazowy; cel ustala właściciel po pomiarze)
 Urządzenie odniesienia: najstarszy wspierany iPhone — XR / XS (rejestr Apple 20). P-041: właściciel nie mierzy na telefonie, więc pomiar bazowy robi CI na symulatorze (proporcja, nie czas urządzenia), a czas urządzenia daje Xcode Organizer i MetricKit od testerów TestFlight i użytkowników po wydaniu (odczyt raportów: rola 10/12).

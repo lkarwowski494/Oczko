@@ -103,6 +103,17 @@ Zatwierdzone w fix-2 05 2026-10-25 (NZ-08-P1-05, P-118 S1): sygnatury dopisane p
 | `postep.ts` | `dniDoTerminu(dzis: string, termin: string): Wynik<number>` | `Wynik` (`bledne_dane`) | RD-15-W8–W10 |
 | `postep.ts` | `poczatekTygodnia(dzien: string): Wynik<string>` | `Wynik` (`bledne_dane`) | RD-20 |
 
+**Zasada błędów (P-118 Q1a, polityka: `e3-tlo-bledy-prywatnosc-wydajnosc.md` §2):** wejście, które może być złe w normalnym działaniu → wartość; wejście z kontraktu poprawne → `BladDanych`. Przypisanie funkcji domeny partii 1:
+| Funkcja | Skąd wejście | Styl |
+|---|---|---|
+| `startDnia`, `mozeZaczacDzien`, `wolaStraznika`, `rodzajStraznika`, `wznowienieLimitu`, `cofniecieSerii`, `scalDni`, `oknoUczciweZasady` | wiersze `dzien_limitu` i `zdarzenie` pod CHECK, `Zegar`, rodzaj zdarzenia z listy `stany.json` | `BladDanych` (bez zmian) |
+| `komunikatZakupu` | status zmapowany przez adapter sklepu z wyliczenia biblioteki | `BladDanych` (bez zmian) |
+| `odczytajPamiec` | plik pamięci uprawnień (może być uszkodzony) | wartość: `null` = brak ważnej pamięci (bez zmian) |
+| `scal` | zdarzenia z synchronizacji, importu i dziennika | wariant `blad` (W1: także `zla_wartosc` zamiast wyjątku) |
+| `klasyfikujGrubosc` | próbka wpisana przez użytkowniczkę | wariant `blad_danych` (bez zmian) |
+| `przelicz`, `rozmiarUS` | liczba wpisana w kalkulatorze F-38 | **`Wynik<number>` / `Wynik<string \| null>` z `bledne_dane`** — zmiana kontraktu: 08 z 07 w partii ekranu narzędzi (dziś `BladDanych`) |
+| funkcje z `Wynik` (`przypomnienia.ts`, `postep.ts`, `licznik.ts`, `obliczenia/oczka.ts`, maszyny stanów) | wpis użytkowniczki albo dane z bazy | `Wynik` (bez zmian; dopuszczalne także przy wejściu z bazy) |
+
 `BladDanych` (`src/domena/bledy.ts`): klasa wyjątku z polem `kod = 'BLAD_DANYCH'`; wołający rozpoznaje ją po `kod`, nie po dowolnym wyjątku. Wariant `blad` w `WynikScalenia` (P-111 (4)) — sekcja „Scalanie”.
 
 ## Scalanie (`scal`, fix 2026-10-25, Z07-13)
