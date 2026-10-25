@@ -3,11 +3,11 @@
 // Wersja 0.1.0 poza testem (P-070, ADR-0015). Wzorzec vN.db kopiowany razem z -wal/-shm, jeśli są (R-075).
 import { copyFileSync, existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { utworzPortNode } from '../../../src/dane/baza/adapter-node';
-import { migruj } from '../../../src/dane/migracje/migruj';
-import { WERSJA_SCHEMATU } from '../../../src/konfiguracja';
-import { KORZEN, licznosciPliku } from '../../dane/pomocnicze/dane-wejsciowe';
-import { katalogTymczasowy, licznosci, migawka } from '../../dane/pomocnicze/srodowisko';
+import { utworzPortNode } from '../../src/dane/baza/adapter-node';
+import { migruj } from '../../src/dane/migracje/migruj';
+import { WERSJA_SCHEMATU } from '../../src/konfiguracja';
+import { KORZEN, licznosciPliku } from './pomocnicze/dane-wejsciowe';
+import { katalogTymczasowy, licznosci, migawka } from './pomocnicze/srodowisko';
 
 const KATALOG_WZORCOW = join(KORZEN, 'tests/bazy');
 const wzorce = (k: string) => (existsSync(k) ? readdirSync(k).filter((n) => /^v\d+\.db$/.test(n)).sort() : []);

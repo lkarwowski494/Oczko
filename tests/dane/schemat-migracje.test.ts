@@ -3,11 +3,11 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { utworzPortNode } from '../../../src/dane/baza/adapter-node';
-import { migruj } from '../../../src/dane/migracje/migruj';
-import { WERSJA_SCHEMATU } from '../../../src/konfiguracja';
-import { SCHEMAT_V1, STANY_JSON, bazaWzorcowa, czytajBaze, wloczka, zycie } from '../../dane/pomocnicze/dane-wejsciowe';
-import { jeden, katalogTymczasowy, licznosci, migawka, przygotuj, wykonaj } from '../../dane/pomocnicze/srodowisko';
+import { utworzPortNode } from '../../src/dane/baza/adapter-node';
+import { migruj } from '../../src/dane/migracje/migruj';
+import { WERSJA_SCHEMATU } from '../../src/konfiguracja';
+import { SCHEMAT_V1, STANY_JSON, bazaWzorcowa, czytajBaze, wloczka, zycie } from './pomocnicze/dane-wejsciowe';
+import { jeden, katalogTymczasowy, licznosci, migawka, przygotuj, wykonaj } from './pomocnicze/srodowisko';
 
 const PLIKI = { pdf: 'a'.repeat(64), rys: 'b'.repeat(64), jpg: 'c'.repeat(64) };
 
