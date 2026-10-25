@@ -31,6 +31,8 @@ describe('RD-12 powtorzenie: wektory BRD', () => {
   });
   test(`RD-12 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
     expect(wektory.length).toBe(6); // W1–W6 (W6: r < 0, P-097 3.1a); W7–W9 (tryb licznika): tests/domena/licznik/tryb-licznika.test.ts
+    // F07-03: oba kształty razem = cała reguła; nowy wektor innego kształtu nie może zostać pominięty po cichu.
+    expect(wektoryReguly('RD-12').map((x) => x.id).sort()).toEqual([...wektory.map((x) => x.id), 'RD-12-W7', 'RD-12-W8', 'RD-12-W9'].sort());
     licznik.wynik(wektory.length);
   });
 });

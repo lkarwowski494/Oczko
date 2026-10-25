@@ -23,11 +23,16 @@ describe('RD-13 czyPrzypomnienie: wektory BRD', () => {
       const wynik = czyPrzypomnienie(liczba(w.wejscie['r [rz.]']), plan);
       const o = w.oczekiwane['przypomnienie [-]'];
       if (o === BLAD_DANYCH) expect(wynik).toEqual({ ok: false, powod: 'bledne_dane' });
-      else expect(wynik).toEqual({ ok: true, wartosc: o === true }); // tak/nie → true/false (P-097 1a)
+      else {
+        expect(typeof o).toBe('boolean'); // tak/nie → true/false (P-097 1a); inna wartość to błąd wektora, nie „nie” (F07-03)
+        expect(wynik).toEqual({ ok: true, wartosc: o });
+      }
     });
   });
   test(`RD-13 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
     expect(wektory.length).toBe(5); // W6–W10 (wpisanie a → b): tests/domena/licznik/przypomnienie-wpisania.test.ts
+    // F07-03: oba kształty razem = cała reguła; nowy wektor innego kształtu nie może zostać pominięty po cichu.
+    expect(wektoryReguly('RD-13').map((x) => x.id).sort()).toEqual([...wektory.map((x) => x.id), 'RD-13-W6', 'RD-13-W7', 'RD-13-W8', 'RD-13-W9', 'RD-13-W10'].sort());
     licznik.wynik(wektory.length);
   });
 });

@@ -74,7 +74,12 @@ describe('RD-10 klasyfikujGrubosc: wektory BRD (kształt po P-097 1a: wynik + ka
       if (!wynik) throw new Error(`RD-10: nieznany wynik ${String(w.oczekiwane['wynik [-]'])}`);
       const k = w.oczekiwane['kategorie [-]'];
       const oczek = Array.isArray(k) ? { wynik, kategorie: k.map(Number).sort(rosnaco) } : { wynik };
-      expect(jakoZbior(klasyfikujGrubosc({ oczka: p, na: '4in' }))).toMatchObject(oczek);
+      const r = jakoZbior(klasyfikujGrubosc({ oczka: p, na: '4in' }));
+      expect(r).toMatchObject(oczek);
+      // F07-03: `kategorie [-]` = null w wektorze → wynik bez kategorii (toMatchObject przepuszczał nadmiarowe pole).
+      if (!Array.isArray(k)) expect('kategorie' in r).toBe(false);
+      // F07-03, P-084 (D1b): całkowite P zaokrągla się do siebie, bez połówki (W1 = 18, W4 = 41 nie ma w wektorach treści 06).
+      if (Number.isInteger(p) && (wynik === 'kategorie' || wynik === 'powyzej_tabeli')) expect(r).toMatchObject({ p4Zaokraglone: p, polowka: false });
     });
   });
   test(`RD-10 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {

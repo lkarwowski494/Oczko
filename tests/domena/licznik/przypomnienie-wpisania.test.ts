@@ -1,6 +1,6 @@
 // Test roli 08 (P-114 Q2a): RD-13-W6–W10 (zmiana wartości z a na b, BR-LIC-017, ER-40, P-097 (3.2a)) i plan rzędów F-06 (U-3).
 // Wyrocznia: tests/wektory/brd.json i wzór RD-13 (docs/brd/reguly.md): wyzwala r ≥ s, (r − s) mod N = 0, (r − s) / N < M.
-// Plan F-06: rachunek z 0.1.0 (`repeats-schedule.ts`, ZOSTAJE wg docs/porownanie-kodu.md) z poprawką N = 0 → błąd danych (RD-13-W5).
+// Plan F-06: rzędy z wzoru RD-13 (s, s + N, …, s + (M − 1)N; RD-13-W1, W2) i N = 0 → błąd danych (RD-13-W5); kod 0.1.0 nie jest wyrocznią (F07-03).
 import { przypomnienieWpisania, planPrzypomnien } from '../../../src/domena/przypomnienia';
 import { wektoryReguly, liczba, licznikWektorow } from '../../narzedzia/akceptacja';
 
@@ -35,7 +35,7 @@ describe('F-06 U-3 planPrzypomnien: rzędy z przypomnieniem przed zapisem (wzór
   test('BR-LIC-009 RD-13-W1 parametry s = 6, N = 6, M = 5 → [6, 12, 18, 24, 30] (ostatnie 6 + 4 × 6, RD-13-W2)', () => {
     expect(planPrzypomnien({ od: 6, co: 6, razy: 5 })).toEqual({ ok: true, wartosc: [6, 12, 18, 24, 30] });
   });
-  test('BR-LIC-009 RD-13-W5 N = 0 → błąd danych (0.1.0 rzucał wyjątek)', () => {
+  test('BR-LIC-009 RD-13-W5 N = 0 → błąd danych', () => {
     expect(planPrzypomnien({ od: 6, co: 0, razy: 5 })).toEqual({ ok: false, powod: 'bledne_dane' });
   });
   test('BR-LIC-009 M = 1 → jeden rząd s', () => {

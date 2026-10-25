@@ -110,7 +110,9 @@ describe('RD-15 celDzienny: wektory BRD (dziś = 2026-10-22, termin = dziś + d 
     });
   });
   test(`RD-15 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(7); // W8–W10 (d z dat): tests/domena/dni/dni-do-terminu.test.ts
+    expect(wektory.length).toBe(7); // W8–W10 (d z dat): tests/domena/dni/dni-tygodnie.test.ts
+    // F07-03: oba kształty razem = cała reguła; nowy wektor innego kształtu nie może zostać pominięty po cichu.
+    expect(wektoryReguly('RD-15').map((x) => x.id).sort()).toEqual([...wektory.map((x) => x.id), 'RD-15-W8', 'RD-15-W9', 'RD-15-W10'].sort());
     licznik.wynik(wektory.length);
   });
   test('BR-DNI-005/S1 RD-15-W1 kontrola wyprowadzenia daty: termin 2026-11-04 → d = 14 → cel 13', () => {

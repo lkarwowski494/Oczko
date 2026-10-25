@@ -1,7 +1,7 @@
 // Test roli 08 (P-114 Q2a): przejścia synchronizacji dodane w fixie 05 (Z07-14, P-110 Q9a) bez testu 07 i zachowanie poza tabelą.
 // Wyrocznia: docs/architektura/moduly.md „Synchronizacja iCloud (F-27, F-58)”: zmiana konta z aktywna / blad / brak_konta → konto_zmienione;
 // konto_zmienione + polacz → aktywna; konto_zmienione + nie_synchronizuj → wylaczona; dowolny ≠ wylaczona + wylacz → wylaczona.
-// Poza tabelą sygnatura zwraca sam stan (bez wyniku „niedozwolone”): stan bez zmian — decyzja 08 zgłoszona do 05.
+// Poza tabelą: stan bez zmian — wybór 08 przyjęty w P-118 (W5, fix-2 roli 05); wcześniej bez wyroczni (F07-03).
 import { przejdzSynchronizacje } from '../../../src/domena/maszyny/synchronizacja';
 import type { ZdarzenieSynchronizacji } from '../../../src/domena/maszyny/synchronizacja';
 import type { StanSynchronizacji } from '../../../src/domena/porty';
