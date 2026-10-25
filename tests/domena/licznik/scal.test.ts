@@ -4,14 +4,14 @@
 // (docs/jakosc/e1-ryzyka.md) i zgłoszenie Z07-13. Konflikt porównywany PO GŁOWACH (mapa głowa → wartość, SC-13), nie jako
 // posortowane wartości. Zbiory (`glowy`, `brakujacy`) porównywane jako zbiory, a wynik dla permutacji wejścia — w całości (R-038).
 import fc from 'fast-check';
-import { scal } from '../../../../src/domena/scal';
-import type { ZdarzenieLicznika, WynikScalenia } from '../../../../src/domena/scal';
-import wektoryJson from '../../../../docs/architektura/eksperymenty/e1/scal-wektory.json';
-import { licznikWektorow, wywolaj, opcjeWlasnosci } from '../../../narzedzia/akceptacja';
+import { scal } from '../../../src/domena/scal';
+import type { ZdarzenieLicznika, WynikScalenia } from '../../../src/domena/scal';
+import wektoryJson from '../../../docs/architektura/eksperymenty/e1/scal-wektory.json';
+import { licznikWektorow, wywolaj, opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 const L = 'licznik-1';
 type ZdarzenieWektora = { id: string; rodzaj: string; wartosc?: number; rodzice: string[]; cofa?: string[] };
-type WektorScalenia = { id: string; opis: string; zdarzenia: ZdarzenieWektora[]; oczekiwane: { stan: string; wartosc?: number; wartosci?: number[] } };
+type WektorScalenia = { id: string; opis: string; zdarzenia: ZdarzenieWektora[]; oczekiwane: { stan: string; wartosc?: number; wartosci?: number[]; kandydaci?: Record<string, number>; powod?: string } };
 const WEKTORY = wektoryJson as unknown as WektorScalenia[];
 
 /** Zdarzenie wektora → typ domeny (wektory nie podają `licznik`; `cofa` z M-08 zostaje jako pole dodatkowe). */
@@ -27,6 +27,7 @@ function glowyZDanych(lista: { id: string; rodzice: string[] }[]): string[] {
 function jakoZbiory(w: WynikScalenia): WynikScalenia {
   if (w.stan === 'zgodny') return { ...w, glowy: [...w.glowy].sort() };
   if (w.stan === 'czeka') return { ...w, brakujacy: [...new Set(w.brakujacy)].sort() };
+  if (w.stan === 'blad') return w;
   return { ...w, glowy: [...w.glowy].sort(), kandydaci: [...w.kandydaci].sort((a, b) => a.glowa.localeCompare(b.glowa)) };
 }
 
@@ -40,8 +41,9 @@ function brakujacyJakoZbior(w: WynikScalenia): WynikScalenia {
  * z1 → z2 (zegarek) = 10 + 2. Test sprawdza też, że przypisanie zgadza się ze zbiorem wartości z wektora.
  */
 const KANDYDACI: Record<string, Record<string, number>> = { 'M-04': { t1: 11, z2: 12 } };
+// NZ-05-04 (08, partia 1): wektory 05 podają mapę `kandydaci` w `oczekiwane` (M-04, M-10b, M-16) — ona ma pierwszeństwo; M-04 zgodna z mapą wyżej.
 
-describe('NFR-DAN-003 scal: wektory M-01–M-08 (scal-wektory.json)', () => {
+describe('NFR-DAN-003 scal: wektory M-01–M-17 (scal-wektory.json)', () => {
   const licznik = licznikWektorow();
   test.each(WEKTORY.map((w) => [`NFR-DAN-003 ${w.id} ${w.opis} → ${w.oczekiwane.stan}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
@@ -54,8 +56,12 @@ describe('NFR-DAN-003 scal: wektory M-01–M-08 (scal-wektory.json)', () => {
         const brakujacy = [...new Set(w.zdarzenia.flatMap((z) => z.rodzice).filter((r) => !znane.has(r)))].sort();
         expect(brakujacy.length).toBeGreaterThan(0);
         expect(jakoZbiory(wynik)).toEqual({ stan: 'czeka', brakujacy });
+      } else if (w.oczekiwane.stan === 'blad') {
+        // Z07-13 (moduly.md „Scalanie”): błąd danych z powodem; `id` = najmniejsze winne (wektor go nie podaje).
+        expect(wynik).toMatchObject({ stan: 'blad', powod: w.oczekiwane.powod });
       } else {
-        const mapa = KANDYDACI[w.id];
+        const mapa = w.oczekiwane.kandydaci ?? KANDYDACI[w.id];
+        if (w.oczekiwane.kandydaci && KANDYDACI[w.id]) expect(w.oczekiwane.kandydaci).toEqual(KANDYDACI[w.id]);
         if (!mapa) throw new Error(`Wektor konfliktu ${w.id} bez przypisania głowa → wartość w teście (SC-13)`);
         expect(Object.values(mapa).sort((a, b) => a - b)).toEqual([...(w.oczekiwane.wartosci ?? [])].sort((a, b) => a - b));
         expect(Object.keys(mapa).sort()).toEqual(glowyZDanych(w.zdarzenia));
@@ -68,7 +74,8 @@ describe('NFR-DAN-003 scal: wektory M-01–M-08 (scal-wektory.json)', () => {
     });
   });
   test(`NFR-DAN-003 liczność: wykonano ${WEKTORY.length} z ${WEKTORY.length} wektorów M-* (pusty zbiór = porażka)`, () => {
-    expect(WEKTORY.map((w) => w.id)).toEqual(['M-01', 'M-02', 'M-03', 'M-04', 'M-05', 'M-06', 'M-07', 'M-08']);
+    // NZ-05-04: lista po fixie 05 (Z07-11, Z07-13, ER-41, ER-42); brak albo nadmiar wektora = porażka.
+    expect(WEKTORY.map((w) => w.id)).toEqual(['M-01', 'M-02', 'M-03', 'M-04', 'M-05', 'M-06', 'M-07', 'M-07b', 'M-08', 'M-08b', 'M-09', 'M-10', 'M-10b', 'M-12', 'M-13', 'M-14', 'M-15', 'M-16', 'M-17']);
     licznik.wynik(WEKTORY.length);
   });
 });

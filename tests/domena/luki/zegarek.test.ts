@@ -6,12 +6,12 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import fc from 'fast-check';
-import { scal } from '../../../../src/domena/scal';
-import type { WynikScalenia, ZdarzenieLicznika } from '../../../../src/domena/scal';
-import type { StanZegarka, ZdarzenieWejsciowe } from '../../../../src/domena/porty';
-import { stanZegarka, zdarzenieZWejscia } from '../../../../src/domena/zegarek';
-import type { WejscieStanuZegarka } from '../../../../src/domena/zegarek';
-import { opcjeWlasnosci } from '../../../narzedzia/akceptacja';
+import { scal } from '../../../src/domena/scal';
+import type { WynikScalenia, ZdarzenieLicznika } from '../../../src/domena/scal';
+import type { StanZegarka, ZdarzenieWejsciowe } from '../../../src/domena/porty';
+import { stanZegarka, zdarzenieZWejscia } from '../../../src/domena/zegarek';
+import type { WejscieStanuZegarka } from '../../../src/domena/zegarek';
+import { opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 const L = 'licznik-1';
 const wejscie = (id: string, rodzaj: 'plus' | 'minus', rodzice: string[], zrodlo: ZdarzenieWejsciowe['zrodlo'] = 'zegarek'): ZdarzenieWejsciowe => ({
@@ -21,6 +21,7 @@ const wejscie = (id: string, rodzaj: 'plus' | 'minus', rodzice: string[], zrodlo
 function jakoZbiory(w: WynikScalenia): WynikScalenia {
   if (w.stan === 'zgodny') return { ...w, glowy: [...w.glowy].sort() };
   if (w.stan === 'czeka') return { ...w, brakujacy: [...new Set(w.brakujacy)].sort() };
+  if (w.stan === 'blad') return w; // wariant blad (P-111 (4)), dopisany przez 08
   return { ...w, glowy: [...w.glowy].sort(), kandydaci: [...w.kandydaci].sort((a, b) => a.glowa.localeCompare(b.glowa)) };
 }
 
@@ -105,7 +106,7 @@ describe('NFR-ZEG-001 zgodność zegarka i telefonu: różnica 0 po synchronizac
 });
 
 describe('NFR-ZEG-001 ADR-0009 stan zegarka = złote pliki tests/wspolne/stan-zegarka-*.json', () => {
-  const KATALOG = join(__dirname, '../../../wspolne');
+  const KATALOG = join(__dirname, '../../wspolne');
   const PLIKI = ['stan-zegarka-typowy.json', 'stan-zegarka-pro-dozywotni.json', 'stan-zegarka-pro-subskrypcja.json', 'stan-zegarka-najwiekszy.json'];
   /** Wejście z danych bazy, nie ze złotego pliku wprost: dni limitu z innego miesiąca i w odwróconej kolejności (filtr i sortowanie po stronie kodu). */
   function wejscieDla(z: StanZegarka): WejscieStanuZegarka {
