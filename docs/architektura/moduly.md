@@ -98,6 +98,19 @@ Prototyp i wyrocznia: `eksperymenty/e1/scal.mjs`, `scal-wektory.json` (M-01–M-
 - Cofnięcie (P-091 (3a), ER-41): `cofniecie` dotyczy ostatniej zmiany albo serii na końcu historii; pomyłkę ze środka historii poprawia się wpisaniem wartości (M-08b).
 - Import „scal” (ER-42): zdarzenia z archiwum to kolejne dostarczenia — ten sam `id` = jedno zdarzenie, rozbieżna gałąź = konflikt jak przy iCloud, drugi import tego samego pliku nic nie zmienia (M-16).
 
+## Stan Live Activity i zegarka, wersja 2 (fix 2026-10-25, Z07-12)
+Wersja 1 (`StanEkranuBlokady`, `StanZegarka` w „Porty domeny”) nie wystarcza intencji i zegarkowi bez JS: brak dni limitu i Pro na ekranie blokady (po północy intencja liczy nowy dzień sama, ADR-0008 (6)), brak czasu ostatniego +1 (przerwa nowego dnia, `PRZERWA_NOWEGO_DNIA_MS`), znaczenia licznika (RD-12), przypomnień (RD-13) i wersji ładunku. Wersja 2 (jeden ładunek dla obu celów, jeden dekoder Swift):
+```ts
+export type PrzypomnienieStanu = { od: number; co: number; razy: number; tekst: string }; // plan RD-13; tekst ucięty do STAN_PRZYPOMNIENIE_TEKST_MAKS znaków
+export type StanEkranuBlokadyV2 = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[] }; // wersja = 2
+export type StanZegarkaV2 = StanEkranuBlokadyV2;
+```
+- `pro`, `proWaznoscDo`: dostęp z `docs/monetyzacja/dostep.mjs` w chwili wysłania; `proWaznoscDo` = koniec uprawnienia (późniejsza z dat `wygasa` i `karencjaDo`, ADR-0010), `null` = bez końca (dożywotni), nie „wygasło” (R-031). Na zegarku i w intencji ocenia je `proZegarka` (KP-17) w pakiecie Swift reguł (ADR-0007, uzupełnienie).
+- `dniWMiesiacu`: wiersze `dzien_limitu` z miesiąca dnia `dzien`, rosnąco (wejście `mozeZaczacDzien` w Swift); `ostatniPlusMs`: czas ostatniej zmiany licznika (intencja aktualizuje go sama, ADR-0008 (1)).
+- `nazwa` ucięta do `STAN_NAZWA_MAKS_ZNAKOW` znaków, najwyżej `STAN_PRZYPOMNIENIA_MAKS` przypomnień: ładunek < 4 KB (rejestr Apple 1b) także dla nazwy z 3-bajtowych znaków UTF-8.
+- Czytelnik pomija nieznane pola (vN czyta vN+1); dekoder Swift odrzuca ładunek z `wersja` większą niż znana i bez wymaganego pola (bez wartości domyślnych, X-ST-01), a Live Activity pokazuje wtedy ostatni poprawny stan.
+- **Przełączenie v1 → v2** (jeden commit 07 + 08, kolejność z `tests/wspolne/README.md`): typy v2 zastępują v1 w „Porty domeny” (`porty.ts`), pliki `tests/wspolne/stan-*.json` i `wzorce.json` (`wersja_kontraktu: 2`, pliki v1 jako `*-v1.json` dla zgodności) uzupełnione, listy pól w `tests/jakosc/zlote-pliki.test.ts` i wejście `stanZegarka` w `tests/akceptacja/domena/luki/zegarek.test.ts` dopasowane; złote pliki stanu od tej chwili tworzy generator z kodu TS (`stanZegarka`, jak generator tekstów Swift w ADR-0017), a test pilnuje, że generator i pliki się zgadzają.
+
 ## Ścieżka zapisu +1 (przypadek użycia `dodajRzad`)
 Jedna transakcja w kolejce (ADR-0002), bez `await` na nic poza bazą:
 1. odczyt licznika (`wartosc`, `glowa`, `zablokowany`, `konflikt`) i dni limitu miesiąca;
@@ -152,6 +165,8 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `STRAZNIK_OKNO_S` (s) | 2 | RD-17, P-047 |
 | `KOSZ_DNI` (dni) | 30 | P-026 |
 | `KOPIA_PRZED_IMPORTEM_DNI` (dni) | 30 | ADR-0004 (jak F-33) |
+| `STAN_NAZWA_MAKS_ZNAKOW` (znaki) | 60 | [OCENA] roli 05 (Z07-12): nazwa na ekranie blokady i zegarku; ładunek < 4 KB (rejestr Apple 1b) |
+| `STAN_PRZYPOMNIENIA_MAKS` (liczba) / `STAN_PRZYPOMNIENIE_TEKST_MAKS` (znaki) | 3 / 40 | [OCENA] roli 05 (Z07-12): plan przypomnień w stanie Live Activity i zegarka |
 | `SESJA_MAKS_H` (h) | 8 | P-072 (7a); limit Live Activity 8 h (rejestr Apple 1a) |
 | `WERSJA_SCHEMATU` (-) | 1 | `schemat.sql` |
 | `WERSJA_FORMATU_ARCHIWUM` (-) | 1 | ADR-0004 |

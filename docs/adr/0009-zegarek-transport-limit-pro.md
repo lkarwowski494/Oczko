@@ -1,5 +1,5 @@
 # 0009. Zegarek: zdarzenia przez `transferUserInfo`, stan przez kontekst aplikacji, Pro i limit z ostatniego stanu od telefonu oraz z StoreKit na zegarku
-Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: P-039, P-067, OP-22, F-12, F-58, NFR-ZEG-001, ADR-0005, ADR-0007
+Data: 2026-10-22 · Status: **przyjęta** (P-071; uzupełniona 2026-10-25) · Rola: 05 (E1) · Zależy od: P-039, P-067, OP-22, F-12, F-58, NFR-ZEG-001, ADR-0005, ADR-0007
 
 ## Kontekst i problem
 Ten sam licznik na zegarku i telefonie (F-12), zgodność po synchronizacji (NFR-ZEG-001), Pro na zegarku bez telefonu, gdy telefon wcześniej potwierdził zakup (P-039), a +1 z zegarka zaczyna dzień limitu (P-067). `transferUserInfo` kolejkuje i dostarcza wszystko po kolei, także przy zawieszonej aplikacji (symulator nie obsługuje); `updateApplicationContext` przekazuje tylko ostatni stan; `sendMessage` wymaga osiągalności (rejestr Apple 4a–4c). `expo-iap` nie wspiera watchOS (rejestr Expo 5b). `Transaction.currentEntitlements` jest na watchOS 8+ (Apple 4d), a czy zakup z iPhone'a jest tam widoczny bez telefonu, dokumentacja nie mówi (4e).
@@ -22,6 +22,11 @@ A + D. Zegarek trzyma mały plik stanu i kolejkę wysłanych zdarzeń; telefon s
 - Test domeny: wektory M-* plus scenariusze zegarka (telefon poza zasięgiem, powrót, zmiany na obu stronach) w `scal-wektory.json` (E2).
 - Test Swift celu zegarka: te same `wektory-limitu.json` (L-04, S-*) dają te same wyniki co `limit.mjs`.
 - Test „Pro bez telefonu”: kontekst z `pro=true, proWaznoscDo` w przyszłości, brak telefonu → +1 w nowym dniu ponad limit dozwolone (W-10, P-039).
+
+## Uzupełnienie 2026-10-25 (fix 05: Z07-12, P-109, P-110 Q8a)
+- **Stan dla zegarka** = `StanZegarkaV2` = `StanEkranuBlokadyV2` (moduly.md, „Stan Live Activity i zegarka, wersja 2”) przez `updateApplicationContext`; pole `wersja` w ładunku, dekoder odrzuca wersję nowszą niż znana i zostaje przy ostatnim poprawnym stanie.
+- **Skrzynka zdarzeń po stronie telefonu** (P-110 Q8a): `transferUserInfo` odebrane, gdy JS nie działa, moduł natywny (`WCSessionDelegate`) dopisuje jako linie `ZdarzenieWejsciowe` z `zrodlo: 'zegarek'` do tego samego dziennika `.jsonl` co intencja ekranu blokady (ADR-0008), przez tę samą kolejkę szeregową `DziennikPlus`; scalanie, idempotencja po UUID, zatrute linie i skracanie jak w ADR-0008 (3). Odbiór działa w procesie aplikacji, więc App Group nie jest potrzebna; skrzynka nie jest kasowana przed `COMMIT` scalenia.
+- **Zegarek:** własny plik stanu i lista wysłanych, jeszcze niepotwierdzonych zdarzeń (do wyświetlenia wartości bez telefonu); potwierdzeniem jest `glowa` z kolejnego kontekstu telefonu.
 
 ## Opcje: zalety i wady
 ### A — zalety: kolejka bez utraty, idempotencja · wady: brak w symulatorze.

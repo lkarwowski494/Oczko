@@ -1,5 +1,5 @@
 # 0007. Cele natywne (Live Activity, zegarek, rozszerzenie udostępniania) jako własny Swift przez `@bacons/apple-targets`, mosty przez Expo Modules API
-Data: 2026-10-22 · Status: **przyjęta** (P-071) · Rola: 05 (E1) · Zależy od: ADR-0006, ADR-0008, ADR-0009, ADR-0011, ADR-0012
+Data: 2026-10-22 · Status: **przyjęta** (P-071; uzupełniona 2026-10-25) · Rola: 05 (E1) · Zależy od: ADR-0006, ADR-0008, ADR-0009, ADR-0011, ADR-0012
 
 ## Kontekst i problem
 Kontrakt (05) wymaga: sesji na ekranie blokady z +1 i stoperem (F-11, F-21), aplikacji na zegarku (F-12), rozszerzenia udostępniania (F-24, F-55), PencilKit (F-28), CloudKit (F-27), StoreKit na zegarku. Expo: oficjalny `expo-widgets` (SDK 57) renderuje Live Activity z JS w izolowanym środowisku, a przycisk zmienia tylko właściwości widżetu „with no running app process required” (rejestr Expo 6d) — nie ma intencji, więc +1 nie trafiłby do bazy. Rozszerzenia w CNG: „experimental” (6b). `@bacons/apple-targets` 5.0.0 obsługuje m.in. watch, widget, share (6c), z zastrzeżeniem autora „I haven't tested all of these”.
@@ -25,6 +25,13 @@ Opcja A. Wersja `@bacons/apple-targets` przypięta dokładnie, z regułą wieku 
 - CI (07): `npx expo prebuild --clean` + `xcodebuild build` dla schematów aplikacji, widżetu, zegarka i rozszerzenia na runnerze macOS (ADR-0014).
 - Test wspólnych wektorów: `wektory-limitu.json` i `scal-wektory.json` uruchamiane w Node i w testach Swift (XCTest) celu zegarka.
 - `granice.mjs`: brak katalogu `ios/` w repo.
+
+## Uzupełnienie 2026-10-25 (fix 05: Z07-12, P-109)
+- **Jeden pakiet Swift reguł `OczkoReguly`** (Swift Package w `modules/oczko-reguly/`, bez zależności od UIKit, ActivityKit i WatchConnectivity), używany przez cele `widget` (intencja) i `watch`: `mozeZaczacDzien` i `wolaStraznika` (`docs/monetyzacja/limit.mjs`), `proZegarka` (KP-17, `docs/monetyzacja/dostep.mjs`), dzień lokalny RD-16 (`YYYY-MM-DD`, kalendarz gregoriański, cyfry ASCII, niezależnie od języka i kalendarza urządzenia, ER-37) i dekoder `StanEkranuBlokadyV2` (moduly.md).
+- **Test bez symulatora:** `swift test` pakietu na runnerze macOS (bez `xcodebuild` i bez symulatora) na tych samych plikach JSON co Node: `wektory-limitu.json` (L-*, S-*, Z-*), `wektory-dostepu.json` (PZ-*), wektory RD-16 z `tests/wektory/brd.json`, złote pliki stanów `tests/wspolne/`. Każdy zestaw raportuje „wykonano N z N” (N = liczba wektorów w JSON, 0 = błąd), a wykonane id = id z JSON.
+- **Stałe:** `LIMIT_DNI_W_MIESIACU`, `PRZERWA_NOWEGO_DNIA_MS`, `LASKA_OFFLINE_MS` w Swift generowane z jednego pliku JSON wytwarzanego z `src/konfiguracja.ts` (test: stałe Swift = JSON; ręczna zmiana w Swift = czerwone).
+- **Siła testu:** mutant `<` → `<=` w porównaniu limitu i granica `wygasa = teraz` w `proZegarka` muszą czerwienić `swift test` (sprawdzenie raz przy dodaniu pakietu, potem w przeglądzie 07).
+- Intencja wymagająca procesu aplikacji (`DziennikPlus`, plik niedostępny przed odblokowaniem) zostaje w XCTest celu po prebuild (`tests/wspolne/xctest-specyfikacja.md`).
 
 ## Opcje: zalety i wady
 ### A — zalety: wszystkie cele, CNG · wady: paczka społeczności, Swift.
