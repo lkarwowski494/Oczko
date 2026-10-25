@@ -15,7 +15,7 @@ const wywolaj = (nazwa, wejscie) => {
   if (typeof L[nazwa] !== 'function') return `BRAK FUNKCJI ${nazwa}`;
   try { return L[nazwa](wejscie); } catch (e) { return e?.kod === 'BLAD_DANYCH' ? { blad: 'BLAD_DANYCH' } : `WYJĄTEK ${e?.name}: ${e?.message}`; }
 };
-const sekcje = [['startDnia', w.startDnia], ['wolaStraznika', w.wolaStraznika || []], ['mozeZaczacDzien', w.mozeZaczacDzien || []], ['wznowienieLimitu', w.wznowienieLimitu || []], ['cofniecieSerii', w.cofniecieSerii || []]];
+const sekcje = [['startDnia', w.startDnia], ['wolaStraznika', w.wolaStraznika || []], ['mozeZaczacDzien', w.mozeZaczacDzien || []], ['wznowienieLimitu', w.wznowienieLimitu || []], ['cofniecieSerii', w.cofniecieSerii || []], ['scalDni', w.scalDni || []], ['oknoUczciweZasady', w.oknoUczciweZasady || []]];
 for (const [nazwa, lista] of sekcje) {
   for (const t of lista) {
     const kopia = structuredClone(t.wejscie);
@@ -23,6 +23,12 @@ for (const [nazwa, lista] of sekcje) {
     if (!isDeepStrictEqual(wynik, t.oczekiwane)) bledy.push(`${t.id} (${t.scenariusz}): ${JSON.stringify(wynik)} ≠ ${JSON.stringify(t.oczekiwane)}`);
     if (!isDeepStrictEqual(kopia, t.wejscie)) bledy.push(`${t.id}: funkcja zmieniła wejście`);
   }
+}
+
+// Własność scalenia (Z07-09): kolejność urządzeń nie zmienia wyniku.
+for (const t of (w.scalDni || []).filter((x) => !x.oczekiwane?.blad)) {
+  const ab = wywolaj('scalDni', t.wejscie), ba = wywolaj('scalDni', { a: t.wejscie.b, b: t.wejscie.a });
+  if (!isDeepStrictEqual(ab, ba)) bledy.push(`${t.id}: scalDni zależy od kolejności: ${JSON.stringify(ab)} ≠ ${JSON.stringify(ba)}`);
 }
 
 // Własności (Z07-07) na wszystkich poprawnych wektorach startDnia i mozeZaczacDzien.

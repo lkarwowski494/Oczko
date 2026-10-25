@@ -77,3 +77,28 @@ export function cofniecieSerii({ dni, dzienSerii, seriaZaczelaDzien, inneDodania
   const zwraca = zrodlo === 'pytanie-serii' && seriaZaczelaDzien && inneDodaniaDnia === 0 && dni.some((d) => d.data === dzienSerii);
   return { dni: zwraca ? dni.filter((d) => d.data !== dzienSerii) : dni, zwrocono: zwraca };
 }
+
+const sprawdzDni = (lista, gdzie) => {
+  if (!Array.isArray(lista) || !lista.every((d) => d && typeof d.data === 'string' && DATA.test(d.data) && typeof d.pro === 'boolean')) throw new BladDanych(`${gdzie}: zła lista dni`);
+};
+
+// Scalenie list dni z dwóch urządzeń (Z07-09, R-048; P-103 (6a); wzorzec dla `scal` roli 05, ADR-0005):
+// suma po dacie (jedna data = jeden dzień, L-11), dzień raz zaczęty z Pro zostaje dniem z Pro (OR),
+// żaden rozpoczęty dzień nie ginie (KP-15, L-16). Wynik posortowany po dacie, niezależny od kolejności urządzeń.
+export function scalDni({ a, b }) {
+  sprawdzDni(a, 'scalDni'); sprawdzDni(b, 'scalDni');
+  const wg = new Map();
+  for (const d of [...a, ...b]) wg.set(d.data, (wg.get(d.data) ?? false) || d.pro);
+  return [...wg.keys()].sort().map((data) => ({ data, pro: wg.get(data) }));
+}
+
+// Okno „Uczciwe zasady” (P-089 (3a), P-103 (5a); Z07-09, R-120): raz, gdy minął co najmniej jeden dzień z robótką bez Pro
+// (data < dzis; dzień z Pro według OR jak w scalDni), tylko w pewnym stanie darmowym, nigdy na ekranie licznika.
+// poziom: 'darmowa' (sklep odpowiedział: brak Pro) | 'pro' | 'niepewny' (błąd sklepu bez pamięci); ekran: miejsce, w którym okno by się pokazało.
+const POZIOMY = ['darmowa', 'pro', 'niepewny'];
+export function oknoUczciweZasady({ dni, dzis, widziane, poziom, ekran }) {
+  sprawdzDni(dni, 'oknoUczciweZasady');
+  if (typeof dzis !== 'string' || !DATA.test(dzis) || typeof widziane !== 'boolean' || !POZIOMY.includes(poziom) || typeof ekran !== 'string') throw new BladDanych('oknoUczciweZasady: złe dane wejściowe');
+  if (widziane || poziom !== 'darmowa' || ekran === 'licznik') return false;
+  return scalDni({ a: dni, b: [] }).some((d) => !d.pro && d.data < dzis);
+}
