@@ -99,6 +99,19 @@ for (const [klucz, lista] of Object.entries(stany).filter(([k]) => !k.startsWith
   ok(JSON.stringify([...zCheck].sort()) === JSON.stringify([...lista].sort()), `stany ⊆ CHECK: ${klucz} = {${lista.join(', ')}}`);
 }
 
+// Zapis dnia limitu (P-109, scalDni L-20): instrukcja z dane.md („zapis-dnia-limitu.sql”) wykonana na bazie: pro = OR, najwcześniejszy start dnia zostaje.
+const dane = readFileSync(join(dir, 'dane.md'), 'utf8');
+const zapisDnia = dane.match(/```sql\n-- zapis-dnia-limitu\.sql[^\n]*\n([\s\S]*?)```/)?.[1];
+ok(Boolean(zapisDnia), 'dane.md: blok „zapis-dnia-limitu.sql” istnieje');
+if (zapisDnia) {
+  const dbd = otworz(); migruj(dbd, MIGRACJE);
+  const zd = dbd.prepare(zapisDnia);
+  const dzien = () => dbd.prepare("SELECT pro, zaczeto_ms, zdarzenie_id FROM dzien_limitu WHERE dzien = '2026-10-22'").get();
+  zd.run('2026-10-22', 0, 200, 'b'); zd.run('2026-10-22', 1, 300, 'c');
+  ok(dzien().pro === 1 && dzien().zaczeto_ms === 200 && dzien().zdarzenie_id === 'b', 'dzień limitu: bez Pro, potem z Pro → pro = 1, start i zdarzenie z wcześniejszego zapisu');
+  zd.run('2026-10-22', 0, 100, 'a');
+  ok(dzien().pro === 1 && dzien().zaczeto_ms === 100 && dzien().zdarzenie_id === 'a' && dbd.prepare('SELECT count(*) n FROM dzien_limitu').get().n === 1, 'dzień limitu: wcześniejszy start z innego urządzenia bez Pro → pro zostaje 1, start = najwcześniejszy, jeden wiersz (L-20, L-23)');
+}
 // Baza nowsza niż aplikacja: odrzucona bez zmian.
 const db2 = otworz(); db2.exec('PRAGMA user_version = 2');
 ok(/nowsza/.test(rzuca(() => migruj(db2, MIGRACJE)) ?? '') && db2.prepare('PRAGMA user_version').get().user_version === 2, 'baza w wersji 2 odrzucona przez aplikację w wersji 1, bez zmian');

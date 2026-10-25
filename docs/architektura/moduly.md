@@ -93,7 +93,7 @@ export interface PortArchiwum {                                                 
 Jedna transakcja w kolejce (ADR-0002), bez `await` na nic poza bazą:
 1. odczyt licznika (`wartosc`, `glowa`, `zablokowany`, `konflikt`) i dni limitu miesiąca;
 2. `zablokowany` → `{ ok: false, powod: 'zablokowany' }` (F-03); `wolaStraznika({ rodzaj })` → jeśli `true`, `startDnia(...)`; niedozwolone → `{ ok: false, powod: 'limit' }` (ekran pokazuje limit zawczasu, więc w praktyce dotyczy wyścigu o północy, L-04);
-3. `INSERT zdarzenie` (rodzice = `[glowa]`), `UPDATE licznik SET wartosc, glowa`, `INSERT … ON CONFLICT DO NOTHING` do `dzien_limitu` (gdy dzień się zaczął), `UPDATE projekt SET ostatnia_praca_ms`;
+3. `INSERT zdarzenie` (rodzice = `[glowa]`), `UPDATE licznik SET wartosc, glowa`, zapis `dzien_limitu` instrukcją `zapis-dnia-limitu.sql` z `dane.md` (gdy dzień się zaczął; UPSERT z `pro = max(pro, excluded.pro)`, P-109), `UPDATE projekt SET ostatnia_praca_ms`;
 4. `COMMIT`; dopiero potem haptyka, odświeżenie ekranu, `LiveActivity.aktualizuj`, `Zegarek.wyslijStan`.
 Błąd w kroku 3: `ROLLBACK`, `{ ok: false, powod: 'zapis' }`, ekran pokazuje „Couldn’t save that row…” z ponowieniem (design-spec), wpis w `blad`.
 

@@ -35,10 +35,22 @@ Każda funkcja zapisująca z kontraktu (05: F-01, F-02, F-04–F-06, F-08, F-14�
 | zdarzenia licznika, wartość, notatki, części, projekty | użytkownik | **nie** | zapis w kolejce → kopia urządzenia / iCloud / archiwum → „Ostatnio usunięte” 30 dni → kaskada |
 | wzory (PDF, oryginał), rysunki, zdjęcia | użytkownik | **nie** (oryginał może mieć użytkownik gdzie indziej) | plik + odwołanie → sprzątanie pliku bez odwołań po COMMIT usunięcia |
 | zapas, narzędzia, obliczenia | użytkownik | nie | jak wyżej (zapas: `usunieto_ms`, 30 dni) |
-| dni limitu | aplikacja | nie (dane użytkownika synchronizowane iCloud, KP-15) | dopisywane; scalenie z innym urządzeniem = suma zbiorów dat, nigdy nie odbiera rozpoczętego dnia (L-16); zostają po usunięciu licznika albo projektu (P-072 (8a): inaczej usunięcie licznika zwalniałoby dzień limitu); usuwane tylko przez „usuń wszystko” (F-34) |
+| dni limitu | aplikacja | nie (dane użytkownika synchronizowane iCloud, KP-15) | dopisywane; scalenie z innym urządzeniem = suma po dacie, `pro` = OR (`scalDni`, L-20, P-109; zapis niżej), nigdy nie odbiera rozpoczętego dnia (L-16); zostają po usunięciu licznika albo projektu (P-072 (8a): inaczej usunięcie licznika zwalniałoby dzień limitu); usuwane tylko przez „usuń wszystko” (F-34) |
 | `licznik.wartosc`, `glowa`, `konflikt` | aplikacja | **tak** (`scal` nad zdarzeniami) | pamięć podręczna w tej samej transakcji co zdarzenie |
 | `ustawienie`, `blad` | aplikacja | tak / nie potrzeba | `blad` przycinany do `BLEDY_MAKS_WIERSZY` |
 | uprawnienie Pro | App Store | **tak** (StoreKit, ADR-0010) | nie przechowywane jako źródło prawdy; ostatni stan dla zegarka w `ustawienie` |
+
+## Dni limitu: zapis i scalenie (fix 2026-10-25, P-109)
+Jedna instrukcja dla trzech ścieżek: start dnia w `dodajRzad` (moduly.md, krok 3), scalenie dziennika +1 i zegarka (ADR-0008, ADR-0009) oraz synchronizacja iCloud i import „scal” (ADR-0005, ADR-0004). Wynik jest równy `scalDni()` z `docs/monetyzacja/limit.mjs` (L-20–L-20e, L-23): jedna data = jeden wiersz; dzień raz zaczęty z Pro zostaje dniem z Pro (`pro` = OR); zostaje najwcześniejszy start dnia i zdarzenie, które go zaczęło. Wiersza nigdy nie usuwa żadna z tych ścieżek (L-16). Kontrola: `sprawdz-schemat.mjs` wykonuje ten blok.
+```sql
+-- zapis-dnia-limitu.sql (parametry: dzien, pro, zaczeto_ms, zdarzenie_id)
+INSERT INTO dzien_limitu (dzien, pro, zaczeto_ms, zdarzenie_id) VALUES (?, ?, ?, ?)
+ON CONFLICT (dzien) DO UPDATE SET
+  pro = max(pro, excluded.pro),
+  zdarzenie_id = CASE WHEN excluded.zaczeto_ms < zaczeto_ms THEN excluded.zdarzenie_id ELSE zdarzenie_id END,
+  zaczeto_ms = min(zaczeto_ms, excluded.zaczeto_ms);
+```
+SQLite liczy wszystkie wyrażenia `SET` na wartościach wiersza sprzed aktualizacji, więc kolejność `zdarzenie_id` i `zaczeto_ms` nie zmienia wyniku (sprawdzone w `sprawdz-schemat.mjs`: wcześniejszy start z drugiego urządzenia ustawia oba pola).
 
 ## Polityka migracji
 - Wersja w `PRAGMA user_version`; migracje to dane w `src/dane/migracje/` (`0001.sql` = `schemat.sql` v1), uruchamiane przed pierwszym zapytaniem przez runner z modułu `dane-lokalne-sqlite` (wersja w `sprawdz-schemat.mjs` jest jego odpowiednikiem dla `node:sqlite`). **Wydanej migracji nie zmieniamy**; poprawka = nowa migracja.
