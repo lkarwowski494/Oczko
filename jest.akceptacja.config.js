@@ -1,5 +1,10 @@
 // Testy akceptacyjne przed kodem (DS-02, docs/jakosc/strategia.md): poza `npm test`; czerwone z właściwego powodu sprawdza scripts/jakosc/akceptacja-raport.mjs.
 const wspolne = {
+  // Zastępniki pakietów natywnych na Node (P-120 Q1a, jak w jest.config.js).
+  moduleNameMapper: {
+    '^expo-file-system$': '<rootDir>/tests/narzedzia/expo-file-system-node.ts',
+    '^expo-sqlite$': '<rootDir>/tests/narzedzia/expo-sqlite-node.ts',
+  },
   setupFiles: ['<rootDir>/jest.fast-check.js'],
   transformIgnorePatterns: [
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|react-native-svg|@testing-library/.*)',

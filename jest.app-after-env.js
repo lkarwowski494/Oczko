@@ -4,14 +4,6 @@ const ALLOWED_ERRORS = [
   'BottomTabView', // @react-navigation/bottom-tabs timer po animacji
 ];
 
-jest.mock('expo-file-system', () => ({
-  documentDirectory: 'file:///mock-documents/',
-  getInfoAsync: jest.fn().mockResolvedValue({ exists: true }),
-  makeDirectoryAsync: jest.fn().mockResolvedValue(undefined),
-  writeAsStringAsync: jest.fn().mockResolvedValue(undefined),
-  readDirectoryAsync: jest.fn().mockResolvedValue([]),
-  deleteAsync: jest.fn().mockResolvedValue(undefined),
-}), { virtual: true });
 
 const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;

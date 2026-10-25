@@ -1,6 +1,11 @@
 module.exports = {
   preset: 'jest-expo/ios',
   setupFiles: ['<rootDir>/jest.fast-check.js'],
+  // Zastępniki pakietów natywnych na Node (P-120 Q1a, jak Trening): prawdziwy dysk i prawdziwy SQLite, nie atrapa.
+  moduleNameMapper: {
+    '^expo-file-system$': '<rootDir>/tests/narzedzia/expo-file-system-node.ts',
+    '^expo-sqlite$': '<rootDir>/tests/narzedzia/expo-sqlite-node.ts',
+  },
   setupFilesAfterEnv: ['<rootDir>/jest.app-after-env.js'],
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',
