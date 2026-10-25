@@ -186,6 +186,7 @@ Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda
 | trwa | wstrzymaj | wstrzymana | `wstrzymano_ms` |
 | wstrzymana | wznow | trwa | `przerwy_ms += teraz − wstrzymano_ms`, `wstrzymano_ms = NULL` |
 | trwa / wstrzymana | zakoncz | zakonczona | `koniec_ms`; czas = `koniec − start − przerwy` |
+| wstrzymana | zakoncz | zakonczona | jak wyżej, a najpierw `przerwy_ms += teraz − wstrzymano_ms`, `wstrzymano_ms = NULL`: koniec w pauzie dolicza bieżącą przerwę, bo czas pauzy nie jest dzierganiem (fix-2, P-118 W6; jedyna reguła zgodna z formułą P-072) |
 | zakonczona | koryguj | zakonczona | `skorygowano = 1`, nowe `start_ms`/`koniec_ms` (`koniec ≥ start`) |
 | trwa, `teraz − start_ms ≥ SESJA_MAKS_H` | start aplikacji | zakonczona | `koniec_ms = start + SESJA_MAKS_H`, `do_korekty = 1` (zapomniany stoper) |
 | trwa / wstrzymana | scalenie przynosi otwartą sesję z wcześniejszym `start_ms` | zakonczona | `koniec_ms = start_ms`, `do_korekty = 1` (ADR-0005, uzupełnienie) |
