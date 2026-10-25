@@ -4,7 +4,7 @@ Stan: rola 01, tryb fix (2026-10-22) · Moduł z ER-11 i ER-12 (P-043, P-044, P-
 Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego modułu, dopóki użytkownik sam czegoś nie ustawi (P-046); kalendarz, dzień i podsumowanie okresu to jeden widok w historii albo projekcie, nie osobna zakładka (P-046).
 
 ### BR-DNI-001: Kalendarz dni z robótką
-- Przepływ: PR-16
+- Przepływ: PR-16 · Reguła: RD-20
 - Dowód potrzeby: J-11; dowód słaby (pochwały istniejącej funkcji, 0 próśb w recenzjach angielskich, P-043): „アクティビティが自動で記録されるのが、後から見返す時に進捗がわかりやすくてありがたいです” (編み物カウンター２, id12699699581); „毎日の編み物の励みになっています。” (編み物カウンター２, id9461069621) · ER-11 (K-1)
 - Kryteria akceptacji:
   - Scenariusz: Dzień z robótką
@@ -20,6 +20,10 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Gdy otwiera kalendarz października
     - Wtedy 21 i 22 października mają znacznik dnia z robótką, a 23 października go nie ma (RD-15, RD-16)
     - Oraz w limicie 21 października to jeden dzień limitu, a 23 października to drugi dzień limitu (BR-ZAK-005, L-04, L-06)
+  - Scenariusz: Kolumny kalendarza od poniedziałku (NZ-05-03)
+    - Zakładając, że telefon ma region en-US, który w ustawieniach systemu zaczyna tydzień w niedzielę
+    - Gdy użytkownik otwiera kalendarz października 2026
+    - Wtedy pierwsza kolumna to poniedziałek, a 1 października (czwartek) stoi w czwartej kolumnie (P-110 Q7, RD-20)
   - Scenariusz: Bez serii i ponagleń
     - Zakładając, że użytkownik nie dziergał od 10 dni
     - Gdy otwiera aplikację albo kalendarz
@@ -47,13 +51,18 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Wtedy całe 50 minut sesji jest w 21 października, dniu startu sesji, a rząd z 00:10 jest w 22 października (P-097 (4a), jak Trening `docs/29-zdrowie-odczyt-spec.md:152`; RD-16)
 
 ### BR-DNI-003: Podsumowanie tygodnia i miesiąca
-- Przepływ: PR-16
+- Przepływ: PR-16 · Reguła: RD-20
 - Dowód potrzeby: J-11; „As a data nerd I love all of the counts it gives you.” (My Row Counter, id13787781171); „you also get daily, weekly, monthly, and yearly stats” (My Row Counter, id12140475342); id10575864934 jw. · ER-11 (K-3)
 - Kryteria akceptacji:
   - Scenariusz: Tydzień z porównaniem
     - Zakładając, że w tym tygodniu użytkownik zrobił 80 rzędów i 4 godziny ze stopera, a w poprzednim 60 rzędów
     - Gdy otwiera podsumowanie tygodnia
-    - Wtedy widzi 80 rzędów, 4 godziny, liczbę ukończonych projektów oraz 60 rzędów w poprzednim tygodniu, a tydzień zaczyna się w dniu ustawionym w regionie telefonu
+    - Wtedy widzi 80 rzędów, 4 godziny, liczbę ukończonych projektów oraz 60 rzędów w poprzednim tygodniu
+    - Oraz tydzień trwa od poniedziałku do niedzieli niezależnie od języka i regionu telefonu, a podsumowanie ma podpis „Tygodnie od poniedziałku” (P-110 Q7, RD-20; NZ-05-03)
+  - Scenariusz: Niedziela w regionie z tygodniem od niedzieli (NZ-05-03)
+    - Zakładając, że telefon ma region en-US, który w ustawieniach systemu zaczyna tydzień w niedzielę, a użytkownik zrobił 10 rzędów w niedzielę 25 października 2026 i 5 rzędów w poniedziałek 26 października
+    - Gdy 26 października otwiera podsumowanie tygodnia
+    - Wtedy bieżący tydzień zaczyna się 26 października i pokazuje 5 rzędów, a 10 rzędów z 25 października należy do poprzedniego tygodnia, od 19 października (RD-20-W4, RD-20-W5)
   - Scenariusz: Czas bez stopera
     - Zakładając, że w miesiącu nie było żadnej sesji stopera
     - Gdy użytkownik otwiera podsumowanie miesiąca

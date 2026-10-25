@@ -2698,5 +2698,140 @@
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: d ≤ 0",
     "miejsce": "docs/brd/reguly.md:389"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W1",
+    "wejscie": {
+      "dzień [data]": "2026-10-21",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-10-19"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: środa, 2 dni po poniedziałku (P-110 Q7)",
+    "miejsce": "docs/brd/reguly.md:400"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W2",
+    "wejscie": {
+      "dzień [data]": "2026-10-19",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-10-19"
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: poniedziałek zaczyna własny tydzień",
+    "miejsce": "docs/brd/reguly.md:401"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W3",
+    "wejscie": {
+      "dzień [data]": "2026-10-25",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-10-19"
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: niedziela, ostatni dzień tygodnia od 19.10",
+    "miejsce": "docs/brd/reguly.md:402"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W4",
+    "wejscie": {
+      "dzień [data]": "2026-10-26",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-10-26"
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: następny poniedziałek, nowy tydzień",
+    "miejsce": "docs/brd/reguly.md:403"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W5",
+    "wejscie": {
+      "dzień [data]": "2026-10-25",
+      "region [BCP 47]": "en-US"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-10-19"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek i P-110 Q7: region zaczyna tydzień w niedzielę (`firstDay: 7`), wynik bez zmian",
+    "miejsce": "docs/brd/reguly.md:404"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W6",
+    "wejscie": {
+      "dzień [data]": "2026-10-24",
+      "region [BCP 47]": "ar-EG"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-10-19"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek i P-110 Q7: region zaczyna tydzień w sobotę (`firstDay: 6`), wynik bez zmian",
+    "miejsce": "docs/brd/reguly.md:405"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W7",
+    "wejscie": {
+      "dzień [data]": "2027-01-01",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2026-12-28"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: piątek, tydzień zaczęty w poprzednim roku",
+    "miejsce": "docs/brd/reguly.md:406"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W8",
+    "wejscie": {
+      "dzień [data]": "2028-03-01",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "2028-02-28"
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: środa, tydzień zaczęty w lutym roku przestępnego (29.02 w środku)",
+    "miejsce": "docs/brd/reguly.md:407"
+  },
+  {
+    "regula": "RD-20",
+    "id": "RD-20-W9",
+    "wejscie": {
+      "dzień [data]": "2026-02-30",
+      "region [BCP 47]": "pl-PL"
+    },
+    "oczekiwane": {
+      "początek tygodnia [data]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: data spoza kalendarza",
+    "miejsce": "docs/brd/reguly.md:408"
   }
 ]

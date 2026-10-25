@@ -387,3 +387,22 @@ Liczba dni d z dat (ER-38):
 | RD-19-W5 | 4,75 | brak | — | typowy | S-18 i rachunek: rozmiar spoza tabeli, bez najbliższej wartości |
 | RD-19-W6 | 3,1254 | D | — | typowy | S-18 i rachunek: 3,125 po zaokrągleniu do 0,001 mm |
 | RD-19-W7 | 0 | błąd danych | — | błąd | rachunek: d ≤ 0 |
+
+### RD-20: Początek tygodnia: poniedziałek
+- Wzór: początek tygodnia dnia D = D − (numer dnia tygodnia D − 1) dni, gdzie poniedziałek = 1 … niedziela = 7 (kalendarz gregoriański); tydzień trwa od poniedziałku do niedzieli dla wszystkich języków i regionów, także tych, które w ustawieniach systemu zaczynają tydzień w niedzielę albo w sobotę; podsumowanie ma podpis „Tygodnie od poniedziałku” (P-110 Q7, jak Trening `thisMonday`; NZ-05-03). Dzień D to dzień zmiany z RD-16 (`RRRR-MM-DD`), więc zmiany czasu i strefy rozstrzyga RD-16, nie ta reguła
+- Jednostki: dzień D [data]; region [BCP 47] (nie wpływa na wynik); początek tygodnia [data]
+- Granica: poniedziałek należy do tygodnia, który się w nim zaczyna (włącznie); niedziela to ostatni dzień tygodnia; data spoza kalendarza (np. 2026-02-30) to błąd danych
+- Podstawa: decyzja P-110 (Q7); rachunek (`datetime.date.weekday()` Pythona, sprawdzone `Intl.Locale.getWeekInfo()` w Node 22: en-US `firstDay: 7`, ar-EG `firstDay: 6`, pl-PL `firstDay: 1` — region pokazuje inny pierwszy dzień, a wynik się nie zmienia)
+- Krytyczna: nie
+
+| ID | dzień [data] | region [BCP 47] | Oczekiwane: początek tygodnia [data] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|
+| RD-20-W1 | 2026-10-21 | pl-PL | 2026-10-19 | 0 | typowy | rachunek: środa, 2 dni po poniedziałku (P-110 Q7) |
+| RD-20-W2 | 2026-10-19 | pl-PL | 2026-10-19 | 0 | granica | rachunek: poniedziałek zaczyna własny tydzień |
+| RD-20-W3 | 2026-10-25 | pl-PL | 2026-10-19 | 0 | poniżej | rachunek: niedziela, ostatni dzień tygodnia od 19.10 |
+| RD-20-W4 | 2026-10-26 | pl-PL | 2026-10-26 | 0 | powyżej | rachunek: następny poniedziałek, nowy tydzień |
+| RD-20-W5 | 2026-10-25 | en-US | 2026-10-19 | 0 | typowy | rachunek i P-110 Q7: region zaczyna tydzień w niedzielę (`firstDay: 7`), wynik bez zmian |
+| RD-20-W6 | 2026-10-24 | ar-EG | 2026-10-19 | 0 | typowy | rachunek i P-110 Q7: region zaczyna tydzień w sobotę (`firstDay: 6`), wynik bez zmian |
+| RD-20-W7 | 2027-01-01 | pl-PL | 2026-12-28 | 0 | typowy | rachunek: piątek, tydzień zaczęty w poprzednim roku |
+| RD-20-W8 | 2028-03-01 | pl-PL | 2028-02-28 | 0 | typowy | rachunek: środa, tydzień zaczęty w lutym roku przestępnego (29.02 w środku) |
+| RD-20-W9 | 2026-02-30 | pl-PL | błąd danych | — | błąd | rachunek: data spoza kalendarza |
