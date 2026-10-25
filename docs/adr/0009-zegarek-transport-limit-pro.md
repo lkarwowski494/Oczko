@@ -25,6 +25,7 @@ A + D. Zegarek trzyma mały plik stanu i kolejkę wysłanych zdarzeń; telefon s
 
 ## Uzupełnienie 2026-10-25 (fix 05: Z07-12, P-109, P-110 Q8a)
 - **Stan dla zegarka** = `StanZegarkaV2` = `StanEkranuBlokadyV2` (moduly.md, „Stan Live Activity i zegarka, wersja 2”) przez `updateApplicationContext`; pole `wersja` w ładunku, dekoder odrzuca wersję nowszą niż znana i zostaje przy ostatnim poprawnym stanie.
+- **Pro na zegarku** (KP-17, P-103 (4a)): `proZegarka` w pakiecie Swift `OczkoReguly` (ADR-0007, uzupełnienie) na wektorach PZ-01–PZ-11 z `docs/monetyzacja/wektory-dostepu.json`, wspólnych z TS: OR źródeł; kontekst z telefonu oceniany jak pamięć uprawnień (`proWaznoscDo: null` = dożywotni, okno 7 dni po końcu), StoreKit zegarka jak odczyt sklepu; `pro: false` nigdy nie daje Pro.
 - **Skrzynka zdarzeń po stronie telefonu** (P-110 Q8a): `transferUserInfo` odebrane, gdy JS nie działa, moduł natywny (`WCSessionDelegate`) dopisuje jako linie `ZdarzenieWejsciowe` z `zrodlo: 'zegarek'` do tego samego dziennika `.jsonl` co intencja ekranu blokady (ADR-0008), przez tę samą kolejkę szeregową `DziennikPlus`; scalanie, idempotencja po UUID, zatrute linie i skracanie jak w ADR-0008 (3). Odbiór działa w procesie aplikacji, więc App Group nie jest potrzebna; skrzynka nie jest kasowana przed `COMMIT` scalenia.
 - **Zegarek:** własny plik stanu i lista wysłanych, jeszcze niepotwierdzonych zdarzeń (do wyświetlenia wartości bez telefonu); potwierdzeniem jest `glowa` z kolejnego kontekstu telefonu.
 
