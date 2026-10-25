@@ -3,11 +3,11 @@
 // Wyrocznie: docs/tresci/wektory.json „druty” (DRT-M04000, DRT-M03000, DRT-M03250; rola 06), „jednostki” (JW-yd-437);
 // scenariusze docs/brd/wymagania-projekt.md:40, :44, :80, docs/brd/wymagania-narzedzia.md:11, :33 (wartości w scenariuszu).
 import fc from 'fast-check';
-import { rozmiarUS } from '../../../../src/domena/obliczenia/druty';
-import { przelicz } from '../../../../src/domena/obliczenia/jednostki';
-import { czasSesjiMs, przejdzSesje, rozpocznijSesje } from '../../../../src/domena/maszyny/sesja';
-import { SESJA_MAKS_H } from '../../../../src/konfiguracja';
-import { WEKTORY_TRESCI, MIN, GODZ, opcjeWlasnosci } from '../../../narzedzia/akceptacja';
+import { rozmiarUS } from '../../../src/domena/obliczenia/druty';
+import { przelicz } from '../../../src/domena/obliczenia/jednostki';
+import { czasSesjiMs, przejdzSesje, rozpocznijSesje } from '../../../src/domena/maszyny/sesja';
+import { SESJA_MAKS_H } from '../../../src/konfiguracja';
+import { WEKTORY_TRESCI, MIN, GODZ, opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 function wektorDrutu(id: string) {
   const w = WEKTORY_TRESCI.druty.find((x) => x.id === id);

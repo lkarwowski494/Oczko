@@ -2,11 +2,11 @@
 // Wyrocznia: tests/wektory/brd.json (RD-01, RD-03, RD-04, tolerancja z wektora) i docs/tresci/wektory.json „jednostki”
 // (tolerancja 1e-9, przelicznik uncji 28,349523125 g z parametry.json, JED-005). Własności: przeliczenie tam i z powrotem.
 import fc from 'fast-check';
-import { oczkaNaSzerokosc, proba4inNa10cm } from '../../../../src/domena/obliczenia/oczka';
-import { przelicz } from '../../../../src/domena/obliczenia/jednostki';
-import type { Przelicznik } from '../../../../src/domena/obliczenia/jednostki';
-import parametry from '../../../../docs/tresci/parametry.json';
-import { wektoryReguly, liczba, licznikWektorow, wywolaj, BLAD_DANYCH, WEKTORY_TRESCI, opcjeWlasnosci } from '../../../narzedzia/akceptacja';
+import { oczkaNaSzerokosc, proba4inNa10cm } from '../../../src/domena/obliczenia/oczka';
+import { przelicz } from '../../../src/domena/obliczenia/jednostki';
+import type { Przelicznik } from '../../../src/domena/obliczenia/jednostki';
+import parametry from '../../../docs/tresci/parametry.json';
+import { wektoryReguly, liczba, licznikWektorow, wywolaj, BLAD_DANYCH, WEKTORY_TRESCI, opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 const KRYTERIA: Record<string, string> = {
   'RD-01-W1': 'BR-KAL-001/S1',

@@ -2,10 +2,10 @@
 // Wyrocznia: docs/tresci/wektory.json (klasyfikacja_4in, klasyfikacja_10cm, druty, szydelka; rola 06, P-084, P-086 Q1a/Q3b)
 // oraz tests/wektory/brd.json RD-10 i RD-11. RD-10 tekst i RD-10-W2 „2.3” są błędne (ER-34, ER-39): W2 czytany jako {2, 3}
 // z tabeli reguly.md:164; „poza tabelą” = wynik „powyzej_tabeli” (P > 40). Kategorie porównywane jako zbiory (§3.3).
-import { klasyfikujGrubosc } from '../../../../src/domena/obliczenia/grubosc';
-import type { Klasyfikacja } from '../../../../src/domena/obliczenia/grubosc';
-import { rozmiarUS } from '../../../../src/domena/obliczenia/druty';
-import { type WartoscBrd, WEKTORY_TRESCI, wektoryReguly, licznikWektorow, wywolaj, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
+import { klasyfikujGrubosc } from '../../../src/domena/obliczenia/grubosc';
+import type { Klasyfikacja } from '../../../src/domena/obliczenia/grubosc';
+import { rozmiarUS } from '../../../src/domena/obliczenia/druty';
+import { WEKTORY_TRESCI, wektoryReguly, licznikWektorow, wywolaj, BLAD_DANYCH } from '../../narzedzia/akceptacja';
 
 type OczekiwaneTresci = { wynik: string; kategorie?: number[]; p4_zaokraglone?: number | null; polowka?: boolean };
 const rosnaco = (a: number, b: number) => a - b;
@@ -61,25 +61,24 @@ describe('BR-KAL-003 BR-KAL-008 klasyfikujGrubosc: wektory treści „klasyfikac
   });
 });
 
-describe('RD-10 klasyfikujGrubosc: wektory BRD (W2 według reguly.md, ER-34)', () => {
+describe('RD-10 klasyfikujGrubosc: wektory BRD (kształt po P-097 1a: wynik + kategorie)', () => {
+  // NZ-05-01 (08): brd.json podaje `wynik [-]` i zbiór `kategorie [-]` (tablica albo null); W2 = {2, 3} wprost (ER-34, ER-39 zamknięte).
+  // Pola `p4Zaokraglone` i `polowka` sprawdzają wektory treści wyżej (88 + 18), tu wynik i zbiór kategorii.
   const wektory = wektoryReguly('RD-10');
   const licznik = licznikWektorow();
-  /** BRD: liczba = jedna kategoria; 2.3 = zapis zbioru {2, 3} (ER-39); „poza tabelą”; „błąd danych”. */
-  function zBrd(p: number, o: WartoscBrd): Klasyfikacja {
-    if (o === BLAD_DANYCH) return { wynik: 'blad_danych' };
-    if (o === 'poza tabelą') return { wynik: 'powyzej_tabeli', p4Zaokraglone: p, polowka: false };
-    if (o === 2.3) return { wynik: 'kategorie', kategorie: [2, 3], p4Zaokraglone: p, polowka: false };
-    if (typeof o === 'number' && Number.isInteger(o)) return { wynik: 'kategorie', kategorie: [o], p4Zaokraglone: p, polowka: false };
-    throw new Error(`RD-10: nieznane oczekiwanie ${o}`);
-  }
+  const WYNIK: Record<string, Klasyfikacja['wynik']> = { kategorie: 'kategorie', 'między kategoriami': 'miedzy', 'poza tabelą': 'powyzej_tabeli', [BLAD_DANYCH]: 'blad_danych' };
   test.each(wektory.map((w) => [`${w.id === 'RD-10-W2' ? 'BR-KAL-008/S1' : 'BR-KAL-008'} ${w.id} (${w.rodzaj}) P=${w.wejscie['P [o./4 in]']} o./4 in`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
       const p = Number(w.wejscie['P [o./4 in]']);
-      expect(jakoZbior(klasyfikujGrubosc({ oczka: p, na: '4in' }))).toEqual(zBrd(p, w.oczekiwane['kategorie [-]']));
+      const wynik = WYNIK[String(w.oczekiwane['wynik [-]'])];
+      if (!wynik) throw new Error(`RD-10: nieznany wynik ${String(w.oczekiwane['wynik [-]'])}`);
+      const k = w.oczekiwane['kategorie [-]'];
+      const oczek = Array.isArray(k) ? { wynik, kategorie: k.map(Number).sort(rosnaco) } : { wynik };
+      expect(jakoZbior(klasyfikujGrubosc({ oczka: p, na: '4in' }))).toMatchObject(oczek);
     });
   });
   test(`RD-10 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(6);
+    expect(wektory.length).toBe(14); // W7–W14 dopisane przez 01 (P-084, ER-31, ER-34)
     licznik.wynik(wektory.length);
   });
 });
@@ -119,7 +118,7 @@ describe('RD-11 rozmiarUS: wektory BRD (druty)', () => {
     });
   });
   test(`RD-11 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(4);
+    expect(wektory.length).toBe(7); // W5–W7 (zaokrąglenie do 0,001 mm) dopisane przez 01
     licznik.wynik(wektory.length);
   });
 });
