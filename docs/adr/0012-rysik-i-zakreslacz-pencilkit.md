@@ -22,6 +22,9 @@ Opcja A.
 - Test UI (07, symulator iPad): w trybie `pencilOnly` przeciągnięcie palcem przewija i nie dodaje kresek (`drawing.strokes.count` bez zmian); test XCTest: `PKDrawing(data:)` z zapisanego pliku daje tyle samo kresek.
 - Plik rysunku zapisany przez kolejkę plików z SHA-256 (spójność, ADR-0001).
 
+## Uzupełnienie 2026-10-25 (fix 05: Z07-17; decyzja A bez zmian)
+- **Kiedy zapis rysunku:** po każdej zmianie rysunku z opóźnieniem ≤ 1 s od ostatniej kreski (`RYSUNEK_ZAPIS_MS`) i natychmiast przy przejściu w tło (`AppState → background`, zapis krótki, pod `CzasWTle.chron`) oraz przy zmianie strony i zamknięciu wzoru. Każdy zapis tworzy nowy plik `<sha256>.pkdrawing` i jednym zapisem w kolejce przestawia odwołanie `rysunek.plik_sha256`; poprzedni plik bez odwołań usuwa sprzątanie (moduly.md, „Sprzątanie plików”). Zabicie procesu traci najwyżej kreski z ostatniej sekundy.
+
 ## Opcje: zalety i wady
 ### A — zalety: system robi trudną część · wady: Swift, test tylko w symulatorze.
 ### B — zalety: czysty JS · wady: brak odrzucania dłoni (rdzeń P-042), własna obsługa nacisku i wygładzania.

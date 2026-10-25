@@ -129,7 +129,7 @@ CREATE TABLE wzor (                                   -- F-24, F-25, F-26, F-55 
   pdf_sha256 TEXT REFERENCES plik(sha256) ON DELETE RESTRICT,       -- NULL tylko dla Worda w podglądzie (P-071 (5a))
   oryginal_sha256 TEXT REFERENCES plik(sha256) ON DELETE RESTRICT,
   adres TEXT,                                                       -- URL strony albo filmu
-  znacznik TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(znacznik)), -- {licznik_id, strona, y, wysokosc_rzedu, rzad_bazowy} (BR-WZR-003)
+  znacznik TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(znacznik)), -- {licznik_id, strona, y, wysokosc_rzedu, rzad_bazowy} (BR-WZR-003); y i wysokosc_rzedu: ułamek wysokości strony 0–1 (ADR-0011, uzupełnienie)
   zmieniono_ms INTEGER NOT NULL,
   CHECK (pdf_sha256 IS NOT NULL OR (zrodlo = 'word' AND oryginal_sha256 IS NOT NULL))
 ) STRICT;

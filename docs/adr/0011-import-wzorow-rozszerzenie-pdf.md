@@ -25,6 +25,10 @@ Opcja A, z wariantem zastępczym dla Worda: jeśli eksperyment pokaże, że rend
 - Testy importu (07, symulator): PDF, JPEG, URL lokalnego serwera testowego, `.docx` z korpusu; każdy daje PDF z ≥ 1 stroną i zachowany oryginał; skrzynka pusta po imporcie.
 - Pamięć rozszerzenia: rozszerzenie nie dekoduje pliku (kopiowanie strumieniowe), test z PDF 100 MB.
 
+## Uzupełnienie 2026-10-25 (fix 05: Z07-17; decyzja A bez zmian)
+- **Znacznik bieżącego rzędu** (BR-WZR-003, pole `wzor.znacznik`): współrzędne względne strony PDF, nie punkty ekranu — `y` i `wysokosc_rzedu` jako ułamek wysokości strony 0–1 (od góry strony w jej układzie bez obrotu), `strona` od 0. Wektor dla 07: ten sam znacznik po obrocie urządzenia, zmianie powiększenia i na innym rozmiarze ekranu wskazuje ten sam rząd (przeliczenie tylko w widoku, dane bez zmian); strona obrócona w PDF (`/Rotate`) — współrzędne w układzie strony przed obrotem.
+- **Rozszerzenie udostępniania:** plik kopiowany do skrzynki strumieniowo (kopiowanie pliku przez system plików albo strumień, bez wczytywania całego pliku do pamięci); plik większy niż `WZOR_MAKS_MB` nie jest kopiowany, a rozszerzenie pokazuje jedno zdanie (tekst: 04). Limit pamięci rozszerzenia nie jest liczbą podaną w dokumentacji przeczytanej w tej sesji [DO USTALENIA: pomiar na urządzeniu przy TestFlight], stąd kopiowanie bez wczytywania.
+
 ## Opcje: zalety i wady
 ### A — zalety: jeden format dla funkcji wzoru · wady: konwersja na urządzeniu, Word niepewny.
 ### B — zalety: wierność źródła · wady: trzy widoki, znacznik i rysik tylko na części formatów.

@@ -25,6 +25,9 @@ Opcja A. Scalenie po stałych identyfikatorach (UUID wierszy i zdarzeń) z funkc
 - Test na kopii: archiwum z każdej wydanej wersji importowane do bieżącej (jak migracja).
 - Kontrola: kopia samego `.db` nigdzie w kodzie (grep `copyAsync` na ścieżce bazy w CI).
 
+## Uzupełnienie 2026-10-25 (fix 05: Z07-17; decyzja A bez zmian)
+- **Typ pliku `.oczko`:** konfiguracja iOS deklaruje typ eksportowany (`UTExportedTypeDeclarations`): identyfikator `com.apps4brew.knitting.archiwum` (prefiks z `bundleIdentifier` w `app.json`), rozszerzenie `oczko`, zgodność (`UTTypeConformsTo`) z `public.zip-archive` i `public.data`, opis „Oczko backup” (tekst: 04, tłumaczenia: 09); oraz `CFBundleDocumentTypes` z tym typem i `LSHandlerRank = Owner`, żeby plik otwierał się w Oczku z Plików i z poczty. Kontrola w podpisanym `.ipa` (ADR-0014, uzupełnienie).
+
 ## Opcje: zalety i wady
 ### A — zalety: kompletność, spójna migawka, weryfikacja przed zapisem · wady: rozmiar, kod archiwum.
 ### B — zalety: czytelny format · wady: druga ścieżka mapowania schematu na JSON i z powrotem (podwójne migracje), base64 powiększa pliki o ok. 1/3.
