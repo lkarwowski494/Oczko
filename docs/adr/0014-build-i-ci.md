@@ -1,5 +1,5 @@
 # 0014. Build i CI: testy, symulatory i buildy do TestFlight na runnerze macOS GitHub Actions; sekrety podpisu tylko w chronionym środowisku
-Data: 2026-10-22 · Status: **przyjęta** (P-071 (6b)) · Rola: 05 (E1) · Zależy od: P-041, NFR-KOS-001, ADR-0007
+Data: 2026-10-22 · Status: **przyjęta** (P-071 (6b); uzupełniona 2026-10-25) · Rola: 05 (E1) · Zależy od: P-041, NFR-KOS-001, ADR-0007
 
 ## Kontekst i problem
 Weryfikacja tylko automatem (P-041), w tym testy na symulatorze iOS i zegarka (NFR-SYS-001, NFR-ZEG-001, NFR-DOS-001). Standardowe runnery GitHub, w tym macOS, są „free and unlimited” w repozytoriach publicznych (rejestr Apple 12). EAS Free: 0 USD, 15 buildów iOS/mies., kolejka o niskim priorytecie, limit 45 min (rejestr Expo 12a). Oficjalnego przepisu Expo na GitHub Actions nie znaleziono (12b, [DO USTALENIA]); `eas build --local` i `prebuild` + Xcode są opisane.
@@ -29,6 +29,24 @@ Opcja A = wariant (b) pytania Q6 (właściciel: „6b”, 2026-10-22; rekomendac
 - Workflow (07/10): zadanie Linux `npm test` + `npm run verify`; zadanie macOS `prebuild` + `xcodebuild test` (iOS 18 i najnowszy symulator), bez `environment:` i bez sekretów.
 - Kontrola w CI (skrypt roli 07): każde odwołanie `secrets.ASC_*` występuje tylko w zadaniu z `environment: testflight`; workflow z tym zadaniem nie ma wyzwalacza `pull_request` ani `pull_request_target`.
 - Kontrola sekretów: `git diff --cached` przed commitem, skan sekretów w CI; brak plików `.p8`, `.mobileprovision`, `.env` w repo.
+
+## Uzupełnienie 2026-10-25 (fix 05: Z07-19; decyzja A bez zmian)
+Kontrole po `prebuild` nie wystarczą: sprawdzany jest artefakt, który idzie do Apple. Skrypt kontroli podpisanego `.ipa` (rola 10, krok workflow TestFlight przed wysyłką; ten sam skrypt na `.app` symulatora w `jakosc-ios.yml` informacyjnie) rozpakowuje archiwum i sprawdza każdy pakiet (aplikacja, `Watch/*.app`, `PlugIns/*.appex`):
+- uprawnienia (`codesign -d --entitlements`) i ich wartości per pakiet zgodne z listą z `docs/architektura/prywatnosc.md` (iCloud/CloudKit, App Group tylko w rozszerzeniu udostępniania i aplikacji, ADR-0011; brak uprawnień nieużywanych);
+- `main.jsbundle` jest bajtkodem Hermesa i build nie zawiera `EXDevLauncher` ani innych modułów deweloperskich;
+- zegarek osadzony (`Watch/*.app`, `WKCompanionAppBundleIdentifier` = identyfikator aplikacji) i rozszerzenia obecne (`PlugIns/*.appex`: Live Activity, udostępnianie);
+- `MinimumOSVersion` = 18.0 (aplikacja, rozszerzenia) i 11.0 (zegarek), ADR-0006;
+- `CFBundleVersion` równy we wszystkich pakietach, w formacie z rejestru Apple 21d, większy niż 1004 (TestFlight 0.1.0, P-070) i niż ostatni build w App Store Connect;
+- `PrivacyInfo.xcprivacy` w każdym pakiecie z kodem, kategorie zgodne z `prywatnosc.md` i `privacy-pliki-e3.txt`;
+- 35 katalogów `.lproj` (`CFBundleLocalizations` = lista języków, ADR-0017);
+- `NSExtensionActivationRule` rozszerzenia udostępniania ≠ `TRUEPREDICATE` (ADR-0011);
+- deklaracja typu `.oczko` (`UTExportedTypeDeclarations`, `CFBundleDocumentTypes`, ADR-0004);
+- `ITSAppUsesNonExemptEncryption` obecny z wartością potwierdzoną przez rolę 10 (rejestr Apple 21e);
+- orientacje iPada i `UIBackgroundModes` = tylko tryby z ADR (E3 §2 pkt 10).
+
+**Numer buildu:** `CFBundleVersion` = `github.run_number × 10 + github.run_attempt + PRZESUNIECIE`, gdzie przesunięcie daje wynik > 1004 przy pierwszym przebiegu (wartość ustala rola 10 przy pierwszym buildzie); skrypt sprawdza przed wysyłką, że numer jest większy niż ostatni z App Store Connect API.
+**Po wysyłce:** workflow odpytuje App Store Connect API o build do `processingState` = `VALID` (`FAILED` albo `INVALID` = czerwony przebieg z nazwą stanu; rejestr Apple 21f), z limitem czasu ustalonym przez rolę 10.
+Adresy dokumentacji Apple, na które powołuje się zgłoszenie 07 (A1–A4), są w rejestrze: 21a (środowiska CloudKit), 21d (`CFBundleVersion`), 21e (szyfrowanie), 21f (stan przetwarzania); wydanie stopniowe dotyczy roli 12 (Z07-21).
 
 ## Opcje: zalety i wady
 ### A — zalety: jedno miejsce, bez limitu buildów · wady: klucz App Store Connect w sekretach publicznego repo, własny skrypt podpisu.
