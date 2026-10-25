@@ -12,3 +12,14 @@ Jedno miejsce zgłoszeń roli 07 (P-090 Q3a): zapisane teraz, poprawki zbiorczo 
 | Z07-04 | 03/04 | BR-LIC-012 (F-09, tryb „rząd w trakcie”) a ekran zawsze z „Now knitting row N” | `docs/design/design-spec.md:30` | otwarte | BR-LIC-012 |
 | Z07-05 | 04 | stany bez zrzutu wzorcowego (zablokowany, seria stuknięć, błąd zapisu, offline, pusty, oferty z subskrypcją / bez sieci) i ekrany nienarysowane (wzór poziomo, zegarek, ekran blokady, kalendarz, Ustawienia, tryb awaryjny ADR-0019, okno „Uczciwe zasady” P-089); ok. 20 stanów z BR bez makiety | `design-spec.md:51–57, :95`; `e0/kryteria.md` | otwarte | testy ekranów tych stanów: zapytania po roli bez etykiety wzorcowej |
 | Z07-06 | 01/04 | NFR-DOS-002, NFR-WYD-001 bez progu (OP-16, OP-17) | `docs/brd/README.md:116–117` | otwarte | pomiar bazowy informacyjny do czasu progu |
+
+## Zgłoszenia z E1 (2026-10-25)
+Pełny opis, dowód (`plik:linia` albo komenda), propozycja i testy zależne: [`e1/zgloszenia-e1.md`](e1/zgloszenia-e1.md).
+| Do | ID | Temat |
+|---|---|---|
+| 01 | ER-37–ER-44 | RD-16 strefy i DST; arytmetyka RD-14/07/15/11 i tolerancja; schemat `brd.json`; reguły licznika (RD-17 a scalone stuknięcia, RD-12, RD-13); cofnięcie ze środka historii; import „scal”; liczby w 35 lokalizacjach; dni przy północy |
+| 02 | Z07-07–Z07-09 | wektory limitu (L-04c, L-04d, Z-09, Z-10); wektory dostępu (W-19, karencja, zakup oczekujący, Pro na zegarku); reguły produktu (dzień ukończony dla okna „Uczciwe zasady”, seria a dzień limitu, `pro` przy scaleniu) |
+| 04 | Z07-10 | liczba 5-cyfrowa przy AX5, ostrzeżenie o metadanych przy eksporcie, stan „czeka” |
+| 05 | Z07-11–Z07-19 | intencja i dziennik +1 (M-10, złoty plik TS↔Swift); kontrakt stanu Live Activity i zegarka; `scal` iteracyjne i M-09; iCloud (kolejność, schemat CloudKit); migracje i plan zapytań; obejścia narzędzi; wzory i `.oczko`; wstrzyknięty zegar; kontrola podpisanego `.ipa` |
+| 10 | Z07-20 | lista wydania (eksport, IAP w pierwszej wersji, notatka dla recenzenta) |
+| 12 | Z07-21 | start w tle po aktualizacji, limit kopii, czas migracji wobec watchdoga, Xcode |

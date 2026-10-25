@@ -2,7 +2,7 @@
 
 Źródło: płytki klon `https://github.com/lkarwowski494/trening`, gałąź `main`, commit **928d0ffeb8650efa8b758add627d07d71f47a430**
 (2026-10-25 17:39 +0100, „Merge pull request #62 from lkarwowski494/przeklad-workflow”). Lokalnie:
-`/tmp/claude-0/-home-user-Oczko/7a539315-487d-5764-892a-02446533611e/scratchpad/trening`. W żadnym repo nic nie zmieniłem.
+klon w scratchpadzie roli 07 (poza repo). W żadnym repo nic nie zmieniłem.
 Ścieżki niżej są względne wobec katalogu głównego klonu; `plik:linia` dotyczy tego commitu.
 
 **Czego nie udało się ustalić:** czasów z GitHub API. Narzędzia MCP `actions_list` i `api.github.com` odmówiły dostępu
