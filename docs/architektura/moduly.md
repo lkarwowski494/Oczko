@@ -202,7 +202,7 @@ Po zabiciu procesu sesja „trwa” odtwarza się ze znacznika (zasada 4 modułu
 | aktywna / blad / brak_konta | zmiana konta (`switchAccounts` albo `signIn` innego użytkownika, rejestr Apple 21c) | konto_zmienione (wysyłka zatrzymana, pytanie; ADR-0005, P-110 Q9a) |
 | konto_zmienione | polacz | aktywna (pełne ponowne wysłanie lokalnych rekordów, scalenie przez `scal`) |
 | konto_zmienione | nie_synchronizuj | wylaczona (dane lokalne zostają) |
-Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHECK.
+Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHECK. Zdarzenie spoza tabeli → stan bez zmian (fix-2 2026-10-25, P-118 W5): zdarzenia przychodzą z modułu natywnego i mogą się powtarzać (np. drugie „ustąpienie przyczyny”), więc idempotentny brak zmiany, a nie błąd — inaczej niż w maszynach projektu i importu, gdzie przejście wywołuje użytkowniczka.
 
 ### Import archiwum (ADR-0004)
 `sprawdzanie` (manifest, wersja, SHA-256, miejsce) → `odrzucony` (powód) | `gotowy` → wybór `scal` / `zastap` → `kopia_przed` (`VACUUM INTO`) → `wczytywanie` (krótkie transakcje w kolejce) → `gotowe` | `wycofany` (przywrócenie kopii przed). Na każdym etapie przed `wczytywanie` baza bez zmian. `blad` przed `wczytywanie` (np. `VACUUM INTO` bez miejsca w `kopia_przed`) → `odrzucony` z powodem; ten sam krok usuwa niepełny plik kopii przed (fix-2 2026-10-25, P-118 W3). `bazaZmieniona(s)` = „ta operacja zmieniała bazę”: `false` przed `wczytywanie`, `true` w `wczytywanie`, `gotowe` i `wycofany` — po wycofaniu dane równe kopii przed, ale przypadek użycia i tak odświeża odczyty ekranów, stan Live Activity i zegarka (P-118 W4).
