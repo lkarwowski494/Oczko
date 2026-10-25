@@ -609,18 +609,23 @@ Różnice nazwane: Family Sharing: kierunek jak w Treningu (S5), włączenie prz
 Wymagania danych dla 05: pamięć podręczna uprawnień (JSON `Pamiec`, KP-06); licznik limitu: brak (P-030). Wpis do inwentarza prywatności: zakup przez StoreKit bez SDK zewnętrznego; czy transakcja obsługiwana przez Apple jest „collect” w rozumieniu App Privacy (MS-31: „transmitting data off the device in a way that allows you and/or your third-party partners to access it…”): [DO USTALENIA] przez 05 (OP-23). „Potwierdzenie” ADR: wektory w Node (kod 0) i scenariusze na telefonie niżej. Adapter izoluje bibliotekę za `Uprawnienie[]`, więc zamiana na własny moduł nie zmienia logiki dostępu.
 
 ### Testy, których nie zrobi Node (krok właściciela, dla strategii 07)
+**Fix 2026-10-25 (Z07-01):** tabela modelu B (P-029) zastąpiona; obowiązuje jedna lista kontrolna z telefonu przy TestFlight wewnętrznym (P-090 Q1a, P-091 (2a)) w `docs/jakosc/strategia.md` §8 (TT-01–TT-11, prowadzi rola 07). Po utracie Pro (zwrot, wygaśnięcie, odebranie z rodziny) wraca limit dni, a dane, historia, eksport i kopia działają w pełni (KP-02 V4) — nie „tryb do odczytu” z modelu B.
 Bez Maca (OP-03) testy StoreKit tylko przez TestFlight: „Apps downloaded from TestFlight will automatically operate in a sandbox environment.” (MS-29); piaskownica pozwala testować zakupy „using test accounts without incurring charges” (MS-30).
-| Scenariusz | Oczekiwane | Wektor |
-|---|---|---|
-| zakup Pro w TestFlight | Pro działa od razu | W-01 |
-| usunięcie i ponowna instalacja, potem start bez stuknięcia „Przywróć” | Pro działa (bieżące uprawnienia) | W-02 |
-| tryb samolotowy po zakupie, zabicie i start aplikacji | Pro działa z pamięci | W-03 |
-| iPad z tym samym kontem App Store, „Przywróć” | Pro działa | W-09 |
-| inne konto piaskownicy bez zakupu, „Przywróć” | komunikat, brak Pro | W-07 |
-| „Usuń wszystkie dane”, potem „Przywróć” | Pro wraca (KP-05) | W-02 |
-| członek rodziny po włączeniu Family Sharing; potem odebranie z rodziny | Pro działa; po odebraniu Pro znika, dane do odczytu (KP-02) | W-10, W-14 |
-| zwrot | Pro znika, dane do odczytu (KP-02) | W-05, W-06; jak wywołać zwrot w piaskownicy bez Xcode: [DO USTALENIA] (OP-21) |
-| zegarek bez telefonu w pobliżu | [DO USTALENIA] przez 05: jak zegarek czyta uprawnienie (OP-22) | — |
+| Scenariusz V4 | Oczekiwane | Wektor | Na liście P-090 |
+|---|---|---|---|
+| zakup subskrypcji miesięcznej albo rocznej w TestFlight | Pro od razu, licznik bez limitu dni | W-01, W-15 | TT-01 |
+| zakup dożywotniego przy aktywnej subskrypcji | Pro bez końca; ekran zakupu informuje o samodzielnym anulowaniu subskrypcji (KP-03) | W-17 | „Nie sprawdzono” (wektor + E2E na sztucznym sklepie) |
+| usunięcie i ponowna instalacja, start bez „Przywróć” | Pro działa (bieżące uprawnienia) | W-02 | TT-02 |
+| tryb samolotowy po zakupie, zabicie i start | Pro działa z pamięci; subskrypcja jeszcze 7 dni po końcu okresu bez sieci (P-103 (3a)) | W-03, W-18, W-12b | TT-03 |
+| subskrypcja wygasa bez odnowienia (piaskownica skraca okresy) | Pro znika, wraca limit dni; dane, historia, eksport działają | W-16 | „Nie sprawdzono” (wektor; czas właściciela bez nowej informacji) |
+| problem z płatnością przy odnowieniu, karencja 3 dni (krok właściciela 6) | Pro trwa do końca karencji, potem jak wyżej | W-23, W-23b | „Nie sprawdzono” (Trening: pozycja do piaskownicy, `docs/30-storekit-etap0.md` pkt 4) |
+| zakup oczekujący (Ask to Buy) | komunikat „czeka”, bez Pro i bez błędu; po zgodzie Pro bez restartu | W-22, W-22b, K-02 | „Nie sprawdzono” (wymaga konta dziecka; E2E na sztucznym sklepie) |
+| iPad z tym samym kontem App Store, „Przywróć” | Pro działa | W-09 | TT-10 |
+| inne konto piaskownicy bez zakupu, „Przywróć” | komunikat, brak Pro | W-07 | „Nie sprawdzono” (strategia §8) |
+| „Usuń wszystkie dane”, potem „Przywróć” | dane puste, Pro wraca (KP-05) | W-02 | TT-11 |
+| członek rodziny po włączeniu Family Sharing; potem odebranie | Pro działa; po odebraniu wraca limit dni, dane w pełni dostępne (KP-02) | W-10, W-14 | TT-04 |
+| zwrot | jak odebranie z rodziny | W-05, W-06 | TT-05 (sposób w piaskownicy: [DO USTALENIA], OP-21, rola 10) |
+| zegarek bez telefonu w pobliżu | Pro według `proZegarka()` (ADR-0009 D, KP-17) | PZ-01–PZ-11 | „Nie sprawdzono” (brak Apple Watch u właściciela; strategia §8) |
 
 ### Zgłoszenie do roli 01 (do poprawki zbiorczej z ER-06 i ER-07, P-028)
 | ID | Zgłoszenie | Dowód |
