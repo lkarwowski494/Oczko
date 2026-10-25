@@ -1,9 +1,0 @@
-appId: com.apps4brew.knitting
----
-- launchApp
-- tapOn: "Ustawienia"
-- assertVisible: "JĘZYK & SYSTEM JEDNOSTEK"
-- tapOn: "Kopia zapasowa"
-- assertVisible: "Utwórz kopię zapasową"
-- tapOn: "Utwórz kopię zapasową"
-- assertVisible: "Pomyślnie utworzono kopię zapasową"

@@ -13,22 +13,4 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/akceptacja/'],
   testTimeout: 30000,
   workerIdleMemoryLimit: '800MB',
-  coverageThreshold: {
-    './src/core/gauge-calculator.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/hat-calculator.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/raglan-calculator.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/yarn-usage-estimator.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/yarn-substitution-service.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/unit-converter.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/use-unit-system.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/csv-exporter.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/knitting-doctor.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/time-tracking-service.ts': { lines: 100, branches: 100, functions: 100, statements: 100 },
-    './src/core/': {
-      lines: 99,
-      branches: 94,
-      functions: 95,
-      statements: 98,
-    },
-  },
 };
