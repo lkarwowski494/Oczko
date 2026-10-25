@@ -5,6 +5,8 @@ Zasady wspólne reguł:
 - Wynik obliczenia pokazuje dane wejściowe i założenia; tabele CYC to „GUIDELINES ONLY” [FAKT S-19], więc aplikacja nie przedstawia ich jako normy.
 - Zaokrąglanie liczby oczek do całości (w górę, w dół, do krotności motywu, do parzystości) nie jest rozstrzygnięte: [DO USTALENIA] (OP-02). Reguły RD-01, RD-02 i RD-07 zwracają wartość niezaokrągloną.
 - Reguły krytyczne (błąd = zmarnowana włóczka albo pieniądze) idą do przeglądu roli 06; przegląd zastępczy (D-027).
+- Arytmetyka (ER-38): wejścia to liczby dziesiętne, a wynik zaokrąglany (⌊ ⌋, ⌈ ⌉, do całości) jest taki, jak przy rachunku dokładnym: iloraz, który na papierze jest całością, daje tę całość (100 × 29 / 100 = 29; 50 × 1,1 / 55 = 1). Wektory z dopiskiem „pułapka zmiennoprzecinkowa” wykrywają rachunek na liczbach binarnych bez korekty.
+- Tolerancja (ER-38): bezwzględna, w jednostce wyniku, dotyczy wyników niecałkowitych. Wynik całkowity (liczba po zaokrągleniu, q, r, motki, p, g, d, dni, powtórzenie, rząd) i wynik nieliczbowy porównuje się dokładnie, także gdy w wierszu stoi tolerancja innego wyniku; `—` oznacza porównanie dokładne.
 - Zapis w tabelach wektorów (ER-39, P-097): `{a, b}` to zbiór (kolejność bez znaczenia), `a; b` to lista w kolejności, `tak`/`nie` to wartość logiczna, `—` to brak wartości; pozostałe słowa (`błąd danych`, `brak`, `poza tabelą`, `między kategoriami`) to wynik nazwany. Generator `docs/brd/narzedzia/kontrola-brd.mjs` zamienia je na typy JSON według `docs/brd/wektory.schema.json` i sprawdza, że zapis md → json → md nie traci informacji (`--zgodnosc=tests/wektory/brd.json`).
 
 ### RD-01: Liczba oczek na szerokość z próbki
@@ -120,6 +122,7 @@ Zasady wspólne reguł:
 | RD-07-W3 | 5,62875 | 225 | 6000 | 0 | 50 | 150,1 | 4 | 0,001 | powyżej | rachunek |
 | RD-07-W4 | 5,62125 | 225 | 6000 | 0 | 50 | 149,9 | 3 | 0,001 | poniżej | rachunek |
 | RD-07-W5 | 6 | 0 | 6000 | 0,1 | 50 | błąd danych | błąd danych | — | błąd | rachunek: A_p = 0 |
+| RD-07-W6 | 5 | 100 | 1000 | 0,1 | 55 | 50 | 1 | 0,001 | granica | rachunek: 50 × 1,1 / 55 = 1 dokładnie; pułapka zmiennoprzecinkowa: 50 × 1,1 = 55,000…01 daje 2 motki (ER-38) |
 
 ### RD-08: Długość na drutach przy zmianie po blokowaniu
 - Wzór: `rzędy = R_po × L / 10`; `L_druty = rzędy × 10 / R_przed`
@@ -177,7 +180,7 @@ Zasady wspólne reguł:
 | RD-10-W14 | 0,3 | kategorie | {7} | — | typowy | S-19 i P-084: n = 0, „6 sts and fewer” (KL4-0_3) |
 
 ### RD-11: Rozmiar drutu w mm na numer US
-- Wzór: wyszukanie w tabeli S-18; klucz główny to mm; brak odpowiednika daje „brak”, nie najbliższą wartość
+- Wzór: wyszukanie w tabeli S-18; klucz główny to mm, porównany po zaokrągleniu rozmiaru do 0,001 mm (najmniejszy krok tabeli: 3,125 mm; zapis liczby binarnej w bazie nie zmienia wyniku, ER-38); brak odpowiednika daje „brak”, nie najbliższą wartość
 - Jednostki: d [mm], numer US [-]
 - Granica: brak
 - Podstawa: S-18
@@ -189,6 +192,9 @@ Zasady wspólne reguł:
 | RD-11-W2 | 3,25 | 3 | — | typowy | S-18 |
 | RD-11-W3 | 3 | brak | — | typowy | S-18: brak odpowiednika |
 | RD-11-W4 | -1 | błąd danych | — | błąd | rachunek |
+| RD-11-W5 | 3,2500000001 | 3 | — | typowy | S-18 i rachunek: 3,250 po zaokrągleniu do 0,001 mm (pułapka: zapis REAL, ER-38) |
+| RD-11-W6 | 3,1254 | 3 | — | typowy | S-18 i rachunek: 3,125 po zaokrągleniu do 0,001 mm |
+| RD-11-W7 | 3,126 | brak | — | typowy | S-18 i rachunek: 3,126 nie ma w tabeli, bez najbliższej wartości |
 
 ### RD-12: Numer powtórzenia i rząd w powtórzeniu
 - Wzór: `powtórzenie = ⌊(r − 1) / n⌋ + 1`; `rząd_w = ((r − 1) mod n) + 1`
@@ -238,9 +244,10 @@ Zasady wspólne reguł:
 | RD-14-W4 | 120; 0; 0; 0 | 100; 100; 60; 60 | 31 | 0 | powyżej | rachunek: min(120, 100) = 100; ⌊31,25⌋ |
 | RD-14-W5 | 40 | 100 | 40 | 0 | typowy | rachunek: zgodnie z BR-PRJ-009 |
 | RD-14-W6 | 0; 0 | brak; brak | błąd danych | — | błąd | rachunek: Σ c_i = 0, postęp nieokreślony |
+| RD-14-W7 | 29 | 100 | 29 | 0 | typowy | rachunek: ⌊100 × 29 / 100⌋ = 29; pułapka zmiennoprzecinkowa: 100 × 0,29 = 28,999… daje 28 (ER-38) |
 
 ### RD-15: Cel dzienny do terminu i wykonanie dnia
-- Wzór: `d = (termin − dziś) + 1` [dni, daty lokalne RD-16]; `R = C − Z_przed`; cel dnia `g = ⌈R / d⌉` dla d ≥ 1 i R > 0; `g = 0` dla R ≤ 0 („cel osiągnięty”); dla d < 1 brak celu i komunikat „termin minął, zostało R rzędów”. C = Σ c_i, Z_przed = Σ min(r_i, c_i) na koniec wczoraj (jak RD-14). Wykonanie dnia = suma zmian +1 i −1 liczników rzędów z dniem zmiany = dziś (RD-16), bez zmian cofniętych z historii (BR-LIC-003) i bez wpisań wartości (BR-LIC-017); prucie zmniejsza wykonanie
+- Wzór: `d = (termin − dziś) + 1` [dni, daty lokalne RD-16]; `R = C − Z_przed`; cel dnia `g = ⌈R / d⌉` dla d ≥ 1 i R > 0; `g = 0` dla R ≤ 0 („cel osiągnięty”); dla d < 1 brak celu i komunikat „termin minął, zostało R rzędów”. C = Σ c_i, Z_przed = Σ min(r_i, c_i) na koniec wczoraj (jak RD-14). d liczy się na datach kalendarzowych (dzień RD-16), nie z różnicy chwil: doba przy zmianie czasu ma 23 albo 25 h (ER-38). Wykonanie dnia = suma zmian +1 i −1 liczników rzędów z dniem zmiany = dziś (RD-16), bez zmian cofniętych z historii (BR-LIC-003) i bez wpisań wartości (BR-LIC-017); prucie zmniejsza wykonanie
 - Jednostki: C, Z_przed, R, g [rz.]; d [dni]
 - Granica: d = 1 (termin dziś, włącznie); d < 1 po terminie; C > 0 (ostre)
 - Podstawa: decyzja P-047 (cel stały w ciągu dnia), rachunek; potrzeba J-11 (P-043, ZAL-027: cel dzienny to hipoteza)
@@ -256,6 +263,14 @@ Zasady wspólne reguł:
 | RD-15-W5 | 320 | 300 | 2 | 10 | 0 | powyżej | rachunek: ⌈20 / 2⌉ |
 | RD-15-W6 | 320 | 320 | 5 | 0 | 0 | granica | rachunek: R = 0, cel osiągnięty |
 | RD-15-W7 | 0 | 0 | 5 | błąd danych | — | błąd | rachunek: brak celów części |
+
+Liczba dni d z dat (ER-38):
+
+| ID | dziś [data] | termin [data] | strefa [IANA] | Oczekiwane: d [dni] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|
+| RD-15-W8 | 2027-03-22 | 2027-04-04 | Europe/Warsaw | 14 | 0 | typowy | rachunek: daty kalendarzowe; 2027-03-28 ma 23 h, różnica chwil = 12,958 doby (pułapka) |
+| RD-15-W9 | 2026-10-22 | 2026-11-04 | Europe/Warsaw | 14 | 0 | typowy | rachunek: daty kalendarzowe; 2026-10-25 ma 25 h, różnica chwil = 13,042 doby (pułapka) |
+| RD-15-W10 | 2026-10-25 | 2026-10-25 | Europe/Warsaw | 1 | 0 | granica | rachunek: termin dziś w dniu zmiany czasu |
 
 ### RD-16: Dzień zmiany w strefie czasowej urządzenia
 - Wzór: dzień zmiany = data lokalna w strefie czasowej urządzenia w chwili zmiany, zapisanej razem ze zmianą; późniejsza zmiana strefy nie przenosi dawnych zmian między dniami
