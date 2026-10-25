@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (koordynator: P-087, P-088; rola 07: STOP E4)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (koordynator: P-087, P-088; rola 07: STOP E4; rola 03 audit: STOP E3)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -20,8 +20,16 @@
 | 12 Niezawodność, wejście wczesne | build, tylko E0–E1 (P-005) | **E0–E1 zakończone 2026-10-22** (E0: P-079, E1: P-080); E2–E3 po roli 08 | (ten commit) | docs/niezawodnosc/ (e0-rozpoznanie.md, e1-decyzje.md, eksperymenty/wal-kopia.*), ADR-0018–0021; kopie źródeł: oczko-warsztat/12-niezawodnosc/2026-10-22-build/zrodla/ | interpretacje P-080 do weta (próg 2, kopie 30 dni, „6a”, integralność po błędzie); ekran awaryjny do 04 |
 | 06 Treści | build | **zakończona 2026-10-23** (E0 P-081, E1 P-082, E2 P-083, E3 P-084–P-086; przegląd zastępczy D-027; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/tresci/ (README.md, parametry.json, wektory.json, nazwy-zrodel.json, stan.md), scripts/sprawdz-nazwy-zrodel.mjs, tests/tresci/nazwy-zrodel.test.ts; rejestr 103 twierdzeń, treści en, kopie źródeł, 3 weryfikacje: oczko-warsztat/06-tresci/2026-10-22-build/ | ER-31–ER-33 do 01; warunki wyświetlania i rozdzielczość wpisu próbki do 04/05; zestaw przekładu do 09 (po 08 i audycie 04); kategoria 8 CYC: ponowny odczyt do 2027-01-23 |
 | 07 Jakość | build (moduły e2e-mobilne, wlasnosci-i-domena, wydanie; geo-slady nie dotyczy) | **zakończona 2026-10-25** (E0 P-090, E1 P-091, E2 P-092, E3 P-096, E4 przyjęte przez koordynatora wg P-087) | (ten commit) | docs/jakosc/ (strategia.md, e0–e4, e1-ryzyka.md 185 ryzyk, zgloszenia.md, e4/tabela-08.md, narzedzia/), tests/akceptacja/ (980 testów przed kodem), tests/jakosc/, tests/narzedzia/, tests/wspolne/, tests/dane/, e2e/ (32 scenariusze), zaślepki src/domena, src/dane, src/przypadki-uzycia, src/ekrany, scripts/jakosc/, scripts/ci/, .github/workflows/jakosc-{linux,ios}.yml | sygnatury Z07-22 i zgłoszenia ER-34–ER-44, Z07-01–Z07-23 do sesji fix 01/02/05 (przed 08); lista „tylko telefon” TT-01–TT-11 przy TestFlight |
+| 03 Zakres, krok porównania z kodem | audit, `--moduly inwentarz-funkcji` (P-078) | **STOP E3 2026-10-25** (E0: P-098) | (ten commit) | docs/porownanie-kodu.md (lista zadań dla 08: werdykt per F i per plik 0.1.0); raport z dowodami: oczko-warsztat/03-zakres/2026-10-25-audit/ (6 znalezisk: 4 × P1, 2 × P2; `sprawdz-raport` kod 0) | D1 partia porządkowa 08 (rekomendacja a); D2 fix 03 przed 08 (001, 005, 006; rekomendacja a) |
 
 ## Następny krok
+### Przekazanie roli 03, audit — krok porównania z kodem (2026-10-25, STOP E3)
+- Zakończono E0–E3 (P-098); lista zadań dla 08: `docs/porownanie-kodu.md`. Kod 0.1.0: z 49 funkcji MVP 1 zostaje (rachunek F-06), 7 do przepisania, 41 nowe; ok. 60 plików do usunięcia. Kurs zakresu bez zmian (linia bazowa 2026-10-25: YarnPal, Loopsy, knitCompanion).
+- Znaleziska: 03-zakres-001 (BR-ZAK-005–007, BR-DAN-012 bez F; `zakres-oczko.mjs` kod 1; = Z07-03), 002 (warstwa danych 0.1.0 łamie podłogi — nie przenosić), 003 (okno startowe i funkcje spoza kontraktu), 004 (liczby 0.1.0 niezgodne z `parametry.json`), 005 (decyzje po P-052 bez ZM), 006 (kolumna „Intuicyjność” bez wyników 04).
+- Decyzje dla koordynatora: D1 (a) partia porządkowa 08 przed pierwszą funkcją; D2 (a) fix 03 przed 08, równolegle z fixem 05:
+  - `node tools/assemble.mjs 03-zakres --tryb fix --zadania 03-zakres-001,03-zakres-005,03-zakres-006 --moduly zmiany-zakresu --galaz claude/jolly-thompson-paz6d8`
+- Dla 05 (fix): tabela `wloczka` bez kategorii grubości a BR-ZAP-004. Dla 07: brak kontroli „każda zależność ma wiersz ADR-0016”. Dla 08: zadania 1–6 w `docs/porownanie-kodu.md`.
+
 ### Przekazanie roli 07, build (2026-10-25, STOP E4)
 - Zakończono: 07-jakosc, build, E0–E4 (P-090, P-091, P-092, P-096), gałąź `claude/jolly-thompson-paz6d8`; definicja ukończenia z dowodami i paczka dla 08: `docs/jakosc/e4-przekazanie.md`; strategia testów i definicja ukończenia funkcji: `docs/jakosc/strategia.md`; testy przed kodem: `npm run test:akceptacja` (980: 974 na znaczniku, 6 `[ZIELONY-OK]`); CI: „Jakość · Linux” (bramka), „Jakość · iOS” (build zielony, E2E informacyjnie do ekranów 08).
 - Następne kroki (P-002, P-078, P-091 11a, P-096): **krok porównania z kodem: 03-zakres, tryb `audit`, moduł `inwentarz-funkcji`** oraz **sesja fix ról 01, 02 i 05** (zgłoszenia ER-34–ER-44, Z07-07–Z07-09, Z07-11–Z07-19, Z07-22; testy zależne: `docs/jakosc/e4/tabela-08.md`), potem **08-programista**, tryb `build`; nowa sesja: sonnet, wysiłek medium; opus, gdy zadanie dotyka migracji danych, schematu albo architektury.
