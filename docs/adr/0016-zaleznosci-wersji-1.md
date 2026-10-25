@@ -27,6 +27,7 @@ Opcja A.
 | `expo-sharing` 57.0.24 | F-32 eksport, F-53 karta, F-57 zgłoszenie | — |
 | `expo-store-review` 57.0.3 | BR-DAN-012 (prośba o ocenę) | własny `SKStoreReview` w Swift |
 | `expo-localization` 57.0.2 | 35 lokalizacji (NFR-JEZ-001; mechanizm bez biblioteki: ADR-0017, wzór z Treningu) | — |
+| `expo-router` 57.0.24 z wymaganymi `react-native-screens` 4.26, `react-native-safe-area-context` 5.7, `expo-linking` 57.0.11, `expo-constants` 57.0.20 (wiersz roli 08, P-114 Q1a) | nawigacja ekranów (warstwa 4); do niej korzeń `app/_layout.tsx` bez treści | `index.ts` z `registerRootComponent` i decyzja przy ekranach (odrzucone: jak Trening i zielony build iOS) |
 | `expo-iap` 5.8.1 | F-35 (ADR-0010) | 6.x, własny StoreKit |
 | `@bacons/apple-targets` 5.0.0 (narzędzie buildu) | cele Live Activity, zegarek, rozszerzenie (ADR-0007) | `expo-widgets` (bez intencji, rejestr Expo 6d) |
 | Moduły Swift w `modules/` | CloudKit (ADR-0005), PencilKit + PDFKit (ADR-0011, ADR-0012), dziennik +1 (ADR-0008), WatchConnectivity (ADR-0009), `beginBackgroundTask` (ADR-0004) | biblioteki społeczności (opcja B) |
