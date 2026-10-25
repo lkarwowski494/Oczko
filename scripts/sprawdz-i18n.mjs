@@ -119,7 +119,9 @@ function main(argv) {
   let kod = 0;
   if (o.kod) {
     let ts;
-    try { ts = createRequire(resolve('package.json'))('typescript'); } catch { console.log('BŁĄD konfiguracji: brak pakietu typescript w projekcie; skan kodu niewykonany'); kod = 2; }
+    // typescript: najpierw z projektu (katalog roboczy), potem z repo tego skryptu — w CI nie ma globalnego typescript (rola 07, 2026-10-25: test przechodził lokalnie tylko dzięki NODE_PATH kontenera).
+    for (const baza of [resolve('package.json'), import.meta.url]) { try { ts = createRequire(baza)('typescript'); break; } catch { /* następna baza */ } }
+    if (!ts) { console.log('BŁĄD konfiguracji: brak pakietu typescript w projekcie; skan kodu niewykonany'); kod = 2; }
     const brak = o.kod.split(',').filter((k) => !existsSync(k));
     if (brak.length) { console.log(`BŁĄD konfiguracji: brak katalogu ${brak.join(', ')}; skan kodu niewykonany`); kod = 2; }
     if (ts && !brak.length) {

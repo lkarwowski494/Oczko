@@ -23,3 +23,5 @@ Pełny opis, dowód (`plik:linia` albo komenda), propozycja i testy zależne: [`
 | 05 | Z07-11–Z07-19 | intencja i dziennik +1 (M-10, złoty plik TS↔Swift); kontrakt stanu Live Activity i zegarka; `scal` iteracyjne i M-09; iCloud (kolejność, schemat CloudKit); migracje i plan zapytań; obejścia narzędzi; wzory i `.oczko`; wstrzyknięty zegar; kontrola podpisanego `.ipa` |
 | 10 | Z07-20 | lista wydania (eksport, IAP w pierwszej wersji, notatka dla recenzenta) |
 | 12 | Z07-21 | start w tle po aktualizacji, limit kopii, czas migracji wobec watchdoga, Xcode |
+| 09 | Z07-23 | `scripts/sprawdz-i18n.mjs` szukał `typescript` tylko względem katalogu roboczego; w CI (bez globalnego `NODE_PATH`) 2 testy `tests/i18n/sprawdz-i18n.test.ts` padały (run 40223002065). Poprawka minimalna roli 07 (zapasowo względem repo skryptu, 2026-10-25) — do przeglądu przez 09 |
+| 05 | Z07-22 | sygnatury przypadków użycia, danych i ekranów zaproponowane przez 07 w E3 (`src/przypadki-uzycia/**`, `src/dane/**`, `src/ekrany/**`, typy w `src/przypadki-uzycia/porty-propozycja.ts`) — zatwierdzenie i przeniesienie typów portów do `src/domena/porty.ts` w sesji fix 05 (P-091 11a) |
