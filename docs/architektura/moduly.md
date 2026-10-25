@@ -160,10 +160,10 @@ Mapowanie rodzaju zdarzenia na `wolaStraznika` (P-067): `plus` → `plus`; `wpis
 |---|---|---|---|
 | w_toku | ukoncz | ukonczony | `ukonczono_ms = teraz`; pytanie o zużycie włóczki (U-9); karta (F-53) |
 | ukonczony | wznow | w_toku | `ukonczono_ms = NULL` |
-| dowolny | usun | (ten sam) + `usunieto_ms` | widoczny w „Ostatnio usunięte” 30 dni (`KOSZ_DNI`) |
+| dowolny, nieusunięty | usun | (ten sam) + `usunieto_ms` | widoczny w „Ostatnio usunięte” 30 dni (`KOSZ_DNI`) |
 | usunięty | przywroc | (ten sam), `usunieto_ms = NULL` | |
 | usunięty, `teraz − usunieto_ms ≥ KOSZ_DNI` i `ostatni_start_ms − usunieto_ms ≥ KOSZ_DNI` (poprzedni start też po terminie; zegar cofnięty, `teraz < usunieto_ms`, niczego nie usuwa) | sprzatanie przy starcie | — (DELETE, kaskada) | dwa kolejne starty potwierdzają datę, więc jednorazowy skok zegara w przód nie kasuje (P-110 Q5a, Z07-15); `ostatni_start_ms` (ustawienie) zapisywany na końcu każdego startu; pliki bez odwołań usuwane w tej samej operacji kolejki (niżej) |
-Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda zmiana licznika w projekcie usuniętym.
+Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda zmiana licznika w projekcie usuniętym. Projekt w koszu: `ukoncz`, `wznow` i ponowne `usun` niedozwolone (`niedozwolone_przejscie`), jedyne dozwolone przejście to `przywroc`; ponowne `usun` nie przesuwa terminu `usunieto_ms`, a trwałego usunięcia z kosza w 1.0 nie ma (BR-DAN-008) (fix-2, P-118 W8).
 
 **Funkcja sprzątania kosza** (fix-2 2026-10-25, P-118 W2): warunek dwóch startów należy do domeny, bo chroni przed utratą danych i ma być testowany w Node (ARCH-03). Sygnatura: `doSprzatniecia(p, terazMs, ostatniStartMs: number | null, koszDni): boolean`; przypadek użycia startu czyta `ostatni_start_ms` z `ustawienie` (dane.md) **przed** sprzątaniem i zapisuje nowy na końcu startu. `true` tylko, gdy wszystkie warunki: projekt usunięty, `usunietoMs ≤ ostatniStartMs ≤ terazMs`, `terazMs − usunietoMs ≥ koszDni × 86 400 000` i `ostatniStartMs − usunietoMs ≥ koszDni × 86 400 000`. Wyrocznia (D = `koszDni × 86 400 000`, `u` = `usunietoMs`):
 | Przypadek | `terazMs` | `ostatniStartMs` | Wynik |
