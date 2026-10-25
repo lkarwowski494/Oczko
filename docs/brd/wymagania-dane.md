@@ -79,10 +79,18 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Zakładając, że w aplikacji są projekty, a użytkownik importuje plik eksportu
     - Gdy wybiera „zastąp”
     - Wtedy aplikacja najpierw zapisuje plik kopii obecnych danych i pokazuje, gdzie on jest, a dopiero potem zastępuje dane zawartością pliku (P-047)
-  - Scenariusz: Scalenie bez nadpisania (ER-22)
-    - Zakładając, że w aplikacji jest projekt „Skarpeta” z licznikiem 40, a plik ma ten sam projekt z licznikiem 25 oraz projekt „Czapka”
+  - Scenariusz: Scalenie bez nadpisania (ER-22, ER-42)
+    - Zakładając, że w aplikacji jest projekt „Skarpeta” z licznikiem 40, a plik to wcześniejszy eksport z tego samego urządzenia: ten sam projekt (ten sam identyfikator) z licznikiem 25 oraz projekt „Czapka”
     - Gdy użytkownik wybiera „scal”
-    - Wtedy aplikacja ma „Czapkę” oraz obie wersje „Skarpety”: istniejącą z 40 i importowaną z 25, oznaczoną jako import (P-047)
+    - Wtedy aplikacja ma „Czapkę” i jedną „Skarpetę” z licznikiem 40: zmiany z pliku, które już są w aplikacji, nie dublują się, a nic nie zostaje nadpisane (P-091 (6a), ADR-0004)
+  - Scenariusz: Rozbieżne zmiany tego samego projektu (ER-42)
+    - Zakładając, że ten sam projekt „Skarpeta” był liczony dalej na dwóch urządzeniach: w aplikacji do 40, w pliku do 37 po innej ścieżce zmian
+    - Gdy użytkownik wybiera „scal”
+    - Wtedy aplikacja pokazuje konflikt licznika „Skarpety” z obiema wartościami do wyboru, tak jak przy synchronizacji (BR-DAN-002, „Konflikt”), i do wyboru nie zmienia żadnej z nich
+  - Scenariusz: Ten sam plik drugi raz (ER-42)
+    - Zakładając, że użytkownik zaimportował już plik przez „scal”
+    - Gdy importuje ten sam plik ponownie i wybiera „scal”
+    - Wtedy dane w aplikacji się nie zmieniają (P-091 (6a))
   - Scenariusz: Rezygnacja z importu (ER-22)
     - Zakładając, że w aplikacji są projekty
     - Gdy użytkownik otwiera plik eksportu i rezygnuje przy wyborze „zastąp” albo „scal”
