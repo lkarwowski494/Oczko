@@ -1,1 +1,1 @@
-Mutacje: stany.json + 'anulowana' w sesja.stan; schemat.sql bez FK zdarzenie.licznik_id → CASCADE
+Kontrola negatywna `sprawdz-schemat.mjs`: `node docs/architektura/narzedzia/kontrola-negatywna/mutanty-schematu.mjs` (w `jakosc:kontrole`) mutuje kopie `schemat.sql` i `stany.json` w katalogu tymczasowym i wymaga kodu ≠ 0 dla każdej mutacji (fix 05 2026-10-25, Z07-15). `sprawdz-schemat-neg.out` to zapis z E2 (2026-10-22) dla dwóch pierwszych mutacji.

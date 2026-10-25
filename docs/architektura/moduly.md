@@ -129,8 +129,12 @@ Mapowanie rodzaju zdarzenia na `wolaStraznika` (P-067): `plus` → `plus`; `wpis
 | ukonczony | wznow | w_toku | `ukonczono_ms = NULL` |
 | dowolny | usun | (ten sam) + `usunieto_ms` | widoczny w „Ostatnio usunięte” 30 dni (`KOSZ_DNI`) |
 | usunięty | przywroc | (ten sam), `usunieto_ms = NULL` | |
-| usunięty, `teraz − usunieto_ms ≥ KOSZ_DNI` | sprzatanie przy starcie | — (DELETE, kaskada) | pliki bez odwołań usuwane po COMMIT |
+| usunięty, `teraz − usunieto_ms ≥ KOSZ_DNI` i `ostatni_start_ms − usunieto_ms ≥ KOSZ_DNI` (poprzedni start też po terminie; zegar cofnięty, `teraz < usunieto_ms`, niczego nie usuwa) | sprzatanie przy starcie | — (DELETE, kaskada) | dwa kolejne starty potwierdzają datę, więc jednorazowy skok zegara w przód nie kasuje (P-110 Q5a, Z07-15); `ostatni_start_ms` (ustawienie) zapisywany na końcu każdego startu; pliki bez odwołań usuwane w tej samej operacji kolejki (niżej) |
 Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda zmiana licznika w projekcie usuniętym.
+
+**Sprzątanie plików** (ADR-0001, fix 2026-10-25, Z07-15): plik bez odwołań usuwa ta sama operacja kolejki zapisów, która usunęła ostatnie odwołanie (po `COMMIT`, przed następną operacją kolejki); sprzątanie przy starcie pomija pliki z `plik.utworzono_ms` młodszym niż `PLIKI_OCHRONA_MIN` i nie działa, gdy maszyna importu jest w stanie innym niż bezczynny (plik zapisany do magazynu przed wierszem, który go wskaże — import archiwum, import wzoru).
+
+**Powrót do miejsca** (F-49): gdy `ostatnie_miejsce` wskazuje obiekt usunięty albo w koszu, aplikacja otwiera listę projektów i usuwa klucz `ostatnie_miejsce` (bez komunikatu; fix 2026-10-25, Z07-15).
 
 ### Sesja stopera (F-21, F-51)
 | Stan | Zdarzenie | Nowy stan | Skutek |
@@ -177,6 +181,7 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `ROZSZERZENIE_ARCHIWUM` | `.oczko` | ADR-0004 |
 | `ZAPAS_MIEJSCA_EKSPORTU` (×rozmiar) | 2 | [OCENA] roli 05: archiwum + plik tymczasowy; do korekty po pomiarze |
 | `BLEDY_MAKS_WIERSZY` (wiersze) | 200 | [OCENA] roli 05 (F-57: ostatnie błędy bez treści) |
+| `PLIKI_OCHRONA_MIN` (min) | 10 | [OCENA] roli 05 (Z07-15): plik młodszy niż to nie jest sprzątany przy starcie (zapis pliku przed wierszem odwołania) |
 | `POCZEKALNIA_DNI` (dni) | 7 | P-110 (Q1a): po tym czasie „niepełna historia” w Stanie danych, rekord zostaje |
 | `PARTIA_SYNCHRONIZACJI` (wiersze na transakcję) | 200 | [OCENA] roli 05: krótkie transakcje przy scalaniu iCloud i importu (E3 §1); do korekty po pomiarze |
 | `MIN_IOS` / `MIN_WATCHOS` | 18.0 / 11.0 | P-070, ADR-0006 |

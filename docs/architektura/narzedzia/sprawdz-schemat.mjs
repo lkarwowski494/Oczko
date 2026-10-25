@@ -6,6 +6,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { integralnosc, stanyICheck, plany } from './bateria-schematu.mjs';
 const dir = process.argv[2] ?? join(dirname(fileURLToPath(import.meta.url)), '..');
 const schemat = readFileSync(join(dir, 'schemat.sql'), 'utf8');
 const stany = JSON.parse(readFileSync(join(dir, 'stany.json'), 'utf8'));
@@ -90,14 +91,8 @@ ok(['czesc', 'licznik', 'zdarzenie', 'przypomnienie', 'notatka_rzedu', 'wzor', '
   && n('plik') === 3 && n('wloczka') === 1 && n('dzien_limitu') === 1, 'kaskada usunięcia projektu; pliki (sprzątanie osobno), włóczka i dzień limitu zostają');
 ok(db.prepare('PRAGMA foreign_key_check').all().length === 0 && db.prepare('PRAGMA integrity_check').get().integrity_check === 'ok', 'po kaskadzie: foreign_key_check pusty, integrity_check ok');
 
-// Stany ⊆ CHECK: każda lista z stany.json jest dokładnie zbiorem wartości w CHECK kolumny.
-for (const [klucz, lista] of Object.entries(stany).filter(([k]) => !k.startsWith('_'))) {
-  const [tabela, kolumna] = klucz.split('.');
-  const ddl = db.prepare("SELECT sql FROM sqlite_schema WHERE type='table' AND name=?").get(tabela).sql;
-  const m = ddl.match(new RegExp(`\\b${kolumna}\\b[^\\n]*?CHECK \\(${kolumna} IN \\(([^)]*)\\)`));
-  const zCheck = m ? m[1].split(',').map((s) => s.trim().replace(/^'|'$/g, '')) : [];
-  ok(JSON.stringify([...zCheck].sort()) === JSON.stringify([...lista].sort()), `stany ⊆ CHECK: ${klucz} = {${lista.join(', ')}}`);
-}
+// Stany ↔ CHECK w obie strony i integralność po kaskadzie (bateria-schematu.mjs, wspólna z testem runnera aplikacji).
+for (const [w, opis] of [...stanyICheck(db, stany), ...integralnosc(db)]) ok(w, opis);
 
 // Zapis dnia limitu (P-109, scalDni L-20): instrukcja z dane.md („zapis-dnia-limitu.sql”) wykonana na bazie: pro = OR, najwcześniejszy start dnia zostaje.
 const dane = readFileSync(join(dir, 'dane.md'), 'utf8');
@@ -144,18 +139,5 @@ for (let p = 0; p < 45; p++) { dbp.exec(`INSERT INTO projekt (id, nazwa, stan, u
 for (let i = 0; i < 150000; i++) { const czas = Date.UTC(2024, 0, 1) + i * 600000; insZ.run('z' + i, `l${Math.floor(i / 833) % 45}_${i % 4}`, i, czas, new Date(czas).toISOString().slice(0, 10)); }
 for (let y = 0; y < 300; y++) dbp.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('y${y}', 'W${y}', 1, ${y % 8}, 1)`);
 dbp.exec('COMMIT'); dbp.exec('ANALYZE');
-const plany = {
-  'lista projektów w toku': "SELECT id, nazwa FROM projekt WHERE stan = 'w_toku' AND usunieto_ms IS NULL ORDER BY ostatnia_praca_ms DESC",
-  'historia licznika (50 ostatnich)': "SELECT * FROM zdarzenie WHERE licznik_id = 'l3_1' ORDER BY czas_ms DESC LIMIT 50",
-  'kalendarz miesiąca (dni z robótką)': "SELECT dzien, count(*) FROM zdarzenie WHERE dzien BETWEEN '2026-10-01' AND '2026-10-31' GROUP BY dzien",
-  'dzień: projekty i rzędy': "SELECT c.projekt_id, count(*) FROM zdarzenie z JOIN licznik l ON l.id = z.licznik_id JOIN czesc c ON c.id = l.czesc_id WHERE z.dzien = '2026-10-22' GROUP BY c.projekt_id",
-  'zapas: filtr kategorii (BR-ZAP-004)': 'SELECT id, nazwa FROM wloczka WHERE kategoria = 4 AND usunieto_ms IS NULL ORDER BY nazwa COLLATE NOCASE',
-  'dni limitu w miesiącu': "SELECT dzien, pro FROM dzien_limitu WHERE dzien BETWEEN '2026-10-01' AND '2026-10-31'",
-};
-for (const [nazwa, q] of Object.entries(plany)) {
-  const plan = dbp.prepare('EXPLAIN QUERY PLAN ' + q).all().map((r) => r.detail).join(' | ');
-  const t = []; for (let k = 0; k < 20; k++) { const s = performance.now(); dbp.prepare(q).all(); t.push(performance.now() - s); }
-  const p95 = [...t].sort((a, b) => a - b)[18].toFixed(3);
-  ok(!/\bSCAN (zdarzenie|projekt|wloczka)\b(?! USING)/.test(plan), `plan „${nazwa}”: [${plan}] · p95 ${p95} ms (Linux, nie iPhone)`);
-}
+for (const [w, opis] of plany(dbp)) ok(w, opis);
 console.log(bledy ? `${bledy} błędów` : 'wszystkie kontrole OK'); process.exit(bledy ? 1 : 0);
