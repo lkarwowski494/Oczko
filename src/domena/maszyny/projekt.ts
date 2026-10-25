@@ -21,7 +21,8 @@ export function przejdzProjekt(p: Projekt, z: ZdarzenieProjektu, terazMs: number
 }
 /**
  * Sprzątanie przy starcie: true, gdy projekt usunięty co najmniej KOSZ_DNI temu; zegar cofnięty (teraz < usunieto_ms) niczego nie usuwa.
- * Warunek dwóch startów (`ostatni_start_ms`, P-110 Q5a) sprawdza przypadek użycia startu — sygnatura go nie przyjmuje (zgłoszenie 08 → 05).
+ * Kontrakt 05 od fix-2 (P-118 W2): warunek dwóch startów w tej funkcji — `doSprzatniecia(p, terazMs, ostatniStartMs: number | null, koszDni)`,
+ * wyrocznia: tabela „Funkcja sprzątania kosza” w moduly.md; zmianę sygnatury i zachowania robi 08.
  */
 export function doSprzatniecia(p: Projekt, terazMs: number, koszDni: number): boolean {
   return p.usunietoMs !== null && terazMs >= p.usunietoMs && terazMs - p.usunietoMs >= koszDni * 86_400_000;

@@ -165,6 +165,16 @@ Mapowanie rodzaju zdarzenia na `wolaStraznika` (P-067): `plus` → `plus`; `wpis
 | usunięty, `teraz − usunieto_ms ≥ KOSZ_DNI` i `ostatni_start_ms − usunieto_ms ≥ KOSZ_DNI` (poprzedni start też po terminie; zegar cofnięty, `teraz < usunieto_ms`, niczego nie usuwa) | sprzatanie przy starcie | — (DELETE, kaskada) | dwa kolejne starty potwierdzają datę, więc jednorazowy skok zegara w przód nie kasuje (P-110 Q5a, Z07-15); `ostatni_start_ms` (ustawienie) zapisywany na końcu każdego startu; pliki bez odwołań usuwane w tej samej operacji kolejki (niżej) |
 Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda zmiana licznika w projekcie usuniętym.
 
+**Funkcja sprzątania kosza** (fix-2 2026-10-25, P-118 W2): warunek dwóch startów należy do domeny, bo chroni przed utratą danych i ma być testowany w Node (ARCH-03). Sygnatura: `doSprzatniecia(p, terazMs, ostatniStartMs: number | null, koszDni): boolean`; przypadek użycia startu czyta `ostatni_start_ms` z `ustawienie` (dane.md) **przed** sprzątaniem i zapisuje nowy na końcu startu. `true` tylko, gdy wszystkie warunki: projekt usunięty, `usunietoMs ≤ ostatniStartMs ≤ terazMs`, `terazMs − usunietoMs ≥ koszDni × 86 400 000` i `ostatniStartMs − usunietoMs ≥ koszDni × 86 400 000`. Wyrocznia (D = `koszDni × 86 400 000`, `u` = `usunietoMs`):
+| Przypadek | `terazMs` | `ostatniStartMs` | Wynik |
+|---|---|---|---|
+| projekt nieusunięty | dowolny | dowolny | `false` |
+| pierwszy start po aktualizacji / brak klucza | `u + 2D` | `null` | `false` (czeka na następny start) |
+| dwa starty po terminie | `u + D + 1` | `u + D` | `true` (granica: równość daje `true`) |
+| jednorazowy skok zegara w przód | `u + 60 dni` | `u + 1 dzień` | `false` |
+| zegar cofnięty między startami | `u + D` | `u + 2D` (> `terazMs`) | `false` |
+| zegar cofnięty przed usunięcie | `u − 1` | `u + D` | `false` |
+
 **Sprzątanie plików** (ADR-0001, fix 2026-10-25, Z07-15): plik bez odwołań usuwa ta sama operacja kolejki zapisów, która usunęła ostatnie odwołanie (po `COMMIT`, przed następną operacją kolejki); sprzątanie przy starcie pomija pliki z `plik.utworzono_ms` młodszym niż `PLIKI_OCHRONA_MIN` i nie działa, gdy maszyna importu jest w stanie innym niż bezczynny (plik zapisany do magazynu przed wierszem, który go wskaże — import archiwum, import wzoru).
 
 **Powrót do miejsca** (F-49): gdy `ostatnie_miejsce` wskazuje obiekt usunięty albo w koszu, aplikacja otwiera listę projektów i usuwa klucz `ostatnie_miejsce` (bez komunikatu; fix 2026-10-25, Z07-15).
