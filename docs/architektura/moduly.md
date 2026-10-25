@@ -191,6 +191,7 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 |---|---|---|
 | `LIMIT_DNI_W_MIESIACU` (dni) | 5 | P-057 (D2), `limit.mjs` |
 | `PRZERWA_NOWEGO_DNIA_MS` (ms) | 3 600 000 | P-057 (D3), `limit.mjs` |
+| `OKNO_OFFLINE_PRO_MS` (ms) | 604 800 000 (7 dni) | P-103 (3a), `dostep.mjs` `LASKA_OFFLINE_MS` (jak Trening `OFFLINE_GRACE_DAYS = 7`): pamięć Pro przy błędzie sklepu działa do `wygasa` + ta wartość; ta sama liczba w stałych Swift `proZegarka` (KP-17, generator stałych z JSON, Z07-12) |
 | `STRAZNIK_SERIA_ZDARZEN` (liczba dodań) | 3 | RD-17, P-047 |
 | `STRAZNIK_OKNO_S` (s) | 2 | RD-17, P-047 |
 | `KOSZ_DNI` (dni) | 30 | P-026 |
