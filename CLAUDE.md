@@ -22,12 +22,12 @@ Expo SDK 57, React Native, TypeScript, expo-sqlite (stan poprzedniej wersji); de
 
 ## Komendy
 - instalacja: `npm ci` · testy: `npm test` · pełna bramka: `npm run verify`
-- typy: `npm run typecheck`
+- typy: `npm run typecheck` · lint (tylko `src/dane`): `npm run lint` · testy przed kodem: `npm run test:akceptacja` (raport `docs/jakosc/e3/akceptacja-wynik.md`) · kontrole repo: `npm run jakosc:kontrole`
 
 ## Dokumenty (źródło prawdy, rola)
 - `docs/decyzje.md`, `docs/zalozenia.md`, `docs/pomysl.md`, BRD `docs/brd/` (01)
 - `docs/monetyzacja.md` (02), kontrakt zakresu `docs/scope-contract.md` (03), projekt `docs/design/` (04)
-- ADR `docs/adr/` (05; 0018–0021: 12), niezawodność `docs/niezawodnosc/` (12), treści i rejestr twierdzeń: `oczko-warsztat` (06)
+- ADR `docs/adr/` (05; 0018–0021: 12), strategia testów i definicja ukończenia `docs/jakosc/strategia.md` (07), niezawodność `docs/niezawodnosc/` (12), treści i rejestr twierdzeń: `oczko-warsztat` (06)
 - materiały prywatne (wywiad, dane App Store Connect, raporty audytu): `oczko-warsztat`, nie to repo
 
 ## Zasady
@@ -36,6 +36,7 @@ Expo SDK 57, React Native, TypeScript, expo-sqlite (stan poprzedniej wersji); de
 - Koszt stały 0 zł poza opłatą Apple Developer; CI na GitHub Actions (repo publiczne).
 - Zero utraty danych: migracja w transakcji, test na kopii bazy poprzedniej wersji (wyjątek nazwany P-070: dane 0.1.0 bez migracji, stary plik nietknięty).
 - Testy przed kodem; wygląd tylko z systemu w `docs/design/`.
+- CI macOS (`macos-26`): awaria przed pierwszym scenariuszem albo „not acquired by Runner” to maszyna — jedno ponowienie ręczne, potem szukaj przyczyny; scenariuszy z asercją wartości licznika nie ponawiamy (P-091 9a, 10a, jak Trening).
 - Gałąź robocza przebudowy: `claude/jolly-thompson-paz6d8`; scalenie z `main` tylko za zgodą właściciela.
 - Hierarchia źródeł: rachunek → normy (CYC, ISO) → podręczniki → organizacje → przewodniki → fora tylko jako wskazówka (P-017, rola 01 E0).
 - BRD: `docs/brd/` (01), dzielony; wektory reguł `tests/wektory/brd.json` generuje tylko rola 01.

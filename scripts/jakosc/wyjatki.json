@@ -1,0 +1,14 @@
+{
+  "_opis": "Wyjątki nazwane od kontroli roli 07: każdy z regułą, plikiem, powodem, właścicielem i terminem (zasada wspólna 7).",
+  "kontrole": [],
+  "workflowy": [
+    {
+      "regula": "SEKRET-BEZ-SRODOWISKA",
+      "plik": ".github/workflows/testflight.yml",
+      "powod": "workflow wersji 0.1.0 (P-008: naprawy CI poprzedniej wersji odłożone); używa secrets.ASC_* bez environment: testflight, wbrew ADR-0014",
+      "wlasciciel": "10",
+      "termin": "przed pierwszym buildem TestFlight nowej wersji: zastąpić workflowem według ADR-0014",
+      "kontrola_zastepcza": "wyzwalacz tylko tag v* i workflow_dispatch (bez pull_request); sekrety niedostępne z forków"
+    }
+  ]
+}
