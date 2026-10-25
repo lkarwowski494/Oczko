@@ -31,7 +31,7 @@ const SCANNED_ROOTS = [
   'docs',
   'tests',
   '.github',
-  '.maestro',
+  'app',
   'app.json',
   'package.json',
   'README.md',
@@ -97,7 +97,8 @@ describe('Kontrakt czystości marek i znaków towarowych (NFR-SEC-011)', () => {
   });
 
   it('znaki towarowe Apple w materiałach publicznych i tłumaczeniach są zapisywane poprawnie', () => {
-    const publicFiles = ['site', 'src/core/i18n.ts', 'src/core/i18n.en.ts'].flatMap(getFiles);
+    // Słowniki ADR-0017 zastępują i18n 0.1.0 (src/core/i18n*.ts, usunięte w partii porządkowej roli 08).
+    const publicFiles = ['site', 'src/i18n/slowniki'].flatMap(getFiles);
     const badAppleMentions: string[] = [];
 
     const BAD_APPLE_CASES = [
