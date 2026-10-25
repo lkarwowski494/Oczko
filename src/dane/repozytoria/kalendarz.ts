@@ -1,26 +1,101 @@
 // Repozytorium kalendarza dni z robótką, dnia, podsumowania okresu i kolejności „który projekt dziś” (F-59, F-61; RD-15, RD-16;
 // P-046, P-048 (3), (4), (6); P-059 (2a): dzień z robótką ≠ dzień limitu).
-// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
-import type { CelDnia } from '../../domena/postep';
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22).
+// Praca dnia = zmiany +1/−1 liczników rzędów z dniem zdarzenia (RD-16), bez wpisań, zerowań i zmian cofniętych z historii (RD-15, P-048 (3)).
+import { celDzienny, type CelDnia } from '../../domena/postep';
 import type { PortBazy } from '../../domena/porty';
-import { niezaimplementowane } from '../../domena/zaslepka';
+import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from './wiersze';
+
+const nastepnyDzien = (dzien: string, dni: number): string => {
+  const [r, m, d] = dzien.split('-').map(Number);
+  return new Date(Date.UTC(r, m - 1, d + dni)).toISOString().slice(0, 10);
+};
+/** Zmiany pracy (wiersze `zdarzenie`) w dniach [od, doWylacznie): +1/−1 liczników rzędów, bez cofniętych z historii. */
+const PRACA = `FROM zdarzenie z JOIN licznik l ON l.id = z.licznik_id
+  WHERE z.dzien >= ? AND z.dzien < ? AND l.rodzaj = 'rzedy' AND z.rodzaj IN ('plus', 'minus')
+    AND z.id NOT IN (SELECT j.value FROM zdarzenie c, json_each(c.cofa) j
+                      WHERE c.rodzaj = 'cofniecie' AND c.licznik_id IN (SELECT licznik_id FROM zdarzenie WHERE dzien >= ? AND dzien < ?))`;
+const ZMIANA = "CASE z.rodzaj WHEN 'plus' THEN 1 ELSE -1 END";
+const zakres = (od: string, doWyl: string): string[] => [od, doWyl, od, doWyl];
 
 /** Dni miesiąca `RRRR-MM` z robótką: zmiana +1/−1 licznika rzędów (dzień ze zdarzenia, RD-16), bez wpisań, zerowań i zmian cofniętych. Rosnąco. */
-export function dniZRobotka(_baza: PortBazy, _miesiac: string): Promise<string[]> {
-  return niezaimplementowane('BR-DNI-001 dniZRobotka');
+export async function dniZRobotka(baza: PortBazy, miesiac: string): Promise<string[]> {
+  const w = await wiersze(baza.all(`SELECT DISTINCT z.dzien AS dzien ${PRACA} ORDER BY z.dzien`, zakres(`${miesiac}-01`, `${miesiac}-32`)), 'dniZRobotka');
+  return w.map((r) => tekst(r, 'dzien'));
 }
+
 /** `czasMs` = suma sesji stopera projektu z dniem `dzien`; null, gdy sesji nie było (P-048 (6)). */
 export type ProjektDnia = { projektId: string; nazwa: string; rzedy: number; czasMs: number | null };
-export function szczegolyDnia(_baza: PortBazy, _dzien: string): Promise<ProjektDnia[]> {
-  return niezaimplementowane('BR-DNI-002 szczegolyDnia');
+const CZAS_SESJI = "CASE WHEN s.stan = 'zakonczona' THEN max(0, s.koniec_ms - s.start_ms - s.przerwy_ms) ELSE 0 END";
+export async function szczegolyDnia(baza: PortBazy, dzien: string): Promise<ProjektDnia[]> {
+  const doWyl = nastepnyDzien(dzien, 1);
+  const praca = await wiersze(baza.all(
+    `SELECT c.projekt_id AS projekt, sum(${ZMIANA}) AS n ${PRACA.replace('JOIN licznik l ON l.id = z.licznik_id', 'JOIN licznik l ON l.id = z.licznik_id JOIN czesc c ON c.id = l.czesc_id')} GROUP BY c.projekt_id`,
+    zakres(dzien, doWyl)), 'szczegolyDnia');
+  const sesje = await wiersze(baza.all(`SELECT s.projekt_id AS projekt, sum(${CZAS_SESJI}) AS ms FROM sesja s WHERE s.dzien = ? GROUP BY s.projekt_id`, [dzien]), 'szczegolyDnia');
+  const ids = [...new Set([...praca.map((r) => tekst(r, 'projekt')), ...sesje.map((r) => tekst(r, 'projekt'))])];
+  const wynik: ProjektDnia[] = [];
+  for (const id of ids) {
+    const [p] = await wiersze(baza.all('SELECT nazwa FROM projekt WHERE id = ?', [id]), 'szczegolyDnia');
+    const r = praca.find((x) => tekst(x, 'projekt') === id);
+    const s = sesje.find((x) => tekst(x, 'projekt') === id);
+    wynik.push({ projektId: id, nazwa: p ? tekst(p, 'nazwa') : '', rzedy: r ? liczba(r, 'n') : 0, czasMs: s ? liczba(s, 'ms') : null });
+  }
+  return wynik;
 }
+
 /** `pierwszyDzienTygodnia`: 1 = poniedziałek … 7 = niedziela; w aplikacji zawsze `PIERWSZY_DZIEN_TYGODNIA` = 1 (P-110 Q7, moduly.md „Czas w przypadkach użycia”). */
 export type Podsumowanie = { od: string; do: string; rzedy: number; czasMs: number | null; ukonczone: number; poprzednie: { rzedy: number } };
-export function podsumowanieTygodnia(_baza: PortBazy, _w: { dzis: string; pierwszyDzienTygodnia: 1 | 2 | 3 | 4 | 5 | 6 | 7 }): Promise<Podsumowanie> {
-  return niezaimplementowane('BR-DNI-003 podsumowanieTygodnia');
+async function rzedyOkresu(baza: PortBazy, od: string, doWyl: string): Promise<number> {
+  const [w] = await wiersze(baza.all(`SELECT sum(${ZMIANA}) AS n ${PRACA}`, zakres(od, doWyl)), 'podsumowanie');
+  return (w ? liczbaLubNull(w, 'n') : null) ?? 0;
 }
+/**
+ * Ukończone w okresie: `ukonczono_ms` w dniach [od, do] liczonych w UTC — sygnatura nie podaje strefy urządzenia, więc projekt ukończony
+ * tuż przy północy może wpaść do sąsiedniego tygodnia [DO USTALENIA 05: strefa w wejściu albo `ukonczono_dzien`].
+ */
+export async function podsumowanieTygodnia(baza: PortBazy, w: { dzis: string; pierwszyDzienTygodnia: 1 | 2 | 3 | 4 | 5 | 6 | 7 }): Promise<Podsumowanie> {
+  const [r, m, d] = w.dzis.split('-').map(Number);
+  const iso = ((new Date(Date.UTC(r, m - 1, d)).getUTCDay() + 6) % 7) + 1; // 1 = pon … 7 = nd
+  const od = nastepnyDzien(w.dzis, -((iso - w.pierwszyDzienTygodnia + 7) % 7));
+  const doWyl = nastepnyDzien(od, 7);
+  const [s] = await wiersze(baza.all(`SELECT count(*) AS k, sum(${CZAS_SESJI}) AS ms FROM sesja s WHERE s.dzien >= ? AND s.dzien < ?`, [od, doWyl]), 'podsumowanie');
+  const [u] = await wiersze(baza.all("SELECT count(*) AS n FROM projekt WHERE stan = 'ukonczony' AND usunieto_ms IS NULL AND ukonczono_ms >= ? AND ukonczono_ms < ?",
+    [Date.parse(`${od}T00:00:00Z`), Date.parse(`${doWyl}T00:00:00Z`)]), 'podsumowanie');
+  return {
+    od, do: nastepnyDzien(od, 6), rzedy: await rzedyOkresu(baza, od, doWyl),
+    czasMs: s && liczba(s, 'k') > 0 ? liczba(s, 'ms') : null, ukonczone: u ? liczba(u, 'n') : 0,
+    poprzednie: { rzedy: await rzedyOkresu(baza, nastepnyDzien(od, -7), od) },
+  };
+}
+
 /** Projekty w toku (bez kosza) w kolejności P-048 (4): po terminie, potem cel na dziś malejąco, potem bez terminu według ostatniej pracy. */
 export type ProjektDzis = { id: string; nazwa: string; cel: CelDnia | null };
-export function kolejnoscProjektow(_baza: PortBazy, _dzis: string): Promise<ProjektDzis[]> {
-  return niezaimplementowane('BR-DNI-006 kolejnoscProjektow');
+/** Z_przed = Σ min(r_i, c_i) części z celem, r_i = wartość liczników rzędów części na koniec wczoraj (RD-15 jak RD-14). */
+async function celProjektu(baza: PortBazy, projektId: string, termin: string, dzis: string): Promise<CelDnia | null> {
+  const czesci = await wiersze(baza.all('SELECT id, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL AND cel_rzedow IS NOT NULL', [projektId]), 'kolejnosc');
+  let suma = 0, przed = 0;
+  for (const c of czesci) {
+    const cel = liczba(c, 'cel_rzedow');
+    const [r] = await wiersze(baza.all(
+      `SELECT coalesce(sum((SELECT z.wartosc_po FROM zdarzenie z WHERE z.licznik_id = l.id AND z.dzien < ? ORDER BY z.czas_ms DESC, z.rowid DESC LIMIT 1)), 0) AS r
+         FROM licznik l WHERE l.czesc_id = ? AND l.rodzaj = 'rzedy' AND l.usunieto_ms IS NULL`, [dzis, tekst(c, 'id')]), 'kolejnosc');
+    suma += cel;
+    przed += Math.min(r ? liczba(r, 'r') : 0, cel);
+  }
+  const w = celDzienny({ suma, przedDzis: przed, termin, dzis });
+  return w.ok ? w.wartosc : null; // termin bez celów części (C = 0): brak celu dnia, nie zgadywany cel
+}
+const ranga = (c: CelDnia | null): number => (c === null ? 3 : c.rodzaj === 'po_terminie' ? 0 : c.rodzaj === 'cel' ? 1 : 2);
+export async function kolejnoscProjektow(baza: PortBazy, dzis: string): Promise<ProjektDzis[]> {
+  const p = await wiersze(baza.all("SELECT id, nazwa, termin_dzien, ostatnia_praca_ms FROM projekt WHERE stan = 'w_toku' AND usunieto_ms IS NULL"), 'kolejnosc');
+  const lista: (ProjektDzis & { praca: number })[] = [];
+  for (const r of p) {
+    const termin = tekstLubNull(r, 'termin_dzien');
+    lista.push({ id: tekst(r, 'id'), nazwa: tekst(r, 'nazwa'), cel: termin ? await celProjektu(baza, tekst(r, 'id'), termin, dzis) : null, praca: liczba(r, 'ostatnia_praca_ms') });
+  }
+  lista.sort((a, b) => ranga(a.cel) - ranga(b.cel)
+    || (a.cel?.rodzaj === 'cel' && b.cel?.rodzaj === 'cel' ? b.cel.rzedy - a.cel.rzedy : 0)
+    || b.praca - a.praca);
+  return lista.map(({ id, nazwa, cel }) => ({ id, nazwa, cel }));
 }

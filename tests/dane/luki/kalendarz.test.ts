@@ -4,10 +4,10 @@
 // RD-15 (wykonanie: +1/−1 rzędów, bez wpisań i cofniętych; cel g = ⌈R/d⌉; RD-15-W4 po terminie), RD-16 (dzień ze zdarzenia),
 // P-048 (3) wpisanie nie jest pracą, (4) kolejność: po terminie, cel na dziś malejąco, bez terminu według ostatniej pracy,
 // P-059 (2a) dzień z robótką ≠ dzień limitu; L-04 (bez przerwy po północy brak nowego dnia), L-06 (cofnięcie nie oddaje dnia limitu).
-import { dniZRobotka, kolejnoscProjektow, podsumowanieTygodnia, szczegolyDnia } from '../../../../src/dane/repozytoria/kalendarz';
-import { cofnijOstatnie, dodajRzad } from '../../../../src/przypadki-uzycia/licznik';
-import { czesc, licznik, projekt, ustawGlowe, zdarzenie, type Instr } from '../../../dane/pomocnicze/dane-wejsciowe';
-import { GODZ, MIN, T0, przygotuj, wykonaj } from '../../../dane/pomocnicze/srodowisko';
+import { dniZRobotka, kolejnoscProjektow, podsumowanieTygodnia, szczegolyDnia } from '../../../src/dane/repozytoria/kalendarz';
+import { cofnijOstatnie, dodajRzad } from '../../../src/przypadki-uzycia/licznik';
+import { czesc, licznik, projekt, ustawGlowe, zdarzenie, type Instr } from '../pomocnicze/dane-wejsciowe';
+import { GODZ, MIN, T0, przygotuj, wykonaj } from '../pomocnicze/srodowisko';
 
 /** Chwila UTC dla czasu lokalnego Europe/Warsaw w październiku 2026 przed 25.10 (CEST, UTC+2). */
 const waw = (dzien: number, h: number, m = 0) => Date.UTC(2026, 9, dzien, h - 2, m);
