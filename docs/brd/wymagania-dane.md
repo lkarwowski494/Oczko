@@ -95,15 +95,24 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Zakładając, że w aplikacji są projekty
     - Gdy użytkownik otwiera plik eksportu i rezygnuje przy wyborze „zastąp” albo „scal”
     - Wtedy dane w aplikacji się nie zmieniają
+  - Scenariusz: Bez oferty po przywróceniu własnej kopii (ER-46)
+    - Zakładając, że użytkownik bez Pro importuje własny plik eksportu Oczka i import się udaje
+    - Gdy aplikacja kończy import
+    - Wtedy pokazuje wynik importu bez karty planów Pro ani innej oferty, bo to odzyskanie własnych danych, nie przenosiny z innej aplikacji (P-113 (Q2a), jak Trening)
 
 ### BR-DAN-007: Import od konkurencji
 - Przepływ: PR-13
-- Dowód potrzeby: H-08; arkusz zapasu z Ravelry (OG-08); odchodzenie płacących z YarnBuddy (id13993192426) · zależy od: ZAL-023
+- Dowód potrzeby: H-08; arkusz zapasu z Ravelry (OG-08); odchodzenie płacących z YarnBuddy (id13993192426) · zależy od: ZAL-023 · karta planów Pro po imporcie: P-089 (3b), P-113 (Q2a) (jak Trening: karta po przenosinach z innej aplikacji) · ER-46
 - Kryteria akceptacji:
   - Scenariusz: Zapas z Ravelry
     - Zakładając, że użytkownik pobrał arkusz zapasu z Ravelry
     - Gdy importuje go do Oczka
     - Wtedy każda włóczka z arkusza jest w zapasie, a aplikacja pokazuje, ile pozycji zaimportowała i których kolumn nie rozpoznała
+  - Scenariusz: Karta planów Pro po imporcie z innej aplikacji (ER-46)
+    - Zakładając, że użytkownik bez Pro (sklep potwierdził brak Pro) importuje plik z innej aplikacji, a import dodał co najmniej jedną nową pozycję
+    - Gdy aplikacja pokazuje wynik importu
+    - Wtedy pod wynikiem widzi kartę z jednym zdaniem (zaimportowane dane są zawsze dostępne, także bez sieci; wersja darmowa ma darmowe dni z robótką; Pro zdejmuje limit, także zakupem jednorazowym) i odnośnikiem „Zobacz plany Pro ›” do ekranu zakupu, bez kwot (P-089 (3b), P-113 (Q2a))
+    - Ale karty nie ma, gdy import nie dodał żadnej nowej pozycji, gdy użytkownik ma Pro albo gdy stan Pro jest niepewny, a karta znika po wyborze kolejnego pliku
 
 ### BR-DAN-008: Usunięcie z możliwością przywrócenia
 - Przepływ: PR-07
@@ -347,7 +356,7 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
 
 ### BR-ZAK-006: Komunikat na limicie i miejsca ekranu zakupu
 - Przepływ: PR-09, PR-02
-- Dowód potrzeby: P-055 i P-057 (ekran zakupu tylko przy starcie ponad limit i w Ustawieniach, bez arkusza zakupu na starcie); KP-03, KP-13, KP-14 i ujawnienia (5), (6) w `docs/monetyzacja.md`, „Sesja 3, E3”; NFR-PIE-001 · ER-26. Komunikat zawczasu i miejsce licznika dni: P-065 (1a), (2a), bo w przejściu poznawczym roli 04 stuknięcie zatrzymane po zrobionym rzędzie przepadało po cichu, a dziergająca dalej robiła robótkę (`docs/design/przejscie/wynik.md`) · ER-29
+- Dowód potrzeby: P-055 i P-057 (ekran zakupu tylko przy starcie ponad limit i w Ustawieniach, bez arkusza zakupu na starcie); KP-03, KP-13, KP-14 i ujawnienia (5), (6) w `docs/monetyzacja.md`, „Sesja 3, E3”; NFR-PIE-001 · ER-26. Komunikat zawczasu i miejsce licznika dni: P-065 (1a), (2a), bo w przejściu poznawczym roli 04 stuknięcie zatrzymane po zrobionym rzędzie przepadało po cichu, a dziergająca dalej robiła robótkę (`docs/design/przejscie/wynik.md`) · ER-29. Okno „Uczciwe zasady”: P-089 (3a) (zbieżność z Treningiem: raz, główny przycisk zamyka, odnośnik do planów, bez kwot), P-103 (5a) („ukończony dzień” = data dnia bez Pro z robótką minęła), KP-16, wektory O-01–O-11 w `docs/monetyzacja/wektory-limitu.json` (rola 02), ZM-05 · ER-46. Karta planów Pro po imporcie tylko po imporcie z innej aplikacji (P-113 (Q2a), jak Trening): BR-DAN-007, nie BR-DAN-006
 - zależy od: potwierdzenia roli 02, że komunikat przed pierwszym rzędem dnia (bez ekranu zakupu) jest zgodny z KP-12 i KP-13 (P-065 (1a), warunkowa)
 - Teksty i wygląd: `docs/design/design-spec.md`, „Limit dni na ekranach” (rola 04)
 - Kryteria akceptacji:
@@ -368,7 +377,7 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
   - Scenariusz: Bez oferty w trakcie pracy
     - Zakładając, że użytkownik ma darmowe dni albo pracuje w rozpoczętym dniu
     - Gdy liczy rzędy, otwiera projekty, wzór i kalendarz
-    - Wtedy nie widzi ekranu zakupu ani oferty Pro; ekran zakupu otwiera tylko z Ustawień
+    - Wtedy nie widzi ekranu zakupu ani oferty Pro poza jednorazowym oknem „Uczciwe zasady” (scenariusze niżej), które nigdy nie pojawia się na ekranie licznika; ekran zakupu otwiera tylko z Ustawień albo odnośnikiem z tego okna (ER-46)
   - Scenariusz: Licznik dni
     - Zakładając, że użytkownik bez Pro zużył 2 z 5 dni w listopadzie
     - Gdy otwiera listę projektów albo Ustawienia
@@ -381,6 +390,30 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
     - Zakładając, że użytkownik ma aktywną subskrypcję Pro
     - Gdy otwiera Ustawienia
     - Wtedy widzi stan Pro i „Zarządzaj subskrypcją”, które otwiera systemowe zarządzanie subskrypcją (KP-14), a ekran zakupu nie oferuje tej samej subskrypcji (KP-03)
+  - Scenariusz: Okno „Uczciwe zasady” po pierwszym ukończonym dniu (ER-46)
+    - Zakładając, że użytkownik bez Pro (sklep potwierdził brak Pro) dodał rzędy 3 listopada i nie widział jeszcze okna „Uczciwe zasady”
+    - Gdy 4 listopada pierwszy raz otwiera aplikację na liście projektów
+    - Wtedy raz widzi okno „Uczciwe zasady” z trzema krótkimi zdaniami: wszystkie funkcje działają od pierwszego dnia, w wersji darmowej jest 5 dni z robótką w miesiącu, Pro zdejmuje limit (subskrypcja albo zakup jednorazowy), bez kwot i bez listy planów (O-01)
+    - Oraz przycisk główny zamyka okno, a odnośnik „Zobacz plany Pro ›” zamyka okno i otwiera ekran zakupu z cenami ze sklepu (P-089 (1), (3a))
+  - Scenariusz: Okno nie na ekranie licznika (ER-46)
+    - Zakładając warunki z poprzedniego scenariusza, ale aplikacja otwiera się 4 listopada na liczniku projektu (powrót do miejsca, BR-PRJ-011)
+    - Gdy użytkownik liczy rzędy, a potem przechodzi na listę projektów
+    - Wtedy na liczniku nie ma okna (O-05), a okno pojawia się dopiero na liście projektów
+  - Scenariusz: Okno tylko raz (ER-46)
+    - Zakładając, że użytkownik zamknął okno „Uczciwe zasady” przyciskiem głównym, odnośnikiem albo gestem zamknięcia
+    - Gdy w kolejnych dniach otwiera aplikację, także po przywróceniu własnej kopii zapasowej na nowym telefonie
+    - Wtedy okna już nie widzi, bo informacja „widziane” jest w danych i w kopii (O-02, KP-16)
+  - Szablon scenariusza: Bez okna (ER-46)
+    - Zakładając, że <stan>
+    - Gdy użytkownik otwiera listę projektów
+    - Wtedy okna „Uczciwe zasady” nie ma, a limit i dni limitu są takie same jak bez okna (KP-16)
+    - Przykłady:
+      | stan | wektor |
+      | dziś jest pierwszy dzień z robótką i data jeszcze nie minęła | O-06 |
+      | użytkownik ma aktywne Pro | O-03 |
+      | sklep nie odpowiedział, a aplikacja nie pamięta wcześniejszego wyniku | O-04 |
+      | wcześniejsze dni z robótką były tylko z Pro, a pierwszy dzień bez Pro trwa | O-07 |
+      | świeża instalacja bez dni z robótką | O-10 |
 
 ### BR-ZAK-007: Utrata Pro
 - Przepływ: PR-09
