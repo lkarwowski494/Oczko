@@ -4,16 +4,16 @@
 // BR-LIC-018/S1–S3 (licznik całości z sekcji), BR-LIC-019/S3 (strażnik tylko dla rzędów, RD-17, ER-24),
 // BR-WZR-003/S1 (znacznik idzie z licznikiem), BR-DNI-005/S2–S3 (cel stały, prucie dziś, RD-15) — wartości w scenariuszach BRD.
 import fc from 'fast-check';
-import { rodzajStraznika, startDnia, wolaStraznika } from '../../../../src/domena/limit';
-import { licznikCalosci } from '../../../../src/domena/licznik-calosci';
-import type { LicznikKawalka } from '../../../../src/domena/licznik-calosci';
-import { serieLicznika } from '../../../../src/domena/straznik-rodzaj';
-import { polozenieZnacznika } from '../../../../src/domena/znacznik-wzoru';
-import { stanDnia, wykonanieDnia } from '../../../../src/domena/postep-dnia';
-import type { ZmianaDnia } from '../../../../src/domena/postep-dnia';
-import { LIMIT_DNI_W_MIESIACU, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../../../../src/konfiguracja';
-import { WEKTORY_LIMITU, dniListopada, TERAZ } from '../../../domena/zakup/pomocnicze';
-import { opcjeWlasnosci } from '../../../narzedzia/akceptacja';
+import { rodzajStraznika, startDnia, wolaStraznika } from '../../../src/domena/limit';
+import { licznikCalosci } from '../../../src/domena/licznik-calosci';
+import type { LicznikKawalka } from '../../../src/domena/licznik-calosci';
+import { serieLicznika } from '../../../src/domena/straznik-rodzaj';
+import { polozenieZnacznika } from '../../../src/domena/znacznik-wzoru';
+import { stanDnia, wykonanieDnia } from '../../../src/domena/postep-dnia';
+import type { ZmianaDnia } from '../../../src/domena/postep-dnia';
+import { LIMIT_DNI_W_MIESIACU, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../../../src/konfiguracja';
+import { WEKTORY_LIMITU, dniListopada, TERAZ } from '../zakup/pomocnicze';
+import { opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 const wektorL = (id: string) => {
   const w = WEKTORY_LIMITU.startDnia.find((x) => x.id === id);

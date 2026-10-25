@@ -2,9 +2,9 @@
 // Wyrocznia: tests/wektory/brd.json RD-14-W1…W6, RD-15-W1…W7; rachunek na liczbach całkowitych w teście (ER-38, R-127);
 // własności ze wzorów RD-14 i RD-15 (P-047 (3), P-048 (1)). Daty RD-15 jako RRRR-MM-DD (dzień lokalny RD-16).
 import fc from 'fast-check';
-import { postepProcent, celDzienny } from '../../../../src/domena/postep';
-import type { CzescPostepu } from '../../../../src/domena/postep';
-import { type WartoscBrd, wektoryReguly, lista, liczba, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci, DOBA } from '../../../narzedzia/akceptacja';
+import { postepProcent, celDzienny } from '../../../src/domena/postep';
+import type { CzescPostepu } from '../../../src/domena/postep';
+import { type WartoscBrd, wektoryReguly, lista, liczba, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci, DOBA } from '../../narzedzia/akceptacja';
 
 const KRYTERIA_RD14: Record<string, string> = {
   'RD-14-W1': 'BR-DNI-004/S1',

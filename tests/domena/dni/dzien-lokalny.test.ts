@@ -5,10 +5,10 @@
 // Format `dzien`: ^\d{4}-\d{2}-\d{2}$ w ASCII także przy języku urządzenia ja-JP-u-ca-japanese i ar-EG (R-134, ER-37).
 // Strefa procesu ustawiona na Pacific/Kiritimati (+14): dzień ma zależeć od parametru `strefa`, nie od strefy procesu (R-133).
 import fc from 'fast-check';
-import { dzienLokalny } from '../../../../src/domena/postep';
-import { przejsciaCzasu } from '../../../narzedzia/czas';
-import { STREFY_TESTOWE } from '../../../narzedzia/strefy';
-import { wektoryReguly, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci, DOBA } from '../../../narzedzia/akceptacja';
+import { dzienLokalny } from '../../../src/domena/postep';
+import { przejsciaCzasu } from '../../narzedzia/czas';
+import { STREFY_TESTOWE } from '../../narzedzia/strefy';
+import { wektoryReguly, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci, DOBA } from '../../narzedzia/akceptacja';
 
 const OrygDTF = Intl.DateTimeFormat;
 const wyroczniaF = new Map<string, Intl.DateTimeFormat>();
@@ -61,7 +61,7 @@ describe('RD-16 dzienLokalny: wektory BRD', () => {
     });
   });
   test(`RD-16 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(6);
+    expect(wektory.length).toBe(26); // W7–W26 dopisane przez 01 (ER-37, NZ-05-01); ten sam kształt, region nie wpływa na wynik
     licznik.wynik(wektory.length);
   });
 });
