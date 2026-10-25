@@ -89,6 +89,22 @@ export interface PortArchiwum {                                                 
 }
 ```
 
+## Funkcje domeny (sygnatury)
+Zatwierdzone w fix-2 05 2026-10-25 (NZ-08-P1-05, P-118 S1): sygnatury dopisane przez 08 w partii 1 (P-114 Q2a). Nazwy i kształt wejścia funkcji limitu i dostępu = prototypy roli 02 (`docs/monetyzacja/limit.mjs`, `dostep.mjs`; wyrocznia: ich wektory); pozostałe = reguły BRD (RD-13, RD-15, RD-20). Kolumna „Błąd” mówi, jak funkcja zgłasza złe wejście.
+| Funkcja (plik w `src/domena`) | Sygnatura | Błąd | Wyrocznia |
+|---|---|---|---|
+| `limit.ts` | `wznowienieLimitu(w: { dzis: string }): string` | `BladDanych` | wektory `wznowienieLimitu` (02), R-105 |
+| `limit.ts` | `cofniecieSerii(w: { dni: DzienLimitu[]; dzienSerii: string; seriaZaczelaDzien: boolean; inneDodaniaDnia: number; zrodlo: 'pytanie-serii' \| 'historia' }): { dni: DzienLimitu[]; zwrocono: boolean }` | `BladDanych` | wektory `cofniecieSerii` (02), L-19 |
+| `limit.ts` | `scalDni(w: { a: DzienLimitu[]; b: DzienLimitu[] }): DzienLimitu[]` | `BladDanych` | wektory `scalDni` (02), L-20 |
+| `limit.ts` | `oknoUczciweZasady(w: { dni: DzienLimitu[]; dzis: string; widziane: boolean; poziom: 'darmowa' \| 'pro' \| 'niepewny'; ekran: string }): boolean` | `BladDanych` | wektory `oknoUczciweZasady` (02), KP-16 |
+| `dostep.ts` | `komunikatZakupu(status: string): 'sukces' \| 'czeka' \| 'blad' \| null` | `BladDanych` (nieznany status) | wektory K-* (02) |
+| `przypomnienia.ts` | `przypomnienieWpisania(a: number, b: number, plan: PlanPrzypomnienia): Wynik<number \| null>` | `Wynik` (`bledne_dane`) | RD-13-W6–W10 |
+| `przypomnienia.ts` | `planPrzypomnien(plan: PlanPrzypomnienia): Wynik<number[]>` | `Wynik` (`bledne_dane`) | RD-13-W1–W5 (F-06) |
+| `postep.ts` | `dniDoTerminu(dzis: string, termin: string): Wynik<number>` | `Wynik` (`bledne_dane`) | RD-15-W8–W10 |
+| `postep.ts` | `poczatekTygodnia(dzien: string): Wynik<string>` | `Wynik` (`bledne_dane`) | RD-20 |
+
+`BladDanych` (`src/domena/bledy.ts`): klasa wyjątku z polem `kod = 'BLAD_DANYCH'`; wołający rozpoznaje ją po `kod`, nie po dowolnym wyjątku. Wariant `blad` w `WynikScalenia` (P-111 (4)) — sekcja „Scalanie”.
+
 ## Scalanie (`scal`, fix 2026-10-25, Z07-13)
 Prototyp i wyrocznia: `eksperymenty/e1/scal.mjs`, `scal-wektory.json` (M-01–M-17), `scal-test.mjs` (każda permutacja wejścia, 150 000 zdarzeń), `mutanty-scal.mjs` (w `jakosc:kontrole`).
 - Iteracyjnie (kolejność topologiczna), bez rekurencji; budżet: łańcuch 150 000 zdarzeń (szacunek 3 lat, ADR-0005) w jednym wywołaniu.
