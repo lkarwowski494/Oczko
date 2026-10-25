@@ -114,6 +114,10 @@ Zatwierdzone w fix-2 05 2026-10-25 (NZ-08-P1-05, P-118 S1): sygnatury dopisane p
 | `przelicz`, `rozmiarUS` | liczba wpisana w kalkulatorze F-38 | **`Wynik<number>` / `Wynik<string \| null>` z `bledne_dane`** — zmiana kontraktu: 08 z 07 w partii ekranu narzędzi (dziś `BladDanych`) |
 | funkcje z `Wynik` (`przypomnienia.ts`, `postep.ts`, `licznik.ts`, `obliczenia/oczka.ts`, maszyny stanów) | wpis użytkowniczki albo dane z bazy | `Wynik` (bez zmian; dopuszczalne także przy wejściu z bazy) |
 
+**Informowanie o Pro (fix-2, P-118 I1; P-113 Q2a, P-117 Q1a):**
+- `pokazOknoUczciweZasady` (`src/domena/informacje-pro.ts`) dubluje `oknoUczciweZasady` z `limit.ts` (dwie implementacje jednej odpowiedzialności, ARCH-02): w 1.0 zostaje jedna funkcja `oknoUczciweZasady` (wyrocznia: wektory `oknoUczciweZasady` roli 02, KP-16); „dzień ukończony” liczy ona sama z listy dni.
+- `pokazKartePoImporcie` i ekran `KartaPoImporcie` (`src/ekrany/InformacjePro.tsx`): **poza 1.0** — karta planów Pro tylko po imporcie z innej aplikacji (BR-DAN-007, F-29 PÓŹNIEJ), nie po przywróceniu własnej kopii; w 1.0 nie ma wywołującego, więc funkcja byłaby atrapą (zasada 18). 08 usuwa `informacje-pro.ts` i `KartaPoImporcie` w partii 2, 07 przenosi testy karty na listę „poza 1.0 (F-29)”. Kontrakt na F-29 (po decyzji o imporcie z innych aplikacji): `pokazKartePoImporcie(w: { pro: boolean; importUdany: boolean; zrodlo: 'inna_aplikacja' | 'kopia_oczka' }): boolean` = `!pro && importUdany && zrodlo === 'inna_aplikacja'`.
+
 `BladDanych` (`src/domena/bledy.ts`): klasa wyjątku z polem `kod = 'BLAD_DANYCH'`; wołający rozpoznaje ją po `kod`, nie po dowolnym wyjątku. Wariant `blad` w `WynikScalenia` (P-111 (4)) — sekcja „Scalanie”.
 
 ## Scalanie (`scal`, fix 2026-10-25, Z07-13)
