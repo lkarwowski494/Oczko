@@ -22,6 +22,11 @@ Opcja A. Port `Sklep` w domenie (`produkty()`, `kup(id)`, `przywroc()`, `uprawni
 - Testy wektorów dostępu W-* na sztucznym sklepie; „Przywróć zakupy” dostępne w ofertach i ustawieniach (3.1.1, rejestr Apple 10b).
 - Brak żądań sieciowych poza StoreKit (przegląd zależności, rola 10).
 
+## Uzupełnienie 2026-10-25 (fix 05, P-109: karencja płatności, KP-06)
+- Adapter sklepu mapuje każdą bieżącą transakcję subskrypcji na `Transakcja` (`src/domena/porty.ts`, = `Uprawnienie` z `docs/monetyzacja/dostep.mjs`) z polem `karencjaDo` = `renewalInfoIOS.gracePeriodExpirationDate` (ms), gdy jest liczbą; inaczej `null`. Dostęp liczy `dostep.mjs` (koniec = późniejsza z dat `wygasa` i `karencjaDo`, wektory W-23–W-23e). Adapter nie liczy dostępu sam.
+- Fakt o bibliotece (odczyt paczki `expo-iap@5.8.1` z npm, 2026-10-25): typ `RenewalInfoIOS` ma pole `gracePeriodExpirationDate?: (number | null)` z opisem „When set, subscription is in grace period (billing issue but still has access)” (`src/types.ts:1574–1578`), dostępne jako `PurchaseIOS.renewalInfoIOS` (`src/types.ts:1340`). Czy warstwa natywna wypełnia je w piaskownicy przy włączonym Billing Grace Period: **nie sprawdzono** (brak urządzenia) — punkt listy z telefonu przy TestFlight (P-090 Q1a); do tego czasu brak pola = `null` (bez karencji, na niekorzyść użytkowniczki tylko przez okres karencji, potem ścieżka z KP-06 bez zmian).
+- Billing Grace Period włącza właściciel w App Store Connect (krok 6 w `docs/monetyzacja.md`).
+
 ## Opcje: zalety i wady
 ### A — zalety: zgodność z P-036 i Treningiem, reguła wieku spełniona · wady: starsza linia.
 ### B — zalety: najnowsza linia · wady: nie spełnia reguły wieku; zmiana główna bez sprawdzenia w Treningu.

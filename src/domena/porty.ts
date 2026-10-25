@@ -34,7 +34,7 @@ export type ZdarzenieWejsciowe = { id: string; licznikId: string; rodzaj: 'plus'
 // Typy pomocnicze portów (zaproponowane przez 07 w E3, zatwierdzone w fix 05 2026-10-25, Z07-22).
 export type StanSynchronizacji = 'wylaczona' | 'aktywna' | 'blad' | 'brak_konta';
 export type Produkt = { id: string; cenaWyswietlana: string; okres: 'miesiac' | 'rok' | 'dozywotni' };
-export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean };
+export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean; karencjaDo?: number | null }; // = Uprawnienie z docs/monetyzacja/dostep.mjs; karencjaDo: ADR-0010, KP-06
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
 
 // Archiwum, migracje i katalogi (ADR-0004, dane.md; przeniesione z src/przypadki-uzycia/porty-propozycja.ts, Z07-22).
