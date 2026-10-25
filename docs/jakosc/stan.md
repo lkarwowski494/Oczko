@@ -4,10 +4,10 @@ Aktualizacja: 2026-10-25 · Gałąź `claude/jolly-thompson-paz6d8` · Prompt: `
 | Etap | Stan | Artefakt |
 |---|---|---|
 | E0 rozpoznanie | przyjęte (P-090: Q1a, Q2a, Q3a) | `docs/jakosc/e0-rozpoznanie.md`, `docs/jakosc/e0/` |
-| E1 rejestr ryzyk | **STOP E1 — czeka na odpowiedź koordynatora (P-087) na pytania 1–11** | `docs/jakosc/e1-raport.md`, `e1-ryzyka.md`, `e1/` |
-| E2 plan testów | — | |
+| E1 rejestr ryzyk | przyjęte (P-091) | `docs/jakosc/e1-raport.md`, `e1-ryzyka.md`, `e1/` |
+| E2 plan testów | **STOP E2 — czeka na odpowiedź koordynatora na DS-11–DS-13 (DS-01–DS-10 bez weta = rekomendacja)** | `docs/jakosc/strategia.md` |
 | E3 testy akceptacyjne, CI | — | |
 | E4 przekazanie do 08 | — | |
 
-Następny krok: odpowiedź na pytania 1–11 (`docs/jakosc/e1/pytania-e1.md`) → P-091 → E2. Zgłoszenia: `docs/jakosc/zgloszenia.md`.
+Następny krok: odpowiedź na DS-11–DS-13 (`docs/jakosc/strategia.md`, „Pytania na STOP E2”) → P-092 → E3.
 Stan testów na wejściu: `npx jest` 956/956 (kod 0), typecheck kod 0, `granice.mjs src` kod 1 (13 naruszeń w kodzie 0.1.0).

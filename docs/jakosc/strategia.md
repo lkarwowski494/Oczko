@@ -1,0 +1,163 @@
+# Strategia testów Oczka (rola 07-jakosc, build)
+Stan: E2 (plan testów) · 2026-10-25 · STOP E2. Jedyne źródło definicji ukończenia funkcji w projekcie; rola 08 ją wykonuje. Wejścia: E0 ([`e0-rozpoznanie.md`](e0-rozpoznanie.md), P-090), E1 ([`e1-raport.md`](e1-raport.md), rejestr [`e1-ryzyka.md`](e1-ryzyka.md), P-091), wzorzec Treningu @928d0ff ([`e0/trening-wzorzec.md`](e0/trening-wzorzec.md)). Decyzje tej strategii mają ID `DS-nn`; na STOP E2 trafiają do `docs/decyzje.md`.
+
+## 1. Macierz możliwości środowiska
+Pełna, z dowodami: [`e0-rozpoznanie.md`](e0-rozpoznanie.md) §1. Skrót: Linux (kontener i `ubuntu-latest`) uruchamia Jest, `node:sqlite` (sprawdzone w Jest 29.7 na Node 22: `PRAGMA foreign_keys` = 1, 2026-10-25), fast-check, Stryker, Playwright. **Tylko macOS (`macos-26`):** `xcodebuild`, symulator iOS i watchOS, XCTest, Maestro iOS, `performAccessibilityAudit`, `plutil`/`codesign` na `.ipa`. **Tylko telefon:** lista P-090/P-091 (§8). Niczego z kolumny „tylko macOS” nie opisuje się jako sprawdzone, dopóki nie ma przebiegu CI z SHA.
+
+## 2. Rejestr ryzyk
+[`e1-ryzyka.md`](e1-ryzyka.md): 185 ryzyk, priorytet wysokie 129 / średnie 45 / niskie 11; każde z wyrocznią, poziomem i miejscem. Zmiany rejestru: rola 07 (dopisanie ryzyka przy nowej funkcji należy do DoD, §6).
+
+## 3. Poziomy testów, narzędzia i progi
+### Poziomy (najtańszy, który łapie awarię; ryzyko wysokie zależne od platformy dostaje też poziom wyżej)
+| Poziom | Co łapie w Oczku | Narzędzie | Gdzie | Ryzyka (R, przykłady) |
+|---|---|---|---|---|
+| Kontrola repo (skrypt z plikiem-pułapką) | zakazane wzorce: `INSERT OR REPLACE`, `withExclusiveTransactionAsync`, `:memory:` poza testami i `adapter-node.ts`, kopiowanie ścieżki bazy, `expo-updates`, SDK awarii, `EXPO_PUBLIC_STORE_FAKE` poza buildem E2E, ceny w kodzie (P-089), sekrety `ASC_*` poza `environment: testflight`, wydana migracja zmieniona (SHA-256) | `scripts/jakosc/*.mjs` + `tests/jakosc/*.test.ts` (każda reguła: przypadek dobry i pułapka) | Linux, każdy push | strażnicy i build |
+| Domena (czysty TS) | `limit`, `dostep`, `scal`, licznik, RD-11–RD-17, obliczenia F-38, maszyny stanów, mapowanie rodzajów zdarzeń | Jest (projekt `domena`, środowisko `node`), wektory JSON, fast-check | Linux, każdy push | R-018, R-036, R-091, R-098, R-133 |
+| Dane | port bazy, kolejka, transakcje, UPSERT, kaskady, migracje na kopii, kosz 30 dni, archiwum `.oczko`, kopia ratunkowa | Jest (projekt `dane`, `node`) + adapter `node:sqlite` | Linux, każdy push | ścieżki utraty danych (`dane.md`) |
+| Ekran | rola i etykieta VoiceOver, stan z macierzy, skutek w danych przez atrapę portów | `@testing-library/react-native` (projekt `ekrany`, `jest-expo/ios`) | Linux, każdy push | P-090 Q2a |
+| Scenariusz w interpreterze | każdy krok YAML Maestro na drzewie dostępności przed symulatorem (wzór Treningu `tests/maestro-runner.ts`) | Jest | Linux, każdy push | E2E: selektory i kolejność |
+| E2E | przepływ w prawdziwej aplikacji: +1, limit zawczasu, zakup na sztucznym sklepie, okno „Uczciwe zasady”, eksport/import, start awaryjny | Maestro na symulatorze iOS (build Release bez podpisu) | macOS CI | §5 |
+| Natywny | intencja +1 i dziennik, zegarek, wspólne wektory TS↔Swift, złoty plik dziennika i stanu, `performAccessibilityAudit` | XCTest po `expo prebuild` | macOS CI | Z07-11, Z07-12 |
+| Artefakt | podpisany `.ipa`/`.app`: uprawnienia, Info.plist, manifesty prywatności, osadzony zegarek, 35 katalogów językowych, brak przełączników testowych | `scripts/jakosc/sprawdz-ipa.mjs` (`plutil`, `codesign -d --entitlements`) | macOS CI (build TestFlight i build E2E) | Z07-19 |
+| Telefon | §8 | właściciel, TestFlight | telefon | P-090, P-091 |
+| Mutacje | testy domeny, które nie mogą paść | Stryker na `src/domena` | Linux, nocą / ręcznie | §3 DS-05 |
+
+### Decyzje o narzędziach i progach (opcje, rekomendacja)
+| ID | Pytanie | (a) | (b) | Rekomendacja i powód |
+|---|---|---|---|---|
+| DS-01 | Runner testów | **Jest 29 (jest-expo ~57) z `projects`: `domena` i `dane` w środowisku `node`, `ekrany` w `jest-expo/ios`** | `node --test` dla domeny i danych, Jest tylko dla ekranów | **(a)**: jeden runner jak Trening (`jest-expo/ios`), `node:sqlite` działa w Jest (sprawdzone); projekty `node` są szybkie i bez transformacji RN; (b) dwa raporty i dwie konfiguracje |
+| DS-02 | Testy oczekujące (przed kodem) | **katalog `tests/akceptacja/` z własną konfiguracją `jest.akceptacja.config.js` i skryptem `npm run test:akceptacja`, poza `npm test`; 08 przenosi test do głównego zestawu w commicie, który go zazielenia** | test w głównym zestawie z `test.skip` z ID i datą | **(a)** (rekomendacja wzorców): główny zestaw zielony, czerwień widoczna w osobnym raporcie; skrypt sprawdza, że każdy test oczekujący pada z `NIEZAIMPLEMENTOWANE:` albo na asercji, nie na imporcie |
+| DS-03 | Testy własności | **fast-check 4.10.2 (już w repo), 100 przypadków; ziarno stałe na push (`PROP_SEED` z SHA), losowe w przebiegu nocnym; kontrprzykład → test przykładowy** | tylko wektory | **(a)**, jak Trening (`PROP_SEED`); wektor przed własnością (moduł domeny) |
+| DS-04 | Liczba przypadków nocą | **1 000 (`fc.configureGlobal({ numRuns })` w pliku przygotowania tylko przy `PROP_NOC=1`)** | 100 jak na push | **(a)**: rzadkie kontrprzykłady wychodzą w nocy bez spowalniania pushu; koszt 0 zł (repo publiczne) |
+| DS-05 | Mutacje | **Stryker 9.6.1 (`command` runner na `npm run test:domena`) tylko `src/domena/**`, nocą, `break: null` do pomiaru bazowego; potem próg = wynik bazowy (decyzja przy E4 roli 12 albo audycie 07)** | ręczna próba mutacji (`docs/jakosc/narzedzia/mutanty-e1.mjs`) przy każdej zmianie domeny | **(a)** + narzędzie ręczne jako test E3 dla wektorów 02/05 (7/18 przeżywa dziś); Trening ma Strykera nocą |
+| DS-06 | Pokrycie kodu | **raport bez progu (`--coverage` w nocnym przebiegu); celem jest pokrycie ryzyk (§9), nie procent** | próg globalny (jak `jest.config.js` 0.1.0: 94–99%) | **(a)**: progi 0.1.0 dotyczą starego kodu i nagradzały testy atrap; nowy kod ma DoD (§6) |
+| DS-07 | E2E | **Maestro (wersja przypięta zmienną repo jak Trening, Java 17), build Release bez podpisu na `macos-26` raz → artefakt, części LPT z wagami** | Detox | **(a)**: wzorzec Treningu działa na SDK 56/57 (`e2e-ios.yml`), interpreter w Jest; Detox wymaga konfiguracji buildu testowego |
+| DS-08 | Testy ekranów | **`@testing-library/react-native` w wersji z gałęzi 13.x zgodnej z React 19.2 (wersja ≥ 14 dni, ADR-0016), zapytania po roli i nazwie** | `react-test-renderer` (już w repo) | **(a)** (P-090 Q2a, Trening ^13.3.3); `react-test-renderer` nie daje zapytań po roli; dokładną wersję potwierdza E3 (`npm view`) |
+| DS-09 | Lista stref testowych | **jedna lista w `tests/narzedzia/strefy.ts`: Europe/Warsaw, UTC, America/Los_Angeles, Pacific/Kiritimati (+14), Pacific/Pago_Pago (−11), Asia/Kolkata (+5:30), Australia/Lord_Howe (30 min DST), plus Asia/Tokyo (rynek nr 2, bez DST); przejścia z `przejsciaCzasu` dla roku bieżącego i następnego** | 7 stref Treningu bez Tokio | **(a)**: zbiór Treningu + rynek Japonii (kalendarz i cyfry, SD-36); jedna pętla w jednym zadaniu CI |
+| DS-10 | Format zrzutów wzorcowych | **zrzuty 04 (`docs/design/wzorce-zrzuty/`) porównywane tylko na symulatorze; aktualizacja wyłącznie commitem roli 04 z datą akceptacji, nigdy automatem** | automatyczne nadpisywanie przy różnicy | **(a)** (wzorzec zatwierdzony; sceptyk: zrzuty aktualizowane automatem nie mogą paść) |
+
+### Zasady pisania testów (z soczewki sceptyka, obowiązują 07 i 08)
+1. Wyrocznia z innego źródła niż kod: wektor z rejestru (06, 02, 05, BRD), własność, rachunek innym narzędziem albo decyzja z ID; nigdy wynik przepisany z uruchomienia.
+2. Każdy strażnik (skrypt, grep) ma plik-pułapkę, na którym pada, i test „pusty katalog = błąd”.
+3. Zbiory porównywane jako zbiory (tablica posortowana z typem), nie liczby ani teksty; pusta lista wyników to błąd testu, nie zaliczenie.
+4. Oczekiwany błąd z klasą albo kodem (`powod: 'limit'`), nie „cokolwiek rzuca”.
+5. Granice w trójkach: poniżej, na, powyżej (60 min, `wygasa = teraz`, 5 z 5 dni).
+6. Czas tylko ze wstrzykniętego `Zegar`; zero `Date.now()` i asercji na czas zegarowy w testach jednostkowych (zasada roli 5).
+7. Losowość tylko z ziarnem, które test wypisuje przy porażce.
+8. Scenariusz E2E po każdej akcji zmieniającej stan ma `assertVisible` wartości; scenariusz bez asercji po akcji to błąd przeglądu.
+9. Wszystko, co jest dowodem, biegnie w `npm run verify` albo w nazwanym zadaniu CI; skrypt spoza CI nie jest dowodem.
+
+## 4. Dane testowe
+| Dane | Skąd (wycinek prawdziwego pliku) | Kto i kiedy | Czyszczenie z danych osobowych |
+|---|---|---|---|
+| PDF wzorów do importu (F-24, BR-WZR-001) | wzory z domeny publicznej (np. książki o dzierganiu z Project Gutenberg) w kilku wariantach: tekstowy, skan, wielostronicowy; plus pliki z popularnych generatorów PDF (eksport z LibreOffice i z przeglądarki) z tekstem testowym | 07 w E3 (pobranie, licencja i adres w pliku opisu) | bez metadanych autora (`exiftool -all=` przed commitem; test sprawdza brak pól `Author`, `Creator` z nazwiskiem) |
+| Dokument Word (BR-WZR-007, P-071 5a) | plik `.docx` z domeny publicznej albo zapisany przez LibreOffice z tekstu z domeny publicznej | 07 w E3 | jw. (`docProps/core.xml` bez osoby) |
+| Archiwum `.oczko` (ADR-0004) | **od wersji 1.0:** archiwum wyeksportowane z buildu wydania na symulatorze w CI, zapisane w `tests/dane/archiwa/v<wersja>.oczko` przy każdym wydaniu | 07 audit przy wydaniu | dane syntetyczne wpisane przez scenariusz E2E, bez zdjęć osób (zdjęcia: wygenerowany obraz z EXIF GPS ustawionym celowo, żeby test usuwania metadanych miał co usunąć) |
+| Baza poprzedniej wersji (`tests/bazy/vN.db`) | baza z buildu wydania (symulator, scenariusz „życie”) po każdym wydaniu; 0.1.0 poza testem (P-070) | 07 audit przy wydaniu | jw. |
+| Dziennik +1 i stany Live Activity/zegarka | **złote pliki** `tests/wspolne/dziennik-*.jsonl`, `stan-*.json` czytane przez Jest i XCTest (Z07-11, Z07-12) | 07 w E3 (szkic), 05 zatwierdza w sesji fix | syntetyczne |
+| Raporty MetricKit (ADR-0018) | przykładowy ładunek z dokumentacji Apple (adres w opisie) | 12 w E2–E3 | bez identyfikatorów urządzenia |
+| Ślady GPS | nie dotyczy (moduł `geo-slady` nie dotyczy, E0 §6) | — | — |
+Każdy plik danych ma obok opis (`*.opis.md`: skąd, data, licencja, co zawiera, oczekiwany wynik ze źródłem).
+
+## 5. CI: zadania, koszt, limity czasu, bramki
+Wyzwalacze: **`workflow_dispatch` i `schedule` działają tylko z gałęzi domyślnej** (stare workflowy na `main`), więc na gałęzi roboczej zadania uruchamia `push` (decyzja DS-11).
+
+| Workflow (nowy, `jakosc-*.yml`) | Wyzwalacz | Runner | Zadania | Bramka czy informacja | `timeout-minutes` |
+|---|---|---|---|---|---|
+| `jakosc-linux.yml` | push na `claude/jolly-thompson-paz6d8` i `main`; `pull_request` | `ubuntu-latest` | `npm ci`; `npm run verify` (typecheck, `test`, kontrole repo, `i18n:kod`, granice — informacyjnie do usunięcia kodu 0.1.0, `sprawdz-schemat`, wektory 02/05/06, strażnik nazw źródeł); `test:akceptacja` (raport czerwonych, informacyjnie); macierz stref w **jednej** pętli `TZ=…` | bramka: `verify`; informacja: `test:akceptacja`, granice | 20 (pomiar E3 + zapas; rośnie z liczbą stref i testów) |
+| `jakosc-ios.yml` | push na gałąź roboczą i `main` z `paths` (kod aplikacji, `modules/`, `targets/`, `.maestro/`, `package*.json`, `app.json`) | `macos-26` | `build` (prebuild, `xcodebuild` Release, symulator, `CODE_SIGNING_ALLOWED=NO`, sztuczny sklep) → artefakt; `xctest` (cele Swift, wspólne wektory, złote pliki); `e2e` macierz części (pakiet podstawowy); `artefakt` (`sprawdz-ipa.mjs` na `.app`); `wyniki` (`ubuntu-latest`, podsumowanie, status „maszyna nieprzydzielona” osobno) | **pierwszy przebieg informacyjny** (zasada roli 8); po pierwszym zielonym: bramka `build`, `xctest`, pakiet podstawowy | `build` 90, `e2e` 30 + 4 × liczba scenariuszy w części (wyliczane w kroku podziału), `xctest` 30 |
+| `jakosc-pelny.yml` | po scaleniu do `main`: `schedule` nocny + `workflow_dispatch`; do tego czasu push z `[e2e-pelny]` w treści commitu (DS-11) | `macos-26` + `ubuntu-latest` | pełny katalog E2E (iPhone; pakiet podstawowy na iPadzie, P-091 8b), fast-check 1 000, Stryker, pokrycie, tygodniowy build kontrolny na najnowszym Xcode (P-091 5a) | informacja (przegląd raz dziennie, jak Trening) | jak wyżej + Stryker 60 |
+| `testflight.yml` (rola 10) | tag `v*` / ręcznie z `main`, środowisko `testflight` | `macos-26` | bramka: zielony `jakosc-linux` i pakiet podstawowy E2E na tym SHA; `sprawdz-ipa.mjs` na podpisanym `.ipa`; `cktool` schemat (P-091 1b) | bramka | rola 10 |
+
+**Koszt** (odczyt 2026-10-25): repo publiczne, runnery standardowe: **0 USD** („free … for public repositories that use standard GitHub-hosted runners”, docs.github.com/en/billing/concepts/product-billing/github-actions); Free: najwyżej 5 zadań macOS naraz, zadanie do 6 h (docs.github.com/en/actions/reference/limits). Szacunek minut na czas pracy roli 08 (2–3 tygodnie, [OCENA]): Linux ok. 150 pushy × 5 min = 750 min; macOS ok. 60 pushy z kodem × (40 build + 2 × 25 E2E + 10 XCTest) ≈ 6 000 min + nocne 21 × 120 ≈ 2 500 min. **Ryzyko nazwane:** przy zmianie repo na prywatne te same minuty kosztowałyby ok. 8 500 × 0,062 USD ≈ 530 USD/mies. (stawka macOS z odczytu biblioteki 18.10.2026, sprawdzić ponownie) — repo musi zostać publiczne albo plan CI wraca do roli 07.
+**Pierwsze uruchomienie każdej nowej kontroli jest informacyjne**; staje się bramką po jednym zielonym przebiegu w CI (zasada roli 8). Ponowienia: tylko przy błędzie startu sterownika XCTest i dla scenariuszy bez asercji wartości licznika (P-091 9a); „maszyna nieprzydzielona” ponawiana ręcznie (P-091 10a, reguła do `CLAUDE.md`).
+
+## 6. Definicja ukończenia funkcji (według rodzaju zmiany)
+| Rodzaj zmiany | Wymagane, zanim zmiana trafi na gałąź |
+|---|---|
+| Każda | test akceptacyjny kryterium przeniesiony z `tests/akceptacja/` do głównego zestawu i zielony; `npm run verify` kod 0 lokalnie i w CI; wiersz rejestru ryzyk dla nowej ścieżki awarii; brak nowych tekstów poza `t()` (`i18n:kod`) |
+| Logika domeny | wektory ze źródła (ID w nazwie testu) + własność, jeśli reguła ma relację; granice w trójkach; mutant ręczny albo Stryker bez przeżyłego mutanta w funkcji ryzyka wysokiego |
+| Zapis danych, schemat, migracja | test na `node:sqlite` przez port: transakcja, `foreign_keys = 1`, UPSERT, kaskada, przerwany zapis (ROLLBACK); migracja: test na kopii każdej wydanej wersji z licznościami, SHA-256 wydanych migracji niezmienione; ścieżka w tabeli `dane.md` |
+| Ekran | test RNTL: rola i etykieta z `design-spec.md`, każdy stan z macierzy 04, skutek w danych przez atrapę portu; wygląd tylko z tokenów (kontrola tokenów); stany bez makiety → zgłoszenie do 04 (Z07-05) |
+| Przepływ | scenariusz Maestro (stałe `testID`, asercja po każdej akcji), przejście w interpreterze w Jest, waga w `e2e-czesci.json`; zielony na symulatorze przed oznaczeniem „zrobione” |
+| Kod Swift / cel natywny | XCTest na wspólnych wektorach i złotych plikach; test liczności wektorów (wykonano N z N); kontrola artefaktu po zmianie uprawnień lub Info.plist |
+| Treść / tekst krytyczny | wektory 06 zielone, strażnik nazw źródeł; zmiana zdania krytycznego → weryfikacja 06 (`docs/tresci/README.md`) |
+| Zakupy | wektory W/L/Z/S zielone; E2E na sztucznym sklepie; punkt listy §8 przy wydaniu |
+| Workflow CI | przebieg dowodowy na tym SHA (lekcja L-001 Treningu), strażnik sekretów zielony, opis w PR |
+
+## 7. Niestabilne testy i kwarantanna
+Według wzorców roli (wykrycie z komendą, ziarnem i maszyną; najpierw powtórka jednym procesem; przyczyna przed obejściem; bez automatycznych ponowień w bramce poza nazwanymi w §5). Kwarantanna tylko jawna: `docs/jakosc/kwarantanna.md` (ID testu, właściciel, termin najwyżej do następnego wydania, kontrola zastępcza); test w kwarantannie biegnie informacyjnie; ryzyko wysokie nigdy bez kontroli. E2E: każda porażka klasyfikowana jako błąd aplikacji / nieaktualny scenariusz / maszyna; diagnoza od zrzutu kroku, który padł (zrzuty w logu jak Trening, bo artefakty bywają nieosiągalne). Fast-check: kontrprzykład z CI to znaleziony błąd, nie niestabilność.
+
+## 8. Lista „tylko telefon” (P-090 Q1a, P-091 2a) — kroki właściciela przy TestFlight wewnętrznym
+Jedno zadanie naraz; przy każdej pozycji build, data, wynik. Pozycja bez wyniku na kandydacie = „nie sprawdzono” w audycie. Sposób zapisu i kolejność jak Trening `docs/39`.
+| ID | Ryzyko | Kroki | Oczekiwane | Wektor |
+|---|---|---|---|---|
+| TT-01 | zakup | kup Pro miesięczne w piaskownicy TestFlight | Pro od razu, licznik bez limitu | W-01, W-15 |
+| TT-02 | przywrócenie | usuń aplikację, zainstaluj, otwórz bez „Przywróć” | Pro działa (bieżące uprawnienia) | W-02 |
+| TT-03 | tryb samolotowy | po zakupie tryb samolotowy, zabij i otwórz aplikację | Pro działa z pamięci | W-03 |
+| TT-04 | Family Sharing | członek rodziny po włączeniu (P-089) otwiera aplikację | Pro działa; po odebraniu Pro znika, **dane, historia, eksport dostępne** (KP-02 V4) | W-10, W-14 |
+| TT-05 | zwrot | zwrot w piaskownicy (sposób: [DO USTALENIA] OP-21, rola 10) | jak TT-04 po odebraniu | W-05, W-06 |
+| TT-06 | aktualizacja (Trening AK-05) | poprzedni build TestFlight z danymi → „Zaktualizuj” → otwórz | projekty, liczniki, historia, ustawienia na miejscu; Live Activity działa | test migracji (Node) jako pokrycie zastępcze |
+| TT-07 | start nad 0.1.0 (P-070) | na telefonie z 0.1.0 zainstaluj nowy build | pusta aplikacja bez awarii; stary plik nietknięty (diagnostyka pokazuje SHA bez zmian) | ADR-0015 |
+| TT-08 | iCloud (P-091 1) | +1 na telefonie, otwórz iPada z tym samym kontem | rekord widoczny; **niezaliczone → synchronizacja ukryta w 1.0** | R-051 |
+| TT-09 | ekran blokady (ZAL-030) | zablokuj telefon w trakcie Live Activity, stuknij +1 trzy razy, odblokuj | wartość +3 bez konfliktu | R-018 |
+Poza listą, jako „Nie sprawdzono” z ryzykiem szczątkowym: zegarek (właściciel nie ma Apple Watch; testerki według planu koordynatora, krok 10), restart bez odblokowania, bateria, raport awarii TestFlight (ADR-0018, P-079).
+
+## 9. Testy akceptacyjne: kryterium → test → stan
+Wypełnia E3 (inwentarz 220 kryteriów: [`e0/kryteria.json`](e0/kryteria.json); testy zależne od poprawek 01/02/05: [`zgloszenia.md`](zgloszenia.md), kolumna „Testy zależne”).
+
+## 10. Kontrole od innych ról → miejsce w planie
+### Rola 05 (`e3-…md` §4)
+| # | Kontrola | Test / skrypt | Poziom | Gdzie | Bramka |
+|---|---|---|---|---|---|
+| 1 | `granice.mjs src` | istniejące narzędzie + pułapki obejść (Z07-16) | kontrola repo | Linux | **informacja** do usunięcia kodu 0.1.0 (dziś kod 1, 13 naruszeń), potem bramka |
+| 2 | `sprawdz-schemat.mjs` | istniejące + uruchomienie na bazie po migracjach aplikacji (Z07-15) | dane | Linux | bramka |
+| 3 | migracja z kopii każdej wydanej wersji | `tests/dane/migracje.test.ts` na `tests/bazy/vN.db` | dane | Linux | bramka od 1.0 (dziś pusty zbiór = test „brak wydanych wersji”, nie zaliczenie po cichu) |
+| 4 | `PRAGMA foreign_keys` = 1 w transakcji przez port | Jest `node:sqlite` + XCTest/E2E z adapterem expo-sqlite | dane + natywny | Linux, macOS | bramka |
+| 5 | wektory L/S/Z, W, M + RD-11–RD-17; te same w XCTest | Jest (domena) + XCTest z testem liczności | domena + natywny | Linux, macOS | bramka |
+| 6 | własność `scal` (permutacja, powtórzenie) | fast-check | domena | Linux | bramka |
+| 7 | 22 ścieżki utraty danych | test na ścieżkę (`dane.md`), w nazwie ID ścieżki | dane / natywny / E2E | Linux, macOS | bramka |
+| 8 | kontrole repo (OR REPLACE, exclusive, kopia ścieżki, `import SQLite3`, `Library/SQLite`, puste `catch` w `src/dane`, przypięcia, ADR-0016, PrivacyInfo) | `scripts/jakosc/kontrole-repo.mjs` z pułapkami; puste `catch` przez ESLint `no-empty` tylko w `src/dane` (DS-12) | kontrola repo | Linux | bramka |
+| 9 | sekrety `ASC_*` tylko w `environment: testflight`, brak `pull_request`/`workflow_run` | `scripts/jakosc/sprawdz-workflowy.mjs` (parsuje YAML; brak workflowu = błąd) | kontrola repo | Linux | bramka |
+| 10 | po `prebuild`: target 18.0, `UIBackgroundModes`, `NSSupportsLiveActivities`, uprawnienia | `sprawdz-ipa.mjs` na `.app`/`.ipa` (nie tylko po prebuild, Z07-19) | artefakt | macOS | bramka |
+| 11 | `performAccessibilityAudit` PR-01–PR-05 | XCTest UI po prebuild | natywny | macOS | informacja do pierwszego zielonego, potem bramka |
+| 12 | NFR-PIE-001 (1 stuknięcie, 0 ekranów, offline, 1. i ostatni dzień miesiąca) | E2E (świeża instalacja) + test przypadku użycia z wstrzykniętym zegarem dla dat (Z07-18) | E2E + domena | macOS, Linux | bramka |
+| 13 | budżety wydajności | pomiar bazowy w CI jako artefakt | E2E | macOS | **informacja** do progu (OP-17, Z07-06) |
+### Rola 12 (`docs/niezawodnosc/e1-decyzje.md`, „Dla roli 07”)
+| Kontrola | Miejsce | Bramka |
+|---|---|---|
+| brak `:memory:` w `src/` poza testami i `src/dane/baza/adapter-node.ts` (wyjątek nazwany, Z07-21) | kontrole repo | bramka |
+| brak kopiowania samego `.db`, `VACUUM`/`REINDEX` w kodzie ratunkowym, `expo-updates`, SDK awarii; przełącznik wymuszonej awarii tylko w konfiguracji testowej | kontrole repo + `sprawdz-ipa.mjs` (brak przełącznika w buildzie wydania) | bramka |
+| dwa wymuszone nieudane starty → ekran awaryjny → archiwum z licznościami, oryginał z tym samym SHA-256 | E2E (build z przełącznikiem testowym) | bramka po pierwszym zielonym |
+| przywrócenie z kopii na czystej instalacji; start w tle (intencja +1) nie zwiększa licznika nieudanych startów | E2E + XCTest | jw. |
+| pomiar `integrity_check` na bazie 3-letniej | pomiar w CI (artefakt) | informacja |
+| Xcode | najnowszy 26.x + tygodniowy build (P-091 5a) | — |
+### Rola 09 (`docs/lokalizacja/e1-mechanizm.md`)
+| Kontrola | Miejsce | Bramka |
+|---|---|---|
+| `npm run i18n:kod` | `verify` (dziś kod 2 „nie sprawdzono” bez katalogów nowego kodu — skrypt musi kończyć się 0 albo 1, Z07-16) | bramka po pierwszym ekranie |
+| strażnik liczby mnogiej na Node z pełnym ICU | Jest (istniejący `tests/i18n/liczba-mnoga.test.ts`) | bramka |
+| `supportedLocales` = `CFBundleLocalizations` = `locales` = słowniki | kontrola repo + `sprawdz-ipa.mjs` (katalogi `.lproj`) | bramka |
+| pseudolokalizacja | zestaw ekranów RNTL z `EXPO_PUBLIC_PSEUDO=1` (długość, brak tekstu poza `t()`) | informacja |
+| `Intl.NumberFormat`/`DateTimeFormat` na Hermes | E2E: ekran z liczbą i datą w 3 językach (en, de, ja) | bramka po pierwszym zielonym |
+
+## 11. Plan wydania (moduł `wydanie`, build)
+Jeden SHA dla wszystkich przebiegów kandydata (tag → SHA → przebieg TestFlight → build N); na tym SHA: `jakosc-linux` zielony, pakiet podstawowy E2E iPhone, pełny katalog raz (P-091 9a), XCTest, `sprawdz-ipa.mjs` na podpisanym `.ipa`, stan `VALID` w App Store Connect (rola 10), schemat CloudKit Production zgodny (P-091 1), lista §8 z wynikami, lista „Nie sprawdzono”. Test aktualizacji z poprzedniej wersji z danymi: od 1.0 (`tests/bazy/vN.db` + TT-06). Werdykt: tryb audit roli 07.
+
+## Pytania na STOP E2
+**DS-11. Przebiegi, które GitHub uruchamia tylko z `main` (nocny pełny katalog, ręczne `workflow_dispatch`).**
+- (a) **Do scalenia z `main`: pełny katalog na gałęzi roboczej przez push z `[e2e-pelny]` w treści commitu; po scaleniu nocny `schedule` jak Trening.** Kompromis: bez działania właściciela teraz; pełny katalog tylko na żądanie roli. **Rekomendacja.**
+- (b) Właściciel scala teraz do `main` sam plik workflowu (mały PR) — działa noc i ręczne uruchomienie od razu. Kompromis: scalenie do `main` to wyjątek P-087 (decyzja właściciela) i miesza nowy workflow ze starym kodem na `main`.
+
+**DS-12. Puste `catch` w `src/dane` (kontrola 05-8): projekt nie ma ESLint.**
+- (a) **ESLint tylko z regułą `no-empty` (i `no-restricted-syntax` dla zakazanych wywołań) na `src/dane`, w `verify`.** Kompromis: nowa zależność deweloperska (reguła wieku ≥ 14 dni). **Rekomendacja**: grep nie rozumie składni (pułapki obejść z E1).
+- (b) Skrypt na AST TypeScriptu (`typescript` już w repo) wyszukujący puste bloki `catch`. Kompromis: bez nowej zależności, ale własny kod do utrzymania.
+
+**DS-13. Stary kod 0.1.0 i jego testy (956) w `npm test` do czasu kroku porównania i roli 08.**
+- (a) **Zostają w `npm test` jako stan wyjściowy; nowe testy w osobnych projektach Jest; usuwa je 08 razem ze starym kodem według wyniku kroku porównania (P-078).** Kompromis: dłuższy `npm test` (36 s), ale bez decyzji o kodzie przed porównaniem. **Rekomendacja.**
+- (b) Wyłączenie starych testów teraz. Kompromis: szybciej, ale tracimy sygnał regresji kodu, który może zostać użyty ponownie (P-001, P-004).
+
+Pozostałe decyzje DS-01–DS-10 (tabela §3) bez weta przechodzą według rekomendacji.
+
+## Czas
+E3: agent 5–8 h (zaślepki z sygnaturami `moduly.md`, testy akceptacyjne domena → dane → ekrany → scenariusze, narzędzia `czas`, `strefy`, części E2E, kontrole repo z pułapkami, workflowy); oczekiwanie: pierwszy przebieg macOS (build ok. 40 min + E2E; `macos-26` bywa niedostępny wieczorami); właściciel 0.
