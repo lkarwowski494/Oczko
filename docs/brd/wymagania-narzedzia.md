@@ -86,7 +86,7 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
   - Scenariusz: Próbka amerykańska
     - Zakładając, że wzór podaje 20 o. na 4 in
     - Gdy użytkownik przelicza na 10 cm
-    - Wtedy wynik to 19,685 o./10 cm (RD-04-W1), a sposób pokazania przybliżenia „4 in = 10 cm” zależy od OP-03
+    - Wtedy wynik to 19,685 o./10 cm (RD-04-W1), a obok jest informacja, że wzory często zrównują 4 in z 10 cm (P-081 P3a; ER-35)
   - Scenariusz: Masa
     - Zakładając, że etykieta podaje 3,5 oz
     - Gdy użytkownik przelicza na gramy

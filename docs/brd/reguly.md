@@ -63,7 +63,7 @@ Zasady wspólne reguł:
 - Granica: P4 > 0 (ostre)
 - Podstawa: rachunek z S-27 (4 in = 10,16 cm dokładnie); S-25 i S-19 zrównują „4"/10 cm”, czyli przybliżają z błędem 1,6%
 - Krytyczna: tak
-- Uproszczenie: brak; reguła usuwa uproszczenie źródeł. Czy aplikacja ma je stosować, czy pokazywać obie wartości: [DO WYJAŚNIENIA] (OP-03).
+- Uproszczenie: brak; reguła usuwa uproszczenie źródeł. Aplikacja liczy dokładnie (10,16 cm) i dopisuje, że wzory często zrównują 4 in z 10 cm (P-081 P3a, OP-03 zamknięte; ER-35).
 
 | ID | P4 [o./4 in] | Oczekiwane: P10 [o./10 cm] | Tolerancja | Rodzaj | Pochodzenie |
 |---|---|---|---|---|---|

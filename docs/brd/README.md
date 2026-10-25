@@ -101,7 +101,7 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 |---|---|---|---|
 | OP-01 | Kolizja ID decyzji `P-nnn` z personami `P-n`: zamknięte decyzją P-018 | właściciel | `kontrola-brd.mjs` |
 | OP-02 | [DO USTALENIA] Reguła zaokrąglania liczby oczek (w górę, w dół, do krotności motywu, do parzystości) i jej źródło | źródła szczebla 1–3, rola 06 | RD-01, RD-02, RD-07 |
-| OP-03 | [DO WYJAŚNIENIA] Próbka na 4 in: przeliczać dokładnie (10,16 cm) czy jak źródła (10 cm), czy pokazać obie | właściciel, 03 | RD-04 |
+| OP-03 | Próbka na 4 in: zamknięte decyzją P-081 (P3a): 4 in = 10,16 cm dokładnie, z dopiskiem, że wzory często zrównują 4 in z 10 cm; klasyfikacja z wartości dokładnej (ER-35) | właściciel | RD-04, RD-10, BR-KAL-003 |
 | OP-04 | [DO USTALENIA] Konwencja równomiernego dodawania w rzędzie płaskim (k+1 odcinków) | źródła szczebla 1–3 | RD-05 |
 | OP-05 | [DO USTALENIA] Domyślny zapas włóczki i jego źródło; czy użytkownik wybiera go zawsze sam | źródła (producenci, szczebel 3) | RD-07 |
 | OP-06 | [DO USTALENIA] Jak wzory zapisują „co N rzędów” (od rzędu N czy od 1); japońska notacja 2-1-5 | źródła szczebla 1–3 | RD-13 |
