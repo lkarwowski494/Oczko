@@ -52,6 +52,13 @@ for (const t of poprawne) {
   }
   wlasnosci += 1;
 }
+// Z07-02: każdy wektor limitu (L-, Z-) cytowany w BRD istnieje w wektorach (S-NN w BRD to źródła, nie wektory strażnika).
+const ids = new Set(sekcje.flatMap(([, l]) => l.map((t) => t.id)));
+for (const plik of ['wymagania-dane.md', 'wymagania-licznik.md', 'reguly.md', 'README.md']) {
+  let tekst = '';
+  try { tekst = readFileSync(new URL(`../brd/${plik}`, import.meta.url), 'utf8'); } catch { bledy.push(`BRD: brak pliku ${plik}`); continue; }
+  for (const id of new Set(tekst.match(/\b[LZ]-\d{2}[a-z]?\b/g) || [])) if (!ids.has(id)) bledy.push(`BRD ${plik} cytuje ${id}, którego nie ma w wektory-limitu.json`);
+}
 const n = sekcje.reduce((s, [, l]) => s + l.length, 0);
 console.log(bledy.length ? `NIEZGODNE ${bledy.length} (wektorów ${n}, własności na ${wlasnosci}):\n${bledy.join('\n')}` : `zgodne ${n} z ${n} wektorów; własności (strefa, Pro, duplikaty) na ${wlasnosci} wektorach`);
 process.exit(bledy.length ? 1 : 0);

@@ -1,5 +1,5 @@
 {
- "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu. Z07-07 (2026-10-25, P-103): wszystkie teraz/ostatniPlus spójne z dzis w strefie `strefa` (kontrola w teście; dawne teraz = 1800000000000 przesunięte z zachowaniem różnic), granice przerwy L-04c–L-04e, L-21–L-25, Z-09, wznowienieLimitu (Z-10*); błąd danych = { blad: \"BLAD_DANYCH\" } (klasa BladDanych, kod), nie dowolny wyjątek. L-19 (P-091 (7b), P-103 (7), 2026-10-25): cofniecieSerii — „Cofnij” z pytania o serię RD-17 zwraca dzień limitu tylko, gdy seria zaczęła dzień i dziś nie było innego zdarzenia zaczynającego dzień (także cofniętego); z historii nigdy (L-06). Z07-09 (2026-10-25, P-103 (5a), (6a)): scalDni (L-20*: suma po dacie, pro = OR; wzorzec dla `scal` roli 05) i oknoUczciweZasady (O-*: dzień bez Pro z robótką minął, raz, tylko pewny stan darmowy, nigdy na ekranie licznika).",
+ "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii: wolaStraznika = false) i L-13 (brak sieci, Pro z pamięci podręcznej według wektory-dostepu.json, startDnia z pro = true) mają wektory od Z07-02 (2026-10-25). Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu. Z07-07 (2026-10-25, P-103): wszystkie teraz/ostatniPlus spójne z dzis w strefie `strefa` (kontrola w teście; dawne teraz = 1800000000000 przesunięte z zachowaniem różnic), granice przerwy L-04c–L-04e, L-21–L-25, Z-09, wznowienieLimitu (Z-10*); błąd danych = { blad: \"BLAD_DANYCH\" } (klasa BladDanych, kod), nie dowolny wyjątek. L-19 (P-091 (7b), P-103 (7), 2026-10-25): cofniecieSerii — „Cofnij” z pytania o serię RD-17 zwraca dzień limitu tylko, gdy seria zaczęła dzień i dziś nie było innego zdarzenia zaczynającego dzień (także cofniętego); z historii nigdy (L-06). Z07-09 (2026-10-25, P-103 (5a), (6a)): scalDni (L-20*: suma po dacie, pro = OR; wzorzec dla `scal` roli 05) i oknoUczciweZasady (O-*: dzień bez Pro z robótką minął, raz, tylko pewny stan darmowy, nigdy na ekranie licznika).",
  "limit": 5,
  "przerwa_ms": 3600000,
  "startDnia": [
@@ -439,6 +439,46 @@
      "pro": false
     },
     "zostalo": 3
+   }
+  },
+  {
+   "id": "L-13",
+   "scenariusz": "Z07-02, BR-ZAK-001 „Brak sieci”: Pro z pamięci podręcznej (sklep niedostępny, W-03, W-12b) przy 5 z 5, nowy dzień: dozwolone, dzień zapisany jako dzień z Pro; limit liczony lokalnie (KP-06)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794044400000,
+    "pro": true
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-08",
+     "pro": true
+    },
+    "zostalo": 0
    }
   },
   {
@@ -1030,6 +1070,14 @@
     "rodzaj": "edycja-historii",
     "licznik": "rzedy",
     "urzadzenie": "telefon"
+   },
+   "oczekiwane": false
+  },
+  {
+   "id": "L-07",
+   "scenariusz": "Z07-02, BR-DAN-005 „Bez Pro, na limicie”, BR-ZAK-007 „Dane bez limitu”: dopisanie dnia wstecz nie woła strażnika — dane, historia, notatki i eksport poza limitem (KP-02)",
+   "wejscie": {
+    "rodzaj": "edycja-historii"
    },
    "oczekiwane": false
   },

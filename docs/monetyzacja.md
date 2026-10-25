@@ -115,7 +115,7 @@ Kolumna „Dostęp” kontraktu zakresu: **wszystkie funkcje darmowe w limicie 5
 ### Przekazanie (kolejne role)
 - **04:** ekran ofert (ujawnienia 1–7), licznik dni (KP-13) zgodny z P-046, komunikat na limicie przy starcie dnia (bez przerywania pracy), stan „Masz Pro”, wpis „Zarządzaj subskrypcją”.
 - **05:** ADR biblioteki: `expo-iap` jak Trening (P-036), z subskrypcjami bez oferty wprowadzającej; KP-06–KP-09, KP-14, KP-15 (dni z robótką w danych synchronizowanych); czy Trening liczy D5 tak samo [DO USTALENIA] (spójność portfela).
-- **07:** wektory `wektory-limitu.json` (L-01–L-15) i `wektory-dostepu.json` (W-01–W-18); kontrola KP-01 przed wydaniem; scenariusze automatyczne (P-041).
+- **07:** wektory `wektory-limitu.json` i `wektory-dostepu.json`; kontrola KP-01 przed wydaniem; scenariusze automatyczne (P-041). Stan po fixie 2026-10-25 (Z07-02): limit 77 wektorów (`startDnia` 28: L-01–L-25 bez L-19/L-20; `wolaStraznika` 11: S-01–S-10, L-07; `mozeZaczacDzien` 9: Z-01–Z-09; `wznowienieLimitu` 4; `cofniecieSerii` 9: L-19*; `scalDni` 5: L-20*; `oknoUczciweZasady` 11: O-*), `node docs/monetyzacja/limit-test.mjs` „zgodne 77 z 77”; dostęp 56 (`node docs/monetyzacja/dostep-test.mjs`). Test limitu sprawdza też, że każdy L-/Z- cytowany w BRD ma wektor.
 - **08:** `limit.mjs` i `dostep.mjs` jako wzorce; KP-01–KP-15.
 - **Właściciel (App Store Connect, po ADR 05):** grupa subskrypcji „Oczko Pro” z `monthly` 0,99 i `yearly` 6,99 USD **bez ofert wprowadzających**; dożywotni 14,99 USD (sprawdzić istniejący produkt Oczka, OP-24); Family Sharing (D6); konto testowe piaskownicy.
 
