@@ -288,6 +288,51 @@
   }
  },
  {
+  "id": "M-08b",
+  "opis": "ER-41: pomyłka ze środka historii (b) bez „Cofnij”; korekta wpisaniem wartości na głowie (P-091 (3a))",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 20,
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "c",
+    "rodzaj": "plus",
+    "rodzice": [
+     "b"
+    ]
+   },
+   {
+    "id": "d",
+    "rodzaj": "plus",
+    "rodzice": [
+     "c"
+    ]
+   },
+   {
+    "id": "k",
+    "rodzaj": "wpisanie",
+    "wartosc": 22,
+    "rodzice": [
+     "d"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 22
+  }
+ },
+ {
   "id": "M-09",
   "opis": "Z07-13: plus z dwoma rodzicami (tylko rozstrzygnięcie łączy gałęzie) → błąd danych, nie cichy wynik",
   "zdarzenia": [

@@ -95,6 +95,7 @@ Prototyp i wyrocznia: `eksperymenty/e1/scal.mjs`, `scal-wektory.json` (M-01–M-
 - Wynik: `zgodny { wartosc, glowy }` | `konflikt { glowy, kandydaci: [{ glowa, wartosc }] }` | `czeka { brakujacy }` | `blad { powod, id }`. Typ TS dostaje wariant `blad` w commicie 08, który wdraża `scal.ts` (razem z dopasowaniem pomocnika testów 07).
 - `blad` (dane, których nie da się scalić bez zgadywania; zawsze ten sam wynik dla każdej kolejności wejścia, `id` = najmniejsze winne): `kolizja_id` (to samo `id`, inna treść; identyczny duplikat = idempotencja, M-02), `nieznany_rodzaj` (M-15), `wiele_rodzicow` (zmiana inna niż `rozstrzygniecie` z > 1 rodzicem, M-09; tylko rozstrzygnięcie łączy gałęzie), `cykl` (M-12, M-13). Przypadek użycia: licznik pokazuje ostatnią zapisaną wartość (`licznik.wartosc`), wpis w `blad` (F-57), bez zapisu wyniku.
 - `czeka`: przypadek użycia nie woła `scal` z niekompletną historią. Zdarzenia bez rodzica (albo bez encji licznika) trafiają do poczekalni (ADR-0005, uzupełnienie), a `scal` dostaje tylko zdarzenia z kompletnymi przodkami (P-110 Q1a).
+- Cofnięcie (P-091 (3a), ER-41): `cofniecie` dotyczy ostatniej zmiany albo serii na końcu historii; pomyłkę ze środka historii poprawia się wpisaniem wartości (M-08b).
 
 ## Ścieżka zapisu +1 (przypadek użycia `dodajRzad`)
 Jedna transakcja w kolejce (ADR-0002), bez `await` na nic poza bazą:
