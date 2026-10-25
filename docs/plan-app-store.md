@@ -14,6 +14,7 @@ Czasy to **[OCENA]**: „agent” = praca agentów, „kalendarz” = z czekanie
 |---|---|---|---|---|---|
 | 1 | 07-jakość build: strategia testów, testy akceptacyjne czerwone przed kodem, CI (wzór Treningu: podział E2E, ponawianie macOS, podpis bez nowego certyfikatu) | rola 07 | 0,5–1 dnia | 1–2 dni | 0 |
 | 2 | Porównanie z istniejącym kodem (03 audit, P-078): co z kodu 0.1.0 zostaje, co od nowa | rola 03 | 0,5 dnia | 1 dzień | 0 |
+| 2a | Sesja fix ról 01, 02 i 05 przed programowaniem (P-090 Q3a, P-091 pkt 11): spójne kryteria, kontrakt limitu, poprawki ADR-0008/0009 i `scal` | 01, 02, 05 | 0,5–1 dnia | 1 dzień | 0 |
 | 3 | **08 programista partiami**: 49 funkcji MVP, zegarek, widżet/Live Activity, synchronizacja iCloud, limit V4 i zakupy | rola 08 | 6–10 dni | **2–3 tygodnie** | 0 (decyzje: koordynator) |
 | 4 | 04 audit (ekrany wobec wzorców) + poprawki | 04 → 08 | 1–1,5 dnia | 2–3 dni | 0 |
 | 5 | 09 E2–E4: przekład na 35 języków (zestaw roli 06) | rola 09 | 1–2 dni | 2–4 dni | **zgoda na koszt**, jeśli przekład przez API jak w Treningu (tam limit 6 USD) |
@@ -26,7 +27,7 @@ Czasy to **[OCENA]**: „agent” = praca agentów, „kalendarz” = z czekanie
 | 12 | Przegląd Apple | Apple | — | **[OTWARTE]** (brak źródła na czas; ryzyko rundy przy 4.3(b)) | odpowiedź, jeśli Apple zapyta |
 | — | Marketing (11): kręgi, ASO, plan startu — równolegle od kroku 3 | rola 11 | 1–2 dni | równolegle | zatwierdzenie szkiców |
 
-**Razem: ok. 13–20 dni pracy agentów, 4–6 tygodni kalendarza.**
+**Razem: ok. 14–21 dni pracy agentów, 4–6 tygodni kalendarza.**
 - Zgłoszenie do Apple: **realnie pierwsza połowa grudnia 2026**; optymistycznie ok. 20.11.2026; pesymistycznie druga połowa grudnia.
 - Pierwszy TestFlight z nową wersją: po krokach 1–4, ok. 2,5–3,5 tygodnia od dziś (połowa listopada).
 
@@ -40,6 +41,7 @@ Czasy to **[OCENA]**: „agent” = praca agentów, „kalendarz” = z czekanie
 ## Co tylko Ty (wyjątki P-087)
 - zgoda na koszt przekładu przez API (krok 5) albo wybór przekładu agentami (0 zł, dłużej);
 - sekrety podpisu w repo Oczka (krok 8);
+- CloudKit (P-091 pkt 1): wygenerowanie tokenu zarządzania w CloudKit Console i wklejenie go jako sekretu, potem „Deploy Schema Changes” Development → Production przed wydaniem (ok. 15–20 min, w przeglądarce, bez Maca);
 - testerki (krok 10);
 - App Store Connect i „Submit for Review” (krok 11), wydanie po akceptacji;
 - scalenie gałęzi roboczej do `main` przed buildem wydania.
