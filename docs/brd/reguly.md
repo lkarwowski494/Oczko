@@ -153,20 +153,28 @@ Zasady wspólne reguł:
 | RD-09-W6 | brak | błąd danych | — | — | błąd | rachunek |
 
 ### RD-10: Kategoria grubości włóczki z próbki dżersejowej
-- Wzór: kategorie c ∈ {0…7}, dla których P mieści się w zakresie S-19 (na 4 in): 0: 33–40, 1: 27–32, 2: 23–26, 3: 21–24, 4: 16–20, 5: 12–15, 6: 7–11, 7: ≤ 6; wynik to zbiór
-- Jednostki: P [o./4 in]
-- Granica: zakresy włączne; P > 40 albo luka (np. 25,5) daje „poza tabelą”
-- Podstawa: S-19; zbiór nie oznacza zamienności włóczek S-20
+- Wzór: próbkę P na 4 in (wpisaną albo przeliczoną z 10 cm dokładnie: `P = P10 × 10,16 / 10`, RD-04, P-081 P3a) zaokrągla się do najbliższej całości n (P-084), a wynik to kategorie c ∈ {0…7}, których zakres S-19 (na 4 in, włączny) zawiera n: 0: 33–40, 1: 27–32, 2: 23–26, 3: 21–24, 4: 16–20, 5: 12–15, 6: 7–11, 7: ≤ 6 („6 sts and fewer”, także n = 0). Dokładna połówka (P = n + 0,5): część wspólna zbiorów dla n i n + 1; gdy jest pusta, wynik „między kategoriami” ze zbiorem obu sąsiednich kategorii, a gdy n + 1 > 40, „poza tabelą”. n > 40 daje „poza tabelą”. Obok wyniku aplikacja pokazuje wartość dokładną (P-084)
+- Jednostki: P, P10 [o./4 in, o./10 cm]; n [o./4 in]; kategorie [-]
+- Granica: zakresy włączne; P ≤ 0 to błąd danych. Liczby całkowite 0–40 nie mają luk w tabeli; luki 6–7, 11–12, 15–16, 20–21, 26–27 i 32–33 dotyczą tylko wartości niecałkowitych i rozstrzyga je zaokrąglenie (ER-31, ER-34)
+- Podstawa: S-19 (zakresy); zaokrąglenie i połówki: decyzja P-084 (źródło szczebla 3 w rejestrze roli 06, PRB-004); wektory zgodne z `docs/tresci/wektory.json` (`KL4-*`, 88 z 88 tym samym rachunkiem, `oczko-warsztat/01-odkrywanie/fix-2026-10-25-er34-44/rd10.py`); zbiór nie oznacza zamienności włóczek S-20
 - Krytyczna: tak (wybór włóczki do zakupu)
 
-| ID | P [o./4 in] | Oczekiwane: kategorie [-] | Tolerancja | Rodzaj | Pochodzenie |
-|---|---|---|---|---|---|
-| RD-10-W1 | 18 | {4} | — | typowy | S-19 |
-| RD-10-W2 | 23 | {2, 3} | — | granica | S-19: nakładanie 23–24 |
-| RD-10-W3 | 26 | {2} | — | granica | S-19 |
-| RD-10-W4 | 41 | poza tabelą | — | powyżej | S-19 |
-| RD-10-W5 | 6 | {7} | — | poniżej | S-19: „6 sts and fewer” |
-| RD-10-W6 | 0 | błąd danych | — | błąd | rachunek |
+| ID | P [o./4 in] | Oczekiwane: wynik [-] | Oczekiwane: kategorie [-] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|
+| RD-10-W1 | 18 | kategorie | {4} | — | typowy | S-19 |
+| RD-10-W2 | 23 | kategorie | {2, 3} | — | granica | S-19: nakładanie 23–24 (KL4-23) |
+| RD-10-W3 | 26 | kategorie | {2} | — | granica | S-19 (KL4-26) |
+| RD-10-W4 | 41 | poza tabelą | — | — | powyżej | S-19 (KL4-41) |
+| RD-10-W5 | 6 | kategorie | {7} | — | poniżej | S-19: „6 sts and fewer” (KL4-6) |
+| RD-10-W6 | 0 | błąd danych | — | — | błąd | rachunek: P ≤ 0 (KL4-0) |
+| RD-10-W7 | 25,5 | kategorie | {2} | — | typowy | S-19 i P-084: 25 → {2}, 26 → {2} (KL4-25_5; ER-31, ER-34) |
+| RD-10-W8 | 20,5 | między kategoriami | {3, 4} | — | granica | S-19 i P-084: 20 → {4}, 21 → {3}, część wspólna pusta (KL4-20_5) |
+| RD-10-W9 | 20,4 | kategorie | {4} | — | poniżej | S-19 i P-084: n = 20 (KL4-20_4) |
+| RD-10-W10 | 20,6 | kategorie | {3} | — | powyżej | S-19 i P-084: n = 21 (KL4-20_6) |
+| RD-10-W11 | 23,5 | kategorie | {2, 3} | — | granica | S-19 i P-084: 23 → {2, 3}, 24 → {2, 3} (KL4-23_5) |
+| RD-10-W12 | 6,5 | między kategoriami | {6, 7} | — | granica | S-19 i P-084: 6 → {7}, 7 → {6} (KL4-6_5) |
+| RD-10-W13 | 40,5 | poza tabelą | — | — | powyżej | S-19 i P-084: 41 poza tabelą (KL4-40_5) |
+| RD-10-W14 | 0,3 | kategorie | {7} | — | typowy | S-19 i P-084: n = 0, „6 sts and fewer” (KL4-0_3) |
 
 ### RD-11: Rozmiar drutu w mm na numer US
 - Wzór: wyszukanie w tabeli S-18; klucz główny to mm; brak odpowiednika daje „brak”, nie najbliższą wartość
