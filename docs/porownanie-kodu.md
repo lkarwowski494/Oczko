@@ -180,7 +180,7 @@ Bilans werdyktów: ZOSTAJE 0 · PRZEPISAĆ 7 (`pattern-document-service`, `stash
 | Plik | Co robi | F-nn | Stan z dowodem | Werdykt | Ryzyko dla 08 |
 |---|---|---|---|---|---|
 | `tests/audit-fixes.test.tsx` | Regresje „audytu przedwydaniowego” 0.1.0 (kopie, CSV, motyw, komponenty), plus odczyt dokumentów z `archiwum/`. | brak F | testuje kod 0.1.0; po przebudowie czyta archiwum: `:250` `readFileSync(join(root, 'archiwum/stara-wersja/docs/22-macierz-testow.md'), 'utf8');` | **USUNĄĆ** z kodem | czerwony po usunięciu `src/core` |
-| `tests/brands.contract.test.ts` | Zakaz marek (lista z innego projektu). | brak F | słaby: `:12` `'yahtzee',` … `:19` `'evernote',`; brak `app` w `SCANNED_ROOTS` (`:27-39`) | **USUNĄĆ** (zasadę marek, jeśli potrzebna, robi 07 w nowych kontrolach; `scripts/sprawdz-nazwy-zrodel.mjs` jest nowy) | skanuje `archiwum` (`:38`) — rola z kwarantanny |
+| `tests/brands.contract.test.ts` | Zakaz marek (lista z innego projektu). | brak F | słaby: `:12–19` lista nazw z innego projektu; brak `app` w `SCANNED_ROOTS` (`:27-39`) | **USUNĄĆ** (zasadę marek, jeśli potrzebna, robi 07 w nowych kontrolach; `scripts/sprawdz-nazwy-zrodel.mjs` jest nowy) | skanuje `archiwum` (`:38`) — rola z kwarantanny |
 | `tests/close-button-guard.test.tsx` | Przycisk zamknięcia 0.1.0. | brak F | test komponentu `src/components/CloseButton` | **USUNĄĆ** z kodem | — |
 | `tests/craft-ui.test.tsx` | Komponenty `src/components/craft`. | brak F | importuje `craft-suite-theme` | **USUNĄĆ** z kodem | — |
 | `tests/i18n-dead-keys.test.ts` | Każdy klucz `i18n.en.ts` użyty w kodzie. | NFR-JEZ-001 (stary mechanizm) | ADR-0017: „Stary `check:i18n` i testy `i18n-*.test` dotyczą kodu 0.1.0 i znikają razem z nim.” | **USUNĄĆ** | — |
