@@ -1,5 +1,5 @@
 {
- "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu. Z07-07 (2026-10-25, P-103): wszystkie teraz/ostatniPlus spójne z dzis w strefie `strefa` (kontrola w teście; dawne teraz = 1800000000000 przesunięte z zachowaniem różnic), granice przerwy L-04c–L-04e, L-21–L-25, Z-09, wznowienieLimitu (Z-10*); błąd danych = { blad: \"BLAD_DANYCH\" } (klasa BladDanych, kod), nie dowolny wyjątek.",
+ "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu. Z07-07 (2026-10-25, P-103): wszystkie teraz/ostatniPlus spójne z dzis w strefie `strefa` (kontrola w teście; dawne teraz = 1800000000000 przesunięte z zachowaniem różnic), granice przerwy L-04c–L-04e, L-21–L-25, Z-09, wznowienieLimitu (Z-10*); błąd danych = { blad: \"BLAD_DANYCH\" } (klasa BladDanych, kod), nie dowolny wyjątek. L-19 (P-091 (7b), P-103 (7), 2026-10-25): cofniecieSerii — „Cofnij” z pytania o serię RD-17 zwraca dzień limitu tylko, gdy seria zaczęła dzień i dziś nie było innego zdarzenia zaczynającego dzień (także cofniętego); z historii nigdy (L-06).",
  "limit": 5,
  "przerwa_ms": 3600000,
  "startDnia": [
@@ -1352,6 +1352,287 @@
    "scenariusz": "złe dane: brak daty",
    "wejscie": {
     "dzis": ""
+   },
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
+   }
+  }
+ ],
+ "cofniecieSerii": [
+  {
+   "id": "L-19",
+   "scenariusz": "P-091 (7b), BR-LIC-019: jedyne dodania dnia to seria przypadkowych stuknięć (RD-17), która zaczęła dzień; „Cofnij” w pytaniu strażnika: dzień limitu wraca",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": true,
+    "inneDodaniaDnia": 0,
+    "zrodlo": "pytanie-serii"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     }
+    ],
+    "zwrocono": true
+   }
+  },
+  {
+   "id": "L-19b",
+   "scenariusz": "P-103 (7): rano +1 zaczęło dzień i zostało cofnięte −1 (L-06); wieczorem seria cofnięta z pytania: dzień zostaje (inne dodanie dnia, także cofnięte)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": false,
+    "inneDodaniaDnia": 1,
+    "zrodlo": "pytanie-serii"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "zwrocono": false
+   }
+  },
+  {
+   "id": "L-19c",
+   "scenariusz": "seria zaczęła dzień, ale po niej doszło zwykłe +1 tego dnia: dzień zostaje",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": true,
+    "inneDodaniaDnia": 1,
+    "zrodlo": "pytanie-serii"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "zwrocono": false
+   }
+  },
+  {
+   "id": "L-19d",
+   "scenariusz": "seria w pracy po północy (L-04) nie zaczęła nowego dnia: lista dni bez zmian",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-07",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": false,
+    "inneDodaniaDnia": 0,
+    "zrodlo": "pytanie-serii"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-07",
+      "pro": false
+     }
+    ],
+    "zwrocono": false
+   }
+  },
+  {
+   "id": "L-19e",
+   "scenariusz": "BR-LIC-019, L-06: te same dodania cofnięte z historii: dzień limitu nie wraca",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": true,
+    "inneDodaniaDnia": 0,
+    "zrodlo": "historia"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "zwrocono": false
+   }
+  },
+  {
+   "id": "L-19f",
+   "scenariusz": "P-103 (1a): zdublowany wpis dnia serii (dwa urządzenia): wraca cały dzień, inne dni bez zmian",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": true,
+    "inneDodaniaDnia": 0,
+    "zrodlo": "pytanie-serii"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     }
+    ],
+    "zwrocono": true
+   }
+  },
+  {
+   "id": "L-19i",
+   "scenariusz": "dzień zaczęty na innym urządzeniu (po scaleniu jest na liście dni, KP-15), lokalnie bez innych dodań; seria nie zaczęła dnia: dzień zostaje",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": false,
+    "inneDodaniaDnia": 0,
+    "zrodlo": "pytanie-serii"
+   },
+   "oczekiwane": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": false
+     }
+    ],
+    "zwrocono": false
+   }
+  },
+  {
+   "id": "L-19g",
+   "scenariusz": "złe dane: nieznane źródło cofnięcia",
+   "wejscie": {
+    "dni": [],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": true,
+    "inneDodaniaDnia": 0,
+    "zrodlo": "baner"
+   },
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
+   }
+  },
+  {
+   "id": "L-19h",
+   "scenariusz": "złe dane: liczba innych dodań ujemna",
+   "wejscie": {
+    "dni": [],
+    "dzienSerii": "2026-11-08",
+    "seriaZaczelaDzien": true,
+    "inneDodaniaDnia": -1,
+    "zrodlo": "pytanie-serii"
    },
    "oczekiwane": {
     "blad": "BLAD_DANYCH"

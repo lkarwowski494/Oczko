@@ -65,3 +65,15 @@ export function wznowienieLimitu({ dzis }) {
   const [r, m] = dzis.split('-').map(Number);
   return m === 12 ? `${r + 1}-01-01` : `${r}-${String(m + 1).padStart(2, '0')}-01`;
 }
+
+// „Cofnij” w pytaniu o serię przypadkowych stuknięć (RD-17, BR-LIC-019; L-19, P-091 (7b), P-103 (7)).
+// Dzień limitu wraca tylko, gdy seria zaczęła ten dzień i dziś nie było innego zdarzenia zaczynającego dzień
+// (wolaStraznika = true; liczy się także dodanie później cofnięte −1, L-06). Cofnięcie z historii nigdy nie zwraca dnia.
+// dni: lista dni z robótką; dzienSerii: data dnia, który zaczęłaby seria; zwraca nową listę i czy dzień wrócił.
+const ZRODLA_COFNIECIA = ['pytanie-serii', 'historia'];
+export function cofniecieSerii({ dni, dzienSerii, seriaZaczelaDzien, inneDodaniaDnia, zrodlo }) {
+  if (!Array.isArray(dni) || typeof dzienSerii !== 'string' || !DATA.test(dzienSerii) || typeof seriaZaczelaDzien !== 'boolean'
+    || !Number.isInteger(inneDodaniaDnia) || inneDodaniaDnia < 0 || !ZRODLA_COFNIECIA.includes(zrodlo)) throw new BladDanych('cofniecieSerii: złe dane wejściowe');
+  const zwraca = zrodlo === 'pytanie-serii' && seriaZaczelaDzien && inneDodaniaDnia === 0 && dni.some((d) => d.data === dzienSerii);
+  return { dni: zwraca ? dni.filter((d) => d.data !== dzienSerii) : dni, zwrocono: zwraca };
+}

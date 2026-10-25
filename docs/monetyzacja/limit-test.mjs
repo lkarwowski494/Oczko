@@ -15,7 +15,7 @@ const wywolaj = (nazwa, wejscie) => {
   if (typeof L[nazwa] !== 'function') return `BRAK FUNKCJI ${nazwa}`;
   try { return L[nazwa](wejscie); } catch (e) { return e?.kod === 'BLAD_DANYCH' ? { blad: 'BLAD_DANYCH' } : `WYJĄTEK ${e?.name}: ${e?.message}`; }
 };
-const sekcje = [['startDnia', w.startDnia], ['wolaStraznika', w.wolaStraznika || []], ['mozeZaczacDzien', w.mozeZaczacDzien || []], ['wznowienieLimitu', w.wznowienieLimitu || []]];
+const sekcje = [['startDnia', w.startDnia], ['wolaStraznika', w.wolaStraznika || []], ['mozeZaczacDzien', w.mozeZaczacDzien || []], ['wznowienieLimitu', w.wznowienieLimitu || []], ['cofniecieSerii', w.cofniecieSerii || []]];
 for (const [nazwa, lista] of sekcje) {
   for (const t of lista) {
     const kopia = structuredClone(t.wejscie);
