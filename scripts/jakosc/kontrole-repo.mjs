@@ -1,6 +1,6 @@
 // Kontrole repo roli 07 (docs/jakosc/strategia.md §10: kontrole 05-8, 12, P-089). Każda reguła ma w tests/jakosc/kontrole-repo.test.ts
-// przypadek dobry i plik-pułapkę, na którym pada. Kod 0.1.0 (src/core, src/components, src/screens, app, lib) jest poza zakresem do czasu
-// usunięcia przez rolę 08 (wyjątek nazwany, DS-13); jego naruszenia raportuje `--stary` informacyjnie.
+// przypadek dobry i plik-pułapkę, na którym pada. Kod 0.1.0 (src/core, src/components, src/screens, lib) był poza zakresem (wyjątek DS-13);
+// rola 08 usunęła go w partii porządkowej (P-099 D1a), a `app` (korzeń expo-router) jest w zakresie (P-114 Q4a). `--stary` zostaje do decyzji 07.
 // Użycie: node scripts/jakosc/kontrole-repo.mjs [--katalog <korzeń>] [--stary]   (kod 0 = brak naruszeń, 1 = naruszenia, 2 = zły korzeń)
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
@@ -10,8 +10,8 @@ const arg = (n) => { const i = process.argv.indexOf(n); return i > 0 ? process.a
 const korzen = arg('--katalog') ?? process.cwd();
 const stary = process.argv.includes('--stary');
 
-export const NOWY_KOD = ['src/domena', 'src/dane', 'src/przypadki-uzycia', 'src/platforma', 'src/ekrany', 'src/komponenty', 'src/konfiguracja.ts', 'modules', 'targets'];
-export const STARY_KOD = ['src/core', 'src/components', 'src/screens', 'app', 'lib'];
+export const NOWY_KOD = ['src/domena', 'src/dane', 'src/przypadki-uzycia', 'src/platforma', 'src/ekrany', 'src/komponenty', 'src/konfiguracja.ts', 'app', 'modules', 'targets'];
+export const STARY_KOD = ['src/core', 'src/components', 'src/screens', 'lib'];
 const TEST = /(^|\/)(__tests__|tests?)\/|\.(test|spec)\.[jt]sx?$/;
 const EXT = /\.(ts|tsx|js|jsx|mjs|swift|json)$/;
 
