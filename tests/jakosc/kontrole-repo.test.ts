@@ -78,6 +78,24 @@ describe('kontrole-repo.mjs (strategia §10, kontrola 05-8, P-089)', () => {
     expect(w.status).toBe(1);
     expect(w.stdout).toContain('MIGRACJA-WYDANA');
   });
+  // F07-07 (P-099, P-117 Q4a): każda zależność runtime ma wiersz w tabeli „Decyzja” ADR-0016; pierwsza kolumna, nazwy w `…`.
+  const ADR16 = '# 0016. Zależności\n## Decyzja\n| Pakiet (wersja) | Przepływ | Alternatywa |\n|---|---|---|\n| `expo` 57.0.31, `react` 19.2.3 | podstawa | — |\n| `expo-router` z wymaganymi `react-native-screens` | nawigacja | `inny-router` |\n## Opcje\n| `poza-tabela` | — | — |\n';
+  const zal = (d: string[]) => JSON.stringify({ dependencies: Object.fromEntries(d.map((n) => [n, '1.0.0'])) });
+  test('R-171 F07-07 zależność z wierszem ADR-0016 (także wymagana w tym samym wierszu) przechodzi', () => {
+    const w = uruchom(KONTROLE, repo({ 'docs/adr/0016-zaleznosci.md': ADR16, 'package.json': zal(['expo', 'react', 'expo-router', 'react-native-screens']) }));
+    expect(w.stdout).toContain('naruszeń 0');
+    expect(w.status).toBe(0);
+  });
+  test.each([['qrcode'], ['inny-router'], ['poza-tabela']])('R-171 F07-07 pułapka: zależność %s bez wiersza ADR-0016 (także tylko w kolumnie alternatyw lub poza sekcją Decyzja) pada', (pakiet) => {
+    const w = uruchom(KONTROLE, repo({ 'docs/adr/0016-zaleznosci.md': ADR16, 'package.json': zal(['expo', pakiet]) }));
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain(`ZALEZNOSC-BEZ-ADR package.json: ${pakiet}`);
+  });
+  test('R-171 F07-07 zależności bez pliku ADR-0016 to błąd, nie zaliczenie', () => {
+    const w = uruchom(KONTROLE, repo({ 'package.json': zal(['expo']) }));
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain('brak docs/adr/0016');
+  });
   test('R-171 zły korzeń (bez package.json) to błąd, nie zaliczenie', () => {
     const k = mkdtempSync(join(tmpdir(), 'pusty-'));
     expect(uruchom(KONTROLE, k).status).toBe(2);

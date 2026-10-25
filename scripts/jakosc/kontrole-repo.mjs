@@ -76,6 +76,19 @@ export function sprawdz(korzenKatalog, zakres) {
   if (existsSync(pkgPlik)) {
     const pkg = JSON.parse(readFileSync(pkgPlik, 'utf8'));
     const zal = { ...pkg.dependencies, ...pkg.devDependencies };
+    // ADR-0016 „Potwierdzenie”: każda zależność runtime ma wiersz w tabeli „Decyzja” (P-099, P-117 Q4a: `dependencies` po nazwie; wersje do partii 2–3, P-114 Q6a).
+    const runtime = Object.keys(pkg.dependencies ?? {});
+    if (runtime.length) {
+      const adrKat = join(korzenKatalog, 'docs/adr');
+      const adr = existsSync(adrKat) ? readdirSync(adrKat).find((n) => /^0016-.*\.md$/.test(n)) : null;
+      if (!adr) naruszenia.push('ZALEZNOSC-BEZ-ADR package.json — brak docs/adr/0016-*.md z tabelą zależności');
+      else {
+        const tekst = readFileSync(join(adrKat, adr), 'utf8');
+        const decyzja = tekst.slice(tekst.indexOf('## Decyzja'), tekst.indexOf('\n## ', tekst.indexOf('## Decyzja') + 1) >>> 0);
+        const wTabeli = new Set(decyzja.split('\n').filter((l) => l.startsWith('| ')).flatMap((l) => [...l.split('|')[1].matchAll(/`(@?[a-z0-9][\w.-]*(?:\/[\w.-]+)?)`/g)].map((m) => m[1])));
+        for (const n of runtime) if (!wTabeli.has(n)) naruszenia.push(`ZALEZNOSC-BEZ-ADR package.json: ${n} — brak wiersza w tabeli ADR-0016 (${adr}); nowa zależność = nowy wiersz (rola 05/08)`);
+      }
+    }
     for (const [n, v] of Object.entries(zal)) {
       if (n === 'expo-updates') naruszenia.push(`EXPO-UPDATES package.json — bez OTA (ADR-0021)`);
       if (SDK_AWARII.test(n)) naruszenia.push(`SDK-AWARII package.json: ${n} — sygnał bez SDK (ADR-0018)`);
