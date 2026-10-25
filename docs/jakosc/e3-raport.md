@@ -8,7 +8,7 @@ Wejście: E2 przyjęte (P-092). Testy pisane wobec portów i sygnatur; zaślepki
 | Pokrycie kryteriów | skrypt po ID w nazwach testów | **201 / 220** z testem; 19 z powodem i kontrolą zastępczą (strategia §9) |
 | Główny zestaw | `npm run verify` | kod 0: typecheck, typecheck testów, lint `src/dane`, kontrole repo i workflowów, wektory 02/05, schemat, ADR, i18n, `npm test` 1071/1071 (956 kodu 0.1.0 + 115 narzędzi i kontroli) |
 | CI Linux | „Jakość · Linux”, run 40223883481 (d0d96f4) | **zielony** (pierwszy zielony → `verify` jest bramką, zasada 8); runy 1–2 czerwone: różnica środowiska (niżej) |
-| CI iOS | „Jakość · iOS”, run 40223597670 (be6c43e) | [wpis po zakończeniu przebiegu] |
+| CI iOS | „Jakość · iOS”, run 40223597670 (be6c43e) | `build` **zielony** na `macos-26` (prebuild, pody, platforma, `xcodebuild` Release bez podpisu 12,5 min; razem 14,5 min); części E2E 1 i 2 (pakiet podstawowy, 9 scenariuszy) **czerwone z właściwego powodu**: każdy scenariusz pada na `Assertion is false: id: licznik-plus is visible` (aplikacja to jeszcze kod 0.1.0 bez testID z `e2e/README.md`); część 3 bez scenariuszy (plan). Rozruch symulatora 2–3 min; część 1 (5 scenariuszy) 17 min wobec szacunku ok. 10 min z wag — wagi `e2e/czesci.json` zaniżone, odświeżyć po pierwszym zielonym przebiegu. Usterka workflowu: wysyłka artefaktu odrzucona (dwukropek w nazwach katalogów Maestro) → poprawka: wyniki pakowane do `e2e-out.zip` |
 | Scenariusze E2E | 32 w `e2e/scenariusze/` (26 kryteriów E2E, pakiet podstawowy 9) | kontrola składni, selektorów i asercji po akcjach w Jest: zielona; na symulatorze: CI macOS |
 
 | Część | Pliki | Testy | Próba „test potrafi przejść / paść” (kopie poza repo) |

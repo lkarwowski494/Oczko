@@ -172,9 +172,12 @@ jobs:
             maestro --device "$SIM" test "$f" --format junit --output "e2e-out/$n.xml" --test-output-dir "e2e-out/$n" && echo "- zielony $n (AX5)" >> "$GITHUB_STEP_SUMMARY" || { echo "- czerwony $n (AX5)" >> "$GITHUB_STEP_SUMMARY"; porazki=$((porazki + 1)); }
           done
           exit $porazki
+      - name: Spakowanie wyników (Maestro zapisuje katalogi z „:” w nazwie scenariusza, których upload-artifact nie przyjmuje; run 40223597670)
+        if: always() && steps.plan.outputs.any == 'true'
+        run: '[ -d e2e-out ] && zip -qry e2e-out.zip e2e-out || true'
       - uses: actions/upload-artifact@v4
         if: always() && steps.plan.outputs.any == 'true'
         with:
           name: e2e-czesc-${{ matrix.czesc }}
-          path: e2e-out
+          path: e2e-out.zip
           retention-days: 3
