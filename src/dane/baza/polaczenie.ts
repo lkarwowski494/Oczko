@@ -1,5 +1,5 @@
 // Otwarcie bazy aplikacji (ADR-0019: bez cichego zastępstwa bazą w pamięci; Z07-21: plik niedostępny przed odblokowaniem ≠ uszkodzenie).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciało: zaślepka roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciało: zaślepka roli 07 (E3).
 // Docelowo jedyne miejsce importu expo-sqlite (moduly.md); fabryka połączenia wstrzykiwana, żeby test szedł na node:sqlite.
 import type { Wynik } from '../../domena/bledy';
 import type { PortBazy } from '../../domena/porty';

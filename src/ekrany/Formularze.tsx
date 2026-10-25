@@ -1,5 +1,5 @@
 // Formularze w arkuszach (prototyp.html:130–138; design-spec.md:45, :67): wpisanie wartości (F-45), powtórzenie (F-05), przypomnienie (F-06), korekta sesji (F-51).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07 do zatwierdzenia przez 04 (teksty, stany) i 05 (porty, granice).
+// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 // Walidację liczy domena (RD-12-W5, RD-13, BR-LIC-017/S7); ekran nie woła naZapisz z błędną wartością i pokazuje komunikat (rola alert).
 import type React from 'react';
 import { niezaimplementowane } from '../domena/zaslepka';

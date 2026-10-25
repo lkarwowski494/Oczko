@@ -1,6 +1,6 @@
 // Zegarek (ADR-0009, F-12): stan wysyłany telefon → zegarek (`StanZegarka`, złote pliki tests/wspolne/stan-zegarka-*.json)
 // i zdarzenia z zegarka (`ZdarzenieWejsciowe`, `zrodlo: 'zegarek'`) jako wejście funkcji `scal` (ADR-0005, NFR-ZEG-001).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
 import type { DzienLimitu } from './limit';
 import type { StanZegarka, ZdarzenieWejsciowe } from './porty';
 import type { ZdarzenieLicznika } from './scal';

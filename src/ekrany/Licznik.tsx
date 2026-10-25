@@ -1,5 +1,5 @@
 // Ekran licznika (F-01–F-10, F-47, BR-LIC-*, BR-ZAK-006). Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu.
-// Sygnatura = propozycja 07 do zatwierdzenia przez 04 (stany z macierzy design-spec.md:51–57) i 05 (granice: ekran → przypadki użycia przez propsy).
+// Sygnatura = propozycja 07; do zatwierdzenia przez 04 (stany z macierzy design-spec.md:51–57); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 // Teksty i etykiety VoiceOver: docs/design/design-spec.md (wyrocznia testów tests/akceptacja/ekrany/licznik*.test.tsx), każdy przez t().
 import type React from 'react';
 import type { Haptyka } from '../domena/porty';

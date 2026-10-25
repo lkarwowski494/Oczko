@@ -1,5 +1,5 @@
 // Import archiwum i rozstrzygnięcie konfliktu (F-31–F-34, F-27; R-050, R-068). Ekrany nienarysowane (Z07-05).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07 do zatwierdzenia przez 04 (teksty, stany) i 05 (porty, granice).
+// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 import type React from 'react';
 import { niezaimplementowane } from '../domena/zaslepka';
 import type { Tlumacz } from './wspolne';

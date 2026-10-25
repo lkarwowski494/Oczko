@@ -1,4 +1,5 @@
-// Porty domeny: kopia sygnatur z docs/architektura/moduly.md („Porty domeny”), tylko typy. Zmiana = zmiana dokumentu roli 05.
+// Porty domeny: kopia sygnatur z docs/architektura/moduly.md („Porty domeny”), tylko typy. Zmiana = zmiana dokumentu roli 05
+// (kontrola zgodności: docs/architektura/narzedzia/sprawdz-porty.mjs w `jakosc:kontrole`).
 import type { Wynik } from './bledy';
 export interface PortBazy {                       // ADR-0002; adaptery: expo-sqlite (kolejka) i node:sqlite (testy)
   run(sql: string, params?: unknown[]): Promise<{ zmiany: number }>;
@@ -30,8 +31,24 @@ export type StanEkranuBlokady = { licznikId: string; nazwa: string; wartosc: num
 export type StanZegarka = StanEkranuBlokady & { pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[] }; // ADR-0009
 export type ZdarzenieWejsciowe = { id: string; licznikId: string; rodzaj: 'plus' | 'minus'; rodzice: string[]; czasMs: number; strefa: string; dzien: string; zrodlo: 'ekran_blokady' | 'zegarek'; urzadzenie: string };
 
-// Typy pomocnicze, których moduly.md używa bez definicji (propozycja roli 07, do zatwierdzenia w sesji fix roli 05, zgłoszenie Z07-22).
+// Typy pomocnicze portów (zaproponowane przez 07 w E3, zatwierdzone w fix 05 2026-10-25, Z07-22).
 export type StanSynchronizacji = 'wylaczona' | 'aktywna' | 'blad' | 'brak_konta';
 export type Produkt = { id: string; cenaWyswietlana: string; okres: 'miesiac' | 'rok' | 'dozywotni' };
 export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean };
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
+
+// Archiwum, migracje i katalogi (ADR-0004, dane.md; przeniesione z src/przypadki-uzycia/porty-propozycja.ts, Z07-22).
+export interface Licznosci { [tabela: string]: number }    // tabela → liczba wierszy
+export interface Katalogi { kopie: string; tymczasowy: string } // Application Support/kopie (dane.md), katalog tymczasowy importu
+export interface Manifest { format: 'oczko'; wersja_formatu: number; wersja_schematu: number; aplikacja: string; utworzono: number; licznosci: Licznosci; pliki: { sha256: string; bajty: number }[] } // manifest.json archiwum `.oczko`
+export type TrybImportu = 'scal' | 'zastap';
+export interface ArchiwumSprawdzone { manifest: Manifest; katalog: string } // rozpakowane i sprawdzone w katalogu tymczasowym
+export interface WynikImportu { tryb: TrybImportu | 'anulowano'; kopiaPrzed: string | null; licznosci: Licznosci }
+export type Migracja = { wersja: number; sql: string; przebudowa?: boolean };
+export interface Migruj { (baza: PortBazy): Promise<Wynik<{ z: number; do: number }>> }
+export interface PortArchiwum {                                                   // implementacja: src/dane/archiwum.ts
+  zapisz(katalogDocelowy: string): Promise<Wynik<{ sciezka: string; manifest: Manifest }>>; // VACUUM INTO + pliki + manifest
+  sprawdz(sciezka: string): Promise<Wynik<ArchiwumSprawdzone>>;                              // manifest, wersje, SHA-256, miejsce; baza bez zmian
+  kopiaPrzed(): Promise<Wynik<{ sciezka: string }>>;                                         // „kopia przed importem” (KOPIA_PRZED_IMPORTEM_DNI)
+  wczytaj(a: ArchiwumSprawdzone, tryb: TrybImportu): Promise<Wynik<{ licznosci: Licznosci }>>;
+}

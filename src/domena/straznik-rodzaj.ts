@@ -1,5 +1,5 @@
 // Strażnik stuknięć tylko dla liczników rzędów (RD-17 „tylko liczniki rzędów, nie oczek”, ER-24, BR-LIC-019/S3).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciało: zaślepka roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciało: zaślepka roli 07 (E3).
 import type { Wynik } from './bledy';
 import type { STANY } from './stany';
 import type { Dodanie, Seria } from './straznik-tempa';

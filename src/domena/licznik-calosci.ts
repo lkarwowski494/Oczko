@@ -1,5 +1,5 @@
 // Licznik całości kawałka zasilany przez sekcje rzędów (BR-LIC-018, F-46; schemat.sql `licznik.sekcja`: całość liczona, nie zapisywana).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciało: zaślepka roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciało: zaślepka roli 07 (E3).
 import type { STANY } from './stany';
 import { niezaimplementowane } from './zaslepka';
 

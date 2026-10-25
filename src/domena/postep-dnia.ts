@@ -1,5 +1,5 @@
 // Wykonanie dnia i cel stały w ciągu dnia (RD-15, BR-DNI-005, P-047, P-048 (3)).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
 import type { Wynik } from './bledy';
 import type { CelDnia } from './postep';
 import type { RodzajZdarzenia, STANY } from './stany';

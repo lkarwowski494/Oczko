@@ -1,6 +1,6 @@
 // Repozytorium kalendarza dni z robótką, dnia, podsumowania okresu i kolejności „który projekt dziś” (F-59, F-61; RD-15, RD-16;
 // P-046, P-048 (3), (4), (6); P-059 (2a): dzień z robótką ≠ dzień limitu).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
 import type { CelDnia } from '../../domena/postep';
 import type { PortBazy } from '../../domena/porty';
 import { niezaimplementowane } from '../../domena/zaslepka';

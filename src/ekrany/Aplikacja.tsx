@@ -1,5 +1,5 @@
 // Korzeń aplikacji: pierwszy ekran, start, cykl życia (NFR-PIE-001, BR-LIC-001, KP-07, KP-08, KP-13, BR-DAN-012/S2, R-020, R-091).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07 do zatwierdzenia przez 04 (teksty, stany) i 05 (porty, granice).
+// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 // `UslugiAplikacji` to atrapa warstwy przypadków użycia widziana z ekranu (src/przypadki-uzycia: sygnatury od 05, moduly.md:20) — [DO USTALENIA] 05.
 import type React from 'react';
 import type { EkranAktywny, Haptyka, Sklep } from '../domena/porty';

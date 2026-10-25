@@ -1,4 +1,4 @@
-// Typy wspólne ekranów (rola 07, E3: zaślepki tylko sygnatury, P-090 Q2a). Propozycja 07 do zatwierdzenia przez 04 (teksty, stany) i 05 (granice, porty).
+// Typy wspólne ekranów (rola 07, E3: zaślepki tylko sygnatury, P-090 Q2a). Propozycja 07; teksty i stany do zatwierdzenia przez 04; granice i porty zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 // Ekrany nie importują src/dane ani src/przypadki-uzycia: dostają stan i wywołania przez propsy (kierunek zależności z docs/architektura/moduly.md:33).
 import type { Klucz } from '../i18n/typy';
 import type { Parametry } from '../i18n/i18n';

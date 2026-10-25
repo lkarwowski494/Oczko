@@ -1,5 +1,5 @@
 // Wzory: import pliku, znacznik rzędu, notatka w miejscu wzoru (ADR-0001, ADR-0011, ADR-0012).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
 import type { Wynik } from '../domena/bledy';
 import type { PlikWejsciowy } from '../domena/porty';
 import { niezaimplementowane } from '../domena/zaslepka';

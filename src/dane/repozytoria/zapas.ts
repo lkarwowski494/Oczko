@@ -1,5 +1,5 @@
 // Repozytorium zapasu włóczki (F-37; BR-ZAP-001, BR-ZAP-002 (U-9), BR-ZAP-004; RD-10 kategorie grubości).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
 // Schemat v1 nie ma kolumny kategorii grubości w `wloczka` ([DO USTALENIA] 05, raport luk E3).
 import type { Wynik } from '../../domena/bledy';
 import type { PortBazy } from '../../domena/porty';

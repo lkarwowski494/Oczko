@@ -1,5 +1,5 @@
 // Dziennik +1 z ekranu blokady (ADR-0008): odczyt pliku .jsonl po stronie TS (złote pliki wspólne z XCTest, Z07-11).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
 import type { DziennikPlus, PortBazy, ZdarzenieWejsciowe } from '../domena/porty';
 import { niezaimplementowane } from '../domena/zaslepka';
 

@@ -1,5 +1,5 @@
 // Chwila ukończenia: karta projektu i pytanie o włóczkę (F-19, F-37, F-53; U-9; design-spec.md:57, :66; ekrany.html `ukonczenie`; BR-DAN-012/S1).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07 do zatwierdzenia przez 04 (teksty, stany) i 05 (porty, granice).
+// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 import type React from 'react';
 import { niezaimplementowane } from '../domena/zaslepka';
 import type { Oglos, System, Tlumacz } from './wspolne';

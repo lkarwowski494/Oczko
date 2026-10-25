@@ -1,5 +1,5 @@
 // Repozytorium projektów: lista „W toku” / „Ukończone”, wyszukiwanie (F-50, F-54; indeks projekt_lista).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciało: zaślepka roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciało: zaślepka roli 07 (E3).
 import type { PortBazy } from '../../domena/porty';
 import type { StanProjektu } from '../../domena/stany';
 import { niezaimplementowane } from '../../domena/zaslepka';

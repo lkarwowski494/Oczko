@@ -1,5 +1,5 @@
 // Ekran nie gaśnie podczas liczenia (BR-LIC-013, F-10; port EkranAktywny, rejestr Expo 7: każdy włączony tag wyłączany).
-// sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22). Ciało: zaślepka roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciało: zaślepka roli 07 (E3).
 import type { EkranAktywny } from '../domena/porty';
 import { niezaimplementowane } from '../domena/zaslepka';
 

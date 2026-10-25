@@ -1,5 +1,5 @@
 // Ekran ofert Oczko Pro (F-35; design-spec.md:56, :68, :77–80; ekrany.html `oferty`; KP-03, KP-04, KP-08, KP-09, KP-14; P-089 (1)).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07 do zatwierdzenia przez 04 (teksty, stany) i 05 (porty, granice).
+// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
 // Ceny wyłącznie z `Produkt.cenaWyswietlana` (StoreKit displayPrice); w kodzie i tłumaczeniach żadnej kwoty (KP-09, P-089 (1), R-118).
 import type React from 'react';
 import type { Produkt } from '../domena/porty';

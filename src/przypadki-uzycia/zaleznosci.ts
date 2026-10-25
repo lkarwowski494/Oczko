@@ -1,6 +1,6 @@
-// Zależności przypadków użycia jako obiekt portów (sygnatura: propozycja 07, do zatwierdzenia w sesji fix 05 (Z07-22)). Tylko typy.
+// Zależności przypadków użycia jako obiekt portów (sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22)). Tylko typy.
 import type { CzasWTle, DziennikPlus, Identyfikatory, MagazynPlikow, PortBazy, Synchronizacja, Zegar } from '../domena/porty';
-import type { Katalogi, Migruj, PortArchiwum } from './porty-propozycja';
+import type { Katalogi, Migruj, PortArchiwum } from '../domena/porty';
 
 export type Zaleznosci = {
   baza: PortBazy;
