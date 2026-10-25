@@ -2,12 +2,12 @@
 // Wyrocznia: tabele przejść docs/architektura/moduly.md („Projekt (F-19, F-33)”, „Sesja stopera (F-21, F-51)”);
 // parametry KOSZ_DNI i SESJA_MAKS_H z src/konfiguracja.ts. Przejście spoza tabeli → { ok: false, powod: 'niedozwolone_przejscie' }.
 // Granice w trójkach (§3.5): kosz 30 dni − 1 ms / 30 / 31 dni (warunek „teraz − usunieto_ms ≥ KOSZ_DNI”), sesja 8 h − 1 ms / 8 h / 8 h + 1 ms.
-import { przejdzProjekt, doSprzatniecia } from '../../../../src/domena/maszyny/projekt';
-import type { Projekt, ZdarzenieProjektu } from '../../../../src/domena/maszyny/projekt';
-import { rozpocznijSesje, przejdzSesje, czasSesjiMs } from '../../../../src/domena/maszyny/sesja';
-import type { Sesja, ZdarzenieSesji } from '../../../../src/domena/maszyny/sesja';
-import { KOSZ_DNI, SESJA_MAKS_H } from '../../../../src/konfiguracja';
-import { DOBA, GODZ, MIN } from '../../../narzedzia/akceptacja';
+import { przejdzProjekt, doSprzatniecia } from '../../../src/domena/maszyny/projekt';
+import type { Projekt, ZdarzenieProjektu } from '../../../src/domena/maszyny/projekt';
+import { rozpocznijSesje, przejdzSesje, czasSesjiMs } from '../../../src/domena/maszyny/sesja';
+import type { Sesja, ZdarzenieSesji } from '../../../src/domena/maszyny/sesja';
+import { KOSZ_DNI, SESJA_MAKS_H } from '../../../src/konfiguracja';
+import { DOBA, GODZ, MIN } from '../../narzedzia/akceptacja';
 
 const T0 = 1_800_000_000_000;
 const TERAZ = T0 + 5 * DOBA;

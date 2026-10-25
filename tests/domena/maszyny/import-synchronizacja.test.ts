@@ -3,11 +3,11 @@
 // Import: przejście spoza opisu → 'niedozwolone' (sygnatura przejdzImport). `blad` przed `wczytywanie` nie jest opisany
 // (np. VACUUM INTO bez miejsca) — [DO USTALENIA] 05, poza testem. Synchronizacja: sygnatura zwraca sam stan, bez wyniku
 // „niedozwolone” — przejścia spoza tabeli nie mają oczekiwania (brakująca sygnatura, raport E3).
-import { przejdzImport, bazaZmieniona } from '../../../../src/domena/maszyny/import';
-import type { StanImportu, ZdarzenieImportu } from '../../../../src/domena/maszyny/import';
-import { przejdzSynchronizacje } from '../../../../src/domena/maszyny/synchronizacja';
-import type { ZdarzenieSynchronizacji } from '../../../../src/domena/maszyny/synchronizacja';
-import type { StanSynchronizacji } from '../../../../src/domena/porty';
+import { przejdzImport, bazaZmieniona } from '../../../src/domena/maszyny/import';
+import type { StanImportu, ZdarzenieImportu } from '../../../src/domena/maszyny/import';
+import { przejdzSynchronizacje } from '../../../src/domena/maszyny/synchronizacja';
+import type { ZdarzenieSynchronizacji } from '../../../src/domena/maszyny/synchronizacja';
+import type { StanSynchronizacji } from '../../../src/domena/porty';
 
 const STANY_IMPORTU: StanImportu[] = ['sprawdzanie', 'odrzucony', 'gotowy', 'kopia_przed', 'wczytywanie', 'gotowe', 'wycofany'];
 const ZDARZENIA_IMPORTU: ZdarzenieImportu[] = ['sprawdzono_ok', 'sprawdzono_zle', 'wybrano', 'kopia_gotowa', 'wczytano', 'blad'];
