@@ -1,0 +1,36 @@
+# Scenariusze E2E wersji 1 (Maestro, iOS symulator, build Release E2E bez podpisu: EXPO_PUBLIC_E2E=1, EXPO_PUBLIC_STORE_FAKE=1, EXPO_PUBLIC_WATCH_FAKE=1).
+# Kontrakt: e2e/README.md. Każdy plik NN-*.yaml z tego katalogu musi być na liście (tests/jakosc/maestro-scenariusze.test.ts); subflows/ to podprzepływy runFlow.
+# Workflow uruchamia scenariusze części z katalogu przygotowanego przez scripts/ci/e2e-czesci.mjs (bez tego pliku); lista służy przebiegowi lokalnemu `maestro test e2e/scenariusze`.
+flows:
+  - 01-nfr-pie-001-pierwsze-liczenie.yaml
+  - 02-br-lic-001-s1-pierwsze-uruchomienie.yaml
+  - 03-br-lic-001-s2-pierwszy-rzad-jednym-stuknieciem.yaml
+  - 04-br-lic-002-s1-plus-minus-cofnij.yaml
+  - 05-br-zak-006-s1-limit-zawczasu.yaml
+  - 06-br-zak-001-s1-zakup-przywrocenie.yaml
+  - 07-p-089-3a-uczciwe-zasady.yaml
+  - 08-br-dan-006-s1-eksport-import.yaml
+  - 09-adr-0019-start-awaryjny.yaml
+  - 10-nfr-dan-002-kazda-zmiana-trwala.yaml
+  - 11-br-dan-001-s1-baza-bez-sieci.yaml
+  - 12-br-zak-006-s4-bez-oferty-w-pracy.yaml
+  - 13-kp-10-zakup-tylko-po-dzialaniu.yaml
+  - 14-br-lic-004-s4-gest-od-krawedzi.yaml
+  - 15-br-lic-015-s2-przypomnienie-zegarek.yaml
+  - 16-br-zap-004-s2-zapas-bez-zasiegu.yaml
+  - 17-br-prj-003-s1-zdjecie-etykiety.yaml
+  - 18-br-prj-011-s1-start-po-zamknieciu.yaml
+  - 19-br-prj-011-s2-powrot-z-innej-aplikacji.yaml
+  - 20-br-prj-016-s2-powrot-po-przerwie.yaml
+  - 21-br-wzr-001-s1-pdf-z-plikow.yaml
+  - 22-br-wzr-002-s1-zdjecie-strony.yaml
+  - 23-br-wzr-005-s1-poziomo-na-stojaku.yaml
+  - 24-br-wzr-007-s1-strona-www-bez-sieci.yaml
+  - 25-br-wzr-007-s2-plik-word.yaml
+  - 26-br-wzr-008-s1-zakreslenie.yaml
+  - 27-br-wzr-008-s3-przewijanie-bez-zakreslacza.yaml
+  - 28-nfr-off-001-bez-sieci.yaml
+  - 29-nfr-dos-001-voiceover.yaml
+  - 30-nfr-dos-002-duzy-tekst.yaml
+  - 31-nfr-wyd-001-reakcja-licznika.yaml
+  - 32-nfr-sys-001-nowy-ios.yaml

@@ -1,0 +1,36 @@
+# NFR-SYS-001 (docs/brd/wymagania.md:113): działanie po premierze nowego iOS — 0 przepływów zepsutych; czas poprawki [DO USTALENIA] OP-26.
+# Scenariusz dymny głównych ekranów; workflow uruchamia go na najstarszym wspieranym iOS (MIN_IOS 18.0, ADR-0006) i najnowszym w obrazie macos-26
+# (P-091 5a: najnowszy Xcode 26.x + cotygodniowy build kontrolny). Wersja iOS symulatora w logu przebiegu.
+appId: com.apps4brew.knitting
+name: "NFR-SYS-001 · Dymny przebieg głównych ekranów (najstarszy i najnowszy iOS)"
+tags:
+  - NFR-SYS-001
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- tapOn: { id: "licznik-historia" }
+- assertVisible: { id: "historia-lista" }
+- tapOn: { id: "arkusz-zamknij" }
+- assertVisible: { id: "licznik-plus" }
+- tapOn: { id: "licznik-menu" }
+- assertVisible: { id: "menu-nazwa" }
+- tapOn: { id: "arkusz-zamknij" }
+- assertVisible: { id: "licznik-plus" }
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-ustawienia" }
+- assertVisible: { id: "ustawienia-oczko-pro" }
+- tapOn: { id: "ustawienia-oczko-pro" }
+- assertVisible: { id: "oferty-ekran" }
+- takeScreenshot: 32-oferty
+- tapOn: { id: "oferty-nie-teraz" }
+- assertVisible: { id: "ustawienia-oczko-pro" }
+- tapOn: { id: "nav-wstecz" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "projekty-wiersz", index: 0 }
+- assertVisible: { id: "licznik-wartosc", text: "1" }

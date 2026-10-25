@@ -1,0 +1,28 @@
+# BR-LIC-001/S1 (docs/brd/wymagania-licznik.md:8): pierwsze uruchomienie — licznik od razu, bez konta, projektu, wzoru i oferty.
+# Wyrocznia: NFR-PIE-001, Z-01 (docs/monetyzacja/wektory-limitu.json). Ekran: design-spec „Macierz stanów”, stan `licznik-start`.
+appId: com.apps4brew.knitting
+name: "BR-LIC-001/S1 · Pierwsze uruchomienie: licznik bez konta, projektu i oferty"
+tags:
+  - BR-LIC-001-S1
+  - podstawowy
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- assertVisible: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-minus" }
+- assertVisible: "Tap the big button each time you finish a row.*"
+- assertNotVisible: ".*[Ss]ign in.*|.*[Ll]og in.*|.*[Cc]reate account.*"
+- assertNotVisible: { id: "oferty-ekran" }
+- assertNotVisible: "Oczko Pro removes the limit"
+- takeScreenshot: 02-licznik-start
+# --- po restarcie nadal licznik (żadnego ekranu powitalnego przy drugim starcie) ---
+- runFlow:
+    file: subflows/restart.yaml
+    env:
+      TERAZ: "2026-11-10T19:35:00"
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- assertNotVisible: { id: "wprowadzenie" }

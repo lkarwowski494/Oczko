@@ -1,0 +1,31 @@
+# BR-PRJ-011/S1 (docs/brd/wymagania-projekt.md:111): start po zamknięciu aplikacji wraca do tego samego projektu, części i rzędu (terminate + relaunch).
+appId: com.apps4brew.knitting
+name: "BR-PRJ-011/S1 · Start po zamknięciu: ten sam projekt i rząd"
+tags:
+  - BR-PRJ-011-S1
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- runFlow: subflows/nazwij-projekt.yaml
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+# --- drugi projekt z listy, potem powrót do „Harbor” (ostatnio używany) ---
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "projekty-nowy" }
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: "Harbor.*"
+- assertVisible: { id: "licznik-projekt", text: "Harbor" }
+- runFlow: subflows/odstep.yaml
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "2" }
+- runFlow: { file: subflows/restart.yaml, env: { TERAZ: "2026-11-10T22:00:00" } }
+- assertVisible: { id: "licznik-projekt", text: "Harbor" }
+- assertVisible: { id: "licznik-wartosc", text: "2" }
+- assertVisible: { id: "licznik-teraz-rzad", text: "Now knitting row 3" }
+- takeScreenshot: 18-po-starcie

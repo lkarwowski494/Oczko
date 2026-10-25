@@ -1,0 +1,71 @@
+# Zakup na sztucznym sklepie i przywrócenie (pakiet podstawowy; P-090 Q1a: w E2E zakupy na sztucznym sklepie, wzór Treningu lib/store-fake.ts;
+# prawdziwy StoreKit: lista „tylko telefon” TT-01–TT-05, strategia §8).
+# Kryteria: BR-ZAK-001/S1 (W-02, logika w Node; tu przepływ UI), PR-09, KP-13 (oferty z Ustawień), KP-03 (stan Pro), W-01.
+# Build E2E: EXPO_PUBLIC_STORE_FAKE=1 tylko w kroku buildu jakosc-ios.yml (kontrola repo, strategia §3); panel „Test store” tylko w tym buildzie, bez t().
+# Ceny tylko ze sklepu (P-089 (1)): scenariusz nie sprawdza kwot, tylko nazwy planów i obecność ceny.
+appId: com.apps4brew.knitting
+name: "BR-ZAK-001/S1 + PR-09 · Zakup Pro na sztucznym sklepie, wygaśnięcie i przywrócenie zakupu"
+tags:
+  - BR-ZAK-001-S1
+  - PR-09
+  - podstawowy
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+# --- Ustawienia: licznik darmowych dni i wejście do ofert (KP-13) ---
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-ustawienia" }
+- assertVisible: { id: "ustawienia-dni-darmowe", text: "4 of 5 free knitting days left in November" }
+- tapOn: { id: "ustawienia-oczko-pro" }
+- assertVisible: { id: "oferty-ekran" }
+- assertVisible: "Knit on as many days as you like\\. Everything else stays the same\\."
+- assertVisible: { id: "oferty-plan-miesieczny", text: "Monthly · .+ / month" }
+- assertVisible: { id: "oferty-plan-roczny", text: "Yearly · .+ / year" }
+- assertVisible: { id: "oferty-plan-dozywotni", text: "Lifetime · .+ once" }
+- assertVisible: "Without Pro: 5 knitting days every month, and all your projects and data, always\\."
+- assertVisible: { id: "oferty-przywroc", text: "Restore purchases" }
+- takeScreenshot: 06-oferty
+# --- zakup dożywotni (sztuczny sklep) ---
+- tapOn: { id: "oferty-plan-dozywotni" }
+- assertVisible: { id: "oferty-plan-dozywotni", selected: true }
+- tapOn: { id: "oferty-kup" }
+- extendedWaitUntil: { visible: { id: "oferty-stan-pro" }, timeout: 20000 }
+- takeScreenshot: 06-po-zakupie
+- tapOn: { id: "oferty-zamknij" }
+- assertVisible: { id: "ustawienia-oczko-pro" }
+- assertNotVisible: { id: "ustawienia-dni-darmowe" }
+# --- wygaśnięcie dostępu panelem sztucznego sklepu, potem „Restore purchases” przywraca Pro ---
+- tapOn: { id: "ustawienia-oczko-pro" }
+- assertVisible: { id: "oferty-ekran" }
+- scrollUntilVisible: { element: { id: "e2e-sklep-wygas" }, direction: DOWN, timeout: 30000, centerElement: true }
+- tapOn: { id: "e2e-sklep-wygas" }
+- assertNotVisible: { id: "oferty-stan-pro" }
+- assertVisible: { id: "oferty-plan-dozywotni" }
+- scrollUntilVisible: { element: { id: "oferty-przywroc" }, direction: DOWN, timeout: 30000, centerElement: true }
+- tapOn: { id: "oferty-przywroc" }
+- extendedWaitUntil: { visible: { id: "oferty-stan-pro" }, timeout: 20000 }
+- takeScreenshot: 06-po-przywroceniu
+- tapOn: { id: "oferty-zamknij" }
+- assertNotVisible: { id: "ustawienia-dni-darmowe" }
+- tapOn: { id: "nav-wstecz" }
+- assertVisible: { id: "projekty-lista" }
+- assertNotVisible: { id: "projekty-dni-darmowe" }
+- tapOn: { id: "projekty-wiersz", index: 0 }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+# --- Pro po restarcie (pamięć uprawnień, W-03 w Node; tu tylko trwałość stanu w aplikacji) ---
+- runFlow:
+    file: subflows/restart.yaml
+    env:
+      TERAZ: "2026-11-10T19:50:00"
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-ustawienia" }
+- assertVisible: { id: "ustawienia-oczko-pro" }
+- assertNotVisible: { id: "ustawienia-dni-darmowe" }

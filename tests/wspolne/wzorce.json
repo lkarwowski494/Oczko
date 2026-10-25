@@ -1,0 +1,45 @@
+{
+  "_opis": "Manifest złotych plików kontraktu TS ↔ Swift (Z07-11, Z07-12; strategia §4). Te same pliki czyta Jest (tests/jakosc/zlote-pliki.test.ts) i XCTest (specyfikacja: xctest-specyfikacja.md). Każdy plik z katalogu jest tu wpisany dokładnie raz i odwrotnie — obie strony raportują „wykonano N z N”. Zmiana pliku albo oczekiwań = zmiana kontraktu roli 05 (tests/wspolne/README.md).",
+  "wersja_kontraktu": 1,
+  "zrodlo_typow": "docs/architektura/moduly.md (export type StanEkranuBlokady, StanZegarka, ZdarzenieWejsciowe)",
+  "limit_bajtow_stanu": 4096,
+  "dziennik": [
+    {
+      "plik": "dziennik-plus-poprawny.jsonl",
+      "co": "4 zdarzenia z ekranu blokady (3 × plus, 1 × minus), łańcuch rodziców: każde kolejne wskazuje poprzednie własne id (propozycja Z07-11 (1), wektor M-10), przejście przez północ Europe/Warsaw (dzien = data zdarzenia, Z07-11 (6))",
+      "linie": 4,
+      "przyjete_id": ["3f2b8d4e-5a6c-4b7d-8e9f-a0b1c2d3e4f5", "4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6", "5b4daf60-7c8e-4d9f-a0b1-c2d3e4f5a6b7", "6c5eb071-8d9f-4ea0-b1c2-d3e4f5a6b7c8"],
+      "odrzucone_linie": [],
+      "ostatnia_ucieta": false,
+      "skroc_do_id": "6c5eb071-8d9f-4ea0-b1c2-d3e4f5a6b7c8"
+    },
+    {
+      "plik": "dziennik-plus-ucieta-linia.jsonl",
+      "co": "przerwany zapis: 2 pełne linie i ucięta trzecia bez znaku nowej linii (ADR-0008 „Potwierdzenie”, R-023) — ucięta pominięta i zgłoszona, poprzednie zachowane",
+      "linie": 3,
+      "przyjete_id": ["3f2b8d4e-5a6c-4b7d-8e9f-a0b1c2d3e4f5", "4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6"],
+      "odrzucone_linie": [3],
+      "ostatnia_ucieta": true,
+      "skroc_do_id": "4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6"
+    },
+    {
+      "plik": "dziennik-plus-nieznane-pole.jsonl",
+      "co": "linia z wersji N+1 z polami nieznanymi w wersji N (wersja, znaczenie): przyjęta, nieznane pola pominięte (zgodność vN ↔ vN+1, Z07-11 (4), R-024) — propozycja 07 do zatwierdzenia przez 05",
+      "linie": 2,
+      "przyjete_id": ["3f2b8d4e-5a6c-4b7d-8e9f-a0b1c2d3e4f5", "4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6"],
+      "odrzucone_linie": [],
+      "ostatnia_ucieta": false,
+      "skroc_do_id": "4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6",
+      "nieznane_pola": ["wersja", "znaczenie"]
+    }
+  ],
+  "stany": [
+    { "plik": "stan-ekranu-blokady-typowy.json", "typ": "StanEkranuBlokady", "co": "liczenie w toku, dzień dozwolony, stoper sesji od 19:52" },
+    { "plik": "stan-ekranu-blokady-limit.json", "typ": "StanEkranuBlokady", "co": "nowy dzień ponad limit (dzienDozwolony = false → intencja nie dopisuje +1, Live Activity pokazuje limit, P-065 (1a)); licznik bez zdarzeń (glowa null), bez sesji" },
+    { "plik": "stan-ekranu-blokady-najwiekszy.json", "typ": "StanEkranuBlokady", "co": "duży stan: nazwa 320 znaków CJK (3 B UTF-8), wartość 150 000; rozmiar < 4096 B (rejestr Apple 1b, R-028); maksymalna długość nazwy [DO USTALENIA] 05" },
+    { "plik": "stan-zegarka-typowy.json", "typ": "StanZegarka", "co": "wersja darmowa, 3 dni z robótką w miesiącu" },
+    { "plik": "stan-zegarka-pro-dozywotni.json", "typ": "StanZegarka", "co": "Pro dożywotni: proWaznoscDo = null znaczy „bez końca”, NIE „wygasło” (R-031)" },
+    { "plik": "stan-zegarka-pro-subskrypcja.json", "typ": "StanZegarka", "co": "Pro z subskrypcji ważnej do 2026-12-31T23:59:59Z; dzień zaczęty bez Pro i dzień z Pro" },
+    { "plik": "stan-zegarka-najwiekszy.json", "typ": "StanZegarka", "co": "duży stan: nazwa 320 znaków CJK, 30 dni w miesiącu; rozmiar < 4096 B" }
+  ]
+}

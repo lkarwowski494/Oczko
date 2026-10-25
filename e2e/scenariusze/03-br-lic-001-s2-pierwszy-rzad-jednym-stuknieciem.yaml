@@ -1,0 +1,25 @@
+# BR-LIC-001/S2 (docs/brd/wymagania-licznik.md:12): pierwszy rząd jednym stuknięciem, bez sieci; liczba stuknięć = 1.
+# Wyrocznia: NFR-PIE-001, L-01, Z-01. Ryzyko R-001: wartość po zabiciu procesu (COMMIT przed haptyką).
+appId: com.apps4brew.knitting
+name: "BR-LIC-001/S2 · Pierwszy rząd jednym stuknięciem (offline, trwały po zabiciu)"
+tags:
+  - BR-LIC-001-S2
+  - podstawowy
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- assertVisible: { id: "licznik-teraz-rzad", text: "Now knitting row 2" }
+- assertVisible: { id: "kreski-podpis", text: "Tonight’s marks: 1 row since 19:30" }
+- takeScreenshot: 03-pierwszy-rzad
+- runFlow:
+    file: subflows/restart.yaml
+    env:
+      TERAZ: "2026-11-10T19:31:00"
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- takeScreenshot: 03-po-restarcie

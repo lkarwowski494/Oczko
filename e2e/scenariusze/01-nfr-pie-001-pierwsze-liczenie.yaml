@@ -1,0 +1,44 @@
+# NFR-PIE-001 (docs/brd/wymagania.md:89; metoda: 1 stuknięcie, 0 ekranów przed licznikiem, offline, 1. i ostatni dzień miesiąca).
+# Kontrola 05-12 (strategia §10): E2E świeżej instalacji + test przypadku użycia z wstrzykniętym zegarem dla dat (Z07-18).
+# Zegar: argument startu oczkoE2eTeraz tylko w buildzie E2E (EXPO_PUBLIC_E2E=1), sieć: oczkoE2eSiec=brak (kontrakt: e2e/README.md).
+# Scenorys 04: docs/design/przejscie/z1-k1.png (start), z1-k2.png (po +1 row).
+appId: com.apps4brew.knitting
+name: "NFR-PIE-001 · Pierwsze liczenie: 1 stuknięcie, 0 ekranów, offline, 1. i ostatni dzień miesiąca"
+tags:
+  - NFR-PIE-001
+  - podstawowy
+  - stan-licznika
+---
+# --- 1. dzień miesiąca, tuż po północy, czysta instalacja, bez sieci ---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-01T00:05:00"
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- assertVisible: "\\+1 row.*"
+- assertNotVisible: { id: "oferty-ekran" }
+- assertNotVisible: { id: "okno-uczciwe-zasady" }
+- assertNotVisible: { id: "wprowadzenie" }
+- takeScreenshot: 01-start-1-dnia
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- assertVisible: { id: "licznik-teraz-rzad", text: "Now knitting row 2" }
+- takeScreenshot: 01-po-pierwszym-plus-1-dnia
+# --- ostatni dzień miesiąca, tuż przed północą, czysta instalacja ---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-30T23:55:00"
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- assertNotVisible: { id: "oferty-ekran" }
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- takeScreenshot: 01-po-pierwszym-plus-ostatni-dzien
+# --- luty w roku przestępnym, ostatni dzień (granica miesiąca inna niż 30/31) ---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2028-02-29T21:00:00"
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- assertNotVisible: { id: "oferty-ekran" }

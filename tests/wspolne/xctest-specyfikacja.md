@@ -1,0 +1,55 @@
+# Specyfikacja testów XCTest na wspólnych plikach (dla roli 08; zatwierdza 05)
+
+Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-0007) — to specyfikacja, nie test. Miejsce wykonania: zadanie `xctest` w `jakosc-ios.yml` (macOS, po `expo prebuild`, strategia §5; pierwszy przebieg informacyjny, potem bramka). Reguły logiki wspólne dla `widget` i `watch` w jednym pakiecie Swift testowanym `swift test` bez symulatora (Z07-12, wzór Treningu `ios-unsigned.yml`); testy wymagające procesu aplikacji (intencja, `DziennikPlus`) jako XCTest celu po prebuild.
+
+## Zasady wspólne
+- Pliki czytane z `tests/wspolne/` i `docs/…/wektory-*.json` **w repo** (zasób testu kopiowany w kroku budowania z repo, nie kopia w `targets/` — kontrola repo: brak kopii `wektory-*.json` i złotych plików poza tymi katalogami, R-032).
+- Każdy test wypisuje „wykonano N z N” i **pada**, gdy N = 0, gdy wykonanych < N albo gdy plik nie ma wpisu w manifeście. Żadnego `try?` na odczycie pliku ani dekodowaniu w pętli wektorów.
+- Liczności dzisiejsze (z repo, 2026-10-25): N wyliczane z plików w czasie testu — liczby niżej są kontrolą, że nic nie zniknęło (test porównuje wyliczone N z tą tabelą tylko przez `>=`).
+
+| Zestaw | Plik | Liczność dziś | Kto czyta w Swift |
+|---|---|---|---|
+| Złote pliki dziennika | `tests/wspolne/wzorce.json` → `dziennik` | 3 pliki, 9 linii | `modules/oczko-dziennik-plus` |
+| Złote pliki stanów | `tests/wspolne/wzorce.json` → `stany` | 7 plików (3 × `StanEkranuBlokady`, 4 × `StanZegarka`) | `targets/widget`, `targets/watch` |
+| Wektory limitu | `docs/monetyzacja/wektory-limitu.json` | 35 (`startDnia` 17, `wolaStraznika` 10, `mozeZaczacDzien` 8); stałe `limit` = 5, `przerwa_ms` = 3 600 000 | pakiet reguł (intencja i zegarek, ADR-0007/0008/0009) |
+| Wektory dostępu | `docs/monetyzacja/wektory-dostepu.json` | 24 (`decyzja` 18, `odczytajPamiec` 6) | zegarek (Pro bez telefonu, ADR-0009 D) |
+| Wektory scalania | `docs/architektura/eksperymenty/e1/scal-wektory.json` | 8 (M-01–M-08; M-09, M-10 po fix 05) | tylko jeśli Swift scala (dziś nie: scala TS) |
+| Wektory dnia (RD-16) | po ER-37 (strefy, DST, kalendarz niegregoriański) | [DO USTALENIA] | pakiet reguł (`dzien` w Swift, R-133, R-134) |
+
+## 1. Dziennik +1 (`DziennikPlus`, ADR-0008; R-018, R-022–R-025)
+| ID | Test | Wyrocznia |
+|---|---|---|
+| X-DZ-01 | Dla każdego pliku `dziennik[]`: odczyt Swift daje dokładnie `przyjete_id` (kolejność), `odrzucone_linie`, `ostatnia_ucieta`; wynik raportowany jako błąd diagnostyki, nie wyjątek | `wzorce.json` |
+| X-DZ-02 | Koder: zdarzenia z `dziennik-plus-poprawny.jsonl` zdekodowane i zakodowane ponownie dają **te same bajty linii** (kolejność pól jak w pliku, `czasMs` w ms jako liczba całkowita, `zrodlo: "ekran_blokady"`, bez `\/`: `JSONEncoder.outputFormatting` z `.withoutEscapingSlashes`, `.sortedKeys` NIE — kolejność z typu). Jeśli Foundation na iOS 18 nie gwarantuje kolejności kluczy [DO USTALENIA 05/08 przy pierwszym przebiegu], porównanie po zdekodowaniu obu stron do słownika, a kolejność pól przestaje być częścią kontraktu (TS czyta pola po nazwie) | plik |
+| X-DZ-03 | Zapis z intencji: linia dopisana przez `DziennikPlus` dla zdarzenia z pliku = linia z pliku (TS czyta to, co Swift pisze) | plik |
+| X-DZ-04 | 1000 równoległych dopisań z dwóch wątków → 1000 poprawnych linii, 1000 różnych id | ADR-0008 „Potwierdzenie” |
+| X-DZ-05 | Przerwany zapis (ucięta ostatnia linia jak w pliku) → poprzednie linie zachowane, kolejne dopisanie zaczyna od nowej linii (nie skleja się z uciętą) | `dziennik-plus-ucieta-linia.jsonl` |
+| X-DZ-06 | `skroc(doId)`: zostają linie po `doId`; linia dopisana między `odczytaj()` a `skroc()` nie ginie | R-022 |
+| X-DZ-07 | Plik niedostępny (ochrona danych przed pierwszym odblokowaniem, atrapa) → intencja zwraca błąd, stan Live Activity „Unlock to count” | R-025, ADR-0008 |
+| X-DZ-08 | Intencja przy `dzienDozwolony: false` (`stan-ekranu-blokady-limit.json`) nie dopisuje linii | P-065 (1a) |
+| X-DZ-09 | Kolejne stuknięcia intencji łańcuchują rodziców jak `dziennik-plus-poprawny.jsonl` (rodzic = poprzednie własne id, pierwszy = `glowa` ze stanu) | Z07-11 (1), M-10 |
+| X-DZ-10 | Migawka nazwy i parametrów `LiveActivityIntent` (zmiana = zmiana kontraktu, Live Activity żyje do 8 h przez aktualizację aplikacji) | Z07-11 (4) |
+| X-DZ-11 | Linia z nieznanymi polami (`dziennik-plus-nieznane-pole.jsonl`) dekodowana bez błędu, pola pominięte | R-024 |
+
+## 2. Stan Live Activity i zegarka (Z07-12; R-026–R-028, R-031)
+| ID | Test | Wyrocznia |
+|---|---|---|
+| X-ST-01 | Każdy plik `stany[]` dekoduje się `JSONDecoder` do struktury Swift typu z `typ` bez wartości domyślnych (brak pola = błąd dekodowania, nie `?? false`) | `moduly.md` |
+| X-ST-02 | Zakodowany ponownie przez Swift: ten sam zbiór kluczy i wartości (porównanie po zdekodowaniu do słownika) | plik |
+| X-ST-03 | Rozmiar `ActivityContent` po kodowaniu Swift < 4096 B dla `*-najwiekszy.json` | rejestr Apple 1b, R-028 |
+| X-ST-04 | Pułapka: plik z polem przemianowanym (`dzien_dozwolony`) nie dekoduje się — test oczekuje błędu | R-027 |
+| X-ST-05 | `stan-zegarka-pro-dozywotni.json`: reguła Pro na zegarku daje „ma Pro” (null = bez końca) | R-031, W-01 |
+| X-ST-06 | `stan-zegarka-pro-subskrypcja.json`: „ma Pro” dla `teraz < proWaznoscDo`, „nie ma” dla `teraz = proWaznoscDo` i `teraz + 1` (granica jak Z07-08) | KP-06, R-114 |
+
+## 3. Reguły limitu i dostępu w Swift (ADR-0007, ADR-0009; R-032, R-098, R-099)
+| ID | Test | Wyrocznia |
+|---|---|---|
+| X-RG-01 | Każdy wektor `startDnia`, `wolaStraznika`, `mozeZaczacDzien` z `wektory-limitu.json` daje wynik z pliku; wykonane id = id z pliku (zbiór, nie liczba) | `limit.mjs` przez wektory |
+| X-RG-02 | Stałe Swift = `limit` i `przerwa_ms` z pliku (nie wpisane na sztywno) | R-032 |
+| X-RG-03 | Mutant: zamiana `<` na `<=` w porównaniu przerwy (wstrzyknięta w teście przez parametr) daje czerwone na wektorze granicznym (po Z07-07: L-04c = 60 min, L-04d = 59:59,999) | R-098 |
+| X-RG-04 | `func mozeZaczacDzien` jest w pakiecie dokładnie raz (kontrola repo z plikiem-pułapką, Linux) i jest używana przez intencję i zegarek | R-032 |
+| X-RG-05 | Wektory dostępu `decyzja` i `odczytajPamiec` z `wektory-dostepu.json` (Pro na zegarku bez telefonu) | ADR-0009 D, P-039 |
+| X-RG-06 | `dzien` w Swift: kalendarz gregoriański i cyfry ASCII niezależnie od `Locale`/`Calendar` urządzenia (`Calendar(identifier: .japanese)` w teście) | R-134, RD-16 |
+
+## Wynik i raport
+Raport XCTest (`xcresult`) jako artefakt; podsumowanie przebiegu wypisuje dla każdego zestawu „wykonano N z N”. Pierwsze uruchomienie informacyjne; bramka po pierwszym zielonym przebiegu na SHA (zasada roli 8). Do tego czasu: „Nie sprawdzono” w audycie dla R-018, R-022–R-028, R-031, R-032.

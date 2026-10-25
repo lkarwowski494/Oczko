@@ -1,0 +1,45 @@
+# NFR-OFF-001 (docs/brd/wymagania.md:85, próg 100% PR-01–07, 10–12, 14; PR-12 poza zakresem): działanie bez sieci.
+# Całość przy oczkoE2eSiec=brak (adapter sieci „brak połączenia”): PR-01 (pierwsze +1), PR-02 (+1/−1/historia), PR-07 (ukończenie), PR-14 (stoper sesji);
+# PR-04 — 15, PR-06 — 21, PR-10 — 16. PR-03, PR-05 i PR-11: [DO USTALENIA] (części bez makiety, zegarek, obliczenia F-38 — rejestr 06).
+# Scenorys 04: z5-k1.png – z5-k3.png (ukończenie i karta z pytaniem o włóczkę).
+appId: com.apps4brew.knitting
+name: "NFR-OFF-001 · Bez sieci: liczenie, historia, stoper sesji, ukończenie projektu"
+tags:
+  - NFR-OFF-001
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- runFlow: subflows/odstep.yaml
+- tapOn: { id: "licznik-minus" }
+- assertVisible: { id: "licznik-wartosc", text: "0" }
+- tapOn: { id: "licznik-historia" }
+- assertVisible: { id: "historia-lista" }
+- tapOn: { id: "arkusz-zamknij" }
+- assertVisible: { id: "licznik-plus" }
+- runFlow: subflows/nazwij-projekt.yaml
+# --- PR-14: stoper sesji ---
+- tapOn: { id: "licznik-menu" }
+- assertVisible: { id: "menu-sesja" }
+- tapOn: { id: "menu-sesja" }
+- assertVisible: { id: "sesja-trwa" }
+- takeScreenshot: 28-sesja-trwa
+- tapOn: { id: "sesja-zakoncz" }
+- assertNotVisible: { id: "sesja-trwa" }
+# --- PR-07: ukończenie projektu (U-9) ---
+- tapOn: { id: "licznik-menu" }
+- assertVisible: { id: "menu-ukoncz" }
+- tapOn: { id: "menu-ukoncz" }
+- assertVisible: { id: "ukonczenie-potwierdz" }
+- tapOn: { id: "ukonczenie-potwierdz" }
+- extendedWaitUntil: { visible: { id: "ukonczenie-karta" }, timeout: 20000 }
+- takeScreenshot: 28-karta-ukonczenia
+- tapOn: { id: "ukonczenie-gotowe" }
+- assertVisible: { id: "projekty-lista" }
+- assertVisible: { id: "projekty-ukonczone" }
+- assertVisible: "Harbor.*"
+- assertNotVisible: { id: "blad-sieci" }

@@ -1,0 +1,26 @@
+# BR-WZR-008/S3 (docs/brd/wymagania-projekt.md:303): przewijanie wzoru bez zakreślacza nie zostawia śladu. Wyrocznia: BR-WZR-004.
+appId: com.apps4brew.knitting
+name: "BR-WZR-008/S3 · Przewijanie wzoru bez zakreślacza: strona się zmienia, zakreśleń 0"
+tags:
+  - BR-WZR-008-S3
+  - wzor
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T12:00:00"
+- tapOn: { id: "licznik-menu" }
+- assertVisible: { id: "menu-wzor" }
+- tapOn: { id: "menu-wzor" }
+- assertVisible: { id: "wzor-dodaj" }
+- tapOn: { id: "wzor-dodaj" }
+- assertVisible: { id: "e2e-wzor-pdf" }
+- tapOn: { id: "e2e-wzor-pdf" }
+- extendedWaitUntil: { visible: { id: "wzor-widok" }, timeout: 30000 }
+- assertVisible: { id: "wzor-zakreslacz", selected: false }
+- swipe: { start: "50%, 80%", end: "50%, 20%", duration: 600 }
+- assertVisible: { id: "wzor-zakreslenia", text: "0 highlights" }
+- swipe: { start: "50%, 80%", end: "50%, 10%", duration: 400 }
+- assertVisible: { id: "wzor-strona", text: "Page [2-9] of .*" }
+- assertVisible: { id: "wzor-zakreslenia", text: "0 highlights" }
+- takeScreenshot: 27-po-przewinieciu

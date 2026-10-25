@@ -1,0 +1,63 @@
+# Start awaryjny (pakiet podstawowy): ADR-0019 „Potwierdzenie” — dwa wymuszone nieudane starty przed kamieniem milowym → trzeci start pokazuje ekran
+# trybu awaryjnego; „Zapisz kopię danych” daje archiwum z licznościami jak w bazie; oryginał bazy ma ten sam SHA-256 przed i po (R-086).
+# Kontrola roli 12 (strategia §10): przełącznik wymuszonej awarii tylko w konfiguracji testowej (argument startu oczkoE2eAwariaStartu, build E2E),
+# nieobecny w buildzie wydania (sprawdz-ipa.mjs). PROG_NIEUDANYCH_STARTOW = 2 (P-080, do weta). Ekran awaryjny: teksty 04/09 (Z07-05) — tu tylko testID.
+# [DO USTALENIA] zachowanie Maestro po awarii procesu w trakcie launchApp (czy następne polecenie startuje aplikację ponownie) — rozstrzyga pierwszy przebieg macOS.
+appId: com.apps4brew.knitting
+name: "ADR-0019 · Start awaryjny po dwóch nieudanych startach: kopia z licznościami, oryginał bez zmian, „Spróbuj normalnie”"
+tags:
+  - ADR-0019
+  - R-086
+  - podstawowy
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+# --- SHA-256 pliku bazy przed awariami (panel diagnostyki E2E, tylko EXPO_PUBLIC_E2E=1) ---
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-ustawienia" }
+- assertVisible: { id: "e2e-sha-bazy" }
+- copyTextFrom: { id: "e2e-sha-bazy" }
+- evalScript: ${output.shaPrzed = maestro.copiedText}
+- assertTrue: ${output.shaPrzed.length == 64}
+# --- dwa nieudane starty przed kamieniem milowym ---
+- stopApp
+- launchApp:
+    clearState: false
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:40:00"
+      oczkoE2eAwariaStartu: "przed-kamieniem"
+- extendedWaitUntil: { notVisible: { id: "licznik-plus" }, timeout: 15000 }
+- launchApp:
+    clearState: false
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:41:00"
+      oczkoE2eAwariaStartu: "przed-kamieniem"
+- extendedWaitUntil: { notVisible: { id: "licznik-plus" }, timeout: 15000 }
+# --- trzeci start (bez przełącznika): ekran trybu awaryjnego, baza nietknięta ---
+- launchApp:
+    clearState: false
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:42:00"
+- extendedWaitUntil: { visible: { id: "tryb-awaryjny" }, timeout: 60000 }
+- assertVisible: { id: "awaryjny-zapisz-kopie" }
+- assertVisible: { id: "awaryjny-sprobuj-normalnie" }
+- assertVisible: { id: "awaryjny-zglos-problem" }
+- assertNotVisible: { id: "licznik-plus" }
+- takeScreenshot: 09-tryb-awaryjny
+- tapOn: { id: "awaryjny-zapisz-kopie" }
+- extendedWaitUntil: { visible: { id: "awaryjny-licznosci" }, timeout: 60000 }
+- assertVisible: { id: "awaryjny-licznosci", text: "1 project.*1 counter.*1 change.*" }
+- takeScreenshot: 09-kopia-awaryjna
+- copyTextFrom: { id: "e2e-sha-bazy" }
+- assertTrue: ${maestro.copiedText == output.shaPrzed}
+# --- „Spróbuj normalnie”: zwykły start, dane na miejscu ---
+- tapOn: { id: "awaryjny-sprobuj-normalnie" }
+- extendedWaitUntil: { visible: { id: "licznik-plus" }, timeout: 60000 }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- assertNotVisible: { id: "tryb-awaryjny" }

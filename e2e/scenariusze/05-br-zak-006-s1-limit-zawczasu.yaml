@@ -1,0 +1,60 @@
+# Limit dni pokazany zawczasu (pakiet podstawowy): BR-ZAK-006/S1 (Z-02, KP-13), BR-ZAK-005/S4 (L-03), P-065 (1a), design-spec „Limit dni na ekranach”.
+# Pięć darmowych dni (LIMIT_DNI_W_MIESIACU = 5, P-057 D2) zużywa pięć restartów z zegarem w kolejnych dniach o 20:00; szósty dzień: zamiast +1 i −1
+# komunikat „No free knitting days left in November…”, odnośnik „Oczko Pro removes the limit” (poza strefą +1); historia i menu działają.
+# Scenorys 04: z4-k4.png (wariant „zawczasu”, decyzja STOP E3). Zakup z tego miejsca: 06-br-zak-001-s1-zakup-przywrocenie.yaml.
+appId: com.apps4brew.knitting
+name: "BR-ZAK-006/S1 · Limit dni zawczasu: szósty dzień listopada bez +1, dane i historia dostępne"
+tags:
+  - BR-ZAK-006-S1
+  - KP-13
+  - podstawowy
+  - stan-licznika
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-02T20:00:00"
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- runFlow: { file: subflows/dzien-z-robotka.yaml, env: { TERAZ: "2026-11-03T20:00:00", WARTOSC: "2" } }
+- runFlow: { file: subflows/dzien-z-robotka.yaml, env: { TERAZ: "2026-11-04T20:00:00", WARTOSC: "3" } }
+- runFlow: { file: subflows/dzien-z-robotka.yaml, env: { TERAZ: "2026-11-05T20:00:00", WARTOSC: "4" } }
+- runFlow: { file: subflows/dzien-z-robotka.yaml, env: { TERAZ: "2026-11-06T20:00:00", WARTOSC: "5" } }
+# --- szósty dzień: limit zawczasu, przed pierwszym stuknięciem ---
+- runFlow:
+    file: subflows/restart.yaml
+    env:
+      TERAZ: "2026-11-07T20:00:00"
+- assertVisible: { id: "limit-zawczasu", text: "No free knitting days left in November\\. Counting is paused until .*Your 5 rows and everything else are kept\\." }
+- assertVisible: { id: "licznik-wartosc", text: "5" }
+- assertNotVisible: { id: "licznik-plus" }
+- assertNotVisible: { id: "licznik-minus" }
+- assertVisible: { id: "limit-oferta-link", text: "Oczko Pro removes the limit" }
+- assertNotVisible: { id: "oferty-ekran" }
+- takeScreenshot: 05-limit-zawczasu
+# --- odnośnik otwiera oferty (KP-13: jedyne miejsca to limit i Ustawienia); „Not now” wraca do licznika bez zmian ---
+- tapOn: { id: "limit-oferta-link" }
+- assertVisible: { id: "oferty-ekran" }
+- assertVisible: "Oczko Pro"
+- takeScreenshot: 05-oferty-z-limitu
+- tapOn: { id: "oferty-nie-teraz" }
+- assertVisible: { id: "limit-zawczasu" }
+- assertVisible: { id: "licznik-wartosc", text: "5" }
+# --- historia i menu działają na limicie ---
+- tapOn: { id: "licznik-historia" }
+- assertVisible: { id: "historia-lista" }
+- tapOn: { id: "arkusz-zamknij" }
+- assertVisible: { id: "limit-zawczasu" }
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-dni-darmowe", text: "0 of 5 free knitting days left in November" }
+- takeScreenshot: 05-lista-projektow-na-limicie
+- tapOn: { id: "projekty-wiersz", index: 0 }
+- assertVisible: { id: "limit-zawczasu" }
+# --- nowy miesiąc: licznik wraca (BR-ZAK-005/S8, L-05) ---
+- runFlow:
+    file: subflows/restart.yaml
+    env:
+      TERAZ: "2026-12-01T20:00:00"
+- assertVisible: { id: "licznik-plus" }
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "6" }

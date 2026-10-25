@@ -24,6 +24,7 @@ const PULAPKI: [string, string, string][] = [
   ['STARY-PLIK-0-1-0', 'src/dane/baza/sciezki.ts', "const s = 'Library/SQLite/oczko.db';"],
   ['SQLITE3-SWIFT', 'targets/widget/Intencja.swift', 'import Foundation\nimport SQLite3\n'],
   ['SZTUCZNY-SKLEP', 'src/ekrany/Oferty.tsx', "if (process.env.EXPO_PUBLIC_STORE_FAKE === '1') {}"],
+  ['TRYB-E2E', 'src/ekrany/Licznik.tsx', "const e2e = process.env.EXPO_PUBLIC_E2E === '1';"],
   ['WYMUSZONA-AWARIA', 'src/ekrany/Start.tsx', "if (process.env.EXPO_PUBLIC_WYMUS_AWARIE) throw new Error('x');"],
   ['CENY-W-KODZIE', 'src/ekrany/Oferty.tsx', "const cena = '14,99 zł';"],
   ['CENY-W-KODZIE', 'src/komponenty/Plan.tsx', "const c = '$0.99';"],
@@ -91,6 +92,10 @@ describe('sprawdz-workflowy.mjs (ADR-0014, kontrola 05-9)', () => {
   test('R-173 sekret w zadaniu z environment: testflight i wyzwalaczem tag przechodzi', () => {
     const w = uruchom(WORKFLOWY, wf('t.yml', "on:\n  push:\n    tags: ['v*']\n  workflow_dispatch:\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    steps:\n      - run: echo ${{ secrets.ASC_KEY_ID }} ${{ secrets.GITHUB_TOKEN }}\n"));
     expect(w.status).toBe(0);
+  });
+  test.each(['WATCH_FAKE', 'E2E', 'PSEUDO'])('P-089 przełącznik EXPO_PUBLIC_%s w workflowie wydania pada', (p) => {
+    const w = uruchom(WORKFLOWY, wf('t.yml', `on: workflow_dispatch\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    env:\n      EXPO_PUBLIC_${p}: '1'\n    steps:\n      - run: true\n`));
+    expect(w.stdout).toContain(`EXPO_PUBLIC_${p}`);
   });
   test('P-089 sztuczny sklep w workflowie wydania pada', () => {
     const w = uruchom(WORKFLOWY, wf('t.yml', "on: workflow_dispatch\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    env:\n      EXPO_PUBLIC_STORE_FAKE: '1'\n    steps:\n      - run: true\n"));

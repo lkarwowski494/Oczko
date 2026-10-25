@@ -1,0 +1,61 @@
+# BR-ZAP-004/S2 (docs/brd/wymagania-narzedzia.md:46): wyszukiwanie w zapasie w sklepie bez zasięgu. Wyrocznia: NFR-OFF-001.
+# Wpis znak po znaku z asercją wartości pola i Enter po wyszukiwarce (Trening L-013, docs/40-lekcje.md:197-199).
+appId: com.apps4brew.knitting
+name: "BR-ZAP-004/S2 · Zapas: dodanie włóczki i wyszukanie bez sieci"
+tags:
+  - BR-ZAP-004-S2
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T12:00:00"
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-zapas" }
+- assertVisible: { id: "zapas-lista" }
+- tapOn: { id: "zapas-dodaj" }
+- assertVisible: { id: "zapas-nazwa" }
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn: { id: "zapas-nazwa" }
+      - waitForAnimationToEnd
+      - eraseText: 40
+      - inputText: "F"
+      - inputText: "j"
+      - inputText: "o"
+      - inputText: "r"
+      - inputText: "d"
+      - assertVisible: { id: "zapas-nazwa", text: "Fjord" }
+- pressKey: Enter
+- assertVisible: { id: "formularz-zapisz" }
+- tapOn: { id: "formularz-zapisz" }
+- assertVisible: { id: "zapas-lista" }
+- assertVisible: "Fjord.*"
+# --- wyszukiwanie bez sieci ---
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn: { id: "zapas-szukaj" }
+      - waitForAnimationToEnd
+      - eraseText: 40
+      - inputText: "F"
+      - inputText: "j"
+      - inputText: "o"
+      - assertVisible: { id: "zapas-szukaj", text: "Fjo" }
+- pressKey: Enter
+- assertVisible: { id: "zapas-wynik", text: "Fjord.*" }
+- takeScreenshot: 16-wynik-bez-sieci
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn: { id: "zapas-szukaj" }
+      - waitForAnimationToEnd
+      - eraseText: 40
+      - inputText: "x"
+      - inputText: "y"
+      - inputText: "z"
+      - assertVisible: { id: "zapas-szukaj", text: "xyz" }
+- pressKey: Enter
+- assertNotVisible: { id: "zapas-wynik" }
+- assertVisible: { id: "zapas-brak-wynikow" }
