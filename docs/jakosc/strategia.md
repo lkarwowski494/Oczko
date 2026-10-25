@@ -1,5 +1,5 @@
 # Strategia testów Oczka (rola 07-jakosc, build)
-Stan: E2 (plan testów) · 2026-10-25 · STOP E2. Jedyne źródło definicji ukończenia funkcji w projekcie; rola 08 ją wykonuje. Wejścia: E0 ([`e0-rozpoznanie.md`](e0-rozpoznanie.md), P-090), E1 ([`e1-raport.md`](e1-raport.md), rejestr [`e1-ryzyka.md`](e1-ryzyka.md), P-091), wzorzec Treningu @928d0ff ([`e0/trening-wzorzec.md`](e0/trening-wzorzec.md)). Decyzje tej strategii mają ID `DS-nn`; na STOP E2 trafiają do `docs/decyzje.md`.
+Stan: E3 (testy akceptacyjne, CI) · 2026-10-25 · STOP E3. Jedyne źródło definicji ukończenia funkcji w projekcie; rola 08 ją wykonuje. Wejścia: E0 ([`e0-rozpoznanie.md`](e0-rozpoznanie.md), P-090), E1 ([`e1-raport.md`](e1-raport.md), rejestr [`e1-ryzyka.md`](e1-ryzyka.md), P-091), wzorzec Treningu @928d0ff ([`e0/trening-wzorzec.md`](e0/trening-wzorzec.md)). Decyzje tej strategii mają ID `DS-nn`; na STOP E2 trafiają do `docs/decyzje.md`.
 
 ## 1. Macierz możliwości środowiska
 Pełna, z dowodami: [`e0-rozpoznanie.md`](e0-rozpoznanie.md) §1. Skrót: Linux (kontener i `ubuntu-latest`) uruchamia Jest, `node:sqlite` (sprawdzone w Jest 29.7 na Node 22: `PRAGMA foreign_keys` = 1, 2026-10-25), fast-check, Stryker, Playwright. **Tylko macOS (`macos-26`):** `xcodebuild`, symulator iOS i watchOS, XCTest, Maestro iOS, `performAccessibilityAudit`, `plutil`/`codesign` na `.ipa`. **Tylko telefon:** lista P-090/P-091 (§8). Niczego z kolumny „tylko macOS” nie opisuje się jako sprawdzone, dopóki nie ma przebiegu CI z SHA.
@@ -102,10 +102,27 @@ Jedno zadanie naraz; przy każdej pozycji build, data, wynik. Pozycja bez wyniku
 | TT-07 | start nad 0.1.0 (P-070) | na telefonie z 0.1.0 zainstaluj nowy build | pusta aplikacja bez awarii; stary plik nietknięty (diagnostyka pokazuje SHA bez zmian) | ADR-0015 |
 | TT-08 | iCloud (P-091 1) | +1 na telefonie, otwórz iPada z tym samym kontem | rekord widoczny; **niezaliczone → synchronizacja ukryta w 1.0** | R-051 |
 | TT-09 | ekran blokady (ZAL-030) | zablokuj telefon w trakcie Live Activity, stuknij +1 trzy razy, odblokuj | wartość +3 bez konfliktu | R-018 |
+| TT-10 | przywrócenie na drugim urządzeniu | na iPadzie z tym samym kontem App Store (przy TT-08) „Przywróć” | Pro działa | W-09 |
+| TT-11 | usunięcie danych a zakup (KP-05) | Ustawienia → „Usuń wszystkie dane”, potem „Przywróć” | dane puste, Pro wraca | W-02 |
 Poza listą, jako „Nie sprawdzono” z ryzykiem szczątkowym: zegarek (właściciel nie ma Apple Watch; testerki według planu koordynatora, krok 10), restart bez odblokowania, bateria, raport awarii TestFlight (ADR-0018, P-079).
 
 ## 9. Testy akceptacyjne: kryterium → test → stan
-Wypełnia E3 (inwentarz 220 kryteriów: [`e0/kryteria.json`](e0/kryteria.json); testy zależne od poprawek 01/02/05: [`zgloszenia.md`](zgloszenia.md), kolumna „Testy zależne”).
+Stan E3 (2026-10-25, `env -u NODE_PATH npm run test:akceptacja`): **980 testów akceptacyjnych, 974 czerwone na znaczniku `NIEZAIMPLEMENTOWANE:`, 6 jawnie zielonych `[ZIELONY-OK: …]` (parametry konfiguracji i kontrole narzędzi testu), 0 czerwonych z złego powodu**; pełna lista test → stan → fragment wyniku: [`e3/akceptacja-wynik.md`](e3/akceptacja-wynik.md). Scenariusze E2E: 32 w `e2e/scenariusze/` (czerwień sprawdza CI macOS, nie kontener). Kontrole repo i workflowów: `tests/jakosc/` (zielone, każda z pułapką).
+Pokrycie 220 kryteriów z inwentarza ([`e0/kryteria.json`](e0/kryteria.json)), liczone skryptem po ID w nazwach testów: **201 z testem**, 19 bez testu z powodem:
+| Kryterium | Powód braku testu | Kontrola zastępcza / kiedy test |
+|---|---|---|
+| TT-1–TT-3, TT-7, TT-8 (tabela modelu B, `docs/monetyzacja.md:581–593`) | zastąpione listą §8 (P-090, P-091): TT-01, TT-02, TT-03, TT-04, TT-05 | lista §8 przy TestFlight; wektory W |
+| TT-4, TT-6 | jak wyżej: TT-10, TT-11 | lista §8 |
+| TT-5 (inne konto piaskownicy) | wymaga drugiego konta piaskownicy; czas właściciela bez nowej informacji wobec wektora | W-07 (domena) + E2E na sztucznym sklepie (06); na urządzeniu „Nie sprawdzono” |
+| TT-9, BR-ZAK-001/S4 (zegarek bez telefonu) | właściciel nie ma Apple Watch; `transferUserInfo` nie działa w symulatorze (ADR-0009) | wektory Pro na zegarku i złote pliki stanu (`tests/wspolne`, Z07-12); testerki według planu koordynatora (krok 10); „Nie sprawdzono” |
+| BR-LIC-005/S1 (haptyka nie przerywa dźwięku innej aplikacji) | zachowanie sesji audio systemu | kontrola repo `DZWIEK` (aplikacja bez dźwięku); „Nie sprawdzono” na urządzeniu |
+| BR-PRJ-008/S2 (zapomniany stoper przy zablokowanym ekranie) | blokada ekranu i Live Activity 8 h tylko na urządzeniu | maszyna sesji `SESJA_MAKS_H` (domena, testy w `maszyny/`); „Nie sprawdzono” |
+| BR-WZR-004/S1 (dłoń na ekranie przy Pencil) | tylko iPad z Apple Pencil (P-042) | XCTest po prebuild: `drawingPolicy = pencilOnly` (po celu natywnym roli 08); „Nie sprawdzono” |
+| BR-DAN-002/S1, S3, BR-PRJ-011/S3 (iCloud) | brak portu i sygnatur adaptera synchronizacji (Z07-14) | test po sesji fix 05; maszyna synchronizacji testowana w `maszyny/`; TT-08 |
+| BR-WZR-007/S3 (strona WWW bez treści) | brak portu pobierania strony; kryterium niemierzalne (ER-36) | po ER-36 i porcie (05) |
+| BR-PRJ-015/S2 (udostępnienie bez lokalizacji) | brak portu udostępniania i usuwania EXIF (P-073 10a) | po porcie (05); dane testowe ze zdjęciem z EXIF GPS (§4) |
+| NFR-JEZ-001 (35 lokalizacji) | mechanizm roli 09: testy `tests/i18n/` (186, zielone) bez ID kryterium w nazwie | przy E2–E4 roli 09: test `supportedLocales` = `CFBundleLocalizations` = słowniki z ID (strategia §10) |
+Testy zależne od poprawek 01/02/05 (P-090 Q3a, P-091 11a): [`zgloszenia.md`](zgloszenia.md) i [`e1/zgloszenia-e1.md`](e1/zgloszenia-e1.md), kolumna „Testy zależne”; zestawienie dla roli 08 w przekazaniu E4.
 
 ## 10. Kontrole od innych ról → miejsce w planie
 ### Rola 05 (`e3-…md` §4)

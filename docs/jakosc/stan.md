@@ -5,9 +5,9 @@ Aktualizacja: 2026-10-25 · Gałąź `claude/jolly-thompson-paz6d8` · Prompt: `
 |---|---|---|
 | E0 rozpoznanie | przyjęte (P-090: Q1a, Q2a, Q3a) | `docs/jakosc/e0-rozpoznanie.md`, `docs/jakosc/e0/` |
 | E1 rejestr ryzyk | przyjęte (P-091) | `docs/jakosc/e1-raport.md`, `e1-ryzyka.md`, `e1/` |
-| E2 plan testów | **STOP E2 — czeka na odpowiedź koordynatora na DS-11–DS-13 (DS-01–DS-10 bez weta = rekomendacja)** | `docs/jakosc/strategia.md` |
-| E3 testy akceptacyjne, CI | — | |
+| E2 plan testów | przyjęte (P-092) | `docs/jakosc/strategia.md` |
+| E3 testy akceptacyjne, CI | **STOP E3** (po wpisie wyniku pierwszego przebiegu iOS) | `docs/jakosc/e3-raport.md`, `strategia.md` §9 |
 | E4 przekazanie do 08 | — | |
 
-Następny krok: odpowiedź na DS-11–DS-13 (`docs/jakosc/strategia.md`, „Pytania na STOP E2”) → P-092 → E3.
+Następny krok: wynik runu iOS 40223597670 → e3-raport.md; push; odpowiedź koordynatora na STOP E3 → P-093+ → E4 (przekazanie do 08).
 Stan testów na wejściu: `npx jest` 956/956 (kod 0), typecheck kod 0, `granice.mjs src` kod 1 (13 naruszeń w kodzie 0.1.0).
