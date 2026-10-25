@@ -86,14 +86,15 @@ describe('BR-LIC-019 strażnik tylko dla liczników rzędów (RD-17, ER-24) — 
 });
 
 describe('BR-WZR-003 znacznik bieżącego rzędu idzie z licznikiem — docs/brd/wymagania-projekt.md:234', () => {
-  const z = { strona: 2, y: 500, wysokoscRzedu: 18, rzadBazowy: 12, wartoscPrzyUstawieniu: 12 };
+  // Jednostki według ADR-0011 (uzupełnienie Z07-17, fix-2 W7): y i wysokość rzędu jako ułamek strony, kierunek w znaczniku (P-120 Q4a).
+  const z = { strona: 2, y: 0.5, wysokoscRzedu: 0.1, rzadBazowy: 12, wartoscPrzyUstawieniu: 12, kierunek: -1 as const };
   test('BR-WZR-003/S1 znacznik na rzędzie 12 przy liczniku 12; +1 → rząd 13, przesunięcie o jedną wysokość rzędu, ta sama strona', () => {
     const przed = polozenieZnacznika(z, 12);
     const po = polozenieZnacznika(z, 13);
-    expect(przed).toEqual({ strona: 2, rzad: 12, y: 500 });
+    expect(przed).toEqual({ strona: 2, rzad: 12, y: 0.5, pozaStrona: false });
     expect(po.rzad).toBe(13);
     expect(po.strona).toBe(2);
-    expect(Math.abs(po.y - przed.y)).toBe(18); // kierunek (w górę czy w dół strony): [DO USTALENIA] 05
+    expect(Math.abs(po.y - przed.y)).toBeCloseTo(0.1, 9); // kierunek w znaczniku (P-118 Q2a); wyrocznia kierunku: znacznik-kierunek.test.ts
   });
   test('BR-WZR-003/S1 własność: rząd znacznika − rzadBazowy = wartość licznika − wartość przy ustawieniu', () => {
     fc.assert(

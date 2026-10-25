@@ -2,11 +2,11 @@
 // kryteria.json (uwagi: „plik uszkodzony jako wejście testu”, „plik wzoru niezmieniony: skrót pliku przed i po”).
 import { readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { utworzPortNode } from '../../../src/dane/baza/adapter-node';
-import { notatkiWzoru, odczytajZnacznik } from '../../../src/dane/repozytoria/wzory';
-import { dodajNotatkeWzoru, importujWzor, ustawZnacznik } from '../../../src/przypadki-uzycia/wzor';
-import { czesc, licznik, plik, projekt, wzor } from '../../dane/pomocnicze/dane-wejsciowe';
-import { DOBA, ile, jeden, przygotuj, sha256Pliku, wlozPlik, wykonaj } from '../../dane/pomocnicze/srodowisko';
+import { utworzPortNode } from '../../src/dane/baza/adapter-node';
+import { notatkiWzoru, odczytajZnacznik } from '../../src/dane/repozytoria/wzory';
+import { dodajNotatkeWzoru, importujWzor, ustawZnacznik } from '../../src/przypadki-uzycia/wzor';
+import { czesc, licznik, plik, projekt, wzor } from './pomocnicze/dane-wejsciowe';
+import { DOBA, ile, jeden, przygotuj, sha256Pliku, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
 
 const PDF = Buffer.from('%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n');
 
@@ -25,7 +25,7 @@ test('BR-WZR-003/S2: znacznik na rzędzie 13 → zamknięcie aplikacji → po ty
   const s = await przygotuj();
   const h = wlozPlik(s.magazyn, PDF, 'pdf');
   await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód'), ...licznik('l1', 'c1', 13), plik(h, 'pdf', PDF.length), wzor('w1', 'p1', h)]);
-  expect(await ustawZnacznik(s.z, { wzorId: 'w1', licznikId: 'l1', strona: 2, y: 0.4, wysokoscRzedu: 0.02, rzadBazowy: 13 })).toEqual({ ok: true, wartosc: undefined });
+  expect(await ustawZnacznik(s.z, { wzorId: 'w1', licznikId: 'l1', strona: 2, y: 0.4, wysokoscRzedu: 0.02, rzadBazowy: 13, kierunek: -1 })).toEqual({ ok: true, wartosc: undefined }); // kierunek wymagany (P-120 Q5a)
   s.baza.zamknij();
   s.zegar.przesun(7 * DOBA);
   const ponownie = utworzPortNode(join(s.katalog, 'oczko.db'));
