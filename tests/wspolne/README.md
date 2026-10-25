@@ -1,6 +1,6 @@
 # Złote pliki kontraktu TS ↔ Swift (`tests/wspolne/`)
 
-Stan: rola 07, E3, 2026-10-25 (szkic; **zatwierdza rola 05** w sesji fix Z07-11–Z07-19, P-091 11a). Źródło typów: `docs/architektura/moduly.md` (`ZdarzenieWejsciowe`, `StanEkranuBlokady`, `StanZegarka`), format dziennika: ADR-0008, stan zegarka: ADR-0009, cele natywne: ADR-0007.
+Stan: rola 07, E3, 2026-10-25; **zatwierdzone przez rolę 05** w sesji fix 2026-10-25 (Z07-11, Z07-12; ADR-0008 „Uzupełnienie”): format dziennika i reguły odczytu bez zmian; zgodność wersji przez nazwę pliku `dziennik-plus-v2.jsonl` zamiast pola wersji w linii (ADR-0008 (4)). Źródło typów: `docs/architektura/moduly.md` (`ZdarzenieWejsciowe`, `StanEkranuBlokady`, `StanZegarka`), format dziennika: ADR-0008, stan zegarka: ADR-0009, cele natywne: ADR-0007.
 
 ## Kontrakt
 - **Te same pliki czyta Jest i XCTest.** Jest: `tests/jakosc/zlote-pliki.test.ts` (główny zestaw, `npm test`). XCTest: cele Swift po `expo prebuild` (`modules/oczko-dziennik-plus`, `targets/widget`, `targets/watch`) według `xctest-specyfikacja.md`. Kodu Swift jeszcze nie ma (brak celów natywnych) — strona Swift to zadanie roli 08 w zadaniu `xctest` workflowu `jakosc-ios.yml` (strategia §5).
@@ -14,7 +14,7 @@ Stan: rola 07, E3, 2026-10-25 (szkic; **zatwierdza rola 05** w sesji fix Z07-11�
 |---|---|---|---|
 | `dziennik-plus-poprawny.jsonl` | `ZdarzenieWejsciowe` na linię | 3 × `plus` i `minus` z ekranu blokady, łańcuch rodziców (każde kolejne wskazuje poprzednie własne id — propozycja Z07-11 (1), M-10), przejście przez północ Europe/Warsaw (`dzien` = data zdarzenia) | 4 przyjęte, 0 odrzuconych, skrócenie do ostatniego id |
 | `dziennik-plus-ucieta-linia.jsonl` | jw. | przerwany zapis: ostatnia linia ucięta, bez `\n` (ADR-0008 „Potwierdzenie”, R-023) | 2 przyjęte, linia 3 odrzucona i zgłoszona, skrócenie do ostatniej przyjętej |
-| `dziennik-plus-nieznane-pole.jsonl` | jw. | linia z wersji N+1 z polami `wersja`, `znaczenie` (Z07-11 (4), R-024) | przyjęta, nieznane pola pominięte (propozycja 07 do zatwierdzenia przez 05) |
+| `dziennik-plus-nieznane-pole.jsonl` | jw. | linia z wersji N+1 z polami `wersja`, `znaczenie` (Z07-11 (4), R-024) | przyjęta, nieznane pola pominięte (zatwierdzone przez 05: ADR-0008 (4)) |
 | `stan-ekranu-blokady-typowy.json` | `StanEkranuBlokady` | liczenie w toku, stoper sesji | zgodny ściśle z typem, < 4096 B |
 | `stan-ekranu-blokady-limit.json` | `StanEkranuBlokady` | `dzienDozwolony: false` (intencja nie dopisuje +1), `glowa: null`, `sesjaStartMs: null` | jw. |
 | `stan-ekranu-blokady-najwiekszy.json` | `StanEkranuBlokady` | nazwa 320 znaków CJK (3 B w UTF-8), wartość 150 000 (R-028) | < 4096 B |
