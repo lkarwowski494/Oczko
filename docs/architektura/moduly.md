@@ -30,7 +30,7 @@ src/
 modules/                  moduły Expo (Swift): oczko-dziennik-plus, oczko-icloud, oczko-pencilkit, oczko-zegarek, oczko-czas-w-tle
 targets/                  cele @bacons/apple-targets: widget (Live Activity + LiveActivityIntent), watch, share
 ```
-Kierunek zależności: `ekrany → przypadki-uzycia → domena ← dane, platforma`; `konfiguracja.ts` importują wszyscy, sam nie importuje nic. Swift w `targets/` i `modules/` nie importuje `SQLite3` (ADR-0008). Kontrola: `docs/architektura/narzedzia/granice.mjs` (E3) i grep w CI.
+Kierunek zależności: `ekrany → przypadki-uzycia → domena ← dane, platforma`; `konfiguracja.ts` importują wszyscy, sam nie importuje nic. Swift w `targets/` i `modules/` nie importuje `SQLite3` (ADR-0008). Kontrola: `docs/architektura/narzedzia/granice.mjs` (fix 2026-10-25, Z07-16: importy rozwiązywane kompilatorem TS z `tsconfig.json`; reguły DOMENA, KONFIGURACJA, SQLITE, EKRANY, IOS, SWIFT, ROZMIAR, CYKL, PUSTO; fikstury negatywne `granice-test/obejscia/` w `jakosc:kontrole`). Na `src` jest bramką dopiero po usunięciu kodu 0.1.0 (partia porządkowa 08, P-099 D1a); dziś informacyjnie w `jakosc:info` (14 naruszeń, wszystkie w `core/`, `components/`, `screens/`).
 
 ## Porty domeny (sygnatury)
 Zatwierdzone w fix 05 2026-10-25 (Z07-22) razem z sygnaturami przypadków użycia, danych i ekranów zaproponowanymi przez 07 w E3 (`src/przypadki-uzycia/**`, `src/dane/**`, `src/ekrany/**`). Ten blok jest równy deklaracjom `src/domena/porty.ts`; kontrola: `node docs/architektura/narzedzia/sprawdz-porty.mjs` (w `jakosc:kontrole`).
