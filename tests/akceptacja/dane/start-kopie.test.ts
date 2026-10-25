@@ -12,8 +12,8 @@ import { migruj } from '../../../src/dane/migracje/migruj';
 import { WERSJA_SCHEMATU } from '../../../src/konfiguracja';
 import { uruchomDane } from '../../../src/przypadki-uzycia/start';
 import { przygotujZgloszenie } from '../../../src/przypadki-uzycia/zgloszenie';
-import { bazaWzorcowa, czytajBaze, wloczka, zycie } from './pomocnicze/dane-wejsciowe';
-import { T0, katalogTymczasowy, migawka, przygotuj, sha256Pliku, wlozPlik, wykonaj, zegarTestowy } from './pomocnicze/srodowisko';
+import { bazaWzorcowa, czytajBaze, wloczka, zycie } from '../../dane/pomocnicze/dane-wejsciowe';
+import { T0, katalogTymczasowy, migawka, przygotuj, sha256Pliku, wlozPlik, wykonaj, zegarTestowy } from '../../dane/pomocnicze/srodowisko';
 
 describe('ścieżki danych i start nad 0.1.0', () => {
   test('ŚU-16 BR-DAN-004/S1 ADR-0001: baza, pliki, kopie, dziennik i stan startu w Library/Application Support — nic w Caches ani Documents', () => {

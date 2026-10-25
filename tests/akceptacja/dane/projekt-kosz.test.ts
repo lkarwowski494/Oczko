@@ -12,8 +12,8 @@ import {
 import { uruchomDane } from '../../../src/przypadki-uzycia/start';
 import { utworzPortNode } from '../../../src/dane/baza/adapter-node';
 import { join } from 'node:path';
-import { czesc, dzienLimitu, licznik, plik, projekt, przypomnienie, sesja, wzor, zycie, type Instr } from './pomocnicze/dane-wejsciowe';
-import { DOBA, GODZ, MIN, T0, ile, jeden, licznosci, migawka, przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
+import { czesc, dzienLimitu, licznik, plik, projekt, przypomnienie, sesja, wzor, zycie, type Instr } from '../../dane/pomocnicze/dane-wejsciowe';
+import { DOBA, GODZ, MIN, T0, ile, jeden, licznosci, migawka, przygotuj, wlozPlik, wykonaj } from '../../dane/pomocnicze/srodowisko';
 
 const OK = { ok: true, wartosc: undefined };
 const SWETER: Instr[] = [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Rękaw lewy', 1, { cel: 96 }), czesc('c2', 'p1', 'Przód', 2), ...licznik('l1', 'c1', 18, { rodzaj: 'oczka' }), ...licznik('l2', 'c1', 40, { kolejnosc: 2 }), ...licznik('l3', 'c2', 7), przypomnienie('r1', 'l2')];

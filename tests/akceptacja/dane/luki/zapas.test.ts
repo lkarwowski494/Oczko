@@ -3,8 +3,8 @@
 // Schemat v1 nie ma kolumny kategorii w `wloczka`: test zapisuje przez repozytorium, nie SQL ([DO USTALENIA] 05, raport luk E3).
 import { dodajWloczke, potwierdzZuzycie, zapas } from '../../../../src/dane/repozytoria/zapas';
 import { zakonczProjekt } from '../../../../src/przypadki-uzycia/projekt';
-import { czesc, projekt, projektWloczka, wloczka } from '../pomocnicze/dane-wejsciowe';
-import { T0, jeden, przygotuj, wykonaj } from '../pomocnicze/srodowisko';
+import { czesc, projekt, projektWloczka, wloczka } from '../../../dane/pomocnicze/dane-wejsciowe';
+import { T0, jeden, przygotuj, wykonaj } from '../../../dane/pomocnicze/srodowisko';
 
 describe('BR-ZAP-002 zużycie z projektu odjęte z zapasu', () => {
   test('BR-ZAP-002/S1 zapas 5 motków, projekt zużył 3 → po zakończeniu i potwierdzeniu zapas 2, zużycie zapisane przy projekcie', async () => {

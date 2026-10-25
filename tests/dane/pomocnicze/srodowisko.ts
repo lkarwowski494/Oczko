@@ -4,10 +4,10 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { CzasWTle, DziennikPlus, Identyfikatory, MagazynPlikow, PortBazy, Zegar, ZdarzenieWejsciowe } from '../../../../src/domena/porty';
-import { utworzPortNode, type PortNode } from '../../../../src/dane/baza/adapter-node';
-import { migruj } from '../../../../src/dane/migracje/migruj';
-import type { Zaleznosci, ZaleznosciPlikow } from '../../../../src/przypadki-uzycia/zaleznosci';
+import type { CzasWTle, DziennikPlus, Identyfikatory, MagazynPlikow, PortBazy, Zegar, ZdarzenieWejsciowe } from '../../../src/domena/porty';
+import { utworzPortNode, type PortNode } from '../../../src/dane/baza/adapter-node';
+import { migruj } from '../../../src/dane/migracje/migruj';
+import type { Zaleznosci, ZaleznosciPlikow } from '../../../src/przypadki-uzycia/zaleznosci';
 
 export const MIN = 60_000;
 export const GODZ = 3_600_000;

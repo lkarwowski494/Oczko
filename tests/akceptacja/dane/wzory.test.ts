@@ -5,8 +5,8 @@ import { join } from 'node:path';
 import { utworzPortNode } from '../../../src/dane/baza/adapter-node';
 import { notatkiWzoru, odczytajZnacznik } from '../../../src/dane/repozytoria/wzory';
 import { dodajNotatkeWzoru, importujWzor, ustawZnacznik } from '../../../src/przypadki-uzycia/wzor';
-import { czesc, licznik, plik, projekt, wzor } from './pomocnicze/dane-wejsciowe';
-import { DOBA, ile, jeden, przygotuj, sha256Pliku, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
+import { czesc, licznik, plik, projekt, wzor } from '../../dane/pomocnicze/dane-wejsciowe';
+import { DOBA, ile, jeden, przygotuj, sha256Pliku, wlozPlik, wykonaj } from '../../dane/pomocnicze/srodowisko';
 
 const PDF = Buffer.from('%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n');
 

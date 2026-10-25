@@ -11,8 +11,8 @@ import { eksportuj, importuj } from '../../../src/przypadki-uzycia/archiwum';
 import type { Manifest } from '../../../src/przypadki-uzycia/porty-propozycja';
 import {
   archiwumWzorcowe, czesc, czytajBaze, czytajZip, licznik, licznosciPliku, projekt, ustawGlowe, zapiszZip, zdarzenie, zycie, type Instr,
-} from './pomocnicze/dane-wejsciowe';
-import { GODZ, MIN, T0, czasWTle, ile, jeden, licznosci, migawka, przygotuj, sha256, sha256Pliku, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
+} from '../../dane/pomocnicze/dane-wejsciowe';
+import { GODZ, MIN, T0, czasWTle, ile, jeden, licznosci, migawka, przygotuj, sha256, sha256Pliku, wlozPlik, wykonaj } from '../../dane/pomocnicze/srodowisko';
 
 const POMIN = ['blad', 'ustawienie']; // diagnostyka i mały stan nie są danymi użytkownika w porównaniu
 const TRESCI = { pdf: Buffer.from('PDF-1.4 abc'), rys: Buffer.from('PKDRAWING'), jpg: Buffer.from('JPEG-DANE!') }; // bajty = zycie(): 11, 9, 10

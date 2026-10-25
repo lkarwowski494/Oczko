@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { T0, sha256 } from './srodowisko';
 
-export const KORZEN = join(__dirname, '../../../..');
+export const KORZEN = join(__dirname, '../../..');
 export const SCHEMAT_V1 = readFileSync(join(KORZEN, 'docs/architektura/schemat.sql'), 'utf8');
 export const STANY_JSON: Record<string, string[]> = JSON.parse(readFileSync(join(KORZEN, 'docs/architektura/stany.json'), 'utf8'));
 

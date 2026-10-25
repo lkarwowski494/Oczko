@@ -11,8 +11,8 @@ import { startDnia } from '../../../../src/domena/limit';
 import { LIMIT_DNI_W_MIESIACU, WERSJA_SCHEMATU } from '../../../../src/konfiguracja';
 import { eksportuj } from '../../../../src/przypadki-uzycia/archiwum';
 import type { Manifest } from '../../../../src/przypadki-uzycia/porty-propozycja';
-import { bazaWzorcowa, czytajZip, dzienLimitu, zycie, type Instr } from '../pomocnicze/dane-wejsciowe';
-import { T0, czasWTle, katalogTymczasowy, licznosci, przygotuj, wlozPlik, wykonaj } from '../pomocnicze/srodowisko';
+import { bazaWzorcowa, czytajZip, dzienLimitu, zycie, type Instr } from '../../../dane/pomocnicze/dane-wejsciowe';
+import { T0, czasWTle, katalogTymczasowy, licznosci, przygotuj, wlozPlik, wykonaj } from '../../../dane/pomocnicze/srodowisko';
 
 /** Poprzednie wydanie (P-057 D2): 5 darmowych dni limitu w miesiącu (KP-01: limit raz wydany tylko się luzuje). */
 const LIMIT_POPRZEDNIEGO_WYDANIA = 5;

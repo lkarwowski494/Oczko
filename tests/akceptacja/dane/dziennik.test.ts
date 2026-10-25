@@ -7,8 +7,8 @@ import { parsujDziennik, utworzDziennikNode } from '../../../src/dane/dziennik';
 import { scalDziennik } from '../../../src/przypadki-uzycia/dziennik';
 import { dodajRzad } from '../../../src/przypadki-uzycia/licznik';
 import { naPierwszyPlan } from '../../../src/przypadki-uzycia/start';
-import { czesc, licznik, projekt } from './pomocnicze/dane-wejsciowe';
-import { MIN, T0, ile, jeden, przygotuj, wykonaj } from './pomocnicze/srodowisko';
+import { czesc, licznik, projekt } from '../../dane/pomocnicze/dane-wejsciowe';
+import { MIN, T0, ile, jeden, przygotuj, wykonaj } from '../../dane/pomocnicze/srodowisko';
 
 const linia = (id: string, rodzice: string[], licznikId = 'l1', i = 0): ZdarzenieWejsciowe => ({
   id, licznikId, rodzaj: 'plus', rodzice, czasMs: T0 + (i + 1) * MIN, strefa: 'Europe/Warsaw', dzien: '2026-10-22', zrodlo: 'ekran_blokady', urzadzenie: 'iphone-test',
