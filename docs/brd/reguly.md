@@ -197,9 +197,9 @@ Zasady wspólne reguł:
 | RD-11-W7 | 3,126 | brak | — | typowy | S-18 i rachunek: 3,126 nie ma w tabeli, bez najbliższej wartości |
 
 ### RD-12: Numer powtórzenia i rząd w powtórzeniu
-- Wzór: `powtórzenie = ⌊(r − 1) / n⌋ + 1`; `rząd_w = ((r − 1) mod n) + 1`
-- Jednostki: r, n, rząd_w [rz.]; powtórzenie [-]
-- Granica: r ≥ 1, n ≥ 1 (włączne)
+- Wzór: `powtórzenie = ⌊(r − 1) / n⌋ + 1`; `rząd_w = ((r − 1) mod n) + 1` dla r ≥ 1; dla r = 0 powtórzenie 1 i rząd_w 0 („0 z n”: jeszcze nic, P-097 (3.1a)). r to liczba pokazana na liczniku (BR-LIC-012): w trybie „skończone rzędy” r = skończone, w trybie „rząd w trakcie” r = skończone + 1 (ER-40)
+- Jednostki: r, n, rząd_w, skończone [rz.]; powtórzenie [-]
+- Granica: r ≥ 0, n ≥ 1 (włączne); r < 0 to błąd danych
 - Podstawa: rachunek; potrzeba J-02
 - Krytyczna: nie
 
@@ -208,11 +208,20 @@ Zasady wspólne reguł:
 | RD-12-W1 | 17 | 8 | 3 | 1 | 0 | typowy | rachunek |
 | RD-12-W2 | 8 | 8 | 1 | 8 | 0 | granica | rachunek: koniec powtórzenia |
 | RD-12-W3 | 9 | 8 | 2 | 1 | 0 | powyżej | rachunek |
-| RD-12-W4 | 0 | 8 | błąd danych | błąd danych | — | poniżej | rachunek: r < 1 |
+| RD-12-W4 | 0 | 8 | 1 | 0 | 0 | granica | rachunek: r = 0, „0 z 8” przed pierwszym rzędem (P-097 (3.1a), ER-40) |
+| RD-12-W6 | -1 | 8 | błąd danych | błąd danych | — | poniżej | rachunek: r < 0 |
 | RD-12-W5 | 5 | 0 | błąd danych | błąd danych | — | błąd | rachunek: n < 1 |
 
+Tryb licznika (BR-LIC-012, ER-40):
+
+| ID | skończone [rz.] | tryb [-] | n [rz.] | Oczekiwane: powtórzenie [-] | Oczekiwane: rząd_w [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|
+| RD-12-W7 | 12 | rząd w trakcie | 8 | 2 | 5 | 0 | typowy | rachunek: r = 12 + 1 = 13 |
+| RD-12-W8 | 0 | rząd w trakcie | 8 | 1 | 1 | 0 | granica | rachunek: r = 0 + 1 = 1 |
+| RD-12-W9 | 12 | skończone rzędy | 8 | 2 | 4 | 0 | typowy | rachunek: r = 12 |
+
 ### RD-13: Przypomnienie „co N rzędów, M razy, od rzędu s”
-- Wzór: rząd r wyzwala przypomnienie, gdy `r ≥ s`, `(r − s) mod N = 0` i `(r − s) / N < M`
+- Wzór: rząd r wyzwala przypomnienie, gdy `r ≥ s`, `(r − s) mod N = 0` i `(r − s) / N < M`. Zmiana wartości licznika z a na b: przy b = a + 1 sprawdza się r = b; przy wpisaniu b > a + 1 (BR-LIC-017) przypomnienie pojawia się raz, dla największego rzędu wyzwalającego w (a, b]; przy spadku (b < a) nie pojawia się; zdarzenia scalone z zegarka nie wywołują na telefonie przypomnienia, które zegarek już pokazał (BR-LIC-015; P-097 (3.2a), ER-40)
 - Jednostki: r, s, N [rz.]; M [-]
 - Granica: ostatnie wyzwolenie w rzędzie `s + (M − 1) × N` (włączne)
 - Podstawa: rachunek; potrzeba J-03. Odczyt instrukcji wzoru („co 6 rzędów” liczone od rzędu 6 czy od 1) zależy od wzoru: aplikacja pyta o s, nie zgaduje (OP-06)
@@ -225,6 +234,16 @@ Zasady wspólne reguł:
 | RD-13-W3 | 36 | 6 | 6 | 5 | nie | — | powyżej | rachunek: szóste wyzwolenie |
 | RD-13-W4 | 5 | 6 | 6 | 5 | nie | — | poniżej | rachunek: przed s |
 | RD-13-W5 | 12 | 6 | 0 | 5 | błąd danych | — | błąd | rachunek: N < 1 |
+
+Zmiana wartości z a na b (ER-40):
+
+| ID | a [rz.] | b [rz.] | s [rz.] | N [rz.] | M [-] | Oczekiwane: przypomnienie [-] | Oczekiwane: rząd przypomnienia [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|---|---|
+| RD-13-W6 | 10 | 20 | 6 | 6 | 5 | tak | 18 | 0 | typowy | rachunek: wpisanie, przeskok przez 12 i 18; jedno przypomnienie dla 18 (P-097 (3.2a)) |
+| RD-13-W7 | 11 | 12 | 6 | 6 | 5 | tak | 12 | 0 | typowy | rachunek: zwykłe +1 |
+| RD-13-W8 | 20 | 10 | 6 | 6 | 5 | nie | — | — | poniżej | rachunek: spadek przy wpisaniu, bez przypomnienia |
+| RD-13-W9 | 25 | 30 | 6 | 6 | 5 | tak | 30 | 0 | granica | rachunek: wpisanie do ostatniego wyzwolenia 6 + 4 × 6 |
+| RD-13-W10 | 31 | 40 | 6 | 6 | 5 | nie | — | — | powyżej | rachunek: przeskok po końcu serii (36 to szóste wyzwolenie) |
 
 **Bez reguły (OP):** karczek raglanowy i czapka. Rachunek jest prosty, ale głębokość karczka, ujemny luz czapki i średnie zużycie na rodzaj odzieży nie mają przeczytanego źródła szczebla 1–3, a recenzje nie dają dowodu potrzeby (soczewka zaawansowana: 2 trafienia). OP-07.
 
@@ -309,7 +328,7 @@ Liczba dni d z dat (ER-38):
 | RD-16-W26 | 2026-10-22T22:00:00Z | Europe/Warsaw | ar-EG | 2026-10-23 | 0 | typowy | rachunek: cyfry ASCII mimo cyfr arabsko-indyjskich regionu (Intl daje „٢٣‏/١٠‏/٢٠٢٦”) |
 
 ### RD-17: Strażnik stuknięć: seria dodań do sprawdzenia
-- Wzór: pytanie „Dodano n rzędów w t s. Cofnąć?” pojawia się, gdy w liczniku rzędów istnieją 3 kolejne dodania z `t_(i+2) − t_i ≤ T`; T = 2 s; seria obejmuje wszystkie dodania z odstępem ≤ T od poprzedniego
+- Wzór: pytanie „Dodano n rzędów w t s. Cofnąć?” pojawia się, gdy w liczniku rzędów istnieją 3 kolejne dodania z `t_(i+2) − t_i ≤ T`; T = 2 s; seria obejmuje wszystkie dodania z odstępem ≤ T od poprzedniego. Reguła działa osobno dla każdego źródła zdarzeń (aplikacja, ekran blokady, zegarek, Siri) i po czasie zdarzenia zapisanym przy stuknięciu, nigdy po czasie dostarczenia do aplikacji; dodania sortuje się po czasie zdarzenia, a przy równym czasie po identyfikatorze zdarzenia; pytanie o serię scaloną z innego źródła podaje źródło i godzinę serii (P-091 (4b), ER-40)
 - Jednostki: t [s]; T [s]; n [-]
 - Granica: `t_(i+2) − t_i = 2 s` wyzwala (włącznie)
 - Podstawa: rachunek; parametr T i próg 3 dodań z decyzji P-047 (parametr produktowy, ocena roli 01 do korekty po wydaniu); potrzeba J-01 (P-044, I-1); tylko liczniki rzędów, nie oczek (ER-24)
@@ -322,7 +341,18 @@ Liczba dni d z dat (ER-38):
 | RD-17-W3 | 0; 1; 2,01 | nie | — | powyżej | rachunek: 2,01 > 2 |
 | RD-17-W4 | 0; 0,5 | nie | — | poniżej | rachunek: tylko 2 dodania (nadrobienie zapomnianego rzędu) |
 | RD-17-W5 | 0; 60; 120 | nie | — | typowy | rachunek: zwykłe dzierganie |
-| RD-17-W6 | 0; 1; 0,5 | błąd danych | — | błąd | rachunek: chwile nie rosną |
+| RD-17-W6 | 0; 1; 0,5 | tak | — | typowy | rachunek: kolejność dowolna, po sortowaniu 0; 0,5; 1 (P-091 (4b); wcześniej „błąd danych”) |
+| RD-17-W7 | 0; brak; 1 | błąd danych | — | błąd | rachunek: dodanie bez czasu zdarzenia |
+
+Źródła i scalanie (P-091 (4b), ER-40):
+
+| ID | chwile dodań [s] | źródła [-] | dostarczenie [s] | Oczekiwane: pytanie [-] | Oczekiwane: źródło pytania [-] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|
+| RD-17-W8 | 0; 1; 2; 3; 4 | ekran blokady; ekran blokady; ekran blokady; ekran blokady; ekran blokady | 2760; 2760; 2760; 2760; 2760 | tak | ekran blokady | — | typowy | rachunek: seria w czasie zdarzenia (np. 21:14), scalona naraz po 46 min |
+| RD-17-W9 | 0; 300; 600 | ekran blokady; ekran blokady; ekran blokady | 3600; 3600; 3600 | nie | — | — | typowy | rachunek: wieczór z ekranu blokady scalony naraz; czas dostarczenia się nie liczy |
+| RD-17-W10 | 0; 0,5; 1 | aplikacja; ekran blokady; aplikacja | 0; 30; 1 | nie | — | — | poniżej | rachunek: osobno dla źródeł, w aplikacji 2 dodania |
+| RD-17-W11 | 0; 0,7; 0,5; 1 | aplikacja; zegarek; aplikacja; aplikacja | 0; 40; 0,5; 1 | tak | aplikacja | — | typowy | rachunek: w aplikacji 0; 0,5; 1 |
+| RD-17-W12 | 5; 5; 5 | zegarek; zegarek; zegarek | 60; 60; 60 | tak | zegarek | — | granica | rachunek: równy czas, kolejność po identyfikatorze; 5 − 5 ≤ 2 |
 
 ### RD-18: Szacunek „zdążę?” z własnego tempa
 - Wzór: `h = C × H / R`; `dni = ⌈h / h_d⌉`; R i H z ukończonych projektów z sesjami stopera; h_d = średni czas stopera na dzień z robótką

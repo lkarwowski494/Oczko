@@ -107,6 +107,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że użytkownik ustawia powtórzenie
     - Gdy podaje długość 0 rzędów
     - Wtedy aplikacja nie zapisuje ustawienia i prosi o długość co najmniej 1 (RD-12-W5)
+  - Scenariusz: Przed pierwszym rzędem (ER-40)
+    - Zakładając, że powtórzenie ma 8 rzędów, a licznik rzędów ma 0
+    - Gdy użytkownik patrzy na licznik
+    - Wtedy aplikacja pokazuje powtórzenie 1 i 0 z 8 rzędów powtórzenia (RD-12-W4)
 
 ### BR-LIC-008: Zmiana ustawień licznika w trakcie
 - Przepływ: PR-03
@@ -133,6 +137,14 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając tę samą instrukcję
     - Gdy licznik osiąga 36
     - Wtedy aplikacja nie pokazuje przypomnienia (RD-13-W3)
+  - Scenariusz: Wpisanie wartości przez kilka przypomnień (ER-40)
+    - Zakładając tę samą instrukcję i licznik 10
+    - Gdy użytkownik wpisuje wartość 20
+    - Wtedy aplikacja pokazuje jedno przypomnienie, dla rzędu 18, a nie dla 12 (RD-13-W6)
+  - Scenariusz: Wpisanie mniejszej wartości (ER-40)
+    - Zakładając tę samą instrukcję i licznik 20
+    - Gdy użytkownik wpisuje wartość 10
+    - Wtedy aplikacja nie pokazuje przypomnienia (RD-13-W8)
 
 ### BR-LIC-010: Plan rzędów z instrukcji wzoru
 - Przepływ: PR-04 · Reguła: RD-13
@@ -168,6 +180,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że użytkownik wybrał tryb „rząd w trakcie” i skończył 12 rzędów
     - Gdy patrzy na licznik
     - Wtedy licznik pokazuje „rząd 13”
+  - Scenariusz: Powtórzenie w trybie „rząd w trakcie” (ER-40)
+    - Zakładając tryb „rząd w trakcie”, powtórzenie 8 rzędów i 12 skończonych rzędów
+    - Gdy użytkownik patrzy na licznik
+    - Wtedy licznik pokazuje „rząd 13” oraz powtórzenie 2 i rząd 5 powtórzenia (RD-12-W7)
 
 ### BR-LIC-013: Ekran nie gaśnie podczas liczenia
 - Przepływ: PR-05
@@ -263,6 +279,14 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że projekt „Sweter” ma osobne kawałki przód i rękaw lewy (BR-PRJ-001)
     - Gdy użytkownik dodaje rząd w rękawie
     - Wtedy licznik całości przodu się nie zmienia
+  - Scenariusz: Sekcja w koszu (ER-40)
+    - Zakładając, że kawałek „korpus” ma sekcje „ściągacz” z 20 rzędami i „gładki” z 5 rzędami
+    - Gdy użytkownik usuwa sekcję „gładki” (trafia do „Ostatnio usunięte”, BR-DAN-008)
+    - Wtedy licznik całości pokazuje 20, a po przywróceniu sekcji znów 25
+  - Scenariusz: Sekcja w konflikcie synchronizacji (ER-40)
+    - Zakładając, że sekcja „gładki” ma dwie wersje do wyboru po synchronizacji (BR-DAN-002)
+    - Gdy użytkownik otwiera kawałek
+    - Wtedy licznik całości pokazuje „—” z odsyłaczem do wyboru wersji, a po wyborze pokazuje sumę sekcji (P-097 (3.3a))
 
 ### BR-LIC-019: Strażnik stuknięć z tempa
 - Przepływ: PR-02 · Reguła: RD-17
@@ -284,6 +308,19 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że nie było serii dodań
     - Gdy użytkownik liczy rzędy
     - Wtedy ekran licznika nie pokazuje nic związanego ze strażnikiem (P-046)
+  - Scenariusz: Seria z ekranu blokady po scaleniu (ER-40)
+    - Zakładając, że o 21:14 z ekranu blokady doszło 5 rzędów w 4 s, a aplikacja scala je po otwarciu o 22:00
+    - Gdy użytkownik otwiera licznik
+    - Wtedy aplikacja pyta o tę serię, podając źródło i godzinę („ekran blokady, 21:14”), a nie czas scalenia (RD-17-W8; P-091 (4b))
+  - Scenariusz: Wieczór z ekranu blokady bez pytania (ER-40)
+    - Zakładając, że z ekranu blokady doszły 3 rzędy co 5 minut, scalone naraz po otwarciu aplikacji
+    - Gdy aplikacja je scala
+    - Wtedy aplikacja nie pyta o cofnięcie (RD-17-W9)
+  - Scenariusz: Cofnięcie serii zwraca dzień limitu (ER-40)
+    - Zakładając, że użytkownik bez Pro dziś nie dziergał, a jedyne dodania dnia to seria przypadkowych stuknięć, która zaczęła dzień limitu
+    - Gdy wybiera „Cofnij” w pytaniu strażnika
+    - Wtedy dodania serii znikają, a ponieważ dziś nie zostało żadne dodanie, dzień limitu wraca (P-091 (7b); wektor L-19 w kontrakcie roli 02, Z07-09)
+    - Ale cofnięcie tych samych dodań z historii nie zwraca dnia limitu (L-06)
 
 ### BR-LIC-020: Wibracje rozróżniane bez patrzenia
 - Przepływ: PR-02, PR-04
