@@ -32,6 +32,10 @@ export function scal(zdarzenia: ZdarzenieLicznika[]): WynikScalenia {
   const wszystkie = [...mapa.values()];
   const nieznane = wszystkie.filter((z) => !RODZAJE.has(z.rodzaj)).map((z) => z.id);
   if (nieznane.length) return { stan: 'blad', powod: 'nieznany_rodzaj', id: najmniejszy(nieznane) }; // M-15
+  // Niezmiennik schemat.sql (CHECK zdarzenia): ustawienie niesie nieujemną liczbę całkowitą, ±1 i zerowanie — bez wartości. Rekord z synchronizacji
+  // albo importu może go łamać, więc wynik, nie wyjątek (P-118 W1, Q1a; M-18–M-20).
+  const zle = wszystkie.filter((z) => (USTAWIA.has(z.rodzaj) ? !(typeof z.wartosc === 'number' && Number.isInteger(z.wartosc) && z.wartosc >= 0) : z.wartosc !== undefined && z.wartosc !== null)).map((z) => z.id);
+  if (zle.length) return { stan: 'blad', powod: 'zla_wartosc', id: najmniejszy(zle) };
   const wiele = wszystkie.filter((z) => z.rodzaj !== 'rozstrzygniecie' && z.rodzice.length > 1).map((z) => z.id);
   if (wiele.length) return { stan: 'blad', powod: 'wiele_rodzicow', id: najmniejszy(wiele) }; // M-09
   const brakujacy = new Set(wszystkie.flatMap((z) => z.rodzice.filter((r) => !mapa.has(r))));
@@ -64,8 +68,7 @@ export function scal(zdarzenia: ZdarzenieLicznika[]): WynikScalenia {
 /** Wartość licznika po zdarzeniu: ustawienie niesie wartość, zerowanie daje 0, ±1 od rodzica bez zejścia poniżej 0 (M-06). */
 function wartoscPo(z: ZdarzenieLicznika, wartosc: ReadonlyMap<string, number>): number {
   if (USTAWIA.has(z.rodzaj)) {
-    // Kontrakt 05 od fix-2 (P-118 W1): zamiast wyjątku wynik { stan: 'blad', powod: 'zla_wartosc' } sprawdzany przed przejściem (M-18–M-20); zmianę zachowania robi 08.
-    if (typeof z.wartosc !== 'number') throw new Error(`scal: zdarzenie ${z.id} (${z.rodzaj}) bez wartości`);
+    if (typeof z.wartosc !== 'number') throw new Error(`scal: zdarzenie ${z.id} (${z.rodzaj}) bez wartości`); // stan niemożliwy: zla_wartosc sprawdzone wyżej
     return z.wartosc;
   }
   if (z.rodzaj === 'zerowanie') return 0;

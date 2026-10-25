@@ -2,9 +2,8 @@
 // (odwrócona i 20 losowych z ziarnem) daje ten sam wynik, wejście nie jest modyfikowane, łańcuch 150 000 zdarzeń bez rekurencji.
 import { readFileSync } from 'node:fs'; import { pathToFileURL } from 'node:url';
 const { scal } = await import(process.env.SCAL_MODUL ? pathToFileURL(process.env.SCAL_MODUL).href : './scal.mjs'); // SCAL_MODUL: mutant (mutanty-scal.mjs)
-// scal-wektory-fix2.json (M-18–M-20, P-118 W1): kontrakt 05 dla zmiany zachowania src/domena/scal.ts; 08 przenosi je do scal-wektory.json
-// w commicie, który zmienia scal.ts (razem z licznością w tests/domena/licznik/scal.test.ts, 07) — do tego czasu czyta je tylko ten test.
-const W = ['./scal-wektory.json', './scal-wektory-fix2.json'].flatMap((p) => JSON.parse(readFileSync(new URL(p, import.meta.url))));
+// M-18–M-20 (P-118 W1) przeniesione z scal-wektory-fix2.json w commicie 08, który zmienia src/domena/scal.ts (P-119).
+const W = JSON.parse(readFileSync(new URL('./scal-wektory.json', import.meta.url)));
 let ok = 0, n = 0;
 let ziarno = 20261025; const los = () => ((ziarno = (ziarno * 1103515245 + 12345) % 2147483648) / 2147483648);
 const tasuj = (a) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(los() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };

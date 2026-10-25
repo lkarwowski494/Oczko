@@ -11,7 +11,7 @@ import { licznikWektorow, wywolaj, opcjeWlasnosci } from '../../narzedzia/akcept
 
 const L = 'licznik-1';
 type ZdarzenieWektora = { id: string; rodzaj: string; wartosc?: number; rodzice: string[]; cofa?: string[] };
-type WektorScalenia = { id: string; opis: string; zdarzenia: ZdarzenieWektora[]; oczekiwane: { stan: string; wartosc?: number; wartosci?: number[]; kandydaci?: Record<string, number>; powod?: string } };
+type WektorScalenia = { id: string; opis: string; zdarzenia: ZdarzenieWektora[]; oczekiwane: { stan: string; wartosc?: number; wartosci?: number[]; kandydaci?: Record<string, number>; powod?: string; id?: string } };
 const WEKTORY = wektoryJson as unknown as WektorScalenia[];
 
 /** Zdarzenie wektora → typ domeny (wektory nie podają `licznik`; `cofa` z M-08 zostaje jako pole dodatkowe). */
@@ -43,7 +43,7 @@ function brakujacyJakoZbior(w: WynikScalenia): WynikScalenia {
 const KANDYDACI: Record<string, Record<string, number>> = { 'M-04': { t1: 11, z2: 12 } };
 // NZ-05-04 (08, partia 1): wektory 05 podają mapę `kandydaci` w `oczekiwane` (M-04, M-10b, M-16) — ona ma pierwszeństwo; M-04 zgodna z mapą wyżej.
 
-describe('NFR-DAN-003 scal: wektory M-01–M-17 (scal-wektory.json)', () => {
+describe('NFR-DAN-003 scal: wektory M-01–M-20 (scal-wektory.json)', () => {
   const licznik = licznikWektorow();
   test.each(WEKTORY.map((w) => [`NFR-DAN-003 ${w.id} ${w.opis} → ${w.oczekiwane.stan}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
@@ -58,7 +58,7 @@ describe('NFR-DAN-003 scal: wektory M-01–M-17 (scal-wektory.json)', () => {
         expect(jakoZbiory(wynik)).toEqual({ stan: 'czeka', brakujacy });
       } else if (w.oczekiwane.stan === 'blad') {
         // Z07-13 (moduly.md „Scalanie”): błąd danych z powodem; `id` = najmniejsze winne (wektor go nie podaje).
-        expect(wynik).toMatchObject({ stan: 'blad', powod: w.oczekiwane.powod });
+        expect(wynik).toMatchObject({ stan: 'blad', powod: w.oczekiwane.powod, ...(w.oczekiwane.id ? { id: w.oczekiwane.id } : {}) }); // id winnego, gdy wektor je podaje (05 fix-2)
       } else {
         const mapa = w.oczekiwane.kandydaci ?? KANDYDACI[w.id];
         if (w.oczekiwane.kandydaci && KANDYDACI[w.id]) expect(w.oczekiwane.kandydaci).toEqual(KANDYDACI[w.id]);
@@ -75,7 +75,7 @@ describe('NFR-DAN-003 scal: wektory M-01–M-17 (scal-wektory.json)', () => {
   });
   test(`NFR-DAN-003 liczność: wykonano ${WEKTORY.length} z ${WEKTORY.length} wektorów M-* (pusty zbiór = porażka)`, () => {
     // NZ-05-04: lista po fixie 05 (Z07-11, Z07-13, ER-41, ER-42); brak albo nadmiar wektora = porażka.
-    expect(WEKTORY.map((w) => w.id)).toEqual(['M-01', 'M-02', 'M-03', 'M-04', 'M-05', 'M-06', 'M-07', 'M-07b', 'M-08', 'M-08b', 'M-09', 'M-10', 'M-10b', 'M-12', 'M-13', 'M-14', 'M-15', 'M-16', 'M-17']);
+    expect(WEKTORY.map((w) => w.id)).toEqual(['M-01', 'M-02', 'M-03', 'M-04', 'M-05', 'M-06', 'M-07', 'M-07b', 'M-08', 'M-08b', 'M-09', 'M-10', 'M-10b', 'M-12', 'M-13', 'M-14', 'M-15', 'M-16', 'M-17', 'M-18', 'M-19', 'M-20']); // M-18–M-20: P-118 W1, P-119
     licznik.wynik(WEKTORY.length);
   });
 });
