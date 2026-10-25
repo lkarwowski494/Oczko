@@ -30,7 +30,7 @@ Typu **M** brak: limit dni to limit użyć, nie okres próbny (MON-01 bez zmian)
 Agent: ok. 2,5–3 h (4 commity z ID, testy czerwone, mutanty przed/po, KP, E2). Oczekiwanie: brak. Koordynator: 6 wyborów + weto 7 (ok. 5 min). Właściciel: przy konfiguracji App Store Connect włączenie karencji, jeśli (2a).
 
 ### E2 dowody (STOP, 2026-10-25)
-Decyzje E0: P-103 (1a–6a, weto 7 przyjęte, Z07-01 i Z07-02 dołączone). Dowody: `oczko-warsztat/02-monetyzacja/2026-10-25-fix-z07/E2-dowody.md` (`sprawdz-raport` kod 0). Jeden commit na ID: Z07-07 cb9f702, L-19 3bc0a14, Z07-09 33b830c, Z07-08 b8d7cd6, Z07-02 bfc1689 (+ 1d44c95), Z07-01 9071049.
+Decyzje E0: P-103 (1a–6a, weto 7 przyjęte, Z07-01 i Z07-02 dołączone). Dowody: `oczko-warsztat/02-monetyzacja/2026-10-25-fix-z07/E2-dowody.md` (`sprawdz-raport` kod 0). Jeden commit na ID: Z07-07 cb9f702, L-19 3bc0a14, Z07-09 33b830c, Z07-08 b8d7cd6, Z07-02 bfc1689 (+ 872ca55), Z07-01 9071049.
 | Kontrola | Przed | Po |
 |---|---|---|
 | `node docs/monetyzacja/limit-test.mjs` | 35/35 (słabe: 7 mutantów przeżywa) | 77/77 + własności (strefa, Pro, duplikaty, przemienność scalenia, cytaty BRD) |
