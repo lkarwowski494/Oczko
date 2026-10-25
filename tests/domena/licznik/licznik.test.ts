@@ -1,8 +1,8 @@
 // RD-12 (powtórzenie i rząd w powtórzeniu), BR-LIC-007, BR-LIC-008, BR-LIC-012 — poziom domena-Node.
 // Wyrocznia: tests/wektory/brd.json (RD-12-W1…W5), scenariusze BRD (docs/brd/wymagania-licznik.md) policzone wzorem RD-12.
 // RD-12-W4 (r = 0 → błąd danych) zgodnie z BRD; ER-40 proponuje „powtórzenie 1, rząd 0” — otwarte, wektor zmieni rola 01.
-import { powtorzenie, wartoscWyswietlana } from '../../../../src/domena/licznik';
-import { wektoryReguly, liczba, licznikWektorow, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
+import { powtorzenie, wartoscWyswietlana } from '../../../src/domena/licznik';
+import { wektoryReguly, liczba, licznikWektorow, BLAD_DANYCH } from '../../narzedzia/akceptacja';
 
 const KRYTERIA_RD12: Record<string, string> = {
   'RD-12-W1': 'BR-LIC-007/S1',

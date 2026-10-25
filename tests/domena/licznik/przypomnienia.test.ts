@@ -2,8 +2,8 @@
 // Wyrocznia: tests/wektory/brd.json RD-13-W1…W5 + własność ze wzoru RD-13 (rachunek na liczbach całkowitych w teście).
 // Przeskok wartości (wpisanie 10 → 20, R-015) nie ma reguły: ER-40 otwarte, poza tym plikiem.
 import fc from 'fast-check';
-import { czyPrzypomnienie } from '../../../../src/domena/przypomnienia';
-import { wektoryReguly, liczba, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci } from '../../../narzedzia/akceptacja';
+import { czyPrzypomnienie } from '../../../src/domena/przypomnienia';
+import { wektoryReguly, liczba, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 const KRYTERIA_RD13: Record<string, string> = {
   'RD-13-W1': 'BR-LIC-009/S1',
