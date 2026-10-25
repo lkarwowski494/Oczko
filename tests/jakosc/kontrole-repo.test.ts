@@ -47,9 +47,15 @@ describe('kontrole-repo.mjs (strategia §10, kontrola 05-8, P-089)', () => {
     expect(w.stdout).toContain('naruszeń 0');
     expect(w.status).toBe(0);
   });
-  test('R-171 testy i kod 0.1.0 są poza zakresem nowego kodu', () => {
-    const w = uruchom(KONTROLE, repo({ 'src/core/database.ts': "open(':memory:')", 'src/dane/__tests__/x.test.ts': "open(':memory:')" }));
+  test('R-171 testy są poza zakresem nowego kodu', () => {
+    const w = uruchom(KONTROLE, repo({ 'src/dane/__tests__/x.test.ts': "open(':memory:')" }));
     expect(w.status).toBe(0);
+  });
+  // F07-08 (P-117 Q5a): kod 0.1.0 usunięty (P-099 D1a) nie wraca; wcześniej był poza zakresem (wyjątek DS-13) i tryb --stary go raportował.
+  test.each(['src/core/database.ts', 'src/components/Przycisk.tsx', 'src/screens/Start.tsx', 'lib/i18n.ts'])('R-171 F07-08 pułapka: plik 0.1.0 %s pada (STARY-KOD-WRACA)', (plik) => {
+    const w = uruchom(KONTROLE, repo({ [plik]: 'export const x = 1;' }));
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain('STARY-KOD-WRACA');
   });
   test('R-171 package.json: expo-updates, SDK awarii i nieprzypięta wersja padają', () => {
     const w = uruchom(KONTROLE, repo({ 'package.json': JSON.stringify({ dependencies: { 'expo-updates': '1.0.0', '@sentry/react-native': '6.0.0', 'expo-iap': '^5.8.1', 'expo-av': '1.0.0' } }) }));

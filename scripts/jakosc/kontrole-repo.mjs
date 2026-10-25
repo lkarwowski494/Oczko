@@ -1,17 +1,17 @@
 // Kontrole repo roli 07 (docs/jakosc/strategia.md §10: kontrole 05-8, 12, P-089). Każda reguła ma w tests/jakosc/kontrole-repo.test.ts
 // przypadek dobry i plik-pułapkę, na którym pada. Kod 0.1.0 (src/core, src/components, src/screens, lib) był poza zakresem (wyjątek DS-13);
-// rola 08 usunęła go w partii porządkowej (P-099 D1a), a `app` (korzeń expo-router) jest w zakresie (P-114 Q4a). `--stary` zostaje do decyzji 07.
-// Użycie: node scripts/jakosc/kontrole-repo.mjs [--katalog <korzeń>] [--stary]   (kod 0 = brak naruszeń, 1 = naruszenia, 2 = zły korzeń)
+// rola 08 usunęła go w partii porządkowej (P-099 D1a), a `app` (korzeń expo-router) jest w zakresie (P-114 Q4a). Tryb `--stary` usunięty (P-117 Q5a):
+// sprawdzał katalogi, których już nie ma, i raportował „0 naruszeń”; w zamian STARY-KOD-WRACA — katalogi 0.1.0 nie mogą wrócić.
+// Użycie: node scripts/jakosc/kontrole-repo.mjs [--katalog <korzeń>]   (kod 0 = brak naruszeń, 1 = naruszenia, 2 = zły korzeń)
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { createHash } from 'node:crypto';
 
 const arg = (n) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : null; };
 const korzen = arg('--katalog') ?? process.cwd();
-const stary = process.argv.includes('--stary');
 
 export const NOWY_KOD = ['src/domena', 'src/dane', 'src/przypadki-uzycia', 'src/platforma', 'src/ekrany', 'src/komponenty', 'src/konfiguracja.ts', 'app', 'modules', 'targets'];
-export const STARY_KOD = ['src/core', 'src/components', 'src/screens', 'lib'];
+export const STARY_KOD = ['src/core', 'src/components', 'src/screens', 'lib']; // katalogi 0.1.0: nie mogą wrócić (STARY-KOD-WRACA)
 const TEST = /(^|\/)(__tests__|tests?)\/|\.(test|spec)\.[jt]sx?$/;
 const EXT = /\.(ts|tsx|js|jsx|mjs|swift|json)$/;
 
@@ -53,6 +53,7 @@ const rel = (p) => relative(korzen, p).split(sep).join('/');
 
 export function sprawdz(korzenKatalog, zakres) {
   const naruszenia = [];
+  for (const k of STARY_KOD) if (existsSync(join(korzenKatalog, k))) naruszenia.push(`STARY-KOD-WRACA ${k} — kod 0.1.0 usunięty (P-099 D1a); nowy kod tylko w ${NOWY_KOD.slice(0, 7).join(', ')}… (P-117 Q5a)`);
   const wyjatkiPlik = join(korzenKatalog, 'scripts/jakosc/wyjatki.json');
   const wyjatki = existsSync(wyjatkiPlik) ? JSON.parse(readFileSync(wyjatkiPlik, 'utf8')).kontrole ?? [] : [];
   const zwolniony = (r, p) => wyjatki.some((w) => w.regula === r && w.plik === p);
@@ -117,8 +118,8 @@ export function sprawdz(korzenKatalog, zakres) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   if (!existsSync(join(korzen, 'package.json'))) { console.log(`BŁĄD ${korzen}: brak package.json — zły korzeń repo`); process.exit(2); }
-  const naruszenia = sprawdz(korzen, stary ? STARY_KOD : NOWY_KOD);
+  const naruszenia = sprawdz(korzen, NOWY_KOD);
   for (const n of naruszenia) console.log(n);
-  console.log(`${stary ? 'kod 0.1.0 (informacja)' : 'nowy kod'}: naruszeń ${naruszenia.length}`);
-  process.exit(stary ? 0 : naruszenia.length ? 1 : 0);
+  console.log(`nowy kod: naruszeń ${naruszenia.length}`);
+  process.exit(naruszenia.length ? 1 : 0);
 }
