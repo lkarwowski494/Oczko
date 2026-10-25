@@ -280,7 +280,7 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Gdy użytkownik udostępnia go do Oczka
     - Wtedy wzór jest w projekcie i otwiera się bez sieci
   - Scenariusz: Strona, której nie da się zapisać
-    - Zakładając, że strona wymaga logowania albo nie ma treści wzoru
+    - Zakładając, że strona odpowiada kodem 401 albo 403 (wymaga logowania) albo po zapisie nie ma w niej tekstu ani obrazu (ER-36)
     - Gdy użytkownik udostępnia ją do Oczka
     - Wtedy aplikacja pokazuje, że nie może zapisać strony, i nie tworzy pustego wzoru
   - Scenariusz: Link do filmu

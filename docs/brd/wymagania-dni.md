@@ -111,12 +111,12 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
 
 ### BR-DNI-006: Który projekt dziś: kolejność według terminu
 - Przepływ: PR-16 · Reguła: RD-15
-- Dowód potrzeby: J-11, J-02; „進捗を参照して隙間時間をどう使うか配分したい” (編み物カウンター２, id12060415068); kilka projektów naraz (P-2) · ER-12 (I-3, P-044); jako kolejność listy projektów, nie osobny ekran (P-046)
+- Dowód potrzeby: J-11, J-02; „進捗を参照して隙間時間をどう使うか配分したい” (編み物カウンター２, id12060415068); kilka projektów naraz (P-2) · ER-12 (I-3, P-044); jako kolejność listy projektów, nie osobny ekran (P-046) · ER-36: kolejność według P-048 (4): najpierw projekty po terminie, potem z terminem według celu na dziś malejąco, na końcu bez terminu według ostatniej pracy (BR-PRJ-012)
 - Kryteria akceptacji:
   - Scenariusz: Projekty z terminem na górze
     - Zakładając, że „Czapka” ma cel na dziś 20 rzędów, „Szal” 8 rzędów, a „Sweter” nie ma terminu
     - Gdy użytkownik otwiera listę projektów w toku
-    - Wtedy kolejność to „Czapka”, „Szal”, „Sweter”, a przy projektach z terminem widać cel na dziś
+    - Wtedy kolejność to „Czapka”, „Szal”, „Sweter” (z terminem według celu na dziś malejąco, P-048 (4)), a przy projektach z terminem widać cel na dziś
   - Scenariusz: Termin minął
     - Zakładając, że termin „Szala” minął, a zostało 10 rzędów
     - Gdy użytkownik otwiera listę

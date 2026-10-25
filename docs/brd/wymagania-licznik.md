@@ -63,11 +63,11 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 - Kryteria akceptacji:
   - Scenariusz: Licznik zablokowany
     - Zakładając, że licznik ma wartość 15 i jest zablokowany
-    - Gdy telefon dotknie kolana albo stołu w miejscu przycisku dodawania
-    - Wtedy licznik nadal pokazuje 15
+    - Gdy przycisk dodawania dostaje stuknięcie, np. od kolana albo stołu (ER-36)
+    - Wtedy licznik nadal pokazuje 15, a historia nie ma nowej zmiany
   - Scenariusz: Odblokowanie
     - Zakładając, że licznik jest zablokowany
-    - Gdy użytkownik odblokowuje go świadomym gestem
+    - Gdy użytkownik wybiera odblokowanie na pasku blokady licznika (ER-36; miejsce i tekst: rola 04)
     - Wtedy dodanie rzędu znów zmienia wartość
   - Scenariusz: Stuknięcie w zablokowany licznik (ER-24)
     - Zakładając, że licznik ma wartość 15 i jest zablokowany
@@ -86,10 +86,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że w tle gra podcast z innej aplikacji
     - Gdy użytkownik dodaje rząd
     - Wtedy telefon potwierdza zmianę wibracją, a podcast gra dalej bez przerwy
-  - Scenariusz: Dźwięk wyłączony
-    - Zakładając, że użytkownik wyłączył dźwięki aplikacji
-    - Gdy dodaje rząd
-    - Wtedy aplikacja nie odtwarza żadnego dźwięku
+  - Scenariusz: Bez dźwięku (ER-36)
+    - Zakładając, że licznik ma instrukcję przypomnienia (BR-LIC-009)
+    - Gdy użytkownik dodaje rząd, odejmuje rząd albo dostaje przypomnienie
+    - Wtedy aplikacja nie odtwarza żadnego dźwięku; sygnałem jest tylko wibracja (P-097 (2a), F-48, S-17)
 
 ### BR-LIC-006: Kilka liczników w projekcie
 - Przepływ: PR-03
@@ -359,7 +359,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
   - Scenariusz: Koniec powtórzenia i cel dnia
     - Zakładając powtórzenie 8 rzędów i cel dnia 13 rzędów (BR-DNI-005)
     - Gdy licznik kończy powtórzenie albo osiąga cel dnia
-    - Wtedy telefon wibruje wzorem przypisanym do tego zdarzenia, innym niż wzór rzędu
+    - Wtedy telefon wibruje wzorem przypomnienia, innym niż wzór rzędu; aplikacja ma tylko te dwa wzorce (F-48, ER-36)
   - Scenariusz: Wibracje wyłączone
     - Zakładając, że użytkownik wyłączył wibracje w aplikacji
     - Gdy następuje dowolne z tych zdarzeń
