@@ -1,7 +1,9 @@
 # Stan roli 07-jakosc — fix NZ-08-P1-07 (2026-10-25)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P1-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2026-10-25.md`.
-- E0 plan: **STOP** (Q1–Q6 do koordynatora wg P-087). Wejście 9ea0b80: verify 1278/1278.
-- Następny krok: po odpowiedzi E1 (F07-01 … F07-09, jeden commit na ID).
+- E0 plan: przyjęty (P-117: Q1a–Q6a). E1: F07-01…F07-09 naprawione-do-weryfikacji, commity dcb3d2e…91f7e64 (jeden na ID; F07-06 w dwóch: skrypt, potem bramka po zielonym CI).
+- E2 dowody: **STOP** — `oczko-warsztat/07-jakosc/2026-10-25-fix/E2-dowody.md` (`sprawdz-raport` OK). Wejście 9ea0b80: verify 1278/1278; wyjście 91f7e64: verify 1323/1323.
+- Nowe kontrole w `jakosc:kontrole`: `licencje.mjs`, `mutanty-e1.mjs`, `tabela-08.mjs --check`; w testach: `tests/jakosc/marki.test.ts` (zapadka nazw, P-107), `tests/wydanie/repo-wydanie.test.ts` (wyjątek roli 10).
+- Następny krok: decyzja koordynatora o E2; zgłoszenia dla 05, 08, 10, 07 audit w E2-dowody §„Zgłoszenia”.
 
 # Stan roli 07-jakosc (build)
 Aktualizacja: 2026-10-25 · Gałąź `claude/jolly-thompson-paz6d8` · Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb build --galaz claude/jolly-thompson-paz6d8`; moduły e2e-mobilne, geo-slady, wlasnosci-i-domena, wydanie; 64 487 znaków)
