@@ -1,21 +1,24 @@
 // Projekt, części, kosz 30 dni i sprzątanie (moduly.md „Projekt”, ADR-0013, P-026, P-047 (7), P-072): ścieżki ŚU-14, ŚU-15, ŚU-19, ŚU-22 (dane.md),
 // BR-DAN-008/S1–S4, BR-DAN-009/S1, BR-PRJ-*. Wyrocznie: BRD (wymagania-dane.md, wymagania-projekt.md), dane.md, P-026, P-072, konfiguracja (KOSZ_DNI, SESJA_MAKS_H).
-import { migruj } from '../../../src/dane/migracje/migruj';
-import { listaProjektow } from '../../../src/dane/repozytoria/projekty';
-import { KOSZ_DNI, SESJA_MAKS_H } from '../../../src/konfiguracja';
-import { sprzatnijKosz } from '../../../src/przypadki-uzycia/kosz';
-import { dodajRzad } from '../../../src/przypadki-uzycia/licznik';
+import { migruj } from '../../src/dane/migracje/migruj';
+import { listaProjektow } from '../../src/dane/repozytoria/projekty';
+import { KOSZ_DNI, SESJA_MAKS_H } from '../../src/konfiguracja';
+import { sprzatnijKosz } from '../../src/przypadki-uzycia/kosz';
+import { dodajRzad } from '../../src/przypadki-uzycia/licznik';
 import {
   dodajCzescPara, przywrocCzesc, przywrocLicznik, przywrocProjekt, usunCzesc, usunLicznik, usunProjekt, usunWszystkieDane,
   utworzProjekt, zakonczProjekt, zapiszNotatke, zmienDateUkonczenia, zrobPonownie,
-} from '../../../src/przypadki-uzycia/projekt';
-import { uruchomDane } from '../../../src/przypadki-uzycia/start';
-import { utworzPortNode } from '../../../src/dane/baza/adapter-node';
+} from '../../src/przypadki-uzycia/projekt';
+import { uruchomDane } from '../../src/przypadki-uzycia/start';
+import { utworzPortNode } from '../../src/dane/baza/adapter-node';
 import { join } from 'node:path';
-import { czesc, dzienLimitu, licznik, plik, projekt, przypomnienie, sesja, wzor, zycie, type Instr } from '../../dane/pomocnicze/dane-wejsciowe';
-import { DOBA, GODZ, MIN, T0, ile, jeden, licznosci, migawka, przygotuj, wlozPlik, wykonaj } from '../../dane/pomocnicze/srodowisko';
+import { czesc, dzienLimitu, licznik, plik, projekt, przypomnienie, sesja, wzor, zycie, type Instr } from './pomocnicze/dane-wejsciowe';
+import { DOBA, GODZ, MIN, T0, ile, jeden, licznosci, migawka, przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
 
 const OK = { ok: true, wartosc: undefined };
+/** Warunek wstępny W2 (P-118, P-120 Q3a): poprzedni start aplikacji teraz — sprzątanie wymaga dwóch startów po terminie (moduly.md). */
+const poprzedniStartTeraz = (s: Awaited<ReturnType<typeof przygotuj>>) =>
+  s.baza.run("INSERT INTO ustawienie (klucz, wartosc, zmieniono_ms) VALUES ('ostatni_start_ms', ?, ?) ON CONFLICT (klucz) DO UPDATE SET wartosc = excluded.wartosc", [String(s.zegar.teraz().ms), s.zegar.teraz().ms]);
 const SWETER: Instr[] = [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Rękaw lewy', 1, { cel: 96 }), czesc('c2', 'p1', 'Przód', 2), ...licznik('l1', 'c1', 18, { rodzaj: 'oczka' }), ...licznik('l2', 'c1', 40, { kolejnosc: 2 }), ...licznik('l3', 'c2', 7), przypomnienie('r1', 'l2')];
 const daneProjektu = async (b: Parameters<typeof ile>[0]) => ({
   czesc: await ile(b, 'czesc', "projekt_id = 'p1'"),
@@ -33,6 +36,7 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
     await wykonaj(s.baza, SWETER);
     expect(await usunProjekt(s.z, { projektId: 'p1' })).toEqual(OK);
     s.zegar.przesun(dni * DOBA);
+    await poprzedniStartTeraz(s);
     const w = await sprzatnijKosz(s.z);
     expect(w).toMatchObject({ ok: true, wartosc: { projekty: 1 - zostaje } });
     expect(await ile(s.baza, 'projekt', "id = 'p1'")).toBe(zostaje);
@@ -42,6 +46,7 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
   test('ŚU-14 BR-DAN-008/S1: usunięty projekt po 29 dniach przywrócony ze wszystkimi danymi (części, liczniki, historia, przypomnienia)', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, SWETER);
+    await poprzedniStartTeraz(s); // przed migawką: porównanie obejmuje tabelę ustawienie
     const przed = await migawka(s.baza, ['projekt', 'blad']);
     const p = await daneProjektu(s.baza);
     await usunProjekt(s.z, { projektId: 'p1' });
@@ -58,6 +63,7 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
     await wykonaj(s.baza, [...SWETER, dzienLimitu('2026-10-01', 'l2-z1'), dzienLimitu('2026-10-02', 'l2-z2')]);
     await usunProjekt(s.z, { projektId: 'p1' });
     s.zegar.przesun(KOSZ_DNI * DOBA);
+    await poprzedniStartTeraz(s);
     await sprzatnijKosz(s.z);
     expect(await ile(s.baza, 'projekt')).toBe(0);
     expect(await s.baza.all('SELECT dzien FROM dzien_limitu ORDER BY dzien')).toEqual([{ dzien: '2026-10-01' }, { dzien: '2026-10-02' }]);
@@ -68,6 +74,7 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
     await wykonaj(s.baza, SWETER);
     expect(await usunLicznik(s.z, { licznikId: 'l1' })).toEqual(OK);
     s.zegar.przesun(10 * DOBA);
+    await poprzedniStartTeraz(s);
     await sprzatnijKosz(s.z);
     expect(await przywrocLicznik(s.z, { licznikId: 'l1' })).toEqual(OK);
     expect(await jeden(s.baza, "SELECT wartosc, rodzaj, usunieto_ms FROM licznik WHERE id = 'l1'")).toEqual({ wartosc: 18, rodzaj: 'oczka', usunieto_ms: null });
@@ -80,6 +87,7 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
     const przed = await s.baza.all("SELECT id, wartosc, glowa FROM licznik WHERE czesc_id = 'c1' ORDER BY id");
     expect(await usunCzesc(s.z, { czescId: 'c1' })).toEqual(OK);
     s.zegar.przesun(KOSZ_DNI * DOBA - MIN);
+    await poprzedniStartTeraz(s);
     await sprzatnijKosz(s.z);
     expect(await przywrocCzesc(s.z, { czescId: 'c1' })).toEqual(OK);
     expect(await jeden(s.baza, "SELECT usunieto_ms FROM czesc WHERE id = 'c1'")).toEqual({ usunieto_ms: null });
@@ -96,6 +104,7 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
       projekt('aktywny', 'Aktywny'), wzor('w3', 'aktywny', B),
       projekt('kosz', 'W koszu', T0, { usunieto: T0 - 10 * DOBA }), wzor('w4', 'kosz', C),
     ]);
+    await poprzedniStartTeraz(s);
     expect(await sprzatnijKosz(s.z)).toMatchObject({ ok: true, wartosc: { projekty: 1, pliki: 1 } });
     expect(s.magazyn.usuniete).toEqual([A]);
     expect((await s.baza.all<{ sha256: string }>('SELECT sha256 FROM plik ORDER BY sha256')).map((r) => r.sha256)).toEqual([B, C].sort());

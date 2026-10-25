@@ -11,14 +11,17 @@ export const blad = (powod: Powod): { ok: false; powod: Powod } => ({ ok: false,
 export const OK: Wynik<void> = { ok: true, wartosc: undefined };
 export const czyBladDanych = (e: unknown): boolean => typeof e === 'object' && e !== null && 'kod' in e && e.kod === 'BLAD_DANYCH';
 
+/** Transakcja z obsługą błędu, bez kolejki: dla pozycji kolejki, które składają kilka kroków (start, eksport, import). */
+export async function wTransakcji<T>(z: Pick<Zaleznosci, 'baza' | 'zegar'>, operacja: string, fn: (tx: PortBazy, terazMs: number) => Promise<Wynik<T>>): Promise<Wynik<T>> {
+  const teraz = z.zegar.teraz().ms;
+  try {
+    return await z.baza.transakcja((tx) => fn(tx, teraz));
+  } catch (e) {
+    await zapiszBlad(z.baza, { czasMs: teraz, kod: `zapis_${operacja}`, szczegoly: { sqlite: kodBledu(e) } });
+    return blad(czyBladDanych(e) ? 'bledne_dane' : 'zapis');
+  }
+}
+/** Jedna operacja zapisu jako pozycja kolejki przypadków użycia. */
 export function operacjaZapisu<T>(z: Pick<Zaleznosci, 'baza' | 'zegar'>, operacja: string, fn: (tx: PortBazy, terazMs: number) => Promise<Wynik<T>>): Promise<Wynik<T>> {
-  return wKolejce(z.baza, async () => {
-    const teraz = z.zegar.teraz().ms;
-    try {
-      return await z.baza.transakcja((tx) => fn(tx, teraz));
-    } catch (e) {
-      await zapiszBlad(z.baza, { czasMs: teraz, kod: `zapis_${operacja}`, szczegoly: { sqlite: kodBledu(e) } });
-      return blad(czyBladDanych(e) ? 'bledne_dane' : 'zapis');
-    }
-  });
+  return wKolejce(z.baza, () => wTransakcji(z, operacja, fn));
 }

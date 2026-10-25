@@ -20,10 +20,13 @@ export function przejdzProjekt(p: Projekt, z: ZdarzenieProjektu, terazMs: number
   }
 }
 /**
- * Sprzątanie przy starcie: true, gdy projekt usunięty co najmniej KOSZ_DNI temu; zegar cofnięty (teraz < usunieto_ms) niczego nie usuwa.
- * Kontrakt 05 od fix-2 (P-118 W2): warunek dwóch startów w tej funkcji — `doSprzatniecia(p, terazMs, ostatniStartMs: number | null, koszDni)`,
- * wyrocznia: tabela „Funkcja sprzątania kosza” w moduly.md; zmianę sygnatury i zachowania robi 08.
+ * Sprzątanie przy starcie (P-118 W2, P-110 Q5a): true tylko, gdy projekt usunięty, `usunietoMs ≤ ostatniStartMs ≤ terazMs` i od usunięcia minęło
+ * co najmniej `koszDni` dni zarówno teraz, jak i przy poprzednim starcie — jednorazowy skok zegara w przód nie kasuje, zegar cofnięty nie kasuje,
+ * brak poprzedniego startu (`null`) czeka na następny. Wyrocznia: tabela „Funkcja sprzątania kosza” w moduly.md.
  */
-export function doSprzatniecia(p: Projekt, terazMs: number, koszDni: number): boolean {
-  return p.usunietoMs !== null && terazMs >= p.usunietoMs && terazMs - p.usunietoMs >= koszDni * 86_400_000;
+export function doSprzatniecia(p: Projekt, terazMs: number, ostatniStartMs: number | null, koszDni: number): boolean {
+  const u = p.usunietoMs;
+  if (u === null || ostatniStartMs === null) return false;
+  const d = koszDni * 86_400_000;
+  return u <= ostatniStartMs && ostatniStartMs <= terazMs && terazMs - u >= d && ostatniStartMs - u >= d;
 }

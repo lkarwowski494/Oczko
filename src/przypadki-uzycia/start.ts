@@ -1,16 +1,54 @@
 // Start i powrót na pierwszy plan (ADR-0008, ADR-0015, ADR-0019, P-072 (7a), Z07-11).
-// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciała: zaślepki roli 07 (E3).
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22).
 import type { Wynik } from '../domena/bledy';
-import { niezaimplementowane } from '../domena/zaslepka';
+import { przejdzSesje, type Sesja } from '../domena/maszyny/sesja';
+import { SESJA_MAKS_H } from '../konfiguracja';
+import { zapiszUstawienie } from '../dane/repozytoria/ustawienia';
+import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
 import { scalDziennikWKolejce } from './dziennik';
+import { sprzatnijKoszWKolejce } from './kosz';
 import { wKolejce } from './kolejka';
+import { wTransakcji } from './zapis';
 import type { ZaleznosciDziennika, ZaleznosciStartu } from './zaleznosci';
 
 export type WynikStartuDanych = { migracja: { z: number; do: number }; scalono: number; sprzatnieto: number; domknieteSesje: number };
-/** Kolejność: migruj → scalDziennik → domknięcie zapomnianych sesji (SESJA_MAKS_H) → sprzatnijKosz. */
-export function uruchomDane(_z: ZaleznosciStartu): Promise<Wynik<WynikStartuDanych>> {
-  return niezaimplementowane('NFR-DAN-001 uruchomDane');
+
+/** Zapomniany stoper (P-072 (7a)): sesja „trwa” od co najmniej SESJA_MAKS_H kończy się na start + SESJA_MAKS_H z `do_korekty = 1`. */
+function domknijSesje(z: ZaleznosciStartu): Promise<Wynik<number>> {
+  return wTransakcji(z, 'domknijSesje', async (tx, teraz) => {
+    let n = 0;
+    for (const r of await wiersze(tx.all("SELECT id, start_ms, wstrzymano_ms, przerwy_ms FROM sesja WHERE stan = 'trwa'"), 'domknijSesje')) {
+      const s: Sesja = { stan: 'trwa', startMs: liczba(r, 'start_ms'), wstrzymanoMs: liczbaLubNull(r, 'wstrzymano_ms'), przerwyMs: liczba(r, 'przerwy_ms'), koniecMs: null, skorygowano: false, doSprawdzenia: false };
+      const w = przejdzSesje(s, { rodzaj: 'start_aplikacji' }, teraz, SESJA_MAKS_H);
+      if (!w.ok || w.wartosc.stan !== 'zakonczona') continue;
+      await tx.run("UPDATE sesja SET stan = 'zakonczona', koniec_ms = ?, do_korekty = 1 WHERE id = ?", [w.wartosc.koniecMs, tekst(r, 'id')]);
+      n += 1;
+    }
+    return { ok: true, wartosc: n };
+  });
 }
+
+/** Kolejność: migruj → scalDziennik → domknięcie zapomnianych sesji (SESJA_MAKS_H) → sprzatnijKosz; na końcu `ostatni_start_ms` (P-110 Q5a). */
+export function uruchomDane(z: ZaleznosciStartu): Promise<Wynik<WynikStartuDanych>> {
+  return wKolejce(z.baza, async () => {
+    const migracja = await z.migruj(z.baza);
+    if (!migracja.ok) return migracja; // baza nowsza albo błąd migracji: dalej nic (ekran awaryjny, ADR-0019)
+    const scalono = await scalDziennikWKolejce(z);
+    if (!scalono.ok) return scalono;
+    const sesje = await domknijSesje(z);
+    if (!sesje.ok) return sesje;
+    const kosz = await sprzatnijKoszWKolejce(z); // czyta ostatni_start_ms poprzedniego startu, zanim zapiszemy bieżący
+    if (!kosz.ok) return kosz;
+    const start = await wTransakcji(z, 'ostatniStart', async (tx, teraz) => {
+      await zapiszUstawienie(tx, 'ostatni_start_ms', teraz, teraz);
+      return { ok: true, wartosc: undefined };
+    });
+    if (!start.ok) return start;
+    const k = kosz.wartosc;
+    return { ok: true, wartosc: { migracja: migracja.wartosc, scalono: scalono.wartosc.scalono, sprzatnieto: k.projekty + k.czesci + k.liczniki, domknieteSesje: sesje.wartosc } };
+  });
+}
+
 /** `AppState → active`: scalenie dziennika w kolejce przed pierwszym zapisem po powrocie (Z07-11, R-020). */
 export function naPierwszyPlan(z: ZaleznosciDziennika): Promise<Wynik<{ scalono: number }>> {
   // Pozycja kolejki powstaje synchronicznie w chwili wywołania, więc zapis z ekranu wywołany później jej nie wyprzedzi (ADR-0008 (2)).

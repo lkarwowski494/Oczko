@@ -53,10 +53,10 @@ describe('BR-DAN-008 P-026 doSprzatniecia: kosz KOSZ_DNI dni (granica włączna)
     ['30 dni (= KOSZ_DNI) → sprzątnięty', KOSZ_DNI * DOBA, true],
     ['31 dni → sprzątnięty', 31 * DOBA, true],
   ] as const)('BR-DAN-008 P-026 usunięty %s', (_n, msTemu, oczek) => {
-    expect(doSprzatniecia(usuniety(msTemu), TERAZ, KOSZ_DNI)).toBe(oczek);
+    expect(doSprzatniecia(usuniety(msTemu), TERAZ, TERAZ, KOSZ_DNI)).toBe(oczek); // poprzedni start = teraz (P-118 W2; P-120 Q4a)
   });
   test('BR-DAN-008 projekt nieusunięty (usunieto_ms = NULL) nigdy do sprzątnięcia', () => {
-    expect(doSprzatniecia({ stan: 'ukonczony', ukonczonoMs: T0 - 400 * DOBA, usunietoMs: null }, TERAZ, KOSZ_DNI)).toBe(false);
+    expect(doSprzatniecia({ stan: 'ukonczony', ukonczonoMs: T0 - 400 * DOBA, usunietoMs: null }, TERAZ, TERAZ, KOSZ_DNI)).toBe(false);
   });
 });
 
