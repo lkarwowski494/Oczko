@@ -8,11 +8,23 @@ export const PRZERWA_MS = 60 * 60 * 1000; // D3: +1 po północy otwiera nowy dz
 
 const DATA = /^\d{4}-\d{2}-\d{2}$/;
 
+// Błąd danych wejściowych (Z07-07, R-178): test i wołający rozpoznają go po kodzie, nie po dowolnym wyjątku.
+export class BladDanych extends Error {
+  constructor(komunikat) { super(komunikat); this.name = 'BladDanych'; this.kod = 'BLAD_DANYCH'; }
+}
+
+// Darmowe dni miesiąca (D5) liczone po różnych datach (P-103 (1a), R-102): duplikat daty z dwóch urządzeń liczy się raz,
+// a data jest dniem z Pro, gdy którykolwiek jej wpis ma pro (P-103 (6a)).
+function darmoweDni(lista, miesiac) {
+  const zPro = new Set(lista.filter((d) => d.pro).map((d) => d.data));
+  return new Set(lista.filter((d) => d.data.startsWith(miesiac) && !zPro.has(d.data)).map((d) => d.data)).size;
+}
+
 // Które zdarzenia wołają strażnika startDnia() (P-067): każde +1 na dowolnym liczniku i z każdego urządzenia
 // oraz ręczne wpisanie wartości (D4) zaczynają dzień; zerowanie, −1 i edycja historii to korekty danych (zawsze wolne, KP-02, L-07).
 const ZACZYNA_DZIEN = { plus: true, wpisanie: true, zerowanie: false, minus: false, 'edycja-historii': false };
 export function wolaStraznika({ rodzaj }) {
-  if (!(rodzaj in ZACZYNA_DZIEN)) throw new Error(`wolaStraznika: nieznany rodzaj zdarzenia ${rodzaj}`);
+  if (!(rodzaj in ZACZYNA_DZIEN)) throw new BladDanych(`wolaStraznika: nieznany rodzaj zdarzenia ${rodzaj}`);
   return ZACZYNA_DZIEN[rodzaj];
 }
 
@@ -20,10 +32,10 @@ export function wolaStraznika({ rodzaj }) {
 // dzis: data lokalna zdarzenia; teraz i ostatniPlus: ms (ostatniPlus = poprzednie +1 w dowolnym projekcie albo null).
 // Zwraca: dozwolone (czy wolno dodać rząd), zapis (dzień do dopisania albo null), zostalo (darmowe dni w miesiącu po zdarzeniu).
 export function startDnia({ dni, dzis, teraz, ostatniPlus, pro, limit = LIMIT_DNI, przerwa = PRZERWA_MS }) {
-  if (!Array.isArray(dni) || !DATA.test(dzis) || !Number.isFinite(teraz)) throw new Error('startDnia: złe dane wejściowe');
+  if (!Array.isArray(dni) || !DATA.test(dzis) || !Number.isFinite(teraz)) throw new BladDanych('startDnia: złe dane wejściowe');
   const miesiac = dzis.slice(0, 7);
   // D5: do limitu liczą się tylko dni bez aktywnego Pro.
-  const darmowe = (lista) => lista.filter((d) => d.data.startsWith(miesiac) && !d.pro).length;
+  const darmowe = (lista) => darmoweDni(lista, miesiac);
   const wynik = (dozwolone, zapis) => {
     const po = zapis ? [...dni, zapis] : dni;
     return { dozwolone, zapis, zostalo: Math.max(0, limit - darmowe(po)) };
@@ -42,7 +54,14 @@ export function startDnia({ dni, dzis, teraz, ostatniPlus, pro, limit = LIMIT_DN
 // zostalo: darmowe dni w miesiącu przed dzisiejszym startem (licznik dni na liście projektów i w Ustawieniach).
 export function mozeZaczacDzien({ dni, dzis, teraz, ostatniPlus, pro, limit = LIMIT_DNI, przerwa = PRZERWA_MS }) {
   const start = startDnia({ dni, dzis, teraz, ostatniPlus, pro, limit, przerwa });
-  const miesiac = dzis.slice(0, 7);
-  const zostalo = Math.max(0, limit - dni.filter((d) => d.data.startsWith(miesiac) && !d.pro).length);
+  const zostalo = Math.max(0, limit - darmoweDni(dni, dzis.slice(0, 7)));
   return { limitZawczasu: !start.dozwolone, ostatniDarmowy: !pro && zostalo === 1, zostalo };
+}
+
+// Data wznowienia liczenia na limicie (Z07-07, R-105): pierwszy dzień następnego miesiąca kalendarzowego,
+// w grudniu z rokiem + 1 („Counting is paused until January 1.”, P-065 (1a)). Zwraca 'RRRR-MM-01'.
+export function wznowienieLimitu({ dzis }) {
+  if (typeof dzis !== 'string' || !DATA.test(dzis)) throw new BladDanych('wznowienieLimitu: zła data');
+  const [r, m] = dzis.split('-').map(Number);
+  return m === 12 ? `${r + 1}-01-01` : `${r}-${String(m + 1).padStart(2, '0')}-01`;
 }

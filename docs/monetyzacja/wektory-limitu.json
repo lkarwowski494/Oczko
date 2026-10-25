@@ -1,5 +1,5 @@
 {
- "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu.",
+ "opis": "Wektory reguły darmowego limitu dni z robótką (model V4, P-057; rola 02, kontrakt płatności, 2026-10-22). Limit 5 dni (D2), przerwa 60 min (D3), ręczne wpisanie jak +1 (D4), liczą się tylko dni bez Pro (D5). L-07 (dopisanie wstecz, edycja historii) i L-13 (brak sieci) są poza tą funkcją: strażnik nie jest wołany / Pro z pamięci podręcznej według wektory-dostepu.json. Zmienia rola 02 (ER), czyta 07 i 08. wolaStraznika (S-01–S-10, P-067): które zdarzenia wołają startDnia. mozeZaczacDzien (Z-01–Z-08, P-065): stan zawczasu i ostatni darmowy dzień, bez zapisu. Z07-07 (2026-10-25, P-103): wszystkie teraz/ostatniPlus spójne z dzis w strefie `strefa` (kontrola w teście; dawne teraz = 1800000000000 przesunięte z zachowaniem różnic), granice przerwy L-04c–L-04e, L-21–L-25, Z-09, wznowienieLimitu (Z-10*); błąd danych = { blad: \"BLAD_DANYCH\" } (klasa BladDanych, kod), nie dowolny wyjątek.",
  "limit": 5,
  "przerwa_ms": 3600000,
  "startDnia": [
@@ -9,7 +9,7 @@
    "wejscie": {
     "dni": [],
     "dzis": "2026-11-01",
-    "teraz": 1800000000000,
+    "teraz": 1793559600000,
     "ostatniPlus": null,
     "pro": false
    },
@@ -49,8 +49,8 @@
      }
     ],
     "dzis": "2026-11-07",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799982000000,
+    "teraz": 1794078000000,
+    "ostatniPlus": 1794060000000,
     "pro": false
    },
    "oczekiwane": {
@@ -86,8 +86,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799880000000,
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794044400000,
     "pro": false
    },
    "oczekiwane": {
@@ -123,8 +123,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799999400000,
+    "teraz": 1794093000000,
+    "ostatniPlus": 1794092400000,
     "pro": false
    },
    "oczekiwane": {
@@ -160,8 +160,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799996340000,
+    "teraz": 1794093000000,
+    "ostatniPlus": 1794089340000,
     "pro": false
    },
    "oczekiwane": {
@@ -197,8 +197,8 @@
      }
     ],
     "dzis": "2026-11-01",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799820000000,
+    "teraz": 1793559600000,
+    "ostatniPlus": 1793379600000,
     "pro": false
    },
    "oczekiwane": {
@@ -237,8 +237,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799994600000,
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794159000000,
     "pro": false
    },
    "oczekiwane": {
@@ -274,7 +274,7 @@
      }
     ],
     "dzis": "2026-11-09",
-    "teraz": 1800000000000,
+    "teraz": 1794250800000,
     "ostatniPlus": null,
     "pro": false
    },
@@ -339,8 +339,8 @@
      }
     ],
     "dzis": "2026-11-21",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799820000000,
+    "teraz": 1795287600000,
+    "ostatniPlus": 1795107600000,
     "pro": false
    },
    "oczekiwane": {
@@ -379,7 +379,7 @@
      }
     ],
     "dzis": "2026-11-09",
-    "teraz": 1800000000000,
+    "teraz": 1794250800000,
     "ostatniPlus": null,
     "pro": true
    },
@@ -407,8 +407,8 @@
      }
     ],
     "dzis": "2026-11-09",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799992800000,
+    "teraz": 1794250800000,
+    "ostatniPlus": 1794243600000,
     "pro": false
    },
    "oczekiwane": {
@@ -428,7 +428,7 @@
      }
     ],
     "dzis": "2026-11-03",
-    "teraz": 1800000000000,
+    "teraz": 1793732400000,
     "ostatniPlus": null,
     "pro": false
    },
@@ -447,7 +447,7 @@
    "wejscie": {
     "dni": [],
     "dzis": "2026-11-20",
-    "teraz": 1800000000000,
+    "teraz": 1795201200000,
     "ostatniPlus": null,
     "pro": false
    },
@@ -487,8 +487,8 @@
      }
     ],
     "dzis": "2026-11-09",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1800001800000,
+    "teraz": 1794250800000,
+    "ostatniPlus": 1794252600000,
     "pro": false
    },
    "oczekiwane": {
@@ -528,8 +528,8 @@
      }
     ],
     "dzis": "2026-11-06",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799990000000,
+    "teraz": 1793991600000,
+    "ostatniPlus": 1793981600000,
     "pro": false
    },
    "oczekiwane": {
@@ -569,8 +569,8 @@
      }
     ],
     "dzis": "2026-11-07",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799800000000,
+    "teraz": 1794078000000,
+    "ostatniPlus": 1793878000000,
     "pro": false
    },
    "oczekiwane": {
@@ -606,14 +606,339 @@
      }
     ],
     "dzis": "2026-11-09",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799700000000,
+    "teraz": 1794250800000,
+    "ostatniPlus": 1793950800000,
     "pro": false
    },
    "oczekiwane": {
     "dozwolone": false,
     "zapis": null,
     "zostalo": 0
+   }
+  },
+  {
+   "id": "L-04c",
+   "scenariusz": "Z07-07: 5 z 5, przerwa dokładnie 60 min (3 600 000 ms): nowy dzień ponad limit, blokada (D3: przerwa ≥ 60 min)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794093000000,
+    "ostatniPlus": 1794089400000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-04d",
+   "scenariusz": "Z07-07: 5 z 5, przerwa 59:59,999 (3 599 999 ms): praca w toku, bez nowego dnia",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794093000000,
+    "ostatniPlus": 1794089400001,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-04e",
+   "scenariusz": "Z07-07: 5 z 5, ostatnie +1 w tej samej milisekundzie (różnica 0): praca w toku",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794093000000,
+    "ostatniPlus": 1794093000000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-21",
+   "scenariusz": "Z07-07 (R-100): dzień zaczęty z Pro, Pro wygasło tego dnia, 5 darmowych dni w miesiącu: rozpoczęty dzień trwa (KP-15, L-02)",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     },
+     {
+      "data": "2026-11-08",
+      "pro": true
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794157200000,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-22",
+   "scenariusz": "Z07-07 (R-103): parametry limit = 3, przerwa = 30 min; 3 z 3, przerwa 45 min: nowy dzień ponad limit, blokada",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794161700000,
+    "pro": false,
+    "limit": 3,
+    "przerwa": 1800000
+   },
+   "oczekiwane": {
+    "dozwolone": false,
+    "zapis": null,
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-22b",
+   "scenariusz": "Z07-07 (R-103): limit = 3, przerwa = 30 min; 2 z 3, przerwa 45 min: nowy dzień, ostatni darmowy",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794161700000,
+    "pro": false,
+    "limit": 3,
+    "przerwa": 1800000
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-08",
+     "pro": false
+    },
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-23",
+   "scenariusz": "Z07-07 (R-102, P-103 (1a)): zdublowana data w liście dni (dwa urządzenia przed scaleniem): liczy się raz; 4 różne dni, nowy dzień dozwolony",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-08",
+     "pro": false
+    },
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-23b",
+   "scenariusz": "Z07-07 (R-102, P-103 (1a), (6a)): ta sama data z pro i bez pro: dzień z Pro (OR), nie liczy się do limitu",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-01",
+      "pro": true
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     },
+     {
+      "data": "2026-11-05",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "dozwolone": true,
+    "zapis": {
+     "data": "2026-11-08",
+     "pro": false
+    },
+    "zostalo": 0
+   }
+  },
+  {
+   "id": "L-24",
+   "scenariusz": "Z07-07 (R-103): teraz nie jest liczbą (null, w JSON zamiast NaN): błąd danych z kodem",
+   "wejscie": {
+    "dni": [],
+    "dzis": "2026-11-08",
+    "teraz": null,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
+   }
+  },
+  {
+   "id": "L-25",
+   "scenariusz": "Z07-07 (R-178): brak daty: błąd danych z kodem, nie dowolny wyjątek",
+   "wejscie": {
+    "dni": [],
+    "dzis": "",
+    "teraz": 1794164400000,
+    "ostatniPlus": null,
+    "pro": false
+   },
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
    }
   }
  ],
@@ -716,7 +1041,9 @@
     "licznik": "rzedy",
     "urzadzenie": "telefon"
    },
-   "oczekiwane": "błąd"
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
+   }
   }
  ],
  "mozeZaczacDzien": [
@@ -726,7 +1053,7 @@
    "wejscie": {
     "dni": [],
     "dzis": "2026-11-01",
-    "teraz": 1800000000000,
+    "teraz": 1793559600000,
     "ostatniPlus": null,
     "pro": false
    },
@@ -763,8 +1090,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799992800000,
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794157200000,
     "pro": false
    },
    "oczekiwane": {
@@ -800,8 +1127,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799999400000,
+    "teraz": 1794093000000,
+    "ostatniPlus": 1794092400000,
     "pro": false
    },
    "oczekiwane": {
@@ -837,8 +1164,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799992800000,
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794157200000,
     "pro": true
    },
    "oczekiwane": {
@@ -874,8 +1201,8 @@
      }
     ],
     "dzis": "2026-11-05",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799992800000,
+    "teraz": 1793905200000,
+    "ostatniPlus": 1793898000000,
     "pro": false
    },
    "oczekiwane": {
@@ -907,8 +1234,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799992800000,
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794157200000,
     "pro": false
    },
    "oczekiwane": {
@@ -936,8 +1263,8 @@
      }
     ],
     "dzis": "2026-11-08",
-    "teraz": 1800000000000,
-    "ostatniPlus": 1799992800000,
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794157200000,
     "pro": false
    },
    "oczekiwane": {
@@ -956,7 +1283,79 @@
     "ostatniPlus": null,
     "pro": false
    },
-   "oczekiwane": "błąd"
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
+   }
+  },
+  {
+   "id": "Z-09",
+   "scenariusz": "Z07-07 (R-099): Pro przy 4 z 5, dziś bez rzędu: bez linii o ostatnim darmowym dniu (P-065 (2a)); własność w teście: przy pro nigdy ostatniDarmowy ani limitZawczasu",
+   "wejscie": {
+    "dni": [
+     {
+      "data": "2026-11-01",
+      "pro": false
+     },
+     {
+      "data": "2026-11-02",
+      "pro": false
+     },
+     {
+      "data": "2026-11-03",
+      "pro": false
+     },
+     {
+      "data": "2026-11-04",
+      "pro": false
+     }
+    ],
+    "dzis": "2026-11-08",
+    "teraz": 1794164400000,
+    "ostatniPlus": 1794157200000,
+    "pro": true
+   },
+   "oczekiwane": {
+    "limitZawczasu": false,
+    "ostatniDarmowy": false,
+    "zostalo": 1
+   }
+  }
+ ],
+ "strefa": "Europe/Warsaw",
+ "wznowienieLimitu": [
+  {
+   "id": "Z-10",
+   "scenariusz": "Z07-07 (R-105): 31 grudnia na limicie: „Counting is paused until January 1” następnego roku",
+   "wejscie": {
+    "dzis": "2026-12-31"
+   },
+   "oczekiwane": "2027-01-01"
+  },
+  {
+   "id": "Z-10b",
+   "scenariusz": "listopad: wznowienie 1 grudnia (P-065 (1a))",
+   "wejscie": {
+    "dzis": "2026-11-08"
+   },
+   "oczekiwane": "2026-12-01"
+  },
+  {
+   "id": "Z-10c",
+   "scenariusz": "luty roku nieprzestępnego, ostatni dzień: 1 marca",
+   "wejscie": {
+    "dzis": "2026-02-28"
+   },
+   "oczekiwane": "2026-03-01"
+  },
+  {
+   "id": "Z-10d",
+   "scenariusz": "złe dane: brak daty",
+   "wejscie": {
+    "dzis": ""
+   },
+   "oczekiwane": {
+    "blad": "BLAD_DANYCH"
+   }
   }
  ]
 }
