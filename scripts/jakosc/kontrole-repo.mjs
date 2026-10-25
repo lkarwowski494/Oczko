@@ -32,6 +32,8 @@ export const REGULY = [
 
 // Reguły na plikach konfiguracji (package.json, app.json).
 const SDK_AWARII = /^(@sentry\/|sentry-|@bugsnag\/|bugsnag|@datadog\/|@react-native-firebase\/crashlytics|instabug|@embrace-io\/)/;
+// BR-ZAK-002, KP-11, NFR-KOS-001: bez analityki, reklam i śledzenia (koszt 0 zł, brak sieci poza Apple).
+const SDK_SLEDZENIA = /^(@react-native-firebase\/(analytics|app)|firebase|@segment\/|mixpanel|@amplitude\/|amplitude|react-native-appsflyer|react-native-adjust|react-native-branch|react-native-google-mobile-ads|expo-ads-|react-native-fbsdk|@datadog\/|posthog|expo-tracking-transparency|@sentry\/)/;
 const DZWIEK = /^(expo-av|expo-audio|react-native-sound|react-native-track-player)$/; // BR-LIC-005: haptyka bez dźwięku (moduly.md, port Haptyka)
 const PRZYPIETE = ['expo-iap', '@bacons/apple-targets', '@testing-library/react-native', 'eslint', '@typescript-eslint/parser', 'yaml'];
 
@@ -77,6 +79,7 @@ export function sprawdz(korzenKatalog, zakres) {
     for (const [n, v] of Object.entries(zal)) {
       if (n === 'expo-updates') naruszenia.push(`EXPO-UPDATES package.json — bez OTA (ADR-0021)`);
       if (SDK_AWARII.test(n)) naruszenia.push(`SDK-AWARII package.json: ${n} — sygnał bez SDK (ADR-0018)`);
+      if (SDK_SLEDZENIA.test(n)) naruszenia.push(`SDK-SLEDZENIA package.json: ${n} — bez analityki, reklam i śledzenia (BR-ZAK-002, KP-11)`);
       if (DZWIEK.test(n)) naruszenia.push(`DZWIEK package.json: ${n} — aplikacja nie odtwarza dźwięku (BR-LIC-005)`);
       if (PRZYPIETE.includes(n) && !/^\d+\.\d+\.\d+$/.test(v)) naruszenia.push(`PRZYPIECIE package.json: ${n}@${v} — wersja dokładna (ADR-0016)`);
     }
@@ -84,6 +87,7 @@ export function sprawdz(korzenKatalog, zakres) {
   const appPlik = join(korzenKatalog, 'app.json');
   if (existsSync(appPlik)) {
     const app = JSON.parse(readFileSync(appPlik, 'utf8'));
+    if (app.expo?.ios?.privacyManifests?.NSPrivacyTracking !== false) naruszenia.push('SLEDZENIE app.json: ios.privacyManifests.NSPrivacyTracking musi być false (BR-ZAK-002, KP-11)');
     if (app.expo?.updates && app.expo.updates.enabled !== false) naruszenia.push('EXPO-UPDATES app.json: sekcja updates włączona — bez OTA (ADR-0021)');
   }
   const manifest = join(korzenKatalog, 'docs/jakosc/migracje-wydane.json');

@@ -56,8 +56,18 @@ describe('kontrole-repo.mjs (strategia §10, kontrola 05-8, P-089)', () => {
     expect(w.status).toBe(1);
     for (const r of ['EXPO-UPDATES', 'SDK-AWARII', 'PRZYPIECIE', 'DZWIEK']) expect(w.stdout).toContain(r);
   });
+  test.each(['@react-native-firebase/analytics', 'mixpanel-react-native', 'react-native-google-mobile-ads', 'react-native-appsflyer', 'expo-tracking-transparency'])('BR-ZAK-002/S1 KP-11 NFR-KOS-001 SDK analityki, reklam albo śledzenia %s pada', (pakiet) => {
+    const w = uruchom(KONTROLE, repo({ 'package.json': JSON.stringify({ dependencies: { [pakiet]: '1.0.0' } }) }));
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain('SDK-SLEDZENIA');
+  });
+  test('BR-ZAK-002/S1 KP-11 app.json bez NSPrivacyTracking = false pada; z false przechodzi', () => {
+    expect(uruchom(KONTROLE, repo({ 'app.json': JSON.stringify({ expo: { ios: { privacyManifests: { NSPrivacyTracking: true } } } }) })).stdout).toContain('SLEDZENIE app.json');
+    expect(uruchom(KONTROLE, repo({ 'app.json': JSON.stringify({ expo: { ios: {} } }) })).stdout).toContain('SLEDZENIE app.json');
+    expect(uruchom(KONTROLE, repo({ 'app.json': JSON.stringify({ expo: { ios: { privacyManifests: { NSPrivacyTracking: false } } } }) })).status).toBe(0);
+  });
   test('R-171 app.json z włączoną sekcją updates pada (ADR-0021)', () => {
-    const w = uruchom(KONTROLE, repo({ 'app.json': JSON.stringify({ expo: { updates: { url: 'https://u.expo.dev/x' } } }) }));
+    const w = uruchom(KONTROLE, repo({ 'app.json': JSON.stringify({ expo: { ios: { privacyManifests: { NSPrivacyTracking: false } }, updates: { url: 'https://u.expo.dev/x' } } }) }));
     expect(w.stdout).toContain('EXPO-UPDATES app.json');
   });
   test('R-130 wydana migracja zmieniona po wydaniu pada (Z07-15)', () => {

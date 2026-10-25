@@ -3,15 +3,15 @@
 // jest błędem (nie może paść), chyba że ma w nazwie `[ZIELONY-OK: powód]` (np. kontrola, która już działa).
 // Użycie: node scripts/jakosc/akceptacja-raport.mjs [--wynik plik.md] [--json plik.json]  (kod 0 = wszystko czerwone z właściwego powodu)
 import { spawnSync } from 'node:child_process';
-import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 
 const arg = (n) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : null; };
 let wejscie = arg('--json');
 if (!wejscie) {
   wejscie = join(mkdtempSync(join(tmpdir(), 'akceptacja-')), 'wynik.json');
-  spawnSync('npx', ['jest', '-c', 'jest.akceptacja.config.js', '--json', '--outputFile', wejscie, '--silent'], { stdio: ['ignore', 'ignore', 'inherit'] });
+  spawnSync('npx', ['jest', '-c', 'jest.akceptacja.config.js', '--json', '--outputFile', wejscie, '--silent'], { stdio: 'ignore' });
 }
 const raport = JSON.parse(readFileSync(wejscie, 'utf8'));
 export const ID = /\b(BR-[A-Z]{3}-\d{3}|NFR-[A-Z]{3}-\d{3}|KP-\d{2}|RD-\d{2}|P-\d{3}|R-\d{3}|TT-\d{2}|ER-\d{2}|Z07-\d{2}|PR-\d{2}|L-\d{2}|W-\d{2}|M-\d{2})\b/;
@@ -45,6 +45,7 @@ if (wynik) {
     `Razem ${wiersze.length}: ` + Object.entries(liczby).map(([k, v]) => `${k} ${v}`).join(', ') + `; błędy raportu: ${bledy.length}.`, '',
     '| Plik | Test | Stan | Fragment wyniku |', '|---|---|---|---|',
     ...wiersze.map((w) => `| ${w.plik} | ${w.nazwa.replace(/\|/g, '\\|')} | ${w.stan} | ${w.fragment.replace(/\|/g, '\\|')} |`)];
+  mkdirSync(dirname(wynik), { recursive: true });
   writeFileSync(wynik, md.join('\n') + '\n');
 }
 console.log(`testy: ${wiersze.length}; ` + Object.entries(liczby).map(([k, v]) => `${k}: ${v}`).join(', '));
