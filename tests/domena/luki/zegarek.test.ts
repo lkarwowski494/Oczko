@@ -15,7 +15,7 @@ import { opcjeWlasnosci } from '../../narzedzia/akceptacja';
 
 const L = 'licznik-1';
 const wejscie = (id: string, rodzaj: 'plus' | 'minus', rodzice: string[], zrodlo: ZdarzenieWejsciowe['zrodlo'] = 'zegarek'): ZdarzenieWejsciowe => ({
-  id, licznikId: L, rodzaj, rodzice, czasMs: 1_800_000_000_000, strefa: 'Europe/Warsaw', dzien: '2027-01-15', zrodlo, urzadzenie: 'zegarek-test',
+  id, licznikId: L, rodzaj, rodzice, czasMs: 1_800_000_000_000, strefa: 'Europe/Warsaw', dzien: '2027-01-15', zrodlo, urzadzenie: 'zegarek-test', pro: false,
 });
 /** Postać do porównania: zbiory głów, brakujących i kandydatów (jak tests/akceptacja/domena/licznik/scal.test.ts, R-038). */
 function jakoZbiory(w: WynikScalenia): WynikScalenia {

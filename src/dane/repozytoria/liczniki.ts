@@ -1,6 +1,7 @@
 // Repozytorium licznika i jego zdarzeń (moduly.md „Ścieżka zapisu +1”, ADR-0002, ADR-0005): odczyt stanu, dopisanie zdarzenia
 // (historia tylko dopisywana), pamięć podręczna wartości, dni limitu (`zapis-dnia-limitu.sql`, dane.md) i ostatnia praca projektu.
 import type { DzienLimitu } from '../../domena/limit';
+import type { ZdarzenieLicznika } from '../../domena/scal';
 import type { PortBazy } from '../../domena/porty';
 import { BladDanych } from '../../domena/bledy';
 import { STANY, type RodzajZdarzenia, type ZrodloZdarzenia } from '../../domena/stany';
@@ -87,4 +88,31 @@ export async function seriaOdKonca(tx: PortBazy, glowa: string, doId: string): P
   const ostatni = w[w.length - 1];
   if (!ostatni || tekst(ostatni, 'id') !== doId) return null;
   return { ids: w.map((r) => tekst(r, 'id')), rodzicPoczatku: tekstLubNull(ostatni, 'rodzic') };
+}
+
+/** Wszystkie zdarzenia licznika w postaci wejścia `scal` (ADR-0005); wartości ustawień z kolumny `wartosc`. */
+export async function zdarzeniaDoScalenia(tx: PortBazy, licznikId: string): Promise<ZdarzenieLicznika[]> {
+  const w = await wiersze(tx.all('SELECT id, rodzaj, wartosc, rodzice, cofa FROM zdarzenie WHERE licznik_id = ?', [licznikId]), 'zdarzeniaDoScalenia');
+  return w.map((r) => {
+    const rodzaj = tekst(r, 'rodzaj');
+    const rz = STANY['zdarzenie.rodzaj'].find((x) => x === rodzaj);
+    if (rz === undefined) throw new BladDanych(`zdarzenie ${tekst(r, 'id')}: nieznany rodzaj`);
+    const wartosc = liczbaLubNull(r, 'wartosc');
+    return { id: tekst(r, 'id'), licznik: licznikId, rodzaj: rz, ...(wartosc === null ? {} : { wartosc }), rodzice: listaTekstow(r, 'rodzice'), cofa: listaTekstow(r, 'cofa') };
+  });
+}
+/** Treść zapisanego zdarzenia do porównania przy ponownym dostarczeniu (idempotencja po UUID, M-02; inna treść = kolizja, M-14). */
+export async function trescZdarzenia(tx: PortBazy, id: string): Promise<{ licznikId: string; rodzaj: string; rodzice: string[] } | null> {
+  const [w] = await wiersze(tx.all('SELECT licznik_id, rodzaj, rodzice FROM zdarzenie WHERE id = ?', [id]), 'trescZdarzenia');
+  return w ? { licznikId: tekst(w, 'licznik_id'), rodzaj: tekst(w, 'rodzaj'), rodzice: listaTekstow(w, 'rodzice') } : null;
+}
+/** Poprzednie +1 przed chwilą `przedMs` (wejście `ostatniPlus` przy scaleniu zdarzeń z opóźnieniem, ADR-0008 (6)). */
+export async function ostatniPlusPrzed(tx: PortBazy, odDnia: string, przedMs: number): Promise<number | null> {
+  const [w] = await wiersze(tx.all("SELECT max(czas_ms) AS m FROM zdarzenie WHERE dzien >= ? AND rodzaj = 'plus' AND czas_ms < ?", [odDnia, przedMs]), 'ostatniPlusPrzed');
+  return w ? liczbaLubNull(w, 'm') : null;
+}
+export async function poczekalnia(tx: PortBazy, r: { id: string; dane: string; powod: 'brak_rodzica' | 'brak_encji'; zrodlo: 'ekran_blokady' | 'zegarek' | 'synchronizacja' | 'import'; terazMs: number }): Promise<void> {
+  await tx.run(
+    `INSERT INTO poczekalnia (id, rodzaj_rekordu, dane, powod, zrodlo, przyszlo_ms) VALUES (?, 'zdarzenie', ?, ?, ?, ?)
+     ON CONFLICT (id) DO UPDATE SET proby = proby + 1`, [r.id, r.dane, r.powod, r.zrodlo, r.terazMs]);
 }

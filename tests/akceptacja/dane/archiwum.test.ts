@@ -72,7 +72,7 @@ describe('eksport (BR-DAN-005, ADR-0004)', () => {
   test('R-063 ADR-0008: eksport najpierw scala dziennik +1 — trzy nieskalone stuknięcia są w oczko.db archiwum', async () => {
     const s = await srodowisko();
     await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód'), ...licznik('l1', 'c1', 5)]);
-    const l = (id: string, r: string, i: number) => ({ id, licznikId: 'l1', rodzaj: 'plus' as const, rodzice: [r], czasMs: T0 + i * MIN, strefa: 'Europe/Warsaw', dzien: '2026-10-22', zrodlo: 'ekran_blokady' as const, urzadzenie: 'iphone-test' });
+    const l = (id: string, r: string, i: number) => ({ id, licznikId: 'l1', rodzaj: 'plus' as const, rodzice: [r], czasMs: T0 + i * MIN, strefa: 'Europe/Warsaw', dzien: '2026-10-22', zrodlo: 'ekran_blokady' as const, urzadzenie: 'iphone-test', pro: false });
     s.dziennik.linie.push(l('d1', 'l1-z5', 10), l('d2', 'd1', 11), l('d3', 'd2', 12));
     const w = await eksportuj(s.za, { katalogDocelowy: doKatalogu(join(s.katalog, 'eksport')) });
     if (!w.ok) throw new Error(w.powod);

@@ -78,7 +78,7 @@ describe('typy z moduly.md (źródło kontraktu)', () => {
     const pola = (n: string) => Object.keys((typy[n] as { pola: object }).pola).sort();
     expect(pola('StanEkranuBlokady')).toEqual(['dzien', 'dzienDozwolony', 'glowa', 'licznikId', 'nazwa', 'sesjaStartMs', 'wartosc']);
     expect(pola('StanZegarka')).toEqual([...pola('StanEkranuBlokady'), 'dniWMiesiacu', 'pro', 'proWaznoscDo'].sort());
-    expect(pola('ZdarzenieWejsciowe')).toEqual(['czasMs', 'dzien', 'id', 'licznikId', 'rodzaj', 'rodzice', 'strefa', 'urzadzenie', 'zrodlo']);
+    expect(pola('ZdarzenieWejsciowe')).toEqual(['czasMs', 'dzien', 'id', 'licznikId', 'pro', 'rodzaj', 'rodzice', 'strefa', 'urzadzenie', 'zrodlo']);
   });
   test('pułapki walidatora: brak pola, pole obce, zły typ, zły literał, null w polu bez null', () => {
     const t = typy.StanEkranuBlokady; const ok = JSON.parse(fs.readFileSync(path.join(KAT, 'stan-ekranu-blokady-typowy.json'), 'utf8'));
@@ -88,8 +88,8 @@ describe('typy z moduly.md (źródło kontraktu)', () => {
     expect(bledy({ ...ok, dzien_dozwolony: true }, t)).toEqual(['$.dzien_dozwolony: pole spoza typu']); /* R-027: zmiana nazwy pola */
     expect(bledy({ ...ok, sesjaStartMs: '1794336720' }, t).length).toBe(1); /* R-024: sekundy jako tekst */
     expect(bledy({ ...ok, nazwa: null }, t).length).toBe(1);
-    expect(bledy({ id: 'x', licznikId: 'x', rodzaj: 'plusik', rodzice: [], czasMs: 1, strefa: 'UTC', dzien: '2026-01-01', zrodlo: 'ekran_blokady', urzadzenie: 'u' }, typy.ZdarzenieWejsciowe)).toEqual(['$.rodzaj: żaden wariant unii ("plusik")']);
-    expect(bledy({ id: 'x', licznikId: 'x', rodzaj: 'plus', rodzice: [], czasMs: 1, strefa: 'UTC', dzien: '2026-01-01', zrodlo: 'lockscreen', urzadzenie: 'u' }, typy.ZdarzenieWejsciowe)).toEqual(['$.zrodlo: żaden wariant unii ("lockscreen")']);
+    expect(bledy({ id: 'x', licznikId: 'x', rodzaj: 'plusik', rodzice: [], czasMs: 1, strefa: 'UTC', dzien: '2026-01-01', zrodlo: 'ekran_blokady', urzadzenie: 'u', pro: false }, typy.ZdarzenieWejsciowe)).toEqual(['$.rodzaj: żaden wariant unii ("plusik")']);
+    expect(bledy({ id: 'x', licznikId: 'x', rodzaj: 'plus', rodzice: [], czasMs: 1, strefa: 'UTC', dzien: '2026-01-01', zrodlo: 'lockscreen', urzadzenie: 'u', pro: false }, typy.ZdarzenieWejsciowe)).toEqual(['$.zrodlo: żaden wariant unii ("lockscreen")']);
   });
   test('literały rodzaj i zrodlo typu ZdarzenieWejsciowe ⊆ stany.json (CHECK bazy)', () => {
     const lit = (n: string) => ((typy.ZdarzenieWejsciowe as { pola: Record<string, Typ> }).pola[n] as { z: { v: string }[] }).z.map(x => x.v).sort();
