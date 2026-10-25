@@ -112,6 +112,10 @@ if (zapisDnia) {
   zd.run('2026-10-22', 0, 100, 'a');
   ok(dzien().pro === 1 && dzien().zaczeto_ms === 100 && dzien().zdarzenie_id === 'a' && dbd.prepare('SELECT count(*) n FROM dzien_limitu').get().n === 1, 'dzień limitu: wcześniejszy start z innego urządzenia bez Pro → pro zostaje 1, start = najwcześniejszy, jeden wiersz (L-20, L-23)');
 }
+// Kategoria grubości włóczki (P-099, P-110 Q6a): jedna wartość CYC 0–7 albo NULL.
+const dbk = otworz(); migruj(dbk, MIGRACJE);
+ok(/CHECK/.test(rzuca(() => dbk.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('k8', 'X', 1, 8, 1)`)) ?? 'brak kolumny'), 'CHECK: kategoria grubości 8 odrzucona');
+ok(rzuca(() => dbk.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('k0', 'Koronka', 1, 0, 1), ('kn', 'Bez etykiety', 1, NULL, 1)`)) === null, 'kategoria 0 i NULL przyjęte');
 // Baza nowsza niż aplikacja: odrzucona bez zmian.
 const db2 = otworz(); db2.exec('PRAGMA user_version = 2');
 ok(/nowsza/.test(rzuca(() => migruj(db2, MIGRACJE)) ?? '') && db2.prepare('PRAGMA user_version').get().user_version === 2, 'baza w wersji 2 odrzucona przez aplikację w wersji 1, bez zmian');
@@ -129,18 +133,20 @@ dbp.exec('BEGIN');
 for (let p = 0; p < 45; p++) { dbp.exec(`INSERT INTO projekt (id, nazwa, stan, utworzono_ms, zmieniono_ms, ostatnia_praca_ms, ukonczono_ms) VALUES ('p${p}', 'P${p}', '${p < 40 ? 'ukonczony' : 'w_toku'}', 1, 1, ${p}, ${p < 40 ? 1 : 'NULL'})`);
   for (let c = 0; c < 4; c++) { dbp.exec(`INSERT INTO czesc VALUES ('c${p}_${c}', 'p${p}', 'C', ${c}, NULL, NULL, 1, NULL); INSERT INTO licznik (id, czesc_id, kolejnosc, zmieniono_ms) VALUES ('l${p}_${c}', 'c${p}_${c}', 0, 1);`); } }
 for (let i = 0; i < 150000; i++) { const czas = Date.UTC(2024, 0, 1) + i * 600000; insZ.run('z' + i, `l${Math.floor(i / 833) % 45}_${i % 4}`, i, czas, new Date(czas).toISOString().slice(0, 10)); }
+for (let y = 0; y < 300; y++) dbp.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('y${y}', 'W${y}', 1, ${y % 8}, 1)`);
 dbp.exec('COMMIT'); dbp.exec('ANALYZE');
 const plany = {
   'lista projektów w toku': "SELECT id, nazwa FROM projekt WHERE stan = 'w_toku' AND usunieto_ms IS NULL ORDER BY ostatnia_praca_ms DESC",
   'historia licznika (50 ostatnich)': "SELECT * FROM zdarzenie WHERE licznik_id = 'l3_1' ORDER BY czas_ms DESC LIMIT 50",
   'kalendarz miesiąca (dni z robótką)': "SELECT dzien, count(*) FROM zdarzenie WHERE dzien BETWEEN '2026-10-01' AND '2026-10-31' GROUP BY dzien",
   'dzień: projekty i rzędy': "SELECT c.projekt_id, count(*) FROM zdarzenie z JOIN licznik l ON l.id = z.licznik_id JOIN czesc c ON c.id = l.czesc_id WHERE z.dzien = '2026-10-22' GROUP BY c.projekt_id",
+  'zapas: filtr kategorii (BR-ZAP-004)': 'SELECT id, nazwa FROM wloczka WHERE kategoria = 4 AND usunieto_ms IS NULL ORDER BY nazwa COLLATE NOCASE',
   'dni limitu w miesiącu': "SELECT dzien, pro FROM dzien_limitu WHERE dzien BETWEEN '2026-10-01' AND '2026-10-31'",
 };
 for (const [nazwa, q] of Object.entries(plany)) {
   const plan = dbp.prepare('EXPLAIN QUERY PLAN ' + q).all().map((r) => r.detail).join(' | ');
   const t = []; for (let k = 0; k < 20; k++) { const s = performance.now(); dbp.prepare(q).all(); t.push(performance.now() - s); }
   const p95 = [...t].sort((a, b) => a - b)[18].toFixed(3);
-  ok(!/\bSCAN (zdarzenie|projekt)\b(?! USING)/.test(plan), `plan „${nazwa}”: [${plan}] · p95 ${p95} ms (Linux, nie iPhone)`);
+  ok(!/\bSCAN (zdarzenie|projekt|wloczka)\b(?! USING)/.test(plan), `plan „${nazwa}”: [${plan}] · p95 ${p95} ms (Linux, nie iPhone)`);
 }
 console.log(bledy ? `${bledy} błędów` : 'wszystkie kontrole OK'); process.exit(bledy ? 1 : 0);

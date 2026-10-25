@@ -154,12 +154,14 @@ CREATE TABLE wloczka (                                -- zapas (F-37, BR-ZAP-001
   waga_motka_g REAL CHECK (waga_motka_g IS NULL OR waga_motka_g > 0),
   dlugosc_motka_m REAL CHECK (dlugosc_motka_m IS NULL OR dlugosc_motka_m > 0),
   motki REAL NOT NULL DEFAULT 0 CHECK (motki >= 0),
+  kategoria INTEGER CHECK (kategoria IS NULL OR kategoria BETWEEN 0 AND 7), -- kategoria grubości CYC 0–7 z etykiety albo wybrana przez użytkownika; NULL = nieznana (BR-ZAP-004, RD-10, P-110 Q6a)
   pielegnacja TEXT NOT NULL DEFAULT '',                             -- tekstem (OG-13)
   notatka TEXT NOT NULL DEFAULT '',
   zmieniono_ms INTEGER NOT NULL,
   usunieto_ms INTEGER
 ) STRICT;
 CREATE INDEX wloczka_nazwa ON wloczka(nazwa COLLATE NOCASE) WHERE usunieto_ms IS NULL;
+CREATE INDEX wloczka_kategoria ON wloczka(kategoria, nazwa COLLATE NOCASE) WHERE usunieto_ms IS NULL; -- filtr grubości w zapasie (BR-ZAP-004)
 
 CREATE TABLE narzedzie (                              -- BR-ZAP-003
   id TEXT PRIMARY KEY NOT NULL,
