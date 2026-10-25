@@ -8,5 +8,8 @@
   "sesja.stan": ["trwa", "wstrzymana", "zakonczona"],
   "wzor.zrodlo": ["pdf", "obraz", "www", "word"],
   "narzedzie.rodzaj": ["druty", "szydelko", "inne"],
-  "obliczenie.rodzaj": ["oczka_z_probki", "jednostki", "grubosc"]
+  "obliczenie.rodzaj": ["oczka_z_probki", "jednostki", "grubosc"],
+  "poczekalnia.rodzaj_rekordu": ["zdarzenie", "encja"],
+  "poczekalnia.powod": ["brak_rodzica", "brak_encji", "nowsza_wersja"],
+  "poczekalnia.zrodlo": ["synchronizacja", "import", "ekran_blokady", "zegarek"]
 }

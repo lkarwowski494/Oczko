@@ -110,6 +110,7 @@ CREATE TABLE sesja (                                  -- stoper (F-21, F-51); cz
   przerwy_ms INTEGER NOT NULL DEFAULT 0 CHECK (przerwy_ms >= 0),
   koniec_ms INTEGER,
   skorygowano INTEGER NOT NULL DEFAULT 0 CHECK (skorygowano IN (0, 1)),
+  do_korekty INTEGER NOT NULL DEFAULT 0 CHECK (do_korekty IN (0, 1)),  -- zamknięta automatycznie (SESJA_MAKS_H) albo druga otwarta sesja przy scaleniu (ADR-0005, Z07-14); pokazana do sprawdzenia
   strefa TEXT NOT NULL,
   dzien TEXT NOT NULL CHECK (dzien GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   CHECK ((stan = 'zakonczona') = (koniec_ms IS NOT NULL)),
@@ -210,6 +211,17 @@ CREATE TABLE dzien_limitu (                           -- dni limitu V4 (startDni
   zaczeto_ms INTEGER NOT NULL,
   zdarzenie_id TEXT NOT NULL                                        -- zdarzenie, które zaczęło dzień (bez FK: dzień zostaje po usunięciu licznika; dane.md, KP-15, L-16)
 ) STRICT;
+
+CREATE TABLE poczekalnia (                           -- rekordy z synchronizacji, importu, dziennika i zegarka, które czekają na rodzica albo encję (ADR-0005, P-110 Q1a)
+  id TEXT PRIMARY KEY NOT NULL,                                     -- id rekordu (zdarzenia albo encji); powtórzone dostarczenie = ten sam wiersz
+  rodzaj_rekordu TEXT NOT NULL CHECK (rodzaj_rekordu IN ('zdarzenie', 'encja')),
+  dane TEXT NOT NULL CHECK (json_valid(dane)),                      -- rekord w postaci adaptera (bez kluczy obcych: rodzic może jeszcze nie istnieć)
+  powod TEXT NOT NULL CHECK (powod IN ('brak_rodzica', 'brak_encji', 'nowsza_wersja')),
+  zrodlo TEXT NOT NULL CHECK (zrodlo IN ('synchronizacja', 'import', 'ekran_blokady', 'zegarek')),
+  przyszlo_ms INTEGER NOT NULL,                                     -- pierwsze dostarczenie; po POCZEKALNIA_DNI: wpis w `blad` i „niepełna historia” w Stanie danych, wiersz zostaje
+  proby INTEGER NOT NULL DEFAULT 0 CHECK (proby >= 0)
+) STRICT;
+CREATE INDEX poczekalnia_przyszlo ON poczekalnia(przyszlo_ms);
 
 CREATE TABLE ustawienie (                             -- ustawienia i mały stan (np. ostatnie miejsce F-49, stan Pro dla zegarka)
   klucz TEXT PRIMARY KEY NOT NULL,

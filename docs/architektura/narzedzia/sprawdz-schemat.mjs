@@ -116,6 +116,15 @@ if (zapisDnia) {
 const dbk = otworz(); migruj(dbk, MIGRACJE);
 ok(/CHECK/.test(rzuca(() => dbk.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('k8', 'X', 1, 8, 1)`)) ?? 'brak kolumny'), 'CHECK: kategoria grubości 8 odrzucona');
 ok(rzuca(() => dbk.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('k0', 'Koronka', 1, 0, 1), ('kn', 'Bez etykiety', 1, NULL, 1)`)) === null, 'kategoria 0 i NULL przyjęte');
+// Synchronizacja i import (fix 2026-10-25, Z07-14): poczekalnia bez kluczy obcych (rekord czeka na rodzica albo encję, partia nie jest cofana),
+// sesja zamknięta przy scaleniu albo po SESJA_MAKS_H oznaczona do korekty.
+const dbs = otworz(); migruj(dbs, MIGRACJE);
+const kolumny = (t) => dbs.prepare(`PRAGMA table_info(${t})`).all().map((k) => k.name);
+ok(['id', 'rodzaj_rekordu', 'dane', 'powod', 'zrodlo', 'przyszlo_ms', 'proby'].every((k) => kolumny('poczekalnia').includes(k)), 'poczekalnia: kolumny id, rodzaj_rekordu, dane, powod, zrodlo, przyszlo_ms, proby');
+ok(dbs.prepare('PRAGMA foreign_key_list(poczekalnia)').all().length === 0, 'poczekalnia bez kluczy obcych (rekord bez rodzica nie odrzuca partii)');
+ok(rzuca(() => dbs.exec(`INSERT INTO poczekalnia (id, rodzaj_rekordu, dane, powod, zrodlo, przyszlo_ms) VALUES ('zx', 'zdarzenie', '{"licznik":"brak"}', 'brak_encji', 'synchronizacja', 1)`)) === null
+  && /CHECK/.test(rzuca(() => dbs.exec(`INSERT INTO poczekalnia (id, rodzaj_rekordu, dane, powod, zrodlo, przyszlo_ms) VALUES ('zy', 'zdarzenie', 'x', 'brak_encji', 'synchronizacja', 1)`)) ?? ''), 'poczekalnia: zdarzenie bez licznika przyjęte, dane niebędące JSON odrzucone');
+ok(kolumny('sesja').includes('do_korekty') && /CHECK/.test(rzuca(() => dbs.exec(`INSERT INTO projekt (id, nazwa, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES ('p', 'A', 1, 1, 1); INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien, do_korekty) VALUES ('s', 'p', 'trwa', 1, 'UTC', '2026-10-22', 2)`)) ?? ''), 'sesja.do_korekty ∈ {0, 1} (zapomniany stoper, druga otwarta sesja przy scaleniu)');
 // Baza nowsza niż aplikacja: odrzucona bez zmian.
 const db2 = otworz(); db2.exec('PRAGMA user_version = 2');
 ok(/nowsza/.test(rzuca(() => migruj(db2, MIGRACJE)) ?? '') && db2.prepare('PRAGMA user_version').get().user_version === 2, 'baza w wersji 2 odrzucona przez aplikację w wersji 1, bez zmian');

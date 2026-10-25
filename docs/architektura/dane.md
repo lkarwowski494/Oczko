@@ -58,6 +58,7 @@ Tabela `ustawienie` jest w bazie, więc każdy klucz trafia do kopii urządzenia
 |---|---|---|---|---|
 | `okno_uczciwe_zasady_widziane` | `true` | tak | OR: raz `true` zostaje `true` na wszystkich urządzeniach (okno nie wraca po przeniesieniu danych ani na drugim urządzeniu) | KP-16, P-089 (3a), P-103 (5a); każde zamknięcie okna zapisuje `true` w kolejce |
 | `ostatnie_miejsce` | `{ ekran, id }` | nie (stan urządzenia) | przy imporcie pomijany | F-49 |
+| `icloud_uzytkownik` | identyfikator użytkownika iCloud z ostatniej synchronizacji | nie (stan urządzenia) | przy imporcie pomijany | ADR-0005 (zmiana konta) |
 Nowy klucz wymaga wiersza w tej tabeli. Pamięć uprawnień Pro nie jest kluczem tej tabeli (KP-06: poza danymi synchronizowanymi).
 
 ## Polityka migracji
@@ -87,6 +88,8 @@ Nowy klucz wymaga wiersza w tej tabeli. Pamięć uprawnień Pro nie jest kluczem
 | Kopia samego `.db` przy WAL | eksport tylko `VACUUM INTO` | grep kopiowania ścieżki bazy w CI; test eksportu (liczności) |
 | Import pliku nowszej wersji | odrzucenie przed zapisem | test: `wersja_schematu + 1` → baza bez zmian |
 | Import „zastąp” niechciany | kopia przed importem 30 dni | test: zastąp → przywróć kopię → liczności jak przed |
+| Rekord synchronizacji przed rodzicem albo encją; rekord nowszej wersji (Z07-14) | `poczekalnia` zamiast odrzucenia partii; po 7 dniach „niepełna historia”, rekord zostaje (P-110 Q1a) | własność: permutacja dostarczeń → ten sam stan (07) |
+| Zmiana konta Apple, „zastąp”, „usuń wszystko” przy kilku urządzeniach (Z07-14) | `konto_zmienione` z pytaniem; „zastąp” tylko przy wyłączonej synchronizacji; „usuń wszystko” lokalnie, iCloud osobną opcją (ADR-0005) | maszyna synchronizacji (07), test atrapy `CKSyncEngine` |
 | Podwójny import / powtórzone dostarczenie (zegarek, iCloud) | idempotencja po UUID (`scal`) | wektor M-02, test archiwum dwa razy |
 | Równoległa praca na dwóch urządzeniach (NFR-DAN-003, NFR-ZEG-001) | `konflikt` pokazany, rozstrzygnięcie użytkownika (M-04, M-05) | wektory M-04, M-05, M-16; mutanty `mutanty-scal.mjs` (10, 0 przeżywa) |
 | Usunięcie przez pomyłkę (F-33) | `usunieto_ms`, 30 dni, przywracanie | test maszyny projektu: usuń → przywróć; 29 dni zostaje, 31 dni sprzątnięte |

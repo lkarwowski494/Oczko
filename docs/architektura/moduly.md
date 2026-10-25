@@ -67,7 +67,7 @@ export type StanZegarka = StanEkranuBlokady & { pro: boolean; proWaznoscDo: numb
 export type ZdarzenieWejsciowe = { id: string; licznikId: string; rodzaj: 'plus' | 'minus'; rodzice: string[]; czasMs: number; strefa: string; dzien: string; zrodlo: 'ekran_blokady' | 'zegarek'; urzadzenie: string };
 
 // Typy pomocnicze portów (zaproponowane przez 07 w E3, zatwierdzone w fix 05 2026-10-25, Z07-22).
-export type StanSynchronizacji = 'wylaczona' | 'aktywna' | 'blad' | 'brak_konta';
+export type StanSynchronizacji = 'wylaczona' | 'aktywna' | 'blad' | 'brak_konta' | 'konto_zmienione'; // konto_zmienione: ADR-0005, P-110 Q9a
 export type Produkt = { id: string; cenaWyswietlana: string; okres: 'miesiac' | 'rok' | 'dozywotni' };
 export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean; karencjaDo?: number | null }; // = Uprawnienie z docs/monetyzacja/dostep.mjs; karencjaDo: ADR-0010, KP-06
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
@@ -140,7 +140,8 @@ Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda
 | wstrzymana | wznow | trwa | `przerwy_ms += teraz − wstrzymano_ms`, `wstrzymano_ms = NULL` |
 | trwa / wstrzymana | zakoncz | zakonczona | `koniec_ms`; czas = `koniec − start − przerwy` |
 | zakonczona | koryguj | zakonczona | `skorygowano = 1`, nowe `start_ms`/`koniec_ms` (`koniec ≥ start`) |
-| trwa, `teraz − start_ms ≥ SESJA_MAKS_H` | start aplikacji | zakonczona | `koniec_ms = start + SESJA_MAKS_H`, oznaczona do korekty (zapomniany stoper) |
+| trwa, `teraz − start_ms ≥ SESJA_MAKS_H` | start aplikacji | zakonczona | `koniec_ms = start + SESJA_MAKS_H`, `do_korekty = 1` (zapomniany stoper) |
+| trwa / wstrzymana | scalenie przynosi otwartą sesję z wcześniejszym `start_ms` | zakonczona | `koniec_ms = start_ms`, `do_korekty = 1` (ADR-0005, uzupełnienie) |
 Po zabiciu procesu sesja „trwa” odtwarza się ze znacznika (zasada 4 modułu tła).
 
 ### Synchronizacja iCloud (F-27, F-58)
@@ -151,6 +152,9 @@ Po zabiciu procesu sesja „trwa” odtwarza się ze znacznika (zasada 4 modułu
 | aktywna | konto wylogowane | brak_konta |
 | blad / brak_konta | ustąpienie przyczyny | aktywna |
 | dowolny ≠ wylaczona | wylacz | wylaczona (dane lokalne zostają) |
+| aktywna / blad / brak_konta | zmiana konta (`switchAccounts` albo `signIn` innego użytkownika, rejestr Apple 21c) | konto_zmienione (wysyłka zatrzymana, pytanie; ADR-0005, P-110 Q9a) |
+| konto_zmienione | polacz | aktywna (pełne ponowne wysłanie lokalnych rekordów, scalenie przez `scal`) |
+| konto_zmienione | nie_synchronizuj | wylaczona (dane lokalne zostają) |
 Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHECK.
 
 ### Import archiwum (ADR-0004)
@@ -173,6 +177,7 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `ROZSZERZENIE_ARCHIWUM` | `.oczko` | ADR-0004 |
 | `ZAPAS_MIEJSCA_EKSPORTU` (×rozmiar) | 2 | [OCENA] roli 05: archiwum + plik tymczasowy; do korekty po pomiarze |
 | `BLEDY_MAKS_WIERSZY` (wiersze) | 200 | [OCENA] roli 05 (F-57: ostatnie błędy bez treści) |
+| `POCZEKALNIA_DNI` (dni) | 7 | P-110 (Q1a): po tym czasie „niepełna historia” w Stanie danych, rekord zostaje |
 | `PARTIA_SYNCHRONIZACJI` (wiersze na transakcję) | 200 | [OCENA] roli 05: krótkie transakcje przy scalaniu iCloud i importu (E3 §1); do korekty po pomiarze |
 | `MIN_IOS` / `MIN_WATCHOS` | 18.0 / 11.0 | P-070, ADR-0006 |
 | `PRODUKTY_PRO` (ID) | [DO USTALENIA] | P-038 (przy konfiguracji App Store Connect) |
