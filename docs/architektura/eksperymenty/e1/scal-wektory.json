@@ -554,6 +554,70 @@
   }
  },
  {
+  "id": "M-16",
+  "opis": "ER-42: import „scal” archiwum z gałęzią rozbieżną z lokalną → konflikt; zdarzenia archiwum dostarczone drugi raz (import dwa razy) → ten sam konflikt",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 30,
+    "rodzice": []
+   },
+   {
+    "id": "t1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "x1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "x2",
+    "rodzaj": "plus",
+    "rodzice": [
+     "x1"
+    ]
+   },
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 30,
+    "rodzice": []
+   },
+   {
+    "id": "x1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "x2",
+    "rodzaj": "plus",
+    "rodzice": [
+     "x1"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "konflikt",
+   "wartosci": [
+    31,
+    32
+   ],
+   "kandydaci": {
+    "t1": 31,
+    "x2": 32
+   }
+  }
+ },
+ {
   "id": "M-17",
   "opis": "Z07-13: rozstrzygnięcie z jednym rodzicem jest dozwolone (wybór wersji po konflikcie z gałęzią usuniętą)",
   "zdarzenia": [

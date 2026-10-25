@@ -15,8 +15,9 @@ M-12 OK — Z07-13: cykl a ↔ b → błąd danych → {"stan":"blad","powod":"c
 M-13 OK — Z07-13: zdarzenie jest własnym rodzicem → błąd danych → {"stan":"blad","powod":"cykl","id":"a"}
 M-14 OK — Z07-13: kolizja id (to samo id, inna treść) → błąd danych; identyczny duplikat to M-02 → {"stan":"blad","powod":"kolizja_id","id":"b"}
 M-15 OK — Z07-13: nieznany rodzaj (literówka albo nowsza wersja aplikacji) → błąd danych; adapter synchronizacji i importu odkłada takie zdarzenie do poczekalni, zanim wywoła scal (ADR-0005) → {"stan":"blad","powod":"nieznany_rodzaj","id":"b"}
+M-16 OK — ER-42: import „scal” archiwum z gałęzią rozbieżną z lokalną → konflikt; zdarzenia archiwum dostarczone drugi raz (import dwa razy) → ten sam konflikt → {"stan":"konflikt","glowy":["t1","x2"],"kandydaci":[{"glowa":"t1","wartosc":31},{"glowa":"x2","wartosc":32}]}
 M-17 OK — Z07-13: rozstrzygnięcie z jednym rodzicem jest dozwolone (wybór wersji po konflikcie z gałęzią usuniętą) → {"stan":"zgodny","wartosc":7,"glowy":["r"]}
-R-036-10000 OK — łańcuch 10000 zdarzeń plus → zgodny 10000 (26 ms, Linux) → {"stan":"zgodny","wartosc":10000,"glowy":["e9999"]}
-R-036-150000 OK — łańcuch 150000 zdarzeń plus → zgodny 150000 (422 ms, Linux) → {"stan":"zgodny","wartosc":150000,"glowy":["e149999"]}
-20/20
+R-036-10000 OK — łańcuch 10000 zdarzeń plus → zgodny 10000 (24 ms, Linux) → {"stan":"zgodny","wartosc":10000,"glowy":["e9999"]}
+R-036-150000 OK — łańcuch 150000 zdarzeń plus → zgodny 150000 (357 ms, Linux) → {"stan":"zgodny","wartosc":150000,"glowy":["e149999"]}
+21/21
 kod wyjścia: 0
