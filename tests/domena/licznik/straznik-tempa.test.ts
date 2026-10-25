@@ -2,11 +2,11 @@
 // Wyrocznia: tests/wektory/brd.json RD-17-W1…W6 (jedno źródło: aplikacja) i decyzja P-091 (4b): osobno dla każdego
 // źródła, po czasie zdarzenia (`czasMs`), nigdy po czasie dostarczenia (R-009, ER-40 — wektory roli 01 jeszcze nie dopisane).
 // Seria = wszystkie dodania z odstępem ≤ T od poprzedniego (RD-17 „Wzór”), więc oczekiwane `ids`, `odMs`, `doMs` wynikają z wektora.
-import { serieDoSprawdzenia } from '../../../../src/domena/straznik-tempa';
-import type { Dodanie, Seria } from '../../../../src/domena/straznik-tempa';
-import type { ZrodloZdarzenia } from '../../../../src/domena/stany';
-import { STRAZNIK_SERIA_ZDARZEN, STRAZNIK_OKNO_S } from '../../../../src/konfiguracja';
-import { type WartoscBrd, wektoryReguly, licznikWektorow, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
+import { serieDoSprawdzenia } from '../../../src/domena/straznik-tempa';
+import type { Dodanie, Seria } from '../../../src/domena/straznik-tempa';
+import type { ZrodloZdarzenia } from '../../../src/domena/stany';
+import { STRAZNIK_SERIA_ZDARZEN, STRAZNIK_OKNO_S } from '../../../src/konfiguracja';
+import { type WartoscBrd, wektoryReguly, licznikWektorow, BLAD_DANYCH } from '../../narzedzia/akceptacja';
 
 const KONF = { seria: STRAZNIK_SERIA_ZDARZEN, oknoS: STRAZNIK_OKNO_S };
 const KRYTERIA_RD17: Record<string, string> = {
@@ -16,11 +16,21 @@ const KRYTERIA_RD17: Record<string, string> = {
   'RD-17-W4': 'BR-LIC-019/S2',
   'RD-17-W5': 'BR-LIC-019',
   'RD-17-W6': 'BR-LIC-019',
+  'RD-17-W7': 'BR-LIC-019',
 };
 
 /** Chwile w sekundach „0; 0,4; …” → ms całkowite (bez błędu 2,01 × 1000 = 2009,999…). */
 function chwileMs(v: WartoscBrd): number[] {
+  // Tablica z brd.json (P-097 1a; „brak” → NaN, RD-17-W7) albo dawny tekst „0; 0,4; …”.
+  if (Array.isArray(v)) return v.map((s) => (s === 'brak' ? NaN : Math.round(Number(s) * 1000)));
   return String(v).split(';').map((s) => Math.round(Number(s.trim().replace(',', '.')) * 1000));
+}
+/** Źródło z wektora BRD („ekran blokady”) → wartość ze STANY['zdarzenie.zrodlo']. */
+function zrodloZBrd(s: unknown): ZrodloZdarzenia {
+  if (s === 'aplikacja') return 'aplikacja';
+  if (s === 'ekran blokady') return 'ekran_blokady';
+  if (s === 'zegarek') return 'zegarek';
+  throw new Error(`RD-17: nieznane źródło ${String(s)}`);
 }
 function dodania(zrodlo: ZrodloZdarzenia, ms: number[], prefiks = zrodlo): Dodanie[] {
   return ms.map((czasMs, i) => ({ id: `${prefiks}-${i}`, czasMs, zrodlo }));
@@ -40,22 +50,26 @@ describe('RD-17 serieDoSprawdzenia: wektory BRD (źródło: aplikacja)', () => {
   test.each(wektory.map((w) => [`${KRYTERIA_RD17[w.id] ?? 'RD-17'} ${w.id} (${w.rodzaj}) chwile [s]: ${w.wejscie['chwile dodań [s]']}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
       const ms = chwileMs(w.wejscie['chwile dodań [s]']);
-      const wejscie = dodania('aplikacja', ms);
+      // NZ-05-01 (08): W8–W12 podają źródło każdego dodania; bez pola — aplikacja (W1–W7). Czas dostarczenia nie wchodzi (P-091 4b).
+      const zr = w.wejscie['źródła [-]'];
+      const wejscie: Dodanie[] = ms.map((czasMs, i) => ({ id: `d${i}`, czasMs, zrodlo: Array.isArray(zr) ? zrodloZBrd(zr[i]) : 'aplikacja' }));
       const wynik = serieDoSprawdzenia(wejscie, KONF);
       const o = w.oczekiwane['pytanie [-]'];
       if (o === BLAD_DANYCH) {
-        // RD-17-W6: chwile nie rosną w jednym źródle (ER-40 proponuje sortowanie po czasie — do tego czasu wektor BRD).
+        // RD-17-W7: dodanie bez czasu zdarzenia.
         expect(wynik).toEqual({ ok: false, powod: 'bledne_dane' });
-      } else if (o === 'tak') {
-        // W1, W2: wszystkie dodania mają odstęp ≤ 2 s od poprzedniego → jedna seria z całym wejściem.
-        expect(wynik).toEqual({ ok: true, wartosc: [{ zrodlo: 'aplikacja', ids: wejscie.map((d) => d.id), odMs: ms[0], doMs: ms[ms.length - 1] }] });
+      } else if (o === true) {
+        // Wektory „tak”: wszystkie dodania źródła pytania tworzą jedną serię; kolejność po czasie zdarzenia, przy równym czasie po id (W6, W12).
+        const zp = w.oczekiwane['źródło pytania [-]'] === undefined ? 'aplikacja' : zrodloZBrd(w.oczekiwane['źródło pytania [-]']);
+        const seria = wejscie.filter((d) => d.zrodlo === zp).sort((a, b) => a.czasMs - b.czasMs || (a.id < b.id ? -1 : 1));
+        expect(wynik).toEqual({ ok: true, wartosc: [{ zrodlo: zp, ids: seria.map((d) => d.id), odMs: seria[0].czasMs, doMs: seria[seria.length - 1].czasMs }] });
       } else {
         expect(wynik).toEqual({ ok: true, wartosc: [] });
       }
     });
   });
   test(`RD-17 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(6);
+    expect(wektory.length).toBe(12); // W1–W12 po fixie 01 (P-091 4b, ER-40)
     licznik.wynik(wektory.length);
   });
 });
