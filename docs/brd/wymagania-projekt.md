@@ -34,7 +34,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Wtedy zdjęcie jest w projekcie i widać je bez sieci
 
 ### BR-PRJ-004: Dane techniczne projektu
-- Przepływ: PR-07 · Reguła: RD-11
+- Przepływ: PR-07 · Reguła: RD-11, RD-19
 - Dowód potrzeby: J-05; „Enter project details such as start date, yarn, gauge, hook/needle sizes” (opis YarnBuddy, S-17); szydełko 5,2 mm niedostępne do wyboru (Crochet row & stitch counter, id12656086541)
 - Kryteria akceptacji:
   - Scenariusz: Drut w milimetrach
@@ -45,6 +45,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Zakładając, że użytkownik wpisuje drut 3 mm
     - Gdy zapisuje projekt
     - Wtedy projekt pokazuje „3 mm” bez numeru US (RD-11-W3)
+  - Scenariusz: Szydełko w milimetrach (ER-32)
+    - Zakładając, że użytkownik wpisuje szydełko 6,5 mm
+    - Gdy zapisuje projekt
+    - Wtedy projekt pokazuje „6,5 mm (US K-10 ½)” (RD-19-W3)
 
 ### BR-PRJ-005: Powrót do projektu po przerwie
 - Przepływ: PR-07

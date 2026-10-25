@@ -2600,5 +2600,103 @@
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: C < 0",
     "miejsce": "docs/brd/reguly.md:372"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W1",
+    "wejscie": {
+      "d [mm]": 5
+    },
+    "oczekiwane": {
+      "US [-]": "H-8"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18",
+    "miejsce": "docs/brd/reguly.md:383"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W2",
+    "wejscie": {
+      "d [mm]": 3.125
+    },
+    "oczekiwane": {
+      "US [-]": "D"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18",
+    "miejsce": "docs/brd/reguly.md:384"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W3",
+    "wejscie": {
+      "d [mm]": 6.5
+    },
+    "oczekiwane": {
+      "US [-]": "K-10 ½"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18",
+    "miejsce": "docs/brd/reguly.md:385"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W4",
+    "wejscie": {
+      "d [mm]": 2.5
+    },
+    "oczekiwane": {
+      "US [-]": "brak"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18: wiersz bez oznaczenia US",
+    "miejsce": "docs/brd/reguly.md:386"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W5",
+    "wejscie": {
+      "d [mm]": 4.75
+    },
+    "oczekiwane": {
+      "US [-]": "brak"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18 i rachunek: rozmiar spoza tabeli, bez najbliższej wartości",
+    "miejsce": "docs/brd/reguly.md:387"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W6",
+    "wejscie": {
+      "d [mm]": 3.1254
+    },
+    "oczekiwane": {
+      "US [-]": "D"
+    },
+    "tolerancja": null,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-18 i rachunek: 3,125 po zaokrągleniu do 0,001 mm",
+    "miejsce": "docs/brd/reguly.md:388"
+  },
+  {
+    "regula": "RD-19",
+    "id": "RD-19-W7",
+    "wejscie": {
+      "d [mm]": 0
+    },
+    "oczekiwane": {
+      "US [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: d ≤ 0",
+    "miejsce": "docs/brd/reguly.md:389"
   }
 ]

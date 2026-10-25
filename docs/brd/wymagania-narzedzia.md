@@ -27,13 +27,21 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
     - Wtedy zapas pokazuje 2 motki
 
 ### BR-ZAP-003: Narzędzia w milimetrach
-- Przepływ: PR-10 · Reguła: RD-11
+- Przepływ: PR-10 · Reguła: RD-11, RD-19
 - Dowód potrzeby: J-08; „Tool stash for keeping track of your hooks, needles” (opis YarnBuddy, S-17); mm jako klucz [FAKT S-18]
 - Kryteria akceptacji:
   - Scenariusz: Drut 3,25 mm
     - Zakładając, że użytkownik dodaje drut 3,25 mm
     - Gdy zapisuje
     - Wtedy lista pokazuje „3,25 mm (US 3)” (RD-11-W2)
+  - Scenariusz: Szydełko 5 mm (ER-32)
+    - Zakładając, że użytkownik dodaje szydełko 5 mm
+    - Gdy zapisuje
+    - Wtedy lista pokazuje „5 mm (US H-8)” (RD-19-W1)
+  - Scenariusz: Szydełko bez oznaczenia US (ER-32)
+    - Zakładając, że użytkownik dodaje szydełko 2,5 mm
+    - Gdy zapisuje
+    - Wtedy lista pokazuje „2,5 mm” bez oznaczenia US (RD-19-W4)
 
 ### BR-ZAP-004: Wyszukiwanie w zapasie
 - Przepływ: PR-10

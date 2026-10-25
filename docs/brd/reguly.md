@@ -370,3 +370,20 @@ Liczba dni d z dat (ER-38):
 | RD-18-W4 | 320 | 600 | 0 | 0 | brak szacunku | brak szacunku | — | poniżej | rachunek: H = 0, brak sesji stopera |
 | RD-18-W5 | 100 | 100 | 10 | 1 | 10 | 10 | 0,01 | powyżej | rachunek: tempo 10 rz./h |
 | RD-18-W6 | -5 | 600 | 20 | 1 | błąd danych | błąd danych | — | błąd | rachunek: C < 0 |
+
+### RD-19: Rozmiar szydełka w mm na oznaczenie US
+- Wzór: wyszukanie w tabeli szydełek zwykłych S-18 („Crochet Hook Sizes”); klucz to rozmiar w mm po zaokrągleniu do 0,001 mm (jak RD-11); brak oznaczenia US w wierszu albo rozmiar spoza tabeli daje „brak”, nie najbliższą wartość. Szydełka stalowe (numeracja odwrotna) nie wchodzą do W1 (P-081 P4a; ER-32)
+- Jednostki: d [mm], oznaczenie US [-] (tekst, np. „H-8”, „K-10 ½”)
+- Granica: brak; d ≤ 0 to błąd danych
+- Podstawa: S-18 (tabela odczytana surowo 2026-10-25, zgodna z `docs/tresci/wektory.json`, `szydelka`); decyzja P-081 (P4a)
+- Krytyczna: nie
+
+| ID | d [mm] | Oczekiwane: US [-] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|
+| RD-19-W1 | 5 | H-8 | — | typowy | S-18 |
+| RD-19-W2 | 3,125 | D | — | typowy | S-18 |
+| RD-19-W3 | 6,5 | K-10 ½ | — | typowy | S-18 |
+| RD-19-W4 | 2,5 | brak | — | typowy | S-18: wiersz bez oznaczenia US |
+| RD-19-W5 | 4,75 | brak | — | typowy | S-18 i rachunek: rozmiar spoza tabeli, bez najbliższej wartości |
+| RD-19-W6 | 3,1254 | D | — | typowy | S-18 i rachunek: 3,125 po zaokrągleniu do 0,001 mm |
+| RD-19-W7 | 0 | błąd danych | — | błąd | rachunek: d ≤ 0 |
