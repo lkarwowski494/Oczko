@@ -3,16 +3,16 @@
 // Archiwa wejściowe budowane bez kodu aplikacji (node:sqlite + schemat.sql v1 + własny zapis ZIP); wyjściowe czytane własnym czytnikiem ZIP.
 import { mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { utworzArchiwum } from '../../../src/dane/archiwum';
-import { przywrocZKopii } from '../../../src/dane/kopia-ratunkowa';
-import { migruj } from '../../../src/dane/migracje/migruj';
-import { ROZSZERZENIE_ARCHIWUM, WERSJA_FORMATU_ARCHIWUM, WERSJA_SCHEMATU } from '../../../src/konfiguracja';
-import { eksportuj, importuj } from '../../../src/przypadki-uzycia/archiwum';
-import type { Manifest } from '../../../src/przypadki-uzycia/porty-propozycja';
+import { utworzArchiwum } from '../../src/dane/archiwum';
+import { przywrocZKopii } from '../../src/dane/kopia-ratunkowa';
+import { migruj } from '../../src/dane/migracje/migruj';
+import { ROZSZERZENIE_ARCHIWUM, WERSJA_FORMATU_ARCHIWUM, WERSJA_SCHEMATU } from '../../src/konfiguracja';
+import { eksportuj, importuj } from '../../src/przypadki-uzycia/archiwum';
+import type { Manifest } from '../../src/przypadki-uzycia/porty-propozycja';
 import {
   archiwumWzorcowe, czesc, czytajBaze, czytajZip, licznik, licznosciPliku, projekt, ustawGlowe, zapiszZip, zdarzenie, zycie, type Instr,
-} from '../../dane/pomocnicze/dane-wejsciowe';
-import { GODZ, MIN, T0, czasWTle, ile, jeden, licznosci, migawka, przygotuj, sha256, sha256Pliku, wlozPlik, wykonaj } from '../../dane/pomocnicze/srodowisko';
+} from './pomocnicze/dane-wejsciowe';
+import { GODZ, MIN, T0, czasWTle, ile, jeden, licznosci, migawka, przygotuj, sha256, sha256Pliku, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
 
 const POMIN = ['blad', 'ustawienie']; // diagnostyka i mały stan nie są danymi użytkownika w porównaniu
 const TRESCI = { pdf: Buffer.from('PDF-1.4 abc'), rys: Buffer.from('PKDRAWING'), jpg: Buffer.from('JPEG-DANE!') }; // bajty = zycie(): 11, 9, 10

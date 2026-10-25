@@ -1,10 +1,10 @@
 // Pamięć podręczna licznika po dopisaniu zdarzeń z innego źródła (dziennik +1, zegarek, import „scal”; ADR-0005, ADR-0008, moduly.md „Scalanie”):
 // `scal` nad wszystkimi zdarzeniami licznika → zgodny: wartość i głowa; konflikt: `konflikt = 1`, wartość bez zmian (NFR-DAN-003: pokaż, nie zgaduj);
 // blad: wpis w `blad`, licznik pokazuje ostatnią zapisaną wartość, bez zapisu wyniku.
-import type { PortBazy } from '../domena/porty';
-import { scal } from '../domena/scal';
-import { zapiszBladW } from '../dane/repozytoria/bledy';
-import { stanLicznika, ustawStan, zdarzeniaDoScalenia } from '../dane/repozytoria/liczniki';
+import type { PortBazy } from '../../domena/porty';
+import { scal } from '../../domena/scal';
+import { zapiszBladW } from './bledy';
+import { stanLicznika, ustawStan, zdarzeniaDoScalenia } from './liczniki';
 
 export async function przeliczLicznik(tx: PortBazy, licznikId: string, terazMs: number): Promise<'zgodny' | 'konflikt' | 'czeka' | 'blad'> {
   const w = scal(await zdarzeniaDoScalenia(tx, licznikId));

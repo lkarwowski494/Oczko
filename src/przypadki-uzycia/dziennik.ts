@@ -12,7 +12,7 @@ import {
 } from '../dane/repozytoria/liczniki';
 import { dodajDni } from './daty';
 import { wKolejce } from './kolejka';
-import { przeliczLicznik } from './scalenie';
+import { przeliczLicznik } from '../dane/repozytoria/przelicz';
 import { blad, czyBladDanych } from './zapis';
 import type { ZaleznosciDziennika } from './zaleznosci';
 

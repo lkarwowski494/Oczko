@@ -1,11 +1,18 @@
 // Otwarcie bazy aplikacji (ADR-0019: bez cichego zastępstwa bazą w pamięci; Z07-21: plik niedostępny przed odblokowaniem ≠ uszkodzenie).
-// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Ciało: zaślepka roli 07 (E3).
-// Docelowo jedyne miejsce importu expo-sqlite (moduly.md); fabryka połączenia wstrzykiwana, żeby test szedł na node:sqlite.
+// sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22).
+// Fabryka połączenia wstrzykiwana (aplikacja: otworzPortExpo z adapter-expo.ts), żeby test szedł na node:sqlite.
 import type { Wynik } from '../../domena/bledy';
 import type { PortBazy } from '../../domena/porty';
-import { niezaimplementowane } from '../../domena/zaslepka';
+import { powodBledu } from './bledy-sqlite';
 
-/** SQLITE_CORRUPT / SQLITE_NOTADB → `uszkodzony`; SQLITE_CANTOPEN / IOERR → `zapis` (propozycja; osobny powód: [DO USTALENIA] Z07-21). */
-export function otworzBaze(_sciezka: string, _fabryka: (sciezka: string) => PortBazy): Promise<Wynik<PortBazy>> {
-  return niezaimplementowane('ADR-0019 otworzBaze');
+/** SQLITE_CORRUPT / SQLITE_NOTADB → `uszkodzony`; SQLITE_CANTOPEN / IOERR → `zapis` (osobny powód „plik niedostępny”: [DO USTALENIA] Z07-21). */
+export async function otworzBaze(sciezka: string, fabryka: (sciezka: string) => PortBazy): Promise<Wynik<PortBazy>> {
+  try {
+    const baza = fabryka(sciezka);
+    await baza.all('SELECT count(*) AS n FROM sqlite_schema'); // pierwszy odczyt: plik obcy albo uszkodzony ujawnia się tu, nie przy pierwszym +1
+    return { ok: true, wartosc: baza };
+  } catch (e) {
+    const powod = powodBledu(e);
+    return { ok: false, powod: powod === 'uszkodzony' ? 'uszkodzony' : 'zapis' };
+  }
 }
