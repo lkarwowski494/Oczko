@@ -2,6 +2,7 @@
  * Kontrakt czystości marek i znaków towarowych (NFR-SEC-011).
  * Weryfikuje brak cudzych znaków towarowych i nazw komercyjnych (Yahtzee, Hasbro, Kniffel, itp.)
  * oraz poprawność zapisu znaków Apple w materiałach zewnętrznych i tłumaczeniach.
+ * Nazwy aplikacji i serwisów konkurencji (także w docs/, zapadka P-107): tests/jakosc/marki.test.ts, scripts/jakosc/marki.mjs (F07-05).
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join } from 'node:path';
