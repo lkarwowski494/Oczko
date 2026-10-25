@@ -4,7 +4,7 @@
 import fc from 'fast-check';
 import { postepProcent, celDzienny } from '../../../../src/domena/postep';
 import type { CzescPostepu } from '../../../../src/domena/postep';
-import { wektoryReguly, lista, liczba, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci, DOBA } from '../../../narzedzia/akceptacja';
+import { type WartoscBrd, wektoryReguly, lista, liczba, licznikWektorow, BLAD_DANYCH, opcjeWlasnosci, DOBA } from '../../../narzedzia/akceptacja';
 
 const KRYTERIA_RD14: Record<string, string> = {
   'RD-14-W1': 'BR-DNI-004/S1',
@@ -16,7 +16,7 @@ const KRYTERIA_RD15: Record<string, string> = {
   'RD-15-W4': 'BR-DNI-005/S4',
 };
 
-function czesci(r: number | string, c: number | string): CzescPostepu[] {
+function czesci(r: WartoscBrd, c: WartoscBrd): CzescPostepu[] {
   const rz = lista(r), ce = lista(c);
   if (rz.length !== ce.length) throw new Error('Wektor RD-14: różna liczba r_i i c_i');
   return rz.map((x, i) => ({ rzedy: x ?? 0, cel: ce[i] }));
@@ -41,7 +41,7 @@ describe('RD-14 postepProcent: wektory BRD', () => {
     });
   });
   test(`RD-14 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(6);
+    expect(wektory.length).toBe(7); // W7 (ER-38) dopisany przez 01
     licznik.wynik(wektory.length);
   });
 });
@@ -92,7 +92,8 @@ describe('RD-14 własności (fast-check)', () => {
 });
 
 describe('RD-15 celDzienny: wektory BRD (dziś = 2026-10-22, termin = dziś + d − 1)', () => {
-  const wektory = wektoryReguly('RD-15');
+  // 08 (partia 1, NZ-05-01, P-097 1a, P-114 Q2a): pętla obejmuje wektory tego kształtu; wektory nowego kształtu sprawdza test 08 w tests/domena/.
+  const wektory = wektoryReguly('RD-15').filter((w) => 'C [rz.]' in w.wejscie);
   const licznik = licznikWektorow();
   test.each(wektory.map((w) => [`${KRYTERIA_RD15[w.id] ?? 'BR-DNI-005'} ${w.id} (${w.rodzaj}) C=${w.wejscie['C [rz.]']} Z_przed=${w.wejscie['Z_przed [rz.]']} d=${w.wejscie['d [dni]']}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
@@ -109,7 +110,7 @@ describe('RD-15 celDzienny: wektory BRD (dziś = 2026-10-22, termin = dziś + d 
     });
   });
   test(`RD-15 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(7);
+    expect(wektory.length).toBe(7); // W8–W10 (d z dat): tests/domena/dni/dni-do-terminu.test.ts
     licznik.wynik(wektory.length);
   });
   test('BR-DNI-005/S1 RD-15-W1 kontrola wyprowadzenia daty: termin 2026-11-04 → d = 14 → cel 13', () => {

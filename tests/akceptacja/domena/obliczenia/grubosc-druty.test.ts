@@ -5,7 +5,7 @@
 import { klasyfikujGrubosc } from '../../../../src/domena/obliczenia/grubosc';
 import type { Klasyfikacja } from '../../../../src/domena/obliczenia/grubosc';
 import { rozmiarUS } from '../../../../src/domena/obliczenia/druty';
-import { WEKTORY_TRESCI, wektoryReguly, licznikWektorow, wywolaj, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
+import { type WartoscBrd, WEKTORY_TRESCI, wektoryReguly, licznikWektorow, wywolaj, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
 
 type OczekiwaneTresci = { wynik: string; kategorie?: number[]; p4_zaokraglone?: number | null; polowka?: boolean };
 const rosnaco = (a: number, b: number) => a - b;
@@ -65,7 +65,7 @@ describe('RD-10 klasyfikujGrubosc: wektory BRD (W2 według reguly.md, ER-34)', (
   const wektory = wektoryReguly('RD-10');
   const licznik = licznikWektorow();
   /** BRD: liczba = jedna kategoria; 2.3 = zapis zbioru {2, 3} (ER-39); „poza tabelą”; „błąd danych”. */
-  function zBrd(p: number, o: number | string): Klasyfikacja {
+  function zBrd(p: number, o: WartoscBrd): Klasyfikacja {
     if (o === BLAD_DANYCH) return { wynik: 'blad_danych' };
     if (o === 'poza tabelą') return { wynik: 'powyzej_tabeli', p4Zaokraglone: p, polowka: false };
     if (o === 2.3) return { wynik: 'kategorie', kategorie: [2, 3], p4Zaokraglone: p, polowka: false };

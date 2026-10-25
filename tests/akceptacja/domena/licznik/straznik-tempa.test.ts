@@ -6,7 +6,7 @@ import { serieDoSprawdzenia } from '../../../../src/domena/straznik-tempa';
 import type { Dodanie, Seria } from '../../../../src/domena/straznik-tempa';
 import type { ZrodloZdarzenia } from '../../../../src/domena/stany';
 import { STRAZNIK_SERIA_ZDARZEN, STRAZNIK_OKNO_S } from '../../../../src/konfiguracja';
-import { wektoryReguly, licznikWektorow, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
+import { type WartoscBrd, wektoryReguly, licznikWektorow, BLAD_DANYCH } from '../../../narzedzia/akceptacja';
 
 const KONF = { seria: STRAZNIK_SERIA_ZDARZEN, oknoS: STRAZNIK_OKNO_S };
 const KRYTERIA_RD17: Record<string, string> = {
@@ -19,7 +19,7 @@ const KRYTERIA_RD17: Record<string, string> = {
 };
 
 /** Chwile w sekundach „0; 0,4; …” → ms całkowite (bez błędu 2,01 × 1000 = 2009,999…). */
-function chwileMs(v: number | string): number[] {
+function chwileMs(v: WartoscBrd): number[] {
   return String(v).split(';').map((s) => Math.round(Number(s.trim().replace(',', '.')) * 1000));
 }
 function dodania(zrodlo: ZrodloZdarzenia, ms: number[], prefiks = zrodlo): Dodanie[] {

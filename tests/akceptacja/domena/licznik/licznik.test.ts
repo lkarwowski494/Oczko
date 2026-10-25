@@ -10,10 +10,12 @@ const KRYTERIA_RD12: Record<string, string> = {
   'RD-12-W3': 'BR-LIC-007',
   'RD-12-W4': 'BR-LIC-007',
   'RD-12-W5': 'BR-LIC-007/S3',
+  'RD-12-W6': 'BR-LIC-007',
 };
 
 describe('RD-12 powtorzenie: wektory BRD', () => {
-  const wektory = wektoryReguly('RD-12');
+  // 08 (partia 1, NZ-05-01, P-097 1a, P-114 Q2a): pętla obejmuje wektory tego kształtu; wektory nowego kształtu sprawdza test 08 w tests/domena/.
+  const wektory = wektoryReguly('RD-12').filter((w) => 'r [rz.]' in w.wejscie);
   const licznik = licznikWektorow();
   test.each(wektory.map((w) => [`${KRYTERIA_RD12[w.id] ?? 'RD-12'} ${w.id} (${w.rodzaj}) r=${w.wejscie['r [rz.]']} n=${w.wejscie['n [rz.]']}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
@@ -28,7 +30,7 @@ describe('RD-12 powtorzenie: wektory BRD', () => {
     });
   });
   test(`RD-12 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(5);
+    expect(wektory.length).toBe(6); // W1–W6 (W6: r < 0, P-097 3.1a); W7–W9 (tryb licznika): tests/domena/licznik/tryb-licznika.test.ts
     licznik.wynik(wektory.length);
   });
 });

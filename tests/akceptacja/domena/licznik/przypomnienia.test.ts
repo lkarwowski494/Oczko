@@ -14,7 +14,8 @@ const KRYTERIA_RD13: Record<string, string> = {
 };
 
 describe('RD-13 czyPrzypomnienie: wektory BRD', () => {
-  const wektory = wektoryReguly('RD-13');
+  // 08 (partia 1, NZ-05-01, P-097 1a, P-114 Q2a): pętla obejmuje wektory tego kształtu; wektory nowego kształtu sprawdza test 08 w tests/domena/.
+  const wektory = wektoryReguly('RD-13').filter((w) => 'r [rz.]' in w.wejscie);
   const licznik = licznikWektorow();
   test.each(wektory.map((w) => [`${KRYTERIA_RD13[w.id] ?? 'RD-13'} ${w.id} (${w.rodzaj}) r=${w.wejscie['r [rz.]']} s=${w.wejscie['s [rz.]']} N=${w.wejscie['N [rz.]']} M=${w.wejscie['M [-]']}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
@@ -22,11 +23,11 @@ describe('RD-13 czyPrzypomnienie: wektory BRD', () => {
       const wynik = czyPrzypomnienie(liczba(w.wejscie['r [rz.]']), plan);
       const o = w.oczekiwane['przypomnienie [-]'];
       if (o === BLAD_DANYCH) expect(wynik).toEqual({ ok: false, powod: 'bledne_dane' });
-      else expect(wynik).toEqual({ ok: true, wartosc: o === 'tak' });
+      else expect(wynik).toEqual({ ok: true, wartosc: o === true }); // tak/nie → true/false (P-097 1a)
     });
   });
   test(`RD-13 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(5);
+    expect(wektory.length).toBe(5); // W6–W10 (wpisanie a → b): tests/domena/licznik/przypomnienie-wpisania.test.ts
     licznik.wynik(wektory.length);
   });
 });

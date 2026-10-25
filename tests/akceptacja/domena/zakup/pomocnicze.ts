@@ -43,6 +43,15 @@ export const KRYTERIA: Record<string, string> = {
   'W-14': 'KP-02 BR-ZAK-001/S6', 'W-15': 'BR-ZAK-003/S1', 'W-16': 'KP-02 BR-ZAK-007/S2', 'W-17': 'BR-ZAK-003/S1 KP-03',
   'W-18': 'BR-ZAK-001/S2 KP-06',
   'P-01': 'KP-06', 'P-02': 'KP-06', 'P-03': 'KP-06', 'P-04': 'KP-06', 'P-05': 'KP-06', 'P-06': 'KP-06',
+  // Wektory dopisane przez 02 w fixie Z07-07–Z07-09 (P-103, P-109): kryterium/ryzyko z pola „scenariusz” wektora
+  // (kryteria.json E0 roli 07 ich nie zna; dopisała rola 08 w partii 1, NZ-05-01, zgłoszenie do 07).
+  'L-04c': 'KP-12 BR-ZAK-005/S3 R-100', 'L-04d': 'KP-12 BR-ZAK-005/S3 R-100', 'L-04e': 'KP-12 BR-ZAK-005/S3 R-100',
+  'L-07': 'KP-12 BR-DAN-005/S2 BR-ZAK-005/S7', 'L-13': 'KP-12 BR-ZAK-001/S2', 'L-21': 'KP-12 KP-15 R-100',
+  'L-22': 'KP-12 R-103', 'L-22b': 'KP-12 R-103', 'L-23': 'KP-12 R-102', 'L-23b': 'KP-12 R-102', 'L-24': 'KP-12 R-103',
+  'L-25': 'KP-12 R-178', 'Z-09': 'KP-13 R-099',
+  'W-12b': 'KP-06 R-116', 'W-19a': 'KP-06 R-113', 'W-19b': 'KP-06 R-113', 'W-20': 'KP-06 R-114', 'W-20b': 'KP-06 R-114',
+  'W-21': 'KP-06 R-114', 'W-21b': 'KP-06 R-114', 'W-22': 'KP-07 R-111', 'W-22b': 'KP-07 R-111', 'W-23': 'KP-06 R-112',
+  'W-23b': 'KP-06 R-112', 'W-23c': 'KP-06 R-112', 'W-23d': 'KP-06 R-112', 'W-23e': 'KP-06 R-112', 'P-07': 'KP-06 R-115',
 };
 export function kryteria(id: string): string {
   const k = KRYTERIA[id];
