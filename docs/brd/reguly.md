@@ -43,17 +43,17 @@ Zasady wspólne reguł:
 | RD-02-W6 | 100 | 0 | 22 | błąd danych | — | błąd | rachunek: dzielenie przez zero |
 
 ### RD-03: Przeliczenia jednostek długości i masy
-- Wzór: `cm = in × 2,54`; `m = yd × 0,9144`; `g = oz × 28,34952`
+- Wzór: `cm = in × 2,54`; `m = yd × 0,9144`; `g = oz × 28,349 523 125` (ER-33)
 - Jednostki: wejście i wyjście jak we wzorze
 - Granica: wartość ≥ 0 (włączna)
-- Podstawa: S-27 (2,54 i 0,9144 dokładne; 28,34952 to wartość tabeli zaokrąglona do 7 cyfr)
+- Podstawa: S-27 (2,54 i 0,9144 dokładne); S-41 (uncja 28,349 523 125 g = funt 453,592 37 g / 16, dokładnie; S-27 podaje tę wartość zaokrągloną do 7 cyfr: 28,34952; ER-33, rejestr roli 06 JED-005)
 - Krytyczna: tak
 
 | ID | Przelicznik [-] | Wartość [jedn. wejścia] | Oczekiwane: wynik [jedn. wyjścia] | Tolerancja | Rodzaj | Pochodzenie |
 |---|---|---|---|---|---|---|
 | RD-03-W1 | yd→m | 437 | 399,5928 | 0,0001 | typowy | S-27: 437 × 0,9144 |
 | RD-03-W2 | in→cm | 4 | 10,16 | 0,0001 | typowy | S-27: 4 × 2,54 |
-| RD-03-W3 | oz→g | 3,5 | 99,22332 | 0,0001 | typowy | S-27: 3,5 × 28,34952 |
+| RD-03-W3 | oz→g | 3,5 | 99,22333 | 0,0001 | typowy | S-41: 3,5 × 28,349 523 125 = 99,223 330 937 5 (ER-33) |
 | RD-03-W4 | yd→m | 0 | 0 | 0 | granica | rachunek |
 | RD-03-W5 | in→cm | -1 | błąd danych | — | poniżej | rachunek |
 | RD-03-W6 | in→cm | 0,01 | 0,0254 | 0,0001 | powyżej | S-27 |
