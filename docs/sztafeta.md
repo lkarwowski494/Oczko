@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (koordynator: P-087, P-088)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (koordynator: P-087, P-088; rola 07: STOP E4)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -19,8 +19,17 @@
 | 05 Architekt | build | **zakończona 2026-10-22** (E0 P-070, E1 P-071, E2 P-072, E3 P-073, E4 P-074; 2026-10-22; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/architektura/e0-rozpoznanie.md, docs/architektura/rejestr/ (apple, expo, sqlite), docs/architektura/eksperymenty/e0/, docs/architektura/e1-decyzje.md, docs/adr/0001–0015, eksperymenty/e1/, docs/architektura/e2-moduly-dane.md, moduly.md, dane.md, schemat.sql, stany.json, narzedzia/sprawdz-schemat.mjs, e3-tlo-bledy-prywatnosc-wydajnosc.md, prywatnosc.md, ADR-0016, narzedzia/granice.mjs, README.md, e4-przekazanie.md; ZAL-030 | dla 10: rola klucza ASC API, wariant podpisu, OP-25, „collected” dla CloudKit |
 | 12 Niezawodność, wejście wczesne | build, tylko E0–E1 (P-005) | **E0–E1 zakończone 2026-10-22** (E0: P-079, E1: P-080); E2–E3 po roli 08 | (ten commit) | docs/niezawodnosc/ (e0-rozpoznanie.md, e1-decyzje.md, eksperymenty/wal-kopia.*), ADR-0018–0021; kopie źródeł: oczko-warsztat/12-niezawodnosc/2026-10-22-build/zrodla/ | interpretacje P-080 do weta (próg 2, kopie 30 dni, „6a”, integralność po błędzie); ekran awaryjny do 04 |
 | 06 Treści | build | **zakończona 2026-10-23** (E0 P-081, E1 P-082, E2 P-083, E3 P-084–P-086; przegląd zastępczy D-027; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/tresci/ (README.md, parametry.json, wektory.json, nazwy-zrodel.json, stan.md), scripts/sprawdz-nazwy-zrodel.mjs, tests/tresci/nazwy-zrodel.test.ts; rejestr 103 twierdzeń, treści en, kopie źródeł, 3 weryfikacje: oczko-warsztat/06-tresci/2026-10-22-build/ | ER-31–ER-33 do 01; warunki wyświetlania i rozdzielczość wpisu próbki do 04/05; zestaw przekładu do 09 (po 08 i audycie 04); kategoria 8 CYC: ponowny odczyt do 2027-01-23 |
+| 07 Jakość | build (moduły e2e-mobilne, wlasnosci-i-domena, wydanie; geo-slady nie dotyczy) | **E0–E3 przyjęte, STOP E4** 2026-10-25 (E0 P-090, E1 P-091, E2 P-092, E3 P-096) | (ten commit) | docs/jakosc/ (strategia.md, e0–e4, e1-ryzyka.md 185 ryzyk, zgloszenia.md, e4/tabela-08.md, narzedzia/), tests/akceptacja/ (980 testów przed kodem), tests/jakosc/, tests/narzedzia/, tests/wspolne/, tests/dane/, e2e/ (32 scenariusze), zaślepki src/domena, src/dane, src/przypadki-uzycia, src/ekrany, scripts/jakosc/, scripts/ci/, .github/workflows/jakosc-{linux,ios}.yml | sygnatury Z07-22 i zgłoszenia ER-34–ER-44, Z07-01–Z07-23 do sesji fix 01/02/05 (przed 08); lista „tylko telefon” TT-01–TT-11 przy TestFlight |
 
 ## Następny krok
+### Przekazanie roli 07, build (2026-10-25, STOP E4)
+- Zakończono: 07-jakosc, build, E0–E4 (P-090, P-091, P-092, P-096), gałąź `claude/jolly-thompson-paz6d8`; definicja ukończenia z dowodami i paczka dla 08: `docs/jakosc/e4-przekazanie.md`; strategia testów i definicja ukończenia funkcji: `docs/jakosc/strategia.md`; testy przed kodem: `npm run test:akceptacja` (980: 974 na znaczniku, 6 `[ZIELONY-OK]`); CI: „Jakość · Linux” (bramka), „Jakość · iOS” (build zielony, E2E informacyjnie do ekranów 08).
+- Następne kroki (P-002, P-078, P-091 11a, P-096): **krok porównania z kodem: 03-zakres, tryb `audit`, moduł `inwentarz-funkcji`** oraz **sesja fix ról 01, 02 i 05** (zgłoszenia ER-34–ER-44, Z07-07–Z07-09, Z07-11–Z07-19, Z07-22; testy zależne: `docs/jakosc/e4/tabela-08.md`), potem **08-programista**, tryb `build`; nowa sesja: sonnet, wysiłek medium; opus, gdy zadanie dotyka migracji danych, schematu albo architektury.
+  - `node tools/assemble.mjs 08-programista --tryb build --galaz claude/jolly-thompson-paz6d8`
+  - `.\Get-Prompt.ps1 08-programista -Tryb build -CopyToClipboard`
+- Paczka wejściowa 08: `docs/jakosc/e4-przekazanie.md`, `docs/jakosc/e4/tabela-08.md`, `docs/jakosc/strategia.md` (§6 definicja ukończenia, §3 zasady testów), `e2e/README.md` (testID, build E2E), `tests/wspolne/` (złote pliki, specyfikacja XCTest), `docs/architektura/` (05).
+- Otwarte decyzje: brak w roli 07; [DO USTALENIA] w zgłoszeniach dla 01/02/04/05/09/10/12 (`docs/jakosc/zgloszenia.md`).
+
 ### Koordynacja (2026-10-25)
 - Koordynator: sesja „Main: Oczko” (nowe konto). **P-087:** decyzje podejmuje koordynator (najpierw jak w Treningu, potem własna rekomendacja); na STOP-y ról odpowiada koordynator; wyjątki u właściciela: koszty, jego konta, scalenie do `main`, wysłanie do Apple.
 - **P-089:** monetyzacja zbieżna z Treningiem (ceny PL/EUR/GBP, Family Sharing, okno „Uczciwe zasady”, karta po imporcie) — dla 07, 04, 08, 10.

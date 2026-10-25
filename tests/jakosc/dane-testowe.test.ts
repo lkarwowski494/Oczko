@@ -1,0 +1,25 @@
+// Dane testowe z wycinków prawdziwych plików (strategia §4, zasada roli 07 nr 7): każdy plik ma opis pochodzenia, PDF bez metadanych osobowych.
+import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+
+const KAT = join(__dirname, '../dane');
+const pliki: string[] = [];
+const skan = (d: string) => { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (!n.endsWith('.opis.md')) pliki.push(p); } };
+skan(KAT);
+
+describe('tests/dane (strategia §4)', () => {
+  test('R-171 katalog danych testowych nie jest pusty (pusty zbiór to nie zaliczenie)', () => {
+    expect(pliki.length).toBeGreaterThan(0);
+  });
+  test.each(pliki.map((p) => [p.replace(KAT + '/', ''), p]))('BR-WZR-001 %s ma opis pochodzenia ze źródłem, licencją i oczekiwanym wynikiem', (_n, p) => {
+    expect(existsSync(`${p}.opis.md`)).toBe(true);
+    const opis = readFileSync(`${p}.opis.md`, 'utf8');
+    for (const pole of ['**Źródło:**', '**Licencja', '**Oczekiwany wynik']) expect(opis).toContain(pole);
+  });
+  test.each(pliki.filter((p) => p.endsWith('.pdf')).map((p) => [p.replace(KAT + '/', ''), p]))('NFR-PRY-001 %s bez słownika Info z autorem i bez strumienia XMP', (_n, p) => {
+    const tekst = readFileSync(p).toString('latin1');
+    expect(tekst).not.toMatch(/\/Author\s*\(/);
+    expect(tekst).not.toMatch(/\/Creator\s*\(/);
+    expect(tekst).not.toMatch(/\/Type\s*\/Metadata/);
+  });
+});

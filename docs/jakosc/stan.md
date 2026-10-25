@@ -6,8 +6,8 @@ Aktualizacja: 2026-10-25 · Gałąź `claude/jolly-thompson-paz6d8` · Prompt: `
 | E0 rozpoznanie | przyjęte (P-090: Q1a, Q2a, Q3a) | `docs/jakosc/e0-rozpoznanie.md`, `docs/jakosc/e0/` |
 | E1 rejestr ryzyk | przyjęte (P-091) | `docs/jakosc/e1-raport.md`, `e1-ryzyka.md`, `e1/` |
 | E2 plan testów | przyjęte (P-092) | `docs/jakosc/strategia.md` |
-| E3 testy akceptacyjne, CI | **STOP E3 — czeka na odpowiedź koordynatora** (CI Linux zielony 40223883481; iOS build zielony, E2E czerwone z właściwego powodu 40223597670) | `docs/jakosc/e3-raport.md`, `strategia.md` §9 |
-| E4 przekazanie do 08 | — | |
+| E3 testy akceptacyjne, CI | przyjęte (P-096) | `docs/jakosc/e3-raport.md`, `strategia.md` §9 |
+| E4 przekazanie do 08 | **STOP E4 — rola zakończona po przyjęciu** | `docs/jakosc/e4-przekazanie.md`, `e4/tabela-08.md` |
 
-Następny krok: odpowiedź koordynatora na STOP E3 → zapis w docs/decyzje.md → E4 (przekazanie do 08: test → kryterium → plik → kolejność).
+Następny krok (po przyjęciu E4): krok porównania z kodem (03 audit, P-078) i sesja fix 01/02/05 (P-091 11a, P-096), potem 08 build. Paczka: `docs/jakosc/e4-przekazanie.md`.
 Stan testów na wejściu: `npx jest` 956/956 (kod 0), typecheck kod 0, `granice.mjs src` kod 1 (13 naruszeń w kodzie 0.1.0).
