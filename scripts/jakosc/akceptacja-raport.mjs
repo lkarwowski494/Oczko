@@ -18,7 +18,7 @@ export const ID = /\b(BR-[A-Z]{3}-\d{3}|NFR-[A-Z]{3}-\d{3}|KP-\d{2}|RD-\d{2}|P-\
 export function powodCzerwieni(komunikat) {
   if (/NIEZAIMPLEMENTOWANE:/.test(komunikat)) return 'znacznik';
   if (/Cannot find module|SyntaxError|is not a function|is not defined|is not a constructor|TS\d{4}|Unexpected token/.test(komunikat)) return 'zly';
-  if (/expect\(|toBe|toEqual|toStrictEqual|toThrow|Expected|Received/.test(komunikat)) return 'asercja';
+  if (/expect\(|toBe|toEqual|toStrictEqual|toThrow|Expected|Received|Unable to find an element|Found multiple elements|toHaveAccessibleName|toHaveBeenCalled/.test(komunikat)) return 'asercja';
   return 'zly';
 }
 const wiersze = [], bledy = [];

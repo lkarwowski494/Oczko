@@ -51,9 +51,9 @@ describe('kontrole-repo.mjs (strategia §10, kontrola 05-8, P-089)', () => {
     expect(w.status).toBe(0);
   });
   test('R-171 package.json: expo-updates, SDK awarii i nieprzypięta wersja padają', () => {
-    const w = uruchom(KONTROLE, repo({ 'package.json': JSON.stringify({ dependencies: { 'expo-updates': '1.0.0', '@sentry/react-native': '6.0.0', 'expo-iap': '^5.8.1' } }) }));
+    const w = uruchom(KONTROLE, repo({ 'package.json': JSON.stringify({ dependencies: { 'expo-updates': '1.0.0', '@sentry/react-native': '6.0.0', 'expo-iap': '^5.8.1', 'expo-av': '1.0.0' } }) }));
     expect(w.status).toBe(1);
-    for (const r of ['EXPO-UPDATES', 'SDK-AWARII', 'PRZYPIECIE']) expect(w.stdout).toContain(r);
+    for (const r of ['EXPO-UPDATES', 'SDK-AWARII', 'PRZYPIECIE', 'DZWIEK']) expect(w.stdout).toContain(r);
   });
   test('R-171 app.json z włączoną sekcją updates pada (ADR-0021)', () => {
     const w = uruchom(KONTROLE, repo({ 'app.json': JSON.stringify({ expo: { updates: { url: 'https://u.expo.dev/x' } } }) }));

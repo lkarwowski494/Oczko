@@ -31,6 +31,7 @@ export const REGULY = [
 
 // Reguły na plikach konfiguracji (package.json, app.json).
 const SDK_AWARII = /^(@sentry\/|sentry-|@bugsnag\/|bugsnag|@datadog\/|@react-native-firebase\/crashlytics|instabug|@embrace-io\/)/;
+const DZWIEK = /^(expo-av|expo-audio|react-native-sound|react-native-track-player)$/; // BR-LIC-005: haptyka bez dźwięku (moduly.md, port Haptyka)
 const PRZYPIETE = ['expo-iap', '@bacons/apple-targets', '@testing-library/react-native', 'eslint', '@typescript-eslint/parser', 'yaml'];
 
 function pliki(katalog) {
@@ -75,6 +76,7 @@ export function sprawdz(korzenKatalog, zakres) {
     for (const [n, v] of Object.entries(zal)) {
       if (n === 'expo-updates') naruszenia.push(`EXPO-UPDATES package.json — bez OTA (ADR-0021)`);
       if (SDK_AWARII.test(n)) naruszenia.push(`SDK-AWARII package.json: ${n} — sygnał bez SDK (ADR-0018)`);
+      if (DZWIEK.test(n)) naruszenia.push(`DZWIEK package.json: ${n} — aplikacja nie odtwarza dźwięku (BR-LIC-005)`);
       if (PRZYPIETE.includes(n) && !/^\d+\.\d+\.\d+$/.test(v)) naruszenia.push(`PRZYPIECIE package.json: ${n}@${v} — wersja dokładna (ADR-0016)`);
     }
   }

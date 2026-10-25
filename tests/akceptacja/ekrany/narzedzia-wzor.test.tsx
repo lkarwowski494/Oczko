@@ -1,0 +1,40 @@
+// Warstwa „Narzędzia” (P-046): włóczka (F-37, BR-ZAP-001/S2), kalkulator (F-38, BR-KAL-003, R-131); link do filmu przy wzorze (F-55, BR-WZR-007/S4).
+// Ekrany nienarysowane (design-spec.md:95; Z07-05).
+import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import { Kalkulator, Wloczka } from '../../../src/ekrany/Narzedzia';
+import { LinkFilmu } from '../../../src/ekrany/Wzor';
+import type { Tlumacz } from '../../../src/ekrany/wspolne';
+import { atrapaSystemu, tEn } from './pomoc';
+
+let t: Tlumacz;
+beforeAll(async () => { t = await tEn(); });
+
+describe('Narzędzia i wzór', () => {
+  test('BR-ZAP-001/S2: pielęgnacja jako tekst, bez rysowanych symboli (OG-13, OP-11)', () => {
+    const r = render(<Wloczka stan={{ nazwa: 'Fjord Wool, Slate', pielegnacja: { tekst: 'Hand wash, 30 °C, dry flat', zdjecie: null } }} t={t} naZapisz={jest.fn()} />);
+    expect(screen.getByText('Hand wash, 30 °C, dry flat')).toBeTruthy();
+    expect(screen.queryAllByRole('image')).toHaveLength(0);
+    r.rerender(<Wloczka stan={{ nazwa: 'Fjord Wool, Slate', pielegnacja: { tekst: null, zdjecie: 'file:///etykieta.jpg' } }} t={t} naZapisz={jest.fn()} />);
+    expect(screen.getAllByRole('image')).toHaveLength(1); // tylko zdjęcie etykiety
+  });
+
+  test('R-131 / BR-KAL-003: jednostka z ustawień widoczna przy polu długości (P-075 (4a); Z07-05)', () => {
+    const r = render(<Kalkulator stan={{ uklad: 'metryczny' }} t={t} naOblicz={jest.fn()} />);
+    expect(screen.getByLabelText(/\bcm\b/)).toBeTruthy();
+    r.rerender(<Kalkulator stan={{ uklad: 'imperialny' }} t={t} naOblicz={jest.fn()} />);
+    expect(screen.getByLabelText(/\bin\b|inch/)).toBeTruthy();
+    expect(screen.queryByLabelText(/\bcm\b/)).toBeNull();
+  });
+
+  test('BR-WZR-007/S4: link do filmu bez sieci — informacja, że film wymaga sieci; Oczko trzyma tylko link (Z07-05)', () => {
+    const system = atrapaSystemu();
+    const r = render(<LinkFilmu stan={{ tytul: 'Cable cast-on video', url: 'https://video.example/abc', siec: 'brak' }} t={t} system={system} />);
+    fireEvent.press(screen.getByRole('link', { name: /Cable cast-on video/ }));
+    expect(screen.getByRole('alert')).toBeTruthy();
+    expect(system.otworzAdres).not.toHaveBeenCalled();
+    r.rerender(<LinkFilmu stan={{ tytul: 'Cable cast-on video', url: 'https://video.example/abc', siec: 'jest' }} t={t} system={system} />);
+    fireEvent.press(screen.getByRole('link', { name: /Cable cast-on video/ }));
+    expect(system.otworzAdres).toHaveBeenCalledWith('https://video.example/abc');
+  });
+});
