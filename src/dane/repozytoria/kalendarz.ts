@@ -14,7 +14,7 @@ export type ProjektDnia = { projektId: string; nazwa: string; rzedy: number; cza
 export function szczegolyDnia(_baza: PortBazy, _dzien: string): Promise<ProjektDnia[]> {
   return niezaimplementowane('BR-DNI-002 szczegolyDnia');
 }
-/** `pierwszyDzienTygodnia`: 1 = poniedziałek … 7 = niedziela (z regionu, Intl/CLDR, ADR-0017). */
+/** `pierwszyDzienTygodnia`: 1 = poniedziałek … 7 = niedziela; w aplikacji zawsze `PIERWSZY_DZIEN_TYGODNIA` = 1 (P-110 Q7, moduly.md „Czas w przypadkach użycia”). */
 export type Podsumowanie = { od: string; do: string; rzedy: number; czasMs: number | null; ukonczone: number; poprzednie: { rzedy: number } };
 export function podsumowanieTygodnia(_baza: PortBazy, _w: { dzis: string; pierwszyDzienTygodnia: 1 | 2 | 3 | 4 | 5 | 6 | 7 }): Promise<Podsumowanie> {
   return niezaimplementowane('BR-DNI-003 podsumowanieTygodnia');
