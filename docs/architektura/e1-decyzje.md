@@ -25,7 +25,7 @@ Wejście: E0 (`e0-rozpoznanie.md`) przyjęte P-070. ADR w `docs/adr/` (format MA
 |---|---|---|---|---|
 | E1-1 | SQLite czy JSON przy 150 000 zdarzeń (ADR-0001) | `node --no-warnings eksperymenty/e1/e1-1-skala.mjs` | 0 | SQLite +1 p50 0,182 ms / p95 0,367 ms; historia i kalendarz po indeksie (p95 ≤ 0,336 ms, `SEARCH … USING INDEX`); JSON 13,2 MB przepisywany przy każdym +1: p50 128 ms / p95 176 ms. Linux, Node 22, nie iPhone — proporcja, nie budżet |
 | E1-2 | Scalanie zdarzeń z wielu źródeł bez cichego sumowania (ADR-0005, 0008, 0009) | `node eksperymenty/e1/scal-test.mjs` | 0 | 7/7 wektorów M-01–M-07 (liniowo, duplikat, odwrócona kolejność, konflikt zegarek–telefon, rozstrzygnięcie, −1 przy zerze, +1 po zerowaniu); każdy też przy odwróconym wejściu; wejście niezmienione |
-| E1-2m | Czy wektory łapią błąd „sumuj gałęzie” | `node eksperymenty/e1/mutant/…` (kopia z mutacją) | 1 | 6/7, M-04 BŁĄD → wektory wykrywają błąd |
+| E1-2m | Czy wektory łapią błąd „sumuj gałęzie” | `node eksperymenty/e1/mutant/…` (kopia z mutacją) | 1 | 6/7, M-04 BŁĄD → wektory wykrywają błąd (fix 2026-10-25, Z07-13: statyczna kopia usunięta, zastąpiona generatorem `eksperymenty/e1/mutanty-scal.mjs`, 10 mutantów, 0 przeżywa) |
 | G-07 | Czy `withExclusiveTransactionAsync` otwiera nowe połączenie | `npm pack expo-sqlite@57`, `src/SQLiteDatabase.ts:181, :789` | — | tak (`useNewConnection: true`) |
 
 Nowe wiersze rejestru (odczyt 2026-10-22): Apple 15a–15d, 16, 17.

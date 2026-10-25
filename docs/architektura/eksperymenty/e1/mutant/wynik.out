@@ -1,9 +1,0 @@
-M-01 OK — jedno urządzenie, liniowo → {"stan":"zgodny","wartosc":1,"glowy":["c"]}
-M-02 OK — duplikat dostarczenia (transferUserInfo powtórzony, dziennik Live Activity scalony dwa razy) → {"stan":"zgodny","wartosc":2,"glowy":["b"]}
-M-03 OK — odwrócona kolejność: dziecko przed rodzicem → {"stan":"czeka","brakujacy":["a"]}
-M-04 BŁĄD — zegarek bez telefonu i telefon równolegle od tej samej wartości: konflikt pokazany, nie zsumowany po cichu → {"stan":"zgodny","wartosc":23}
-M-05 OK — rozstrzygnięcie użytkownika łączy gałęzie → {"stan":"zgodny","wartosc":13,"glowy":["p"]}
-M-06 OK — −1 nie schodzi poniżej zera → {"stan":"zgodny","wartosc":0,"glowy":["a"]}
-M-07 OK — zerowanie po serii, potem +1 z ekranu blokady znającego zerowanie → {"stan":"zgodny","wartosc":1,"glowy":["l"]}
-6/7
-kod wyjścia: 1

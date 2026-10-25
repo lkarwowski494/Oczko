@@ -110,7 +110,11 @@
    "wartosci": [
     11,
     12
-   ]
+   ],
+   "kandydaci": {
+    "t1": 11,
+    "z2": 12
+   }
   }
  },
  {
@@ -204,6 +208,36 @@
   }
  },
  {
+  "id": "M-07b",
+  "opis": "zerowanie z wartości większej niż 1 daje 0 (nie −1), następne +1 → 1 (mutant „zerowanie jako −1”)",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 5,
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "zerowanie",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "c",
+    "rodzaj": "plus",
+    "rodzice": [
+     "b"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 1
+  }
+ },
+ {
   "id": "M-08",
   "opis": "cofnięcie serii stuknięć (F-47) przywraca wartość sprzed serii",
   "zdarzenia": [
@@ -251,6 +285,250 @@
   "oczekiwane": {
    "stan": "zgodny",
    "wartosc": 20
+  }
+ },
+ {
+  "id": "M-09",
+  "opis": "Z07-13: plus z dwoma rodzicami (tylko rozstrzygnięcie łączy gałęzie) → błąd danych, nie cichy wynik",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 10,
+    "rodzice": []
+   },
+   {
+    "id": "t1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "z1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "z2",
+    "rodzaj": "plus",
+    "rodzice": [
+     "z1"
+    ]
+   },
+   {
+    "id": "p",
+    "rodzaj": "plus",
+    "rodzice": [
+     "t1",
+     "z2"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "wiele_rodzicow"
+  }
+ },
+ {
+  "id": "M-10",
+  "opis": "Z07-11 (1): trzy stuknięcia z ekranu blokady od 22, każde z rodzicem = poprzednie własne stuknięcie → zgodny 25",
+  "zdarzenia": [
+   {
+    "id": "g",
+    "rodzaj": "wpisanie",
+    "wartosc": 22,
+    "rodzice": []
+   },
+   {
+    "id": "l1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "g"
+    ]
+   },
+   {
+    "id": "l2",
+    "rodzaj": "plus",
+    "rodzice": [
+     "l1"
+    ]
+   },
+   {
+    "id": "l3",
+    "rodzaj": "plus",
+    "rodzice": [
+     "l2"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 25
+  }
+ },
+ {
+  "id": "M-10b",
+  "opis": "Z07-11 (1): stan sprzed poprawki — trzy stuknięcia z tym samym rodzicem g → fałszywy konflikt 23/23/23 (wektor pokazuje, dlaczego intencja łańcuchuje)",
+  "zdarzenia": [
+   {
+    "id": "g",
+    "rodzaj": "wpisanie",
+    "wartosc": 22,
+    "rodzice": []
+   },
+   {
+    "id": "l1",
+    "rodzaj": "plus",
+    "rodzice": [
+     "g"
+    ]
+   },
+   {
+    "id": "l2",
+    "rodzaj": "plus",
+    "rodzice": [
+     "g"
+    ]
+   },
+   {
+    "id": "l3",
+    "rodzaj": "plus",
+    "rodzice": [
+     "g"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "konflikt",
+   "wartosci": [
+    23,
+    23,
+    23
+   ],
+   "kandydaci": {
+    "l1": 23,
+    "l2": 23,
+    "l3": 23
+   }
+  }
+ },
+ {
+  "id": "M-12",
+  "opis": "Z07-13: cykl a ↔ b → błąd danych",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": [
+     "b"
+    ]
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "cykl"
+  }
+ },
+ {
+  "id": "M-13",
+  "opis": "Z07-13: zdarzenie jest własnym rodzicem → błąd danych",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "cykl"
+  }
+ },
+ {
+  "id": "M-14",
+  "opis": "Z07-13: kolizja id (to samo id, inna treść) → błąd danych; identyczny duplikat to M-02",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "wpisanie",
+    "wartosc": 5,
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "b",
+    "rodzaj": "minus",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "kolizja_id"
+  }
+ },
+ {
+  "id": "M-15",
+  "opis": "Z07-13: nieznany rodzaj (literówka albo nowsza wersja aplikacji) → błąd danych; adapter synchronizacji i importu odkłada takie zdarzenie do poczekalni, zanim wywoła scal (ADR-0005)",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plsu",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "nieznany_rodzaj"
+  }
+ },
+ {
+  "id": "M-17",
+  "opis": "Z07-13: rozstrzygnięcie z jednym rodzicem jest dozwolone (wybór wersji po konflikcie z gałęzią usuniętą)",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "r",
+    "rodzaj": "rozstrzygniecie",
+    "wartosc": 7,
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "zgodny",
+   "wartosc": 7
   }
  }
 ]

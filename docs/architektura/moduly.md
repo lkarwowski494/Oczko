@@ -7,7 +7,7 @@ src/
   domena/                 czysty TS: bez react, react-native, expo-*, src/dane, src/platforma (granice.mjs)
     limit.ts              startDnia, wolaStraznika, mozeZaczacDzien (z docs/monetyzacja/limit.mjs, wektory L-*, S-*, Z-*)
     dostep.ts             uprawnienia Pro z bieżących transakcji (z docs/monetyzacja/dostep.mjs, wektory W-*)
-    scal.ts               scalanie zdarzeń licznika (z eksperymenty/e1/scal.mjs, wektory M-01–M-08)
+    scal.ts               scalanie zdarzeń licznika (z eksperymenty/e1/scal.mjs, iteracyjnie; wektory M-01–M-17; wynik zgodny | konflikt | czeka | blad)
     licznik.ts            wartość wyświetlana (skończone / w trakcie, RD-12 powtórzenia, licznik całości BR-LIC-018)
     straznik-tempa.ts     seria dodań RD-17
     przypomnienia.ts      plan rzędów i wyzwolenie RD-13 (F-06)
@@ -88,6 +88,13 @@ export interface PortArchiwum {                                                 
   wczytaj(a: ArchiwumSprawdzone, tryb: TrybImportu): Promise<Wynik<{ licznosci: Licznosci }>>;
 }
 ```
+
+## Scalanie (`scal`, fix 2026-10-25, Z07-13)
+Prototyp i wyrocznia: `eksperymenty/e1/scal.mjs`, `scal-wektory.json` (M-01–M-17), `scal-test.mjs` (każda permutacja wejścia, 150 000 zdarzeń), `mutanty-scal.mjs` (w `jakosc:kontrole`).
+- Iteracyjnie (kolejność topologiczna), bez rekurencji; budżet: łańcuch 150 000 zdarzeń (szacunek 3 lat, ADR-0005) w jednym wywołaniu.
+- Wynik: `zgodny { wartosc, glowy }` | `konflikt { glowy, kandydaci: [{ glowa, wartosc }] }` | `czeka { brakujacy }` | `blad { powod, id }`. Typ TS dostaje wariant `blad` w commicie 08, który wdraża `scal.ts` (razem z dopasowaniem pomocnika testów 07).
+- `blad` (dane, których nie da się scalić bez zgadywania; zawsze ten sam wynik dla każdej kolejności wejścia, `id` = najmniejsze winne): `kolizja_id` (to samo `id`, inna treść; identyczny duplikat = idempotencja, M-02), `nieznany_rodzaj` (M-15), `wiele_rodzicow` (zmiana inna niż `rozstrzygniecie` z > 1 rodzicem, M-09; tylko rozstrzygnięcie łączy gałęzie), `cykl` (M-12, M-13). Przypadek użycia: licznik pokazuje ostatnią zapisaną wartość (`licznik.wartosc`), wpis w `blad` (F-57), bez zapisu wyniku.
+- `czeka`: przypadek użycia nie woła `scal` z niekompletną historią. Zdarzenia bez rodzica (albo bez encji licznika) trafiają do poczekalni (ADR-0005, uzupełnienie), a `scal` dostaje tylko zdarzenia z kompletnymi przodkami (P-110 Q1a).
 
 ## Ścieżka zapisu +1 (przypadek użycia `dodajRzad`)
 Jedna transakcja w kolejce (ADR-0002), bez `await` na nic poza bazą:

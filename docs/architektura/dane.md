@@ -88,7 +88,7 @@ Nowy klucz wymaga wiersza w tej tabeli. Pamięć uprawnień Pro nie jest kluczem
 | Import pliku nowszej wersji | odrzucenie przed zapisem | test: `wersja_schematu + 1` → baza bez zmian |
 | Import „zastąp” niechciany | kopia przed importem 30 dni | test: zastąp → przywróć kopię → liczności jak przed |
 | Podwójny import / powtórzone dostarczenie (zegarek, iCloud) | idempotencja po UUID (`scal`) | wektor M-02, test archiwum dwa razy |
-| Równoległa praca na dwóch urządzeniach (NFR-DAN-003, NFR-ZEG-001) | `konflikt` pokazany, rozstrzygnięcie użytkownika (M-04, M-05) | wektory M-04, M-05, mutant „suma” (6/7) |
+| Równoległa praca na dwóch urządzeniach (NFR-DAN-003, NFR-ZEG-001) | `konflikt` pokazany, rozstrzygnięcie użytkownika (M-04, M-05) | wektory M-04, M-05, M-16; mutanty `mutanty-scal.mjs` (10, 0 przeżywa) |
 | Usunięcie przez pomyłkę (F-33) | `usunieto_ms`, 30 dni, przywracanie | test maszyny projektu: usuń → przywróć; 29 dni zostaje, 31 dni sprzątnięte |
 | Usunięcie pliku używanego przez wzór | `ON DELETE RESTRICT`, sprzątanie tylko plików bez odwołań | `sprawdz-schemat.mjs` (OK); test sprzątania |
 | Plik w `Caches`, usunięty przez system | baza i pliki tylko w `Application Support` (ADR-0001) | test ścieżek po prebuild |
