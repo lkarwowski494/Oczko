@@ -7,7 +7,7 @@ Aktualizacja: 2026-10-25 · Gałąź `claude/jolly-thompson-paz6d8` · Prompt: `
 | E1 rejestr ryzyk | przyjęte (P-091) | `docs/jakosc/e1-raport.md`, `e1-ryzyka.md`, `e1/` |
 | E2 plan testów | przyjęte (P-092) | `docs/jakosc/strategia.md` |
 | E3 testy akceptacyjne, CI | przyjęte (P-096) | `docs/jakosc/e3-raport.md`, `strategia.md` §9 |
-| E4 przekazanie do 08 | **STOP E4 — rola zakończona po przyjęciu** | `docs/jakosc/e4-przekazanie.md`, `e4/tabela-08.md` |
+| E4 przekazanie do 08 | przyjęte (koordynator wg P-087, 2026-10-25) — rola 07 build zakończona | `docs/jakosc/e4-przekazanie.md`, `e4/tabela-08.md` |
 
-Następny krok (po przyjęciu E4): krok porównania z kodem (03 audit, P-078) i sesja fix 01/02/05 (P-091 11a, P-096), potem 08 build. Paczka: `docs/jakosc/e4-przekazanie.md`.
+Następny krok: krok porównania z kodem (03 audit, P-078) i sesja fix 01/02/05 (P-091 11a, P-096), potem 08 build. Paczka: `docs/jakosc/e4-przekazanie.md`.
 Stan testów na wejściu: `npx jest` 956/956 (kod 0), typecheck kod 0, `granice.mjs src` kod 1 (13 naruszeń w kodzie 0.1.0).
