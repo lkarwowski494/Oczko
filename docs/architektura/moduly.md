@@ -205,7 +205,7 @@ Po zabiciu procesu sesja „trwa” odtwarza się ze znacznika (zasada 4 modułu
 Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHECK.
 
 ### Import archiwum (ADR-0004)
-`sprawdzanie` (manifest, wersja, SHA-256, miejsce) → `odrzucony` (powód) | `gotowy` → wybór `scal` / `zastap` → `kopia_przed` (`VACUUM INTO`) → `wczytywanie` (krótkie transakcje w kolejce) → `gotowe` | `wycofany` (przywrócenie kopii przed). Na każdym etapie przed `wczytywanie` baza bez zmian.
+`sprawdzanie` (manifest, wersja, SHA-256, miejsce) → `odrzucony` (powód) | `gotowy` → wybór `scal` / `zastap` → `kopia_przed` (`VACUUM INTO`) → `wczytywanie` (krótkie transakcje w kolejce) → `gotowe` | `wycofany` (przywrócenie kopii przed). Na każdym etapie przed `wczytywanie` baza bez zmian. `blad` przed `wczytywanie` (np. `VACUUM INTO` bez miejsca w `kopia_przed`) → `odrzucony` z powodem; ten sam krok usuwa niepełny plik kopii przed (fix-2 2026-10-25, P-118 W3).
 
 ## Konfiguracja (`src/konfiguracja.ts`)
 | Nazwa (jednostka) | Wartość | Źródło |
