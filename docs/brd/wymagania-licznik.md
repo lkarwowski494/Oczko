@@ -37,7 +37,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 
 ### BR-LIC-003: Historia zmian z godziną i cofnięciem
 - Przepływ: PR-02
-- Dowód potrzeby: J-01; „いつカウンターを押したのか履歴を確認できるので” (編み物カウンター２, id13252701149); historii nie da się poprawić (Easy Knitty GB, id8099185238)
+- Dowód potrzeby: J-01; „いつカウンターを押したのか履歴を確認できるので” (編み物カウンター２, id13252701149); historii nie da się poprawić (Easy Knitty GB, id8099185238) · ER-41: „Cofnij” dotyczy tylko ostatniej zmiany albo serii zmian na końcu historii; starszą pomyłkę poprawia się wpisaniem wartości (BR-LIC-017), które zostaje w historii, bez kasowania późniejszych rzędów (P-091 (3a); jak Trening `docs/32-wzorce-interakcji.md:58`: „„Cofnij” = odwrócenie ostatniej zmiany”)
 - Kryteria akceptacji:
   - Scenariusz: Sprawdzenie, czy dodałem rząd
     - Zakładając, że użytkownik dodał rząd o 20:14 i o 20:31
@@ -47,6 +47,15 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że licznik miał 30, a przez przypadek dodano 100 rzędów
     - Gdy użytkownik cofa te zmiany z historii
     - Wtedy licznik pokazuje 30, a statystyki czasu i tempa nie liczą cofniętych rzędów
+  - Scenariusz: Cofnięcie ostatniej zmiany (ER-41)
+    - Zakładając, że ostatnia zmiana w historii to dodanie rzędu o 20:31 z 41 na 42
+    - Gdy użytkownik cofa ją z historii
+    - Wtedy licznik pokazuje 41, a historia pokazuje tę zmianę jako cofniętą
+  - Scenariusz: Pomyłka ze środka historii (ER-41)
+    - Zakładając, że licznik miał 30, o 20:14 przez pomyłkę dodano rząd (31), a potem użytkownik zrobił 10 rzędów do 41
+    - Gdy otwiera historię przy zmianie z 20:14
+    - Wtedy ta zmiana nie ma „Cofnij”, a aplikacja proponuje wpisanie właściwej wartości (BR-LIC-017)
+    - Oraz po wpisaniu 40 licznik pokazuje 40, a historia zachowuje wszystkie wcześniejsze zmiany i dopisuje wpisanie z 41 na 40
 
 ### BR-LIC-004: Blokada przed przypadkowym stuknięciem
 - Przepływ: PR-02
