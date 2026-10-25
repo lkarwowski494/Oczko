@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const KAT = join(__dirname, '../dane');
 const pliki: string[] = [];
-const skan = (d: string) => { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (!n.endsWith('.opis.md')) pliki.push(p); } };
+const skan = (d: string) => { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (!n.endsWith('.opis.md') && !n.endsWith('.ts')) pliki.push(p); } }; // *.ts = kod testów warstwy danych (DS-02, strategia §10), nie dane (P-122 (a))
 skan(KAT);
 
 describe('tests/dane (strategia §4)', () => {
