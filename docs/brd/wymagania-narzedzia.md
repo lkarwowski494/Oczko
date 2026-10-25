@@ -106,7 +106,7 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
 
 ### BR-KAL-003: Jednostki i próbka w calach
 - Przepływ: PR-11 · Reguła: RD-03, RD-04
-- Dowód potrzeby: J-09; „Please add centimeter conversion” (YarnBuddy, id11586030925); błąd 1,6% w źródłach (RD-04)
+- Dowód potrzeby: J-09; „Please add centimeter conversion” (YarnBuddy, id11586030925); błąd 1,6% w źródłach (RD-04) · przełącznik jednostek: P-075 (4a) (domyślnie z systemu, przełącznik w Ustawieniach), ZM-02, ADR-0017 (`auto` z systemu miar: us i uk → imperialne; dane zapisane w mm, m, g) · ER-45
 - Kryteria akceptacji:
   - Scenariusz: Próbka amerykańska
     - Zakładając, że wzór podaje 20 o. na 4 in
@@ -120,6 +120,19 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
     - Zakładając, że telefon ma język i region pl-PL, a wzór podaje 20,5 o. na 4 in
     - Gdy użytkownik wpisuje „20,5” i przelicza na 10 cm
     - Wtedy wynik to 20,177 o./10 cm (rachunek RD-04: 20,5 × 10 / 10,16)
+  - Scenariusz: Jednostki domyślnie z systemu (ER-45)
+    - Zakładając, że w Ustawieniach aplikacji jednostki mają wartość „jak w systemie” (stan po instalacji)
+    - Gdy użytkownik z regionem en-US (system miar US) otwiera obliczenia, a potem użytkownik z regionem pl-PL (system metryczny) robi to samo
+    - Wtedy pierwszy widzi długości w calach i jardach, a masę w uncjach, a drugi w centymetrach, metrach i gramach, bez pytania o jednostki przy pierwszym użyciu
+  - Scenariusz: Region brytyjski (ER-45)
+    - Zakładając, że telefon ma region en-GB (system miar UK), a jednostki mają wartość „jak w systemie”
+    - Gdy użytkownik otwiera obliczenia
+    - Wtedy długości i masa są w jednostkach imperialnych, jak dla en-US (ADR-0017)
+  - Scenariusz: Przełącznik jednostek nie zmienia danych (ER-45)
+    - Zakładając, że telefon ma region pl-PL, a w zapasie jest włóczka zapisana jako 437 yd z etykiety, czyli 399,5928 m (RD-03-W1)
+    - Gdy użytkownik wybiera w Ustawieniach jednostki imperialne, a potem znowu metryczne
+    - Wtedy przy imperialnych widzi 437 yd, a po powrocie tę samą długość w metrach co przed przełączeniem, także po wielu przełączeniach, bo zapisana długość (399,5928 m) się nie zmienia
+    - Oraz rozmiary drutów i szydełek zostają w milimetrach przy obu ustawieniach (BR-ZAP-003)
 
 ### BR-KAL-004: Równomierne dodawanie i ujmowanie
 - Przepływ: PR-11 · Reguła: RD-05, RD-06
@@ -179,12 +192,21 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
 
 ### BR-KAL-008: Grubość włóczki z próbki
 - Przepływ: PR-11 · Reguła: RD-10
-- Dowód potrzeby: J-08, J-09; „I have medium and light yarns (3, 4) that are 4 ply. Which to use?” (YarnPal, id14529076820, soczewka początkująca)
+- Dowód potrzeby: J-08, J-09; „I have medium and light yarns (3, 4) that are 4 ply. Which to use?” (YarnPal, id14529076820, soczewka początkująca) · ekran „Źródła wiedzy” i linia źródła przy tabelach CYC: P-085, P-108 (1)–(4), P-112 (1)–(3), OG-12 (CYC prosi o linię ze źródłem, S-24), ZM-04 · ER-45
 - Kryteria akceptacji:
   - Scenariusz: Zakres wspólny
     - Zakładając próbkę 23 o. na 4 in
     - Gdy użytkownik sprawdza kategorię
     - Wtedy aplikacja pokazuje kategorie 2 i 3 oraz informację, że kategoria nie oznacza zamienności i trzeba zrobić próbkę [FAKT S-20] (RD-10-W2)
+  - Scenariusz: Ekran „Źródła wiedzy” (ER-45)
+    - Zakładając, że aplikacja jest otwarta, także bez sieci
+    - Gdy użytkownik otwiera w Ustawieniach „Źródła wiedzy”
+    - Wtedy widzi jedno ogólne zdanie, że treści opracowano na podstawie norm branżowych i podręczników dziewiarskich (P-108 (4)), oraz linię źródła wymaganą warunkami użycia CYC „Source: Craft Yarn Council's www.YarnStandards.com” (S-24, P-112 (2))
+    - Ale nie widzi listy książek, autorów, producentów, adresów stron ani cytatów (P-108 (1), (2), P-112 (2))
+  - Scenariusz: Linia źródła przy tabeli CYC (ER-45)
+    - Zakładając, że aplikacja pokazuje tabelę opartą na standardach CYC: kategorie grubości włóczki, rozmiary drutów albo szydełek
+    - Gdy użytkownik ogląda tę tabelę
+    - Wtedy przy tabeli jest ta sama linia źródła CYC (P-112 (1)), a w tekstach obok tabeli nie ma innych nazw źródeł, autorów ani norm (P-085)
 
 ## Słownik (SLO)
 ### BR-SLO-001: Skróty z jawnym systemem terminologii

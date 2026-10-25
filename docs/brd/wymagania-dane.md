@@ -137,7 +137,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
 
 ### BR-DAN-010: Zgłoś problem z diagnostyką lokalną
 - Przepływ: PR-15
-- Dowód potrzeby: J-07; „I don’t know where else to report bugs.” (YarnBuddy, id8151431159); „No email link posted just a direct link to a mail app I don’t have.” (Loopsy, id13620980670) · ER-19; prywatność OG-14, NFR-PRY-001, ZP-03
+- Dowód potrzeby: J-07; „I don’t know where else to report bugs.” (YarnBuddy, id8151431159); „No email link posted just a direct link to a mail app I don’t have.” (Loopsy, id13620980670) · ER-19; prywatność OG-14, NFR-PRY-001, ZP-03 · wiersz „Translation quality”: P-075 (2a), ZM-02, ER-45
 - Kryteria akceptacji:
   - Scenariusz: Podgląd przed wysłaniem
     - Zakładając, że użytkownik wybiera „Zgłoś problem”
@@ -151,6 +151,19 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
     - Zakładając, że użytkownik obejrzał treść zgłoszenia
     - Gdy rezygnuje
     - Wtedy nic nie opuszcza telefonu, a aplikacja nie zapisuje, że zgłoszenie było przygotowane
+  - Scenariusz: Wiersz „Translation quality” przy przekładzie maszynowym (ER-45)
+    - Zakładając, że język aplikacji jest inny niż angielski, czyli teksty pochodzą z przekładu maszynowego (D-026, P-075 (1a), (2a))
+    - Gdy użytkownik otwiera Ustawienia
+    - Wtedy widzi wiersz „Translation quality” z informacją, że tłumaczenie jest maszynowe, i odnośnikiem „Report a translation problem”
+    - Ale na innych ekranach nie ma banera ani komunikatu o jakości tłumaczenia (P-075 (2a))
+  - Scenariusz: Zgłoszenie problemu z tłumaczeniem (ER-45)
+    - Zakładając, że język aplikacji to niemiecki
+    - Gdy użytkownik stuka „Report a translation problem”
+    - Wtedy otwiera się ten sam podgląd zgłoszenia co „Zgłoś problem”, z językiem aplikacji w diagnostyce, i nic nie opuszcza telefonu przed wyborem kanału w arkuszu udostępniania (jak „Podgląd przed wysłaniem” i „Wysyłka wybranym kanałem”)
+  - Scenariusz: Angielski bez wiersza o przekładzie (ER-45)
+    - Zakładając, że język aplikacji to angielski, czyli język źródłowy tekstów (P-075 (1a))
+    - Gdy użytkownik otwiera Ustawienia
+    - Wtedy nie widzi wiersza „Translation quality”, a „Zgłoś problem” jest dostępne jak zawsze
 
 ### BR-DAN-011: Widoczny stan synchronizacji i zegarka
 - Przepływ: PR-15, PR-08
@@ -239,14 +252,31 @@ Model i ceny: P-057 (2026-10-22, model V4; ER-26): cała aplikacja darmowa od pi
     - Gdy użytkownik bez Pro instaluje nową wersję
     - Wtedy limit wynosi co najmniej 5 dni w miesiącu, a każda funkcja dostępna wcześniej bez Pro jest dostępna bez Pro (KP-01)
 
-### BR-ZAK-004: Polityka prywatności w aplikacji
+### BR-ZAK-004: Polityka prywatności i język aplikacji w Ustawieniach
 - Przepływ: PR-09
-- Dowód potrzeby: OG-04
+- Dowód potrzeby: OG-04 · język: P-075 (3b) (język z ustawień systemu i przełącznik w aplikacji), ZM-02, ADR-0017 („jawny wybór wygrywa z systemem”, uszkodzony odczyt ustawień = język systemu); D-026, NFR-JEZ-001 · ER-45
 - Kryteria akceptacji:
   - Scenariusz: Dostęp do polityki
     - Zakładając, że aplikacja jest otwarta
     - Gdy użytkownik otwiera ustawienia
     - Wtedy widzi odnośnik do polityki prywatności, który ją otwiera
+  - Scenariusz: Język domyślnie z systemu (ER-45)
+    - Zakładając, że telefon ma język polski, a w Ustawieniach aplikacji język ma wartość „jak w systemie” (stan po instalacji)
+    - Gdy użytkownik otwiera aplikację
+    - Wtedy teksty aplikacji są po polsku, a przed pierwszym +1 nie ma pytania o język (NFR-PIE-001)
+  - Scenariusz: Wybór języka w aplikacji wygrywa z systemem (ER-45)
+    - Zakładając, że telefon ma język polski, a w projekcie „Skarpeta” licznik pokazuje 42
+    - Gdy użytkownik wybiera w Ustawieniach aplikacji język niemiecki
+    - Wtedy teksty aplikacji są po niemiecku bez ponownego uruchamiania aplikacji, a licznik, projekty i historia są bez zmian (42 w „Skarpecie”)
+    - Oraz po zamknięciu i ponownym otwarciu aplikacji teksty nadal są po niemiecku
+  - Scenariusz: Powrót do języka systemu (ER-45)
+    - Zakładając, że w aplikacji wybrano niemiecki, a telefon ma język polski
+    - Gdy użytkownik wybiera w Ustawieniach aplikacji „jak w systemie”
+    - Wtedy teksty aplikacji są po polsku, a gdy później zmieni język telefonu na francuski i wróci do aplikacji, teksty są po francusku
+  - Scenariusz: Uszkodzony zapis ustawienia języka (ER-45)
+    - Zakładając, że zapisane ustawienie języka nie daje się odczytać, a telefon ma język polski
+    - Gdy użytkownik otwiera aplikację
+    - Wtedy teksty są po polsku (jak „jak w systemie”, ADR-0017), aplikacja uruchamia się normalnie, a dane projektów są bez zmian
 
 ### BR-ZAK-005: Limit dni i strażnik startu dnia
 - Przepływ: PR-02, PR-09
