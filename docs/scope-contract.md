@@ -1,14 +1,14 @@
 # Kontrakt zakresu: Oczko
-Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · Aktualizacja: 2026-10-22 · Rola 03-zakres, tryb build (prompt `prompts` @97ec212) · Wejście: BRD `docs/brd/` (80 BR po poprawce roli 01: P-047, P-048), `docs/monetyzacja.md` (sesja 2), ZAL-001–027 · Decyzje zakresu: P-040–P-046, P-049, P-052; model: V4 (P-057, P-058) · Historia E0–E2 (rama, soczewki, pominięcia, warianty): `docs/scope-contract-historia.md`
+Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · Aktualizacja: 2026-10-25 (fix 03-zakres-001, -005, -006; P-102) · Rola 03-zakres, tryb build (prompt `prompts` @97ec212) · Wejście: BRD `docs/brd/` (80 BR po poprawce roli 01: P-047, P-048), `docs/monetyzacja.md` (sesja 2), ZAL-001–027 · Decyzje zakresu: P-040–P-046, P-049, P-052; model: V4 (P-057, P-058) · Historia E0–E2 (rama, soczewki, pominięcia, warianty): `docs/scope-contract-historia.md`
 
 ## Główna praca i pętla
 - Główna praca: J-01 „Wiedzieć, w którym rzędzie jestem, i ufać tej liczbie” z J-05 (powrót) i J-04 (miejsce we własnym wzorze); ZAL-019 podważone w części (J-04 w rdzeniu, E1).
 - Pętla główna: uruchomienie w ostatnim miejscu (F-49, F-18) → +1 z wibracją, ekran nie gaśnie (F-01, F-10) → pomyłka: −1, cofnięcie, strażnik, opcjonalna blokada, wpisanie wartości (F-02, F-47, F-03, F-45) → [warstwa] części z celem (F-14, F-08), wzór obok licznika ze znacznikiem (F-24, F-25, F-26) i przypomnienie (F-06) → wyjście bez zapisywania (F-31) → powrót z notatką (F-15).
-- Apetyt wersji 1: 45 h godzin właściciela na funkcje (W1 = 43,75 h [OCENA ×0,5–2]) plus ok. 15 h bramek ról (P-049). Podział: jedna aplikacja (iPhone, iPad, zegarek) z warstwami Narzędzia (F-37, F-38) i Historia (F-59) poza ekranem licznika (P-049, H-07 (a), ZAL-022).
+- Apetyt wersji 1: 45 h godzin właściciela na funkcje (W1 = 43,75 h [OCENA ×0,5–2]) plus ok. 15 h bramek ról (P-049). Wyjątek apetytu: P-102 — po F-63 i F-64 (warunek modelu V4 i pętla opinii, już przyjęte: P-057, P-052) MVP = 46 h [OCENA]; skrypt pokazuje uwagę, nie błąd; tańsza kontrola zamiast cięcia: 07 audit sprawdza apetyt po partiach 08. Podział: jedna aplikacja (iPhone, iPad, zegarek) z warstwami Narzędzia (F-37, F-38) i Historia (F-59) poza ekranem licznika (P-049, H-07 (a), ZAL-022).
 - Zasada ekranu licznika (P-046): nic z kalendarza, terminu ani nowych funkcji, dopóki użytkownik sam czegoś nie ustawi; wyjątki działające bez nowego elementu: F-47, F-48. Uproszczenia przepływów U-1–U-12: `oczko-warsztat/03-zakres/2026-10-22-build/przeplywy-mapa-szkic.md` (wejście dla 04).
 - Wzorzec najlepszych (Lookup US 2026-10-22): knitCompanion (6899 ocen), My Row Counter (3867), Knitting Chart (1298). W pętli: licznik + własny wzór ze znacznikiem + powrót; nie mają kalendarza, kalkulatorów swetrowych, słownika; skargi: złożoność, funkcje przeniesione za paywall, reklamy, synchronizacja. Szczegóły i cytaty: historia, sekcja „E1”.
 - Dostęp darmowe / płatne: **model V4 (P-057, kontrakt płatności `docs/monetyzacja.md`, „Sesja 3, E3”, P-058).** Wszystkie funkcje z tabeli „Zakres” są darmowe od pierwszego uruchomienia w limicie 5 dni z robótką w miesiącu kalendarzowym; dzień zużywa tylko praca przy robótce (liczenie rzędów), blokada tylko przy starcie nowego dnia ponad limit (strażnik startu), praca w toku nigdy nie przerwana; dane, eksport, przywracanie i polityka zawsze. Pro (0,99 USD/mies., 6,99 USD/rok bez oferty wprowadzającej, dożywotni 14,99 USD) znosi limit; podziału funkcji na darmowe i Pro nie ma, więc P-049 (4) i kolumna „Dostęp” z E2 tracą przedmiot.
-- Pętla opinii w wersji 1: F-57 „Zgłoś problem”; systemowa prośba o ocenę po ukończeniu projektu i odnośnik „Oceń” (specyfikacja: rola 11) bez BR: ER-25 do roli 01.
+- Pętla opinii w wersji 1: F-57 „Zgłoś problem” i F-64 (systemowa prośba o ocenę po ukończeniu projektu, odnośnik „Oceń”; BR-DAN-012 po ER-25, specyfikacja: rola 11).
 
 ## Zakres
 | ID | Funkcja | Wymagania | Decyzja | Dowód wartości | WTP | Intuicyjność | Podłoga | Zależy od | Uzasadnienie |
@@ -22,8 +22,8 @@ Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · A
 | F-08 | Cel rzędów części i jego osiągnięcie | BR-LIC-011 | MVP | J-11 (B: id13666644359) | WTP-2 (B) | cel jednym polem; po osiągnięciu „Następna część / Druga taka sama” (U-11); wynik: czeka na 04 | — | F-14 | cel zasila postęp F-60 i bliźniaka F-52 |
 | F-09 | Znaczenie liczby: rząd skończony / w trakcie | BR-LIC-012 | MVP | J-01 (B: id12699699581) | WTP-2 (B) | domyślnie „skończone rzędy”; zmiana w ustawieniach licznika, bez pytania na starcie; wynik: czeka na 04 | — | F-01 | P-040 (wariant B); ustawienie zamiast pytania (sygnał kombajnu złagodzony domyślną wartością) |
 | F-10 | Ekran nie gaśnie podczas liczenia | BR-LIC-013 | MVP | J-06 (R: ✓ 6 z 14) | WTP-0 (R) | domyślnie włączone na ekranie licznika; wynik: czeka na 04 | — | F-01 | pętla |
-| F-11 | Sesja na ekranie blokady: rząd (+1) i czas razem | BR-LIC-014 | MVP | J-06 (R słaby: ✓$ 1) | WTP-1 (R) | jedna sesja na ekranie blokady z rzędem i czasem (U-4); wynik: czeka na 04 | — | F-01 | P-040; wspólny mechanizm z F-21 |
-| F-12 | Liczenie na zegarku | BR-LIC-015 | MVP | J-06 (R mocny: ✓$ 3, id14675500870) | WTP-1 (R) | +1 jednym stuknięciem na zegarku, ten sam licznik co w telefonie; wynik: czeka na 04 | dane: NFR-ZEG-001 (blok.) | F-01, F-35 | P-040 (wariant B); P-039 |
+| F-11 | Sesja na ekranie blokady: rząd (+1) i czas razem | BR-LIC-014 | MVP | J-06 (R słaby: ✓$ 1) | WTP-1 (R) | jedna sesja na ekranie blokady z rzędem i czasem (U-4); wynik: czeka na 04 | — | F-01, F-63 | P-040; wspólny mechanizm z F-21; +1 z ekranu blokady woła strażnika (BR-ZAK-005) |
+| F-12 | Liczenie na zegarku | BR-LIC-015 | MVP | J-06 (R mocny: ✓$ 3, id14675500870) | WTP-1 (R) | +1 jednym stuknięciem na zegarku, ten sam licznik co w telefonie; wynik: czeka na 04 | dane: NFR-ZEG-001 (blok.) | F-01, F-35, F-63 | P-040 (wariant B); P-039; +1 z zegarka woła strażnika (BR-ZAK-005, ADR-0009) |
 | F-13 | Rząd głosem (Siri) | BR-LIC-016 | PÓŹNIEJ | J-06 (R: ✓$ 2; 3 z 3 liderów) | WTP-1 (R) | — | — | F-01 | poza kierunkiem P-040; frazy i rozpoznawanie w 35 językach, 1,5 h + 2 h/rok. Powrót: wersja 1.1 albo ≥3 prośby o sterowanie głosem w recenzjach Oczka |
 | F-14 | Projekt z częściami (powstaje z pierwszego licznika) | BR-PRJ-001 | MVP | J-02, J-05 (R: 10 z 14) | WTP-1 (R) | projekt powstaje sam z pierwszego licznika, części dodawane w razie potrzeby (U-5); wynik: czeka na 04 | — | F-01 | pętla (swetry, części) |
 | F-15 | Notatka widoczna przy liczniku | BR-PRJ-002 | MVP | J-05 (R: id3713410970) | WTP-1 (R) | notatka obok licznika bez otwierania innego ekranu; wynik: czeka na 04 | — | F-14 | pętla (powrót z notatką) |
@@ -52,7 +52,7 @@ Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · A
 | F-40 | Równomierne dodawanie i ujmowanie | BR-KAL-004 | PÓŹNIEJ | J-09 (B) | WTP-1 (B) | — | — | F-38 | bez rzędu płaskiego (OP-04) funkcja połowiczna. Powrót: OP-04 rozstrzygnięte u źródła i ≥3 prośby |
 | F-42 | Zużycie włóczki z wagi próbki | BR-KAL-005 | PÓŹNIEJ | J-08, J-09 (R: StashBot 4,99 USD) | WTP-1 (R) | — | bezpieczeństwo: RD-07 | F-37 | OP-05 (zapas domyślny) otwarte; RD-07 krytyczna. Powrót: wersja 1.1 razem z zapasem, po rozstrzygnięciu OP-05 |
 | F-44 | Słownik skrótów US/UK bez sieci | BR-SLO-001, BR-SLO-002 | PÓŹNIEJ | J-10 (R: RYZ-03) | WTP-2 (R) | — | bezpieczeństwo: RYZ-03 | — | OP-12: brak źródeł terminologii w 35 językach; 6 h + 3 h/rok przeglądu treści krytycznej. Powrót: źródło terminologii (OP-12) albo zawężenie do tabeli US↔UK z CYC |
-| F-45 | Wpisanie wartości licznika i wyzerowanie | BR-LIC-017 | MVP | J-01, J-07 (R: 86 recenzji, 44 ≤3★; id14375427685) | WTP-0 (R), ocena 03 | stuknięcie w liczbę otwiera pole wartości; zerowanie z potwierdzeniem i cofnięciem; wynik: czeka na 04 | — | F-02 | pętla (przeniesienie trwającej robótki); E1 ER-13 |
+| F-45 | Wpisanie wartości licznika i wyzerowanie | BR-LIC-017 | MVP | J-01, J-07 (R: 86 recenzji, 44 ≤3★; id14375427685) | WTP-0 (R), ocena 03 | stuknięcie w liczbę otwiera pole wartości; zerowanie z potwierdzeniem i cofnięciem; wynik: czeka na 04 | — | F-02, F-63 | pętla (przeniesienie trwającej robótki); E1 ER-13; wpisanie wartości woła strażnika jak +1 (BR-ZAK-005, D4) |
 | F-46 | Licznik całości nad sekcjami kawałka | BR-LIC-018 | MVP | J-01, J-02 (R: id13712427204) | WTP-1 (R), ocena 03 | licznik całości widoczny nad sekcjami bez ustawienia; wynik: czeka na 04 | — | F-14 | E1 ER-16; P-045 |
 | F-47 | Strażnik stuknięć z tempa | BR-LIC-019 | MVP | J-01 (R: 47 recenzji, id8099185238) | WTP-1 (R), ocena 03 | baner „Cofnąć?” przy serii (RD-17), bez ustawienia; wynik: czeka na 04 | dane: ochrona liczby → F-01 | F-02 | pętla; P-044 (I-1) |
 | F-48 | Wibracja przypomnienia inna niż wibracja rzędu | BR-LIC-020 | MVP | J-03 (B: id12476127028) | WTP-2 (B), ocena 03 | tylko dwa wzorce (rząd, przypomnienie), bez kodu do nauki; wynik: czeka na 04 | — | F-01, F-06 | P-044 (I-7) zawężone do dwóch wzorców (soczewka opiekuna) |
@@ -70,6 +70,8 @@ Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · A
 | F-60 | Postęp projektu w procentach | BR-DNI-004 | MVP | J-11 (R: id13632559947, id12304022403) | WTP-2 (R), ocena 03 | % pokazuje się sam, gdy części mają cele (U-8); część bez celu oznaczona; wynik: czeka na 04 | — | F-08 | P-043 |
 | F-61 | Termin projektu, cel dzienny i kolejność „który projekt dziś” | BR-DNI-005, BR-DNI-006 | MVP | termin (R: listing YarnBuddy, id13818450106); cel dzienny (H) | WTP-2 (H), ocena 03 | jedno pole „Gotowe do”; cel na dziś i kolejność listy liczą się same (U-6); bez terminu nic się nie pokazuje; wynik: czeka na 04 | — | F-60 | wyjątek właściciela P-043, ZAL-027 (cel dzienny); P-044, P-046 |
 | F-62 | „Zdążę?” przed startem projektu | BR-DNI-007 | PÓŹNIEJ | J-11 (H) | WTP-2 (H), ocena 03 | — | — | F-61 | P-046: przy pierwszym projekcie brak historii tempa. Powrót: wersja 1.1, gdy użytkownicy mają ukończone projekty |
+| F-63 | Limit darmowych dni i strażnik startu dnia (komunikat zawczasu, licznik dni, utrata Pro) | BR-ZAK-005, BR-ZAK-006, BR-ZAK-007 | MVP | model V4: decyzja właściciela P-057 (D2–D5), P-053, KP-12–KP-15; komunikat zawczasu P-065 (1a) po przejściu poznawczym 04 | warunek | w nowym dniu ponad limit komunikat na miejscu +1 przed pierwszym rzędem, odnośnik do Pro poza strefą +1, bez ekranu zakupu (P-065 (1a), potwierdzone przez 02: P-068); praca w toku nigdy nie przerwana; wynik: czeka na 04 | dane: odczyt, eksport, historia przy limicie i po utracie Pro (KP-02) → F-31; prawo: OG-02 | F-01, F-35 | warunek modelu V4 (P-057, P-058); reguła i wektory: `docs/monetyzacja/limit.mjs`; dodane w fixie 03-zakres-001 (P-099 D2a, P-102); bloker wydania (BRD) |
+| F-64 | Prośba o ocenę po ukończeniu projektu i odnośnik „Oceń” | BR-DAN-012 | MVP | pętla opinii wersji 1 (P-052; P-059 (3a)); przeciw natręctwu: recenzje w BR-DAN-012 | warunek | systemowa prośba dopiero po zamknięciu karty ukończenia (F-53), nigdy przy otwarciu, liczeniu, limicie ani zakupie; własnego okna z prośbą brak (OG-15); „Oceń” w Ustawieniach; wynik: czeka na 04 | prawo: OG-15 | F-53 | pętla opinii (kontrakt roli 03, P-052); chwila i limit: OP-33 (rola 11); dodane w fixie 03-zakres-001 (P-099 D2a, P-102) |
 
 ## NIE robimy
 | ID | Funkcja | Wymagania | Decyzja | Dowód wartości | WTP | Intuicyjność | Podłoga | Zależy od | Uzasadnienie |
@@ -139,6 +141,8 @@ Stan: **E3 zakończony, przyjęty przez właściciela (P-052, 2026-10-22)** · A
 | F-60 | 30 | 1 | 80 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
 | F-61 | 10 | 1 | 50 | 1,25 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
 | F-62 | 5 | 0,5 | 50 | 0,5 | R, I, C: [OCENA] z dowodu w kolumnie „Dowód wartości” |
+| F-63 | — | — | — | 2 | stała (podłoga albo WTP-0); [OCENA] fixu 001: strażnik, komunikat, licznik dni, utrata Pro na gotowej regule `limit.mjs` |
+| F-64 | — | — | — | 0,25 | stała (podłoga albo WTP-0); [OCENA] fixu 001: jedno wywołanie systemowe i odnośnik |
 
 Wynik `zakres-oczko.mjs docs/scope-contract.md --brd docs/brd --apetyt 45` (wyjątek nazwany P-049 (5): obok D-nnn przyjmuje P-nnn; skrypt: `oczko-warsztat/03-zakres/2026-10-22-build/zakres-oczko.mjs`):
 ```
@@ -175,38 +179,41 @@ Ranking (R × I × C ÷ koszt [h]; stałe: podłoga albo WTP-0; „razem” licz
   30. F-56 stała · 0,75 h, razem 30 h · MVP
   31. F-57 stała · 1 h, razem 31 h · MVP
   32. F-58 stała · 0,5 h, razem 31,5 h · MVP
-  33. F-04 wynik 320 · 0,25 h, razem 31,75 h · MVP
-  34. F-14 wynik 192 · 0,5 h, razem 32,25 h · MVP
-  35. F-15 wynik 160 · 0,25 h, razem 32,5 h · MVP
-  36. F-05 wynik 96 · 0,5 h, razem 33 h · MVP
-  37. F-08 wynik 80 · 0,25 h, razem 33,25 h · MVP
-  38. F-06 wynik 64 · 1 h, razem 34,25 h · MVP
-  39. F-60 wynik 48 · 0,5 h, razem 34,75 h · MVP
-  40. F-03 wynik 40 · 0,25 h, razem 35 h · MVP
-  41. F-46 wynik 32 · 0,5 h, razem 35,5 h · MVP
-  42. F-17 wynik 30 · 0,25 h, razem 35,75 h · MVP
-  43. F-16 wynik 24 · 0,5 h, razem 36,25 h · MVP
-  44. F-54 wynik 24 · 0,25 h, razem 36,5 h · MVP
-  45. F-20 wynik 20 · 0,25 h, razem 36,75 h · MVP
-  46. F-21 wynik 20 · 1 h, razem 37,75 h · MVP
-  47. F-48 wynik 20 · 0,5 h, razem 38,25 h · MVP
-  48. F-09 wynik 10 · 0,25 h, razem 38,5 h · MVP
-  49. F-22 wynik 10 · 0,5 h, razem 39 h · PÓŹNIEJ
-  50. F-52 wynik 10 · 0,5 h, razem 39 h · MVP
-  51. F-11 wynik 7,5 · 2 h, razem 41 h · MVP
-  52. F-13 wynik 5 · 1,5 h, razem 42,5 h · PÓŹNIEJ
-  53. F-40 wynik 5 · 0,5 h, razem 41,5 h · PÓŹNIEJ
-  54. F-61 wynik 4 · 1,25 h, razem 42,25 h · MVP
-  55. F-59 wynik 3,33 · 1,5 h, razem 43,75 h · MVP
-  56. F-62 wynik 2,5 · 0,5 h, razem 44,25 h · PÓŹNIEJ
-  57. F-29 wynik 1,67 · 1,5 h, razem 45,25 h · PÓŹNIEJ · poza apetytem 45 h
-Kolejność budowy MVP: F-31 → F-01 → F-02 → F-03 → F-04 → F-05 → F-06 → F-14 → F-08 → F-09 → F-10 → F-11 → F-35 → F-12 → F-15 → F-16 → F-17 → F-18 → F-19 → F-20 → F-21 → F-24 → F-25 → F-26 → F-27 → F-28 → F-32 → F-33 → F-34 → F-36 → F-37 → F-38 → F-45 → F-46 → F-47 → F-48 → F-49 → F-50 → F-51 → F-52 → F-53 → F-54 → F-55 → F-56 → F-57 → F-58 → F-59 → F-60 → F-61
-61 funkcji (MVP 49, PÓŹNIEJ 8, TEST 0, NIE 4), 80 BR · 0 błędów, 0 uwag
+  33. F-63 stała · 2 h, razem 33,5 h · MVP
+  34. F-64 stała · 0,25 h, razem 33,75 h · MVP
+  35. F-04 wynik 320 · 0,25 h, razem 34 h · MVP
+  36. F-14 wynik 192 · 0,5 h, razem 34,5 h · MVP
+  37. F-15 wynik 160 · 0,25 h, razem 34,75 h · MVP
+  38. F-05 wynik 96 · 0,5 h, razem 35,25 h · MVP
+  39. F-08 wynik 80 · 0,25 h, razem 35,5 h · MVP
+  40. F-06 wynik 64 · 1 h, razem 36,5 h · MVP
+  41. F-60 wynik 48 · 0,5 h, razem 37 h · MVP
+  42. F-03 wynik 40 · 0,25 h, razem 37,25 h · MVP
+  43. F-46 wynik 32 · 0,5 h, razem 37,75 h · MVP
+  44. F-17 wynik 30 · 0,25 h, razem 38 h · MVP
+  45. F-16 wynik 24 · 0,5 h, razem 38,5 h · MVP
+  46. F-54 wynik 24 · 0,25 h, razem 38,75 h · MVP
+  47. F-20 wynik 20 · 0,25 h, razem 39 h · MVP
+  48. F-21 wynik 20 · 1 h, razem 40 h · MVP
+  49. F-48 wynik 20 · 0,5 h, razem 40,5 h · MVP
+  50. F-09 wynik 10 · 0,25 h, razem 40,75 h · MVP
+  51. F-22 wynik 10 · 0,5 h, razem 41,25 h · PÓŹNIEJ
+  52. F-52 wynik 10 · 0,5 h, razem 41,25 h · MVP
+  53. F-11 wynik 7,5 · 2 h, razem 43,25 h · MVP
+  54. F-13 wynik 5 · 1,5 h, razem 44,75 h · PÓŹNIEJ
+  55. F-40 wynik 5 · 0,5 h, razem 43,75 h · PÓŹNIEJ
+  56. F-61 wynik 4 · 1,25 h, razem 44,5 h · MVP
+  57. F-59 wynik 3,33 · 1,5 h, razem 46 h · MVP · poza apetytem 45 h
+  58. F-62 wynik 2,5 · 0,5 h, razem 46,5 h · PÓŹNIEJ · poza apetytem 45 h
+  59. F-29 wynik 1,67 · 1,5 h, razem 47,5 h · PÓŹNIEJ · poza apetytem 45 h
+Kolejność budowy MVP: F-31 → F-01 → F-02 → F-03 → F-04 → F-05 → F-06 → F-14 → F-08 → F-09 → F-10 → F-35 → F-63 → F-11 → F-12 → F-15 → F-16 → F-17 → F-18 → F-19 → F-20 → F-21 → F-24 → F-25 → F-26 → F-27 → F-28 → F-32 → F-33 → F-34 → F-36 → F-37 → F-38 → F-45 → F-46 → F-47 → F-48 → F-49 → F-50 → F-51 → F-52 → F-53 → F-54 → F-55 → F-56 → F-57 → F-58 → F-59 → F-60 → F-61 → F-64
+UWAGA F-59 w MVP poza apetytem 45 h (wyjątek nazwany P-102)
+63 funkcji (MVP 51, PÓŹNIEJ 8, TEST 0, NIE 4), 84 BR · 0 błędów, 1 uwag
 kod wyjścia: 0
 ```
 
 ## Kolejność i przekazanie
-- **Kolejność budowy MVP (wynik skryptu, zależności przed zależnymi):** F-31 → F-01 → F-02 → F-03 → F-04 → F-05 → F-06 → F-14 → F-08 → F-09 → F-10 → F-11 → F-35 → F-12 → F-15 → F-16 → F-17 → F-18 → F-19 → F-20 → F-21 → F-24 → F-25 → F-26 → F-27 → F-28 → F-32 → F-33 → F-34 → F-36 → F-37 → F-38 → F-45 → F-46 → F-47 → F-48 → F-49 → F-50 → F-51 → F-52 → F-53 → F-54 → F-55 → F-56 → F-57 → F-58 → F-59 → F-60 → F-61
+- **Kolejność budowy MVP (wynik skryptu, zależności przed zależnymi):** F-31 → F-01 → F-02 → F-03 → F-04 → F-05 → F-06 → F-14 → F-08 → F-09 → F-10 → F-35 → F-63 → F-11 → F-12 → F-15 → F-16 → F-17 → F-18 → F-19 → F-20 → F-21 → F-24 → F-25 → F-26 → F-27 → F-28 → F-32 → F-33 → F-34 → F-36 → F-37 → F-38 → F-45 → F-46 → F-47 → F-48 → F-49 → F-50 → F-51 → F-52 → F-53 → F-54 → F-55 → F-56 → F-57 → F-58 → F-59 → F-60 → F-61 → F-64
 - **04 Studio projektowe:**
   - Przepływy w zakresie: PR-01–PR-11, PR-13 (tylko przeniesienie trwającej robótki, BR-LIC-017; import od konkurencji PÓŹNIEJ), PR-14, PR-15, PR-16 (bez BR-DNI-007). PR-12 (słownik) poza zakresem. Kto, cel, kroki, częstość, kontekst: `docs/brd/wymagania.md`.
   - Kryteria intuicyjności: kolumna „Intuicyjność” (każde `wynik: czeka na 04`); przejście poznawcze (cztery pytania NN/g) na prototypie; wynik wraca do kolumny jako `wynik: <pozytywny|negatywny>, <data, plik>` przez bramkę `zmiany-zakresu`; wynik negatywny: przebudowa w 04 albo NIE.
@@ -214,12 +221,13 @@ kod wyjścia: 0
   - Zasada P-046 i uproszczenia U-1–U-12; NFR-PIE-001 (pierwsze +1 jednym stuknięciem, nic przed licznikiem); KP-10 (zakup nigdy w trakcie liczenia).
   - „NIE robimy” to czego nie projektować; PÓŹNIEJ bez miejsca w nawigacji na zapas (bez pustych zakładek).
   - Tekst ekranu ofert wybrany przez właściciela (wariant 1): `oczko-warsztat/03-zakres/2026-10-22-build/oferty-tekst-wlasciciela.md`; ostateczny kształt ekranu zakupu po kontrakcie płatności roli 02.
-- **05 Architekt:** przepływy w zakresie jak wyżej; dane zapisują F-01, F-02, F-04–F-06, F-08, F-14–F-21, F-24–F-28, F-31–F-38, F-45–F-61 (każda z historią zmian tam, gdzie BR tego wymaga); wszystko bez sieci (NFR-OFF-001) z bazą na urządzeniu jako źródłem prawdy (OG-09); praca w tle i powierzchnie natywne: zegarek (F-12, NFR-ZEG-001, P-039, OP-22), ekran blokady i stoper (F-11, F-21, U-4), iCloud (F-27, NFR-DAN-003), PencilKit `pencilOnly` (F-28, P-042), rozszerzenie udostępniania dla PDF, zdjęć, stron WWW i Worda (F-24, F-55), wibracje (F-01, F-48); uprawnienia: aparat i zdjęcia (F-16, F-24), powiadomienia tylko jeśli 04 ich użyje; StoreKit według kontraktu płatności (P-036; przy P-051 data końca subskrypcji nieodnawialnej liczona przez aplikację). Funkcje PÓŹNIEJ (F-13, F-22, F-29, F-39, F-40, F-42, F-44, F-62) nazwane, bez tabel i zależności na zapas. OP-25, OP-26, NFR-SYS-001 (minimalne wersje systemu).
+- **05 Architekt:** przepływy w zakresie jak wyżej; dane zapisują F-01, F-02, F-04–F-06, F-08, F-14–F-21, F-24–F-28, F-31–F-38, F-45–F-61, F-63 (dni limitu, `docs/monetyzacja/limit.mjs`) (każda z historią zmian tam, gdzie BR tego wymaga); wszystko bez sieci (NFR-OFF-001) z bazą na urządzeniu jako źródłem prawdy (OG-09); praca w tle i powierzchnie natywne: zegarek (F-12, NFR-ZEG-001, P-039, OP-22), ekran blokady i stoper (F-11, F-21, U-4), iCloud (F-27, NFR-DAN-003), PencilKit `pencilOnly` (F-28, P-042), rozszerzenie udostępniania dla PDF, zdjęć, stron WWW i Worda (F-24, F-55), wibracje (F-01, F-48); uprawnienia: aparat i zdjęcia (F-16, F-24), powiadomienia tylko jeśli 04 ich użyje; StoreKit według kontraktu płatności (P-036; przy P-051 data końca subskrypcji nieodnawialnej liczona przez aplikację). Funkcje PÓŹNIEJ (F-13, F-22, F-29, F-39, F-40, F-42, F-44, F-62) nazwane, bez tabel i zależności na zapas. OP-25, OP-26, NFR-SYS-001 (minimalne wersje systemu).
 - **06 Treści:** potrzeby treści: F-38 (obliczenia: reguły krytyczne RD-01, RD-03, RD-04, RD-10, przegląd zastępczy D-027; OP-02, OP-03, OP-09 zgoda CYC), F-37 (RD-03, RD-10; pielęgnacja tekstem, OG-13), F-17 (RD-11), F-05 (RD-12), F-06 (RD-13, OP-06), F-60 (RD-14), F-61 (RD-15), F-59 (RD-16), F-47 (RD-17). Słownik (F-44) PÓŹNIEJ, więc bez treści terminologii w wersji 1.
-- **07 Jakość:** BR w zakresie: kolumna „Wymagania” tabeli „Zakres” dla decyzji MVP (scenariusze w `docs/brd/wymagania-*.md`, nagłówek `### BR-…`); blokery wydania z `docs/brd/README.md` w zakresie: BR-LIC-001–003 (F-01, F-02), BR-DAN-001–006 (F-31, F-32, F-27), BR-ZAK-001–004 (F-35, F-36), NFR-PRY-001, NFR-ZEG-001 (F-12), BR-KAL-001, BR-KAL-003, BR-KAL-008 (F-38, przegląd 06), funkcje wzoru F-24–F-26, F-28, F-55, F-56 (porównanie z zastrzeżeniami patentów OG-07, P-024), OG-05; poza zakresem: BR-SLO-001, BR-KAL-006. Testy tylko automatyczne (P-041, metody NFR po ER-10); kryteria intuicyjności, których nie zautomatyzuje (np. odczucie wibracji F-48, rysik F-28), jako ryzyko szczątkowe; kryterium bez sprawdzalnego wyniku: ER do roli 01.
+- **07 Jakość:** BR w zakresie: kolumna „Wymagania” tabeli „Zakres” dla decyzji MVP (scenariusze w `docs/brd/wymagania-*.md`, nagłówek `### BR-…`); blokery wydania z `docs/brd/README.md` w zakresie: BR-LIC-001–003 (F-01, F-02), BR-DAN-001–006 (F-31, F-32, F-27), BR-ZAK-001–004 (F-35, F-36), BR-ZAK-005–007 (F-63; = Z07-03), NFR-PRY-001, NFR-ZEG-001 (F-12), BR-KAL-001, BR-KAL-003, BR-KAL-008 (F-38, przegląd 06), funkcje wzoru F-24–F-26, F-28, F-55, F-56 (porównanie z zastrzeżeniami patentów OG-07, P-024), OG-05; poza zakresem: BR-SLO-001, BR-KAL-006. Testy tylko automatyczne (P-041, metody NFR po ER-10); kryteria intuicyjności, których nie zautomatyzuje (np. odczucie wibracji F-48, rysik F-28), jako ryzyko szczątkowe; kryterium bez sprawdzalnego wyniku: ER do roli 01.
 - **08 Programista:** kolejność budowy jak wyżej; zmiany kodu z trybów fix to zadania dla 08.
 - **02 Monetyzacja:** model V4 (P-057) przyjęty po kontrakcie zakresu; podział darmowe/Pro nie dotyczy (limit dni dla całej aplikacji).
-- **01 Odkrywanie:** ER-25: systemowa prośba o ocenę po ukończeniu projektu (w limitach API) i odnośnik „Oceń” (`action=write-review`) jako pętla opinii wersji 1 (kontrakt roli 03, E2 pkt 6; specyfikacja roli 11).
+- **01 Odkrywanie:** ER-25 zamknięte w BRD (BR-DAN-012, fix ER-25–ER-28) i w kontrakcie (F-64, fix 03-zakres-001).
+- **07 Jakość (fix 03-zakres-001):** testy BR-ZAK-005–007 i BR-DAN-012 dostają w nazwie F-63 i F-64 zamiast „F-—” (Z07-03).
 
 ## Zmiany zakresu
 | ID | Data | Prośba (kto, skąd) | Bramka: praca i dowód · intuicyjność · koszt · co wypada | Decyzja (ID, słowa właściciela) |
@@ -228,7 +236,7 @@ kod wyjścia: 0
 ## Definicja ukończenia (build), z dowodem
 | Punkt kontraktu | Stan | Dowód |
 |---|---|---|
-| każde BR ma dokładnie jedną decyzję; `zakres.mjs --brd` kod 0 | spełnione | wynik skryptu wyżej: 80 BR, 0 błędów; kontrola negatywna kod 1 (`oczko-warsztat/03-zakres/2026-10-22-build/e2-zakres-wynik.txt`) |
+| każde BR ma dokładnie jedną decyzję; `zakres.mjs --brd` kod 0 | spełnione | wynik skryptu wyżej: 84 BR, 0 błędów (2026-10-25, fix 03-zakres-001: przed kod 1, `oczko-warsztat/03-zakres/2026-10-25-fix/dowody/`); kontrola negatywna kod 1 (`oczko-warsztat/03-zakres/2026-10-22-build/e2-zakres-wynik.txt`) |
 | pętla opisana pracą J i listą funkcji; każda MVP służy pętli albo podłodze albo ma decyzję właściciela | spełnione | „Pętla główna”; skrypt nie zgłasza MVP poza pętlą bez podłogi i decyzji |
 | każda MVP: BR, dowód B/R/W, klasa WTP z roli 02, kryterium intuicyjności z `wynik:`; WTP-X nie w MVP; H tylko jako TEST albo wyjątek właściciela | spełnione z wyjątkiem nazwanym | F-61 (cel dzienny, H): wyjątek P-043, ZAL-027; WTP nowych funkcji F-45–F-62 to ocena roli 03 („ocena 03”), do potwierdzenia przez 02; żadnej funkcji TEST (F-07 scalone z F-06, U-3) |
 | każde NIE i PÓŹNIEJ: powód i „Powrót:” | spełnione | kolumna „Uzasadnienie”; skrypt |
@@ -236,4 +244,4 @@ kod wyjścia: 0
 | R, I, C, koszt i apetyt jako [OCENA] z metodą albo dane z datą | spełnione | „Ranking” (metoda w nagłówku); koszty z soczewki opiekuna |
 | właściciel wybrał wariant spośród co najmniej dwóch, apetyt i podział; słowa i data w rejestrze | spełnione | P-049 (W1 z W1–W3, apetyt 45 h, jedna aplikacja); P-040–P-046 |
 | przekazanie mówi, co dostaje każda z ról 04–08 | spełnione | „Kolejność i przekazanie” |
-| otwarte | — | ER-25 (rola 01 razem z ER-26–ER-28 roli 02); WTP nowych funkcji traci znaczenie dla podziału przy V4 (P-057) |
+| otwarte | — | ER-25 zamknięte (BR-DAN-012, F-64); WTP nowych funkcji traci znaczenie dla podziału przy V4 (P-057) |
