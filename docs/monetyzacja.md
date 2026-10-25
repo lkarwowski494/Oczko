@@ -1,5 +1,5 @@
 # Monetyzacja: Oczko
-Stan: **fix 2026-10-25 (Z07-07–Z07-09, L-19): STOP E0** · fix 2026-10-22 (NZ-01, NZ-02, P-065): zakończony (E0: P-067, E2: P-068) · sesja 3 zakończona 2026-10-22: model V4 bez próby (P-057; STOP E3 przyjęty: P-058) (V1/V2 odrzucone: P-056; STOP E0: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
+Stan: **fix 2026-10-25 (Z07-07–Z07-09, L-19, Z07-01, Z07-02): STOP E2** (E0: P-103) · fix 2026-10-22 (NZ-01, NZ-02, P-065): zakończony (E0: P-067, E2: P-068) · sesja 3 zakończona 2026-10-22: model V4 bez próby (P-057; STOP E3 przyjęty: P-058) (V1/V2 odrzucone: P-056; STOP E0: P-054) · sesja 2 zakończona 2026-10-22 (STOP E3 przyjęty: P-036, P-037; po zamknięciu P-038; STOP E2: P-029–P-035; STOP E1: P-027, P-028) · krok 0 zakończony (sesja 1: bramka „budować”, P-013) · Aktualizacja: 2026-10-22 · Wejście sesji 2: BRD `docs/brd/` (E4, 2026-10-21), ZAL-001–024, P-001–P-026
 
 Rola 02-monetyzacja, tryb build, moduły `oplacalnosc,cena-i-rachunek` (prompt z biblioteki `prompts` @97ec212, 65 593 znaków). Kwarantanna P-003: nie czytano `archiwum/`, kodu ani historii git sprzed 2026-10-21. Niezależność D-023: nie otwierano repo `portfel-aplikacji`; `find` po nazwach `monetyzacja*`, `prognoz*`, `rachunek*`, `portfel*`, `wycena*`, `*forecast*`, `*oplacalnosc*` w repo Oczko (bez `node_modules`): brak trafień.
 
@@ -28,6 +28,16 @@ Typu **M** brak: limit dni to limit użyć, nie okres próbny (MON-01 bez zmian)
 
 ### Czas (zasada 9)
 Agent: ok. 2,5–3 h (4 commity z ID, testy czerwone, mutanty przed/po, KP, E2). Oczekiwanie: brak. Koordynator: 6 wyborów + weto 7 (ok. 5 min). Właściciel: przy konfiguracji App Store Connect włączenie karencji, jeśli (2a).
+
+### E2 dowody (STOP, 2026-10-25)
+Decyzje E0: P-103 (1a–6a, weto 7 przyjęte, Z07-01 i Z07-02 dołączone). Dowody: `oczko-warsztat/02-monetyzacja/2026-10-25-fix-z07/E2-dowody.md` (`sprawdz-raport` kod 0). Jeden commit na ID: Z07-07 cb9f702, L-19 3bc0a14, Z07-09 33b830c, Z07-08 b8d7cd6, Z07-02 bfc1689 (+ 1d44c95), Z07-01 9071049.
+| Kontrola | Przed | Po |
+|---|---|---|
+| `node docs/monetyzacja/limit-test.mjs` | 35/35 (słabe: 7 mutantów przeżywa) | 77/77 + własności (strefa, Pro, duplikaty, przemienność scalenia, cytaty BRD) |
+| `node docs/monetyzacja/dostep-test.mjs` | 24/24 (3 mutanty przeżywają) | 56/56 |
+| mutanty limit + dostęp (07 i dodatkowe) | 12 przeżywa | 0 przeżywa (28/28 dodatkowych zabitych) |
+| `npx jest`, typecheck, lint, `jakosc:kontrole` | 1080/1080 | 1080/1080, kod 0 |
+Nowe w wzorcach: `BladDanych`, `wznowienieLimitu`, `cofniecieSerii` (L-19), `scalDni` (L-20), `oknoUczciweZasady` (O-*), `LASKA_OFFLINE_MS`, `karencjaDo`, `komunikatZakupu` (K-*), `proZegarka` (PZ-*). Kontrakt: KP-06, KP-07, KP-12, KP-15 dopisane, KP-16, KP-17 nowe; krok właściciela 6 (Billing Grace Period 3 dni, All Renewals). Polecenia dla 05, 07, 08, 04: w raporcie E2. „Zweryfikowane” nadaje reaudit.
 
 ## Fix 2026-10-22: NZ-01, NZ-02, P-065 (1a) · E0 plan (STOP)
 Rola 02-monetyzacja, tryb fix (prompt `prompts` @97ec212, kopia: `oczko-warsztat/02-monetyzacja/2026-10-22-fix-nz/02-fix-prompt-2026-10-22.md`). **Wyjątek nazwany (zasada 19):** ta sama sesja co role 01 i 04, polecenie właściciela „Działaj” (2026-10-22); tańsza kontrola: stan z plików, punkt czyszczenia na STOP. Wejście: P-060 (5b), P-065, P-066, NZ-01–NZ-03 (`oczko-warsztat/01-odkrywanie/fix-2026-10-22-er25-28/E0-plan.md`), OP-32, `docs/design/przejscie/wynik.md`. Stan przed: `node docs/monetyzacja/limit-test.mjs` „zgodne 14 z 14 wektorów”, kod 0.
