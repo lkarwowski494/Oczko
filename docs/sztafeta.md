@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (rola 01 fix-2: STOP E2; koordynator: P-087, P-088; rola 07: STOP E4; rola 03 audit: STOP E3)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (rola 08 partia 1: STOP E2; rola 01 fix-2: STOP E2; koordynator: P-087, P-088; rola 07: STOP E4; rola 03 audit: STOP E3)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -26,8 +26,14 @@
 | 03 Zakres, fix 001, 005, 006 | fix, `--moduly zmiany-zakresu` (P-099 D2a) | **STOP E2 2026-10-25**: 03-zakres-001, -005, -006 naprawione-do-weryfikacji (E0: P-102) | 39bbecf | docs/scope-contract.md: F-63 (limit dni i strażnik, BR-ZAK-005–007), F-64 (prośba o ocenę, BR-DAN-012), ZM-01–ZM-07, kolumna „Intuicyjność” (14 wyników, 37 × „brak”); `zakres-oczko.mjs` kod 1 → 0 (84 BR, uwaga apetytu 46 h: P-102); dowody: oczko-warsztat `03-zakres/2026-10-25-fix/` | ER-45, ER-46 do 01; koszt ZM 1,25 h [OCENA] ponad ranking; status „zweryfikowane” nadaje reaudit |
 | 05 Architekt, fix Z07-11–Z07-19, Z07-22 (+ ER-40–42, polecenia 02 i 03) | fix (P-091 11a, P-100, P-109, P-099) | **STOP E2 2026-10-25**: wszystkie ID naprawione-do-weryfikacji (E0: P-110) | 9f79749 | docs/architektura/ (ADR-0004, 0005, 0007–0012, 0014 uzupełnienia; moduly.md, dane.md, schemat.sql, stany.json, rejestr Apple 21a–21f, narzędzia: sprawdz-porty, bateria-schematu, mutanty-schematu, granice + obejścia, mutanty-scal, scal iteracyjny), src/domena/porty.ts; dowody: oczko-warsztat `05-architekt/2026-10-25-fix/E2-dowody.md` | NZ-05-01–04; dla 07, 08, 10, 04, 01 w E2-dowody |
 | 01 Odkrywanie, fix-2 ER-45, ER-46, NZ-07, NZ-05-03 | fix (P-111, P-112) | **STOP E2 2026-10-25**: wszystkie ID naprawione-do-weryfikacji (E0: P-113) | fc12981 | docs/brd/ (BR-ZAK-004, BR-DAN-010, BR-KAL-003, BR-KAL-008 — ER-45; BR-ZAK-006, BR-DAN-006, BR-DAN-007 — ER-46; nowa RD-20, BR-DNI-001, BR-DNI-003 — NZ-05-03/ER-48; OP-10 zamknięte, S-42 — NZ-07/ER-47), `tests/wektory/brd.json` (+9 wektorów RD-20, 169); dowody: oczko-warsztat `01-odkrywanie/fix-2026-10-25-fix2/E2-dowody.md` | polecenia dla 07, 08, 03 (ZM-05 karta po imporcie poza 1.0), 04, 06, 09; NZ-08, NZ-09; status „zweryfikowane” nadaje reaudit |
+| 08 Programista, build, partia 1 (porządki 0.1.0 + domena) | build, `--moduly sqlite-expo` (P-099 D1a, P-111, P-114) | **STOP E2 2026-10-25**: kod 0.1.0 usunięty, warstwa 1 domena (20 plików testów) zielona; verify 1278/1278 | 88d1e1e | src/domena/, app/_layout.tsx, tests/domena/, docs/programista/partia-1.md; dowody: oczko-warsztat `08-programista/2026-10-25-partia1/E2-dowody.md` | zgłoszenia dla 07, 05, 01, 09, 10 (E2-dowody) |
 
 ## Następny krok
+### Przekazanie roli 08, build, partia 1 (2026-10-25, STOP E2)
+- Zakończono E0–E2 (P-114); commity 64be4b8…88d1e1e: partia porządkowa 0.1.0 (A1–A5, osobne commity strukturalne), NZ-05-01, warstwa 1 domena C1–C11 (DS-02, czerwień i zieleń w logach). `npm run verify` 1278/1278; `test:akceptacja` 0 błędów raportu; `jakosc:kontrole` z `granice.mjs src` i `--zgodnosc` BRD.
+- Dla 07: test R-114 (`tests/akceptacja/domena/zakup/granice-r114.test.ts`) sprzeczny z P-103 (3a); przegląd zmian testów i 9 testów 08; `informacje-pro` a ER-46; regeneracja `tabela-08.md`. Dla 05: nowe sygnatury, `BladDanych`, `OKNO_OFFLINE_PRO_MS`, kopia `parametry.ts`, wybory w [DO USTALENIA]. Lista: oczko-warsztat `08-programista/2026-10-25-partia1/E2-dowody.md`.
+- Następny krok (po akceptacji): **08-programista, partia 2 — warstwa danych** (port bazy, migracje, repozytoria, dziennik z polem `pro`, P-111 (2)); nowa sesja: opus (dane i migracje).
+
 ### Przekazanie roli 01, fix-2 ER-45, ER-46, NZ-07, NZ-05-03 (2026-10-25, STOP E2)
 - Zakończono E0–E2 (P-113); commity 2b03384 (NZ-07), 8f346ef (NZ-05-03), 91a0f17 (ER-45), fc12981 (ER-46); dowody i polecenia: `oczko-warsztat/01-odkrywanie/fix-2026-10-25-fix2/E2-dowody.md`. `npx jest` 1080/1080, `kontrola-brd` i `--zgodnosc` kod 0, `zakres-oczko.mjs` kod 0 (84 BR).
 - **Dla 08:** `brd.json` tylko +9 wektorów `RD-20` (tydzień od poniedziałku, region bez wpływu); 160 istniejących wpisów bez zmian, także `miejsce`. BR-DNI-001: kolumny kalendarza od poniedziałku. Karta Pro po imporcie w 1.0 nie istnieje (P-113 Q2a).

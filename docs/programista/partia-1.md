@@ -2,7 +2,10 @@
 Plik stanu sesji · start 2026-10-25 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków; nie w repo)
 Zakres: P-099 D1a, P-111 (start 08 partia 1), P-097 (1a), P-100. Specyfikacja: `docs/scope-contract.md` („Kolejność budowy MVP”), `docs/jakosc/e4-przekazanie.md` („Dla roli 08”), `docs/jakosc/e4/tabela-08.md` (kolejność „1 domena”), `docs/porownanie-kodu.md`.
 
-## Stan: E0 → STOP (czeka na koordynatora wg P-087)
+## Stan: E2 → STOP (czeka na koordynatora wg P-087); E0 przyjęte jako P-114
+Wynik E1–E2 (commity 64be4b8…88d1e1e): kod 0.1.0 usunięty (A1–A5), NZ-05-01 (B), warstwa 1 domena kompletna (C1–C11: 20 plików testów 07 w `tests/domena`, 9 testów 08 z wektorów). `npm run verify` kod 0, **1278/1278**; `test:akceptacja` 0 błędów raportu (196 testów warstw 2–4, 1 asercja = zgłoszony test R-114). Dowody, mutanty i zgłoszenia: `oczko-warsztat/08-programista/2026-10-25-partia1/E2-dowody.md`.
+Zgłoszenia w skrócie — 07: test R-114 sprzeczny z P-103 (3a), przegląd zmian testów i 9 nowych testów, `informacje-pro` a ER-46, regeneracja `tabela-08.md`; 05: 9 nowych sygnatur, `BladDanych`, `OKNO_OFFLINE_PRO_MS`, kopia `parametry.ts`, 8 wyborów w miejscach [DO USTALENIA]; 01: RD-15 przy d < 1 i R = 0; 09: `Intl` ze strefą na Hermes; 10: opis w `package.json`, `ci.yml`.
+
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -73,4 +76,5 @@ Liczby i progi tylko z `src/konfiguracja.ts` i `docs/tresci/parametry.json`; log
 - Właściciel: nic (decyzje u koordynatora, P-087).
 
 ## Dziennik
-- 2026-10-25: E0 — stan wyjściowy, plan, Q1–Q6; STOP do koordynatora.
+- 2026-10-25: E0 — stan wyjściowy, plan, Q1–Q6; STOP do koordynatora. Odpowiedź: P-114 (Q1a–Q4a, Q5, Q6a).
+- 2026-10-25: E1 A1–A5, B, C1–C11; E2 — verify 1278/1278, raport akceptacji bez błędów; STOP E2.
