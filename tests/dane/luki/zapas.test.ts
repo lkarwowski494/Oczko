@@ -1,10 +1,10 @@
 // Luki pokrycia E3 (rola 07): zapas — zużycie z projektu odjęte z zapasu (BR-ZAP-002/S1, U-9) i filtr grubości (BR-ZAP-004/S1, RD-10 kategorie).
 // Poziom dane-node:sqlite. Wyrocznia: scenariusze docs/brd/wymagania-narzedzia.md:24 (5 − 3 = 2 motki) i :42 (tylko kategoria 4).
 // Schemat v1 nie ma kolumny kategorii w `wloczka`: test zapisuje przez repozytorium, nie SQL ([DO USTALENIA] 05, raport luk E3).
-import { dodajWloczke, potwierdzZuzycie, zapas } from '../../../../src/dane/repozytoria/zapas';
-import { zakonczProjekt } from '../../../../src/przypadki-uzycia/projekt';
-import { czesc, projekt, projektWloczka, wloczka } from '../../../dane/pomocnicze/dane-wejsciowe';
-import { T0, jeden, przygotuj, wykonaj } from '../../../dane/pomocnicze/srodowisko';
+import { dodajWloczke, potwierdzZuzycie, zapas } from '../../../src/dane/repozytoria/zapas';
+import { zakonczProjekt } from '../../../src/przypadki-uzycia/projekt';
+import { czesc, projekt, projektWloczka, wloczka } from '../pomocnicze/dane-wejsciowe';
+import { T0, jeden, przygotuj, wykonaj } from '../pomocnicze/srodowisko';
 
 describe('BR-ZAP-002 zużycie z projektu odjęte z zapasu', () => {
   test('BR-ZAP-002/S1 zapas 5 motków, projekt zużył 3 → po zakończeniu i potwierdzeniu zapas 2, zużycie zapisane przy projekcie', async () => {

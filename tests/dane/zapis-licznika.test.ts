@@ -2,12 +2,12 @@
 // Wyrocznie: moduly.md (kroki 1–4, powody), wektory limitu docs/monetyzacja/wektory-limitu.json (L-01–L-04), BRD wymagania-licznik.md, P-091 (3a).
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { PortBazy } from '../../../src/domena/porty';
-import { dodajLicznik, cofnijOstatnie, cofnijSerie, dodajRzad, utworzSzybkiLicznik, wpiszWartosc, wyzeruj } from '../../../src/przypadki-uzycia/licznik';
-import { nazwijProjekt, usunProjekt } from '../../../src/przypadki-uzycia/projekt';
-import { wykonanieDnia } from '../../../src/dane/repozytoria/dni';
-import { KORZEN, czesc, czytajBaze, dzienLimitu, licznik, projekt } from '../../dane/pomocnicze/dane-wejsciowe';
-import { DOBA, T0, ile, jeden, migawka, przygotuj, wykonaj, type Srodowisko } from '../../dane/pomocnicze/srodowisko';
+import type { PortBazy } from '../../src/domena/porty';
+import { dodajLicznik, cofnijOstatnie, cofnijSerie, dodajRzad, utworzSzybkiLicznik, wpiszWartosc, wyzeruj } from '../../src/przypadki-uzycia/licznik';
+import { nazwijProjekt, usunProjekt } from '../../src/przypadki-uzycia/projekt';
+import { wykonanieDnia } from '../../src/dane/repozytoria/dni';
+import { KORZEN, czesc, czytajBaze, dzienLimitu, licznik, projekt } from './pomocnicze/dane-wejsciowe';
+import { DOBA, T0, ile, jeden, migawka, przygotuj, wykonaj, type Srodowisko } from './pomocnicze/srodowisko';
 
 const PODSTAWA = [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód')];
 async function zLicznikiem(n = 0, o: Parameters<typeof licznik>[3] = {}, s?: Srodowisko): Promise<Srodowisko> {
