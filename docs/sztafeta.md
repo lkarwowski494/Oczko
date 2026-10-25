@@ -1,5 +1,5 @@
 # Stan sztafety
-Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-23 (rola 06, build zakończony: P-081–P-086)
+Ścieżka: greenfield z ponownym użyciem kodu (P-001, P-002) · Aktualizacja: 2026-10-25 (koordynator: P-087, P-088)
 
 | Rola | Tryb | Stan | Commit | Artefakty | Otwarte decyzje |
 |---|---|---|---|---|---|
@@ -21,6 +21,10 @@
 | 06 Treści | build | **zakończona 2026-10-23** (E0 P-081, E1 P-082, E2 P-083, E3 P-084–P-086; przegląd zastępczy D-027; ta sama sesja, wyjątek zasady 19) | (ten commit) | docs/tresci/ (README.md, parametry.json, wektory.json, nazwy-zrodel.json, stan.md), scripts/sprawdz-nazwy-zrodel.mjs, tests/tresci/nazwy-zrodel.test.ts; rejestr 103 twierdzeń, treści en, kopie źródeł, 3 weryfikacje: oczko-warsztat/06-tresci/2026-10-22-build/ | ER-31–ER-33 do 01; warunki wyświetlania i rozdzielczość wpisu próbki do 04/05; zestaw przekładu do 09 (po 08 i audycie 04); kategoria 8 CYC: ponowny odczyt do 2027-01-23 |
 
 ## Następny krok
+### Koordynacja (2026-10-25)
+- Koordynator: sesja „Main: Oczko” (nowe konto). **P-087:** decyzje podejmuje koordynator (najpierw jak w Treningu, potem własna rekomendacja); na STOP-y ról odpowiada koordynator; wyjątki u właściciela: koszty, jego konta, scalenie do `main`, wysłanie do Apple.
+- **P-088:** STOP E3 roli 06 przyjęty. Następny krok: **07-jakosc build** (nowa sesja).
+
 ### Koordynacja (2026-10-23)
 - Sesja koordynująca przeszła na inne konto Claude (limit tygodniowy). Sposób koordynacji, szablon startu roli i otwarte sprawy: `oczko-warsztat/koordynacja/przekazanie-koordynatora-2026-10-23.md`.
 - Otwarte przed rolą 07: akceptacja STOP E3 roli 06 przez właściciela.
