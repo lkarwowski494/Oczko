@@ -6,6 +6,7 @@
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 
 const arg = (n) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : null; };
 const korzen = arg('--katalog') ?? process.cwd();
@@ -50,6 +51,14 @@ function pliki(katalog) {
   return wynik;
 }
 const rel = (p) => relative(korzen, p).split(sep).join('/');
+function sledzone(k) {
+  if (existsSync(join(k, '.git'))) {
+    try { return execFileSync('git', ['ls-files'], { cwd: k, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).split('\n').filter(Boolean); } catch { /* bez git: przegląd katalogu */ }
+  }
+  const wynik = [];
+  (function skan(d) { for (const n of readdirSync(d)) { if (n === 'node_modules' || n === '.git') continue; const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else wynik.push(relative(k, p).split(sep).join('/')); } })(k);
+  return wynik;
+}
 
 export function sprawdz(korzenKatalog, zakres) {
   const naruszenia = [];
@@ -71,6 +80,15 @@ export function sprawdz(korzenKatalog, zakres) {
           naruszenia.push(`${reg.id} ${r}:${linia} — ${reg.opis}`);
         }
       }
+    }
+  }
+  // PLIK-SEKRETU (F07-09, z tests/public-repo.test.ts 0.1.0; JAK-10, zasada wspólna 14): w plikach śledzonych przez git (bez git: wszystkie pliki)
+  // nie ma kluczy, certyfikatów, profili, .ipa ani .env, a pliki tekstowe nie zawierają bloku klucza prywatnego.
+  for (const r of sledzone(korzenKatalog)) {
+    if (/\.(p8|p12|mobileprovision|cer|keystore|jks|ipa)$/i.test(r) || /(^|\/)\.env(\..+)?$/.test(r)) { naruszenia.push(`PLIK-SEKRETU ${r} — klucz, certyfikat, profil, .ipa albo .env w repo publicznym`); continue; }
+    if (/\.(ts|tsx|js|mjs|cjs|json|md|yml|yaml|html|txt|pem|key)$/i.test(r) && r !== 'scripts/jakosc/kontrole-repo.mjs') {
+      const p = join(korzenKatalog, r);
+      if (existsSync(p) && statSync(p).isFile() && /-----BEGIN [A-Z ]*PRIVATE KEY-----/.test(readFileSync(p, 'utf8'))) naruszenia.push(`PLIK-SEKRETU ${r} — blok klucza prywatnego`);
     }
   }
   const pkgPlik = join(korzenKatalog, 'package.json');

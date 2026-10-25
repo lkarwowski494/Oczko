@@ -3,6 +3,12 @@
 //  WYZWALACZ-Z-SEKRETAMI: workflow z takim zadaniem nie ma `pull_request`, `pull_request_target` ani `workflow_run`;
 //  SZTUCZNY-SKLEP-W-WYDANIU: przełączniki testowe (`EXPO_PUBLIC_STORE_FAKE`, `_WATCH_FAKE`, `_E2E`, `_WYMUS_AWARIE`, `_PSEUDO`) nie występują w workflowie z `environment: testflight`;
 //  BRAK-WORKFLOWOW: katalog bez plików .yml to błąd (pusty zbiór to nie zaliczenie).
+// Reguły JAK-10 przeniesione z tests/public-repo.test.ts 0.1.0 (F07-09, P-117 Q6a):
+//  PULL-REQUEST-TARGET: wyzwalacz pull_request_target w żadnym workflowie (kod z PR z prawem zapisu i sekretami);
+//  PERMISSIONS-KORZEN: `permissions` na poziomie workflowu z `contents: read` (minimalne uprawnienia);
+//  TIMEOUT: każde zadanie ma `timeout-minutes` (domyślne 360 min to nie limit);
+//  DANE-ZDARZEN-W-RUN: `${{ github.event.(inputs|pull_request|head_commit|issue|comment)… }}` ani `${{ github.head_ref }}` wprost w `run:` (przez env);
+//  AKCJA-NIEPRZYPIETA: `uses:` spoza actions/* przypięte do 40-znakowego SHA.
 // Wyjątki nazwane: scripts/jakosc/wyjatki.json („workflowy”). Użycie: node scripts/jakosc/sprawdz-workflowy.mjs [--katalog <korzeń>]
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -25,6 +31,17 @@ export function sprawdzWorkflowy(korzen) {
     const on = wf?.on ?? wf?.true ?? {}; // YAML 1.1 czyta `on` jako true
     const wyzwalacze = typeof on === 'string' ? [on] : Array.isArray(on) ? on : Object.keys(on ?? {});
     const zgl = (regula, opis) => { if (!wyjatki.some((w) => w.regula === regula && w.plik === rel)) naruszenia.push(`${regula} ${rel}: ${opis}`); };
+    if (wyzwalacze.includes('pull_request_target')) zgl('PULL-REQUEST-TARGET', 'wyzwalacz pull_request_target');
+    if (wf?.permissions?.contents !== 'read' && !(wf?.permissions && typeof wf.permissions === 'object' && Object.keys(wf.permissions).length === 0)) zgl('PERMISSIONS-KORZEN', 'brak `permissions: contents: read` na poziomie workflowu');
+    const DANE_ZDARZEN = /\$\{\{\s*github\.(event\.(inputs|pull_request|head_commit|issue|comment)|head_ref)\b/;
+    for (const [id, job] of Object.entries(wf?.jobs ?? {})) {
+      if (job?.uses) { if (!/@[0-9a-f]{40}$/.test(job.uses) && !job.uses.startsWith('./')) zgl('AKCJA-NIEPRZYPIETA', `zadanie ${id}: ${job.uses}`); continue; } // workflow wielokrotnego użytku
+      if (job?.['timeout-minutes'] === undefined) zgl('TIMEOUT', `zadanie ${id} bez timeout-minutes`);
+      for (const [i, krok] of (job?.steps ?? []).entries()) {
+        if (typeof krok?.run === 'string' && DANE_ZDARZEN.test(krok.run)) zgl('DANE-ZDARZEN-W-RUN', `zadanie ${id}, krok ${i + 1}: dane zdarzenia wprost w run: (przekaż przez env)`);
+        if (typeof krok?.uses === 'string' && !krok.uses.startsWith('actions/') && !krok.uses.startsWith('./') && !/@[0-9a-f]{40}$/.test(krok.uses)) zgl('AKCJA-NIEPRZYPIETA', `zadanie ${id}, krok ${i + 1}: ${krok.uses}`);
+      }
+    }
     let zSekretami = false, wydanie = false;
     for (const [id, job] of Object.entries(wf?.jobs ?? {})) {
       const env = typeof job?.environment === 'string' ? job.environment : job?.environment?.name;

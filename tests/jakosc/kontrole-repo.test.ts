@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 
 const KONTROLE = join(__dirname, '../../scripts/jakosc/kontrole-repo.mjs');
 const WORKFLOWY = join(__dirname, '../../scripts/jakosc/sprawdz-workflowy.mjs');
+const LICENCJE = join(__dirname, '../../scripts/jakosc/licencje.mjs');
 
 function repo(pliki: Record<string, string>): string {
   const k = mkdtempSync(join(tmpdir(), 'kontrole-'));
@@ -102,6 +103,16 @@ describe('kontrole-repo.mjs (strategia §10, kontrola 05-8, P-089)', () => {
     expect(w.status).toBe(1);
     expect(w.stdout).toContain('brak docs/adr/0016');
   });
+  // F07-09 (P-117 Q6a): pliki sekretów z tests/public-repo.test.ts 0.1.0; bez .git kontrola przegląda wszystkie pliki katalogu.
+  const KLUCZ = '-----BEGIN ' + 'PRIVATE KEY-----'; // sklejone, żeby ten plik nie zawierał bloku
+  test.each([['AuthKey_X.p8', 'x'], ['cert/dist.p12', 'x'], ['ios/App.mobileprovision', 'x'], ['.env', 'K=1'], ['config/.env.production', 'K=1'], ['build/App.ipa', 'x'], ['docs/notatka.md', `a\n${KLUCZ}\nb`]])('R-171 F07-09 pułapka: %s pada (PLIK-SEKRETU)', (plik, tekst) => {
+    const w = uruchom(KONTROLE, repo({ [plik]: tekst }));
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain(`PLIK-SEKRETU ${plik}`);
+  });
+  test('R-171 F07-09 dokument, który tylko wspomina o kluczu (bez bloku), przechodzi', () => {
+    expect(uruchom(KONTROLE, repo({ 'docs/podpis.md': 'Klucz .p8 trzyma tylko sekret środowiska testflight.' })).status).toBe(0);
+  });
   test('R-171 zły korzeń (bez package.json) to błąd, nie zaliczenie', () => {
     const k = mkdtempSync(join(tmpdir(), 'pusty-'));
     expect(uruchom(KONTROLE, k).status).toBe(2);
@@ -124,7 +135,8 @@ describe('sprawdz-workflowy.mjs (ADR-0014, kontrola 05-9)', () => {
     expect(w.stdout).toContain('WYZWALACZ-Z-SEKRETAMI');
   });
   test('R-173 sekret w zadaniu z environment: testflight i wyzwalaczem tag przechodzi', () => {
-    const w = uruchom(WORKFLOWY, wf('t.yml', "on:\n  push:\n    tags: ['v*']\n  workflow_dispatch:\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    steps:\n      - run: echo ${{ secrets.ASC_KEY_ID }} ${{ secrets.GITHUB_TOKEN }}\n"));
+    // F07-09: przypadek dobry spełnia też reguły JAK-10 (permissions, timeout-minutes).
+    const w = uruchom(WORKFLOWY, wf('t.yml', "on:\n  push:\n    tags: ['v*']\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  b:\n    runs-on: macos-26\n    timeout-minutes: 30\n    environment: testflight\n    steps:\n      - run: echo ${{ secrets.ASC_KEY_ID }} ${{ secrets.GITHUB_TOKEN }}\n"));
     expect(w.status).toBe(0);
   });
   test.each(['WATCH_FAKE', 'E2E', 'PSEUDO'])('P-089 przełącznik EXPO_PUBLIC_%s w workflowie wydania pada', (p) => {
@@ -134,6 +146,26 @@ describe('sprawdz-workflowy.mjs (ADR-0014, kontrola 05-9)', () => {
   test('P-089 sztuczny sklep w workflowie wydania pada', () => {
     const w = uruchom(WORKFLOWY, wf('t.yml', "on: workflow_dispatch\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    env:\n      EXPO_PUBLIC_STORE_FAKE: '1'\n    steps:\n      - run: true\n"));
     expect(w.stdout).toContain('SZTUCZNY-SKLEP-W-WYDANIU');
+  });
+  // F07-09 (P-117 Q6a, JAK-10): reguły z tests/public-repo.test.ts 0.1.0.
+  const DOBRY = "on: push\npermissions:\n  contents: read\njobs:\n  b:\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    steps:\n      - uses: actions/checkout@v5\n      - uses: org/akcja@0123456789abcdef0123456789abcdef01234567\n      - run: echo \"$T\"\n        env:\n          T: ${{ github.event.pull_request.title }}\n";
+  test('R-173 F07-09 dobry workflow (permissions, timeout, akcja przypięta, dane zdarzenia przez env) przechodzi', () => {
+    const w = uruchom(WORKFLOWY, wf('a.yml', DOBRY));
+    expect(w.stdout).toContain('naruszeń 0');
+    expect(w.status).toBe(0);
+  });
+  test.each([
+    ['PULL-REQUEST-TARGET', DOBRY.replace('on: push', 'on: pull_request_target')],
+    ['PERMISSIONS-KORZEN', DOBRY.replace('permissions:\n  contents: read\n', '')],
+    ['PERMISSIONS-KORZEN', DOBRY.replace('contents: read', 'contents: write')],
+    ['TIMEOUT', DOBRY.replace('    timeout-minutes: 10\n', '')],
+    ['AKCJA-NIEPRZYPIETA', DOBRY.replace('org/akcja@0123456789abcdef0123456789abcdef01234567', 'org/akcja@v2')],
+    ['DANE-ZDARZEN-W-RUN', DOBRY.replace('echo \"$T\"', 'echo \"${{ github.event.pull_request.title }}\"')],
+    ['DANE-ZDARZEN-W-RUN', DOBRY.replace('echo \"$T\"', 'git checkout ${{ github.head_ref }}')],
+  ])('R-173 F07-09 pułapka %s pada', (regula, tekst) => {
+    const w = uruchom(WORKFLOWY, wf('a.yml', tekst));
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain(regula);
   });
   test('R-173 brak workflowów to błąd, nie zaliczenie', () => {
     expect(uruchom(WORKFLOWY, repo({})).status).toBe(1);
@@ -154,5 +186,30 @@ describe('ESLint src/dane (DS-12, kontrola 05-8)', () => {
   });
   test('R-171 catch z obsługą błędu przechodzi', async () => {
     expect(await bledy("try { f(); } catch (e) { zapiszBlad(e); throw e; }")).toEqual([]);
+  });
+});
+
+describe('licencje.mjs (F07-09, P-117 Q6a; zastępuje scripts/licenses.mjs 0.1.0)', () => {
+  const lock = (pakiety: Record<string, { license?: string; dev?: boolean; dependencies?: Record<string, string> }>) => JSON.stringify({
+    packages: { '': { dependencies: Object.fromEntries(Object.keys(pakiety).filter((n) => !pakiety[n].dev && !n.includes('/node_modules/')).map((n) => [n, '1.0.0'])) },
+      ...Object.fromEntries(Object.entries(pakiety).map(([n, e]) => [`node_modules/${n}`, { version: '1.0.0', ...e }])) },
+  });
+  const sprawdz = (p: Parameters<typeof lock>[0]) => uruchom(LICENCJE, repo({ 'package-lock.json': lock(p) }));
+  test('R-171 F07-09 licencje permisywne, „A OR B” z permisywną, „A AND B” obu dozwolonych i wyjątek lightningcss przechodzą', () => {
+    const w = sprawdz({ a: { license: 'MIT' }, b: { license: '(GPL-3.0 OR MIT)' }, c: { license: 'MIT AND Apache-2.0', dependencies: { lightningcss: '1.0.0' } }, lightningcss: { license: 'MPL-2.0' } });
+    expect(w.stdout).toContain('naruszeń 0');
+    expect(w.status).toBe(0);
+  });
+  test.each([['GPL-3.0'], ['AGPL-3.0'], ['LGPL-2.1'], ['MPL-2.0'], ['UNKNOWN'], ['SEE LICENSE IN LICENSE'], ['MIT AND GPL-2.0']])('R-171 F07-09 pułapka: pakiet produkcyjny z licencją %s pada', (lic) => {
+    const w = sprawdz({ zly: { license: lic } });
+    expect(w.status).toBe(1);
+    expect(w.stdout).toContain('LICENCJA zly@1.0.0');
+  });
+  test('R-171 F07-09 zależność przechodnia też jest sprawdzana; pakiet dev nie', () => {
+    expect(sprawdz({ a: { license: 'MIT', dependencies: { b: '1.0.0' } }, b: { license: 'GPL-3.0' } }).status).toBe(1);
+    expect(sprawdz({ a: { license: 'MIT' }, d: { license: 'GPL-3.0', dev: true } }).status).toBe(0);
+  });
+  test('R-171 F07-09 brak package-lock.json to błąd, nie zaliczenie', () => {
+    expect(uruchom(LICENCJE, repo({})).status).toBe(2);
   });
 });
