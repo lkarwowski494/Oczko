@@ -52,6 +52,14 @@ ON CONFLICT (dzien) DO UPDATE SET
 ```
 SQLite liczy wszystkie wyrażenia `SET` na wartościach wiersza sprzed aktualizacji, więc kolejność `zdarzenie_id` i `zaczeto_ms` nie zmienia wyniku (sprawdzone w `sprawdz-schemat.mjs`: wcześniejszy start z drugiego urządzenia ustawia oba pola).
 
+## Klucze tabeli `ustawienie` (fix 2026-10-25)
+Tabela `ustawienie` jest w bazie, więc każdy klucz trafia do kopii urządzenia i do archiwum `.oczko` (ADR-0004). Kolumna „iCloud” mówi, czy klucz jest rekordem synchronizacji (ADR-0005) i jak się scala.
+| Klucz | Wartość (JSON) | iCloud | Scalenie i import „scal” | Źródło |
+|---|---|---|---|---|
+| `okno_uczciwe_zasady_widziane` | `true` | tak | OR: raz `true` zostaje `true` na wszystkich urządzeniach (okno nie wraca po przeniesieniu danych ani na drugim urządzeniu) | KP-16, P-089 (3a), P-103 (5a); każde zamknięcie okna zapisuje `true` w kolejce |
+| `ostatnie_miejsce` | `{ ekran, id }` | nie (stan urządzenia) | przy imporcie pomijany | F-49 |
+Nowy klucz wymaga wiersza w tej tabeli. Pamięć uprawnień Pro nie jest kluczem tej tabeli (KP-06: poza danymi synchronizowanymi).
+
 ## Polityka migracji
 - Wersja w `PRAGMA user_version`; migracje to dane w `src/dane/migracje/` (`0001.sql` = `schemat.sql` v1), uruchamiane przed pierwszym zapytaniem przez runner z modułu `dane-lokalne-sqlite` (wersja w `sprawdz-schemat.mjs` jest jego odpowiednikiem dla `node:sqlite`). **Wydanej migracji nie zmieniamy**; poprawka = nowa migracja.
 - Dodanie kolumny, tabeli, indeksu: zwykła migracja w transakcji. Każda inna zmiana tabeli: 12 kroków sqlite.org (`PRAGMA foreign_keys=OFF` **przed** `BEGIN`, nowa tabela, kopia, `DROP`, `RENAME new_X`, odtworzenie indeksów, `foreign_key_check` pusty, `COMMIT`, `ON`); eksperyment B (E0) pokazał, że `OFF` w transakcji nic nie robi.
