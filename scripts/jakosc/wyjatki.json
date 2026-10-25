@@ -1,6 +1,15 @@
 {
   "_opis": "Wyjątki nazwane od kontroli roli 07: każdy z regułą, plikiem, powodem, właścicielem i terminem (zasada wspólna 7).",
-  "kontrole": [],
+  "kontrole": [
+    {
+      "regula": "KOPIA-SAMEGO-DB",
+      "plik": "src/dane/kopia-ratunkowa.ts",
+      "powod": "ADR-0020: surowa kopia trzech plików (app.db, -wal, -shm) przed otwarciem bazy; kopia samego .db pozostaje zakazana",
+      "wlasciciel": "12",
+      "termin": "stały, dopóki obowiązuje ADR-0020",
+      "kontrola_zastepcza": "test akceptacyjny kopii ratunkowej sprawdza komplet trzech plików i liczności po przywróceniu (tests/akceptacja/dane)"
+    }
+  ],
   "workflowy": [
     {
       "regula": "SEKRET-BEZ-SRODOWISKA",
