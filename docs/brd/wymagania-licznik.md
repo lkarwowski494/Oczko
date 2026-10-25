@@ -240,7 +240,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 
 ### BR-LIC-017: Wpisanie wartości licznika i wyzerowanie
 - Przepływ: PR-01, PR-02, PR-13
-- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13 · ER-27: „praca” w statystykach (RD-15, P-048 (3)) i „start dnia” w limicie (D4 w P-057, KP-12) to dwa osobne pojęcia (P-059); zerowanie nie woła strażnika limitu i działa także na limicie (P-067 (1a), S-07)
+- Dowód potrzeby: J-01, J-07; „You should be able to enter the number.” (StitchTally, id14375427685); „I wish the edit screen for a project let me directly edit the number of rows completed” (Easy Knitty, id11473397244); przeniesienie trwających robótek z papieru albo innej aplikacji i poprawka bez dziesiątek stuknięć (rola 03, `docs/scope-contract.md` E1: ER-13) · ER-13 · ER-27: „praca” w statystykach (RD-15, P-048 (3)) i „start dnia” w limicie (D4 w P-057, KP-12) to dwa osobne pojęcia (P-059); zerowanie nie woła strażnika limitu i działa także na limicie (P-067 (1a), S-07) · ER-43: liczby wpisuje się w zapisie języka i regionu telefonu: separator tysięcy i dziesiętny oraz cyfry regionu [FAKT S-40], także cyfry ASCII; zapis niezgodny z regionem jest odrzucany z przykładem, bez zgadywania (P-097 (5a), jak Trening `docs/32-wzorce-interakcji.md:68`)
 - Kryteria akceptacji:
   - Scenariusz: Przeniesienie trwającej robótki
     - Zakładając, że użytkownik zakłada licznik dla robótki, w której skończył 57 rzędów
@@ -271,6 +271,23 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
     - Zakładając, że licznik ma 42
     - Gdy użytkownik wpisuje wartość ujemną albo tekst
     - Wtedy aplikacja nie zmienia licznika i pokazuje, że wartość musi być liczbą całkowitą od 0
+  - Szablon scenariusza: Wpisanie w zapisie regionu (ER-43)
+    - Zakładając, że telefon ma język i region <region>
+    - Gdy użytkownik wpisuje „<zapis>” jako wartość licznika
+    - Wtedy licznik pokazuje <wynik>
+    - Przykłady:
+
+      | region | zapis | wynik |
+      |---|---|---|
+      | pl-PL | 1 000 (spacja albo spacja nierozdzielająca) | 1000 |
+      | de-DE | 1.000 | 1000 |
+      | en-US | 1,000 | 1000 |
+      | ar-EG | ٥٧ (cyfry arabsko-indyjskie) | 57 |
+      | ar-EG | 57 (cyfry ASCII) | 57 |
+  - Scenariusz: Zapis niezgodny z regionem (ER-43)
+    - Zakładając, że telefon ma język i region pl-PL, a licznik ma 42
+    - Gdy użytkownik wpisuje „1,000” (w pl-PL przecinek jest separatorem dziesiętnym)
+    - Wtedy aplikacja nie zmienia licznika i pokazuje, że wartość musi być liczbą całkowitą od 0, z przykładem zapisu w regionie, bez zgadywania „1000” ani „1”
 
 ### BR-LIC-018: Licznik całości zasilany przez sekcje jednego kawałka
 - Przepływ: PR-03

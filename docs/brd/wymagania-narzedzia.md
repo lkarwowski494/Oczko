@@ -51,7 +51,7 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
 ## Obliczenia (KAL)
 ### BR-KAL-001: Liczba oczek z próbki
 - Przepływ: PR-11 · Reguła: RD-01
-- Dowód potrzeby: J-09; kalkulatory u 8 z 14; ułamkowa próbka (StashBot CA, id1176543796)
+- Dowód potrzeby: J-09; kalkulatory u 8 z 14; ułamkowa próbka (StashBot CA, id1176543796) · ER-43: zapis liczb według języka i regionu telefonu [FAKT S-40] (P-097 (5a))
 - Kryteria akceptacji:
   - Scenariusz: Typowa próbka
     - Zakładając, że próbka to 22 o./10 cm
@@ -65,6 +65,23 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
     - Zakładając, że próbka to 22 o./10 cm
     - Gdy użytkownik podaje szerokość 0 cm
     - Wtedy aplikacja pokazuje błąd danych (RD-01-W2)
+  - Szablon scenariusza: Ułamkowa próbka w zapisie regionu (ER-43)
+    - Zakładając, że telefon ma język i region <region>, a szerokość to 50 cm
+    - Gdy użytkownik wpisuje próbkę „<zapis>” o./10 cm
+    - Wtedy wynik to 107,5 oczka (rachunek RD-01: 50 × 21,5 / 10), pokazany w zapisie regionu
+    - Przykłady:
+
+      | region | zapis |
+      |---|---|
+      | pl-PL | 21,5 |
+      | de-DE | 21,5 |
+      | fr-FR | 21,5 |
+      | en-US | 21.5 |
+      | ar-EG | ٢١٫٥ |
+  - Scenariusz: Separator dziesiętny innego regionu (ER-43)
+    - Zakładając, że telefon ma język i region de-DE
+    - Gdy użytkownik wpisuje próbkę „21.5” (w de-DE kropka jest separatorem tysięcy)
+    - Wtedy aplikacja nie liczy wyniku i pokazuje przykład zapisu „21,5”, bez zgadywania [FAKT S-40]
 
 ### BR-KAL-002: Przeliczenie wzoru na własną próbkę
 - Przepływ: PR-11 · Reguła: RD-02
@@ -91,6 +108,10 @@ Zasada obliczeń (RYZ-04): każdy wynik pokazuje dane wejściowe, jednostki i za
     - Zakładając, że etykieta podaje 3,5 oz
     - Gdy użytkownik przelicza na gramy
     - Wtedy wynik to 99,22 g (RD-03-W3)
+  - Scenariusz: Próbka w calach z przecinkiem (ER-43)
+    - Zakładając, że telefon ma język i region pl-PL, a wzór podaje 20,5 o. na 4 in
+    - Gdy użytkownik wpisuje „20,5” i przelicza na 10 cm
+    - Wtedy wynik to 20,177 o./10 cm (rachunek RD-04: 20,5 × 10 / 10,16)
 
 ### BR-KAL-004: Równomierne dodawanie i ujmowanie
 - Przepływ: PR-11 · Reguła: RD-05, RD-06
