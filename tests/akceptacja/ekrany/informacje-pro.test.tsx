@@ -1,5 +1,5 @@
 // Momenty informowania o Pro (P-089 (3)): okno „Uczciwe zasady” (3a, R-120); karta po imporcie (3b, R-121) poza 1.0 (P-113 Q2a, P-117 Q1a).
-// Kiedy pokazać (tylko darmowa, raz, po ukończonym dniu): domena `informacje-pro.ts` (testy domeny).
+// Kiedy pokazać (tylko darmowa, raz, po ukończonym dniu): domena `oknoUczciweZasady` (src/domena/limit.ts; testy: tests/domena/zakup/wektory-02-fix.test.ts, P-118 I1).
 // Makiety brak (Z07-05; P-089: projekt okna według wzorca Treningu robi 04) → zapytania po roli bez etykiety wzorcowej.
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';

@@ -28,7 +28,6 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 1 domena: dni, postęp, obliczenia | `tests/domena/obliczenia/parametry-kopia.test.ts` | zielony (główny zestaw) | 3 | P-081, P-084, P-086 | `src/domena/obliczenia/parametry` | — |
 | 1 domena: dni, postęp, obliczenia | `tests/domena/obliczenia/szydelka-brd.test.ts` | zielony (główny zestaw) | 1 | P-114, RD-19 | `src/domena/bledy`<br>`src/domena/obliczenia/druty` | — |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/granice.test.ts` | zielony (główny zestaw) | 26 | KP-01, KP-06, KP-12, KP-13, KP-15, NFR-PIE-001, P-057, P-065, P-103, P-116, R-098, R-099, R-100, R-103, R-108, R-113, R-114 | `src/domena/dostep`<br>`src/domena/limit`<br>`src/konfiguracja` | Z07-07, Z07-08 |
-| 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/informacje-pro.test.ts` | zielony (główny zestaw) | 1 | BR-DAN-007, P-089, P-113, P-117, R-120, R-121 | `src/domena/informacje-pro` | Z07-09 |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/rodzaj-straznika.test.ts` | zielony (główny zestaw) | 1 | KP-12, P-057, P-067, R-092 | `src/domena/limit`<br>`src/domena/stany` | — |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-02-fix.test.ts` | zielony (główny zestaw) | 1 | P-089, P-091, P-103, P-109, P-114, R-048, R-105, R-111, R-120, R-178 | `src/domena/bledy`<br>`src/domena/dostep`<br>`src/domena/limit` | Z07-07 |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-dostepu.test.ts` | zielony (główny zestaw) | 3 | BR-ZAK-001, BR-ZAK-003, BR-ZAK-007, KP-02, KP-05, KP-06, KP-08, P-038, P-057, P-089, R-109 | `src/domena/dostep`<br>`src/konfiguracja` | — |
@@ -49,4 +48,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/ustawienia.test.tsx` | oczekuje | 7 | BR-DAN-010, BR-DAN-012/S3, BR-LIC-020/S3, BR-ZAK-004, BR-ZAK-004/S1, BR-ZAK-006/S5, BR-ZAK-006/S7, KP-13 | `src/ekrany/Ustawienia`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/zglos-stan-danych.test.tsx` | oczekuje | 4 | BR-DAN-010, BR-DAN-010/S1, BR-DAN-010/S2, BR-DAN-011, BR-DAN-011/S1, BR-DAN-011/S2, R-162, R-163 | `src/ekrany/StanDanych`<br>`src/ekrany/ZglosProblem`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 
-Razem plików testów: 45; zależnych od poprawek: 37.
+Razem plików testów: 44; zależnych od poprawek: 36.
