@@ -59,9 +59,6 @@ jobs:
       - name: Informacje (i18n:kod)
         if: always()
         run: npm run -s jakosc:info | tail -5 >> "$GITHUB_STEP_SUMMARY"
-      - name: Mutanty e1 limitu, dostępu i scal (informacyjnie do pierwszego zielonego przebiegu, P-117 Q3a)
-        if: always()
-        run: node docs/jakosc/narzedzia/mutanty-e1.mjs | tail -1 >> "$GITHUB_STEP_SUMMARY"; exit "${PIPESTATUS[0]}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
