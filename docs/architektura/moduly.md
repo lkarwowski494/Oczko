@@ -215,4 +215,4 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `MIN_IOS` / `MIN_WATCHOS` | 18.0 / 11.0 | P-070, ADR-0006 |
 | `PRODUKTY_PRO` (ID) | [DO USTALENIA] | P-038 (przy konfiguracji App Store Connect) |
 | `CENY` | z App Store (StoreKit), nie z kodu | P-057, KP-* |
-| Liczby obliczeń F-38, tabela drutów RD-11 | [DO USTALENIA] | rejestr merytoryczny roli 06 (D-027) |
+| Liczby obliczeń F-38, tabele drutów i szydełek RD-11/RD-19, kategorie grubości RD-10 | `docs/tresci/parametry.json` (rola 06) → kopia `src/domena/obliczenia/parametry.ts` | rejestr merytoryczny roli 06 (D-027); kopię tworzy `node scripts/domena/generuj-parametry.mjs` (ręcznie nie edytować), zgodność pilnuje `tests/domena/obliczenia/parametry-kopia.test.ts` w `verify` (P-118 S4) |

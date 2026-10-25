@@ -27,3 +27,6 @@ A + C. Kierunek zależności: `ekrany → przypadki-uzycia → domena ← dane, 
 ### B — zalety: mniej plików · wady: testy wymagają renderowania; poprzednia wersja pokazała pliki 30–46 KB.
 ### C — zalety: brak drugiego źródła prawdy · wady: przekazywanie odświeżenia przez kontekst.
 ### D — zalety: wygodne subskrypcje · wady: kopia stanu trwałego w pamięci rozjeżdża się z bazą po zapisach spoza JS (dziennik ekranu blokady, zegarek); dodatkowa zależność.
+
+## Uzupełnienie 2026-10-25 (fix-2, NZ-08-P1-05 S4, P-118)
+Dane z `docs/` potrzebne domenie trafiają do `src/domena` jako **pliki generowane**, nie przez import z `docs/` (granica sprawdzana przez `granice.mjs`): `stany.ts` ze `docs/architektura/stany.json` i `obliczenia/parametry.ts` z `docs/tresci/parametry.json` (`node scripts/domena/generuj-parametry.mjs`). Plik generowany ma w nagłówku źródło i zakaz ręcznej edycji, a test w `verify` porównuje kopię ze źródłem (`tests/domena/obliczenia/parametry-kopia.test.ts`), więc zmiana w `docs/` bez ponownego wygenerowania jest czerwona. *Dlaczego:* domena zostaje bez I/O i bez zależności od `docs/`, a liczby treści mają jedno źródło (rola 06).
