@@ -1,10 +1,10 @@
 // Granice brakujące w wektorach roli 02 (zgłoszenia Z07-07, Z07-08; strategia §3.5: poniżej, na, powyżej).
 // Wyrocznia: decyzje z ID w komentarzu każdego bloku. Tam, gdzie decyzja nie rozstrzyga, test sprawdza tylko część
-// rozstrzygniętą, a reszta jest w raporcie roli 07 jako [DO USTALENIA] (np. strona `wygasa === teraz`, `zostalo` u Pro).
+// rozstrzygniętą, a reszta jest w raporcie roli 07 jako [DO USTALENIA] (np. `zostalo` u Pro).
 import { startDnia, mozeZaczacDzien } from '../../../src/domena/limit';
 import { decyzja } from '../../../src/domena/dostep';
 import type { Odczyt } from '../../../src/domena/dostep';
-import { PRODUKTY_PRO, PRZERWA_NOWEGO_DNIA_MS } from '../../../src/konfiguracja';
+import { PRODUKTY_PRO, PRZERWA_NOWEGO_DNIA_MS, OKNO_OFFLINE_PRO_MS } from '../../../src/konfiguracja';
 import { TERAZ, GODZ, DZIEN, dniListopada } from './pomocnicze';
 
 const DZIS = '2026-11-08';
@@ -114,8 +114,7 @@ describe('Z07-08 / R-113 dwie aktywne subskrypcje (KP-06)', () => {
   });
 });
 
-// R-114: styk `wygasa` z `teraz`. Rozstrzygnięte: 1 ms przed końcem okresu Pro trwa; po końcu nie (W-12, W-16).
-// Strona samego `wygasa === teraz` [DO USTALENIA] (Z07-08) — test sprawdza tylko zgodność ścieżki sklepu i pamięci (KP-06).
+// R-114: styk `wygasa` z `teraz`. 1 ms przed końcem okresu Pro trwa; po końcu nie (W-12, W-16); sam styk niżej (P-103 (3a)).
 describe('Z07-08 / R-114 wygasa wobec teraz (KP-06)', () => {
   test('Z07-08 R-114 KP-06 sklep: wygasa = teraz + 1 ms → dostęp', () => {
     expect(decyzja(sklep({ produkt: MIES, wygasa: TERAZ + 1 }), null, TERAZ, PRODUKTY_PRO)).toEqual({
@@ -129,6 +128,29 @@ describe('Z07-08 / R-114 wygasa wobec teraz (KP-06)', () => {
   test('Z07-08 R-114 KP-06 sklep: wygasa = teraz − 1 ms → brak dostępu (jak W-16)', () => {
     expect(decyzja(sklep({ produkt: MIES, wygasa: TERAZ - 1 }), null, TERAZ, PRODUKTY_PRO)).toEqual({ dostep: false, powod: 'brak', pamiec: null });
   });
-  // Test „wygasa === teraz: sklep i pamięć rozstrzygają tak samo” został w tests/akceptacja/domena/zakup/granice-r114.test.ts:
-  // przeczy P-103 (3a) (okno offline pamięci; wektory 02 W-20, W-21b) — zgłoszenie 08 → 07 (partia 1, raport E2).
+});
+
+// R-114, styk `wygasa === teraz` (F07-01, P-116 (1)): rozstrzygnięte w P-103 (3a) i wektorach 02 W-20, W-20b, W-21b.
+// Koniec okresu jest wyłączny w obu źródłach, ale pamięć (ścieżka błędu sklepu) ma okno offline 7 dni po `wygasa`,
+// więc w tej samej chwili sklep daje brak dostępu, a pamięć dostęp. Poprzedni test „sklep = pamięć” przeczył P-103 (3a).
+describe('Z07-08 / R-114 styk wygasa === teraz (P-103 (3a), W-20, W-20b, W-21b)', () => {
+  const OKNO = 7 * DZIEN; // P-103 (3a): „pamięć ważna 7 dni po `wygasa`” (jak Trening OFFLINE_GRACE_DAYS=7)
+  test('Z07-08 R-114 P-103 (3a) stała okna offline = 7 dni', () => {
+    expect(OKNO_OFFLINE_PRO_MS).toBe(OKNO);
+  });
+  test('Z07-08 R-114 W-20 sklep: wygasa = teraz → brak dostępu (koniec wyłączny)', () => {
+    expect(decyzja(sklep({ produkt: MIES, wygasa: TERAZ }), { produkty: [MIES], wygasa: TERAZ + DZIEN }, TERAZ, PRODUKTY_PRO)).toEqual({ dostep: false, powod: 'brak', pamiec: null });
+  });
+  test('Z07-08 R-114 P-103 (3a) pamięć bez sieci: wygasa = teraz → dostęp z pamięci (okno offline), inaczej niż sklep', () => {
+    const pamiec = { produkty: [MIES], wygasa: TERAZ };
+    expect(decyzja({ zrodlo: 'blad' }, pamiec, TERAZ, PRODUKTY_PRO)).toEqual({ dostep: true, powod: 'pamiec', pamiec });
+  });
+  test('Z07-08 R-114 W-20b pamięć bez sieci: wygasa = teraz − 7 dni → brak dostępu (koniec okna wyłączny)', () => {
+    const pamiec = { produkty: [MIES], wygasa: TERAZ - OKNO };
+    expect(decyzja({ zrodlo: 'blad' }, pamiec, TERAZ, PRODUKTY_PRO)).toEqual({ dostep: false, powod: 'brak', pamiec });
+  });
+  test('Z07-08 R-114 W-21b pamięć bez sieci: wygasa = teraz − 7 dni + 1 ms → dostęp z pamięci', () => {
+    const pamiec = { produkty: [MIES], wygasa: TERAZ - OKNO + 1 };
+    expect(decyzja({ zrodlo: 'blad' }, pamiec, TERAZ, PRODUKTY_PRO)).toEqual({ dostep: true, powod: 'pamiec', pamiec });
+  });
 });
