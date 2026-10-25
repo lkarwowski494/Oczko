@@ -108,7 +108,7 @@ Razem: 10–15 h pracy agenta (kilka sesji z punktami czyszczenia); od właścic
 | OP-07 | [DO USTALENIA] Głębokość karczka, ujemny luz czapki, średnie zużycie na rodzaj odzieży | źródła szczebla 1–3 | H-05 |
 | OP-08 | Patent: zamknięte decyzją P-024 (weryfikacja własna, metoda w OG-07) | właściciel | OG-07, RYZ-01 |
 | OP-09 | E-mail do Craft Yarn Council o użyciu tabel i symboli: zamknięte decyzją P-083 (e-mail wysłany 2026-10-23, odpowiedź automatyczna uznana za brak odpowiedzi; tabele CYC jako tekst z linią źródła na ekranie „Źródła wiedzy”, bez symboli graficznych, P-081 P7a, P-085; NZ-05 w fix 2026-10-25) | właściciel | OG-12 |
-| OP-10 | [DO USTALENIA] Kategoria 1 szydełko: strona CYC 2,25–3,5 mm, PDF 2018 2,25–3,25 mm | źródła | RD-10 |
+| OP-10 | Kategoria 1 szydełko: zamknięte w fix-2 NZ-07 (2026-10-25, P-113): obowiązuje strona CYC S-19 „2.25— 3.5 mm” (wydanie bieżące tego samego wydawcy, zakres zgodny z oznaczeniem US „B–1 to E–4”: E–4 = 3,5 mm, S-18); PDF 2018 S-42 (2,25–3,25 mm) to wydanie zastąpione i niespójne z własnym oznaczeniem US. Żadna reguła RD ani treść nie używa dziś zakresów szydełek (RD-10 tylko próbka) | źródła | RD-10 |
 | OP-11 | [DO WYJAŚNIENIA] Pielęgnacja włóczki: opis tekstem zamiast symboli (licencja GINETEX) | właściciel, 03 | OG-13 |
 | OP-12 | [DO USTALENIA] Źródła terminologii i skrótów w 35 językach (CYC daje tylko US, UK, Kanadę) | źródła szczebla 1–3, rola 09 | RYZ-03 |
 | OP-13 | [DO USTALENIA] Japońskie rozmiary drutów (号) na mm: źródło szczebla 1–3 | źródła | RD-11 |
