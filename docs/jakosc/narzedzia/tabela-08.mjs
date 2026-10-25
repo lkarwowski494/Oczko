@@ -1,13 +1,17 @@
 // Tabela przekazania roli 07 → 08 (E4): plik testów akceptacyjnych → kryteria (ID z nazw testów) → pliki src do wdrożenia (importy zaślepek)
 // → kolejność (moduly.md / e4-przekazanie roli 05: domena → dane → platforma → ekrany) → zależność od poprawek 01/02/05 (ER-/Z07- w pliku).
-// Użycie: node docs/jakosc/narzedzia/tabela-08.mjs [--wynik docs/jakosc/e4/tabela-08.md]   (kod 1, gdy jakiś plik testów nie wskazuje pliku src)
+// Katalogi: tests/akceptacja (oczekujące, czerwone do wdrożenia) i tests/domena (przeniesione przez 08 do głównego zestawu, zielone) — F07-04.
+// Użycie: node docs/jakosc/narzedzia/tabela-08.mjs [--wynik docs/jakosc/e4/tabela-08.md] [--check docs/jakosc/e4/tabela-08.md]
+//   (kod 1, gdy jakiś plik testów nie wskazuje pliku src albo gdy --check: plik różni się od regeneracji)
 import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, relative, dirname, resolve } from 'node:path';
 
 const KORZEN = resolve(dirname(new URL(import.meta.url).pathname), '../../..');
-const AKC = join(KORZEN, 'tests/akceptacja');
+const KATALOGI = [['tests/akceptacja', 'oczekuje'], ['tests/domena', 'zielony (główny zestaw)']];
 const pliki = [];
-(function skan(d) { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (/\.test\.tsx?$/.test(n)) pliki.push(p); } })(AKC);
+function skan(d) { if (!existsSync(d)) return; for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (/\.test\.tsx?$/.test(n)) pliki.push(p); } }
+for (const [k] of KATALOGI) skan(join(KORZEN, k));
+const stan = (rel) => KATALOGI.find(([k]) => rel.startsWith(k + '/'))[1];
 
 const ID = /\b(BR-[A-Z]{3}-\d{3}(?:\/S\d+)?|NFR-[A-Z]{3}-\d{3}|KP-\d{2}|RD-\d{2}|P-\d{3}|R-\d{3}|PR-\d{2})\b/g;
 const POPRAWKI = /\b(ER-\d{2}|Z07-\d{2})\b/g;
@@ -33,20 +37,26 @@ for (const p of pliki.sort()) {
   const pop = [...new Set([...(t.match(POPRAWKI) ?? []), ...(zPropozycji ? ['Z07-22'] : [])])].sort();
   const [, nr, opis] = KOLEJNOSC.find(([re]) => re.test(rel)) ?? [null, 9, '?'];
   if (!src.length) { bledy++; console.log(`BŁĄD ${rel}: nie importuje żadnego pliku src`); }
-  wiersze.push({ rel, src, testy, ids, pop, nr, opis });
+  wiersze.push({ rel, src, testy, ids, pop, nr, opis, stan: stan(rel) });
 }
 wiersze.sort((a, b) => a.nr - b.nr || a.rel.localeCompare(b.rel));
 const md = [
   '# Przekazanie 07 → 08: testy akceptacyjne → kryteria → pliki do wdrożenia',
-  `Wygenerowano: \`node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/tabela-08.md\` (${new Date().toISOString().slice(0, 10)}). Kolejność według \`docs/architektura/e4-przekazanie.md\` („Co czyta każda rola: 08”): 1 domena, 2 dane, 3 adaptery i Swift (testy natywne: \`tests/wspolne/xctest-specyfikacja.md\`, scenariusze \`e2e/\`), 4 ekrany. Kolumna „Zależy od poprawek” = zgłoszenia wymienione w pliku testów: test może się zmienić w sesji fix 01/02/05 (P-090 Q3a, P-091 11a, P-096).`,
+  `Wygenerowano: \`node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/tabela-08.md\` (data: historia git pliku; bez daty w treści, żeby \`--check\` dawał pusty diff). Kolejność według \`docs/architektura/e4-przekazanie.md\` („Co czyta każda rola: 08”): 1 domena, 2 dane, 3 adaptery i Swift (testy natywne: \`tests/wspolne/xctest-specyfikacja.md\`, scenariusze \`e2e/\`), 4 ekrany. Kolumna „Zależy od poprawek” = zgłoszenia wymienione w pliku testów: test może się zmienić w sesji fix 01/02/05 (P-090 Q3a, P-091 11a, P-096).`,
   '',
-  '| Kolejność | Plik testów | Testy (wywołania) | Kryteria i ryzyka (ID) | Pliki src do wdrożenia | Zależy od poprawek |',
-  '|---|---|---|---|---|---|',
-  ...wiersze.map((w) => `| ${w.nr} ${w.opis} | \`${w.rel}\` | ${w.testy} | ${w.ids.join(', ') || '—'} | ${w.src.map((s) => `\`${s}\``).join('<br>')} | ${w.pop.join(', ') || '—'} |`),
+  '| Kolejność | Plik testów | Stan | Testy (wywołania) | Kryteria i ryzyka (ID) | Pliki src do wdrożenia | Zależy od poprawek |',
+  '|---|---|---|---|---|---|---|',
+  ...wiersze.map((w) => `| ${w.nr} ${w.opis} | \`${w.rel}\` | ${w.stan} | ${w.testy} | ${w.ids.join(', ') || '—'} | ${w.src.map((s) => `\`${s}\``).join('<br>')} | ${w.pop.join(', ') || '—'} |`),
   '',
   `Razem plików testów: ${wiersze.length}; zależnych od poprawek: ${wiersze.filter((w) => w.pop.length).length}.`,
 ];
+const tekst = md.join('\n') + '\n';
 const i = process.argv.indexOf('--wynik');
-if (i > 0) { mkdirSync(dirname(process.argv[i + 1]), { recursive: true }); writeFileSync(process.argv[i + 1], md.join('\n') + '\n'); }
+if (i > 0) { mkdirSync(dirname(process.argv[i + 1]), { recursive: true }); writeFileSync(process.argv[i + 1], tekst); }
+const c = process.argv.indexOf('--check');
+if (c > 0) {
+  const plik = process.argv[c + 1];
+  if (!existsSync(plik) || readFileSync(plik, 'utf8') !== tekst) { bledy++; console.log(`BŁĄD ${plik}: nieaktualna — uruchom: node docs/jakosc/narzedzia/tabela-08.mjs --wynik ${plik}`); }
+}
 console.log(`plików testów: ${wiersze.length}, zależnych od poprawek: ${wiersze.filter((w) => w.pop.length).length}, błędów: ${bledy}`);
 process.exit(bledy ? 1 : 0);
