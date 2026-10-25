@@ -37,6 +37,14 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając, że użytkownik w Nowym Jorku dodał rząd w sobotę 3 czerwca 2023 o 21:30 czasu lokalnego, czyli 4 czerwca o 01:30 UTC (RD-16-W1)
     - Gdy otwiera ten dzień
     - Wtedy rząd jest w sobocie 3 czerwca, nie w niedzieli 4 czerwca
+  - Scenariusz: Godzina zmiany w strefie zapisu (ER-44)
+    - Zakładając, że użytkownik dodał rząd w Warszawie o 21:30 czasu lokalnego, a potem poleciał do Nowego Jorku
+    - Gdy w Nowym Jorku otwiera historię tego dnia
+    - Wtedy zmiana jest w dniu z Warszawy z godziną 21:30, czyli w strefie zapisu zmiany (RD-16), a nie przeliczona na czas Nowego Jorku
+  - Scenariusz: Sesja stopera przez północ (ER-44)
+    - Zakładając, że stoper sesji „Skarpety” działał od 23:30 21 października do 00:20 22 października, a o 00:10 użytkownik dodał rząd
+    - Gdy otwiera 21 i 22 października
+    - Wtedy całe 50 minut sesji jest w 21 października, dniu startu sesji, a rząd z 00:10 jest w 22 października (P-097 (4a), jak Trening `docs/29-zdrowie-odczyt-spec.md:152`; RD-16)
 
 ### BR-DNI-003: Podsumowanie tygodnia i miesiąca
 - Przepływ: PR-16
@@ -84,6 +92,14 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając 5 rzędów zrobionych dziś
     - Gdy użytkownik odejmuje 2 rzędy
     - Wtedy wykonanie pokazuje 3 z 13
+  - Scenariusz: Aplikacja otwarta przez północ (ER-44)
+    - Zakładając ten sam projekt, ekran otwarty 22 października o 23:50 i 13 rzędów zrobionych tego dnia (wykonanie 13 z 13)
+    - Gdy mija północ, a użytkownik o 00:05 23 października dodaje rząd albo wraca do aplikacji z tła
+    - Wtedy cel na dziś to cel 23 października, 13 rzędów (⌈(320 − 153) / 13⌉), a wykonanie pokazuje 1 z 13 albo 0 z 13 (RD-15, RD-16)
+  - Scenariusz: Wczorajsze rzędy scalone po północy (ER-44)
+    - Zakładając, że 22 października o 23:40 użytkownik dodał 3 rzędy na zegarku, a telefon scalił je 23 października o 08:00, gdy cel na 23 października był już pokazany
+    - Gdy użytkownik otwiera projekt
+    - Wtedy 3 rzędy są w 22 października (wykonanie i kalendarz tego dnia), a cel na 23 października się nie zmienia (cel stały w ciągu dnia, P-047)
   - Scenariusz: Po terminie
     - Zakładając, że termin minął, a zostało 20 rzędów
     - Gdy użytkownik otwiera projekt
