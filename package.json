@@ -17,7 +17,7 @@
     "typecheck": "tsc --noEmit",
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:licenses": "node scripts/licenses.mjs --check",
-    "verify": "npm run typecheck && npm run lint && npm run jakosc:kontrole && npm test",
+    "verify": "npm run typecheck && npm run typecheck:testy && npm run lint && npm run jakosc:kontrole && npm test",
     "i18n": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en",
     "i18n:kod": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en --kod src/ekrany,src/komponenty,app",
     "i18n:pseudo": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en --pseudo src/i18n/pseudo/en-XA.json",
@@ -25,7 +25,8 @@
     "lint": "eslint src/dane",
     "test:akceptacja": "node scripts/jakosc/akceptacja-raport.mjs --wynik docs/jakosc/e3/akceptacja-wynik.md",
     "jakosc:kontrole": "node scripts/jakosc/kontrole-repo.mjs && node scripts/jakosc/sprawdz-workflowy.mjs && node --no-warnings docs/architektura/narzedzia/sprawdz-schemat.mjs && node docs/monetyzacja/limit-test.mjs && node docs/monetyzacja/dostep-test.mjs && node docs/architektura/eksperymenty/e1/scal-test.mjs && node docs/architektura/eksperymenty/e1/kontrola-adr.mjs docs/adr && npm run -s i18n",
-    "jakosc:info": "node docs/architektura/narzedzia/granice.mjs src; npm run -s i18n:kod; exit 0"
+    "jakosc:info": "node docs/architektura/narzedzia/granice.mjs src; npm run -s i18n:kod; exit 0",
+    "typecheck:testy": "tsc -p tsconfig.testy.json"
   },
   "dependencies": {
     "@types/qrcode": "^1.5.6",
