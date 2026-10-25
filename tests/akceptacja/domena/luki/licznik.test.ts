@@ -12,7 +12,7 @@ import { polozenieZnacznika } from '../../../../src/domena/znacznik-wzoru';
 import { stanDnia, wykonanieDnia } from '../../../../src/domena/postep-dnia';
 import type { ZmianaDnia } from '../../../../src/domena/postep-dnia';
 import { LIMIT_DNI_W_MIESIACU, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../../../../src/konfiguracja';
-import { WEKTORY_LIMITU, dniListopada, TERAZ } from '../zakup/pomocnicze';
+import { WEKTORY_LIMITU, dniListopada, TERAZ } from '../../../domena/zakup/pomocnicze';
 import { opcjeWlasnosci } from '../../../narzedzia/akceptacja';
 
 const wektorL = (id: string) => {

@@ -1,10 +1,10 @@
 // Granice brakujące w wektorach roli 02 (zgłoszenia Z07-07, Z07-08; strategia §3.5: poniżej, na, powyżej).
 // Wyrocznia: decyzje z ID w komentarzu każdego bloku. Tam, gdzie decyzja nie rozstrzyga, test sprawdza tylko część
 // rozstrzygniętą, a reszta jest w raporcie roli 07 jako [DO USTALENIA] (np. strona `wygasa === teraz`, `zostalo` u Pro).
-import { startDnia, mozeZaczacDzien } from '../../../../src/domena/limit';
-import { decyzja } from '../../../../src/domena/dostep';
-import type { Odczyt } from '../../../../src/domena/dostep';
-import { PRODUKTY_PRO, PRZERWA_NOWEGO_DNIA_MS } from '../../../../src/konfiguracja';
+import { startDnia, mozeZaczacDzien } from '../../../src/domena/limit';
+import { decyzja } from '../../../src/domena/dostep';
+import type { Odczyt } from '../../../src/domena/dostep';
+import { PRODUKTY_PRO, PRZERWA_NOWEGO_DNIA_MS } from '../../../src/konfiguracja';
 import { TERAZ, GODZ, DZIEN, dniListopada } from './pomocnicze';
 
 const DZIS = '2026-11-08';
@@ -129,9 +129,6 @@ describe('Z07-08 / R-114 wygasa wobec teraz (KP-06)', () => {
   test('Z07-08 R-114 KP-06 sklep: wygasa = teraz − 1 ms → brak dostępu (jak W-16)', () => {
     expect(decyzja(sklep({ produkt: MIES, wygasa: TERAZ - 1 }), null, TERAZ, PRODUKTY_PRO)).toEqual({ dostep: false, powod: 'brak', pamiec: null });
   });
-  test('Z07-08 R-114 KP-06 wygasa === teraz: sklep i pamięć rozstrzygają tak samo (strona granicy [DO USTALENIA])', () => {
-    const zeSklepu = decyzja(sklep({ produkt: MIES, wygasa: TERAZ }), null, TERAZ, PRODUKTY_PRO).dostep;
-    const zPamieci = decyzja({ zrodlo: 'blad' }, { produkty: [MIES], wygasa: TERAZ }, TERAZ, PRODUKTY_PRO).dostep;
-    expect(zPamieci).toBe(zeSklepu);
-  });
+  // Test „wygasa === teraz: sklep i pamięć rozstrzygają tak samo” został w tests/akceptacja/domena/zakup/granice-r114.test.ts:
+  // przeczy P-103 (3a) (okno offline pamięci; wektory 02 W-20, W-21b) — zgłoszenie 08 → 07 (partia 1, raport E2).
 });

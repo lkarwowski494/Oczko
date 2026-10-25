@@ -2,10 +2,10 @@
 // Wyrocznia: docs/architektura/moduly.md:77 „Mapowanie rodzaju zdarzenia na wolaStraznika (P-067): plus → plus;
 // wpisanie → wpisanie; minus → minus; zerowanie → zerowanie; cofniecie, rozstrzygniecie → edycja-historii (nie zaczynają dnia)”.
 // Czy zaczyna dzień: wektory S-01 (plus), S-06 (wpisanie), S-07 (zerowanie), S-08 (minus), S-09 (edycja-historii).
-import { rodzajStraznika, wolaStraznika } from '../../../../src/domena/limit';
-import type { RodzajStraznika } from '../../../../src/domena/limit';
-import { STANY } from '../../../../src/domena/stany';
-import type { RodzajZdarzenia } from '../../../../src/domena/stany';
+import { rodzajStraznika, wolaStraznika } from '../../../src/domena/limit';
+import type { RodzajStraznika } from '../../../src/domena/limit';
+import { STANY } from '../../../src/domena/stany';
+import type { RodzajZdarzenia } from '../../../src/domena/stany';
 
 // `satisfies Record<RodzajZdarzenia, …>`: nowy rodzaj w stany.ts bez wiersza tu = błąd `tsc` (kontrola z R-092).
 const MAPOWANIE = {

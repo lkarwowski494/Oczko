@@ -1,8 +1,8 @@
 // BR-ZAK-001, BR-ZAK-003, BR-ZAK-007, KP-02, KP-05, KP-06, KP-08 (poziom domena-Node): wszystkie wektory W i P roli 02
 // (docs/monetyzacja/wektory-dostepu.json; model V4, P-057, P-038, P-089 (2)). Ryzyko R-109.
 // Lista produktów odblokowujących: src/konfiguracja.ts PRODUKTY_PRO, ta sama co `odblokowuja` w pliku wektorów.
-import { decyzja, odczytajPamiec } from '../../../../src/domena/dostep';
-import { PRODUKTY_PRO } from '../../../../src/konfiguracja';
+import { decyzja, odczytajPamiec } from '../../../src/domena/dostep';
+import { PRODUKTY_PRO } from '../../../src/konfiguracja';
 import { WEKTORY_DOSTEPU, kryteria, licznikWektorow } from './pomocnicze';
 
 const { teraz, odblokowuja } = WEKTORY_DOSTEPU;

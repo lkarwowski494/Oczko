@@ -2,11 +2,11 @@
 // Każda własność wynika z decyzji podanej w nazwie/komentarzu, nie z uruchomienia wzorca.
 // Generator: listopad 2026 (+ dni z innych miesięcy i lat), daty bez powtórzeń (duplikaty: [DO USTALENIA], R-102, Z07-07).
 import fc from 'fast-check';
-import { startDnia, mozeZaczacDzien } from '../../../../src/domena/limit';
-import type { WejscieDnia, DzienLimitu } from '../../../../src/domena/limit';
-import { decyzja } from '../../../../src/domena/dostep';
-import type { Uprawnienie } from '../../../../src/domena/dostep';
-import { LIMIT_DNI_W_MIESIACU, PRZERWA_NOWEGO_DNIA_MS, PRODUKTY_PRO } from '../../../../src/konfiguracja';
+import { startDnia, mozeZaczacDzien } from '../../../src/domena/limit';
+import type { WejscieDnia, DzienLimitu } from '../../../src/domena/limit';
+import { decyzja } from '../../../src/domena/dostep';
+import type { Uprawnienie } from '../../../src/domena/dostep';
+import { LIMIT_DNI_W_MIESIACU, PRZERWA_NOWEGO_DNIA_MS, PRODUKTY_PRO } from '../../../src/konfiguracja';
 import { TERAZ, GODZ, DZIEN } from './pomocnicze';
 
 const dd = (n: number) => String(n).padStart(2, '0');

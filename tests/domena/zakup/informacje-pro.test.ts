@@ -3,7 +3,7 @@
 //      Definicja „ukończonego dnia” [DO USTALENIA] (Z07-09) — test sprawdza zachowanie wobec wejścia `dzienUkonczony`.
 // (3b) karta z planami Pro po udanym imporcie danych, tylko darmowa wersja (o ile import w MVP — rozstrzyga 03).
 //      Czy karta ma być jednorazowa — decyzja nie mówi (R-121 wymienia „przy każdym imporcie” jako awarię) [DO USTALENIA].
-import { pokazOknoUczciweZasady, pokazKartePoImporcie } from '../../../../src/domena/informacje-pro';
+import { pokazOknoUczciweZasady, pokazKartePoImporcie } from '../../../src/domena/informacje-pro';
 
 const tak = [true, false] as const;
 const okno = tak.flatMap((pro) => tak.flatMap((juzPokazane) => tak.map((dzienUkonczony) => ({ pro, juzPokazane, dzienUkonczony }))));

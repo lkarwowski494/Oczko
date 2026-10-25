@@ -1,18 +1,23 @@
 // Wspólne typy wektorów i pomocnik oczekiwanego błędu dla testów akceptacyjnych zakupu i limitu (rola 07, E3).
 // Wyrocznia: docs/monetyzacja/wektory-limitu.json, wektory-dostepu.json (rola 02) i decyzje z ID w komentarzach testów.
-import wektoryLimituJson from '../../../../docs/monetyzacja/wektory-limitu.json';
-import wektoryDostepuJson from '../../../../docs/monetyzacja/wektory-dostepu.json';
-import type { WejscieDnia, WynikStartu, StanZawczasu, RodzajStraznika } from '../../../../src/domena/limit';
-import type { Odczyt, Pamiec, DecyzjaDostepu } from '../../../../src/domena/dostep';
+import wektoryLimituJson from '../../../docs/monetyzacja/wektory-limitu.json';
+import wektoryDostepuJson from '../../../docs/monetyzacja/wektory-dostepu.json';
+import type { WejscieDnia, WynikStartu, StanZawczasu, RodzajStraznika } from '../../../src/domena/limit';
+import type { Odczyt, Pamiec, DecyzjaDostepu } from '../../../src/domena/dostep';
 
 export const BLAD = 'błąd' as const;
+/** Błąd danych w wektorze: dawny zapis „błąd” albo kod `{ blad: 'BLAD_DANYCH' }` z fixu 02 (Z07-07, R-178, P-103). */
+export type BladWektora = typeof BLAD | { blad: 'BLAD_DANYCH' };
+export function czyBlad(o: unknown): o is BladWektora {
+  return o === BLAD || (typeof o === 'object' && o !== null && 'blad' in o && o.blad === 'BLAD_DANYCH');
+}
 type Wektor<W, O> = { id: string; scenariusz: string; wejscie: W; oczekiwane: O };
 export type PlikLimitu = {
   limit: number;
   przerwa_ms: number;
-  startDnia: Wektor<WejscieDnia, WynikStartu>[];
-  wolaStraznika: Wektor<{ rodzaj: RodzajStraznika; licznik: string; urzadzenie: string }, boolean | typeof BLAD>[];
-  mozeZaczacDzien: Wektor<WejscieDnia, StanZawczasu | typeof BLAD>[];
+  startDnia: Wektor<WejscieDnia, WynikStartu | BladWektora>[];
+  wolaStraznika: Wektor<{ rodzaj: RodzajStraznika; licznik: string; urzadzenie: string }, boolean | BladWektora>[];
+  mozeZaczacDzien: Wektor<WejscieDnia, StanZawczasu | BladWektora>[];
 };
 export type PlikDostepu = {
   teraz: number;
