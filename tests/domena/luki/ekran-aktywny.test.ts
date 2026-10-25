@@ -1,8 +1,8 @@
 // Luki pokrycia E3 (rola 07): ekran nie gaśnie podczas liczenia (BR-LIC-013/S1–S2, docs/brd/wymagania-licznik.md:176, :180).
 // Poziom: przypadek użycia z atrapą portu EkranAktywny (src/domena/porty.ts: „F-10, każdy tag wyłączany”, rejestr Expo 7).
 // Realne niegaśnięcie ekranu: tylko urządzenie (ryzyko szczątkowe P-041, kryteria.json „tylko-urządzenie”).
-import type { EkranAktywny } from '../../../../src/domena/porty';
-import { wejdzNaEkranLicznika } from '../../../../src/przypadki-uzycia/ekran-aktywny';
+import type { EkranAktywny } from '../../../src/domena/porty';
+import { wejdzNaEkranLicznika } from '../../../src/przypadki-uzycia/ekran-aktywny';
 
 /** Atrapa portu: dziennik wywołań i zbiór aktywnych tagów (wyłączenie tagu, którego nie włączono, to błąd w atrapie). */
 function atrapa() {
