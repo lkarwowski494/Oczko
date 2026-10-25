@@ -199,6 +199,8 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `STAN_NAZWA_MAKS_ZNAKOW` (znaki) | 60 | [OCENA] roli 05 (Z07-12): nazwa na ekranie blokady i zegarku; ładunek < 4 KB (rejestr Apple 1b) |
 | `STAN_PRZYPOMNIENIA_MAKS` (liczba) / `STAN_PRZYPOMNIENIE_TEKST_MAKS` (znaki) | 3 / 40 | [OCENA] roli 05 (Z07-12): plan przypomnień w stanie Live Activity i zegarka |
 | `SESJA_MAKS_H` (h) | 8 | P-072 (7a); limit Live Activity 8 h (rejestr Apple 1a) |
+| `PROG_NIEUDANYCH_STARTOW` (starty) | 2 | P-080 (interpretacja do weta), ADR-0019 (strażnik startu, rola 12) |
+| `KOPIE_RATUNKOWE_DNI` (dni) | 30 | P-080, ADR-0020 (kopia ratunkowa, rola 12) |
 | `WERSJA_SCHEMATU` (-) | 1 | `schemat.sql` |
 | `WERSJA_FORMATU_ARCHIWUM` (-) | 1 | ADR-0004 |
 | `ROZSZERZENIE_ARCHIWUM` | `.oczko` | ADR-0004 |
