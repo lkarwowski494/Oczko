@@ -23,6 +23,7 @@
 ## Następny krok
 ### Koordynacja (2026-10-25)
 - Koordynator: sesja „Main: Oczko” (nowe konto). **P-087:** decyzje podejmuje koordynator (najpierw jak w Treningu, potem własna rekomendacja); na STOP-y ról odpowiada koordynator; wyjątki u właściciela: koszty, jego konta, scalenie do `main`, wysłanie do Apple.
+- **P-089:** monetyzacja zbieżna z Treningiem (ceny PL/EUR/GBP, Family Sharing, okno „Uczciwe zasady”, karta po imporcie) — dla 07, 04, 08, 10.
 - **P-088:** STOP E3 roli 06 przyjęty. Następny krok: **07-jakosc build** (nowa sesja).
 
 ### Koordynacja (2026-10-23)
