@@ -1,9 +1,7 @@
-// P-089 (3): dwa momenty informowania o Pro, tylko dla wersji darmowej. Ryzyka R-120 (okno), R-121 (karta).
+// P-089 (3): momenty informowania o Pro, tylko dla wersji darmowej. Ryzyka R-120 (okno), R-121 (karta — poza 1.0, niżej).
 // (3a) okno „Uczciwe zasady”: jednorazowe, po pierwszym ukończonym dniu z robótką, tylko darmowa wersja.
 //      Definicja „ukończonego dnia” [DO USTALENIA] (Z07-09) — test sprawdza zachowanie wobec wejścia `dzienUkonczony`.
-// (3b) karta z planami Pro po udanym imporcie danych, tylko darmowa wersja (o ile import w MVP — rozstrzyga 03).
-//      Czy karta ma być jednorazowa — decyzja nie mówi (R-121 wymienia „przy każdym imporcie” jako awarię) [DO USTALENIA].
-import { pokazOknoUczciweZasady, pokazKartePoImporcie } from '../../../src/domena/informacje-pro';
+import { pokazOknoUczciweZasady } from '../../../src/domena/informacje-pro';
 
 const tak = [true, false] as const;
 const okno = tak.flatMap((pro) => tak.flatMap((juzPokazane) => tak.map((dzienUkonczony) => ({ pro, juzPokazane, dzienUkonczony }))));
@@ -22,14 +20,5 @@ describe('P-089 (3a) R-120 okno „Uczciwe zasady”', () => {
   });
 });
 
-const karta = tak.flatMap((pro) => tak.map((importUdany) => ({ pro, importUdany })));
-
-describe('P-089 (3b) R-121 karta z planami Pro po imporcie', () => {
-  test.each(karta.map((w) => [w.pro ? 'Pro' : 'darmowa', w.importUdany ? 'import udany' : 'import nieudany', w] as const))('P-089 (3b) R-121 %s, %s', (_a, _b, w) => {
-    expect(pokazKartePoImporcie(w)).toBe(!w.pro && w.importUdany);
-  });
-  test('P-089 (3b) R-121 tablica pełna: 4 przypadki, dokładnie jeden pokazuje kartę', () => {
-    expect(karta).toHaveLength(4);
-    expect(karta.filter((w) => pokazKartePoImporcie(w))).toEqual([{ pro: false, importUdany: true }]);
-  });
-});
+// (3b) karta z planami Pro po imporcie: w 1.0 jej nie ma (P-113 Q2a — karta tylko po imporcie z innej aplikacji, BR-DAN-007, F-29 PÓŹNIEJ;
+//      przywrócenie własnej kopii bez karty, jak Trening). Test karty na liście „poza 1.0 (F-29)” w strategii §9 (P-117 Q1a).

@@ -1,9 +1,9 @@
-// Momenty informowania o Pro (P-089 (3)): okno „Uczciwe zasady” (3a, R-120) i karta po imporcie (3b, R-121).
-// Kiedy pokazać (tylko darmowa, raz, po ukończonym dniu / udanym imporcie): domena `informacje-pro.ts` (testy domeny).
+// Momenty informowania o Pro (P-089 (3)): okno „Uczciwe zasady” (3a, R-120); karta po imporcie (3b, R-121) poza 1.0 (P-113 Q2a, P-117 Q1a).
+// Kiedy pokazać (tylko darmowa, raz, po ukończonym dniu): domena `informacje-pro.ts` (testy domeny).
 // Makiety brak (Z07-05; P-089: projekt okna według wzorca Treningu robi 04) → zapytania po roli bez etykiety wzorcowej.
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { KartaPoImporcie, OknoUczciweZasady } from '../../../src/ekrany/InformacjePro';
+import { OknoUczciweZasady } from '../../../src/ekrany/InformacjePro';
 import type { Produkt } from '../../../src/domena/porty';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
 import { przycisk, tEn } from './pomoc';
@@ -37,13 +37,5 @@ describe('Informacje o Pro (P-089)', () => {
     expect(screen.queryByText(/[$€£]|zł|%|free trial|Upgrade now|Unlock/i)).toBeNull();
   });
 
-  test('P-089 (3b) / R-121: karta po imporcie z planami i cenami tylko ze sklepu; zamknięcie (warunkowo: import w MVP, 03)', () => {
-    const naZamknij = jest.fn(), naPlany = jest.fn();
-    render(<KartaPoImporcie stan={{ produkty: PRODUKTY }} t={t} naZamknij={naZamknij} naPlany={naPlany} />);
-    for (const p of PRODUKTY) expect(screen.getByText(new RegExp(p.cenaWyswietlana))).toBeTruthy();
-    expect(screen.queryByText(/\$\s?\d|0[.,]99|6[.,]99|14[.,]99/)).toBeNull();
-    fireEvent.press(przycisk('Close', 'button')); // nazwa jak ekrany.html:160
-    expect(naZamknij).toHaveBeenCalledTimes(1);
-    expect(naPlany).not.toHaveBeenCalled();
-  });
+  // P-089 (3b) / R-121 karta po imporcie: poza 1.0 (P-113 Q2a, P-117 Q1a; F-29 PÓŹNIEJ) — strategia §9, lista „poza 1.0”.
 });

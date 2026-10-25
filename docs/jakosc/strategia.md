@@ -122,6 +122,11 @@ Pokrycie 220 kryteriów z inwentarza ([`e0/kryteria.json`](e0/kryteria.json)), l
 | BR-WZR-007/S3 (strona WWW bez treści) | brak portu pobierania strony; kryterium niemierzalne (ER-36) | po ER-36 i porcie (05) |
 | BR-PRJ-015/S2 (udostępnienie bez lokalizacji) | brak portu udostępniania i usuwania EXIF (P-073 10a) | po porcie (05); dane testowe ze zdjęciem z EXIF GPS (§4) |
 | NFR-JEZ-001 (35 lokalizacji) | mechanizm roli 09: testy `tests/i18n/` (186, zielone) bez ID kryterium w nazwie | przy E2–E4 roli 09: test `supportedLocales` = `CFBundleLocalizations` = słowniki z ID (strategia §10) |
+Poza 1.0 (testy usunięte z zestawu razem z zakresem, wracają z funkcją):
+| Kryterium / ryzyko | Decyzja | Warunek powrotu i test |
+|---|---|---|
+| BR-DAN-007 „Karta planów Pro po imporcie z innej aplikacji”, R-121 | P-113 Q2a, P-117 Q1a (F-29 PÓŹNIEJ); w 1.0 import własnej kopii bez karty — E2E 08 (`assertNotVisible karta-pro-po-imporcie`) | F-29 w zakresie: test domeny z pełnym warunkiem BR-DAN-007 (źródło „inna aplikacja”, ≥ 1 nowa pozycja, stan Pro pewny) i test ekranu karty (ceny tylko ze sklepu, zamknięcie) — wcześniejsza wersja w historii git, `tests/domena/zakup/informacje-pro.test.ts` przed F07-02 |
+
 Testy zależne od poprawek 01/02/05 (P-090 Q3a, P-091 11a): [`zgloszenia.md`](zgloszenia.md) i [`e1/zgloszenia-e1.md`](e1/zgloszenia-e1.md), kolumna „Testy zależne”; zestawienie dla roli 08 w przekazaniu E4.
 
 ## 10. Kontrole od innych ról → miejsce w planie

@@ -121,8 +121,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `import-licznosci` | import | liczności pliku przed decyzją | jak `eksport-licznosci` | |
 | `import-scal` | import | wybór „scal” (P-091 6a) | — | |
 | `import-wynik` | import | wynik (`… 0 new …` przy powtórnym imporcie) | — | |
-| `karta-pro-po-imporcie` | import | karta z planami Pro (P-089 3b, tylko darmowa) | — | |
-| `karta-pro-zamknij` | import | zamknięcie karty | — | |
+| `karta-pro-po-imporcie` | import | karta z planami Pro — w 1.0 nie występuje; scenariusz 08 sprawdza jej brak po imporcie własnej kopii (P-113 Q2a, P-117 Q1a) | — | |
 | `tryb-awaryjny` | ekran awaryjny (ADR-0019) | kontener | — (04, 09) | |
 | `awaryjny-zapisz-kopie` | ekran awaryjny | „Zapisz kopię danych” | — | |
 | `awaryjny-sprobuj-normalnie` | ekran awaryjny | „Spróbuj normalnie” | — | |
@@ -187,6 +186,6 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | NFR-DOS-002 | `30-nfr-dos-002-duzy-tekst.yaml` |
 | NFR-WYD-001 | `31-nfr-wyd-001-reakcja-licznika.yaml` |
 | NFR-SYS-001 | `32-nfr-sys-001-nowy-ios.yaml` |
-| (przepływy pakietu podstawowego spoza poziomu E2E) BR-LIC-002/S1–S3, BR-LIC-019/S1, BR-LIC-003/S2 · BR-ZAK-006/S1, KP-13 · BR-ZAK-001/S1, PR-09 · P-089 (3a) · BR-DAN-005/S1, BR-DAN-006/S1, P-089 (3b) · ADR-0019 | `04`, `05`, `06`, `07`, `08`, `09` |
+| (przepływy pakietu podstawowego spoza poziomu E2E) BR-LIC-002/S1–S3, BR-LIC-019/S1, BR-LIC-003/S2 · BR-ZAK-006/S1, KP-13 · BR-ZAK-001/S1, PR-09 · P-089 (3a) · BR-DAN-005/S1, BR-DAN-006/S1, P-113 Q2a (bez karty) · ADR-0019 | `04`, `05`, `06`, `07`, `08`, `09` |
 
 Kryteria „tylko-urządzenie” (18, `kryteria.json`) nie mają scenariusza — lista telefonu (strategia §8, TT-01–TT-09) albo „Nie sprawdzono”.

@@ -1,14 +1,14 @@
 # Eksport i import archiwum .oczko (pakiet podstawowy): BR-DAN-005/S1, BR-DAN-006/S1 (obieg eksport → import), P-091 (6a): import „scal” po UUID, idempotentny;
-# P-089 (3b): karta z planami Pro po udanym imporcie, tylko wersja darmowa (o ile import w MVP — rozstrzyga 03; bez importu ten krok wypada).
+# P-113 Q2a, P-117 Q1a: import własnej kopii (F-32) nie pokazuje karty z planami Pro — karta tylko po imporcie z innej aplikacji (BR-DAN-007, F-29 poza 1.0).
 # ADR-0004 (archiwum), maszyna „Import archiwum” (moduly.md): sprawdzanie → gotowy → scal/zastąp → wczytywanie → gotowe.
 # Systemowy wybór pliku i arkusz udostępniania są poza zasięgiem symulatora (Trening docs/38:75): build E2E ma panel „Test files” (tylko EXPO_PUBLIC_E2E=1),
 # który zapisuje eksport w katalogu testowym i podaje ostatni eksport do importu bez okna systemowego. Okno systemowe: „Nie sprawdzono” (lista telefonu).
 appId: com.apps4brew.knitting
-name: "BR-DAN-006/S1 · Eksport archiwum, usunięcie danych, import i scalenie (liczności, idempotencja, karta Pro)"
+name: "BR-DAN-006/S1 · Eksport archiwum, usunięcie danych, import i scalenie (liczności, idempotencja, bez karty Pro)"
 tags:
   - BR-DAN-005-S1
   - BR-DAN-006-S1
-  - P-089-3b
+  - P-113-Q2a
   - podstawowy
   - stan-licznika
 ---
@@ -47,18 +47,15 @@ tags:
 - tapOn: { id: "import-scal" }
 - extendedWaitUntil: { visible: { id: "import-wynik" }, timeout: 30000 }
 - assertVisible: { id: "import-wynik", text: ".*1 project.*" }
-# --- P-089 (3b): karta z planami Pro po udanym imporcie (wersja darmowa) ---
-- assertVisible: { id: "karta-pro-po-imporcie" }
-- takeScreenshot: 08-karta-pro-po-imporcie
-- tapOn: { id: "karta-pro-zamknij" }
+# --- P-113 Q2a (P-117 Q1a): po imporcie własnej kopii w wersji darmowej karty z planami Pro nie ma ---
 - assertNotVisible: { id: "karta-pro-po-imporcie" }
+- takeScreenshot: 08-import-bez-karty-pro
 # --- drugi import tego samego pliku: scalenie idempotentne (P-091 6a, M-02) — bez duplikatów ---
 - tapOn: { id: "e2e-pliki-importuj-ostatni" }
 - extendedWaitUntil: { visible: { id: "import-gotowy" }, timeout: 30000 }
 - tapOn: { id: "import-scal" }
 - extendedWaitUntil: { visible: { id: "import-wynik" }, timeout: 30000 }
 - assertVisible: { id: "import-wynik", text: ".*0 new.*" }
-- tapOn: { id: "karta-pro-zamknij", optional: true }
 - assertNotVisible: { id: "karta-pro-po-imporcie" }
 - tapOn: { id: "nav-wstecz" }
 - assertVisible: { id: "projekty-lista" }
