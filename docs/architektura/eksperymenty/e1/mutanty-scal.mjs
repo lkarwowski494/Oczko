@@ -12,6 +12,8 @@ const MUTACJE = [
   ['−1 poniżej zera', 'w = Math.max(0, (z.rodzice', 'w = ((z.rodzice'],
   ['bez stanu czeka', 'if (brakujacy.size) return', 'if (false) return'],
   ['bez kontroli kolizji id', "if (kolizje.length) return", 'if (false) return'],
+  ['bez kontroli wartości (W1)', 'if (zle.length) return', 'if (false) return'],
+  ['ujemna wartość ustawienia przechodzi (W1)', 'z.wartosc >= 0', 'z.wartosc >= -1'],
   ['bez kontroli wielu rodziców', "if (wiele.length) return", 'if (false) return'],
   ['bez kontroli cyklu', 'if (kolejka.length < wszystkie.length) return', 'if (false) return'],
   ['bez kontroli rodzaju', 'if (nieznane.length) return', 'if (false) return'],

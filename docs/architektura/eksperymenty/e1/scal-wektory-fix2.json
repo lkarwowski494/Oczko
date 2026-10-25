@@ -1,0 +1,81 @@
+[
+ {
+  "id": "M-18",
+  "opis": "NZ-08-P1-05 W1 (P-118): wpisanie bez wartości (rekord synchronizacji lub importu łamiący niezmiennik schemat.sql) → blad zla_wartosc, nie wyjątek ani cichy wynik",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "w",
+    "rodzaj": "wpisanie",
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "zla_wartosc",
+   "id": "w"
+  }
+ },
+ {
+  "id": "M-19",
+  "opis": "NZ-08-P1-05 W1: rozstrzygnięcie z wartością ujemną albo ułamkową → blad zla_wartosc (CHECK wartosc >= 0, INTEGER)",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "r",
+    "rodzaj": "rozstrzygniecie",
+    "wartosc": -1,
+    "rodzice": [
+     "a"
+    ]
+   },
+   {
+    "id": "s",
+    "rodzaj": "cofniecie",
+    "wartosc": 2.5,
+    "rodzice": [
+     "r"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "zla_wartosc",
+   "id": "r"
+  }
+ },
+ {
+  "id": "M-20",
+  "opis": "NZ-08-P1-05 W1: plus albo zerowanie z polem wartosc (niezmiennik: wartość tylko przy ustawieniu) → blad zla_wartosc",
+  "zdarzenia": [
+   {
+    "id": "a",
+    "rodzaj": "plus",
+    "rodzice": []
+   },
+   {
+    "id": "b",
+    "rodzaj": "plus",
+    "wartosc": 5,
+    "rodzice": [
+     "a"
+    ]
+   }
+  ],
+  "oczekiwane": {
+   "stan": "blad",
+   "powod": "zla_wartosc",
+   "id": "b"
+  }
+ }
+]

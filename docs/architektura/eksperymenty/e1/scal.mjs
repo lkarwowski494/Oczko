@@ -22,6 +22,10 @@ export function scal(zdarzenia) {
   const wszystkie = [...mapa.values()];
   const nieznane = wszystkie.filter((z) => !RODZAJE.has(z.rodzaj)).map((z) => z.id);
   if (nieznane.length) return blad('nieznany_rodzaj', pierwszy(nieznane));             // M-15
+  // Niezmiennik schemat.sql (zdarzenie, CHECK): ustawienie niesie nieujemną liczbę całkowitą, ±1 i zerowanie nie niosą wartości.
+  // Rekord z synchronizacji albo importu może go łamać, więc wynik, nie wyjątek (P-118 W1, Q1a).
+  const zle = wszystkie.filter((z) => (USTAWIA.has(z.rodzaj) ? !(Number.isInteger(z.wartosc) && z.wartosc >= 0) : z.wartosc !== undefined && z.wartosc !== null)).map((z) => z.id);
+  if (zle.length) return blad('zla_wartosc', pierwszy(zle));                               // M-18–M-20
   const wiele = wszystkie.filter((z) => z.rodzaj !== 'rozstrzygniecie' && z.rodzice.length > 1).map((z) => z.id);
   if (wiele.length) return blad('wiele_rodzicow', pierwszy(wiele));                    // M-09
   const brakujacy = new Set(wszystkie.flatMap((z) => z.rodzice.filter((r) => !mapa.has(r))));

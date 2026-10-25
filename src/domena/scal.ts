@@ -8,7 +8,7 @@ export type WynikScalenia =
   | { stan: 'konflikt'; glowy: string[]; kandydaci: { glowa: string; wartosc: number }[] }
   | { stan: 'czeka'; brakujacy: string[] }
   | { stan: 'blad'; powod: PowodBleduScalenia; id: string }; // Z07-13, moduly.md „Scalanie”; wariant dopisany przez 08 (P-111 (4))
-export type PowodBleduScalenia = 'kolizja_id' | 'nieznany_rodzaj' | 'wiele_rodzicow' | 'cykl';
+export type PowodBleduScalenia = 'kolizja_id' | 'nieznany_rodzaj' | 'wiele_rodzicow' | 'cykl' | 'zla_wartosc'; // zla_wartosc: fix-2 05 (P-118 W1, M-18–M-20)
 
 const RODZAJE: ReadonlySet<string> = new Set(STANY['zdarzenie.rodzaj']);
 const USTAWIA: ReadonlySet<string> = new Set(['wpisanie', 'cofniecie', 'rozstrzygniecie']); // zdarzenie niesie wartość po zmianie
@@ -64,7 +64,7 @@ export function scal(zdarzenia: ZdarzenieLicznika[]): WynikScalenia {
 /** Wartość licznika po zdarzeniu: ustawienie niesie wartość, zerowanie daje 0, ±1 od rodzica bez zejścia poniżej 0 (M-06). */
 function wartoscPo(z: ZdarzenieLicznika, wartosc: ReadonlyMap<string, number>): number {
   if (USTAWIA.has(z.rodzaj)) {
-    // Kontrakt 05 nie ma powodu `blad` dla ustawienia bez wartości (schemat.sql dopuszcza NULL) — zgłoszenie 08 → 05; do tego czasu wyjątek.
+    // Kontrakt 05 od fix-2 (P-118 W1): zamiast wyjątku wynik { stan: 'blad', powod: 'zla_wartosc' } sprawdzany przed przejściem (M-18–M-20); zmianę zachowania robi 08.
     if (typeof z.wartosc !== 'number') throw new Error(`scal: zdarzenie ${z.id} (${z.rodzaj}) bez wartości`);
     return z.wartosc;
   }
