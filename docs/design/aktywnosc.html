@@ -86,7 +86,7 @@ section[data-ekran="zegarek-przypomnienie"] .z-dol .plus, section[data-ekran="ze
 /* „Nie zapisano” (NZ-05-F4-04, P-142 1b): liczba 40 pt jak przy przypomnieniu, komunikat w miejscu podpisu, przyciski zostają */
 section[data-ekran^="zegarek-nie-zapisano"] .z-liczba .n { font-size: calc(40px * min(var(--dt), 1.15)); }
 section[data-ekran^="zegarek-nie-zapisano"] .z-dol .plus, section[data-ekran^="zegarek-nie-zapisano"] .z-dol .minus { min-height: 48px; }
-.z-tekst b { font-weight: 600; }
+.z-tekst b { display: block; font-weight: 600; }
 section[data-ekran^="zegarek"] .zakr::before { background: var(--c-zakreslacz); border-left-color: var(--c-zakr-krawedz); }
 section[data-ekran^="zegarek"] .zakr span { color: var(--c-na-zakreslaczu); font-size: calc(13px * var(--dt)); }
 section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(13px * var(--dt)); padding: 0 6px; }
@@ -253,7 +253,7 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="z-gora"><span class="nazwa">Harbor Sweater</span><span class="godz">9:41</span></div>
   <div class="z-srodek">
   <div class="z-liczba"><span class="n">47</span></div>
-  <div class="z-tekst" role="status"><b>Row 48 wasn’t added.</b> Try again or count on iPhone.</div>
+  <div class="z-tekst" role="status"><b>Row 48 wasn’t added</b>Try again or count on iPhone.</div>
   </div>
   <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Now row 48">+1 row</span></div>
 </section>
@@ -263,7 +263,7 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="z-gora"><span class="nazwa">Harbor Sweater</span><span class="godz">9:41</span></div>
   <div class="z-srodek">
   <div class="z-liczba"><span class="n">47</span></div>
-  <div class="z-tekst" role="status"><b>Row 47 wasn’t removed.</b> Try again or count on iPhone.</div>
+  <div class="z-tekst" role="status"><b>Row 47 wasn’t removed</b>Try again or count on iPhone.</div>
   </div>
   <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Now row 48">+1 row</span></div>
 </section>
