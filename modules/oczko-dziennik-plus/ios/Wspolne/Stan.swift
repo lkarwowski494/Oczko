@@ -1,9 +1,9 @@
-// Stan Live Activity i zegarka, wersja 2 (moduly.md „Stan Live Activity i zegarka”, ADR-0009; X-ST-01–06): jeden dekoder dla intencji
+// Stan Live Activity i zegarka, wersja 3 (moduly.md „Stan Live Activity i zegarka”, ADR-0009; X-ST-01–06): jeden dekoder dla intencji
 // i zegarka. Bez wartości domyślnych — brak pola albo zły typ = błąd dekodowania (X-ST-01, R-027); ładunek z wersją nowszą niż znana jest
 // odrzucany, a cel zostaje przy ostatnim poprawnym stanie. Nieznane pola pomijane (wersja N czyta N+1).
 import Foundation
 
-public let wersjaStanu = 2
+public let wersjaStanu = 3
 
 public struct DzienStanu: Codable, Hashable {
   public let dzien: String
@@ -32,9 +32,11 @@ public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState L
   public let proWaznoscDo: Int64?
   public let dniWMiesiacu: [DzienStanu]
   public let przypomnienia: [PrzypomnienieStanu]
+  /// Blokada licznika (F-03, N1, wersja 3); stan wersji 2 bez pola = odblokowany.
+  public let zablokowany: Bool
 
   enum CodingKeys: String, CodingKey {
-    case wersja, licznikId, nazwa, wartosc, znaczenie, glowa, ostatniPlusMs, dzien, dzienDozwolony, sesjaStartMs, pro, proWaznoscDo, dniWMiesiacu, przypomnienia
+    case wersja, licznikId, nazwa, wartosc, znaczenie, glowa, ostatniPlusMs, dzien, dzienDozwolony, sesjaStartMs, pro, proWaznoscDo, dniWMiesiacu, przypomnienia, zablokowany
   }
 
   /// Pola opcjonalne w typie TS (`T | null`) muszą być obecne: `decodeNil` odróżnia `null` od braku klucza (brak = błąd, X-ST-01).
@@ -61,6 +63,7 @@ public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState L
     proWaznoscDo = try zNull(Int64.self, .proWaznoscDo)
     dniWMiesiacu = try c.decode([DzienStanu].self, forKey: .dniWMiesiacu)
     przypomnienia = try c.decode([PrzypomnienieStanu].self, forKey: .przypomnienia)
+    zablokowany = c.contains(.zablokowany) ? try c.decode(Bool.self, forKey: .zablokowany) : false
   }
 
   /// Kodowanie z `null` dla pustych pól (ten sam zbiór kluczy co TS, X-ST-02).
@@ -70,21 +73,22 @@ public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState L
     try c.encode(wartosc, forKey: .wartosc); try c.encode(znaczenie, forKey: .znaczenie); try c.encode(glowa, forKey: .glowa)
     try c.encode(ostatniPlusMs, forKey: .ostatniPlusMs); try c.encode(dzien, forKey: .dzien); try c.encode(dzienDozwolony, forKey: .dzienDozwolony)
     try c.encode(sesjaStartMs, forKey: .sesjaStartMs); try c.encode(pro, forKey: .pro); try c.encode(proWaznoscDo, forKey: .proWaznoscDo)
-    try c.encode(dniWMiesiacu, forKey: .dniWMiesiacu); try c.encode(przypomnienia, forKey: .przypomnienia)
+    try c.encode(dniWMiesiacu, forKey: .dniWMiesiacu); try c.encode(przypomnienia, forKey: .przypomnienia); try c.encode(zablokowany, forKey: .zablokowany)
   }
 
   /// Stan po zapisanym stuknięciu (ADR-0008 (1)): wartość ± 1, `glowa` = nowe zdarzenie, `ostatniPlusMs` = czas zdarzenia, dzień i dni limitu.
   public func po(_ wartoscZmiana: Int, glowa: String, czasMs: Int64, dzien: String, dni: [DzienStanu]) -> StanEkranuBlokady {
     StanEkranuBlokady(wersja: wersja, licznikId: licznikId, nazwa: nazwa, wartosc: max(0, wartosc + wartoscZmiana), znaczenie: znaczenie, glowa: glowa,
                       ostatniPlusMs: czasMs, dzien: dzien, dzienDozwolony: true, sesjaStartMs: sesjaStartMs, pro: pro, proWaznoscDo: proWaznoscDo,
-                      dniWMiesiacu: dni, przypomnienia: przypomnienia)
+                      dniWMiesiacu: dni, przypomnienia: przypomnienia, zablokowany: zablokowany)
   }
 
   public init(wersja: Int, licznikId: String, nazwa: String, wartosc: Int, znaczenie: Znaczenie, glowa: String?, ostatniPlusMs: Int64?, dzien: String,
-              dzienDozwolony: Bool, sesjaStartMs: Int64?, pro: Bool, proWaznoscDo: Int64?, dniWMiesiacu: [DzienStanu], przypomnienia: [PrzypomnienieStanu]) {
+              dzienDozwolony: Bool, sesjaStartMs: Int64?, pro: Bool, proWaznoscDo: Int64?, dniWMiesiacu: [DzienStanu], przypomnienia: [PrzypomnienieStanu],
+              zablokowany: Bool) {
     self.wersja = wersja; self.licznikId = licznikId; self.nazwa = nazwa; self.wartosc = wartosc; self.znaczenie = znaczenie; self.glowa = glowa
     self.ostatniPlusMs = ostatniPlusMs; self.dzien = dzien; self.dzienDozwolony = dzienDozwolony; self.sesjaStartMs = sesjaStartMs; self.pro = pro
-    self.proWaznoscDo = proWaznoscDo; self.dniWMiesiacu = dniWMiesiacu; self.przypomnienia = przypomnienia
+    self.proWaznoscDo = proWaznoscDo; self.dniWMiesiacu = dniWMiesiacu; self.przypomnienia = przypomnienia; self.zablokowany = zablokowany
   }
 
   public static func dekoduj(_ dane: Data) throws -> StanEkranuBlokady { try JSONDecoder().decode(StanEkranuBlokady.self, from: dane) }

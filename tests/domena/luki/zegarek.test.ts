@@ -113,7 +113,7 @@ describe('NFR-ZEG-001 ADR-0009 stan zegarka = złote pliki tests/wspolne/stan-ze
     const [r, m] = z.dzien.split('-').map(Number);
     const poprzedni = `${m === 1 ? r - 1 : r}-${String(m === 1 ? 12 : m - 1).padStart(2, '0')}-28`;
     return {
-      licznik: { id: z.licznikId, wartosc: z.wartosc, glowa: z.glowa, znaczenie: z.znaczenie }, // wersja 2 (08 partia 3, P-111 (3)): znaczenie, ostatniPlusMs, przypomnienia
+      licznik: { id: z.licznikId, wartosc: z.wartosc, glowa: z.glowa, znaczenie: z.znaczenie, zablokowany: z.zablokowany }, // wersja 2 (08 partia 3, P-111 (3)): znaczenie, ostatniPlusMs, przypomnienia; wersja 3 (08 partia 4, N1): zablokowany
       nazwa: z.nazwa,
       dzis: z.dzien,
       dzienDozwolony: z.dzienDozwolony,
@@ -129,7 +129,7 @@ describe('NFR-ZEG-001 ADR-0009 stan zegarka = złote pliki tests/wspolne/stan-ze
     expect(stanZegarka(wejscieDla(zloty))).toStrictEqual(zloty);
   });
   test(`NFR-ZEG-001 liczność: ${PLIKI.length} złotych plików stanu zegarka obecnych w katalogu (pusty zbiór = porażka)`, () => {
-    const wKatalogu = readdirSync(KATALOG).filter((n) => /^stan-zegarka-.*\.json$/.test(n) && !n.endsWith('-v1.json')).sort(); // pliki wersji 1 (*-v1.json) poza zestawem v2 (08 partia 3)
+    const wKatalogu = readdirSync(KATALOG).filter((n) => /^stan-zegarka-.*\.json$/.test(n) && !/-v[12]\.json$/.test(n)).sort(); // pliki wersji 1 i 2 (*-v1.json, *-v2.json) poza zestawem bieżącym (08 partia 3, partia 4 N1)
     expect(wKatalogu).toEqual([...PLIKI].sort());
     expect(stanZegarka(wejscieDla(JSON.parse(readFileSync(join(KATALOG, PLIKI[0]), 'utf8'))))).toBeDefined();
   });

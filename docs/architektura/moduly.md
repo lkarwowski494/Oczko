@@ -75,7 +75,7 @@ export type SygnalCzasu = { wygaslo(): boolean };  // sprawdzany między instruk
 export interface SkrzynkaImportu { pobierz(): Promise<PlikWejsciowy[]>; usun(id: string): Promise<void> } // ADR-0011
 
 export type PrzypomnienieStanu = { od: number; co: number; razy: number; tekst: string }; // plan RD-13; tekst ucięty do STAN_PRZYPOMNIENIE_TEKST_MAKS znaków
-export type StanEkranuBlokady = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[] }; // wersja 2 (moduly.md „Stan Live Activity i zegarka”); < 4 KB (rejestr Apple 1b)
+export type StanEkranuBlokady = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[]; zablokowany: boolean }; // wersja 3 (moduly.md „Stan Live Activity i zegarka”; N1 P-135 Q7a: zablokowany = licznik.zablokowany); < 4 KB (rejestr Apple 1b)
 export type StanZegarka = StanEkranuBlokady; // ADR-0009: jeden ładunek dla obu celów
 export type ZdarzenieWejsciowe = { id: string; licznikId: string; rodzaj: 'plus' | 'minus'; rodzice: string[]; czasMs: number; strefa: string; dzien: string; zrodlo: 'ekran_blokady' | 'zegarek'; urzadzenie: string; pro: boolean }; // pro: uprawnienie urządzenia w chwili stuknięcia (P-111 (2), ADR-0008 (6))
 
@@ -145,13 +145,14 @@ Prototyp i wyrocznia: `eksperymenty/e1/scal.mjs`, `scal-wektory.json` (M-01–M-
 
 ## Stan Live Activity i zegarka, wersja 2 (fix 2026-10-25, Z07-12)
 Wersja 1 (`StanEkranuBlokady`, `StanZegarka` w „Porty domeny”) nie wystarcza intencji i zegarkowi bez JS: brak dni limitu i Pro na ekranie blokady (po północy intencja liczy nowy dzień sama, ADR-0008 (6)), brak czasu ostatniego +1 (przerwa nowego dnia, `PRZERWA_NOWEGO_DNIA_MS`), znaczenia licznika (RD-12), przypomnień (RD-13) i wersji ładunku. Wersja 2 (jeden ładunek dla obu celów, jeden dekoder Swift):
-**Stan 2026-10-26: przełączone (08 partia 3, krok D1; P-111 (3), P-129 Q7a).** Typy wersji 2 są w „Porty domeny” pod nazwami `StanEkranuBlokady` i `StanZegarka` (`wersja` = `WERSJA_STANU` = 2); wersja 1 zostaje tylko jako typ plików zgodności `tests/wspolne/*-v1.json`:
+**Stan 2026-10-26: przełączone (08 partia 3, krok D1; P-111 (3), P-129 Q7a); wersja 3 (08 partia 4, N1, P-135 Q7a): `StanEkranuBlokady` w „Porty domeny” ma na końcu `zablokowany` (`WERSJA_STANU` = 3), wersja 2 zostaje jako typ plików zgodności `tests/wspolne/*-v2.json`, wersja 1 — `*-v1.json`:**
 ```ts
-export type StanEkranuBlokadyV2 = StanEkranuBlokady;
-export type StanZegarkaV2 = StanZegarka;
+export type StanEkranuBlokadyV2 = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[] }; // wersja 2 (pliki *-v2.json; dekoder Swift: zablokowany = false)
+export type StanZegarkaV2 = StanEkranuBlokadyV2;
 export type StanEkranuBlokadyV1 = { licznikId: string; nazwa: string; wartosc: number; glowa: string | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null }; // wersja 1 (pliki *-v1.json)
 export type StanZegarkaV1 = StanEkranuBlokadyV1 & { pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[] };
 ```
+- `zablokowany` (wersja 3, N1 z P-133, P-135 Q7a, ADR-0008 2026-10-26; przeniesione z „Kontrakt partii 4” przez 08): `licznik.zablokowany` (F-03, BR-LIC-004) w chwili odczytu stanu — `stanEkranuBlokady` dostaje je w `WejscieStanuZegarka.licznik`, `licznikEkranuBlokady` czyta kolumnę; przełączenie blokady woła `odswiezEkranBlokady` po COMMIT. Pliki `tests/wspolne/stan-*.json` z generatora w wersji 3, wersja 2 jako `*-v2.json`; `wzorce.json` `wersja_kontraktu: 3`. Swift (`OczkoReguly`): dekoder przyjmuje wersję 2 bez pola jako `zablokowany = false`, wersję 3 tylko z polem (X-ST-01), wersję > 3 odrzuca; `stuknij` (intencja i zegarek): `zablokowany` → `WynikIntencji.zablokowany` przed limitem, bez linii; scalenie na telefonie nie odrzuca linii zapisanych przed blokadą.
 - `pro`, `proWaznoscDo`: dostęp z `docs/monetyzacja/dostep.mjs` w chwili wysłania; `proWaznoscDo` = koniec uprawnienia (późniejsza z dat `wygasa` i `karencjaDo`, ADR-0010), `null` = bez końca (dożywotni), nie „wygasło” (R-031). Na zegarku i w intencji ocenia je `proZegarka` (KP-17) w pakiecie Swift reguł (ADR-0007, uzupełnienie).
 - `dniWMiesiacu`: wiersze `dzien_limitu` z miesiąca dnia `dzien`, rosnąco (wejście `mozeZaczacDzien` w Swift); `ostatniPlusMs`: czas ostatniego +1 w dowolnym projekcie (zdarzenie `rodzaj = 'plus'`, nie tylko tego licznika; okno od dnia `dzien` − 2, jak wejście `ostatniPlus` limitu — `src/przypadki-uzycia/ekran-blokady.ts:24`, `ostatniPlus` w `src/dane/repozytoria/liczniki.ts`; P-132 (2c), fix-4 05 (g)), `null` bez takiego zdarzenia; intencja i zegarek liczą z niego przerwę nowego dnia (`PRZERWA_NOWEGO_DNIA_MS`) i po swoim +1 ustawiają go na czas stuknięcia (ADR-0008 (1)); −1, wpisanie i zerowanie go nie zmieniają (dziś Swift `StanEkranuBlokady.po` ustawia go także po −1 — `modules/oczko-reguly/Sources/OczkoReguly/Stan.swift:79`; nowe znalezisko fix-4 dla 08, brzegowe, na korzyść użytkowniczki).
 - `nazwa` ucięta do `STAN_NAZWA_MAKS_ZNAKOW` znaków, najwyżej `STAN_PRZYPOMNIENIA_MAKS` przypomnień: ładunek < 4 KB (rejestr Apple 1b) także dla nazwy z 3-bajtowych znaków UTF-8.
@@ -173,15 +174,6 @@ export interface Haptyka { zagraj(w: WzorzecHaptyki): void } // F-48: rozpoznawa
 // adapter: styl z tekstu tokenu (impactAsync light/medium/soft/rigid, notificationAsync error; rzadZInstrukcja = dwa .medium co 90 ms);
 // błąd modułu pomijany (haptyka nie zmienia wyniku operacji); rzad()/przypomnienie() znikają (= zagraj('plus') / zagraj('rzadZInstrukcja')).
 
-// N1 (P-133) blokada licznika poza aplikacją — P-135 Q7a, ADR-0008 (2026-10-26): stan wersja 3 (WERSJA_STANU = 3), nowe pole na końcu typu
-export type StanEkranuBlokadyV3 = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[]; zablokowany: boolean }; // wersja 3; < 4 KB
-// przy przełączeniu (08) ten typ zastępuje StanEkranuBlokady w „Porty domeny” (nazwa V3 tylko tutaj: test złotych plików czyta typy z całego moduly.md)
-// zablokowany = licznik.zablokowany (F-03, BR-LIC-004) w chwili odczytu stanu; stanEkranuBlokady dostaje licznik.zablokowany (WejscieStanuZegarka),
-// licznikEkranuBlokady czyta kolumnę; przełączenie blokady woła odswiezEkranBlokady po COMMIT (Live Activity i zegarek widzą zmianę od razu).
-// Pliki: tests/wspolne/stan-*.json z generatora w wersji 3, pliki wersji 2 jako *-v2.json (jak v1 przy przełączeniu 1 → 2); wzorce.json wersja_kontraktu: 3.
-// Swift (pakiet OczkoReguly): dekoder przyjmuje wersję 2 bez pola jako zablokowany = false (Live Activity i kontekst zegarka sprzed aktualizacji),
-// wersję 3 tylko z polem (X-ST-01), wersję > 3 odrzuca; reguła `stuknij` (intencja i zegarek): zablokowany → WynikIntencji.zablokowany (przed limitem),
-// bez linii; scalenie na telefonie NIE odrzuca linii zapisanych przed blokadą (stuknięcie było dozwolone w chwili zapisu; −1 cofa przypadkowe +1).
 
 // Pora ukończenia (P-137, 04 fix-2: ekran wybiera tylko datę, od startu projektu do dziś) — src/przypadki-uzycia/projekt.ts
 function zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoDzien: string }): Promise<Wynik<void>>;

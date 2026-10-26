@@ -1,4 +1,4 @@
-// X-ST-01–06 (xctest-specyfikacja.md §2): złote pliki stanu wersji 2 z tests/wspolne/wzorce.json (typy StanEkranuBlokady, StanZegarka).
+// X-ST-01–06 (xctest-specyfikacja.md §2): złote pliki stanu bieżącej wersji (3 od 08 partii 4, N1) z tests/wspolne/wzorce.json (typy StanEkranuBlokady, StanZegarka).
 import Foundation
 import OczkoReguly
 import XCTest
@@ -32,13 +32,13 @@ final class StanTests: XCTestCase {
     for (opis, zly) in [
       ("dzien_dozwolony", wzor.replacingOccurrences(of: "\"dzienDozwolony\"", with: "\"dzien_dozwolony\"")),
       ("brak glowa (null ≠ brak)", wzor.replacingOccurrences(of: "\"glowa\": null,", with: "")),
-      ("wersja 3", wzor.replacingOccurrences(of: "\"wersja\": 2", with: "\"wersja\": 3")),
+      ("wersja 4", wzor.replacingOccurrences(of: "\"wersja\": 3", with: "\"wersja\": 4")), // stan v3 (08 partia 4, N1): nowsza = 4
       ("pro jako liczba", wzor.replacingOccurrences(of: "\"pro\": false,\n  \"proWaznoscDo\"", with: "\"pro\": 0,\n  \"proWaznoscDo\"")),
     ] {
       XCTAssertNotEqual(zly, wzor, "\(opis): pułapka niczego nie zmieniła")
       XCTAssertThrowsError(try StanEkranuBlokady.dekoduj(Data(zly.utf8)), opis)
     }
-    let nowszePole = wzor.replacingOccurrences(of: "\"wersja\": 2,", with: "\"wersja\": 2,\n  \"nowe\": 1,")
+    let nowszePole = wzor.replacingOccurrences(of: "\"wersja\": 3,", with: "\"wersja\": 3,\n  \"nowe\": 1,")
     XCTAssertNoThrow(try StanEkranuBlokady.dekoduj(Data(nowszePole.utf8)), "nieznane pole ma być pominięte")
   }
 

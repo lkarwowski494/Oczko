@@ -32,7 +32,7 @@ extension StanEkranuBlokady {
   func zLimitem(dzien: String) -> StanEkranuBlokady {
     StanEkranuBlokady(wersja: wersja, licznikId: licznikId, nazwa: nazwa, wartosc: wartosc, znaczenie: znaczenie, glowa: glowa, ostatniPlusMs: ostatniPlusMs,
                       dzien: dzien, dzienDozwolony: false, sesjaStartMs: sesjaStartMs, pro: pro, proWaznoscDo: proWaznoscDo, dniWMiesiacu: dniWMiesiacu,
-                      przypomnienia: przypomnienia)
+                      przypomnienia: przypomnienia, zablokowany: zablokowany)
   }
 }
 

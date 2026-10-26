@@ -25,7 +25,7 @@ export async function odswiezEkranBlokady(
     return {
       ok: true,
       wartosc: stanEkranuBlokady({
-        licznik: { id: l.id, wartosc: l.wartosc, glowa: l.glowa, znaczenie: l.znaczenie },
+        licznik: { id: l.id, wartosc: l.wartosc, glowa: l.glowa, znaczenie: l.znaczenie, zablokowany: l.zablokowany },
         nazwa: w.nazwa,
         dzis: chwila.dzien,
         dzienDozwolony: startDnia({ dni, dzis: chwila.dzien, teraz, ostatniPlus: plus, pro: w.dostep.pro }).dozwolone,

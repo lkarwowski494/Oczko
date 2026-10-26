@@ -7,7 +7,7 @@ import type { PrzypomnienieStanu, StanEkranuBlokady, StanZegarka, ZdarzenieWejsc
 import type { ZdarzenieLicznika } from './scal';
 
 export type WejscieStanuZegarka = {
-  licznik: { id: string; wartosc: number; glowa: string | null; znaczenie: 'skonczone' | 'w_trakcie' };
+  licznik: { id: string; wartosc: number; glowa: string | null; znaczenie: 'skonczone' | 'w_trakcie'; zablokowany: boolean }; // zablokowany: F-03 (wersja 3, N1)
   nazwa: string; // nazwa projektu albo etykieta projektu roboczego w bieżącym języku (P-126 (1b)) — liczy wołający przez t()
   dzis: string; // RRRR-MM-DD (RD-16)
   dzienDozwolony: boolean;
@@ -42,7 +42,7 @@ export function utnijZnaki(t: string, n: number, zSegmenterem = true): string {
 }
 const utnij = (t: string, n: number): string => utnijZnaki(t, n);
 /**
- * Stan Live Activity i zegarka, wersja 2 (moduly.md „Stan Live Activity i zegarka”, ADR-0009): `dniWMiesiacu` = dni limitu z miesiąca dnia `dzis`,
+ * Stan Live Activity i zegarka, wersja 3 (moduly.md „Stan Live Activity i zegarka”, ADR-0009): `dniWMiesiacu` = dni limitu z miesiąca dnia `dzis`,
  * rosnąco (OR po dacie); nazwa i przypomnienia ucięte do limitów z konfiguracji, żeby ładunek był < 4 KB (rejestr Apple 1b).
  */
 export function stanEkranuBlokady(w: WejscieStanuZegarka): StanEkranuBlokady {
@@ -63,6 +63,7 @@ export function stanEkranuBlokady(w: WejscieStanuZegarka): StanEkranuBlokady {
     proWaznoscDo: w.dostep.wygasa,
     dniWMiesiacu,
     przypomnienia: w.przypomnienia.slice(0, STAN_PRZYPOMNIENIA_MAKS).map((p) => ({ ...p, tekst: utnij(p.tekst, STAN_PRZYPOMNIENIE_TEKST_MAKS) })),
+    zablokowany: w.licznik.zablokowany,
   };
 }
 /** Zegarek dostaje ten sam ładunek co Live Activity (StanZegarka = StanEkranuBlokady, ADR-0009). */

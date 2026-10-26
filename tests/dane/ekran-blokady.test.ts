@@ -30,6 +30,7 @@ test('ADR-0008 (7): po +1 stan z bazy (wartość, głowa, dni miesiąca, ostatni
     ostatniPlusMs: T0, dzien: '2026-10-22', dzienDozwolony: true, sesjaStartMs: T0 - 25 * MIN, pro: false, proWaznoscDo: null,
     dniWMiesiacu: [{ dzien: '2026-10-01', pro: false }, { dzien: '2026-10-22', pro: false }],
     przypomnienia: [{ od: 6, co: 6, razy: 5, tekst: 'ujmowanie' }],
+    zablokowany: false, // wersja 3 (N1, P-135 Q7a)
   };
   expect(w).toEqual({ ok: true, wartosc: oczekiwany });
   expect(c.wyslane).toEqual({ la: [oczekiwany], zegarek: [oczekiwany], zakonczono: 0 });

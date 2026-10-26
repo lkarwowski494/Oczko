@@ -8,9 +8,9 @@ import { WEJSCIA, stany, tresc } from '../wspolne/generator-stanow';
 
 const KAT = join(__dirname, '../wspolne');
 
-describe('stanEkranuBlokady (wersja 2)', () => {
+describe('stanEkranuBlokady (wersja 3; 08 partia 4, N1 P-135 Q7a)', () => {
   const duzy = WEJSCIA['stan-ekranu-blokady-najwiekszy.json'];
-  test('wersja = WERSJA_STANU = 2', () => expect([stanEkranuBlokady(duzy).wersja, WERSJA_STANU]).toEqual([2, 2]));
+  test('wersja = WERSJA_STANU = 3', () => expect([stanEkranuBlokady(duzy).wersja, WERSJA_STANU]).toEqual([3, 3]));
   test(`nazwa ucięta do ${STAN_NAZWA_MAKS_ZNAKOW} punktów kodowych (320 znaków CJK na wejściu), bez rozcinania pary zastępczej`, () => {
     expect([...stanEkranuBlokady(duzy).nazwa].length).toBe(STAN_NAZWA_MAKS_ZNAKOW);
     const emoji = stanEkranuBlokady({ ...duzy, nazwa: '🧶'.repeat(100) }).nazwa;

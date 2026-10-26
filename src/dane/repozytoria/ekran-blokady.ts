@@ -3,17 +3,17 @@
 import type { PortBazy, PrzypomnienieStanu } from '../../domena/porty';
 import { liczba, tekst, wiersze } from './wiersze';
 
-export type LicznikEkranuBlokady = { id: string; wartosc: number; glowa: string | null; znaczenie: 'skonczone' | 'w_trakcie'; projektId: string };
+export type LicznikEkranuBlokady = { id: string; wartosc: number; glowa: string | null; znaczenie: 'skonczone' | 'w_trakcie'; zablokowany: boolean; projektId: string };
 
 /** Licznik poza koszem (licznik, część i projekt); usunięty albo nieistniejący → null. */
 export async function licznikEkranuBlokady(tx: PortBazy, licznikId: string): Promise<LicznikEkranuBlokady | null> {
   const [w] = await wiersze(tx.all(
-    `SELECT l.id, l.wartosc, l.glowa, l.znaczenie, c.projekt_id
+    `SELECT l.id, l.wartosc, l.glowa, l.znaczenie, l.zablokowany, c.projekt_id
        FROM licznik l JOIN czesc c ON c.id = l.czesc_id JOIN projekt p ON p.id = c.projekt_id
       WHERE l.id = ? AND l.usunieto_ms IS NULL AND c.usunieto_ms IS NULL AND p.usunieto_ms IS NULL`, [licznikId]), 'licznikEkranuBlokady');
   if (!w) return null;
   const g = w.glowa;
-  return { id: tekst(w, 'id'), wartosc: liczba(w, 'wartosc'), glowa: typeof g === 'string' ? g : null, znaczenie: tekst(w, 'znaczenie') === 'w_trakcie' ? 'w_trakcie' : 'skonczone', projektId: tekst(w, 'projekt_id') };
+  return { id: tekst(w, 'id'), wartosc: liczba(w, 'wartosc'), glowa: typeof g === 'string' ? g : null, znaczenie: tekst(w, 'znaczenie') === 'w_trakcie' ? 'w_trakcie' : 'skonczone', zablokowany: liczba(w, 'zablokowany') === 1, projektId: tekst(w, 'projekt_id') };
 }
 
 /** Początek trwającej sesji projektu przesunięty o przerwy (czas na ekranie = teraz − wynik, ADR-0013); wstrzymana albo brak → null. */

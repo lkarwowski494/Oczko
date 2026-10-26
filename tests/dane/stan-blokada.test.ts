@@ -1,11 +1,11 @@
 // Blokada licznika w stanie Live Activity i zegarka (N1 z P-133; NZ-08-P3-05, P-135 Q7a; F-03, BR-LIC-004): stan wersja 3 z polem `zablokowany`,
 // czytanym z licznika w chwili odświeżenia. Test oczekujący roli 05 (fix-4): czerwony na asercji do wdrożenia przez 08 (partia 4, przed ekranami;
 // razem z WERSJA_STANU = 3, generatorem złotych plików i dekoderem Swift); sygnatura: „Kontrakt partii 4” w docs/architektura/moduly.md.
-import type { LiveActivity, StanEkranuBlokady, Zegarek } from '../../../src/domena/porty';
-import { odswiezEkranBlokady } from '../../../src/przypadki-uzycia/ekran-blokady';
-import { WERSJA_STANU } from '../../../src/konfiguracja';
-import { czesc, licznik, projekt } from '../../dane/pomocnicze/dane-wejsciowe';
-import { przygotuj, wykonaj } from '../../dane/pomocnicze/srodowisko';
+import type { LiveActivity, StanEkranuBlokady, Zegarek } from '../../src/domena/porty';
+import { odswiezEkranBlokady } from '../../src/przypadki-uzycia/ekran-blokady';
+import { WERSJA_STANU } from '../../src/konfiguracja';
+import { czesc, licznik, projekt } from './pomocnicze/dane-wejsciowe';
+import { przygotuj, wykonaj } from './pomocnicze/srodowisko';
 
 async function stan(zablokowany: 0 | 1) {
   const s = await przygotuj();
