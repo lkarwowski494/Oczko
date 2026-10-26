@@ -55,6 +55,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o włóczkę (`ukonczenie`, prototyp z5); bez włóczki w zapasie: pytanie pominięte |
+| Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
 ## VoiceOver: komunikaty i zachowanie (dla 08; z przejścia poznawczego E3)
@@ -96,6 +97,18 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | `uczciwe.plany` | See Oczko Pro |
 | `wspolne.zamknij` | Close |
 `{{count}}` = `LIMIT_DNI_W_MIESIACU` z konfiguracji (dziś 5), nie wpisane na stałe.
+
+## Ekran „Źródła wiedzy” (ZM-04, BR-KAL-008, P-108, P-112, P-126 (5))
+- **Wejście:** wiersz w Ustawieniach (lista grupowana, sekcja z polityką prywatności i językiem) → ekran z dużym tytułem i przyciskiem wstecz; działa bez sieci.
+- **Treść:** jedno ogólne zdanie (P-108 (4)) i linia źródła wymagana warunkami użycia organizacji standardów (P-112 (2)), w stylu podpisu (ołówek, 15 pt). Nic więcej: bez listy książek, autorów, producentów, adresów i cytatów (P-108 (1), (2)). Linia nie jest odnośnikiem.
+- **Przy tabelach** opartych na tych standardach (kategorie grubości włóczki, rozmiary drutów i szydełek): ta sama linia pod tabelą, tym samym stylem; w tekstach obok tabeli żadnych innych nazw źródeł (BR-KAL-008 S3).
+- Jedna opcja: BR-KAL-008 nakazuje osobny ekran i jego treść.
+
+| Klucz | en |
+|---|---|
+| `ustawienia.zrodla_wiedzy` | About our information |
+| `zrodla.zdanie` | The tables and tips in Oczko are written in our own words, based on industry standards and knitting handbooks. |
+| `zrodla.linia_standardow` | dosłownie linia z BR-KAL-008, scenariusz „Ekran «Źródła wiedzy»” (S-24); w `docs/design/` tylko odsyłacz, bo każde nowe wystąpienie nazwy organizacji zatrzymuje `verify` (P-121 (5)). W przekładzie (09) zmienia się tylko słowo „Source:”, nazwa i adres zostają. |
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
