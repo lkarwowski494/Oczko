@@ -133,7 +133,7 @@ export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<
   });
 }
 
-export type MiejsceLicznika = { ekran: 'licznik'; id: string };
+export type MiejsceLicznika = { ekran: 'licznik'; id: string; wzor?: string }; // wzor: ostatni wzór (partia 6, P-246)
 /** F-49: ostatni licznik z `ostatnie_miejsce`; brak klucza → null; wskazanie na licznik w koszu → klucz usunięty, null (moduly.md:238). */
 export function biezacyLicznik(z: Zaleznosci): Promise<Wynik<string | null>> {
   return operacjaZapisu(z, 'biezacyLicznik', async (tx) => {
@@ -151,7 +151,9 @@ export function biezacyLicznik(z: Zaleznosci): Promise<Wynik<string | null>> {
 }
 export function zapamietajLicznik(z: Zaleznosci, w: { licznikId: string }): Promise<Wynik<void>> {
   return operacjaZapisu(z, 'ostatnieMiejsce', async (tx, teraz) => {
-    await zapiszUstawienie(tx, 'ostatnie_miejsce', { ekran: 'licznik', id: w.licznikId } satisfies MiejsceLicznika, teraz);
+    const m = await odczytajUstawienie(tx, 'ostatnie_miejsce'); // partia 6: ostatni wzór zostaje (wzorDoOtwarcia sprawdza projekt)
+    const wzor = m && typeof m === 'object' && 'wzor' in m && typeof m.wzor === 'string' ? m.wzor : undefined;
+    await zapiszUstawienie(tx, 'ostatnie_miejsce', { ekran: 'licznik', id: w.licznikId, ...(wzor ? { wzor } : {}) }, teraz);
     return OK;
   });
 }

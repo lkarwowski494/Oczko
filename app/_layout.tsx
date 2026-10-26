@@ -43,7 +43,7 @@ export default function Korzen(): React.ReactElement {
       const z = w.wartosc.z;
       w.wartosc.porty.orientacja.tylkoPion(); // iPhone: pion poza ekranem wzoru (P-221 Q3a); iPad: no-op
       obslugaBledow?.ustawZapis(async (b) => { await wKolejce(z.baza, () => zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: b.kod, szczegoly: { ramki: b.szczegoly.ramki, fatal: b.szczegoly.fatal ? 1 : 0 } })); });
-      ustaw({ rodzaj: 'gotowe', a: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje, icloud: w.wartosc.icloud?.sterownik, skrzynka: { start: () => w.wartosc.wzor.k.poStarcie() } }), preferencje: p } });
+      ustaw({ rodzaj: 'gotowe', a: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje, icloud: w.wartosc.icloud?.sterownik, skrzynka: { start: () => w.wartosc.wzor.k.poStarcie(), migawka: () => w.wartosc.wzor.k.odswiezMigawke() } }), preferencje: p } });
     }
     async function start(): Promise<void> {
       if (proba > 0) { await normalny(); return; }

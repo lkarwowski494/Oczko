@@ -84,9 +84,11 @@ export default function EkranProjektu(): React.ReactElement {
   );
   // Partia 6 (W8): wzór otwiera się z licznikiem projektu (pasek licznika pod wzorem); dodanie przez trasę /wzor (te same źródła W7a).
   const doWzoru = async (params: Record<string, string>) => {
-    const l = w.czesci.flatMap((c) => c.liczniki)[0];
+    const ids = w.czesci.flatMap((c) => c.liczniki).map((x) => x.id);
+    const biezacy = licznik.biezacy();
+    const l = biezacy && ids.includes(biezacy) ? biezacy : ids[0]; // bieżący licznik projektu zostaje (przegląd 2026-10-26)
     if (!l) return;
-    await licznik.otworz(l.id);
+    if (l !== biezacy) await licznik.otworz(l);
     router.push({ pathname: '/wzor', params });
   };
   const RODZ = { pdf: 'wzor.rodzaj_pdf', obraz: 'wzor.rodzaj_zdjecie', www: 'wzor.rodzaj_strona', word: 'wzor.rodzaj_word' } as const;

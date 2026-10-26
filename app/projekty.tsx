@@ -9,6 +9,7 @@ import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { stanListy } from '../src/kompozycja/projekty';
 import { widokProjektow, type WidokProjektow } from '../src/przypadki-uzycia/widok-projektow';
 import { ArkuszSkrzynki } from '../src/ekrany/WzorSkrzynka';
+import { alertImportu } from '../src/kompozycja/wzor-dodawanie';
 
 export default function EkranProjektow(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
@@ -29,7 +30,7 @@ export default function EkranProjektow(): React.ReactElement {
   useEffect(() => { // błąd pozycji skrzynki: alert z przyczyną, po „OK” pozycja znika ze skrzynki (design-spec R2)
     if (!blad) return;
     const t = kontener.j.t;
-    const przyczyna = blad.powod === 'uszkodzony' ? t('skrzynka.uszkodzony') : blad.powod === 'odmowa' || blad.powod === 'pusty' ? t('wzor.blad_strona_opis') : t('wzor.blad_typ_opis');
+    const przyczyna = blad.powod === 'uszkodzony' ? t('skrzynka.uszkodzony') : alertImportu(blad.powod, blad.zlecenie.nazwa, t)?.opis ?? '';
     Alert.alert(t('skrzynka.nie_dodano', { plik: blad.zlecenie.nazwa }), przyczyna, [{ text: t('wspolne.ok'), onPress: () => void wz.potwierdzBlad(blad.zlecenie.id) }]);
   }, [blad, kontener, wz]);
   if (!widok) return <View style={{ flex: 1, backgroundColor: k.papier }} />;

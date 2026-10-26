@@ -164,3 +164,10 @@ describe('zapiszRysunek (ADR-0012 uzupełnienie: UPSERT strony, stary plik po CO
     expect(await zapiszRysunek(s.z, { wzorId: 'nie-ma', strona: 0, plikTymczasowy: tmp })).toEqual({ ok: false, powod: 'bledne_dane' });
   });
 });
+
+test('przegląd: powrót do licznika nie gubi ostatniego wzoru (zapamietajLicznik zachowuje `wzor`)', async () => {
+  const { s } = await zDwomaWzorami();
+  await zapamietajWzor(s.z, { licznikId: 'l1', wzorId: 'w1' });
+  await zapamietajLicznik(s.z, { licznikId: 'l1' });
+  expect(await wzorDoOtwarcia(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: 'w1' });
+});

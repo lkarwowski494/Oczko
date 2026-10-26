@@ -53,3 +53,28 @@ test('„New project” w arkuszu: projekt powstaje z nazwą pliku i dostaje wz�
   expect(await jeden(s.baza, "SELECT p.nazwa FROM wzor w JOIN projekt p ON p.id = w.projekt_id")).toEqual({ nazwa: 'Harbor test pattern' });
   expect(pdfTestowy().length).toBeGreaterThan(100);
 });
+
+describe('poprawki po przeglądzie (2026-10-26)', () => {
+  test('dwa stuknięcia w projekt arkusza skrzynki → jeden import (bez duplikatu wzoru); arkusz chowa się od razu', async () => {
+    const { s, k } = await srodowisko({ e2e: true });
+    await k.poStarcie();
+    const [a, b] = [k.wybierzProjekt('p1'), k.wybierzProjekt('p1')];
+    expect(k.stan().doWyboru).toEqual([]);
+    await Promise.all([a, b]);
+    expect(await ile(s.baza, 'wzor')).toBe(1);
+  });
+  test('usunięcie pozycji „czeka na sieć” znika też z listy oczekujących', async () => {
+    const { k } = await srodowisko();
+    const zl = { id: 'x', rodzaj: 'adres' as const, nazwa: 'example.org', sciezki: [], adres: 'https://example.org/', typ: 'public.url', projektId: 'p1', utworzonoMs: 0 };
+    k.ustawStanTestowy({ doWyboru: [], czekaSiec: [zl], bledy: [] });
+    await k.potwierdzBlad('x');
+    expect(k.stan().czekaSiec).toEqual([]);
+  });
+  test('zlecenie testowe E2E wkładane raz na proces (po imporcie nie wraca przy powrocie na pierwszy plan)', async () => {
+    const { k } = await srodowisko({ e2e: true });
+    await k.poStarcie();
+    await k.wybierzProjekt('p1');
+    await k.poStarcie();
+    expect(k.stan().doWyboru).toEqual([]);
+  });
+});

@@ -101,7 +101,7 @@ export type KompozycjaLicznika = {
 const NAZWA_URZADZENIA = { iphone: 'iPhone', ipad: 'iPad' } as const;
 export type WyborKonfliktu = { glowa: string; wartosc: number; tekst: string; etykieta: string };
 /** Opcje: `icloud` = sterownik synchronizacji (partia 7), uruchamiany po danych startu i poza kolejką `uruchomDane`. */
-export type OpcjeKompozycji = { wibracje(): boolean; icloud?: { start(): Promise<void> }; skrzynka?: { start(): Promise<void> } }; // skrzynka: partia 6 (P-246)
+export type OpcjeKompozycji = { wibracje(): boolean; icloud?: { start(): Promise<void> }; skrzynka?: { start(): Promise<void>; migawka(): Promise<unknown> } }; // skrzynka: partia 6 (P-246); migawka po zmianach listy projektów
 
 /** `przygotuj` uruchamia dane raz na proces (ADR-0019: błąd → ekran awaryjny, wołający); potem ekran licznika czyta przez `uslugi`. */
 export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKompozycji = { wibracje: () => true }): KompozycjaLicznika {
@@ -170,9 +170,10 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
       }
       await k.poZmianie();
     },
-    zresetuj() { licznikId = null; baner = null; aktywnosc = false; wersja += 1; void z.liveActivity.zakoncz(); },
+    zresetuj() { void o.skrzynka?.migawka(); licznikId = null; baner = null; aktywnosc = false; wersja += 1; void z.liveActivity.zakoncz(); },
     widok: async () => (await stan()).w,
     async poZmianie() {
+      void o.skrzynka?.migawka().catch(() => undefined); // partia 6: migawka dla rozszerzenia po każdej zmianie projektu (kontrakt: po COMMIT operacji listy)
       baner = null;
       const { w } = await stan();
       await poZapisie(w);
@@ -236,7 +237,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
         const { w } = await stan();
         await poZapisie(w);
       },
-      przyTle: () => przyTle(z),
+      przyTle: async () => { await o.skrzynka?.migawka().catch(() => undefined); await przyTle(z); },
     },
     dzialania: {
       async naMinus() {

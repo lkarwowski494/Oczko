@@ -164,3 +164,11 @@ test('manifest ze ścieżką spoza katalogu zlecenia albo bez pliku → nie jest
   writeFileSync(join(k, 'zlecenie.json'), JSON.stringify({ id: 'z1', rodzaj: 'plik', nazwa: 'a', sciezki: ['a.pdf', 'brak.pdf'], adres: null, typ: 'application/pdf', projektId: null, utworzonoMs: T0 }));
   expect(await skrzynka.pobierz()).toEqual([]);
 });
+
+test('przegląd: powód przejściowy (zapis, brak_miejsca) → zlecenie czeka jak bez sieci, bez alertu o typie i bez kasowania pliku', async () => {
+  const { grupa, z } = await srodowisko();
+  zlecenie(grupa, 'z1');
+  const w = await przetworzSkrzynke({ ...z, magazyn: { ...z.magazyn, zapisz: async () => ({ ok: false as const, powod: 'brak_miejsca' as const }) } });
+  expect(w.ok && [w.wartosc.czekaSiec.map((x) => x.id), w.wartosc.bledy]).toEqual([['z1'], []]);
+  expect(existsSync(join(grupa, 'skrzynka', 'z1'))).toBe(true);
+});

@@ -9,6 +9,8 @@ import { OK, blad, operacjaZapisu } from './zapis';
 import { dodajWzor, type ZaleznosciWzoru, type ZrodloDodania } from './wzor';
 import { ustawFilm } from './film';
 
+/** Powody przejściowe: zlecenie czeka w skrzynce do następnej próby (sieć, miejsce, zapis, wygaśnięcie czasu w tle) — plik nie jest kasowany. */
+export const PRZEJSCIOWE: readonly Powod[] = ['brak_sieci', 'brak_miejsca', 'zapis'];
 export type ZaleznosciSkrzynki = ZaleznosciWzoru & { skrzynka: SkrzynkaImportu };
 export type WynikSkrzynki = { zaimportowano: number; doWyboru: ZlecenieImportu[]; czekaSiec: ZlecenieImportu[]; bledy: { zlecenie: ZlecenieImportu; powod: Powod }[] };
 
@@ -43,7 +45,7 @@ export async function przypiszZlecenie(z: ZaleznosciSkrzynki, w: { zlecenie: Zle
     ? await filmZeZlecenia(z, w.zlecenie, w.projektId)
     : zrodlo ? await dodajWzor(z, { projektId: w.projektId, nazwa: nazwaWzoru(w.zlecenie), zrodlo }) : blad('bledne_dane');
   if (wynik.ok) await z.skrzynka.usun(w.zlecenie.id);
-  else if (wynik.powod !== 'brak_sieci') await zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: 'skrzynka_import', szczegoly: { powod: wynik.powod, rodzaj: w.zlecenie.rodzaj } });
+  else if (!PRZEJSCIOWE.includes(wynik.powod) || wynik.powod === 'zapis') await zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: 'skrzynka_import', szczegoly: { powod: wynik.powod, rodzaj: w.zlecenie.rodzaj } });
   return wynik;
 }
 async function filmZeZlecenia(z: ZaleznosciSkrzynki, zl: ZlecenieImportu, projektId: string): Promise<Wynik<{ wzorId: null }>> {
@@ -61,7 +63,7 @@ export async function przetworzSkrzynke(z: ZaleznosciSkrzynki): Promise<Wynik<Wy
     if (!zl.projektId || !(await projektDostepny(z, zl.projektId))) { wynik.doWyboru.push(zl); continue; }
     const r = await przypiszZlecenie(z, { zlecenie: zl, projektId: zl.projektId });
     if (r.ok) wynik.zaimportowano += 1;
-    else if (r.powod === 'brak_sieci') wynik.czekaSiec.push(zl);
+    else if (PRZEJSCIOWE.includes(r.powod)) wynik.czekaSiec.push(zl);
     else wynik.bledy.push({ zlecenie: zl, powod: r.powod });
   }
   return { ok: true, wartosc: wynik };
