@@ -102,6 +102,7 @@ Zatwierdzone w fix-2 05 2026-10-25 (NZ-08-P1-05, P-118 S1): sygnatury dopisane p
 | `przypomnienia.ts` | `planPrzypomnien(plan: PlanPrzypomnienia): Wynik<number[]>` | `Wynik` (`bledne_dane`) | RD-13-W1–W5 (F-06) |
 | `postep.ts` | `dniDoTerminu(dzis: string, termin: string): Wynik<number>` | `Wynik` (`bledne_dane`) | RD-15-W8–W10 |
 | `postep.ts` | `poczatekTygodnia(dzien: string): Wynik<string>` | `Wynik` (`bledne_dane`) | RD-20 |
+| `licznik.ts` | `powtorzenieLicznika(skonczone: number, znaczenie: ZnaczenieLicznika, n: number): Wynik<{ powtorzenie: number; rzadW: number }>` = `powtorzenie(r, n)` z r = `skonczone` przy `'skonczone'` i `skonczone + 1` przy `'w_trakcie'` (RD-12 „r to liczba pokazana na liczniku”, BR-LIC-012, ER-40); fix-3 05 2026-10-26, P-121 (1): wybór r przechodzi z testu do domeny, wdraża 08 (ekrany wołają tylko tę funkcję) | `Wynik` (`bledne_dane`, jak `powtorzenie`) | RD-12-W7–W9 (test `tests/domena/licznik/tryb-licznika.test.ts` woła tę funkcję zamiast wybierać r sam; mutant „bez + 1 w trybie w trakcie” → W7, W8 czerwone) |
 
 **Zasada błędów (P-118 Q1a, polityka: `e3-tlo-bledy-prywatnosc-wydajnosc.md` §2):** wejście, które może być złe w normalnym działaniu → wartość; wejście z kontraktu poprawne → `BladDanych`. Przypisanie funkcji domeny partii 1:
 | Funkcja | Skąd wejście | Styl |
