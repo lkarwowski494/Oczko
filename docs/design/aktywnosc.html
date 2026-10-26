@@ -48,6 +48,12 @@ section[data-ekran^="blokada"] { width: var(--w); min-height: 420px; background:
 .zakr span { position: relative; color: var(--na-zakreslaczu); font: 700 calc(15px * var(--dt)) / 1.25 var(--tytul); }
 .info { display: flex; gap: 8px; align-items: flex-start; font-size: calc(15px * var(--dt)); line-height: 1.3; color: var(--grafit); }
 .info b { font-weight: 600; }
+/* Kilka przypomnień w jednym rzędzie (P-158 1.1a): pierwsze jako pas, reszta jedną cichą linią */
+.wiecej { font-size: calc(13px * var(--dt)); line-height: 1.25; color: var(--olowek); padding-left: 14px; }
+.wyspa .wiecej, section[data-ekran^="zegarek"] .wiecej { color: var(--c-olowek); }
+section[data-ekran^="zegarek"] .wiecej { padding: 2px 6px 0; }
+.wyspa .zakr::before { background: var(--c-zakreslacz); border-left-color: var(--c-zakr-krawedz); }
+.wyspa .zakr span { color: var(--c-na-zakreslaczu); }
 .znak { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; font: 700 11px var(--tytul); margin-top: 1px; }
 
 /* Dynamic Island (tło systemowe, czarne) */
@@ -81,8 +87,8 @@ section[data-ekran^="zegarek-smart-stack"] { height: auto; min-height: var(--zh)
 .z-dol .minus { width: 52px; min-height: 52px; border-radius: 26px; border: 2px solid var(--c-p-obrys); background: transparent; color: var(--c-grafit); font: 700 calc(20px * min(var(--dt), 1.2)) var(--tytul); display: grid; place-items: center; flex-shrink: 0; }
 .z-dol .plus { white-space: nowrap; font-size: calc(20px * min(var(--dt), 1.1)); flex: 1; min-height: 64px; border-radius: 32px; background: var(--c-p-tlo); color: var(--c-p-tekst); border-color: var(--c-p-obrys); min-width: 0; }
 section[data-ekran^="zegarek"] .zakr { margin: 2px 0 0; padding: 3px 8px 3px 10px; }
-section[data-ekran="zegarek-przypomnienie"] .z-liczba .n { font-size: calc(40px * min(var(--dt), 1.15)); }
-section[data-ekran="zegarek-przypomnienie"] .z-dol .plus, section[data-ekran="zegarek-przypomnienie"] .z-dol .minus { min-height: 48px; }
+section[data-ekran^="zegarek-przypomnienie"] .z-liczba .n { font-size: calc(40px * min(var(--dt), 1.15)); }
+section[data-ekran^="zegarek-przypomnienie"] .z-dol .plus, section[data-ekran^="zegarek-przypomnienie"] .z-dol .minus { min-height: 48px; }
 /* „Nie zapisano” (NZ-05-F4-04, P-142 1b): liczba 40 pt jak przy przypomnieniu, komunikat w miejscu podpisu, przyciski zostają */
 section[data-ekran^="zegarek-nie-zapisano"] .z-liczba .n { font-size: calc(40px * min(var(--dt), 1.15)); }
 section[data-ekran^="zegarek-nie-zapisano"] .z-dol .plus, section[data-ekran^="zegarek-nie-zapisano"] .z-dol .minus { min-height: 48px; }
@@ -129,6 +135,20 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
       <span class="n">47</span>
       <span class="opis"><b>Now row 48</b>tap when row 48 is done</span>
       <span class="plus" role="button" aria-label="Add row. Row 48: decrease at both ends, 7 of 8">+1 row</span>
+    </div>
+    <div class="zakr"><span>Row 48: decrease at both ends · 7 of 8</span></div>
+  </div>
+</section>
+
+<!-- 2a. Dwa przypomnienia w tym samym rzędzie (P-158 1.1a): pierwsze jako pas, cicha linia w miejscu podpisu „tap when…” — karta tej samej wysokości co z jednym przypomnieniem -->
+<section data-ekran="blokada-przypomnienie-wiecej">
+  <div class="zegar-blokady">9:41</div>
+  <div class="la">
+    <div class="gora"><span class="nazwa"><span class="kropka"></span>Harbor Sweater</span><span class="czas"><svg><use href="#stoper"/></svg>0:58:03</span></div>
+    <div class="srodek">
+      <span class="n">47</span>
+      <span class="opis"><b>Now row 48</b>+1 more reminder in Oczko</span>
+      <span class="plus" role="button" aria-label="Add row. Row 48: decrease at both ends, 7 of 8. 1 more reminder in Oczko">+1 row</span>
     </div>
     <div class="zakr"><span>Row 48: decrease at both ends · 7 of 8</span></div>
   </div>
@@ -222,6 +242,19 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="pod-atrapa">Expanded (touch and hold): same layout as the Lock Screen.</div>
 </section>
 
+<section data-ekran="wyspa-przypomnienie">
+  <div class="wyspa rozwinieta">
+    <div class="gora"><span class="nazwa"><svg class="znak-kresek"><use href="#kreski"/></svg>Harbor Sweater</span><span class="czas"><svg><use href="#stoper"/></svg>0:58:03</span></div>
+    <div class="srodek">
+      <span class="n">47</span>
+      <span class="opis"><b>Now row 48</b></span>
+      <span class="plus" role="button" aria-label="Add row. Row 48: decrease at both ends, 7 of 8">+1 row</span>
+    </div>
+    <div class="zakr"><span>Row 48: decrease at both ends · 7 of 8</span></div>
+  </div>
+  <div class="pod-atrapa">Expanded, reminder row: the same strip as the Lock Screen (1 line, then 2, then ellipsis).</div>
+</section>
+
 <section data-ekran="wyspa-zablokowany">
   <div class="wyspa rozwinieta">
     <div class="gora"><span class="nazwa"><svg class="znak-kresek"><use href="#kreski"/></svg>Harbor Sweater</span><span class="czas"><svg><use href="#stoper"/></svg>0:42:10</span></div>
@@ -252,6 +285,17 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="zakr"><span>Row 13: decrease at both ends · 2 of 5</span></div>
   </div>
   <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Row 13: decrease at both ends, 2 of 5">+1 row</span></div>
+</section>
+
+<!-- 8a. Zegarek: dwa przypomnienia w rzędzie (P-158 1.1a) -->
+<section data-ekran="zegarek-przypomnienie-wiecej">
+  <div class="z-gora"><span class="nazwa">Harbor Sweater</span><span class="godz">9:41</span></div>
+  <div class="z-srodek">
+  <div class="z-liczba"><span class="n">12</span></div>
+  <div class="zakr"><span>Row 13: decrease at both ends · 2 of 5</span></div>
+  <div class="wiecej">+1 more reminder in Oczko</div>
+  </div>
+  <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Row 13: decrease at both ends, 2 of 5. 1 more reminder in Oczko">+1 row</span></div>
 </section>
 
 <!-- 9. Zegarek: limit wyczerpany (bez przycisków i bez oferty, KP-13) -->
