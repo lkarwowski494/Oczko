@@ -329,5 +329,11 @@
       "przed": "| `aktywnosc.przypomnienie_wiecej_one` / `aktywnosc.przypomnienie_wiecej_other` |",
       "wiersz": "| `aktywnosc.plus_a11y_przypomnienie` | Add row. Row {{n}}: {{tekst}}, {{k}} of {{razy}} | pełna etykieta VoiceOver przycisku +1 przy przypomnieniu (fix NZ-08-P5-BD R2, P-191: zamiast sklejania „Add row. ” + `aktywnosc.przypomnienie_a11y`) |\n"
     }
-  ]
+  ],
+  "zastapEn": {
+    "projekt.kopia_opis": {
+      "z": "Same parts, goals and reminders. All counters start at 0, and this project stays as it is.",
+      "na": "Same parts, goals, reminders, and needles or hook with their size. All counters start at 0, and this project stays as it is."
+    }
+  }
 }
