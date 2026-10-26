@@ -1,7 +1,8 @@
 // ZIP (PKWARE APPNOTE 6.3.x) dla archiwum `.oczko` i kopii ratunkowej (ADR-0004, ADR-0020; P-120 Q2a, wiersz ADR-0016 do zatwierdzenia przez 05):
 // zapis metodą 0 (stored, bez kompresji — PDF i JPEG są już skompresowane), bez ZIP64 (limit 4 GB wobec ok. 415 MB, E0 §3 roli 05), strumieniowo
 // kawałkami z deskryptorem danych (bit 3); odczyt katalogu centralnego i wypakowanie wpisów metody 0. CRC-32 z tablicy.
-import { otworzDoCzytania, otworzDoZapisu, type Pisarz } from '../pliki/system';
+import type { Wynik } from '../../domena/bledy';
+import { otworzDoCzytania, otworzDoZapisu, rozmiar as rozmiarPliku, usunPlik, type Pisarz } from '../pliki/system';
 
 const KAWALEK = 1 << 20; // 1 MiB na odczyt i zapis
 const CRC = (() => {
@@ -19,9 +20,26 @@ const utf8 = (t: string): Uint8Array => new TextEncoder().encode(t);
 
 export type WpisZip = { nazwa: string } & ({ plik: string } | { dane: Uint8Array });
 
-/** Zapisuje nowy plik ZIP; `naKawalek` dostaje każdy kawałek danych wpisu (np. SHA-256 w tym samym przebiegu). Rzuca przy błędzie systemu plików. */
-export function zapiszZip(cel: string, wpisy: readonly WpisZip[]): void {
+const MAKS_WPISOW = 0xffff;
+/** Rozmiar archiwum z góry (nagłówek 30 B + nazwa + dane + deskryptor 16 B, katalog 46 B + nazwa, koniec 22 B) — granice bez ZIP64 przed zapisem. */
+function rozmiarArchiwum(wpisy: readonly WpisZip[]): number {
+  let suma = 22;
+  for (const w of wpisy) {
+    const n = utf8(w.nazwa).length;
+    suma += 30 + n + ('dane' in w ? w.dane.length : rozmiarPliku(w.plik)) + 16 + 46 + n;
+  }
+  return suma;
+}
+const ZA_DUZE: Wynik<void> = { ok: false, powod: 'za_duze' };
+
+/**
+ * Zapisuje nowy plik ZIP. Bez ZIP64 (ADR-0016): więcej niż 65 535 wpisów albo archiwum ≥ 4 GiB → `za_duze` bez tworzenia pliku; plik zmieniony
+ * w trakcie (przekroczenie po zapisie) → `za_duze` i niepełny plik usunięty. Rzuca przy błędzie systemu plików (wołający usuwa `cel`).
+ */
+export function zapiszZip(cel: string, wpisy: readonly WpisZip[]): Wynik<void> {
+  if (wpisy.length > MAKS_WPISOW || rozmiarArchiwum(wpisy) > MAKS) return ZA_DUZE;
   const p = otworzDoZapisu(cel);
+  let przekroczone = false;
   try {
     const centralny: Uint8Array[] = [];
     for (const w of wpisy) {
@@ -40,7 +58,7 @@ export function zapiszZip(cel: string, wpisy: readonly WpisZip[]): void {
         const c = otworzDoCzytania(w.plik);
         try { for (let od = 0; od < c.rozmiar; od += KAWALEK) dopisz(c.czytaj(od, Math.min(KAWALEK, c.rozmiar - od))); } finally { c.zamknij(); }
       }
-      if (rozmiar > MAKS || p.zapisano > MAKS) throw new Error('zip: plik większy niż 4 GB (bez ZIP64)');
+      if (rozmiar > MAKS || p.zapisano > MAKS) { przekroczone = true; break; }
       const opis = new Uint8Array(16);
       const vo = new DataView(opis.buffer);
       vo.setUint32(0, 0x08074b50, true); vo.setUint32(4, crc, true); vo.setUint32(8, rozmiar, true); vo.setUint32(12, rozmiar, true);
@@ -53,6 +71,7 @@ export function zapiszZip(cel: string, wpisy: readonly WpisZip[]): void {
       cd.set(nazwa, 46);
       centralny.push(cd);
     }
+    if (przekroczone) return ZA_DUZE;
     const poczatekCd = p.zapisano;
     for (const c of centralny) p.zapisz(c);
     const koniec = new Uint8Array(22);
@@ -60,13 +79,15 @@ export function zapiszZip(cel: string, wpisy: readonly WpisZip[]): void {
     ve.setUint32(0, 0x06054b50, true); ve.setUint16(8, wpisy.length, true); ve.setUint16(10, wpisy.length, true);
     ve.setUint32(12, p.zapisano - poczatekCd, true); ve.setUint32(16, poczatekCd, true);
     p.zapisz(koniec);
+    return { ok: true, wartosc: undefined };
   } finally {
     p.zamknij();
+    if (przekroczone) usunPlik(cel);
   }
 }
 
 export type WpisKatalogu = { nazwa: string; metoda: number; crc: number; rozmiar: number; danePrzesuniecie: number };
-/** Katalog centralny; null = to nie jest ZIP (brak końca katalogu) albo katalog niespójny z plikiem. */
+/** Katalog centralny; null = to nie jest ZIP (brak końca katalogu), katalog niespójny z plikiem, ZIP64 albo wpis szyfrowany. */
 export function czytajKatalog(sciezka: string): WpisKatalogu[] | null {
   const c = otworzDoCzytania(sciezka);
   try {
@@ -78,6 +99,8 @@ export function czytajKatalog(sciezka: string): WpisKatalogu[] | null {
     while (e >= 0 && vt.getUint32(e, true) !== 0x06054b50) e--;
     if (e < 0) return null;
     const ile = vt.getUint16(e + 10, true), dlugoscCd = vt.getUint32(e + 12, true), startCd = vt.getUint32(e + 16, true);
+    const zip64 = e >= 20 && vt.getUint32(e - 20, true) === 0x07064b50; // lokalizator końca katalogu ZIP64 tuż przed końcem katalogu
+    if (zip64 || vt.getUint16(e + 8, true) !== ile || startCd === MAKS || dlugoscCd === MAKS) return null; // ZIP64 albo wiele dysków: odrzucone
     if (startCd + dlugoscCd > c.rozmiar) return null;
     const cd = c.czytaj(startCd, dlugoscCd);
     const v = new DataView(cd.buffer, cd.byteOffset, cd.byteLength);
@@ -85,6 +108,7 @@ export function czytajKatalog(sciezka: string): WpisKatalogu[] | null {
     let p = 0;
     for (let i = 0; i < ile; i++) {
       if (p + 46 > cd.length || v.getUint32(p, true) !== 0x02014b50) return null;
+      if (v.getUint16(p + 8, true) & 1) return null; // bit 0: wpis szyfrowany — archiwum odrzucone bez zmian w danych (ADR-0016)
       const metoda = v.getUint16(p + 10, true), crc = v.getUint32(p + 16, true), rozmiar = v.getUint32(p + 20, true);
       const nl = v.getUint16(p + 28, true), el = v.getUint16(p + 30, true), kl = v.getUint16(p + 32, true), lok = v.getUint32(p + 42, true);
       const nazwa = new TextDecoder().decode(cd.subarray(p + 46, p + 46 + nl));

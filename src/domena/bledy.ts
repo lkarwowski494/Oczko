@@ -8,6 +8,7 @@ export type Powod =
   | 'brak_miejsca'
   | 'wersja_nowsza'
   | 'uszkodzony'
+  | 'za_duze'
   | 'konflikt';
 export type Wynik<T> = { ok: true; wartosc: T } | { ok: false; powod: Powod };
 

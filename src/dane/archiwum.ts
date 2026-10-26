@@ -76,11 +76,12 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
           licznosci: await licznosciPliku(baza), // liczności z migawki, która trafia do archiwum
           pliki: pliki.map((p) => ({ sha256: p.sha256, bajty: p.bajty })),
         };
-        zapiszZip(cel, [
+        const zip = zapiszZip(cel, [
           { nazwa: 'manifest.json', dane: new TextEncoder().encode(JSON.stringify(manifest)) },
           { nazwa: 'oczko.db', plik: baza },
           ...pliki.map((p) => ({ nazwa: `pliki/${p.sha256}.${p.rozszerzenie}`, plik: z.magazyn.sciezka(p.sha256) })),
         ]);
+        if (!zip.ok) return zip; // za_duze (bez ZIP64, ADR-0016): plik archiwum nie powstał albo został usunięty
         return { ok: true, wartosc: { sciezka: cel, manifest } };
       } catch (e) {
         usunPlik(cel);
