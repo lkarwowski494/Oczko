@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-26 20:15 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-246
+**Ostatnia aktualizacja:** 2026-10-26 20:35 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-248
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -42,3 +42,8 @@ Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, 
 
 ## Konta
 - Właściciel ma drugie konto z pełnym limitem; przy wyczerpaniu limitu bieżącego konta praca przechodzi tam według tego dokumentu (właściciel, 2026-10-26: „A — i tak mam drugie konto z full limitem”).
+
+## Do porannego raportu dla właściciela
+- Wynik nocnego przebiegu iOS partii 5; postęp partii 6 (P-243, P-246, P-248) i 7 (P-242, P-245, P-247).
+- Propozycja reguły do biblioteki ról (trzeci push przed verify: 10, 06, 08 — P-248): np. `pre-push` w repo uruchamiający verify albo obowiązkowy krok „verify po każdym rebase z cudzymi zmianami” w zasadach wspólnych; dwie opcje z rekomendacją, decyzja właściciela.
+- Przypomnienie: identyfikatory App Group i iCloud w Apple Developer (P-233).
