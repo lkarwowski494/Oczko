@@ -150,6 +150,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
 ### BR-PRJ-013: Korekta czasu sesji i dat projektu
 - Przepływ: PR-14, PR-07
 - Dowód potrzeby: J-11; „Please make it so I can correct my timer. If I forget to pause it when I walk away I can’t wind back the time.” (Loopsy, id13728925552); „I’ll pause it when I go to bed and wake up to it saying I’ve been crocheting for 8 hours.” (Loopsy, id13535125970); „The completion date on the projects I’ve done cannot be changed” (YarnBuddy, id13730696774) · ER-20
+- Czas sesji z przerwami (P-195 Q2a, ER-54): bez korekty czas sesji = koniec − początek − przerwy (pauza nie jest dzierganiem). Korekta początku albo końca zeruje przerwy tej sesji: po zapisie czas sesji = koniec − początek, a arkusz korekty mówi to przed zapisem. *Dlaczego:* aplikacja zna sumę przerw, a nie ich położenie, więc po zmianie końca nie wie, które przerwy leżą przed nim; inna reguła mogłaby po cichu zaniżyć czas albo dać wynik ujemny.
 - Kryteria akceptacji:
   - Scenariusz: Zapomniany stoper
     - Zakładając, że sesja trwa 8 godzin, bo stoper działał przez noc, a czas projektu wynosi 20 godzin
@@ -163,6 +164,11 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Zakładając, że sesja zaczęła się o 20:00
     - Gdy użytkownik ustawia jej koniec na 19:30
     - Wtedy aplikacja nie zapisuje zmiany i pokazuje, że koniec musi być po początku
+  - Scenariusz: Korekta sesji z przerwą (ER-54)
+    - Zakładając, że sesja zaczęła się o 20:00, była wstrzymana od 20:30 do 20:45, a stoper zatrzymano o 04:00, więc sesja trwa 7 godzin 45 minut
+    - Gdy użytkownik zmienia koniec sesji na 21:30
+    - Wtedy przed zapisem arkusz mówi, że czas sesji będzie liczony od początku do końca bez przerw
+    - Oraz po zapisie sesja trwa 1 godzinę 30 minut, a czas projektu maleje o 6 godzin 15 minut
 
 ### BR-PRJ-014: Druga część pary (bliźniak)
 - Przepływ: PR-07, PR-02
