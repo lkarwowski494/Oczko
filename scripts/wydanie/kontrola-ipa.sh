@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Kontrola artefaktu, który idzie do Apple (ADR-0014, uzupełnienie 2026-10-25; rola 10, build E2 2026-10-26). Tylko macOS (PlistBuddy, plutil, codesign).
 # Użycie: bash scripts/wydanie/kontrola-ipa.sh <Payload/X.app> <numer buildu> [ostatni numer w App Store Connect]
-# BŁĄD (kod 1): tożsamość i integralność buildu — pakiety, numer i wersja, minimum systemu, zegarek, Hermes, brak modułów deweloperskich,
+# BŁĄD (kod 1): tożsamość i integralność buildu — pakiety, numer i wersja, minimum systemu, zegarek, Hermes, brak modułów deweloperskich i śladów trybu testowego (JAK-15),
 #   manifest prywatności aplikacji z kategoriami z app.json, klucz szyfrowania, tryby tła, reguła rozszerzenia udostępniania.
 # UWAGA (kod 0, ::warning::): pozycje zależne od prac 08 w toku — typ `.oczko` (ADR-0004), katalogi .lproj (ADR-0017), manifest w celach,
 #   lista uprawnień per pakiet (wypisana do podsumowania; wzorzec listy: docs/architektura/prywatnosc.md). Przed wysyłką do App Store UWAGI
@@ -47,6 +47,8 @@ done
 # Hermes i brak modułów deweloperskich.
 B="$APP/main.jsbundle"
 if [ ! -s "$B" ]; then blad "brak main.jsbundle"; elif LC_ALL=C grep -qI . "$B"; then blad "main.jsbundle jest tekstem JS, nie bajtkodem Hermesa"; fi
+# JAK-15 (P-237): bez śladów trybu testowego (napisy paneli E2E, testID e2e-, klucze oczkoE2e*, nazwy przełączników EXPO_PUBLIC_*).
+[ -s "$B" ] && { node scripts/wydanie/slady-testowe.mjs "$B" || bledy=$((bledy + 1)); }
 find "$APP" -iname '*DevLauncher*' -o -iname '*DevMenu*' | grep -q . && blad "w buildzie są moduły deweloperskie (DevLauncher/DevMenu)"
 strings -a "$APP/$(basename "$APP" .app)" > "${RUNNER_TEMP:-/tmp}/kontrola-ipa-strings.txt" 2>/dev/null
 grep -q EXDevLauncher "${RUNNER_TEMP:-/tmp}/kontrola-ipa-strings.txt" && blad "binarka aplikacji zawiera EXDevLauncher"

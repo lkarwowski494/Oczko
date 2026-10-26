@@ -77,6 +77,10 @@ describe('testflight.yml według ADR-0014 i P-196', () => {
     expect(tekst).toContain('scripts/wydanie/kontrola-ipa.sh');
   });
 
+  test('kontrola .ipa woła skrypt śladów trybu testowego na main.jsbundle (JAK-15, P-237) i liczy wynik jako BŁĄD', () => {
+    expect(czytaj('scripts/wydanie/kontrola-ipa.sh')).toMatch(/node scripts\/wydanie\/slady-testowe\.mjs "\$B" \|\| bledy=\$\(\(bledy \+ 1\)\)/);
+  });
+
   test('podpis ad hoc: każdy pakiet własnym plikiem uprawnień swojego celu (CODE_SIGN_ENTITLEMENTS, P-233), brak pliku = błąd', () => {
     expect(tekst).toContain('node scripts/wydanie/uprawnienia-celow.mjs ios/Oczko.xcodeproj/project.pbxproj');
     expect(tekst).not.toMatch(/grep -i -m1 -e widget/);
