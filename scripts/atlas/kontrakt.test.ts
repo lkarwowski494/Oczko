@@ -39,18 +39,22 @@ describe('walidator karty', () => {
     ['glif cudzego pochodzenia', (k) => { (k as Record<string, unknown>).glif = { id: 'glif.a', origin: 'CYC', rs: 'a', ws: 'b' }; }, 'schemat'],
     ['kotwica strzałki poza zakresem', (k) => { k.kroki![0].strzalka = { ruch: 'nitka', od: 'glowa:9:1', do: 'drut_prawy' }; }, 'schemat'],
     ['id nie od rzemiosła', (k) => { k.rzemioslo = 'szydelko'; }, 'id'],
-    ['tabela bez pozycji', (k) => { k.rodzaj = 'tabela'; k.id = 'tabela.k2tog.x'; delete k.rysunek; delete k.kroki; }, 'pozycje'],
+    ['pozycje poza tabelą', (k) => { k.pozycje = ['druty.oczko.k']; }, 'pozycje'],
+    ['technika bez terminu en-US', (k) => { k.terminy = { sv: [{ skrot: null, twierdzenie: 'TRM-SV-001' }] }; k.jezyki_gotowe = ['sv']; }, 'jezyk'],
+    ['rysunek bez opis_alt', (k) => { delete k.klucze.opis_alt; }, 'klucz'],
+    ['klucz dodatkowy spoza id', (k) => { k.klucze_dodatkowe = ['atlas.inna.karta.uwaga']; }, 'klucz'],
+    ['wkłucie bez grotu', (k) => { k.kroki![1].drut = { ktory: 'prawy' }; }, 'krok'],
+    ['ujęcie środkowe przy 2 oczkach', (k) => { k.rysunek!.operacja = { typ: 'scal', zuzywa: 2, strona: 'prawe', na_wierzchu: 'srodkowe' }; }, 'rysunek'],
     ['hasło skrótu z rysunkiem', (k) => { k.rodzaj = 'skrot'; k.id = 'skrot.druty.k2tog'; }, 'rysunek'],
-    ['faza_opis poza nabieraniem', (k) => { k.kroki![0].faza_opis = 'opis'; }, 'krok'],
+    ['faza null poza nabieraniem', (k) => { k.kroki![0].faza = null; k.kroki![0].faza_opis = 'opis'; }, 'krok'],
     ['operacja, której rodzina nie rysuje (warkocz)', (k) => { k.rysunek!.operacja = { typ: 'warkocz', zuzywa: 4, przekladane: 2, pomocniczy: 'przod' }; }, 'rysunek-nieobslugiwany'],
-    ['drut lewy (silnik rysuje prawy)', (k) => { k.kroki![1].drut = { ktory: 'lewy', grot: 'w_prawo' }; }, 'rysunek-nieobslugiwany'],
     ['klucz nazwy niezgodny z id', (k) => { k.klucze.nazwa = 'atlas.k2tog.nazwa'; }, 'klucz'],
     ['klucz kroku nie po kolei', (k) => { k.kroki![0].klucz = 'atlas.druty.ujecie.k2tog.krok7'; }, 'klucz'],
     ['powtórzone ID twierdzenia', (k) => { k.twierdzenia.push({ ...k.twierdzenia[0] }); }, 'twierdzenie'],
     ['język gotowy bez terminu', (k) => { k.jezyki_gotowe.push('sv'); }, 'jezyk'],
     ['rysunek bez kroków', (k) => { delete k.kroki; }, 'rysunek'],
     ['wkłucie bez drutu', (k) => { delete k.kroki![1].drut; }, 'krok'],
-    ['drut poza wkłuciem', (k) => { k.kroki![0].drut = { ktory: 'prawy', grot: 'w_lewo' }; }, 'krok'],
+    ['wkłucie drutem lewym (silnik rysuje prawy)', (k) => { k.kroki![1].drut = { ktory: 'lewy', grot: 'w_lewo' }; }, 'rysunek-nieobslugiwany'],
     ['faza, której rodzina nie rysuje', (k) => { k.kroki![1].faza = 'narzut'; delete k.kroki![1].drut; }, 'faza-nieobslugiwana'],
     ['rysunek przeczy twierdzeniu', (k) => { k.twierdzenia[0].wartosc.pochylenie = 'lewo'; }, 'rysunek:twierdzenie'],
   ])('oblewa: %s', (_, zmien, kod) => {
@@ -60,7 +64,7 @@ describe('walidator karty', () => {
   });
   test('komunikat schematu ma ścieżkę pola', () => {
     const k = k2tog();
-    k.rysunek!.probka.kolumny = 12;
+    k.rysunek!.probka!.kolumny = 12;
     expect(walidujSchemat(k, SCHEMAT)).toEqual([{ kod: 'schemat', sciezka: '$.rysunek.probka.kolumny', szczegol: '12 > maksimum 8' }]);
   });
   test('--bez-rysunku pomija tylko rysunek', () => {
@@ -132,6 +136,9 @@ describe('język karty (przełącznik Q3, ADR-0025)', () => {
     ['pl', 'angielski', 'en-US'], ['pl', 'ukryj', null],
     ['en-GB', 'angielski', 'en-US'], ['en-GB', 'ukryj', null],
   ] as const)('%s, polityka %s → %s', (j, p, wynik) => expect(jezykKarty(k, j, p)).toBe(wynik));
+  test.each([
+    ['en-US', 'angielski', 'en-US'], ['en-GB', 'angielski', null], ['pl', 'angielski', null], ['pl', 'ukryj', null],
+  ] as const)('szydełko (P-213, E2-Q1a): %s, polityka %s → %s', (j, p, wynik) => expect(jezykKarty({ ...k, rzemioslo: 'szydelko' }, j, p)).toBe(wynik));
 });
 
 describe('strona statyczna', () => {
@@ -191,6 +198,7 @@ describe('strona statyczna', () => {
     for (const [p, html] of Object.entries(w.pliki)) {
       for (const m of html.matchAll(/<svg[\s\S]*?<\/svg>/g)) expect(straznikLiter(m[0])).toEqual([]);
       if (p.includes('/')) expect(html).toContain(`<html lang="${p.split('/')[0]}">`);
+      expect(html).not.toMatch(/<script|faza_opis|onload=/i); // bez skryptów (prywatność, E3 §3) i bez opisów roboczych 06
     }
   });
   test('mapa strony zawiera każdą stronę HTML', () => {
@@ -202,6 +210,11 @@ describe('strona statyczna', () => {
     const z = zbudujStrone({ adres: ADRES, karty: dwuj, teksty: t, palety });
     expect(z.pliki).toEqual({});
     expect(z.bledy).toEqual(['brak tekstu „atlas.druty.ujecie.k2tog.krok2” w języku sv']);
+  });
+  test('karta „po-generatorze” (P-200) nie ma strony', () => {
+    const z = zbudujStrone({ adres: ADRES, karty: dwuj.map((k) => (k.id === 'druty.oczko.p' ? { ...k, publikacja: 'po-generatorze' as const } : k)), teksty: teksty(['en-US', 'sv']), palety });
+    expect(z.bledy).toEqual([]);
+    expect(Object.keys(z.pliki).some((p) => p.includes('druty-oczko-p'))).toBe(false);
   });
   test('brak adresu (domena niekupiona) → błąd', () => {
     expect(zbudujStrone({ adres: '', karty: dwuj, teksty: teksty(['en-US', 'sv']), palety }).bledy[0]).toMatch(/ATLAS_ADRES/);

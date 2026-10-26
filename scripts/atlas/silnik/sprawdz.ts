@@ -61,11 +61,11 @@ export function sprawdzRysunek(karta: Karta, krok: Krok, rys: Rysunek, palety: P
 
   // 3. Liczba oczek i topologia: rodzice w rzędzie niżej, każda pętla poniżej najwyższego rzędu ma dokładnie jedno dziecko.
   const op = karta.rysunek?.operacja;
-  const N = karta.rysunek!.probka.kolumny;
+  const N = karta.rysunek!.probka!.kolumny;
   const rzedy = Math.max(...rys.petle.map((p) => p.rzad)) + 1;
   for (let r = 0; r < rzedy; r++) {
     const ile = rys.petle.filter((p) => p.rzad === r).length;
-    const opRzad = krok.faza !== 'tkanina' && krok.faza !== 'wklucie' && op && r === karta.rysunek!.probka.rzedy - 1;
+    const opRzad = krok.faza !== 'tkanina' && krok.faza !== 'wklucie' && op && r === karta.rysunek!.probka!.rzedy;
     const oczekiwane = opRzad && op.typ === 'scal' ? N - op.zuzywa + 1 : N;
     if (ile !== oczekiwane) dodaj('liczba-oczek', `rząd ${r}: ${ile} oczek, oczekiwane ${oczekiwane}`);
   }
@@ -100,7 +100,7 @@ export function sprawdzRysunek(karta: Karta, krok: Krok, rys: Rysunek, palety: P
     const pochTw = tw.find((w) => 'pochylenie' in w)?.pochylenie;
     const s = rys.scalenia[0];
     const nach = s ? petla.get(s.nad)!.nachylenie : 0;
-    const poch = nach > 0 ? 'prawo' : nach < 0 ? 'lewo' : 'brak';
+    const poch = nach > 0 ? 'prawo' : nach < 0 ? 'lewo' : op.na_wierzchu === 'srodkowe' ? 'srodek' : 'brak';
     if (pochTw !== undefined && poch !== pochTw) dodaj('twierdzenie', `pochylenie rysunku „${poch}” (pętla na wierzchu ${s?.nad}), twierdzenie „${pochTw}”`);
     // pętla na wierzchu naprawdę leży na wierzchu tam, gdzie krzyżuje się z ujmowaną
     if (s && !rys.skrzyzowania.some((x) => x.nad.startsWith(`${s.nad}.`) && s.pod.some((pid) => (x.nad === x.a ? x.b : x.a).startsWith(`${pid}.`)))) dodaj('przeplot', `ujęcie: brak skrzyżowania, na którym ${s.nad} leży na ${s.pod.join(', ')}`);

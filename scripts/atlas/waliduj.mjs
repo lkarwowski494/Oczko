@@ -28,12 +28,20 @@ const pliki = statSync(cel).isDirectory() ? readdirSync(cel).filter((f) => f.end
 const tokeny = JSON.parse(readFileSync(join(KORZEN, 'docs/design/tokeny.json'), 'utf8'));
 const palety = [paletaZTokenow(tokeny, 'jasny'), paletaZTokenow(tokeny, 'ciemny')];
 let bledy = 0;
+// plik karty albo plik katalogu `{ karty: [...] }` (kopia roli 06 w docs/atlas/dane/katalog.json)
+const karty = [];
 for (const p of pliki) {
-  let k;
-  try { k = JSON.parse(readFileSync(p, 'utf8')); } catch (e) { console.log(`${basename(p)} [json] ${e.message}`); bledy++; continue; }
+  let j;
+  try { j = JSON.parse(readFileSync(p, 'utf8')); } catch (e) { console.log(`${basename(p)} [json] ${e.message}`); bledy++; continue; }
+  if (Array.isArray(j?.karty)) j.karty.forEach((k, i) => karty.push({ nazwa: `${basename(p)}:karty[${i}] ${k?.id ?? ''}`.trim(), k }));
+  else karty.push({ nazwa: basename(p), k: j });
+}
+const kody = {};
+for (const { nazwa, k } of karty) {
   const b = walidujKarte(k, argv.includes('--bez-rysunku') ? {} : { sprawdzKrok: sprawdzKrok(palety) });
-  for (const e of b) console.log(`${basename(p)} [${e.kod}] ${e.sciezka}: ${e.szczegol}`);
+  for (const e of b) { console.log(`${nazwa} [${e.kod}] ${e.sciezka}: ${e.szczegol}`); kody[e.kod] = (kody[e.kod] ?? 0) + 1; }
   bledy += b.length;
 }
-console.log(bledy ? `${bledy} błędów w ${pliki.length} kartach` : `OK: ${pliki.length} kart bez błędów`);
+if (bledy) console.log(`według kodu: ${Object.entries(kody).map(([k, n]) => `${k} ${n}`).join(', ')}`);
+console.log(bledy ? `${bledy} błędów w ${karty.length} kartach (${new Set(karty.filter(({ k }) => walidujKarte(k, {}).length).map(({ nazwa }) => nazwa)).size} kart z błędami struktury)` : `OK: ${karty.length} kart bez błędów`);
 process.exit(bledy ? 1 : 0);

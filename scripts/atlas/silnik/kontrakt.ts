@@ -22,28 +22,35 @@ export const SCHEMAT: S = {
   type: 'object',
   additionalProperties: false,
   required: ['format', 'id', 'rzemioslo', 'rodzaj', 'klucze', 'terminy', 'twierdzenia', 'jezyki_gotowe'],
+  // wersja 1.1 (E3, dane 06 z P-212): zmiany zgodne wstecz w ramach format 1 — patrz docs/atlas/kontrakt-krokow.md „Historia”
   properties: {
     format: { const: FORMAT_KARTY },
     id: { type: 'string', pattern: '^[a-z0-9_]+(\\.[a-z0-9_-]+){1,3}$' },
     rzemioslo: { enum: ['druty', 'szydelko', 'oba'] },
     rodzaj: { enum: ['oczko', 'scieg', 'ujecie', 'dodanie', 'nabieranie', 'zamykanie', 'warkocz', 'oczko_szydelkowe', 'tabela', 'schemat', 'skrot'] },
     pozycje: { type: 'array', minItems: 1, maxItems: 200, items: { type: 'string', pattern: '^[a-z0-9_]+(\\.[a-z0-9_-]+){1,3}$' } },
-    klucze: { type: 'object', additionalProperties: false, required: ['nazwa', 'podpis', 'opis_alt'], properties: { nazwa: { type: 'string' }, podpis: { type: 'string' }, opis_alt: { type: 'string' } } },
+    publikacja: { enum: ['mvp', 'po-generatorze'] },
+    klucze_dodatkowe: { type: 'array', maxItems: 20, items: { type: 'string' } },
+    klucze: { type: 'object', additionalProperties: false, required: ['nazwa'], properties: { nazwa: { type: 'string' }, podpis: { type: 'string' }, opis_alt: { type: 'string' } } },
     terminy: {
       type: 'object',
-      required: ['en-US'],
       propertyNames: { pattern: '^[a-z]{2,3}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$' },
       additionalProperties: { type: 'array', minItems: 1, maxItems: 4, items: { type: 'object', additionalProperties: false, required: ['skrot', 'twierdzenie'], properties: { nazwa: { type: ['string', 'null'], minLength: 1, maxLength: 80 }, skrot: { type: ['string', 'null'], minLength: 1, maxLength: 16 }, twierdzenie: twierdzenieId } } },
     },
     twierdzenia: {
-      type: 'array', minItems: 1, maxItems: 16,
+      type: 'array', minItems: 0, maxItems: 16,
       items: {
         type: 'object', additionalProperties: false, required: ['id', 'wartosc'],
         properties: {
           id: twierdzenieId,
+          twierdzenia: { type: 'array', maxItems: 8, items: twierdzenieId }, // twierdzenia wspierające (rejestr 06)
           wartosc: {
             type: 'object', additionalProperties: false, minProperties: 1,
-            properties: { pochylenie: { enum: ['prawo', 'lewo', 'srodek', 'brak'] }, bilans: { type: 'integer', minimum: -4, maximum: 4 }, na_wierzchu: { enum: ['lewe', 'prawe', 'srodkowe'] }, kierunek: { enum: ['od_przodu', 'od_tylu'] } },
+            properties: {
+              pochylenie: { enum: ['prawo', 'lewo', 'srodek', 'brak'] }, bilans: { type: 'integer', minimum: -4, maximum: 4 }, na_wierzchu: { enum: ['lewe', 'prawe', 'srodkowe'] }, kierunek: { enum: ['od_przodu', 'od_tylu'] },
+              znaczenie_ws: { type: 'string', pattern: '^[a-z0-9_]+(\\.[a-z0-9_-]+){1,3}$' }, pomocniczy: { enum: ['przod', 'tyl'] }, narzuty: { type: 'integer', minimum: 0, maximum: 3 },
+              petle_po_wyciagnieciu: { type: 'integer', minimum: 1, maximum: 6 }, pozostaje_na_drucie: { type: 'integer', minimum: 0, maximum: 4 },
+            },
           },
         },
       },
@@ -51,7 +58,7 @@ export const SCHEMAT: S = {
     jezyki_gotowe: { type: 'array', minItems: 1, items: { type: 'string' } },
     glif: { type: 'object', additionalProperties: false, required: ['id', 'origin', 'rs', 'ws'], properties: { id: { type: 'string', pattern: '^glif\\.[a-z0-9_.]+$' }, origin: { const: 'own' }, rs: { type: 'string' }, ws: { type: 'string' } } },
     rysunek: {
-      type: 'object', additionalProperties: false, required: ['rodzina', 'probka', 'tlo', 'operacja'],
+      type: 'object', additionalProperties: false, required: ['rodzina', 'operacja'],
       properties: {
         rodzina: { enum: ['siatka-petli', 'graf-szydelkowy', 'nabieranie'] },
         probka: { type: 'object', additionalProperties: false, required: ['kolumny', 'rzedy'], properties: { kolumny: { type: 'integer', minimum: 2, maximum: 8 }, rzedy: { type: 'integer', minimum: 2, maximum: 4 } } },
@@ -60,7 +67,7 @@ export const SCHEMAT: S = {
           oneOf: [
             { type: 'null' },
             { type: 'object', additionalProperties: false, required: ['typ', 'strona'], properties: { typ: { const: 'oczko' }, strona, kolumna: { type: 'integer', minimum: 0, maximum: 7 } } },
-            { type: 'object', additionalProperties: false, required: ['typ', 'zuzywa', 'strona', 'na_wierzchu'], properties: { typ: { const: 'scal' }, zuzywa: { type: 'integer', minimum: 2, maximum: 3 }, strona, na_wierzchu: { enum: ['lewe', 'prawe'] }, kolumna: { type: 'integer', minimum: 0, maximum: 7 } } },
+            { type: 'object', additionalProperties: false, required: ['typ', 'zuzywa', 'strona', 'na_wierzchu'], properties: { typ: { const: 'scal' }, zuzywa: { type: 'integer', minimum: 2, maximum: 3 }, strona, na_wierzchu: { enum: ['lewe', 'prawe', 'srodkowe'] }, kolumna: { type: 'integer', minimum: 0, maximum: 7 } } },
             // od wersji 1 (pytania 06 nr 2): kontrakt przyjmuje, silnik jeszcze nie rysuje → `rysunek-nieobslugiwany`
             { type: 'object', additionalProperties: false, required: ['typ'], properties: { typ: { const: 'narzut' }, kolumna: { type: 'integer', minimum: 0, maximum: 7 } } },
             { type: 'object', additionalProperties: false, required: ['typ', 'scianka', 'pochylenie'], properties: { typ: { const: 'z_nitki_poziomej' }, scianka: { enum: ['przednia', 'tylna'] }, pochylenie: { enum: ['prawo', 'lewo'] }, kolumna: { type: 'integer', minimum: 0, maximum: 7 } } },
@@ -77,15 +84,16 @@ export const SCHEMAT: S = {
       items: {
         type: 'object', additionalProperties: false, required: ['faza', 'petle', 'wyroznij', 'kierunek', 'strzalka', 'klucz'],
         properties: {
-          faza: { enum: ['tkanina', 'wklucie', 'narzut', 'przeciagniecie', 'zdjecie', 'wynik'] },
+          faza: { enum: ['tkanina', 'wklucie', 'narzut', 'przeciagniecie', 'zdjecie', 'wynik', null] }, // null tylko w rodzinie `nabieranie` (z faza_opis)
           petle: miejsce,
           wyroznij: miejsce,
           kierunek: { enum: ['od_przodu', 'od_tylu', null] },
-          drut: { type: 'object', additionalProperties: false, required: ['ktory', 'grot'], properties: { ktory: { enum: ['prawy', 'lewy', 'pomocniczy', 'szydelko'] }, grot: { enum: ['w_lewo', 'w_prawo'] } } },
+          drut: { type: 'object', additionalProperties: false, required: ['ktory'], properties: { ktory: { enum: ['prawy', 'lewy', 'pomocniczy', 'szydelko'] }, grot: { enum: ['w_lewo', 'w_prawo'] } } },
           nitka: { enum: ['przod', 'tyl'] },
           scianka: { enum: ['przednia', 'tylna'] },
           petle_na_narzedziu: { type: 'integer', minimum: 0, maximum: 6 },
-          faza_opis: { type: 'string', minLength: 1, maxLength: 300 }, // tymczasowe: tylko rodzina `nabieranie`, do oceny (pytanie 06 nr 6)
+          faza_opis: { type: 'string', minLength: 1, maxLength: 300 }, // opis dla 05 (nie wyświetlany; generator strony go pomija)
+          twierdzenia: { type: 'array', maxItems: 8, items: twierdzenieId },
           strzalka: { oneOf: [{ type: 'null' }, { type: 'object', additionalProperties: false, required: ['ruch', 'od', 'do'], properties: { ruch: { enum: ['drut', 'nitka'] }, od: kotwica, do: kotwica } }] },
           klucz: { type: 'string' },
         },
@@ -162,28 +170,39 @@ export function walidujKarte(k: unknown, opcje: OpcjeWalidacji): BladKontraktu[]
   const PRZEKROJOWE = ['tabela', 'schemat', 'skrot'];
   const prefiks = PRZEKROJOWE.includes(karta.rodzaj) ? karta.rodzaj : karta.rzemioslo;
   if (!karta.id.startsWith(`${prefiks}.`)) zgl('id', '$.id', `id „${karta.id}” nie zaczyna się od „${prefiks}.”`);
-  if ((karta.rodzaj === 'tabela') !== Array.isArray(karta.pozycje)) zgl('pozycje', '$.pozycje', 'pole pozycje (lista ID) występuje dokładnie przy rodzaju „tabela”');
+  if (karta.pozycje && karta.rodzaj !== 'tabela') zgl('pozycje', '$.pozycje', 'pole pozycje (lista ID) tylko przy rodzaju „tabela”');
+  const technika = !PRZEKROJOWE.includes(karta.rodzaj) || karta.rodzaj === 'skrot';
+  if (technika && !karta.terminy['en-US']) zgl('jezyk', '$.terminy', 'technika i hasło skrótu wymagają terminu en-US');
+  if (karta.rysunek && !karta.klucze.opis_alt) zgl('klucz', '$.klucze.opis_alt', 'karta z rysunkiem wymaga klucza opis_alt (VoiceOver)');
+  (karta.klucze_dodatkowe ?? []).forEach((k, i) => { if (!k.startsWith(`atlas.${karta.id}.`)) zgl('klucz', `$.klucze_dodatkowe[${i}]`, `klucz „${k}” spoza „atlas.${karta.id}.”`); });
   if (karta.rodzaj === 'skrot' && karta.rysunek) zgl('rysunek', '$.rysunek', 'hasło skrótu bez rysunku (P-095: bez osobnych stron skrótów; skrót pokazuje tabela)');
   for (const [pole, klucz] of Object.entries(karta.klucze)) if (klucz !== `atlas.${karta.id}.${pole}`) zgl('klucz', `$.klucze.${pole}`, `ma być „atlas.${karta.id}.${pole}”, jest „${klucz}”`);
   const ids = karta.twierdzenia.map((t) => t.id);
   for (const d of ids.filter((id, i) => ids.indexOf(id) !== i)) zgl('twierdzenie', '$.twierdzenia', `powtórzone ID ${d}`);
-  karta.jezyki_gotowe.forEach((j, i) => { if (!(j in karta.terminy)) zgl('jezyk', `$.jezyki_gotowe[${i}]`, `język „${j}” bez wpisu w terminy`); });
-  if (!!karta.rysunek !== !!karta.kroki) zgl('rysunek', '$', 'rysunek i kroki występują razem albo wcale');
+  if (technika) karta.jezyki_gotowe.forEach((j, i) => { if (!(j in karta.terminy)) zgl('jezyk', `$.jezyki_gotowe[${i}]`, `język „${j}” bez wpisu w terminy`); });
+  if (karta.rysunek && !karta.kroki) zgl('rysunek', '$', 'rysunek wymaga kroków (kroki bez rysunku — same podpisy — są dozwolone)');
+  const rys = karta.rysunek;
+  if (rys?.operacja?.typ === 'scal' && rys.operacja.na_wierzchu === 'srodkowe' && rys.operacja.zuzywa % 2 === 0) zgl('rysunek', '$.rysunek.operacja', 'na_wierzchu „srodkowe” wymaga nieparzystej liczby ujmowanych oczek');
+  if (rys && rys.rodzina !== 'nabieranie' && (!rys.probka || !rys.tlo)) zgl('rysunek', '$.rysunek', `rodzina „${rys.rodzina}” wymaga pól probka i tlo`);
   karta.kroki?.forEach((krok, i) => {
     const s = `$.kroki[${i}]`;
     if (krok.klucz !== `atlas.${karta.id}.krok${i + 1}`) zgl('klucz', `${s}.klucz`, `ma być „atlas.${karta.id}.krok${i + 1}”, jest „${krok.klucz}”`);
     if (krok.faza === 'wklucie' && (!krok.drut || !krok.kierunek || krok.petle.length === 0)) zgl('krok', s, 'faza „wklucie” wymaga pól drut, kierunek i co najmniej jednej pętli w petle');
-    if (krok.faza !== 'wklucie' && krok.drut) zgl('krok', `${s}.drut`, `pole drut tylko w fazie „wklucie” (jest „${krok.faza}”)`);
-    if (krok.faza_opis !== undefined && karta.rysunek?.rodzina !== 'nabieranie') zgl('krok', `${s}.faza_opis`, 'faza_opis (tymczasowe) tylko w rodzinie „nabieranie”');
+    if (krok.faza === null && (karta.rysunek?.rodzina !== 'nabieranie' || !krok.faza_opis)) zgl('krok', `${s}.faza`, 'faza null tylko w rodzinie „nabieranie” i z faza_opis');
   });
-  if (b.length || !opcje.sprawdzKrok || !karta.rysunek) return b;
+  if (b.length || !opcje.sprawdzKrok || !karta.rysunek || !karta.kroki) return b;
   const obslugiwane = FAZY_RODZINY[karta.rysunek.rodzina] ?? [];
   const op = karta.rysunek.operacja;
   if (op && !OPERACJE_RODZINY[karta.rysunek.rodzina]?.includes(op.typ)) { zgl('rysunek-nieobslugiwany', '$.rysunek.operacja', `rodzina „${karta.rysunek.rodzina}” nie rysuje jeszcze operacji „${op.typ}”`); return b; }
   karta.kroki!.forEach((krok, i) => {
-    if (krok.drut && krok.drut.ktory !== 'prawy') { zgl('rysunek-nieobslugiwany', `$.kroki[${i}].drut`, `silnik rysuje jeszcze tylko prawy drut (jest „${krok.drut.ktory}”)`); return; }
-    if (!obslugiwane.includes(krok.faza)) { zgl('faza-nieobslugiwana', `$.kroki[${i}].faza`, `rodzina „${karta.rysunek!.rodzina}” nie rysuje jeszcze fazy „${krok.faza}” (obsługiwane: ${obslugiwane.join(', ') || 'brak'})`); return; }
-    for (const e of opcje.sprawdzKrok!(karta, krok)) zgl(`rysunek:${e.kod}`, `$.kroki[${i}]`, e.szczegol);
+    if (krok.faza === 'wklucie' && krok.drut && krok.drut.ktory !== 'prawy') { zgl('rysunek-nieobslugiwany', `$.kroki[${i}].drut`, `silnik rysuje jeszcze tylko prawy drut (jest „${krok.drut.ktory}”)`); return; }
+    if (krok.faza === 'wklucie' && !krok.drut?.grot) { zgl('krok', `$.kroki[${i}].drut.grot`, 'rysunek wkłucia wymaga kierunku grotu'); return; }
+    if (krok.faza === null || !obslugiwane.includes(krok.faza)) { zgl('faza-nieobslugiwana', `$.kroki[${i}].faza`, `rodzina „${karta.rysunek!.rodzina}” nie rysuje jeszcze fazy „${krok.faza}” (obsługiwane: ${obslugiwane.join(', ') || 'brak'})`); return; }
+    try {
+      for (const e of opcje.sprawdzKrok!(karta, krok)) zgl(`rysunek:${e.kod}`, `$.kroki[${i}]`, e.szczegol);
+    } catch (e) {
+      zgl('rysunek:wyjatek', `$.kroki[${i}]`, (e as Error).message); // silnik nie narysował kroku — błąd danych albo brak w silniku, nigdy cicho
+    }
   });
   return b;
 }

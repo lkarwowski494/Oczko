@@ -21,7 +21,9 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 export function zbudujStrone(w: WejscieStrony): WynikStrony {
   const bledy: string[] = [];
   if (!/^https:\/\/[^/]+\/(.*\/)?$/.test(w.adres)) return { pliki: {}, bledy: [`adres strony „${w.adres}” nie jest bezwzględnym https z „/” na końcu (ATLAS_ADRES, decyzja właściciela)`] };
-  const jezyki = [...new Set(w.karty.filter((k) => k.rodzaj !== 'skrot').flatMap((k) => k.jezyki_gotowe))].sort();
+  // publikowane: bez haseł skrótów (P-095) i bez kart „po-generatorze” (P-200)
+  const karty = w.karty.filter((k) => k.rodzaj !== 'skrot' && k.publikacja !== 'po-generatorze');
+  const jezyki = [...new Set(karty.flatMap((k) => k.jezyki_gotowe))].sort();
   const t = (j: string, klucz: string): string => {
     const v = w.teksty[j]?.[klucz];
     if (v === undefined || v === '') { bledy.push(`brak tekstu „${klucz}” w języku ${j}`); return ''; }
@@ -37,13 +39,13 @@ export function zbudujStrone(w: WejscieStrony): WynikStrony {
     `<!doctype html>\n<html lang="${j}">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>${esc(tytul)}</title>\n${alt}\n${css(w.palety)}\n</head>\n<body>\n${tresc}\n</body>\n</html>\n`;
   const pliki: Record<string, string> = {};
 
-  for (const k of w.karty) {
-    if (k.rodzaj === 'skrot') continue; // P-095: bez osobnych stron skrótów — skrót pokazuje tabela
+  for (const k of karty) {
     const wersje: [string, string][] = k.jezyki_gotowe.slice().sort().map((j) => [j, `${j}/${slug(k.id)}/`]);
     for (const j of k.jezyki_gotowe) {
       const kroki = (k.kroki ?? []).map((krok) => {
-        const svg = k.rysunek ? doSvg(siatkaPetli(k, krok), w.palety.jasny) : '';
-        return `<figure><div role="img" aria-label="${esc(t(j, k.klucze.opis_alt))}">${svg}</div><figcaption>${esc(t(j, krok.klucz))}</figcaption></figure>`;
+        const svg = k.rysunek?.rodzina === 'siatka-petli' && krok.faza !== null ? doSvg(siatkaPetli(k, krok), w.palety.jasny) : '';
+        const obraz = svg ? `<div role="img" aria-label="${esc(t(j, k.klucze.opis_alt ?? ''))}">${svg}</div>` : '';
+        return `<figure>${obraz}<figcaption>${esc(t(j, krok.klucz))}</figcaption></figure>`;
       });
       const sk = k.terminy[j]?.[0]?.skrot;
       const skrot = sk ? ` <abbr>${esc(sk)}</abbr>` : '';
@@ -51,12 +53,12 @@ export function zbudujStrone(w: WejscieStrony): WynikStrony {
         ? `<table><tbody>${(k.pozycje ?? []).map((id) => w.karty.find((x) => x.id === id)).filter((x): x is Karta => !!x).map((x) => `<tr><td>${esc(x.terminy[j]?.[0]?.skrot ?? '')}</td><td>${esc(t(j, x.klucze.nazwa))}</td></tr>`).join('')}</tbody></table>`
         : '';
       const sklep = w.odnosnikSklepu ? `<p><a href="${esc(w.odnosnikSklepu)}">${esc(t(j, 'atlas.strona.sklep'))}</a></p>` : '';
-      const tresc = `<p><a href="${w.adres}${j}/">${esc(t(j, 'atlas.strona.spis'))}</a></p>\n<h1>${esc(t(j, k.klucze.nazwa))}${skrot}</h1>\n<p>${esc(t(j, k.klucze.podpis))}</p>\n${tabela}${kroki.join('\n')}\n${sklep}`;
+      const tresc = `<p><a href="${w.adres}${j}/">${esc(t(j, 'atlas.strona.spis'))}</a></p>\n<h1>${esc(t(j, k.klucze.nazwa))}${skrot}</h1>\n${k.klucze.podpis ? `<p>${esc(t(j, k.klucze.podpis))}</p>` : ''}\n${(k.klucze_dodatkowe ?? []).map((x) => `<p>${esc(t(j, x))}</p>`).join('')}${tabela}${kroki.join('\n')}\n${sklep}`;
       pliki[`${j}/${slug(k.id)}/index.html`] = strona(j, t(j, k.klucze.nazwa), alternatywy(wersje, ''), tresc);
     }
   }
   for (const j of jezyki) {
-    const wJezyku = w.karty.filter((k) => k.jezyki_gotowe.includes(j) && k.rodzaj !== 'skrot');
+    const wJezyku = karty.filter((k) => k.jezyki_gotowe.includes(j));
     const lista = wJezyku.map((k) => `<li><a href="${w.adres}${j}/${slug(k.id)}/">${esc(t(j, k.klucze.nazwa))}</a></li>`).join('');
     pliki[`${j}/index.html`] = strona(j, t(j, 'atlas.strona.tytul'), alternatywy(jezyki.map((x) => [x, `${x}/`]), ''), `<h1>${esc(t(j, 'atlas.strona.tytul'))}</h1>\n<ul>${lista}</ul>`);
   }

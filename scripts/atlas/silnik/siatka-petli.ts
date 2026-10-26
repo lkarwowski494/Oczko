@@ -47,13 +47,16 @@ interface PetlaRob extends Petla {
 export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
   const rys = karta.rysunek;
   if (!rys || rys.rodzina !== 'siatka-petli') throw new Error(`karta ${karta.id}: rodzina inna niż siatka-petli`);
+  if (!rys.probka || !rys.tlo) throw new Error(`karta ${karta.id}: siatka-petli wymaga probka i tlo (walidator: rysunek)`);
   const { kolumny: N, rzedy: R } = rys.probka;
+  const tlo = rys.tlo;
   const op = rys.operacja;
   const W = WYMIAR.kolumna, H = WYMIAR.rzad;
   const bledy: string[] = [];
   const przed = krok.faza === 'tkanina' || krok.faza === 'wklucie';
-  const doOperacji = przed ? R - 1 : R; // liczba rysowanych rzędów
-  const rzadOp = R - 1;
+  // `probka.rzedy` = rzędy tkaniny przed operacją (0..R−1); operacja tworzy rząd R (kontrakt 1.1, interpretacja roli 06)
+  const doOperacji = przed ? R : R + 1; // liczba rysowanych rzędów
+  const rzadOp = op ? R : -1;
   if (op && op.typ !== 'oczko' && op.typ !== 'scal') throw new Error(`karta ${karta.id}: operacja „${op.typ}” nierysowana (walidator: rysunek-nieobslugiwany)`);
   const zuzywa = op?.typ === 'scal' ? op.zuzywa : 1;
   const k0 = op?.kolumna ?? Math.floor((N - zuzywa) / 2);
@@ -63,9 +66,9 @@ export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
   const wycinek = (x: number) => ({ lewa: x - W / 2, prawa: x + W / 2, szer: 1, glowaSzer: 1, dxGlowy: 0 });
 
   for (let r = 0; r < doOperacji; r++) {
-    if (r < rzadOp || !op) {
+    if (r !== rzadOp || !op) {
       for (let k = 0; k < N; k++) {
-        petle.push({ id: idP(r, k), rzad: r, kolumna: k, x: WYMIAR.margines + (k + 0.5) * W, typ: rys.tlo, rodzice: r ? [idP(r - 1, k)] : [], nachylenie: 0, ...wycinek(WYMIAR.margines + (k + 0.5) * W) });
+        petle.push({ id: idP(r, k), rzad: r, kolumna: k, x: WYMIAR.margines + (k + 0.5) * W, typ: tlo, rodzice: r ? [idP(r - 1, k)] : [], nachylenie: 0, ...wycinek(WYMIAR.margines + (k + 0.5) * W) });
       }
       continue;
     }
@@ -80,16 +83,17 @@ export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
         const dziecko: PetlaRob = { id: idP(r, k), rzad: r, kolumna: k, x, typ, rodzice: ujete.map((p) => p.id), nachylenie: 0, ...wycinek(x), lewa: ujete[0].lewa, prawa: ujete[ujete.length - 1].prawa };
         petle.push(dziecko);
         if (op.typ === 'scal') {
-          const nad = op.na_wierzchu === 'lewe' ? ujete[0] : ujete[ujete.length - 1];
+          const nad = op.na_wierzchu === 'lewe' ? ujete[0] : op.na_wierzchu === 'prawe' ? ujete[ujete.length - 1] : ujete[(ujete.length - 1) / 2];
+          if (!nad) throw new Error(`karta ${karta.id}: na_wierzchu „srodkowe” wymaga nieparzystej liczby ujmowanych oczek`);
           scalenia.push({ dziecko: dziecko.id, nad: nad.id, pod: ujete.filter((p) => p !== nad).map((p) => p.id) });
           for (const p of ujete) {
-            p.dxGlowy = Math.sign(x - p.x) * WYMIAR.przesuniecieUjecia * W;
+            p.dxGlowy = ((x - p.x) / (W / 2)) * WYMIAR.przesuniecieUjecia * W; // proporcjonalnie do odległości od dziecka (k2tog: 0,42 kolumny)
             p.glowaSzer = WYMIAR.glowaUjecia;
           }
         }
         j += zuzywa;
       } else {
-        petle.push({ id: idP(r, k), rzad: r, kolumna: k, x: dolne[j].x, typ: rys.tlo, rodzice: [dolne[j].id], nachylenie: 0, ...wycinek(dolne[j].x) });
+        petle.push({ id: idP(r, k), rzad: r, kolumna: k, x: dolne[j].x, typ: tlo, rodzice: [dolne[j].id], nachylenie: 0, ...wycinek(dolne[j].x) });
         j += 1;
       }
       k++;

@@ -59,7 +59,8 @@ export function zbudujManifest(pliki: { plik: string; bajty: Uint8Array }[], wer
 export type PolitykaJezyka = 'angielski' | 'ukryj';
 export function jezykKarty(karta: Karta, jezykUzytkownika: string, polityka: PolitykaJezyka): string | null {
   if (karta.jezyki_gotowe.includes(jezykUzytkownika)) return jezykUzytkownika;
-  // inny wariant regionalny tego samego języka nie jest „gotowy” (terminologia per region, np. en-US/en-GB) — decyduje polityka (E2-Q1)
+  // P-213 (E2-Q1a): szydełko tylko w dokładnym wariancie regionalnym — „dc” znaczy w US i UK co innego (RYZ-03); druty według przełącznika
+  if (karta.rzemioslo === 'szydelko') return null;
   if (polityka === 'ukryj') return null;
   return karta.jezyki_gotowe.includes('en-US') ? 'en-US' : null;
 }

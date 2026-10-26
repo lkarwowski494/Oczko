@@ -1,6 +1,6 @@
-# Kontrakt danych karty atlasu i kroków rysunku — wersja 1
+# Kontrakt danych karty atlasu i kroków rysunku — wersja 1.1
 
-Właściciel kontraktu: rola 05 (ADR-0023). Wypełnia: rola 06. Stan: **wersja 1 (`format: 1`), 2026-10-26, E2 — wiąże.** Źródło prawdy: `scripts/atlas/silnik/kontrakt.ts` (`SCHEMAT`) → `docs/atlas/katalog.schema.json` (JSON Schema 2020-12; zgodność pliku z kodem sprawdza `verify`). Walidator dla 06:
+Właściciel kontraktu: rola 05 (ADR-0023). Wypełnia: rola 06. Stan: **wersja 1.1 (`format: 1`, zmiany 1.1 zgodne wstecz), 2026-10-26, E3 — wiąże.** Źródło prawdy: `scripts/atlas/silnik/kontrakt.ts` (`SCHEMAT`) → `docs/atlas/katalog.schema.json` (JSON Schema 2020-12; zgodność pliku z kodem sprawdza `verify`). Walidator dla 06:
 
 ```
 node --experimental-strip-types --no-warnings scripts/atlas/waliduj.mjs <katalog-kart|plik.json> [--bez-rysunku]
@@ -25,27 +25,29 @@ Kod 0 = poprawne; każdy błąd: kod, ścieżka pola (np. `$.kroki[1].drut`), op
 | `id` | string | tak | zasada 6 |
 | `rzemioslo` | `druty` \| `szydelko` \| `oba` | tak | `oba` dla konwencji wspólnych (np. `schemat.powtorzenia`) |
 | `rodzaj` | `oczko`, `scieg`, `ujecie`, `dodanie`, `nabieranie`, `zamykanie`, `warkocz`, `oczko_szydelkowe`, `tabela`, `schemat`, `skrot` | tak | `skrot` = hasło skrótu: bez rysunku i bez własnej strony (P-095), pokazuje je tabela |
-| `pozycje` | ID[] | tylko i zawsze przy `tabela` | wiersze tabeli = karty (zwykle `skrot.*`) w tej kolejności |
-| `klucze` | `{ nazwa, podpis, opis_alt }` | tak | `opis_alt` = tekst VoiceOver rysunku |
-| `terminy` | `{ [tag BCP 47]: [{ nazwa?, skrot, twierdzenie }] }` (1–4 wpisy na język) | tak, z `en-US` | kilka nazw przy jednym ID (P-106; pytanie 4); `en-US` i `en-GB` osobno |
-| `twierdzenia` | `[{ id, wartosc }]` (1–16) | tak | bez powtórzeń ID |
-| `jezyki_gotowe` | tag[] (≥ 1), ⊆ klucze `terminy` | tak | strona publikuje tylko te; aplikacja: ADR-0025 (przełącznik Q3) |
+| `pozycje` | ID[] | nie; tylko przy `tabela` | wiersze tabeli = karty (zwykle `skrot.*`); bez pola tabela podaje wiersze tekstem (`klucze_dodatkowe`) |
+| `klucze` | `{ nazwa, podpis?, opis_alt? }` | tak | `opis_alt` = tekst VoiceOver; wymagany, gdy karta ma rysunek |
+| `klucze_dodatkowe` | klucz[] (≤ 20), prefiks `atlas.<id>.` | nie | dodatkowe akapity (np. uwagi, wiersze tabeli jako tekst) |
+| `publikacja` | `mvp` \| `po-generatorze` | nie (domyślnie publikowana) | `po-generatorze`: bez strony do oceny generatora (P-200) |
+| `terminy` | `{ [tag BCP 47]: [{ nazwa?, skrot, twierdzenie }] }` (1–4 wpisy na język) | tak; `en-US` wymagany dla technik i haseł skrótów (nie dla `tabela`, `schemat`) | kilka nazw przy jednym ID (P-106; pytanie 4); `en-US` i `en-GB` osobno |
+| `twierdzenia` | `[{ id, wartosc, twierdzenia? }]` (0–16) | tak (może być puste) | bez powtórzeń ID; `twierdzenia` = ID wspierające; jedna karta = jedna technika (warianty M1R/M1L, RC/LC — osobne karty) |
+| `jezyki_gotowe` | tag[] (≥ 1), dla technik ⊆ klucze `terminy` | tak | strona publikuje tylko te; aplikacja: ADR-0025 (przełącznik Q3) |
 | `glif` | `{ id: "glif.…", origin: "own", rs, ws }` | nie | |
-| `rysunek` + `kroki` | obiekt + krok[] (1–8) | razem albo wcale | |
+| `rysunek` + `kroki` | obiekt + krok[] (1–8) | rysunek wymaga kroków; kroki bez rysunku (same podpisy) dozwolone | |
 
 ### `rysunek`
 
 | Pole | Wartości |
 |---|---|
 | `rodzina` | `siatka-petli` (druty; rysowana) · `graf-szydelkowy`, `nabieranie` (kontrakt przyjmuje, silnik nie rysuje → `rysunek-nieobslugiwany`) |
-| `probka` | `{ kolumny: 2–8, rzedy: 2–4 }`; operacja działa w rzędzie `rzedy − 1` |
-| `tlo` | `prawe` \| `lewe` |
+| `probka` | `{ kolumny: 2–8, rzedy: 2–4 }` = tkanina **przed** operacją (rzędy 0…`rzedy − 1`); operacja tworzy rząd `rzedy` (1.1; wymagane poza rodziną `nabieranie`) |
+| `tlo` | `prawe` \| `lewe` (wymagane poza rodziną `nabieranie`) |
 | `operacja` | niżej; `kolumna` = pierwsza kolumna operacji (brak = środek próbki) |
 
 | `operacja.typ` | Pola | Silnik |
 |---|---|---|
 | `oczko` | `strona`, `kolumna?` | rysuje |
-| `scal` | `zuzywa` 2–3, `strona`, `na_wierzchu` `lewe`\|`prawe`, `kolumna?` | rysuje |
+| `scal` | `zuzywa` 2–3, `strona`, `na_wierzchu` `lewe`\|`prawe`\|`srodkowe` (nieparzyste `zuzywa`), `kolumna?` | rysuje 2 oczka na prawo; 3 oczka i ujęcia lewe — ograniczenie geometrii (E3 §5) |
 | `narzut` | `kolumna?` | w kontrakcie (pytanie 2) |
 | `z_nitki_poziomej` | `scianka` `przednia`\|`tylna`, `pochylenie` `prawo`\|`lewo`, `kolumna?` | w kontrakcie |
 | `scieg` | `wzor`: rzędy × kolumny (`prawe`\|`lewe`) **tak, jak wyglądają na stronie prawej** (karta podaje twierdzenie o przeliczeniu rzędu lewej strony) | w kontrakcie |
@@ -57,14 +59,15 @@ Kod 0 = poprawne; każdy błąd: kod, ścieżka pola (np. `$.kroki[1].drut`), op
 
 | Pole | Typ | Znaczenie |
 |---|---|---|
-| `faza` | `tkanina`, `wklucie`, `wynik` (rysowane) · `narzut`, `przeciagniecie`, `zdjecie` (w kontrakcie) | |
+| `faza` | `tkanina`, `wklucie`, `wynik` (rysowane) · `narzut`, `przeciagniecie`, `zdjecie` (w kontrakcie) · `null` tylko w rodzinie `nabieranie`, z `faza_opis` | |
 | `petle`, `wyroznij` | `[{ rzad 0–7, kolumna 0–11 }]` | `rzad` 0 = najniższy, `kolumna` 0 = lewa na stronie prawej |
 | `kierunek` | `od_przodu` \| `od_tylu` \| `null` | kierunek wkłucia narzędzia z `drut`; wymagany w `wklucie` |
-| `drut` | `{ ktory: prawy\|lewy\|pomocniczy\|szydelko, grot: w_lewo\|w_prawo }` | tylko i zawsze w `wklucie`; silnik rysuje dziś `prawy` (pytanie 3) |
+| `drut` | `{ ktory: prawy\|lewy\|pomocniczy\|szydelko, grot?: w_lewo\|w_prawo }` — `grot` = **kierunek ruchu czubka przy wkłuciu na stronie prawej** (E3; źródła 06: oczko prawe „od lewej do prawej” → `w_prawo`, lewe → `w_lewo`, ATL-K-011) | w każdej fazie (które narzędzie trzyma oczka); wymagany w `wklucie`, a do rysunku wkłucia także `grot`; silnik rysuje dziś wkłucie drutem `prawy` |
 | `nitka` | `przod` \| `tyl` (opcjonalne) | położenie nitki roboczej (pytanie 3; ATL-K-003, ATL-K-005) |
 | `scianka` | `przednia` \| `tylna` (opcjonalne) | za którą ściankę (M1R/M1L) |
 | `petle_na_narzedziu` | 0–6 (opcjonalne) | pętle na szydełku po kroku |
-| `faza_opis` | string ≤ 300 (tymczasowe) | tylko rodzina `nabieranie` (pytanie 6) |
+| `faza_opis` | string ≤ 300 | opis ruchu dla 05 (nie wyświetlany; generator strony go pomija — test) |
+| `twierdzenia` | ID[] (≤ 8) | twierdzenia, na których stoi krok |
 | `strzalka` | `null` \| `{ ruch: drut\|nitka, od, do }` | kotwice: `glowa:<r>:<k>`, `nozka_lewa:<r>:<k>`, `nozka_prawa:<r>:<k>`, `drut_prawy` |
 | `klucz` | string | `atlas.<id>.krok<n>` |
 
@@ -78,6 +81,7 @@ Faza `wklucie`: rysunek przed operacją + drut przez każdą pętlę z `petle`, 
 | `bilans` | −4…4 | kolumny po − przed |
 | `kierunek` | `od_przodu`, `od_tylu` | zgodność z `strona` operacji przez założenie silnika **A-1** (nowa pętla przechodzi przez starą przeciwnie do wkłucia: od przodu → oczko prawe) i z `kierunek` kroków |
 | `na_wierzchu` | `lewe`, `prawe`, `srodkowe` | zapis (silnik bierze wartość z `operacja`) |
+| `znaczenie_ws`, `pomocniczy`, `narzuty`, `petle_po_wyciagnieciu`, `pozostaje_na_drucie` | ID / `przod`\|`tyl` / 0–3 / 1–6 / 0–4 | zapis (1.1); sprawdzenie, gdy rodzina zacznie je rysować |
 
 ## Katalog (manifest `atlas.json`, ADR-0025)
 
@@ -89,7 +93,7 @@ Plik `^[a-z0-9][a-z0-9._-]*\.json$`; SHA-256 z bajtów pliku (przed parsowaniem)
 
 ## Przykład
 
-`docs/atlas/prototyp/karty/` — `druty.oczko.k`, `druty.oczko.p`, `druty.ujecie.k2tog` z ID twierdzeń z rejestru 06 (ATL-K-001, -002, -005, -006, -040, -041; TRM-EN-001, -002, -006). Wartość nieobjęta twierdzeniem: `drut.grot` w k2tog (`w_lewo`) — `[DO USTALENIA: 06]`.
+`docs/atlas/prototyp/karty/` — `druty.oczko.k`, `druty.oczko.p`, `druty.ujecie.k2tog` z ID twierdzeń z rejestru 06 (ATL-K-001, -002, -005, -006, -040, -041; TRM-EN-001, -002, -006). `drut.grot` w k2tog: `w_prawo` (wkłucie jak przy oczku prawym, ATL-K-041; kierunek ATL-K-011 — dopisuje 06).
 
 ## Odpowiedzi 05 na pytania 06 (2026-10-26, E2)
 
@@ -104,6 +108,7 @@ Plik `^[a-z0-9][a-z0-9._-]*\.json$`; SHA-256 z bajtów pliku (przed parsowaniem)
 ## Historia
 
 - 0 (E0), 0.1 (E1: `operacja.kolumna`).
+- **1.1 (E3, dane 06 z P-212; `format` bez zmian):** znaczenie `probka.rzedy` (tkanina przed operacją); wymagalność zależna od rodzaju (`terminy.en-US`, `podpis`, `opis_alt`, `pozycje`, `twierdzenia` ≥ 0, kroki bez rysunku); pola `publikacja`, `klucze_dodatkowe`, `twierdzenia` (wspierające); wartości z danych 06; `na_wierzchu: srodkowe`; `faza: null` w nabieraniu; `drut` w każdej fazie, `grot` wymagany tylko do rysunku wkłucia. Narzędzie przejścia z 0.1: `scripts/atlas/migruj-0-1.mjs <wejście> <wyjście>` (nie nadpisuje danych 06).
 - **1 (E2):** `format`; ID twierdzeń w postaci rejestru 06; ID z prefiksem rodzaju; `rzemioslo: oba`; rodzaje `tabela`, `schemat`, `skrot` i pole `pozycje`; `terminy` jako lista z `nazwa`; operacje z pytania 2; pola kroku `drut {ktory, grot}`, `nitka`, `scianka`, `petle_na_narzedziu`, `faza_opis`; granice liczb; manifest katalogu.
 
 ## Pytania 06
@@ -125,3 +130,5 @@ Plik `^[a-z0-9][a-z0-9._-]*\.json$`; SHA-256 z bajtów pliku (przed parsowaniem)
 2. **`klucze.podpis` i `klucze.opis_alt` wymagane zawsze** — karta bez rysunku (skrót, tabela) nie ma tekstu dla VoiceOver; 06 da klucze z pustą treścią albo prosi o `opis_alt` opcjonalne przy braku `rysunek`. Które wolisz?
 3. **`terminy.en-US` wymagane zawsze** — tabela i karta konwencji schematu nie są terminem; 06 wpisze `{ nazwa: null, skrot: null, twierdzenie: <twierdzenie podstawowe karty> }` (schemat to dopuszcza). Czy to zgodne z intencją?
 - **Z-06-02 (`drut.grot` w k2tog):** źródła mówią o kierunku wkłucia w poziomie: oczko prawe „Wkłuwamy czubek prawego drutu od lewej do prawej (od przodu do tyłu)” (podręcznik PL s. 47), lewe „od prawej do lewej (od tyłu do przodu)” (s. 48); podręcznik EN s. 37: „To knit into front loop, insert right needle left to right into stitch”, „To purl into front loop, insert needle from right to left”. 06 dopisze twierdzenie ATL-K-011 (prawe: od lewej do prawej, lewe: od prawej do lewej). Przełożenie „ruch od lewej do prawej” na `grot` (`w_lewo`/`w_prawo`) to geometria silnika — jeśli 05 uzna, że grot to kierunek ruchu, prawe = `w_prawo`; jeśli to kierunek, w który patrzy czubek po wkłuciu, decyzja 05 jako założenie silnika (jak A-1).
+
+**2026-10-26, 05 — odpowiedzi na pytania do wersji 1 (E3, wersja 1.1).** (1) `twierdzenia` mogą być puste (`minItems: 0`) dla każdej karty; nowe wartości `narzuty`, `petle_po_wyciagnieciu`, `pozostaje_na_drucie`, `pomocniczy`, `znaczenie_ws` w `wartosc`; dla ściegu wzór idzie w `operacja.wzor`, nie w `wartosc`. (2) `podpis` i `opis_alt` opcjonalne; `opis_alt` wymagany tylko przy `rysunek` — kluczy z pustą treścią nie wpisywać. (3) `terminy.en-US` wymagany tylko dla technik i haseł `skrot`; tabela i `schemat.*` mogą mieć `terminy: {}` albo terminy w językach, w których są — wpisu `{ nazwa: null, skrot: null }` nie trzeba. Z-06-02: `grot` = kierunek ruchu czubka przy wkłuciu (wiersz `drut` wyżej); k2tog w kartach próbnych zmieniony na `w_prawo`. Narzędzie przejścia z 0.1: `scripts/atlas/migruj-0-1.mjs` (wynik na danych P-212: 459 → 49 błędów do decyzji 06; `docs/atlas/e3-bledy-prywatnosc-wydajnosc.md` §5).
