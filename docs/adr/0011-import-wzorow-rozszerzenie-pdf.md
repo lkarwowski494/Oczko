@@ -29,6 +29,10 @@ Opcja A, z wariantem zastępczym dla Worda: jeśli eksperyment pokaże, że rend
 - **Znacznik bieżącego rzędu** (BR-WZR-003, pole `wzor.znacznik`): współrzędne względne strony PDF, nie punkty ekranu — `y` i `wysokosc_rzedu` jako ułamek wysokości strony 0–1 (od góry strony w jej układzie bez obrotu), `strona` od 0. Wektor dla 07: ten sam znacznik po obrocie urządzenia, zmianie powiększenia i na innym rozmiarze ekranu wskazuje ten sam rząd (przeliczenie tylko w widoku, dane bez zmian); strona obrócona w PDF (`/Rotate`) — współrzędne w układzie strony przed obrotem.
 - **Rozszerzenie udostępniania:** plik kopiowany do skrzynki strumieniowo (kopiowanie pliku przez system plików albo strumień, bez wczytywania całego pliku do pamięci); plik większy niż `WZOR_MAKS_MB` nie jest kopiowany, a rozszerzenie pokazuje jedno zdanie (tekst: 04). Limit pamięci rozszerzenia nie jest liczbą podaną w dokumentacji przeczytanej w tej sesji [DO USTALENIA: pomiar na urządzeniu przy TestFlight], stąd kopiowanie bez wczytywania.
 
+## Uzupełnienie 2026-10-26 (fix-4 05: RD-21, P-134 Q3a, P-136; decyzja A bez zmian)
+- **Rząd znacznika = rząd w robocie (RD-21):** domyślnie przy ustawieniu `rzad_bazowy = s_ust + 1` (s = skończone rzędy licznika), niezależnie od trybu licznika; notatka na znaczniku dotyczy rzędu licznika `s + 1`.
+- **Stan „przed schematem”:** `rzad < 1` (prucie poniżej początku schematu) → `polozenieZnacznika` zwraca `przedSchematem: true`, znacznik na rzędzie 1 schematu, `rzadNotatki: null` — dodanie notatki na znaczniku w tym stanie: `{ ok: false, powod: 'niedozwolone_przejscie' }`, jak wzór bez znacznika (uzupełnienie fix-3); stan wraca sam, gdy `rzad ≥ 1`. To zastępuje dotychczasowe `pozaStrona: true` dla `rzad < 1` (uzupełnienie fix-2: warunek `rzad ≥ 1`): „poza stroną” zostaje tylko dla wyjścia za krawędź strony. Sygnatura z `Wynik` (s < 0 → `bledne_dane`, RD-21-W7): `moduly.md`, „Kontrakt partii 4”. Wygląd stanu: 04.
+
 ## Opcje: zalety i wady
 ### A — zalety: jeden format dla funkcji wzoru · wady: konwersja na urządzeniu, Word niepewny.
 ### B — zalety: wierność źródła · wady: trzy widoki, znacznik i rysik tylko na części formatów.

@@ -183,12 +183,33 @@ export type StanEkranuBlokadyV3 = { wersja: number; licznikId: string; nazwa: st
 // Swift (pakiet OczkoReguly): dekoder przyjmuje wersję 2 bez pola jako zablokowany = false (Live Activity i kontekst zegarka sprzed aktualizacji),
 // wersję 3 tylko z polem (X-ST-01), wersję > 3 odrzuca; reguła `stuknij` (intencja i zegarek): zablokowany → WynikIntencji.zablokowany (przed limitem),
 // bez linii; scalenie na telefonie NIE odrzuca linii zapisanych przed blokadą (stuknięcie było dozwolone w chwili zapisu; −1 cofa przypadkowe +1).
+
+// Pora ukończenia (P-137, 04 fix-2: ekran wybiera tylko datę, od startu projektu do dziś) — src/przypadki-uzycia/projekt.ts
+function zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoDzien: string }): Promise<Wynik<void>>;
+// ukonczono_dzien = ukonczonoDzien; ukonczono_ms = chwila dnia ukonczonoDzien w strefie Zegar.teraz().strefa o tej samej porze lokalnej
+// (godz., min., s, ms) co dotychczasowe ukonczono_ms w tej strefie — ta sama pora, zmienia się tylko data; pora w luce zmiany czasu → przesunięta
+// o długość luki (02:30 → 03:30), pora podwójna → wcześniejsza chwila; wynik późniejszy niż teraz (dziś, pora jeszcze nie nadeszła) → teraz.
+// Rachunek w domenie z Intl (jak dzienLokalny), bez pakietu; test oczekujący: tests/akceptacja/dane/ukonczenie-pora.test.ts (wyrocznia: zoneinfo).
+
+// RD-15 z Z_teraz (P-136, łatka 01 NZ-RD15 nakładana przez 08 na start partii 4) — src/domena/postep.ts
+function celDzienny(w: { suma: number; przedDzis: number; zrobioneTeraz: number; termin: string; dzis: string }): Wynik<CelDnia>;
+// zrobioneTeraz = Z_teraz = Σ min(r_i, c_i) teraz (całkowite ≥ 0, inaczej bledne_dane); gałęzie w kolejności RD-15: (1) d ≥ 1 i R ≤ 0 albo
+// d < 1 i R_teraz ≤ 0 → { rodzaj: 'osiagniety' }; (2) d < 1 i R_teraz > 0 → { rodzaj: 'po_terminie', zostalo: R_teraz }; (3) → { rodzaj: 'cel',
+// rzedy: ⌈R / d⌉ } (R z przedDzis, cel stały w dniu, P-047). Wyrocznia: RD-15-W1–W16 (brd.json po łatce).
+
+// RD-21 „przed schematem” (P-134 Q3a) — src/domena/znacznik-wzoru.ts; ADR-0011 (2026-10-26 fix-4)
+function polozenieZnacznika(z: ZnacznikWzoru, wartoscLicznika: number): Wynik<{ strona: number; rzad: number; y: number; pozaStrona: boolean; przedSchematem: boolean; rzadNotatki: number | null }>;
+// wartoscLicznika = s (skończone rzędy); s < 0 albo niecałkowite → bledne_dane (RD-21-W7). rzad = rzadBazowy + (s − wartoscPrzyUstawieniu).
+// rzad < 1 → przedSchematem: true, pozaStrona: false, y = położenie rzędu 1 schematu przycięte do strony, rzadNotatki: null (notatki brak);
+// w przeciwnym razie przedSchematem: false, rzadNotatki = s + 1, a krawędź strony jak dotąd (pozaStrona). Domyślnie przy ustawieniu
+// rzadBazowy = s_ust + 1 niezależnie od trybu licznika (RD-21-W1–W3). Wyrocznia: RD-21-W1–W9 (tests/wektory/brd.json).
 ```
 - **Moduł natywny** (`modules/oczko-dziennik-plus/ios/Zegarek.swift`, `index.ts`): `zegarekWyslij(stanJson: string, potwierdzone: string[])`; `didReceiveUserInfo` przy błędzie `dopisz` nie woła `poZapisie` i niczego nie potwierdza (e1, zegarek ponowi).
 - **Zegarek** (`targets/watch/Aplikacja.swift`, `SkrzynkaZegarka` w pakiecie): kolejka w pliku, kolejność stuknięcia, usuwanie i ponowienie według ADR-0009 (2026-10-26) pkt 1–5; testy X-ZG (`xctest-specyfikacja.md` §4).
 - **Sklep (a):** test oczekujący `tests/akceptacja/dane/sklep-status.test.ts`; `tests/adaptery/sklep.test.ts` (asercje `kup` → `{ ok }` i `kupZeStatusem`) przechodzą na status.
 - **Haptyka (b):** test oczekujący `tests/akceptacja/dane/haptyka-wzorce.test.ts` (wyrocznia: tokeny 04; zmiana tokenów w 04 czerwieni test, nie przechodzi po cichu).
 - **Blokada (N1):** test oczekujący `tests/akceptacja/dane/stan-blokada.test.ts`; Swift: X-ST-07, X-DZ-15, X-ZG-11 (`xctest-specyfikacja.md`); teksty stanu blokady na ekranie blokady i zegarku: 04.
+- **Pora ukończenia, RD-15, RD-21 (dopiski P-136, P-137):** `tests/dane/projekt-fix3.test.ts` (wywołanie z `ukonczonoMs`) przechodzi na nową sygnaturę; RD-15 z łatką 01 (`postep.test.ts`, P-136); RD-21: testy 07 na wektorach W1–W9; wołający `polozenieZnacznika` (`src/dane/repozytoria/wzory.ts:41`) obsługuje `Wynik`.
 - **Testy do zmiany mechanicznej przez 08** (asercje bez zmiany sensu): `toEqual({ ok: true, wartosc: { scalono, pominieto } })` w `tests/dane/dziennik*.test.ts` dostaje `potwierdzone`; test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` przenieść do `tests/dane/` w commicie, który go zazielenia.
 
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)
