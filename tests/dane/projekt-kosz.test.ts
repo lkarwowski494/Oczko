@@ -111,6 +111,38 @@ describe('kosz „Ostatnio usunięte” (F-33, P-026)', () => {
   });
 });
 
+// F07-11 (P-125): podłączenie warunku dwóch startów w warstwie danych — `uruchomDane` czyta `ostatni_start_ms` POPRZEDNIEGO startu
+// przed sprzątaniem i zapisuje bieżący na końcu. Wyrocznia: tabela „Funkcja sprzątania kosza” (moduly.md, P-118 W2, P-110 Q5a);
+// testy wyżej ustawiają poprzedni start = teraz, więc nie odróżniają „poprzedni” od „bieżący”.
+describe('ŚU-14 P-110 Q5a P-118 W2: sprzątanie kosza dopiero przy dwóch startach potwierdzających datę (uruchomDane)', () => {
+  const start = (s: Awaited<ReturnType<typeof przygotuj>>) => uruchomDane({ ...s.z, migruj: (b) => migruj(b) });
+  const ostatniStart = async (s: Awaited<ReturnType<typeof przygotuj>>) => (await jeden<{ wartosc: string } | undefined>(s.baza, "SELECT wartosc FROM ustawienie WHERE klucz = 'ostatni_start_ms'"))?.wartosc;
+
+  test('pierwszy start po aktualizacji (brak ostatni_start_ms), 60 dni po usunięciu → projekt zostaje; ostatni_start_ms = teraz', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, SWETER);
+    await usunProjekt(s.z, { projektId: 'p1' });
+    s.zegar.przesun(60 * DOBA);
+    expect(await start(s)).toMatchObject({ ok: true, wartosc: { sprzatnieto: 0 } });
+    expect(await ile(s.baza, 'projekt', "id = 'p1'")).toBe(1);
+    expect(await ostatniStart(s)).toBe(String(s.zegar.teraz().ms));
+  });
+
+  test('jednorazowy skok zegara w przód: start dzień po usunięciu, następny start „60 dni później” → zostaje; kolejny start po terminie → sprzątnięty', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, SWETER);
+    await usunProjekt(s.z, { projektId: 'p1' });
+    s.zegar.przesun(DOBA);
+    await start(s); // ostatni = u + 1 dzień
+    s.zegar.przesun(59 * DOBA);
+    expect(await start(s)).toMatchObject({ ok: true, wartosc: { sprzatnieto: 0 } }); // teraz = u + 60 dni, ostatni = u + 1 dzień
+    expect(await ile(s.baza, 'projekt', "id = 'p1'")).toBe(1);
+    s.zegar.przesun(MIN);
+    expect(await start(s)).toMatchObject({ ok: true, wartosc: { sprzatnieto: 1 } }); // ostatni = u + 60 dni ≥ u + KOSZ_DNI
+    expect(await ile(s.baza, 'projekt', "id = 'p1'")).toBe(0);
+  });
+});
+
 describe('sesja stopera przy starcie (P-072 (7a), SESJA_MAKS_H)', () => {
   test.each([
     [SESJA_MAKS_H * GODZ - MIN, 'trwa', null],
