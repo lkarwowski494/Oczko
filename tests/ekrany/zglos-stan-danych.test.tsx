@@ -41,10 +41,12 @@ describe('Zgłoś problem i stan danych', () => {
     expect(screen.getByText(/saved on this (iPhone|phone|device)/i)).toBeTruthy();
   });
 
-  test('BR-DAN-011/S2: zegarek ma 3 zmiany czekające na połączenie i co zrobić (Z07-05)', () => {
-    render(<StanDanych stan={{ synchronizacja: 'wylaczona', ostatniaUdana: null, czekaNaSiec: false, zegarek: { oczekujace: 3 } }} t={t} />);
+  // Zmiana 08 (partia 5, sesja 3): dawny S2 („telefon pokazuje 3 zmiany czekające na zegarku”) jest sprzeczny z P-193 i P-195 Q1 —
+  // liczbę zmian pokazuje tylko zegarek, a telefon ostatni kontakt (S3). Asercja zastąpiona stanem z decyzji; S3 sprawdza p202-stan-danych-korekta.
+  test('BR-DAN-011/S2 → S3 (P-193): telefon pokazuje ostatni kontakt z zegarkiem i nie podaje liczby zmian', () => {
+    render(<StanDanych stan={{ synchronizacja: 'wylaczona', ostatniaUdana: null, czekaNaSiec: false, zegarek: { ostatniKontakt: 'Nov 10, 14:00' } }} t={t} />);
     expect(screen.getByText(/watch/i)).toBeTruthy();
-    expect(screen.getByText(/\b3\b/)).toBeTruthy();
-    expect(screen.getByText(/open Oczko|bring|near|nearby|Bluetooth/i)).toBeTruthy();
+    expect(screen.getByText(/Nov 10, 14:00/)).toBeTruthy();
+    expect(screen.queryByText(/\b3\b|change(s)? waiting/i)).toBeNull();
   });
 });

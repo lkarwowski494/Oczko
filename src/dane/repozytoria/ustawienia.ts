@@ -20,3 +20,8 @@ export async function ostatniStartMs(tx: PortBazy): Promise<number | null> {
   const v = await odczytajUstawienie(tx, 'ostatni_start_ms');
   return typeof v === 'number' && Number.isInteger(v) ? v : null;
 }
+/** `zegarek_ostatnia_partia_ms` (P-199 Q5a): czas ostatniej partii z zegarka dla Stanu danych (BR-DAN-011/S3); brak albo zły zapis = brak. */
+export async function zegarekOstatniaPartiaMs(tx: PortBazy): Promise<number | null> {
+  const v = await odczytajUstawienie(tx, 'zegarek_ostatnia_partia_ms');
+  return typeof v === 'number' && Number.isInteger(v) ? v : null;
+}

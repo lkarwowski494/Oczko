@@ -2,7 +2,7 @@
 // z zegarka (także samych powtórzeń) w transakcji scalenia; linie ekranu blokady go nie zmieniają; stan urządzenia — import go nie nadpisuje.
 import { join } from 'node:path';
 import type { ZdarzenieWejsciowe } from '../../src/domena/porty';
-import { odczytajUstawienie, zapiszUstawienie } from '../../src/dane/repozytoria/ustawienia';
+import { odczytajUstawienie, zapiszUstawienie, zegarekOstatniaPartiaMs } from '../../src/dane/repozytoria/ustawienia';
 import { zastapZKopii } from '../../src/dane/baza/przeniesienie';
 import { scalDziennik } from '../../src/przypadki-uzycia/dziennik';
 import { przyTle } from '../../src/przypadki-uzycia/start';
@@ -50,5 +50,14 @@ describe('zegarek_ostatnia_partia_ms', () => {
     await zapiszUstawienie(s.baza, 'zegarek_ostatnia_partia_ms', 7, 1);
     await zastapZKopii(s.baza, join(zrodlo.katalog, 'oczko.db'));
     expect(await odczytajUstawienie(s.baza, 'zegarek_ostatnia_partia_ms')).toBe(7);
+  });
+
+  test('odczyt dla Stanu danych: liczba całkowita → ta liczba; brak albo zły zapis → null (brak zostaje brakiem)', async () => {
+    const s = await przygotuj();
+    expect(await zegarekOstatniaPartiaMs(s.baza)).toBeNull();
+    await zapiszUstawienie(s.baza, 'zegarek_ostatnia_partia_ms', 'wczoraj', 1);
+    expect(await zegarekOstatniaPartiaMs(s.baza)).toBeNull();
+    await zapiszUstawienie(s.baza, 'zegarek_ostatnia_partia_ms', T, 1);
+    expect(await zegarekOstatniaPartiaMs(s.baza)).toBe(T);
   });
 });
