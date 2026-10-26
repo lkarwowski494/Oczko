@@ -17,8 +17,30 @@ export type WejscieStanuZegarka = {
   dniLimitu: DzienLimitu[]; // wszystkie wiersze dzien_limitu, dowolna kolejność
   przypomnienia: PrzypomnienieStanu[]; // plan RD-13 licznika
 };
-/** Pierwsze `n` punktów kodowych (para zastępcza UTF-16 nie jest rozcinana). */
-const utnij = (t: string, n: number): string => Array.from(t).slice(0, n).join('');
+/** Ciąg dalszy znaku: znak łączący (w tym selektory wariantu), modyfikator karnacji, ZWJ, znaczniki flag podregionów. */
+const CIAG_DALSZY = /^(?:\p{M}|\p{Emoji_Modifier}|\u200D|[\u{E0020}-\u{E007F}])$/u;
+/**
+ * Najwyżej `n` punktów kodowych bez niepełnego znaku na końcu (P-131 (1)): z `Intl.Segmenter` (gdy jest) całe grafemy; bez niego granica
+ * cofnięta przed ZWJ, selektorem wariantu, znakiem łączącym i modyfikatorem karnacji. `zSegmenterem`: tylko dla testu obu ścieżek.
+ */
+export function utnijZnaki(t: string, n: number, zSegmenterem = true): string {
+  const punkty = Array.from(t);
+  if (punkty.length <= n) return t;
+  const Segmenter = zSegmenterem && 'Segmenter' in Intl ? Intl.Segmenter : undefined;
+  if (Segmenter) {
+    let wynik = '', ile = 0;
+    for (const { segment } of new Segmenter(undefined, { granularity: 'grapheme' }).segment(t)) {
+      const d = Array.from(segment).length;
+      if (ile + d > n) break;
+      wynik += segment; ile += d;
+    }
+    return wynik;
+  }
+  let k = n;
+  while (k > 0 && (CIAG_DALSZY.test(punkty[k] ?? '') || punkty[k - 1] === '\u200D')) k--;
+  return punkty.slice(0, k).join('');
+}
+const utnij = (t: string, n: number): string => utnijZnaki(t, n);
 /**
  * Stan Live Activity i zegarka, wersja 2 (moduly.md „Stan Live Activity i zegarka”, ADR-0009): `dniWMiesiacu` = dni limitu z miesiąca dnia `dzis`,
  * rosnąco (OR po dacie); nazwa i przypomnienia ucięte do limitów z konfiguracji, żeby ładunek był < 4 KB (rejestr Apple 1b).

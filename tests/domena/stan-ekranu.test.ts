@@ -3,7 +3,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { STAN_NAZWA_MAKS_ZNAKOW, STAN_PRZYPOMNIENIA_MAKS, STAN_PRZYPOMNIENIE_TEKST_MAKS, WERSJA_STANU } from '../../src/konfiguracja';
-import { stanEkranuBlokady } from '../../src/domena/zegarek';
+import { stanEkranuBlokady, utnijZnaki } from '../../src/domena/zegarek';
 import { WEJSCIA, stany, tresc } from '../wspolne/generator-stanow';
 
 const KAT = join(__dirname, '../wspolne');
@@ -16,6 +16,20 @@ describe('stanEkranuBlokady (wersja 2)', () => {
     const emoji = stanEkranuBlokady({ ...duzy, nazwa: '🧶'.repeat(100) }).nazwa;
     expect([[...emoji].length, emoji.length]).toEqual([STAN_NAZWA_MAKS_ZNAKOW, 2 * STAN_NAZWA_MAKS_ZNAKOW]);
     expect(stanEkranuBlokady({ ...duzy, nazwa: 'Czapka' }).nazwa).toBe('Czapka');
+  });
+  // P-131 (1): bez niepełnego znaku na końcu — granica cofnięta przed ZWJ, selektorem wariantu, znakiem łączącym i modyfikatorem karnacji;
+  // ścieżka z Intl.Segmenter (grafemy) i bez niego (punkty kodowe z cofnięciem) dają ten sam wynik.
+  describe.each([['z Intl.Segmenter', true], ['bez Intl.Segmenter', false]] as const)('ucinanie na granicy znaku złożonego (%s)', (_n, zSegmenterem) => {
+    const ucinaj = (nazwa: string, n: number) => utnijZnaki(nazwa, n, zSegmenterem);
+    const rodzina = '👩\u200D👩\u200D👧'; // 5 punktów kodowych, 1 znak
+    test.each([
+      ['emoji ZWJ przecięte w środku → całe poza', `${'a'.repeat(58)}${rodzina}`, 60, 'a'.repeat(58)],
+      ['emoji ZWJ mieszczące się w całości zostaje', `${'a'.repeat(55)}${rodzina}b`, 60, `${'a'.repeat(55)}${rodzina}`],
+      ['akcent łączący na granicy → litera z akcentem poza', `${'a'.repeat(59)}e\u0301`, 60, 'a'.repeat(59)],
+      ['modyfikator karnacji na granicy → emoji poza', `${'a'.repeat(59)}👍🏽`, 60, 'a'.repeat(59)],
+      ['selektor wariantu na granicy → znak poza', `${'a'.repeat(59)}❤\uFE0F`, 60, 'a'.repeat(59)],
+      ['krótka nazwa bez zmian', 'Czapka é', 60, 'Czapka é'],
+    ])('%s', (_opis, nazwa, n, oczekiwane) => expect(ucinaj(nazwa, n)).toBe(oczekiwane));
   });
   test(`najwyżej ${STAN_PRZYPOMNIENIA_MAKS} przypomnienia, tekst ucięty do ${STAN_PRZYPOMNIENIE_TEKST_MAKS} znaków, plan bez zmian`, () => {
     const p = stanEkranuBlokady(duzy).przypomnienia;

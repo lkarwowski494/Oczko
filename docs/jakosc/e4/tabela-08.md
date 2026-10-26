@@ -66,6 +66,6 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/ustawienia.test.tsx` | oczekuje | 7 | BR-DAN-010, BR-DAN-012/S3, BR-LIC-020/S3, BR-ZAK-004, BR-ZAK-004/S1, BR-ZAK-006/S5, BR-ZAK-006/S7, KP-13 | `src/ekrany/Ustawienia`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/zglos-stan-danych.test.tsx` | oczekuje | 4 | BR-DAN-010, BR-DAN-010/S1, BR-DAN-010/S2, BR-DAN-011, BR-DAN-011/S1, BR-DAN-011/S2, R-162, R-163 | `src/ekrany/StanDanych`<br>`src/ekrany/ZglosProblem`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 9 ? | `tests/adaptery/identyfikatory.test.ts` | zielony (główny zestaw) | 2 | — | `src/platforma/identyfikatory` | — |
-| 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
+| 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
 
 Razem plików testów: 64; zależnych od poprawek: 53.
