@@ -1,0 +1,43 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.ch",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.ch.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "chain stitch",
+    "skrot": "ch",
+    "twierdzenie": "TRM-EN-028"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "chain",
+    "skrot": "ch",
+    "twierdzenie": "TRM-GB-007"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko łańcuszka",
+    "skrot": "oł",
+    "twierdzenie": "TRM-PL-028"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "luftmaska",
+    "skrot": "lm",
+    "twierdzenie": "TRM-SV-009"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

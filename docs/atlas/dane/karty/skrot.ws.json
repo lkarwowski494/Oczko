@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.ws",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.ws.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "wrong side",
+    "skrot": "WS",
+    "twierdzenie": "TRM-EN-018"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "lewa strona (robótki)",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-039"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "avigsidan",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-020"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

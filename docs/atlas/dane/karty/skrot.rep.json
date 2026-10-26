@@ -1,0 +1,22 @@
+{
+ "format": 1,
+ "id": "skrot.rep",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.rep.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "repeat",
+    "skrot": "rep",
+    "twierdzenie": "TRM-EN-019"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

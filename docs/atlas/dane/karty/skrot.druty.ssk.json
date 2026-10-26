@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.druty.ssk",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.ssk.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "slip, slip, knit",
+    "skrot": "ssk",
+    "twierdzenie": "TRM-EN-007"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "dwa oczka przekręcone razem na prawo",
+    "skrot": "2 o. przekr. p.",
+    "twierdzenie": "TRM-PL-011"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

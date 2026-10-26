@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.dc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.dc.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "double crochet",
+    "skrot": "dc",
+    "twierdzenie": "TRM-EN-032"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "treble",
+    "skrot": "tr",
+    "twierdzenie": "TRM-GB-004"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "słupek",
+    "skrot": "sł",
+    "twierdzenie": "TRM-PL-034"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

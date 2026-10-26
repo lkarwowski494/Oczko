@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.druty.p",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.p.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "purl",
+    "skrot": "p",
+    "twierdzenie": "TRM-EN-002"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko lewe",
+    "skrot": "o. l.",
+    "twierdzenie": "TRM-PL-002"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "avig maska",
+    "skrot": "am",
+    "twierdzenie": "TRM-SV-002"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

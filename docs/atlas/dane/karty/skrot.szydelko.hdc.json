@@ -1,0 +1,43 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.hdc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.hdc.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "half double crochet",
+    "skrot": "hdc",
+    "twierdzenie": "TRM-EN-031"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "half treble",
+    "skrot": "htr",
+    "twierdzenie": "TRM-GB-003"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "półsłupek",
+    "skrot": "psł",
+    "twierdzenie": "TRM-PL-033"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "halvstolpe",
+    "skrot": "hst",
+    "twierdzenie": "TRM-SV-007"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

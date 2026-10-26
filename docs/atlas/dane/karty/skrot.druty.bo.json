@@ -1,0 +1,41 @@
+{
+ "format": 1,
+ "id": "skrot.druty.bo",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.bo.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "bind off",
+    "skrot": "BO",
+    "twierdzenie": "TRM-EN-014"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "zakańczanie oczek",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-016"
+   },
+   {
+    "nazwa": "oczka zamykające",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-017"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "maska av",
+    "skrot": "avm",
+    "twierdzenie": "TRM-SV-018"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

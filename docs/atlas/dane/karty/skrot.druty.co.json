@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.druty.co",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.co.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "cast on",
+    "skrot": "CO",
+    "twierdzenie": "TRM-EN-015"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "nabieranie oczek",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-037"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "lägg upp",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-017"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

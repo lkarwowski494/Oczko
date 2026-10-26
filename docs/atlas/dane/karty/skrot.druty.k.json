@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.druty.k",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.k.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "knit",
+    "skrot": "k",
+    "twierdzenie": "TRM-EN-001"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko prawe",
+    "skrot": "o. p.",
+    "twierdzenie": "TRM-PL-001"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "rät maska",
+    "skrot": "rm",
+    "twierdzenie": "TRM-SV-001"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

@@ -1,0 +1,78 @@
+{
+ "format": 1,
+ "id": "szydelko.oczko_szydelkowe.ch",
+ "rzemioslo": "szydelko",
+ "rodzaj": "oczko_szydelkowe",
+ "klucze": {
+  "nazwa": "atlas.szydelko.oczko_szydelkowe.ch.nazwa",
+  "podpis": "atlas.szydelko.oczko_szydelkowe.ch.podpis",
+  "opis_alt": "atlas.szydelko.oczko_szydelkowe.ch.opis_alt"
+ },
+ "klucze_dodatkowe": [
+  "atlas.szydelko.oczko_szydelkowe.ch.nazwa_gb",
+  "atlas.szydelko.oczko_szydelkowe.ch.uwaga_wezel"
+ ],
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "chain stitch",
+    "skrot": "ch",
+    "twierdzenie": "TRM-EN-028"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "chain",
+    "skrot": "ch",
+    "twierdzenie": "TRM-GB-007"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko łańcuszka",
+    "skrot": "oł",
+    "twierdzenie": "TRM-PL-028"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "luftmaska",
+    "skrot": "lm",
+    "twierdzenie": "TRM-SV-009"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US",
+  "en-GB"
+ ],
+ "rysunek": {
+  "rodzina": "graf-szydelkowy",
+  "probka": {
+   "kolumny": 4,
+   "rzedy": 2
+  },
+  "tlo": "prawe",
+  "operacja": null
+ },
+ "kroki": [
+  {
+   "faza": "narzut",
+   "petle": [],
+   "wyroznij": [],
+   "kierunek": null,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.ch.krok1"
+  },
+  {
+   "faza": "przeciagniecie",
+   "petle": [],
+   "wyroznij": [],
+   "kierunek": null,
+   "petle_na_narzedziu": 1,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.ch.krok2"
+  }
+ ]
+}

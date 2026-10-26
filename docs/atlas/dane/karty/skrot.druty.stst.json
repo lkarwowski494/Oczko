@@ -1,0 +1,41 @@
+{
+ "format": 1,
+ "id": "skrot.druty.stst",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.stst.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "stockinette stitch",
+    "skrot": "St st",
+    "twierdzenie": "TRM-EN-003"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "ścieg pończoszniczy",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-004"
+   },
+   {
+    "nazwa": "dżersej",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-005"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "slätstickning",
+    "skrot": "slätst",
+    "twierdzenie": "TRM-SV-004"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

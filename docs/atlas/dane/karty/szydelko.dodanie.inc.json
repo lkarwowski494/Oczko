@@ -1,0 +1,108 @@
+{
+ "format": 1,
+ "id": "szydelko.dodanie.inc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "dodanie",
+ "klucze": {
+  "nazwa": "atlas.szydelko.dodanie.inc.nazwa",
+  "podpis": "atlas.szydelko.dodanie.inc.podpis",
+  "opis_alt": "atlas.szydelko.dodanie.inc.opis_alt"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "increase",
+    "skrot": "inc",
+    "twierdzenie": "TRM-EN-036"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "increase",
+    "skrot": "inc",
+    "twierdzenie": "TRM-GB-011"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "dodawanie oczek",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-041"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "öka",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-022"
+   }
+  ]
+ },
+ "twierdzenia": [
+  {
+   "id": "ATL-C-013",
+   "wartosc": {
+    "bilans": 1
+   }
+  }
+ ],
+ "jezyki_gotowe": [
+  "en-US",
+  "en-GB"
+ ],
+ "rysunek": {
+  "rodzina": "graf-szydelkowy",
+  "probka": {
+   "kolumny": 4,
+   "rzedy": 2
+  },
+  "tlo": "prawe",
+  "operacja": null
+ },
+ "kroki": [
+  {
+   "faza": "wynik",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.dodanie.inc.krok1"
+  },
+  {
+   "faza": "wynik",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    },
+    {
+     "rzad": 1,
+     "kolumna": 2
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    },
+    {
+     "rzad": 1,
+     "kolumna": 2
+    }
+   ],
+   "kierunek": null,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.dodanie.inc.krok2"
+  }
+ ]
+}

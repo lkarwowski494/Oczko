@@ -1,0 +1,22 @@
+{
+ "format": 1,
+ "id": "skrot.druty.kwise",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.kwise.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "knitwise",
+    "skrot": "kwise",
+    "twierdzenie": "TRM-EN-022"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

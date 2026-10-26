@@ -1,0 +1,41 @@
+{
+ "format": 1,
+ "id": "skrot.druty.sl",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.sl.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "slip",
+    "skrot": "sl",
+    "twierdzenie": "TRM-EN-021"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko zdjęte",
+    "skrot": "o. zdj.",
+    "twierdzenie": "TRM-PL-022"
+   },
+   {
+    "nazwa": "zdjąć 1 oczko",
+    "skrot": "zdjąć 1 o.",
+    "twierdzenie": "TRM-PL-040"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "lyft 1 m",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-021"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "format": 1,
+ "id": "schemat.rs-ws",
+ "rzemioslo": "druty",
+ "rodzaj": "schemat",
+ "klucze": {
+  "nazwa": "atlas.schemat.rs-ws.nazwa",
+  "podpis": "atlas.schemat.rs-ws.podpis",
+  "opis_alt": "atlas.schemat.rs-ws.opis_alt"
+ },
+ "klucze_dodatkowe": [
+  "atlas.schemat.rs-ws.kierunek",
+  "atlas.schemat.rs-ws.znaczenie_ws",
+  "atlas.schemat.rs-ws.legenda"
+ ],
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "right side",
+    "skrot": "RS",
+    "twierdzenie": "TRM-EN-017"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "prawa strona (robótki)",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-038"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "rätsida",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-019"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

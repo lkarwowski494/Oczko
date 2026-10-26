@@ -1,0 +1,96 @@
+{
+ "format": 1,
+ "id": "druty.dodanie.m1r",
+ "rzemioslo": "druty",
+ "rodzaj": "dodanie",
+ "klucze": {
+  "nazwa": "atlas.druty.dodanie.m1r.nazwa",
+  "podpis": "atlas.druty.dodanie.m1r.podpis",
+  "opis_alt": "atlas.druty.dodanie.m1r.opis_alt"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "make one right",
+    "skrot": "M1R",
+    "twierdzenie": "TRM-EN-012"
+   }
+  ]
+ },
+ "twierdzenia": [
+  {
+   "id": "ATL-K-052",
+   "wartosc": {
+    "pochylenie": "prawo",
+    "bilans": 1
+   },
+   "twierdzenia": [
+    "ATL-K-053"
+   ]
+  }
+ ],
+ "jezyki_gotowe": [
+  "en-US"
+ ],
+ "rysunek": {
+  "rodzina": "siatka-petli",
+  "probka": {
+   "kolumny": 4,
+   "rzedy": 2
+  },
+  "tlo": "prawe",
+  "operacja": {
+   "typ": "z_nitki_poziomej",
+   "scianka": "przednia",
+   "pochylenie": "prawo",
+   "kolumna": 1
+  }
+ },
+ "kroki": [
+  {
+   "faza": "tkanina",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    },
+    {
+     "rzad": 1,
+     "kolumna": 2
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    },
+    {
+     "rzad": 1,
+     "kolumna": 2
+    }
+   ],
+   "kierunek": null,
+   "strzalka": null,
+   "klucz": "atlas.druty.dodanie.m1r.krok1"
+  },
+  {
+   "faza": "przeciagniecie",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "scianka": "przednia",
+   "strzalka": null,
+   "klucz": "atlas.druty.dodanie.m1r.krok2"
+  }
+ ]
+}

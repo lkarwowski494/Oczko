@@ -1,0 +1,22 @@
+{
+ "format": 1,
+ "id": "skrot.druty.m1r",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.m1r.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "make one right",
+    "skrot": "M1R",
+    "twierdzenie": "TRM-EN-012"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

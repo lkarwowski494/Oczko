@@ -1,0 +1,43 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.sk",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.sk.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "skip",
+    "skrot": "sk",
+    "twierdzenie": "TRM-EN-037"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "miss",
+    "skrot": null,
+    "twierdzenie": "TRM-GB-006"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "ominąć oczko",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-042"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "hoppa över",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-023"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

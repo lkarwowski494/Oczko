@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.druty.skp",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.skp.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "slip 1, knit 1, pass slipped stitch over",
+    "skrot": "SKP",
+    "twierdzenie": "TRM-EN-008"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "dwa oczka przeciągnięte (podwójne przeciągnięcie)",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-012"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

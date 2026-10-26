@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.yo",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.yo.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "yarn over",
+    "skrot": "yo",
+    "twierdzenie": "TRM-EN-038"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "yarn over hook",
+    "skrot": "yoh",
+    "twierdzenie": "TRM-GB-012"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

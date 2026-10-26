@@ -1,0 +1,43 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.inc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.inc.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "increase",
+    "skrot": "inc",
+    "twierdzenie": "TRM-EN-036"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "increase",
+    "skrot": "inc",
+    "twierdzenie": "TRM-GB-011"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "dodawanie oczek",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-041"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "öka",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-022"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

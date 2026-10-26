@@ -1,0 +1,119 @@
+{
+ "format": 1,
+ "id": "szydelko.oczko_szydelkowe.sc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "oczko_szydelkowe",
+ "klucze": {
+  "nazwa": "atlas.szydelko.oczko_szydelkowe.sc.nazwa",
+  "podpis": "atlas.szydelko.oczko_szydelkowe.sc.podpis",
+  "opis_alt": "atlas.szydelko.oczko_szydelkowe.sc.opis_alt"
+ },
+ "klucze_dodatkowe": [
+  "atlas.szydelko.oczko_szydelkowe.sc.nazwa_gb",
+  "atlas.szydelko.oczko_szydelkowe.sc.uwaga_petle"
+ ],
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "single crochet",
+    "skrot": "sc",
+    "twierdzenie": "TRM-EN-030"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "double crochet",
+    "skrot": "dc",
+    "twierdzenie": "TRM-GB-002"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko ścisłe",
+    "skrot": "oś",
+    "twierdzenie": "TRM-PL-030"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "fast maska",
+    "skrot": "fm",
+    "twierdzenie": "TRM-SV-006"
+   }
+  ]
+ },
+ "twierdzenia": [
+  {
+   "id": "ATL-C-008",
+   "wartosc": {
+    "narzuty": 0
+   },
+   "twierdzenia": [
+    "ATL-C-004"
+   ]
+  },
+  {
+   "id": "ATL-C-004",
+   "wartosc": {
+    "kierunek": "od_przodu",
+    "petle_po_wyciagnieciu": 2
+   }
+  }
+ ],
+ "jezyki_gotowe": [
+  "en-US",
+  "en-GB"
+ ],
+ "rysunek": {
+  "rodzina": "graf-szydelkowy",
+  "probka": {
+   "kolumny": 4,
+   "rzedy": 2
+  },
+  "tlo": "prawe",
+  "operacja": {
+   "typ": "oczko_szydelkowe",
+   "narzuty": 0
+  }
+ },
+ "kroki": [
+  {
+   "faza": "tkanina",
+   "petle": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "petle_na_narzedziu": 2,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.sc.krok1"
+  },
+  {
+   "faza": "przeciagniecie",
+   "petle": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "petle_na_narzedziu": 1,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.sc.krok2"
+  }
+ ]
+}

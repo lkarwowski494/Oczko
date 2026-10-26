@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.druty.k2tog",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.k2tog.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "knit 2 together",
+    "skrot": "k2tog",
+    "twierdzenie": "TRM-EN-006"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "dwa oczka przerobione razem na prawo",
+    "skrot": "2 o. przer. p.",
+    "twierdzenie": "TRM-PL-009"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "sticka ihop 2 rm",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-012"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

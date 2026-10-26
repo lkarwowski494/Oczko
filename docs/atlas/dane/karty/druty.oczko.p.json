@@ -1,0 +1,150 @@
+{
+ "format": 1,
+ "id": "druty.oczko.p",
+ "rzemioslo": "druty",
+ "rodzaj": "oczko",
+ "klucze": {
+  "nazwa": "atlas.druty.oczko.p.nazwa",
+  "podpis": "atlas.druty.oczko.p.podpis",
+  "opis_alt": "atlas.druty.oczko.p.opis_alt"
+ },
+ "klucze_dodatkowe": [
+  "atlas.druty.oczko.p.uwaga_nitka"
+ ],
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "purl",
+    "skrot": "p",
+    "twierdzenie": "TRM-EN-002"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko lewe",
+    "skrot": "o. l.",
+    "twierdzenie": "TRM-PL-002"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "avig maska",
+    "skrot": "am",
+    "twierdzenie": "TRM-SV-002"
+   }
+  ]
+ },
+ "twierdzenia": [
+  {
+   "id": "ATL-K-005",
+   "wartosc": {
+    "kierunek": "od_tylu"
+   },
+   "twierdzenia": [
+    "ATL-K-011"
+   ]
+  },
+  {
+   "id": "ATL-T-036",
+   "wartosc": {
+    "znaczenie_ws": "druty.oczko.k"
+   }
+  }
+ ],
+ "jezyki_gotowe": [
+  "en-US"
+ ],
+ "rysunek": {
+  "rodzina": "siatka-petli",
+  "probka": {
+   "kolumny": 4,
+   "rzedy": 2
+  },
+  "tlo": "prawe",
+  "operacja": {
+   "typ": "oczko",
+   "strona": "lewe",
+   "kolumna": 1
+  }
+ },
+ "kroki": [
+  {
+   "faza": "wklucie",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": "od_tylu",
+   "drut": {
+    "ktory": "prawy",
+    "grot": "w_lewo"
+   },
+   "nitka": "przod",
+   "strzalka": null,
+   "klucz": "atlas.druty.oczko.p.krok1"
+  },
+  {
+   "faza": "narzut",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "nitka": "przod",
+   "strzalka": null,
+   "klucz": "atlas.druty.oczko.p.krok2"
+  },
+  {
+   "faza": "przeciagniecie",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "strzalka": null,
+   "klucz": "atlas.druty.oczko.p.krok3"
+  },
+  {
+   "faza": "zdjecie",
+   "petle": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 1,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "strzalka": null,
+   "klucz": "atlas.druty.oczko.p.krok4"
+  }
+ ]
+}

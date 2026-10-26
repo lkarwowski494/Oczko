@@ -1,0 +1,129 @@
+{
+ "format": 1,
+ "id": "szydelko.oczko_szydelkowe.dc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "oczko_szydelkowe",
+ "klucze": {
+  "nazwa": "atlas.szydelko.oczko_szydelkowe.dc.nazwa",
+  "podpis": "atlas.szydelko.oczko_szydelkowe.dc.podpis",
+  "opis_alt": "atlas.szydelko.oczko_szydelkowe.dc.opis_alt"
+ },
+ "klucze_dodatkowe": [
+  "atlas.szydelko.oczko_szydelkowe.dc.nazwa_gb"
+ ],
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "double crochet",
+    "skrot": "dc",
+    "twierdzenie": "TRM-EN-032"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "treble",
+    "skrot": "tr",
+    "twierdzenie": "TRM-GB-004"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "słupek",
+    "skrot": "sł",
+    "twierdzenie": "TRM-PL-034"
+   }
+  ]
+ },
+ "twierdzenia": [
+  {
+   "id": "ATL-C-008",
+   "wartosc": {
+    "narzuty": 1
+   },
+   "twierdzenia": [
+    "ATL-C-006"
+   ]
+  },
+  {
+   "id": "ATL-C-006",
+   "wartosc": {
+    "petle_po_wyciagnieciu": 3
+   }
+  }
+ ],
+ "jezyki_gotowe": [
+  "en-US",
+  "en-GB"
+ ],
+ "rysunek": {
+  "rodzina": "graf-szydelkowy",
+  "probka": {
+   "kolumny": 4,
+   "rzedy": 2
+  },
+  "tlo": "prawe",
+  "operacja": {
+   "typ": "oczko_szydelkowe",
+   "narzuty": 1
+  }
+ },
+ "kroki": [
+  {
+   "faza": "przeciagniecie",
+   "petle": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "petle_na_narzedziu": 3,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.dc.krok1"
+  },
+  {
+   "faza": "przeciagniecie",
+   "petle": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "petle_na_narzedziu": 2,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.dc.krok2"
+  },
+  {
+   "faza": "przeciagniecie",
+   "petle": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "wyroznij": [
+    {
+     "rzad": 0,
+     "kolumna": 1
+    }
+   ],
+   "kierunek": null,
+   "petle_na_narzedziu": 1,
+   "strzalka": null,
+   "klucz": "atlas.szydelko.oczko_szydelkowe.dc.krok3"
+  }
+ ]
+}

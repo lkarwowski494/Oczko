@@ -1,12 +1,14 @@
 # Atlas technik (1.1) — stan treści roli 06
 
-Aktualizacja: 2026-10-26 · rola 06-tresci, tryb build · decyzje: P-093, P-095, P-101, P-108, P-112, P-179, P-192, P-200, P-210.
+Aktualizacja: 2026-10-26 · rola 06-tresci, tryb build · decyzje: P-093, P-095, P-101, P-108, P-112, P-179, P-192, P-200, P-210, P-212, P-213, P-214.
 
-- **Etap:** STOP E2 (treści), czeka na odpowiedź koordynatora (P-087). E0: P-200; E1: P-210 (pary sv/pl ze słownika producenta przez koordynatora, pt-BR w drugiej fali, start en-US + en-GB szydełko + sv).
+- **Etap:** STOP E3 (weryfikacja i przekazanie), czeka na odpowiedź koordynatora (P-087). E0: P-200; E1: P-210; E2: P-212 (Q1a, Q2a); kontrakt 1.1: P-213, P-214.
 - **Zakres:** 31 pozycji MVP — 5 tabel słownikowych i 26 kart technik (druty 17 + 3 tabele, szydełko 9 + 2 tabele, P-101); dodatkowo dane 3 metod nabierania oczek, publikacja po ocenie generatora (P-200 Q1a).
 - **Wynik E1 (w prywatnym repo treści, `06-tresci/atlas/`):** rejestr 206 twierdzeń (177 potwierdzonych, 28 otwartych, 1 robocze; najwyższy szczebel: 1 — 92, 3 — 85); pozycje z ID twierdzeń, parametry skutku technik, 28 wektorów testowych dla 05 i 07. Kontrole: mechaniczna kod 0; dosłowność cytatów na surowym tekście kod 0.
 - **Format danych:** kontrakt roli 05 `docs/atlas/kontrakt-krokow.md` (ID i pola przyjęte przez 06; pytania 06 w sekcji „Pytania 06”). `kroki-pola.md` wycofany.
 - **Treść publiczna** bez nazw źródeł i bez cytatów (P-108); linia źródła tylko przy tabelach opartych na standardach (P-112).
 - **Wynik E2 (repo treści):** kanon tekstów en-US — 187 kluczy, każde zdanie z ID twierdzenia; katalog 34 kart (31 MVP) z 69 krokami jako danymi według kontraktu 05 w. 0.1; rejestr 236 twierdzeń (pary sv i pl ze słownika producenta, P-210: sv 25 terminów). Kontrola mechaniczna kod 0, dosłowność cytatów kod 0, spójność kluczy kod 0.
-- **Pytania E2:** Q1 kopia katalogu i tekstów en do repo Oczka przed E3, Q2 kolejność: weryfikacja E3 przed przeglądem brzmienia przez 04.
-- **Następny krok:** E3 — niezależna weryfikacja każdego twierdzenia i zdania, przekazanie dla 05, 07, 09, 04.
+- **Wynik E3 (repo treści, `06-tresci/atlas/E3-weryfikacja.md`):** weryfikacja niezależna A, B, C, R2, R3 — wszystkie werdykty inne niż POPARTE poprawione i sprawdzone ponownie (R3: 6/6 POPARTE); rejestr 248 (233 potwierdzone, 14 otwartych, 1 sprzeczne niepublikowane); kontrola końcowa 0 błędów; cytaty: 0 nieznalezionych.
+- **Dane w `docs/atlas/dane/` (format 1, kontrakt 1.1):** 87 kart (33 pozycje MVP poza skrótami, 51 haseł skrótu, 3 nabierania po generatorze), teksty en-US i en-GB. Walidator 05: 79 uwag — 75 po stronie silnika (operacje i fazy nierysowane: 39; przeplot i budowa p2tog, s2kp2: 36), 4 z pytań Q-1.1-1 (ściegi) i Q-1.1-3 (kółko) w `kontrakt-krokow.md`.
+- **Otwarte:** terminy pl z e-booka (O-A-01), kółko bez terminu US (O-A-11), etykieta drugiej listy sv (O-A-12), „yarn forward” sv (O-A-13); pt-BR druga fala.
+- **Następny krok:** przegląd brzmienia przez 04 (P-212 Q2a); 05 — odpowiedzi Q-1.1-1…3 i silnik p2tog/s2kp2; 09 — teksty sv.

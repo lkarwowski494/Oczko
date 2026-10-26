@@ -1,0 +1,22 @@
+{
+ "format": 1,
+ "id": "skrot.druty.tbl",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.tbl.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "through back loop",
+    "skrot": "tbl",
+    "twierdzenie": "TRM-EN-024"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

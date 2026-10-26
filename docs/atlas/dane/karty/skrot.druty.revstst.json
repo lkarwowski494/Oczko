@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.druty.revstst",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.revstst.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "reverse stockinette stitch",
+    "skrot": "rev St st",
+    "twierdzenie": "TRM-EN-004"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "slätst med avigan ut",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-025"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

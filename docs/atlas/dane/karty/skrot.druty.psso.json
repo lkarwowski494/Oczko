@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.druty.psso",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.psso.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "pass slipped stitch over",
+    "skrot": "psso",
+    "twierdzenie": "TRM-EN-027"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "drag den lyfta m över",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-014"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

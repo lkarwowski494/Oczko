@@ -1,0 +1,36 @@
+{
+ "format": 1,
+ "id": "skrot.druty.cn",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.cn.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "cable needle",
+    "skrot": "cn",
+    "twierdzenie": "TRM-EN-016"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "drut pomocniczy",
+    "skrot": null,
+    "twierdzenie": "TRM-PL-020"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "flätsticka",
+    "skrot": null,
+    "twierdzenie": "TRM-SV-016"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

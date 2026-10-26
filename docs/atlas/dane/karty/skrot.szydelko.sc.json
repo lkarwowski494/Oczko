@@ -1,0 +1,43 @@
+{
+ "format": 1,
+ "id": "skrot.szydelko.sc",
+ "rzemioslo": "szydelko",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.szydelko.sc.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "single crochet",
+    "skrot": "sc",
+    "twierdzenie": "TRM-EN-030"
+   }
+  ],
+  "en-GB": [
+   {
+    "nazwa": "double crochet",
+    "skrot": "dc",
+    "twierdzenie": "TRM-GB-002"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "oczko ścisłe",
+    "skrot": "oś",
+    "twierdzenie": "TRM-PL-030"
+   }
+  ],
+  "sv": [
+   {
+    "nazwa": "fast maska",
+    "skrot": "fm",
+    "twierdzenie": "TRM-SV-006"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

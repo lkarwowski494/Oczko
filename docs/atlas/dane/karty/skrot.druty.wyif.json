@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.druty.wyif",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.wyif.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "with yarn in front",
+    "skrot": "wyif",
+    "twierdzenie": "TRM-EN-026"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "nitka z przodu roboty",
+    "skrot": "n. p.",
+    "twierdzenie": "TRM-PL-023"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}

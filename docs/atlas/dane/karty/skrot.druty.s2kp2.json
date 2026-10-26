@@ -1,0 +1,29 @@
+{
+ "format": 1,
+ "id": "skrot.druty.s2kp2",
+ "rzemioslo": "druty",
+ "rodzaj": "skrot",
+ "klucze": {
+  "nazwa": "atlas.skrot.druty.s2kp2.nazwa"
+ },
+ "terminy": {
+  "en-US": [
+   {
+    "nazwa": "centered double decrease",
+    "skrot": "S2KP2",
+    "twierdzenie": "TRM-EN-010"
+   }
+  ],
+  "pl": [
+   {
+    "nazwa": "dwa oczka spuszczone pionowo",
+    "skrot": "2 o. sp. pion.",
+    "twierdzenie": "TRM-PL-013"
+   }
+  ]
+ },
+ "twierdzenia": [],
+ "jezyki_gotowe": [
+  "en-US"
+ ]
+}
