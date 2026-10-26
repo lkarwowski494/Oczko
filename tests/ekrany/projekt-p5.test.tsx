@@ -132,3 +132,17 @@ describe('czas projektu (P-191 P4a, makieta projekt-czas)', () => {
     expect(screen.queryByTestId('projekt-sesje')).toBeNull();
   });
 });
+
+describe('U-10 na ekranie projektu (grupa D)', () => {
+  test('wiersz „Swatch” w „Details” z wartością albo „Add”, otwiera kalkulator', () => {
+    const naProbka = jest.fn();
+    const s = stan({ szczegoly: { narzedzie: 'Needles', rozmiar: '4 mm (US 6)', termin: null, probka: '22 stitches / 10 cm' } });
+    const r = render(<Projekt stan={s} t={t} naOtworzCzesc={jest.fn()} naProbka={naProbka} />);
+    expect(screen.getByTestId('projekt-probka')).toBeTruthy();
+    expect(screen.getByText('22 stitches / 10 cm')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('projekt-probka'));
+    expect(naProbka).toHaveBeenCalled();
+    r.rerender(<Projekt stan={stan({ szczegoly: { narzedzie: null, rozmiar: null, termin: null, probka: null } })} t={t} naOtworzCzesc={jest.fn()} naProbka={naProbka} />);
+    expect(screen.getAllByText('Add').length).toBeGreaterThan(0);
+  });
+});

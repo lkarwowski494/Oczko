@@ -190,6 +190,17 @@ function zmienProjekt(z: Zaleznosci, operacja: string, projektId: string, kolumn
     return r.zmiany === 1 ? OK : blad('bledne_dane');
   });
 }
+/** Próbka projektu (U-10): `projekt.probka` JSON {oczka, na_cm}; inne klucze zostają; `null` usuwa oczka i podstawę. */
+export function ustawProbke(z: Zaleznosci, w: { projektId: string; probka: { oczka: number; naCm: 10 | 10.16 } | null }): Promise<Wynik<void>> {
+  const p = w.probka;
+  if (p !== null && (!(Number.isFinite(p.oczka) && p.oczka > 0) || (p.naCm !== 10 && p.naCm !== 10.16))) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'ustawProbke', async (tx, teraz) => {
+    const r = p === null
+      ? await tx.run("UPDATE projekt SET probka = json_remove(probka, '$.oczka', '$.na_cm'), zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL", [teraz, w.projektId])
+      : await tx.run("UPDATE projekt SET probka = json_set(probka, '$.oczka', ?, '$.na_cm', ?), zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL", [p.oczka, p.naCm, teraz, w.projektId]);
+    return r.zmiany === 1 ? OK : blad('bledne_dane');
+  });
+}
 /**
  * Drut albo szydełko w milimetrach (BR-PRJ-004, F-17; P-184); `null` = brak danych (nie zgadywany rozmiar). Numer US liczy domena przy
  * wyświetleniu (RD-11 druty, RD-19 szydełko). Obie kolumny jedną instrukcją.

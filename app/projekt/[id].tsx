@@ -81,6 +81,7 @@ export default function EkranProjektu(): React.ReactElement {
       <Projekt
         stan={stan} t={t} edycja={edycja} zdjecia={grupaZdjec}
         naSesje={() => router.push({ pathname: '/sesje', params: { projekt: w.id } })}
+        naProbka={() => router.push({ pathname: '/probka', params: { projekt: w.id } })}
         naWstecz={() => (router.canGoBack() ? router.back() : router.replace('/projekty'))}
         naOtworzCzesc={(cid) => { const l = czesc(cid)?.liczniki[0]; if (l) otworzLicznik(l.id); }}
         naOtworzLicznik={otworzLicznik}

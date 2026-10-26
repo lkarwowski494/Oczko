@@ -54,7 +54,7 @@ import { stanProjektu } from '../../src/kompozycja/projekt';
 const W: WidokProjektu = {
   id: 'p1', nazwa: 'Harbor', nienazwany: false, stan: 'w_toku', utworzonoMs: Date.UTC(2026, 9, 1), zmienionoMs: Date.UTC(2026, 9, 20, 10), ostatniaPracaMs: Date.UTC(2026, 9, 22, 10),
   notatka: '', narzedzie: 'druty', drutMm: 4, drutUS: '6', terminDzien: '2026-10-31', celDnia: { rodzaj: 'cel', rzedy: 10 }, zrobioneDzis: 3,
-  postep: { rodzaj: 'procent', wartosc: 51 }, ukonczonoDzien: null,
+  postep: { rodzaj: 'procent', wartosc: 51 }, ukonczonoDzien: null, probka: null, // probka: mechanicznie po D5 (U-10)
   czesci: [
     { id: 'c1', nazwa: 'Back', rzedy: 60, cel: 96, celZPary: false, paraZ: null, calosc: null, liczniki: [{ id: 'l1', nazwa: '', rodzaj: 'rzedy', wartosc: 60, znaczenie: 'skonczone' }] },
     { id: 'c2', nazwa: 'Blanket', rzedy: 20, cel: null, celZPary: false, paraZ: null, calosc: 20, liczniki: [
@@ -64,7 +64,7 @@ const W: WidokProjektu = {
 test('stanProjektu: termin, szczegóły z US, pusta notatka = null, liczniki z nazwą rodzaju, całość z modelu (`licznikCalosci`, P-199 Q1a)', () => {
   const s = stanProjektu(W, { j, terazMs: Date.UTC(2026, 9, 22, 12), strefa: 'UTC' });
   expect(s.termin).toBe('Done by Oct 31 · today 3 of 10 rows');
-  expect(s.szczegoly).toEqual({ narzedzie: 'Needles', rozmiar: '4 mm (US 6)', termin: 'Oct 31' });
+  expect(s.szczegoly).toEqual({ narzedzie: 'Needles', rozmiar: '4 mm (US 6)', termin: 'Oct 31', probka: null }); // probka: pole U-10 (D5), mechanicznie
   expect(s.notatka).toBeNull();
   expect(s.ostatniaZmiana).toBe('Oct 22');
   expect(s.czesci[0].liczniki).toEqual([{ id: 'l1', nazwa: 'Rows', opis: '60 rows' }]);
@@ -76,10 +76,17 @@ test('stanProjektu: gałęzie terminu RD-15 i brak terminu', () => {
   expect(linia({ celDnia: { rodzaj: 'osiagniety' } })).toBe('Done by Oct 31 · goal reached');
   expect(linia({ celDnia: null })).toBe('Done by Oct 31 · set a goal for a part to get a daily goal');
   expect(linia({ terminDzien: null, celDnia: null })).toBeNull();
-  expect(stanProjektu({ ...W, drutMm: 6.5, drutUS: null, narzedzie: 'szydelko' }, { j, terazMs: 0, strefa: 'UTC' }).szczegoly).toEqual({ narzedzie: 'Hook', rozmiar: '6.5 mm', termin: 'Oct 31' });
+  expect(stanProjektu({ ...W, drutMm: 6.5, drutUS: null, narzedzie: 'szydelko' }, { j, terazMs: 0, strefa: 'UTC' }).szczegoly).toEqual({ narzedzie: 'Hook', rozmiar: '6.5 mm', termin: 'Oct 31', probka: null });
 });
 test('stanProjektu: daty ukończonego projektu z rokiem (daty historii), zakres wyboru od dnia startu do dziś; w toku brak', () => {
   const s = stanProjektu({ ...W, stan: 'ukonczony', ukonczonoDzien: '2026-10-20' }, { j, terazMs: Date.UTC(2026, 9, 22, 12), strefa: 'UTC' });
   expect(s.daty).toEqual({ start: 'Oct 1, 2026', koniec: 'Oct 20, 2026', startDzien: '2026-10-01', koniecDzien: '2026-10-20', dzis: '2026-10-22' });
   expect(stanProjektu(W, { j, terazMs: 0, strefa: 'UTC' }).daty).toBeNull();
+});
+
+test('U-10: wiersz „Swatch” w szczegółach — 22 stitches / 10 cm, 20 stitches / 4 in, bez próbki brak wartości', () => {
+  const opcje = { j, terazMs: Date.UTC(2026, 9, 22, 12), strefa: 'UTC' };
+  expect(stanProjektu({ ...W, probka: { oczka: 22, naCm: 10 } }, opcje).szczegoly?.probka).toBe('22 stitches / 10 cm');
+  expect(stanProjektu({ ...W, probka: { oczka: 20, naCm: 10.16 } }, opcje).szczegoly?.probka).toBe('20 stitches / 4 in');
+  expect(stanProjektu(W, opcje).szczegoly?.probka).toBeNull();
 });

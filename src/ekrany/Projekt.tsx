@@ -24,7 +24,7 @@ export type PropsProjektu = {
     postep: { rodzaj: 'procent'; wartosc: number } | { rodzaj: 'brak-celow' };  // RD-14 (RD-14-W6)
     termin?: string | null;          // linia terminu (RD-15) sformatowana; null = bez terminu (BR-DNI-005 „Bez terminu nic”)
     ukonczony?: boolean;
-    szczegoly?: { narzedzie: string | null; rozmiar: string | null; termin: string | null }; // „Needles” / „4 mm (US 6)” / krótka data
+    szczegoly?: { narzedzie: string | null; rozmiar: string | null; termin: string | null; probka?: string | null }; // „Needles” / „4 mm (US 6)” / krótka data / „22 stitches / 10 cm”
     /** Daty ukończonego projektu (F-51, design-spec „Data ukończenia”): sformatowane z rokiem i dni RRRR-MM-DD dla zakresu wyboru. */
     daty?: { start: string; koniec: string; startDzien: string; koniecDzien: string; dzis: string } | null;
     /** Czas projektu (P-191 P4a): suma sformatowana albo null bez sesji; liczba sesji i do sprawdzenia (`do_korekty`). */
@@ -41,6 +41,7 @@ export type PropsProjektu = {
   naWstecz?(): void;
   naDataUkonczenia?(dzien: string): void; // zapis od razu po wyborze (bez „Save”, design-spec)
   naSesje?(): void;
+  naProbka?(): void; // U-10: kalkulator „Swatch” z próbką projektu
   /** Grupa „Photos” po „Note” (P-191 P9a); składa kompozycja (`GrupaZdjec`). */
   zdjecia?: React.ReactNode;
 };
@@ -193,6 +194,12 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
               <Text style={st.tekst}>{s.szczegoly.narzedzie ?? t('projekt.narzedzie_wiersz')}</Text>
               <Text style={st.podpis}>{s.szczegoly.rozmiar ?? t('projekt.dodaj_wartosc')}</Text>
             </Pressable>
+            {p.naProbka && (
+              <Pressable accessibilityRole="button" onPress={p.naProbka} style={st.wierszGrupy} testID="projekt-probka">
+                <Text style={st.tekst}>{t('projekt.probka')}</Text>
+                <Text style={st.podpis}>{s.szczegoly.probka ?? t('projekt.dodaj_wartosc')}</Text>
+              </Pressable>
+            )}
             <Pressable accessibilityRole="button" onPress={p.naTermin} style={st.wierszGrupy} testID="projekt-termin">
               <Text style={st.tekst}>{t('projekt.termin')}</Text>
               <Text style={st.podpis}>{s.szczegoly.termin ?? t('projekt.termin_brak')}</Text>

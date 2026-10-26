@@ -24,7 +24,19 @@ export type WidokProjektu = {
   notatka: string; narzedzie: NarzedzieProjektu; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null; zrobioneDzis: number;
   postep: { rodzaj: 'procent'; wartosc: number } | { rodzaj: 'brak-celow' }; czesci: CzescWidoku[];
   ukonczonoDzien: string | null; // dzień lokalny ukończenia (F-51, `ukonczono_dzien`); w toku null
+  probka: ProbkaProjektu | null;  // U-10: `projekt.probka` {oczka, na_cm}; brak albo zły zapis = null
 };
+export type ProbkaProjektu = { oczka: number; naCm: 10 | 10.16 };
+
+/** `projekt.probka` (JSON z bazy, `unknown`) → próbka albo brak; podstawa tylko 10 cm albo 4 in (10,16 cm, JED-006). */
+export function parsujProbke(tekstJson: string): ProbkaProjektu | null {
+  let v: unknown;
+  try { v = JSON.parse(tekstJson); } catch { return null; }
+  if (typeof v !== 'object' || v === null || !('oczka' in v) || !('na_cm' in v)) return null;
+  const { oczka, na_cm: naCm } = v;
+  if (typeof oczka !== 'number' || !Number.isFinite(oczka) || oczka <= 0) return null;
+  return naCm === 10 || naCm === 10.16 ? { oczka, naCm } : null;
+}
 
 const rodzaj = (t: string): LicznikWidoku['rodzaj'] => (t === 'oczka' ? 'oczka' : 'rzedy'); // CHECK schematu: tylko te dwie wartości
 const znaczenie = (t: string): LicznikWidoku['znaczenie'] => (t === 'w_trakcie' ? 'w_trakcie' : 'skonczone');
@@ -33,7 +45,7 @@ const znaczenie = (t: string): LicznikWidoku['znaczenie'] => (t === 'w_trakcie' 
 export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<WidokProjektu>> {
   return operacjaZapisu(z, 'widokProjektu', async (tx, _teraz, chwila) => {
     const [p] = await wiersze(tx.all(
-      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, narzedzie, termin_dzien, ukonczono_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
+      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, narzedzie, probka, termin_dzien, ukonczono_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
       [w.projektId]), 'widokProjektu');
     if (!p) return blad('bledne_dane');
     const czesci = await wiersze(tx.all('SELECT id, nazwa, cel_rzedow, para_z FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc, id', [w.projektId]), 'widokProjektu');
@@ -69,6 +81,7 @@ export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
         notatka: tekst(p, 'notatka'), narzedzie, drutMm, drutUS: drutMm === null ? null : rozmiarUS(drutMm, narzedzie),
         terminDzien: termin, celDnia: dzien.cel, zrobioneDzis: dzien.zrobioneDzis,
         postep: proc.ok ? { rodzaj: 'procent', wartosc: proc.wartosc } : { rodzaj: 'brak-celow' }, czesci: wynik, ukonczonoDzien: tekstLubNull(p, 'ukonczono_dzien'),
+        probka: parsujProbke(tekst(p, 'probka')),
       },
     };
   });
