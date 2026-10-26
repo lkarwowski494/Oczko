@@ -45,4 +45,4 @@ Czasy to **[OCENA]**: „agent” = praca agentów, „kalendarz” = z czekanie
 - ~~testerki (krok 10)~~ — usunięte (P-146: zegarek sprawdzany na produkcji, bez obietnicy gestu w opisie sklepu);
 - App Store Connect i „Submit for Review” (krok 11), wydanie po akceptacji;
 - scalenie gałęzi roboczej do `main` przed buildem wydania;
-- nominacja „App Launch” w App Store Connect min. 3 tygodnie przed premierą (ok. połowy listopada; P-145), agent przygotuje treść.
+- nominacja „App Enhancements” dla 1.1 min. 3 tygodnie przed jej wydaniem (P-147; bez nominacji „App Launch”), agent przygotuje treść.
