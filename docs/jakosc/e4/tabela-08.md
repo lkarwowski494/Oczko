@@ -40,6 +40,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik-pro.test.ts` | zielony (główny zestaw) | 5 | P-103, P-111 | `src/dane/dziennik`<br>`src/domena/porty`<br>`src/przypadki-uzycia/dziennik` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik-sklejenie.test.ts` | zielony (główny zestaw) | 1 | P-123, P-124, R-022, R-023 | `src/dane/dziennik`<br>`src/domena/porty` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik.test.ts` | zielony (główny zestaw) | 5 | NFR-DAN-003, R-020, R-021 | `src/dane/dziennik`<br>`src/domena/porty`<br>`src/przypadki-uzycia/dziennik`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/start` | Z07-11, Z07-22 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/ekran-blokady.test.ts` | zielony (główny zestaw) | 3 | — | `src/domena/porty`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/ekran-blokady`<br>`src/przypadki-uzycia/licznik` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/luki/kalendarz.test.ts` | zielony (główny zestaw) | 9 | BR-DNI-001, BR-DNI-001/S1, BR-DNI-001/S2, BR-DNI-001/S3, BR-DNI-002, BR-DNI-002/S1, BR-DNI-003, BR-DNI-003/S1, BR-DNI-006, BR-DNI-006/S1, BR-DNI-006/S2, BR-DNI-006/S3, BR-PRJ-012, P-048, P-059, RD-15, RD-16 | `src/dane/repozytoria/kalendarz`<br>`src/przypadki-uzycia/licznik` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/luki/limit-eksport-aktualizacja.test.ts` | zielony (główny zestaw) | 2 | BR-DAN-005, BR-DAN-005/S2, BR-ZAK-003, BR-ZAK-003/S2, KP-01, KP-02, P-057 | `src/dane/archiwum`<br>`src/dane/baza/adapter-node`<br>`src/dane/migracje/migruj`<br>`src/domena/limit`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/archiwum`<br>`src/przypadki-uzycia/porty-propozycja` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/luki/zapas.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, BR-ZAP-002/S1, BR-ZAP-004, BR-ZAP-004/S1, RD-10 | `src/dane/repozytoria/zapas`<br>`src/przypadki-uzycia/projekt` | Z07-22 |
@@ -75,4 +76,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/teksty-natywne.test.ts` | zielony (główny zestaw) | 4 | — | `src/i18n/slowniki/en.json` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
 
-Razem plików testów: 71; zależnych od poprawek: 56.
+Razem plików testów: 72; zależnych od poprawek: 57.
