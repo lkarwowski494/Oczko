@@ -68,7 +68,7 @@ svg.tally { display: block; width: 100%; height: 60px; margin-top: 4px; }
   <button id="sym-reset">Reset prototype</button></div>
 <script>
 // Stan prototypu
-const S0 = () => ({ ekran: 'licznik', projekt: null, czesc: null, rzedy: 0, cel: null, sesja: 0, historia: [], blokada: false, przyp: null, nowyDzienNaLimicie: false, limitPokazany: false, arkusz: null, baner: null, info: null, stuk: [], inne: [['Socks for Ola', 'Second sock · row 12 · 3 days ago'], ['Moss blanket', 'Square 9 of 20 · last worked 41 days ago']] });
+const S0 = () => ({ ekran: 'licznik', projekt: null, czesc: null, rzedy: 0, cel: null, sesja: 0, historia: [], blokada: false, przyp: null, nowyDzienNaLimicie: false, limitPokazany: false, arkusz: null, baner: null, info: null, stuk: [], inne: [['Socks for Ola', 'Second sock · row 12 · last worked 3 days ago'], ['Moss blanket', 'Square 9 · row 20 · last worked 41 days ago']] });
 let S = S0();
 const tel = document.getElementById('tel');
 const teraz = () => new Date().toTimeString().slice(0, 5);
