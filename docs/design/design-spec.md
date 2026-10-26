@@ -1,5 +1,5 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
@@ -8,6 +8,7 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-05-F4-04 2026-10-
 | Tabela kontrastu (70 par, kod 0) | `kontrast-tabela.txt` (z `narzedzia/tokeny-kontrast.mjs` + `narzedzia/kontrast.mjs`) |
 | Kluczowe ekrany (7 stanów; fix NZ-08-P2-04: +10 nowych, 2 zmienione) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (204 pliki, linia bazowa SP-13); kontrola pokrycia fixu: `narzedzia/kontrola-nz08p204.mjs` |
 | Ekran blokady, Dynamic Island, zegarek, Smart Stack (fix NZ-08-P3-04) | `aktywnosc.html`; zrzuty wzorcowe: `wzorce-zrzuty/aktywnosc-*` (blokada i wyspa 320/393/430 × jasny/ciemny × tekst domyślny/duży; zegarek 41/46 mm × domyślny/duży), `narzedzia/zrzuty-aktywnosc.mjs`; kontrola fixu: `narzedzia/kontrola-nz08p304.mjs`; fix NZ-05-F4-04: `narzedzia/kontrola-nz05f404.mjs` |
+| Projekt, części, kosz (fix NZ-08-P5-Q1) | `fix5-2026-10-26/projekt-kosz.html` (22 stany), wzorce `wzorce-zrzuty/projekt-kosz-*` (264), klucze `fix5-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix5.mjs`; kontrola `narzedzia/kontrola-nz08p5q1.mjs` |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -56,7 +57,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Ekran blokady (Live Activity) | typowy ze stoperem (`blokada-typowy`); przypomnienie (`blokada-przypomnienie`; kilka w rzędzie: `blokada-przypomnienie-wiecej`); limit (`blokada-limit`); restart bez odblokowania (`blokada-odblokuj`); błąd zapisu (`blokada-blad-zapisu`); licznik zablokowany (`blokada-zablokowany`); projekt roboczy (`blokada-robocza`); Dynamic Island: `wyspa-compact`, `wyspa-minimal`, `wyspa-rozwinieta`, `wyspa-przypomnienie`, `wyspa-zablokowany` (`aktywnosc.html`) |
 | Zegarek | typowy (`zegarek-typowy`); przypomnienie z wibracją (`zegarek-przypomnienie`, kilka w rzędzie: `zegarek-przypomnienie-wiecej`); limit (`zegarek-limit`); telefon poza zasięgiem (`zegarek-bez-telefonu`); nieudany zapis stuknięcia (`zegarek-nie-zapisano`, `zegarek-nie-zapisano-minus`); licznik zablokowany (`zegarek-zablokowany`, `zegarek-smart-stack-zablokowany`); brak stanu (`zegarek-bez-stanu`); Smart Stack i CarPlay: typowy (`zegarek-smart-stack`), przypomnienie, limit, bez sesji, projekt roboczy (`zegarek-smart-stack-przypomnienie`, `-limit`, `-bez-sesji`, `-robocza`); 40/46/49 mm i CarPlay 170 × 78, 240 × 100 |
 | Licznik przez północ | posiedzenie trwa po północy, podpis z godziną startu (`licznik-przez-polnoc`) |
-| Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
+| Projekty | typowy z „last worked …” w każdym wierszu, bez progu (`projekty`, P-183 1a), wejście do kosza tylko przy niepustym (`projekt-kosz-lista`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Import | przerwany przez czas w tle, dane sprzed importu, „Try again” (`import-przerwany`) |
 | Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); zmiana daty ukończenia (`ukonczenie-data`); bez włóczki w projekcie: pytanie pominięte |
@@ -64,6 +65,8 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Język | lista z „Same as phone” (`jezyk`); język telefonu spoza 35: angielski bez podpowiedzi (P-115); uszkodzony zapis: „Same as phone” |
+| Projekt i części | typowy (`projekt`), bez celów i terminu (`projekt-bez-celow`), ukończony z „Resume” (`projekt-ukonczony`), menu „+” i ••• (`projekt-dodaj`, `projekt-menu`), tryb Edit (`projekt-edycja`), arkusze (`nowy-projekt`, `dodaj-czesc`, `dodaj-licznik`, `notatka`, `znaczenie`, `narzedzie`, `termin`), cel części i „What’s next?” (`licznik-cel`, `co-dalej`), całość (`licznik-calosc`); błąd pola rozmiaru: `formularz.narzedzie_blad` |
+| Usuwanie i kosz | potwierdzenia z datą (`usun-projekt`, `usun-czesc`, `usun-licznik`); kosz (`kosz`), pusty (`kosz-pusty`); offline bez zmian |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
 ## VoiceOver: komunikaty i zachowanie (dla 08; z przejścia poznawczego E3)
@@ -345,6 +348,158 @@ Teksty Live Activity i zegarka idą do celów natywnych z generatora tekstów Sw
 - **Smart Stack i CarPlay:** `ActivityConfiguration(…).supplementalActivityFamilies([.small])`; w widoku ekranu blokady `@Environment(\.activityFamily)` — `.small` → widok Smart Stack (układ i stany w sekcji „Ekran blokady i zegarek”), `.medium` → karta ekranu blokady. Bez przycisków; `uwaga` pomijana; pierwszeństwo: zablokowany → limit → przypomnienie → typowy. Klucz `aktywnosc.przypomnienie_krotkie`. Wzorce: `aktywnosc-zegarek-smart-stack*-{40mm,46mm,49mm,carplay-170,carplay-240}[-duzy].png`. Wygląd w Always-On, kolor karty i tło CarPlay: lista TestFlight (P-158 N2).
 - **Teksty:** 5 nowych kluczy w tabeli „Ekran blokady i zegarek” (`aktywnosc.przypomnienie`, `aktywnosc.przypomnienie_a11y`, `aktywnosc.przypomnienie_wiecej_one`, `aktywnosc.przypomnienie_wiecej_other`, `aktywnosc.przypomnienie_krotkie`); do Swift przez generator tekstów (ADR-0017).
 - **Tokeny:** nowy obiekt `znakKresek`; kolory bez nowych wartości (3 nowe pary kontrastu, 73/73).
+
+## Projekt, części i kosz (F-04, F-08, F-09, F-14, F-15, F-17–F-20, F-33, F-46, F-52, F-54, F-60, F-61; P-182, P-183)
+Makiety: `fix5-2026-10-26/projekt-kosz.html` (22 stany), wzorce `wzorce-zrzuty/projekt-kosz-<stan>-*` (264), kontrola `narzedzia/kontrola-nz08p5q1.mjs`. Zasada: ekran pokazuje tylko to, co wynika z BR; rzadkie akcje w menu (zasada wspólna 18, P-183 3a).
+
+**Lista projektów (BR-PRJ-012, BR-PRJ-016, BR-DNI-006; P-183 1a, 2a).**
+- Grupy „In progress” (`projekty.w_toku`; bez dopisku o kolejności, bo kolejność liczy BR-DNI-006: po terminie → z terminem wg celu na dziś malejąco → bez terminu wg ostatniej pracy) i „Finished”.
+- Wiersz w toku: nazwa (kropka włóczki); linia 1 „{część} · row {n}[ of {cel}]”; linia 2 tylko przy terminie: `projekty.dzis_*` albo `projekty.po_terminie_*` albo `licznik.cel_osiagniety`; linia 3 **zawsze** „last worked …”: `projekty.ostatnia_praca_dzis` (0 dni), `_wczoraj` (1), `_dni_*` (≥ 2) — dni kalendarzowe RD-16 od `ostatnia_praca_ms`, **bez progu** (P-047, P-182): ta sama etykieta przy 2 i przy 400 dniach, bez osobnej sekcji. testID `projekty-ostatnia-praca` na tej etykiecie (powtarzalny); `projekty-uspione` znika.
+- **Wejście do kosza:** ostatni wiersz listy, osobna grupa pod „Finished”, `projekty.kosz` z liczbą elementów po prawej; **tylko, gdy kosz nie jest pusty** (pusty kosz = brak wiersza). VoiceOver `projekty.kosz_a11y_*`. Proponowany testID `projekty-kosz` (dla 07).
+- Stuknięcie w wiersz: licznik w miejscu pracy (BR-PRJ-011, bez zmian). Przesunięcie wiersza w lewo: „Delete” → potwierdzenie projektu; to samo w ••• ekranu projektu (alternatywa przyciskiem, SP-15).
+
+**Ekran projektu** (`app/projekt/[id]`; wejście: nazwa projektu nad tytułem części na liczniku `licznik-projekt` — stuknięcie otwiera ekran projektu; dotychczasowe menu ••• licznika bez zmian).
+- Duży tytuł = nazwa (projekt roboczy: etykieta z sekcji „Projekt roboczy”); pod nim postęp `projekt.postep` + `projekt.postep_opis` (RD-14) albo `projekt.postep_bez_celow` (RD-14-W6, bez procentu).
+- Linia terminu tylko przy terminie (BR-DNI-005 „Bez terminu nic”): `projekt.termin_dzis_*` / `_po_*` / `_osiagniety` / `_bez_celow` (gałęzie RD-15 w tej kolejności, P-134 Q1a).
+- Grupa „Parts” (`projekt.czesci`): część z jednym licznikiem = jeden wiersz („{n} of {cel} rows”, `projekt.czesc_cel`, albo `projekt.czesc_rzedy_*`; przy celu osiągniętym dopisek `licznik.cel_osiagniety`); część z ≥ 2 licznikami rzędów = wiersz nagłówkowy z `projekt.calosc_*` (licznik całości, BR-LIC-018, suma sekcji nieusuniętych) i wcięte wiersze sekcji (32 pt); licznik oczek = wcięty wiersz z „{n} stitches” [klucz z partii licznika oczek; w makiecie nie występuje]; para: druga linia `projekt.para` nad liczbami, bez celu — `projekt.cel_z_pary`. Stuknięcie w licznik = ekran licznika.
+- Grupa „Note” (`licznik.notatka`): tekst notatki do 3 wierszy (dalej wielokropek) albo `projekt.notatka_pusta`; stuknięcie = arkusz notatki.
+- Grupa „Details” (`projekt.szczegoly`): narzędzie (`projekt.druty` / `projekt.szydelko` z wartością `projekt.rozmiar_us` albo `projekt.rozmiar_mm`; nieustawione: `projekt.narzedzie_wiersz` + `projekt.dodaj_wartosc`), termin (`projekt.termin`, wartość krótka data albo `projekt.termin_brak`), miejsce we wzorze (`projekt.miejsce_wzoru`, gdy jest). Pod grupą `projekt.ostatnia_zmiana` (BR-PRJ-005).
+- Pasek: „+” (`projekt.dodaj_a11y`) → menu systemowe `projekt.dodaj_czesc`, `projekt.dodaj_licznik`; ••• (`projekt.menu_a11y`) → `projekt.edytuj`, `projekt.zrob_taka_sama`, `projekt.usun` (destrukcyjna, czerwona). Projekt ukończony: ••• → `projekt.wznow` (pierwsza), `projekt.zrob_taka_sama`, `projekt.usun`; bez „+”.
+- **Tryb Edit** (`projekt.edytuj`, „Done” = `wspolne.gotowe`): przy każdej części i liczniku czerwony przycisk ⊖ (44 × 44 pt, etykieta `usun.a11y`) → potwierdzenie; podpis `projekt.edycja_info`. W zwykłym trybie to samo daje przesunięcie wiersza.
+- „Zrób taką samą” (U-2, BR-PRJ-007): potwierdzenie `projekt.kopia_tytul` / `projekt.kopia_opis` / `projekt.kopia_potwierdz` + `wspolne.anuluj`; po nim nowy projekt otwiera się na ekranie projektu. Nazwa kopii — `[DO USTALENIA 08]` (04-fix5-N1, przekazane P-183).
+
+**Arkusze** (słownik: Cancel lewy, Save/Add prawy; fokus na nagłówku; przy dużym tekście nagłówek łamie tytuł, treść się przewija):
+| Arkusz | Treść | Zapis |
+|---|---|---|
+| Nowy projekt (`formularz.nowy_tytul`) | pole `formularz.nazwa_projekt` z klawiaturą od razu; `formularz.nowy_czesci` z polami części i odnośnikiem `projekt.dodaj_czesc`; `formularz.nowy_czesci_opis` | `wspolne.dodaj`; pusta nazwa = projekt roboczy (P-126 (1b)), nic nie blokuje; bez części = jedna część domyślna |
+| Część (`formularz.czesc_tytul`) | `formularz.nazwa_czesc`, `formularz.cel_opcjonalny` (liczbowa), `formularz.nazwa_opis` | `wspolne.dodaj`; pusta nazwa — przycisk nieaktywny |
+| Licznik (`formularz.licznik_tytul`) | `formularz.licznik_nazwa`, `formularz.licznik_czesc` (wybór systemowy, domyślnie część ostatniej pracy), `formularz.licznik_rodzaj`: przełącznik `formularz.rodzaj_rzedy` / `formularz.rodzaj_oczka`, podpis `formularz.licznik_sekcje` | `wspolne.dodaj`; pusta nazwa = nazwa rodzaju |
+| Notatka (`licznik.notatka`) | pole wielowierszowe bez limitu i bez licznika znaków (BR-PRJ-002/S2), etykieta `formularz.notatka_pole`, `formularz.notatka_opis` | `wspolne.zapisz`; Cancel na zmienionym polu → „Odrzucić zmiany?” (słownik studia) |
+| Znaczenie liczby (`formularz.znaczenie_tytul`; wejście `menu.znaczenie` w ••• licznika) | dwa wybory `formularz.znaczenie_skonczone` (domyślny) i `formularz.znaczenie_w_trakcie` z przykładami `_opis` na bieżącej wartości; `formularz.znaczenie_info` | `wspolne.zapisz`; zmienia tylko kolumnę `znaczenie` (F-09: bez pytania na starcie) |
+| Narzędzie (`formularz.narzedzie_tytul`) | przełącznik `projekt.druty` / `projekt.szydelko` (domyślnie druty, P-182 Q2a), `formularz.narzedzie_mm` (klawiatura dziesiętna), podgląd `formularz.narzedzie_podglad` na żywo (RD-11 / RD-19, bez US gdy brak), błąd `formularz.narzedzie_blad`, `formularz.wyczysc` | `wspolne.zapisz` |
+| Termin (`formularz.termin_tytul`) | systemowy wybór daty (inline, jak `ukonczenie-data`), podgląd `formularz.termin_podglad_*` albo `formularz.termin_bez_celow`, `formularz.termin_brak` | `wspolne.zapisz` |
+
+**„Next part” (BR-LIC-011/S1, P-182 Q4a).** Na liczniku części z celem osiągniętym: `licznik.cel_osiagniety` i przycisk z obrysem `licznik.nastepna_czesc` pod liczbą (poza strefą +1). Jest następna nieusunięta część → otwiera jej pierwszy licznik bez arkusza. Brak → arkusz `czesc.co_dalej_tytul` / `czesc.co_dalej_opis`, dwa wybory: `czesc.druga_taka_sama` z `czesc.druga_opis_*` (cel = rzędy pierwszej) albo `czesc.druga_bez_celu`, oraz `czesc.nowa` z `czesc.nowa_opis` (→ arkusz części); `wspolne.nie_teraz`. Druga z pary otwiera się od razu na swoim liczniku.
+
+**Licznik całości na ekranie licznika (BR-LIC-018/S1):** licznik sekcji pokazuje pod liczbą cichą linię `licznik.calosc_*`; aktualizuje się z każdym +1/−1 sekcji (ta sama transakcja, odczyt przez `widokProjektu`).
+
+**Usuwanie (BR-DAN-008, P-026, słownik „Delete {object}”).** Alert systemowy: `usun.tytul`; treść `usun.projekt_opis` / `usun.czesc_opis_*` / `usun.licznik_opis` z `{{data}}` = dzień usunięcia + `KOSZ_DNI` (krótka data regionu) — termin podany przy usuwaniu (S2); przyciski `usun.projekt` / `usun.czesc` / `usun.licznik` (destrukcyjny) i `wspolne.anuluj`. Po usunięciu: ogłoszenie `usun.ogloszenie`; usunięty bieżący licznik przełącza ekran na pierwszy dostępny (C2). Bez „Cofnij” (jedna reguła: kosz, P-047 (7)).
+
+**Ekran „Recently deleted” (F-33).** Duży tytuł `kosz.tytul`, zdanie `kosz.opis_*` (`{{count}}` = `KOSZ_DNI`), jedna grupa wierszy od najkrótszego terminu: nazwa + podpis `kosz.projekt` / `kosz.czesc` / `kosz.licznik` (gdzie wróci, „until {date}”); po prawej przycisk tekstowy `kosz.przywroc` (etykieta `kosz.przywroc_a11y`), przy dużym tekście pod podpisem. Część i licznik tylko, gdy rodzic nie jest w koszu (C1). Po przywróceniu wiersz znika, ogłoszenie `kosz.przywrocono`; pusty kosz: `kosz.pusto_*` (wejście z listy znika dopiero po wyjściu z ekranu). Bez trwałego usuwania w 1.0 (moduly.md „Projekt”).
+
+**VoiceOver.** Wiersz listy czyta nazwę, linie w kolejności wizualnej, „last worked …” na końcu; wiersz kosza jako przycisk z liczbą; ⊖ i przesunięcie z `usun.a11y`; arkusze jako modal z fokusem na nagłówku; wybory znaczenia i narzędzia jako `radio` z `selected`; wiersz notatki `projekt.notatka_a11y`.
+
+| Klucz | en |
+|---|---|
+| `projekty.ostatnia_praca_dzis` | last worked today |
+| `projekty.ostatnia_praca_wczoraj` | last worked yesterday |
+| `projekty.ostatnia_praca_dni_one` / `projekty.ostatnia_praca_dni_other` | last worked {{count}} day ago / last worked {{count}} days ago |
+| `projekty.dzis_one` / `projekty.dzis_other` | Today: {{zrobione}} of {{count}} row / Today: {{zrobione}} of {{count}} rows |
+| `projekty.po_terminie_one` / `projekty.po_terminie_other` | Past the due date · {{count}} row to go / Past the due date · {{count}} rows to go |
+| `projekty.kosz` | Recently deleted |
+| `projekty.kosz_a11y_one` / `projekty.kosz_a11y_other` | Recently deleted, {{count}} item / Recently deleted, {{count}} items |
+| `projekt.postep_opis` | Approximate, counted from rows of parts with a goal. |
+| `projekt.termin_dzis_one` / `projekt.termin_dzis_other` | Done by {{data}} · today {{zrobione}} of {{count}} row / Done by {{data}} · today {{zrobione}} of {{count}} rows |
+| `projekt.termin_po_one` / `projekt.termin_po_other` | The due date {{data}} has passed · {{count}} row to go / The due date {{data}} has passed · {{count}} rows to go |
+| `projekt.termin_osiagniety` | Done by {{data}} · goal reached |
+| `projekt.termin_bez_celow` | Done by {{data}} · set a goal for a part to get a daily goal |
+| `projekt.czesci` | Parts |
+| `projekt.calosc_one` / `projekt.calosc_other` | Whole piece: {{count}} row / Whole piece: {{count}} rows |
+| `projekt.para` | Pair of {{nazwa}} |
+| `projekt.liczniki_one` / `projekt.liczniki_other` | {{count}} counter / {{count}} counters |
+| `projekt.notatka_pusta` | Add a note |
+| `projekt.notatka_a11y` | Note: {{tresc}}. Edit |
+| `projekt.szczegoly` | Details |
+| `projekt.narzedzie_wiersz` | Needles or hook |
+| `projekt.druty` | Needles |
+| `projekt.szydelko` | Hook |
+| `projekt.rozmiar_us` | {{mm}} mm (US {{us}}) |
+| `projekt.rozmiar_mm` | {{mm}} mm |
+| `projekt.dodaj_wartosc` | Add |
+| `projekt.termin` | Done by |
+| `projekt.termin_brak` | None |
+| `projekt.dodaj_a11y` | Add part or counter |
+| `projekt.menu_a11y` | Project options |
+| `projekt.dodaj_czesc` | Add part |
+| `projekt.dodaj_licznik` | Add counter |
+| `projekt.edytuj` | Edit parts and counters |
+| `projekt.zrob_taka_sama` | Make another like this |
+| `projekt.usun` | Delete project… |
+| `projekt.wznow` | Resume knitting |
+| `projekt.wznowiono` | {{nazwa}} moved to In progress. |
+| `projekt.kopia_tytul` | Make another {{nazwa}}? |
+| `projekt.kopia_opis` | Same parts, goals and reminders. All counters start at 0, and this project stays as it is. |
+| `projekt.kopia_potwierdz` | Make another |
+| `projekt.edycja_info` | Deleted parts and counters stay in Recently deleted for 30 days. |
+| `wspolne.dodaj` | Add |
+| `wspolne.gotowe` | Done |
+| `formularz.nowy_tytul` | New project |
+| `formularz.nowy_czesci` | Parts (optional) |
+| `formularz.nowy_czesci_opis` | Add parts now or later. Without parts, the project has one counter. |
+| `formularz.czesc_tytul` | Add part |
+| `formularz.cel_opcjonalny` | Rows in this part (optional) |
+| `formularz.licznik_tytul` | Add counter |
+| `formularz.licznik_nazwa` | Name |
+| `formularz.licznik_czesc` | In part |
+| `formularz.licznik_rodzaj` | Counts |
+| `formularz.rodzaj_rzedy` | Rows |
+| `formularz.rodzaj_oczka` | Stitches |
+| `formularz.licznik_sekcje` | Row counters in one part add up to a whole-piece total. |
+| `formularz.notatka_pole` | Note for {{projekt}} |
+| `formularz.notatka_opis` | Shows next to the counter. |
+| `menu.znaczenie` | What the number shows |
+| `formularz.znaczenie_tytul` | The big number shows |
+| `formularz.znaczenie_skonczone` | Rows finished |
+| `formularz.znaczenie_skonczone_opis` | {{n}} means {{n}} rows are done. |
+| `formularz.znaczenie_w_trakcie` | The row I’m on |
+| `formularz.znaczenie_w_trakcie_opis` | {{nastepny}} means you’re knitting row {{nastepny}}. |
+| `formularz.znaczenie_info` | Only the number on screen changes. Your rows and history stay the same. |
+| `formularz.narzedzie_tytul` | Needles or hook |
+| `formularz.narzedzie_mm` | Size in mm |
+| `formularz.narzedzie_podglad` | Shows as: {{rozmiar}} |
+| `formularz.narzedzie_blad` | Enter a size above 0, for example 4 or 3.25. |
+| `formularz.wyczysc` | Clear |
+| `formularz.termin_tytul` | Done by |
+| `formularz.termin_podglad_one` / `formularz.termin_podglad_other` | Today’s goal: {{count}} row. It stays the same all day. / Today’s goal: {{count}} rows. It stays the same all day. |
+| `formularz.termin_bez_celow` | Set a goal for a part to get a daily goal. |
+| `formularz.termin_brak` | No date |
+| `czesc.co_dalej_tytul` | What’s next? |
+| `czesc.co_dalej_opis` | {{czesc}} is done. It’s the last part in {{projekt}}. |
+| `czesc.druga_taka_sama` | A second {{czesc}} |
+| `czesc.druga_opis_one` / `czesc.druga_opis_other` | Same goal, {{count}} row. Shows what you noted on each row of the first one. / Same goal, {{count}} rows. Shows what you noted on each row of the first one. |
+| `czesc.druga_bez_celu` | The goal comes once the first one has rows. |
+| `czesc.nowa` | New part |
+| `czesc.nowa_opis` | Name it and start at 0. |
+| `usun.tytul` | Delete “{{nazwa}}”? |
+| `usun.projekt_opis` | You can restore it from Recently deleted on the Projects list until {{data}}. |
+| `usun.projekt` | Delete project |
+| `usun.czesc_opis_one` / `usun.czesc_opis_other` | Its {{count}} counter goes with it. You can restore it from Recently deleted on the Projects list until {{data}}. / Its {{count}} counters go with it. You can restore it from Recently deleted on the Projects list until {{data}}. |
+| `usun.czesc` | Delete part |
+| `usun.licznik_opis` | You can restore it with its history from Recently deleted on the Projects list until {{data}}. |
+| `usun.licznik` | Delete counter |
+| `usun.a11y` | Delete {{nazwa}} |
+| `usun.ogloszenie` | {{nazwa}} moved to Recently deleted. |
+| `kosz.tytul` | Recently deleted |
+| `kosz.opis_one` / `kosz.opis_other` | Projects, parts and counters stay here for {{count}} day. Then they’re deleted for good. / Projects, parts and counters stay here for {{count}} days. Then they’re deleted for good. |
+| `kosz.projekt` | Project · until {{data}} |
+| `kosz.czesc` | Part of {{projekt}} · until {{data}} |
+| `kosz.licznik` | Counter in {{projekt}}, {{czesc}} · until {{data}} |
+| `kosz.przywroc` | Restore |
+| `kosz.przywroc_a11y` | Restore {{nazwa}} |
+| `kosz.przywrocono` | {{nazwa}} is back. |
+| `kosz.pusto_one` / `kosz.pusto_other` | Nothing here. Deleted projects, parts and counters stay here for {{count}} day. / Nothing here. Deleted projects, parts and counters stay here for {{count}} days. |
+| `licznik.calosc_one` / `licznik.calosc_other` | {{czesc}} in total: {{count}} row / {{czesc}} in total: {{count}} rows |
+Istniejące klucze użyte bez zmian: `projekt.postep`, `projekt.postep_bez_celow`, `projekt.czesc_cel`, `projekt.cel_z_pary`, `projekt.czesc_rzedy_*`, `projekt.ostatnia_zmiana`, `projekt.miejsce_wzoru`, `projekty.w_toku`, `projekty.ukonczone`, `projekty.nowy`, `licznik.notatka`, `licznik.cel_osiagniety`, `licznik.nastepna_czesc`, `formularz.nazwa_projekt`, `formularz.nazwa_czesc`, `formularz.nazwa_opis`, `wspolne.anuluj`, `wspolne.zapisz`, `wspolne.nie_teraz`. Źródło en i kontekst dla tłumaczy: `fix5-2026-10-26/klucze.json` (112 kluczy en, 98 wpisów kontekstu).
+
+**Zmiana kontraktu testID i scenariusza 20 dla 07 (nazwany wyjątek P-183 (1a), jak P-176).** `e2e/README.md`: wiersz `projekty-uspione` → `projekty-ostatnia-praca` | lista projektów | etykieta ostatniej pracy w wierszu projektu w toku (powtarzalna) | „last worked 41 days ago”; nowy wiersz `projekty-kosz` | lista projektów | wejście do „Recently deleted” (tylko gdy niepusty) | „Recently deleted”. Scenariusz 20 (`e2e/scenariusze/20-br-prj-016-s2-powrot-po-przerwie.yaml`): `assertVisible: { id: "projekty-uspione" }` → `assertVisible: { id: "projekty-ostatnia-praca", text: "last worked 41 days ago" }`; komentarz i `name:` bez „sekcji uśpionych” („Po 41 dniach: ‘last worked 41 days ago’, jedno stuknięcie wraca do rzędu”); wyrocznia BR-PRJ-016/S1–S2 i BR-PRJ-011 bez zmian. Zmianę wykonuje 07 albo 08 za zgodą 07 (P-183); 04 nie edytuje kontraktu.
+
+## Dla 08 (fix NZ-08-P5-Q1, partia 5: ekrany A5–A6, C2–C3; P-183)
+- **Klucze:** `node docs/design/narzedzia/nakladaj-klucze-fix5.mjs` w pierwszym commicie ekranów (P-183 4a): nakłada `fix5-2026-10-26/klucze.json` na `en.json` i `en.kontekst.json` (odmawia przy kluczu istniejącym z inną treścią) i regeneruje pseudolokalizację (`npm run i18n:pseudo`). Sprawdzone przez 04 na 22643f9: łatka nałożona → `env -u NODE_PATH npm run verify` kod 0, 1808/1808; słowniki cofnięte (nie wypchnięte, bo `src/**` uruchamia CI iOS).
+- **Stany do zbudowania** (wzorce `wzorce-zrzuty/projekt-kosz-<stan>-*`): `lista`, `projekt`, `projekt-dodaj`, `projekt-menu`, `projekt-edycja`, `projekt-ukonczony`, `projekt-bez-celow`, `nowy-projekt`, `dodaj-czesc`, `dodaj-licznik`, `notatka`, `znaczenie`, `narzedzie`, `termin`, `co-dalej`, `licznik-calosc`, `licznik-cel`, `usun-projekt`, `usun-czesc`, `usun-licznik`, `kosz`, `kosz-pusty`; zmienione w `ekrany.html`: `projekty`, `projekty-robocze`, `uczciwe-zasady` (tło) — „last worked …” w każdym wierszu, nagłówek „In progress”.
+- **Dane do modeli odczytu:** dni od ostatniej pracy na datach kalendarzowych (RD-16), nie z różnicy chwil; `{{data}}` w potwierdzeniu = `usunieto_ms + KOSZ_DNI` jako dzień lokalny; liczba w wierszu kosza na liście = projekty + części + liczniki widoczne w koszu (C1).
+- **testID** (propozycja dla tabeli 07): `projekty-ostatnia-praca`, `projekty-kosz`, `projekt-dodaj`, `projekt-menu`, `projekt-edytuj`, `projekt-usun`, `projekt-zrob-taka-sama`, `projekt-wznow`, `projekt-notatka`, `projekt-narzedzie`, `projekt-termin`, `licznik-nastepna-czesc`, `co-dalej-druga`, `co-dalej-nowa`, `potwierdz-usun`, `kosz-lista`, `kosz-przywroc`, `formularz-nazwa-czesci`, `formularz-cel-czesci`, `formularz-nazwa-licznika`, `formularz-notatka`, `formularz-rozmiar-mm`. Scenariusz 20 — sekcja wyżej (wyjątek P-183 (1a)).
+- **Otwarte:** nazwa kopii „Make another” (N1 → 08), flaga `licznik.sekcja` dla „Whole piece” (N2 → 05: propozycja 04 — każdy licznik rzędów części jest sekcją, całość widać przy ≥ 2).
+- Kolory i obrysy tylko z istniejących tokenów (`blad` na arkuszu: para w `kontrast-tabela.txt`); bez nowych kolorów i komponentów poza wierszem z przyciskiem tekstowym i ⊖ (systemowe wzorce list iOS).
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
