@@ -52,6 +52,8 @@ ON CONFLICT (dzien) DO UPDATE SET
 ```
 SQLite liczy wszystkie wyrażenia `SET` na wartościach wiersza sprzed aktualizacji, więc kolejność `zdarzenie_id` i `zaczeto_ms` nie zmienia wyniku (sprawdzone w `sprawdz-schemat.mjs`: wcześniejszy start z drugiego urządzenia ustawia oba pola).
 
+**Ostatnie +1 dla reguły pracy w toku (fix-3 2026-10-26, P-123 pkt 9; bez zmiany schematu).** `ostatniPlus` i `ostatniPlusPrzed` (`src/dane/repozytoria/liczniki.ts:64-67`, `:109-112`) czytają zdarzenia od `dzis − 2`: plan `SEARCH zdarzenie USING INDEX zdarzenie_dzien (dzien>?)`, przy 150 000 zdarzeń z 3 lat 273 wiersze w zakresie (SQLite 3.50.4, `oczko-warsztat/05-architekt/2026-10-26-fix3/dowody/pomiary.txt`; czas z laptopa nie jest budżetem). Nowy indeks po `czas_ms` niepotrzebny (kosztowałby zapis przy każdym +1). Zakres wystarcza dla każdej pary stref: reguła patrzy najwyżej `PRZERWA_NOWEGO_DNIA_MS` (1 h) wstecz, a różnica przesunięć stref wynosi najwyżej 26 h (UTC−12 … UTC+14), więc data lokalna poprzedniego +1 jest najwyżej o ⌊(26 h + 1 h) / 24 h⌋ + 1 = 2 dni wcześniejsza niż `dzis`. Warunek: przerwa < 22 h (różnica dat lokalnych < (przerwa + 26 h) / 24 h + 1; przy dłuższej zakres trzeba poszerzyć).
+
 ## Klucze tabeli `ustawienie` (fix 2026-10-25)
 Tabela `ustawienie` jest w bazie, więc każdy klucz trafia do kopii urządzenia i do archiwum `.oczko` (ADR-0004). Kolumna „iCloud” mówi, czy klucz jest rekordem synchronizacji (ADR-0005) i jak się scala.
 | Klucz | Wartość (JSON) | iCloud | Scalenie i import „scal” | Źródło |
