@@ -18,7 +18,7 @@ export type PropsImportu = {
   wynik?: string;
 };
 /** Arkusz albo blok w treści ekranu (ten sam układ: nagłówek, treść, przyciski). */
-function Ramka(p: { wbudowany?: boolean; tytul: string; testID: string; przyciski: React.ReactNode; children: React.ReactNode }): React.ReactElement {
+function Ramka(p: { wbudowany?: boolean; tytul: string; testID?: string; przyciski: React.ReactNode; children: React.ReactNode }): React.ReactElement {
   const k = useKolory();
   if (!p.wbudowany) return <Arkusz tytul={p.tytul} testID={p.testID} przyciski={p.przyciski}>{p.children}</Arkusz>;
   return (
@@ -32,15 +32,15 @@ function Ramka(p: { wbudowany?: boolean; tytul: string; testID: string; przycisk
 export function Import({ stan, t, naZastap, naScal, naAnuluj, wbudowany, wynik }: PropsImportu): React.ReactElement {
   if (wynik !== undefined) {
     return (
-      <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} testID="import-wynik" przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" />}>
-        <Tresc>{wynik}</Tresc>
+      <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" />}>
+        <Tresc testID="import-wynik">{wynik}</Tresc>
       </Ramka>
     );
   }
   if (stan.rodzaj === 'zastapiono') {
     return (
-      <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} testID="import-wynik" przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />}>
-        <Tresc>{t('dane.zastapiono', { nazwa: stan.kopia.nazwa, miejsce: stan.kopia.miejsce })}</Tresc>
+      <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />}>
+        <Tresc testID="import-wynik">{t('dane.zastapiono', { nazwa: stan.kopia.nazwa, miejsce: stan.kopia.miejsce })}</Tresc>
       </Ramka>
     );
   }

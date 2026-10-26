@@ -164,8 +164,9 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         <Text style={st.tytul} accessibilityRole="header">{s.czesc ?? t('licznik.tytul_roboczy')}</Text>
         {!start && <Text style={st.instrukcja} testID="licznik-teraz-rzad">{t('licznik.teraz', { n: nrRobocza })}</Text>}
         {baner?.rodzaj === 'seria' && (
-          <View style={st.baner} testID="baner-serii">
-            <Text style={st.tresc}>{t('licznik.baner_seria', { count: baner.n, sekundy: baner.sekundy })}</Text>
+          <View style={st.baner}>
+            {/* testID na tekście: Maestro porównuje tekst elementu o tym id (E2E 40290477970, scenariusz 04) */}
+            <Text style={st.tresc} testID="baner-serii">{t('licznik.baner_seria', { count: baner.n, sekundy: baner.sekundy })}</Text>
             <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.cofnij', { count: baner.n })} onPress={p.naCofnijSerie} style={st.drugiPrzycisk} testID="baner-serii-cofnij">
               <Text style={[st.tresc, st.pogrubiony]}>{t('licznik.cofnij', { count: baner.n })}</Text>
             </Pressable>
@@ -220,8 +221,8 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         )}
       </ScrollView>
       {zawczasu ? (
-        <View style={st.komunikatLimitu} accessibilityRole="summary" testID="limit-zawczasu">
-          <Text style={st.tresc}>{t('limit.zawczasu', { count: s.miesiac.rzedyDanych, miesiac: s.miesiac.nazwa, data: s.miesiac.wznowienie })}</Text>
+        <View style={st.komunikatLimitu} accessibilityRole="summary">
+          <Text style={st.tresc} testID="limit-zawczasu">{t('limit.zawczasu', { count: s.miesiac.rzedyDanych, miesiac: s.miesiac.nazwa, data: s.miesiac.wznowienie })}</Text>
         </View>
       ) : (
         <View style={st.przyciski}>
