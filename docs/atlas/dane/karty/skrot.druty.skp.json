@@ -42,6 +42,20 @@
     "twierdzenie": "TRM-PT-020"
    }
   ],
+  "bg": [
+   {
+    "nazwa": "свивка наляво",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-009"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "dviejų akių sumezgimas gerąja akimi į kairę",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-004"
+   }
+  ],
   "es-419": [
    {
     "nazwa": "menguado simple",

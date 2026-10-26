@@ -34,6 +34,20 @@
     "skrot": "CDD",
     "twierdzenie": "TRM-ZHT-009"
    }
+  ],
+  "bg": [
+   {
+    "nazwa": "две централно свити лицеви бримки",
+    "skrot": "2св.л.бр.ц.",
+    "twierdzenie": "TRM-BG-011"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "trijų akių centrinis sumezgimas",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-008"
+   }
   ]
  },
  "twierdzenia": [],

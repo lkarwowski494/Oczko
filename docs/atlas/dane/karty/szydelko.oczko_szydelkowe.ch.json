@@ -80,7 +80,49 @@
    {
     "nazwa": "zincir",
     "skrot": null,
-    "twierdzenie": "TRM-TR-006"
+    "twierdzenie": "TRM-TR-028"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "въздушна бримка",
+    "skrot": "ВБ",
+    "twierdzenie": "TRM-BG-027"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "pynelės kilpa",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-014"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "gaisa cilpiņa",
+    "skrot": "gc",
+    "twierdzenie": "TRM-LV-011"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "verižna petlja",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-010"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "kait tali air",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-010"
+   }
+  ],
+  "id": [
+   {
+    "nazwa": "tusuk rantai",
+    "skrot": "ch",
+    "twierdzenie": "TRM-ID-001"
    }
   ]
  },

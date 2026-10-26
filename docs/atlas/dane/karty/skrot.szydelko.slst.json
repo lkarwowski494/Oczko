@@ -69,6 +69,34 @@
     "skrot": null,
     "twierdzenie": "TRM-ZHT-031"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "basit kroşe",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-029"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "залепена бримка",
+    "skrot": "ЗБ",
+    "twierdzenie": "TRM-BG-028"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "jungiamoji akis",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-015"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "sekali kait",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-011"
+   }
   ]
  },
  "twierdzenia": [],

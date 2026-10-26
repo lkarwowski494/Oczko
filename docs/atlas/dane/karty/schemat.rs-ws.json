@@ -63,11 +63,46 @@
     "twierdzenie": "TRM-ZHT-020"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "işin yüzü",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-026"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "direito do trabalho",
     "skrot": null,
     "twierdzenie": "TRM-PT-025"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "fața lucrului",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-011"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "лицева страна",
+    "skrot": "ЛС",
+    "twierdzenie": "TRM-BG-016"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "lice",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-008"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "lado derecho",
+    "skrot": "LD",
+    "twierdzenie": "TRM-ESLA-025"
    }
   ]
  },

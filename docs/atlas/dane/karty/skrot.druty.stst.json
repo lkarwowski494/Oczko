@@ -68,11 +68,46 @@
     "twierdzenie": "TRM-ZHT-003"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "jarse örgü",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-010"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "ponto jersey",
     "skrot": null,
     "twierdzenie": "TRM-PT-015"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "punct jerseu",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-003"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "лицева плетка",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-003"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "gludais adījums",
+    "skrot": null,
+    "twierdzenie": "TRM-LV-003"
+   }
+  ],
+  "sk": [
+   {
+    "nazwa": "hladký úplet",
+    "skrot": null,
+    "twierdzenie": "TRM-SK-003"
    }
   ],
   "es-419": [

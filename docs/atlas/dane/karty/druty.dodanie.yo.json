@@ -69,11 +69,53 @@
     "twierdzenie": "TRM-ZHT-010"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "ilmek dolayarak arttırma",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-017"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "laçada",
     "skrot": null,
     "twierdzenie": "TRM-PT-022"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "jeteu",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-008"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "наметка",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-012"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "užmetimas",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-003"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "ovita petlja",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-005"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "lazada",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-022"
    }
   ]
  },

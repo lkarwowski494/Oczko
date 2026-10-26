@@ -41,6 +41,34 @@
     "skrot": null,
     "twierdzenie": "TRM-JA-004"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "ters jarse örgü",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-011"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "опакова плетка",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-004"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "kreiliskais adījums",
+    "skrot": null,
+    "twierdzenie": "TRM-LV-004"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "pt jersey revés",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-019"
+   }
   ]
  },
  "twierdzenia": [],

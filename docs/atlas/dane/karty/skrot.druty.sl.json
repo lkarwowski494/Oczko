@@ -68,6 +68,34 @@
     "twierdzenie": "TRM-ZHT-024"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "örmeden kaydırmak",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-020"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "свалена бримка",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-020"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "nukelti",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-005"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "pindah kait",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-006"
+   }
+  ],
   "es-419": [
    {
     "nazwa": "pasar a la ag der un p sin hacer",

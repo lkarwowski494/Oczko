@@ -70,6 +70,27 @@
     "twierdzenie": "TRM-PT-024"
    }
   ],
+  "ro": [
+   {
+    "nazwa": "încheierea ochiurilor",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-010"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "valdziņu noraukšana",
+    "skrot": null,
+    "twierdzenie": "TRM-LV-008"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "mati mata kait",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-005"
+   }
+  ],
   "es-419": [
    {
     "nazwa": "remate",

@@ -56,11 +56,46 @@
     "twierdzenie": "TRM-ZHT-014"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "ilmek atma",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-018"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "montar pontos",
     "skrot": null,
     "twierdzenie": "TRM-PT-023"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "montarea ochiurilor",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-009"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "valdziņu uzmešana",
+    "skrot": null,
+    "twierdzenie": "TRM-LV-007"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "nasnuti",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-003"
+   }
+  ],
+  "sk": [
+   {
+    "nazwa": "nahodenie",
+    "skrot": null,
+    "twierdzenie": "TRM-SK-004"
    }
   ],
   "es-419": [

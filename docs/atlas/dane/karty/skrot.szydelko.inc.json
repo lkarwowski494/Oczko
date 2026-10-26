@@ -62,6 +62,20 @@
     "skrot": null,
     "twierdzenie": "TRM-JA-035"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "artırma",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-034"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "добавяне",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-032"
+   }
   ]
  },
  "twierdzenia": [],

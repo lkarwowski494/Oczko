@@ -68,11 +68,46 @@
     "twierdzenie": "TRM-ZHT-004"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "haraşo örgü",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-012"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "ponto jarreteira",
     "skrot": null,
     "twierdzenie": "TRM-PT-016"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "punct leneș",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-004"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "жартиерна плетка",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-005"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "jahit garter",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-003"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "punto musgo",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-018"
    }
   ]
  },

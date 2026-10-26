@@ -48,6 +48,13 @@
     "skrot": "wyib",
     "twierdzenie": "TRM-ZHT-028"
    }
+  ],
+  "bg": [
+   {
+    "nazwa": "с конеца отзад",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-021"
+   }
   ]
  },
  "twierdzenia": [],

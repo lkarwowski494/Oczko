@@ -74,6 +74,34 @@
     "skrot": null,
     "twierdzenie": "TRM-KO-018"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "yarı üçlü ilmek",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-031"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "pusinis stulpelis",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-016"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "separuh sekali belit",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-012"
+   }
+  ],
+  "id": [
+   {
+    "nazwa": "tusuk setengah ganda",
+    "skrot": "hdc",
+    "twierdzenie": "TRM-ID-003"
+   }
   ]
  },
  "twierdzenia": [

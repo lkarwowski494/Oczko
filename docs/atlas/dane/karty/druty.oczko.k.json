@@ -65,11 +65,67 @@
     "twierdzenie": "TRM-ZHT-001"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "yüz ilmek",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-008"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "ponto meia",
     "skrot": "m.",
     "twierdzenie": "TRM-PT-013"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "ochi pe față",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-001"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "лицева бримка",
+    "skrot": "л.бр.",
+    "twierdzenie": "TRM-BG-001"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "geroji akis",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-001"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "labiskais valdziņš",
+    "skrot": "l",
+    "twierdzenie": "TRM-LV-001"
+   }
+  ],
+  "sr": [
+   {
+    "nazwa": "право",
+    "skrot": null,
+    "twierdzenie": "TRM-SR-001"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "desna petlja",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-001"
+   }
+  ],
+  "sk": [
+   {
+    "nazwa": "lícne očko",
+    "skrot": null,
+    "twierdzenie": "TRM-SK-001"
    }
   ],
   "es-419": [

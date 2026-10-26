@@ -55,6 +55,34 @@
     "skrot": null,
     "twierdzenie": "TRM-KO-013"
    }
+  ],
+  "bg": [
+   {
+    "nazwa": "помощна игла",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-015"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "pagalbinis virbalas",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-010"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "pletilka za izdelavo kit",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-006"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "aguja auxiliar",
+    "skrot": "ag aux",
+    "twierdzenie": "TRM-ESLA-024"
+   }
   ]
  },
  "twierdzenia": [],

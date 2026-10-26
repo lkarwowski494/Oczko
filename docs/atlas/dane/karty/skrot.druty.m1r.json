@@ -27,6 +27,13 @@
     "skrot": "M1R",
     "twierdzenie": "TRM-ZHT-011"
    }
+  ],
+  "bg": [
+   {
+    "nazwa": "нова бримка с наклон вдясно",
+    "skrot": "1н.бр.д.",
+    "twierdzenie": "TRM-BG-013"
+   }
   ]
  },
  "twierdzenia": [],

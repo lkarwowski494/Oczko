@@ -56,11 +56,39 @@
     "twierdzenie": "TRM-ZHT-021"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "işin tersi",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-027"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "avesso do trabalho",
     "skrot": null,
     "twierdzenie": "TRM-PT-026"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "partea din dos a lucrului",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-012"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "опакова страна",
+    "skrot": "ОС",
+    "twierdzenie": "TRM-BG-017"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "narobna stran",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-009"
    }
   ],
   "es-419": [

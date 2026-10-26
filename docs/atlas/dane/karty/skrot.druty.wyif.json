@@ -41,6 +41,27 @@
     "skrot": null,
     "twierdzenie": "TRM-JA-027"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "ipliği işin önünde tutmak",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-025"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "с конеца отпред",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-022"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "siūlas eina priešais mezginį",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-013"
+   }
   ]
  },
  "twierdzenia": [],

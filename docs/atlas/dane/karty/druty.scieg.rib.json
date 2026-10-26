@@ -69,11 +69,46 @@
     "twierdzenie": "TRM-ZHT-005"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "lastik örgü",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-013"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "ponto barra",
     "skrot": null,
     "twierdzenie": "TRM-PT-017"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "punct elastic",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-005"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "ластик",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-006"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "sviķelis",
+    "skrot": null,
+    "twierdzenie": "TRM-LV-006"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "jahit permatang",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-004"
    }
   ],
   "es-419": [

@@ -27,6 +27,20 @@
     "skrot": null,
     "twierdzenie": "TRM-ZHT-025"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "ters örer gibi",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-021"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "както се взимат опаковите бримки",
+    "skrot": null,
+    "twierdzenie": "TRM-BG-023"
+   }
   ]
  },
  "twierdzenia": [],

@@ -68,11 +68,74 @@
     "twierdzenie": "TRM-ZHT-002"
    }
   ],
+  "tr": [
+   {
+    "nazwa": "ters ilmek",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-009"
+   }
+  ],
   "pt-BR": [
    {
     "nazwa": "ponto tricô",
     "skrot": "P",
     "twierdzenie": "TRM-PT-014"
+   }
+  ],
+  "ro": [
+   {
+    "nazwa": "ochi pe dos",
+    "skrot": null,
+    "twierdzenie": "TRM-RO-002"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "опакова бримка",
+    "skrot": "о.бр.",
+    "twierdzenie": "TRM-BG-002"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "išvirkščioji akis",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-002"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "kreiliskais valdziņš",
+    "skrot": "k",
+    "twierdzenie": "TRM-LV-002"
+   }
+  ],
+  "sr": [
+   {
+    "nazwa": "обрнуто",
+    "skrot": null,
+    "twierdzenie": "TRM-SR-002"
+   }
+  ],
+  "sl": [
+   {
+    "nazwa": "leva petlja",
+    "skrot": null,
+    "twierdzenie": "TRM-SL-002"
+   }
+  ],
+  "sk": [
+   {
+    "nazwa": "rubové očko",
+    "skrot": null,
+    "twierdzenie": "TRM-SK-002"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "jahit purl",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-002"
    }
   ],
   "es-419": [

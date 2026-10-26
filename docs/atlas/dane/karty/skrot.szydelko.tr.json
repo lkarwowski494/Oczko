@@ -69,6 +69,41 @@
     "skrot": null,
     "twierdzenie": "TRM-KO-020"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "çift üçlü ilmek",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-033"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "двоен висок пълнеж",
+    "skrot": "ДВП",
+    "twierdzenie": "TRM-BG-031"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "stulpelis su dviem užmetimais",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-019"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "dua kali belit",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-014"
+   }
+  ],
+  "id": [
+   {
+    "nazwa": "tusuk tripel",
+    "skrot": "tr",
+    "twierdzenie": "TRM-ID-005"
+   }
   ]
  },
  "twierdzenia": [],

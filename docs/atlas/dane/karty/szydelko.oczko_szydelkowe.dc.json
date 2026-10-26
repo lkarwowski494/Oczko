@@ -74,6 +74,48 @@
     "skrot": null,
     "twierdzenie": "TRM-KO-019"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "düz üçlü ilmek",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-032"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "висок пълнеж",
+    "skrot": "ВП",
+    "twierdzenie": "TRM-BG-030"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "stulpelis su užmetimu",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-018"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "vienkāršais stabiņš",
+    "skrot": "vst",
+    "twierdzenie": "TRM-LV-013"
+   }
+  ],
+  "ms": [
+   {
+    "nazwa": "sekali belit",
+    "skrot": null,
+    "twierdzenie": "TRM-MS-013"
+   }
+  ],
+  "id": [
+   {
+    "nazwa": "tusuk ganda",
+    "skrot": "dc",
+    "twierdzenie": "TRM-ID-004"
+   }
   ]
  },
  "twierdzenia": [

@@ -76,6 +76,41 @@
     "skrot": null,
     "twierdzenie": "TRM-ZHT-032"
    }
+  ],
+  "tr": [
+   {
+    "nazwa": "sık ilmek",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-030"
+   }
+  ],
+  "bg": [
+   {
+    "nazwa": "нисък пълнеж",
+    "skrot": "НП",
+    "twierdzenie": "TRM-BG-029"
+   }
+  ],
+  "lt": [
+   {
+    "nazwa": "žemas stulpelis be užmetimo",
+    "skrot": null,
+    "twierdzenie": "TRM-LT-017"
+   }
+  ],
+  "lv": [
+   {
+    "nazwa": "īsais stabiņš",
+    "skrot": "īst",
+    "twierdzenie": "TRM-LV-012"
+   }
+  ],
+  "id": [
+   {
+    "nazwa": "tusuk tunggal",
+    "skrot": "sc",
+    "twierdzenie": "TRM-ID-002"
+   }
   ]
  },
  "twierdzenia": [],

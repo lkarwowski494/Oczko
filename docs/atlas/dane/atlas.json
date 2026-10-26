@@ -4,68 +4,68 @@
  "karty": [
   {
    "plik": "druty.oczko.k.json",
-   "bajty": 2899,
-   "sha256": "87aa4636ac8ccdaaf7d978f3403267e53457f642627b71e4ddfe6e5d89a40c57"
+   "bajty": 3762,
+   "sha256": "e134966f0444373c4b27c83bd5e283be9a236c60157ad0fe2a3bc6df99dcc2bb"
   },
   {
    "plik": "druty.oczko.p.json",
-   "bajty": 2969,
-   "sha256": "202c6eeb43d9d34fd58c0017996775d3351d24c5157ceb7b9f12390d652a81fe"
+   "bajty": 3949,
+   "sha256": "ff1f150ceb9c4b15bd541db673f93fb434f7ce4ac44f1d44ed41dfe44ace0e5a"
   },
   {
    "plik": "druty.scieg.stst.json",
-   "bajty": 2005,
-   "sha256": "671100f76608df64d6a5397f0fb5757a0bd4dcbc0ad898429d9398bd0f202505"
+   "bajty": 2549,
+   "sha256": "f84e2adbdc6bd51268176689c88fbf46f8a71cc29b48b8eb4690815986bc7372"
   },
   {
    "plik": "druty.scieg.garter.json",
-   "bajty": 1875,
-   "sha256": "ec9556d53f1c23d2b812a7c9ca00d59349f435931d27b03cf55d06ad351a2cbe"
+   "bajty": 2426,
+   "sha256": "d8262be11a31196534e6dc0cb8945c9d033d056c5710a778decbfd5252fb764a"
   },
   {
    "plik": "druty.scieg.rib.json",
-   "bajty": 1871,
-   "sha256": "ce7f654e621eef8b03caf2c4be2c356e2a5febd8f479e508a9a1512c46b94a8b"
+   "bajty": 2398,
+   "sha256": "85a234feed3290de296a5a0d529912ac180adb51eb45fa939c01f219608a2dd8"
   },
   {
    "plik": "druty.ujecie.k2tog.json",
-   "bajty": 3111,
-   "sha256": "cbec6f82ab19fef08c3e27c3468b1b0faedf04a9394275b83c76060ba75e41bc"
+   "bajty": 3425,
+   "sha256": "283bb6ecb51b82086730901c2780308cc720c5ca10cbd8671dbedc10e8110372"
   },
   {
    "plik": "druty.ujecie.ssk.json",
-   "bajty": 2162,
-   "sha256": "9840f2e2b713ed9899849434956db8c62894a442d6f2e7b5ac2f63528ba72f8f"
+   "bajty": 2333,
+   "sha256": "cbf90d07582f9b2401bf64796208b70ad14372449e8f0b3b5df9393b5e6ed857"
   },
   {
    "plik": "druty.ujecie.skp.json",
-   "bajty": 2179,
-   "sha256": "fba182b3582c1e52a58fc1b78f714d03133b61ce6cdd22f938ddf01a50e688cf"
+   "bajty": 2438,
+   "sha256": "2ec400aba5f3faf57f4dc190cca6a46ceccabc1ac05c88bc4db921edb0ab554a"
   },
   {
    "plik": "druty.ujecie.p2tog.json",
-   "bajty": 2280,
-   "sha256": "3314fc8a40c12b14c9e9505ddc9ca7a8d15f10fcf364fbd48b4f52e79a2e61ec"
+   "bajty": 2800,
+   "sha256": "8a44e53e801ede78a72ea46411d5c66f41de54f8bb09481ff92406fa9fdbca48"
   },
   {
    "plik": "druty.ujecie.s2kp2.json",
-   "bajty": 2428,
-   "sha256": "a54a866c10be8abdd8f700e1256081628108d9553b93e885387fc388963d0b8a"
+   "bajty": 2724,
+   "sha256": "1eabb6c6a6d9814d3f7a48301100e33d76d9ff716c4b47135404bb2154d2d776"
   },
   {
    "plik": "druty.dodanie.yo.json",
-   "bajty": 1333,
-   "sha256": "0d21ebe3533c79b3926a54aafc5a5641418e1a1f6a1cc1742e959d5beb462779"
+   "bajty": 1969,
+   "sha256": "cc066075b53b09668764f7e34d2bf06bd4a1ccb8b018577d52ef09e1209a606f"
   },
   {
    "plik": "druty.dodanie.m1r.json",
-   "bajty": 1762,
-   "sha256": "627c78c23a0d1ca9c34d0adf09c09327a85b6c1a9a9b3d13cd8254b44ebd9c37"
+   "bajty": 1915,
+   "sha256": "51722d212cba924d3ae7066abc4213ecc6b05327e40fff5dd72cdc703ffbbb76"
   },
   {
    "plik": "druty.dodanie.m1l.json",
-   "bajty": 1751,
-   "sha256": "40cbed7206fa3815abf54e0d57f87b95631ebcebb29adaba407b74ebd13ebcf1"
+   "bajty": 1902,
+   "sha256": "12128dd85c56a1d5536275f4a375032d2f41bb430295afa02353d3aa46569f6c"
   },
   {
    "plik": "druty.warkocz.2-2rc.json",
@@ -79,8 +79,8 @@
   },
   {
    "plik": "druty.zamykanie.bo.json",
-   "bajty": 2861,
-   "sha256": "72e8946623c859e496aa950a983eef99a4828748a89050ff137a39072172039d"
+   "bajty": 3197,
+   "sha256": "c0ec3220cdf2d90395ddfb1e7d737fd1935613e6f6a7a5bc1fe938b3a99cf759"
   },
   {
    "plik": "druty.nabieranie.longtail.json",
@@ -109,38 +109,38 @@
   },
   {
    "plik": "schemat.rs-ws.json",
-   "bajty": 1327,
-   "sha256": "030ac31b4cc34feffc6bf36b48db40b98c4e03660115a07f59e6edb2d03dd75c"
+   "bajty": 1867,
+   "sha256": "56595cbb930ccf26d843fc64d12ddfe14ac1ea796a73ea34bf86b7f829e328d1"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.ch.json",
-   "bajty": 2109,
-   "sha256": "e26d188135f8250d28c13b624986e96973dfe162e14af0b8082a52256eb000e5"
+   "bajty": 2766,
+   "sha256": "ec89308c3dd47bd5814d0610b022d17a5803eb2bf1ab7fe669b00d184d9688b2"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.slst.json",
-   "bajty": 2225,
-   "sha256": "43e6936cefe843f3aff92025d311b0da1adb1d9a079a6b8f1f34db6c405ceab2"
+   "bajty": 2666,
+   "sha256": "ccb5ecb5dff2bc257ca7f84cbdce5c901b0b6293ab44a87ca461631d2705a9fa"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.sc.json",
-   "bajty": 2638,
-   "sha256": "13502985e267f3f2943a9dbf301ed31d8d4b4d9732fcbef9e2ecac4b2e556723"
+   "bajty": 3198,
+   "sha256": "a1e35c1bb7c6d1205967b4388f19695cfd9eb43e0d061ef3a38c2e78eca025c5"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.hdc.json",
-   "bajty": 2748,
-   "sha256": "3e184c0766fc181f1d801ae2123a0c9be92e9b7fa114abbfa1d6a3dd5d69555e"
+   "bajty": 3197,
+   "sha256": "463a63d9ed68b9baf25c3a1684da6310a887266f321be9116a2228670e7391f7"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.dc.json",
-   "bajty": 2734,
-   "sha256": "b69199d6ad83eb6070c58dabacb1f9212bb9158d89320f702534c8f7d289d8d4"
+   "bajty": 3404,
+   "sha256": "571f23fdef71910331728d293dfcd60f36c30386b127a626c6fe98e76edfa964"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.tr.json",
-   "bajty": 2498,
-   "sha256": "b5d01aca7fcda3e036844ef7efcfa11aa3df776f0fba54c16a8a2748a39da162"
+   "bajty": 3076,
+   "sha256": "b4bc927214049088a4ac927f92c7fafd7eeff2444253ef68fe38b97227b4604e"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.ring.json",
@@ -154,98 +154,98 @@
   },
   {
    "plik": "szydelko.dodanie.inc.json",
-   "bajty": 2027,
-   "sha256": "6313ff291a006ebe0c7527589764541af94065b388607561f9ef2456e11773dc"
+   "bajty": 2237,
+   "sha256": "5904f452e622cefd08424183019067f15fc00033ef81f5f1b3592882a07a40e2"
   },
   {
    "plik": "skrot.druty.k.json",
-   "bajty": 1287,
-   "sha256": "53e64320c84f2bdacdf357c0333791a2b7cdec02f265986d0bc813f9631c2a1a"
+   "bajty": 2150,
+   "sha256": "f6bc9172e30c817b7d0d54ac3b79c30b051729242d96a2d0f0d89adc9a239a62"
   },
   {
    "plik": "skrot.druty.p.json",
-   "bajty": 1296,
-   "sha256": "8ee796b93ac68094cf45fdedba7c0214caceb471e7be30082543b03041f8ba07"
+   "bajty": 2276,
+   "sha256": "cf906c7f72de70aca7300304a7912c04a85d4ef569a277e32971ee66e3c25420"
   },
   {
    "plik": "skrot.druty.stst.json",
-   "bajty": 1439,
-   "sha256": "2341570018b779b01848b280c9f725c1e31e4d109e3c3f845924ce3ecbade54f"
+   "bajty": 1983,
+   "sha256": "b1ee3d441051335a16387468dc5ffede2ddb07972e90399a18a41f0870524c00"
   },
   {
    "plik": "skrot.druty.revstst.json",
-   "bajty": 826,
-   "sha256": "5c727ac5a33d3350ecd025563dde705e3721cd7f70cc019f49e60624ef68e4e0"
+   "bajty": 1284,
+   "sha256": "4b475e48f80b32689f88863a74b37f9964c41eb0cbc9dbf3e9dbf1977f36711d"
   },
   {
    "plik": "skrot.druty.k2tog.json",
-   "bajty": 1538,
-   "sha256": "548a854fddf870ed9b9835574156fa6b35c74744daa625e9090c6ad2186d144a"
+   "bajty": 1852,
+   "sha256": "a664b8c7c66288bc88c5eab32be3cb3d78bafeba909b6fb90a19861d914717ab"
   },
   {
    "plik": "skrot.druty.ssk.json",
-   "bajty": 748,
-   "sha256": "b73cd23ee669a571a98f03b785febe6524481f60e153ece70a92e3889a75795b"
+   "bajty": 919,
+   "sha256": "28e9c076577b06e4ac5f1441e85e58f7e2883186c1b1ae971bec5ed055133351"
   },
   {
    "plik": "skrot.druty.skp.json",
-   "bajty": 979,
-   "sha256": "2e162dbcfc2e9707b040978a4e496dfa7862a2020a4871f15e3800f499315cc1"
+   "bajty": 1238,
+   "sha256": "9d349d0f517965158dcc62f4864d16a6dff2a99eb0f6924223435e887d9e7d05"
   },
   {
    "plik": "skrot.druty.p2tog.json",
-   "bajty": 1230,
-   "sha256": "2f5ae3733395a559e96a27db8fa7ec6fbc725abeaceb2f926a74c8b8ba288660"
+   "bajty": 1750,
+   "sha256": "efbb7a34f0de8be8f15202c48a3da4b5c34961258f715dc47bddcbbe7d33893c"
   },
   {
    "plik": "skrot.druty.s2kp2.json",
-   "bajty": 699,
-   "sha256": "52dc2e9731a0d16d00fcecb6b31af27afc0f0cffdb078f7a9985b058b4d91855"
+   "bajty": 995,
+   "sha256": "6a680d26efbca34dc83556c038874093244439fd800238cb3fc27e00a069b43d"
   },
   {
    "plik": "skrot.druty.yo.json",
-   "bajty": 1139,
-   "sha256": "52de464aeee0bf730340817a8e559387349384f67b6380fe287f870520b391a4"
+   "bajty": 1775,
+   "sha256": "1f1f7a3e82fb8db96ae7481955eedf4f001a96089b0de5f6a947caeb9e7d6cb0"
   },
   {
    "plik": "skrot.druty.m1r.json",
-   "bajty": 643,
-   "sha256": "04fda96ae95b949b8512baf7007fbd5a372a128b32e6a750621b81f14c218282"
+   "bajty": 796,
+   "sha256": "8aeb3ab32536627ca9c82efaa381af0d289a95e1cf3996087db2400dd07ff065"
   },
   {
    "plik": "skrot.druty.m1l.json",
-   "bajty": 640,
-   "sha256": "238f1507e06f02e76405d70c537156496e22344b3e4e0739805b6a4e3abc0443"
+   "bajty": 791,
+   "sha256": "a9b1a2ded15ae41e44686815cc98845a2d0f6ff702c91bd721cf90c11371d228"
   },
   {
    "plik": "skrot.druty.bo.json",
-   "bajty": 1326,
-   "sha256": "1ed19de610f2759416b67ff57b4c02466b21f50dff94f96bc57a54b503f729d0"
+   "bajty": 1662,
+   "sha256": "7bfbbe1e7e3a477b6c676b702d82532c7165f55e85981ff0d1059112cc62c5c8"
   },
   {
    "plik": "skrot.druty.co.json",
-   "bajty": 1180,
-   "sha256": "467e0ef43f43995f3f82d5e8bb90f480e098b0a707505f63cdc5e0415cb35332"
+   "bajty": 1709,
+   "sha256": "6b41832fd8f9f21e439b654a60d5ae9904576070ec3d776291283ca6d6dd9d05"
   },
   {
    "plik": "skrot.druty.cn.json",
-   "bajty": 1005,
-   "sha256": "ff7eaf9c0ddf1306f033ab5cbfac9f31e118da672bc3054a331433fd7da94c62"
+   "bajty": 1467,
+   "sha256": "a59409642ac43d98e1233f5117535c606c806dc3062d275c192d09ab34b9d398"
   },
   {
    "plik": "skrot.rs.json",
-   "bajty": 1096,
-   "sha256": "bc76385ab43034ca7b9e232eeae61df94d9674e0e31086f5f6ea3c120f9cf711"
+   "bajty": 1636,
+   "sha256": "b6f06c6c55dc541c55a9ecca90ba1d9e00a2d612eaa7126965bd75feacf93972"
   },
   {
    "plik": "skrot.ws.json",
-   "bajty": 1223,
-   "sha256": "0abc128e39ee27ca48b0e7a5a3aef4f5dade5b9e7778da6d5b2d889ccf75aabc"
+   "bajty": 1673,
+   "sha256": "cbab2e56f4979ac3135c935bee69727d71355d27d3f1f841a1304655a51a3c41"
   },
   {
    "plik": "skrot.rep.json",
-   "bajty": 621,
-   "sha256": "ed96e8431a425bf9e9bdfdf4d98f5605527ebebecd4579e7e527a8530aa24cdd"
+   "bajty": 830,
+   "sha256": "17213843375f58d10fe63580a471385f7db7691f917a193a7ff726bf0763a223"
   },
   {
    "plik": "skrot.rnd.json",
@@ -254,38 +254,38 @@
   },
   {
    "plik": "skrot.druty.sl.json",
-   "bajty": 1347,
-   "sha256": "fc4f1463c81bb506779c26c572695bdafc13a16c05e4e7b2d5b4f709dcfd0f72"
+   "bajty": 1783,
+   "sha256": "95d45d5672abf85dddc8c90e2c4ad9c79e4e3fccc2d65088223251fdffdeb0b1"
   },
   {
    "plik": "skrot.druty.kwise.json",
-   "bajty": 557,
-   "sha256": "2f44859692368d1d8d0fbe038c3eacd612690c6e752550e5f69d6ed2a23cbb6e"
+   "bajty": 699,
+   "sha256": "0ce96f62b9dd3a1c042a99e70ecc64d056fb57f58464b93e084b7d1cbb0e51a9"
   },
   {
    "plik": "skrot.druty.pwise.json",
-   "bajty": 563,
-   "sha256": "ccd8fcf8337eb019f0fbf30d03e8971e05d673524bf6311009a157fb7c79abed"
+   "bajty": 824,
+   "sha256": "c7804d70119ce745a283135df6d1f8de34e2f3e6b4181388ea1e1d36a3fa80c6"
   },
   {
    "plik": "skrot.druty.tbl.json",
-   "bajty": 788,
-   "sha256": "9fd0972e727516b3b8954f3286601e7040f84bd06881230303e33028fb7de67b"
+   "bajty": 1034,
+   "sha256": "df4d51ba5d2b05ab213e32849e0e708f4a8968aa17ebb8808800665603686476"
   },
   {
    "plik": "skrot.druty.wyib.json",
-   "bajty": 925,
-   "sha256": "448325e836c4facb023558909fba47f94621369c03dd5926a18430293b61ee02"
+   "bajty": 1044,
+   "sha256": "f9f59c5361c2ca2f2d7e1126f0ad02885c896e07da3cd827283df61ad10bd37b"
   },
   {
    "plik": "skrot.druty.wyif.json",
-   "bajty": 823,
-   "sha256": "077278dc7c8cb49b395ef1451d3d91fe8d2191ed7e05f471f193d2fafa324ce9"
+   "bajty": 1190,
+   "sha256": "2ae6fbe769ad3685cfe210f5de59dff14d706b14607b53aa3dc9bdfed6ab308e"
   },
   {
    "plik": "skrot.druty.psso.json",
-   "bajty": 705,
-   "sha256": "e4f40fa6902daca288fb9c08f78e05c4bf201e995df0683f9c534a1910bcb252"
+   "bajty": 1174,
+   "sha256": "544b623ffb3bbfd413e31e96eca7e170d21ee63617d21d26456c713f86766b1e"
   },
   {
    "plik": "tabela.skroty.druty.json",
@@ -294,33 +294,33 @@
   },
   {
    "plik": "skrot.szydelko.ch.json",
-   "bajty": 1308,
-   "sha256": "e7bffcb71ac427a957c52b1416841b1d7f8c92d9cc50adb2ef336b728d4b6100"
+   "bajty": 1965,
+   "sha256": "9977df056c1701a0419ade7ae0d6dc2f08bd20dc4ef0c3c8545338a71b525386"
   },
   {
    "plik": "skrot.szydelko.slst.json",
-   "bajty": 1265,
-   "sha256": "9e1c1a0e4c8ed9d3f7a7f9b4d85e1ca4203cce7d4000e2e10010523f03e3770d"
+   "bajty": 1706,
+   "sha256": "cf3990444e1999124269a9be886ba223c3c1393905c935a3f711b6b2eb3b29a8"
   },
   {
    "plik": "skrot.szydelko.sc.json",
-   "bajty": 1337,
-   "sha256": "471bd7f421d6d8a01092eaa35757b0d141c0da285edfc933a863190b424a2ddc"
+   "bajty": 1897,
+   "sha256": "63216efc0b160890de8ab6abfeb00309c8fed94db6a4f86ef7a13d78008d8722"
   },
   {
    "plik": "skrot.szydelko.hdc.json",
-   "bajty": 1253,
-   "sha256": "e6dc21a4cbcea23e0954231897da7eb59599c79d39bae6be0b179d2ae254faaa"
+   "bajty": 1702,
+   "sha256": "45ecbf4b845d356c1e67f56d59e0a99d9c12badf821f63ec5692c3f9686509a2"
   },
   {
    "plik": "skrot.szydelko.dc.json",
-   "bajty": 1209,
-   "sha256": "a90101b66fc5e1237051d43ba98306127f2e3a8a6ce026258829b2883a573180"
+   "bajty": 1879,
+   "sha256": "04dbe68431cad6d513b2c6391fcd833c9c3fbee107ddf12190bdebc7b18f7765"
   },
   {
    "plik": "skrot.szydelko.tr.json",
-   "bajty": 1271,
-   "sha256": "e8f7b1f7d698c46e72650ee5eec373f1dc0b062e378da77309dccc9dc1ebb446"
+   "bajty": 1849,
+   "sha256": "124cc9efdd446ddc8f12eca24f477e50123d08bcea19f8be55f9ad3d529dd6a7"
   },
   {
    "plik": "skrot.szydelko.sc2tog.json",
@@ -334,18 +334,18 @@
   },
   {
    "plik": "skrot.szydelko.inc.json",
-   "bajty": 1087,
-   "sha256": "be2069a77a066e22164e1c5a45bef91e77245b754bd1a447b11b317544b31f22"
+   "bajty": 1297,
+   "sha256": "4e4eea184566d9f762ffb67664fa7023b3458c52696e89617b8905e54858dc4a"
   },
   {
    "plik": "skrot.szydelko.sk.json",
-   "bajty": 854,
-   "sha256": "aaf759c99485ee95292eb2cca643637abdb7128394d9c1775e48f32548c31c87"
+   "bajty": 1175,
+   "sha256": "dc2327e913f48b0e23f2c8ecf56204155ced318d16ce1455843f57f262d33272"
   },
   {
    "plik": "skrot.szydelko.yo.json",
-   "bajty": 960,
-   "sha256": "deb400e7481195bc7b9df4fee786f2e0f1fd2474e7d100dda2423dd9540f5bb9"
+   "bajty": 1490,
+   "sha256": "d903135a6d209e2e07cfb55d8322f1d9f84d7295ce2c8c9ef2aaeea96e316590"
   },
   {
    "plik": "tabela.skroty.szydelko.json",
