@@ -97,11 +97,11 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 ### NFR-DOS-001: VoiceOver w głównych przepływach
 - Miara: odsetek elementów sterujących PR-01–PR-05 z etykietą i akcją VoiceOver.
 - Próg: 100% (ZP-04; popyt: VoiceOver w Crochet and Knit Counter).
-- Metoda: automatyczny audyt dostępności w testach UI na ekranach PR-01–PR-05 (`performAccessibilityAudit`, iOS 17.0+, typy m.in. `sufficientElementDescription` i `action` [FAKT S-36]) oraz test, że każdy element sterujący ma etykietę i akcję (rola 07); rola 04 ustala pozostałe podłogi dostępności. Ryzyko szczątkowe (P-041, ER-10): odbiór przez osobę używającą VoiceOver.
+- Metoda: automatyczny audyt dostępności w testach UI na ekranach PR-01–PR-05 na symulatorze iPhone'a i iPada (P-217) (`performAccessibilityAudit`, iOS 17.0+, typy m.in. `sufficientElementDescription` i `action` [FAKT S-36]) oraz test, że każdy element sterujący ma etykietę i akcję (rola 07); rola 04 ustala pozostałe podłogi dostępności. Ryzyko szczątkowe (P-041, ER-10): odbiór przez osobę używającą VoiceOver.
 ### NFR-DOS-002: Duży tekst
 - Miara: obcięty albo nakładający się tekst na ekranach PR-01–PR-06 przy największym rozmiarze tekstu.
 - Próg: [DO USTALENIA] (OP-16), podłogę ustala rola 04.
-- Metoda: zrzuty przy każdym rozmiarze Dynamic Type.
+- Metoda: zrzuty przy każdym rozmiarze Dynamic Type na iPhonie i iPadzie (P-217).
 ### NFR-WYD-001: Reakcja licznika
 - Miara: czas od dotknięcia do pokazania nowej wartości.
 - Próg: [DO USTALENIA] (OP-17), budżet ustala rola 05.
@@ -113,7 +113,11 @@ Lista jest szeroka (zasada roli 7): obejmuje wszystko, na co wskazują dowody. K
 ### NFR-SYS-001: Działanie po premierze nowego iOS i watchOS
 - Miara: liczba przepływów PR-01–PR-05 i PR-08, które nie działają na nowej głównej wersji iOS albo watchOS; czas od publicznej premiery systemu do wydania poprawki.
 - Próg: 0 przepływów; czas i minimalne obsługiwane wersje systemu [DO USTALENIA] (OP-26), P-047. Dowód: „Since the most recent iOS update, the watch app has been glitchy (crashing or not opening at all).” (YarnBuddy, id12259939345); „since the latest updates, the complications on my watch face won’t show the current row count” (YarnBuddy, id10717526170) · ER-21
-- Metoda: testy automatyczne w CI na symulatorach najnowszej dostępnej wersji iOS i watchOS, także beta przed premierą, jeśli runner ją ma (rola 05 i 07). Ryzyko szczątkowe (P-041): różnice prawdziwego urządzenia.
+- Metoda: testy automatyczne w CI na symulatorach najnowszej dostępnej wersji iOS, iPadOS i watchOS, także beta przed premierą, jeśli runner ją ma (rola 05 i 07). Ryzyko szczątkowe (P-041): różnice prawdziwego urządzenia.
+### NFR-UKL-001: Układ na iPadzie w każdym rozmiarze okna
+- Miara: liczba elementów obciętych, nakładających się albo niedostępnych na ekranach PR-01–PR-06 na iPadzie w orientacji pionowej i poziomej oraz w oknie o szerokości kompaktowej (OG-16).
+- Próg: 0 (P-218 Q3a).
+- Metoda: test UI i zrzuty na symulatorze iPada: pełny ekran pionowo i poziomo oraz okno o szerokości kompaktowej (rola 07; układy: rola 04). Ryzyko szczątkowe (P-041): okna o rozmiarach pośrednich na prawdziwym urządzeniu.
 ### NFR-JEZ-001: 35 lokalizacji
 - Miara: odsetek tekstów interfejsu przetłumaczonych w każdej z 35 lokalizacji.
 - Próg: 100% przed wydaniem w danym sklepie (D-026; P-009).

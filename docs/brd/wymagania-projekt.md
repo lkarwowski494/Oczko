@@ -286,6 +286,12 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Zakładając, że użytkownik pisze Apple Pencil po wzorze na iPadzie
     - Gdy dłoń opiera się o ekran
     - Wtedy na wzorze pojawia się tylko linia z rysika
+  - Scenariusz: Rysik pisze, palec przewija (P-042, ADR-0012; P-217)
+    - Zakładając, że użytkownik pisał już rysikiem po wzorze na iPadzie
+    - Gdy przesuwa palcem po wzorze
+    - Wtedy wzór się przewija, a na wzorze nie pojawia się nowa kreska
+    - Gdy dotyka wzoru rysikiem i prowadzi linię
+    - Wtedy na wzorze pojawia się linia bez wcześniejszego wyboru narzędzia
 
 ### BR-WZR-005: Wzór i licznik razem
 - Przepływ: PR-06
@@ -295,6 +301,18 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Zakładając, że wzór jest otwarty, a telefon stoi poziomo
     - Gdy użytkownik dodaje rząd
     - Wtedy widzi jednocześnie wzór i nową wartość licznika
+  - Scenariusz: iPad poziomo i pionowo (P-217)
+    - Zakładając, że wzór jest otwarty na iPadzie
+    - Gdy użytkownik dodaje rząd przy iPadzie ustawionym poziomo, a potem pionowo
+    - Wtedy w obu położeniach widzi jednocześnie wzór i nową wartość licznika (układ: rola 04)
+  - Scenariusz: Obrót z ustawionym znacznikiem (ADR-0011)
+    - Zakładając, że znacznik stoi na rzędzie 13 schematu na stronie 3
+    - Gdy użytkownik obraca telefon albo iPad
+    - Wtedy znacznik stoi na rzędzie 13 na stronie 3, a licznik ma tę samą wartość
+  - Scenariusz: Wąskie okno na iPadzie (OG-16, P-218 Q3a)
+    - Zakładając, że Oczko dzieli ekran iPada z inną aplikacją w oknie o szerokości kompaktowej
+    - Gdy użytkownik otwiera wzór i dodaje rząd
+    - Wtedy widzi wzór i nową wartość licznika bez obciętych ani nakładających się elementów (NFR-UKL-001)
 
 ### BR-WZR-006: Siatka co 10 oczek na schemacie
 - Przepływ: PR-06
@@ -342,3 +360,9 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Zakładając, że zakreślacz jest wyłączony
     - Gdy użytkownik przesuwa palcem po wzorze
     - Wtedy wzór się przewija i nic się na nim nie rysuje (na iPadzie z Apple Pencil palec nie rysuje, BR-WZR-004)
+  - Scenariusz: iPad bez rysika (P-218 Q2a)
+    - Zakładając, że wzór jest otwarty na iPadzie, rysik nigdy nie dotknął wzoru, a użytkownik włączył zakreślacz
+    - Gdy przeciąga palcem po liczbach dla rozmiaru M
+    - Wtedy liczby rozmiaru M są zakreślone jak na iPhonie
+    - Gdy później dotyka wzoru rysikiem
+    - Wtedy od tej chwili rysuje tylko rysik, a palec przewija (BR-WZR-004)

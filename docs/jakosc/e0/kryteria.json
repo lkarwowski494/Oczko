@@ -2284,7 +2284,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "orientacja pozioma w symulatorze; makiety brak (docs/design/design-spec.md:95)",
-  "plik": "docs/brd/wymagania-projekt.md:294",
+  "plik": "docs/brd/wymagania-projekt.md:300",
   "rodzaj": "BR"
  },
  {
@@ -2297,7 +2297,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "udostępnienie z Safari tylko E2E/urządzenie; zapis offline strony w dane-node",
-  "plik": "docs/brd/wymagania-projekt.md:312",
+  "plik": "docs/brd/wymagania-projekt.md:330",
   "rodzaj": "BR"
  },
  {
@@ -2310,7 +2310,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "jak WZR-001/S1",
-  "plik": "docs/brd/wymagania-projekt.md:316",
+  "plik": "docs/brd/wymagania-projekt.md:334",
   "rodzaj": "BR"
  },
  {
@@ -2323,7 +2323,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "„nie ma treści wzoru” niemierzalne. Brzmienie: „strona zwraca 401/403 albo po zapisie nie ma tekstu ani obrazu”",
-  "plik": "docs/brd/wymagania-projekt.md:320",
+  "plik": "docs/brd/wymagania-projekt.md:338",
   "rodzaj": "BR"
  },
  {
@@ -2336,7 +2336,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "adapter sieci „brak połączenia”",
-  "plik": "docs/brd/wymagania-projekt.md:324",
+  "plik": "docs/brd/wymagania-projekt.md:342",
   "rodzaj": "BR"
  },
  {
@@ -2349,7 +2349,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "gest palcem po PDF w E2E; trwałość adnotacji w dane-node",
-  "plik": "docs/brd/wymagania-projekt.md:333",
+  "plik": "docs/brd/wymagania-projekt.md:351",
   "rodzaj": "BR"
  },
  {
@@ -2362,7 +2362,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "plik wzoru niezmieniony: skrót pliku przed i po",
-  "plik": "docs/brd/wymagania-projekt.md:337",
+  "plik": "docs/brd/wymagania-projekt.md:355",
   "rodzaj": "BR"
  },
  {
@@ -2375,7 +2375,7 @@
   "wyrocznia": "BR-WZR-004",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:341",
+  "plik": "docs/brd/wymagania-projekt.md:359",
   "rodzaj": "BR"
  },
  {
@@ -2531,7 +2531,7 @@
   "wyrocznia": "100% kluczy",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "kontrola katalogu tłumaczeń (rola 09); tłumaczenia późno (CLAUDE.md)",
-  "plik": "docs/brd/wymagania.md:117",
+  "plik": "docs/brd/wymagania.md:121",
   "rodzaj": "NFR"
  },
  {
@@ -2544,7 +2544,7 @@
   "wyrocznia": "0 zł",
   "poziom_sugerowany": "—",
   "uwagi": "przegląd usług w ADR, nie test automatyczny; propozycja: kontrola listy zależności sieciowych/usług w CI",
-  "plik": "docs/brd/wymagania.md:121",
+  "plik": "docs/brd/wymagania.md:125",
   "rodzaj": "NFR"
  },
  {

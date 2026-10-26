@@ -235,6 +235,8 @@ Funkcje Oczka 1.0 (P-217) wobec elementów; E9 spełnia każda aplikacja, więc 
 - Dane wysłane przez użytkownika do twórcy (zgłoszenie z diagnostyką) nie zmieniają etykiety tylko wtedy, gdy spełniają wszystkie kryteria „optional disclosure”: opcjonalne, rzadkie, poza główną funkcją, podane w interfejsie aplikacji, jasne co jest wysyłane, z imieniem albo nazwą konta widoczną w formularzu i wybierane za każdym razem [FAKT S-37]. Czy wiadomość z arkusza udostępniania spełnia warunek „submission form”: [DO USTALENIA] (OP-25). Dotyczy BR-DAN-010 i NFR-PRY-001 (ER-19).
 ### OG-15: Prośba o ocenę tylko systemowym API
 - Prośba o ocenę w aplikacji tylko przez API systemu (App Review Guidelines 5.6.1); własne okna z prośbą o ocenę są niedozwolone [FAKT S-38]. System pokazuje prośbę najwyżej 3 razy w 365 dniach i może jej nie pokazać, więc aplikacja nie woła jej w odpowiedzi na stuknięcie; trwały odnośnik do strony w App Store z `action=write-review` w ustawieniach jest dozwolony [FAKT S-39]. Dotyczy BR-DAN-012 (ER-25).
+### OG-16: iPad: zmienny rozmiar okna
+- Wytyczne oczekują, że aplikacja na iPhone'a działa na iPadzie [FAKT S-45]; klucz wyłączający wielozadaniowość i zmianę rozmiaru okna jest wycofany od iPadOS 26, a Apple zaleca obsługę zmiennego rozmiaru [FAKT S-44]. Skutek: od F-28 (P-217) Oczko działa na iPadzie w obu orientacjach i w oknie o dowolnej szerokości, także kompaktowej. Dotyczy NFR-UKL-001, BR-WZR-005 (P-218 Q3a).
 
 ## Ryzyka produktu (RYZ)
 ### RYZ-01: Patent na śledzenie postępu we wzorze (brzegowy)
