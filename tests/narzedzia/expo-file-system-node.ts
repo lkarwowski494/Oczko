@@ -73,6 +73,7 @@ class Katalog {
     mkdirSync(sciezka(this.uri), { recursive: Boolean(o.intermediates) });
   }
   delete(): void { rmSync(sciezka(this.uri), { recursive: true }); }
+  info(): { exists: boolean; modificationTime?: number } { return this.exists ? { exists: true, modificationTime: statSync(sciezka(this.uri)).mtimeMs } : { exists: false }; }
   list(): (Plik | Katalog)[] {
     return readdirSync(sciezka(this.uri), { withFileTypes: true }).map((d) => (d.isDirectory() ? new Katalog(this.uri, encodeURIComponent(d.name)) : new Plik(this.uri, encodeURIComponent(d.name))));
   }

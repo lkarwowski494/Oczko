@@ -47,7 +47,7 @@ export type Produkt = { id: string; cenaWyswietlana: string; okres: 'miesiac' | 
 export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean; karencjaDo?: number | null }; // = Uprawnienie z docs/monetyzacja/dostep.mjs; karencjaDo: ADR-0010, KP-06
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
 export type ZlecenieImportu = { id: string; rodzaj: 'plik' | 'adres'; nazwa: string; sciezka: string | null; adres: string | null; typ: string; projektId: string | null; utworzonoMs: number }; // ADR-0011 fix-7: manifest zlecenia w skrzynce
-export type ProjektMigawki = { id: string; nazwa: string; nienazwany: boolean; utworzonoMs: number }; // tylko projekty w toku poza koszem (P-220 N2)
+export type ProjektMigawki = { id: string; nazwa: string; nienazwany: boolean; utworzonoMs: number; ostatniaPracaMs: number | null; wzory: number }; // tylko projekty w toku poza koszem (P-220 N2); ostatniaPracaMs i wzory (poza koszem): P-243 S1a, do przeglądu 05
 export type ZrodloWzoru = { rodzaj: 'adres'; adres: string } | { rodzaj: 'word'; sciezka: string } | { rodzaj: 'obrazy'; sciezki: string[] }; // PDF bez konwersji (importujWzor)
 export type StatusKonta = 'dostepne' | 'brak_konta' | 'ograniczone' | 'tymczasowo_niedostepne' | 'nieznany'; // CKAccountStatus (P-220 N3); iCloud wyłączony dla aplikacji: [DO USTALENIA] okno maszyn
 export type ZdarzenieKonta = 'zalogowano' | 'wylogowano' | 'zmiana_konta'; // CKSyncEngine accountChange (rejestr Apple 21c)

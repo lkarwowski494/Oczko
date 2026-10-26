@@ -84,3 +84,8 @@ export function katalogBiblioteki(): string {
   const d = decodeURIComponent(Paths.document.uri.replace(/^file:\/\//, '').replace(/\/+$/, ''));
   return `${d.slice(0, d.lastIndexOf('/'))}/Library`;
 }
+/** Czas ostatniej zmiany katalogu (ms; dopisanie pliku go przesuwa) — wiek niepełnego zlecenia skrzynki (fix-7, SKRZYNKA_PORZUCONE_H). */
+export function czasZmianyKatalogu(sciezka: string): number | null {
+  const i = new Directory(uri(sciezka)).info();
+  return i.exists && typeof i.modificationTime === 'number' ? i.modificationTime : null;
+}

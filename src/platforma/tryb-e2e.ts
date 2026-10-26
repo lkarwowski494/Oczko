@@ -14,6 +14,10 @@ export const E2E = process.env.EXPO_PUBLIC_E2E === '1';
 export type PaneleE2e = typeof import('../kompozycja/e2e/panele');
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- ładowanie warunkowe (P-238), jak expo-iap w sklep.ts
 export const paneleE2e: PaneleE2e | null = process.env.EXPO_PUBLIC_E2E === '1' ? (require('../kompozycja/e2e/panele') as PaneleE2e) : null;
+/** Zlecenie testowe skrzynki importu (P-230 Q2a): moduł ładowany warunkowo jak panele (P-238). */
+export type SkrzynkaE2e = typeof import('../kompozycja/e2e/skrzynka');
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- ładowanie warunkowe (P-238)
+export const skrzynkaTestowa: SkrzynkaE2e | null = process.env.EXPO_PUBLIC_E2E === '1' ? (require('../kompozycja/e2e/skrzynka') as SkrzynkaE2e) : null;
 export const ZEGAREK_SZTUCZNY = E2E && process.env.EXPO_PUBLIC_WATCH_FAKE === '1';
 
 function argument(klucz: string): string | null {
@@ -38,3 +42,14 @@ export const siecWylaczona = (): boolean => argument('oczkoE2eSiec') === 'brak';
 export const awariaStartu = (): boolean => argument('oczkoE2eAwariaStartu') === 'przed-kamieniem';
 /** `oczkoE2eIcloud` (P-230 Q1a): tryb atrapy iCloud (`wlaczony` | `wylaczony` | `brak-konta` | `brak-miejsca` | `konflikt`); działa tylko z atrapą (icloud.ts). */
 export const trybIcloudE2e = (): string | null => argument('oczkoE2eIcloud');
+/**
+ * `oczkoE2eSzerokoscOkna=<pt>` (P-225 Q2a, P-237 (1)): aplikacja rysuje się w kontenerze tej szerokości — układ compact na symulatorze iPada
+ * (nazwany wyjątek: bez klasy rozmiaru systemu; prawdziwe okno sprawdza urządzenie, P-226). Poza E2E albo przy złej wartości null.
+ */
+export function szerokoscOknaE2e(): number | null {
+  const a = argument('oczkoE2eSzerokoscOkna');
+  const n = a === null ? NaN : Number(a);
+  return Number.isFinite(n) && n >= 200 && n <= 2000 ? n : null;
+}
+/** `oczkoE2eSkrzynka=pdf` (P-230 Q2a): przed pierwszym ekranem testowy PDF jako zlecenie bez projektu w skrzynce App Group. */
+export const skrzynkaE2e = (): 'pdf' | null => (argument('oczkoE2eSkrzynka') === 'pdf' ? 'pdf' : null);

@@ -3,8 +3,8 @@ Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-tho
 Prompt roli: **nie złożony** — `add_repo` dla repo `prompts` odrzucony przez kontrolę uprawnień sesji; praca według `CLAUDE.md` i procedury partii 1–5 (testy przed kodem, verify przed pushem, STOP-y), zgłoszone koordynatorowi w raporcie E0.
 Zakres: „Kontrakt partii 6” i „Fundament partii 6 i 7” w `docs/architektura/moduly.md`; projekt 04: `docs/design/fix7-2026-10-26.md`, design-spec „Wzór, rysik i iPad”, „Udostępnij do Oczka” i iCloud (część R), makiety `wzor.html`, `udostepnij-icloud.html`; ograniczenia patentowe P-218 (1)–(6) przy każdej funkcji wzoru; dopiski koordynatora: P-229 (łatka kluczy w pierwszym commicie ekranów), P-234 (`entitlements` App Group w celu rozszerzenia), P-237 (`oczkoE2eSzerokoscOkna`, `wzor-znacznik`), P-238/P-240 (E2E tylko przez `tryb-e2e.ts`; `jakosc:slady-wydania` kod 0 przed raportem), P-241 (okno pushy).
 
-## Stan · 2026-10-26 ok. 20:00 UTC
-E0 zrobione, raport wysłany koordynatorowi. W toku: K1–K2 (klucze, powody, stałe, dane wzoru).
+## Stan · 2026-10-26 ok. 20:10 UTC
+E0 zrobione (raport do koordynatora → P-243: S1a, S2a). K1–K2 wypchnięte (f5ac639, verify 2361/2361). K3–K5 w tym commicie (verify 2402/2402, `jakosc:slady-wydania` kod 0 dla wydania i E2E). Następne: K6 (ekrany) i K7 (natywne) — lokalnie do okna maszyn; kopia na `claude/kopia-partia-6` (P-244).
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -37,12 +37,15 @@ Kod 0, 187 zestawów, **2330/2330**.
 | K8 | eksperymenty W1–W3 przygotowane (XCTest, korpus `.docx`, PDF 100 MB/300 stron) i opisane do uruchomienia przez koordynatora | `modules/oczko-wzor/ios/Tests/`, ten plik | z K7 |
 
 ## E0.5 Sprzeczności i luki (zgłoszone; praca idzie dalej)
-- **S1 (P2, 05):** `ProjektMigawki` nie ma ostatniej pracy ani liczby wzorów, a arkusz 04 (R1a, `udostepnij.wiersz`, `udostepnij.kolejny`) je pokazuje. Rekomendacja: dopisać pola do typu (zmiana portu = 05).
-- **S2 (P2, 04):** `wzor.usun_opis` („can’t be undone”, bez kosza) sprzeczny z koszem wzoru (P-229, P-233 (6)). Robię kosz; teksty robocze `usun.wzor_opis`, `kosz.wzor` „do zatwierdzenia przez 04” (precedens P-209).
+- **S1 → P-243 S1a:** `ProjektMigawki` z `ostatniaPracaMs` i `wzory` (porty.ts, moduly.md, prywatnosc.md).
+- **S2 → P-243 S2a:** kosz wzoru; teksty robocze `usun.wzor_opis`, `kosz.wzor` do zatwierdzenia przez 04.
 - **S3 (P2, 05):** obrót strony (04: „zapamiętuje dla strony”) nie ma miejsca w schemacie v1 — do decyzji (kolumna JSON we `wzor`, ustawienie urządzenia albo obrót tylko na czas oglądania).
 - **S4 (P2, 04/05):** link do filmu — `[DO USTALENIA 08 z 04]` w kontrakcie (bez nowej tabeli) — do decyzji przed ekranem grupy wzorów.
 
 ## Odstępstwa nazwane
+- Krok „skrzynka importu” nie jest w `uruchomDane` (`start.ts`), tylko w kompozycji po nim: `dodajWzor` czeka na sieć poza transakcją i sam wchodzi do kolejki, więc w pozycji kolejki startu by się zakleszczył. Kolejność bez zmian: po `sprzatnijKosz`, przed krokiem partii 7.
+- Błąd importu ze skrzynki (uszkodzony, typ, strona pusta): zlecenie zostaje do potwierdzenia alertu `skrzynka.nie_dodano`, potem `odrzucZlecenie` (kontrakt: „zlecenie zostaje”; 04 R2: „pozycja znika” — oba spełnione: nic nie ginie po cichu). Strona bez sieci czeka bez błędu (`czekaSiec`).
+- Migawka: podmiana pliku = usunięcie + przeniesienie (expo-file-system nie ma atomowego `rename` z nadpisaniem); w krótkiej chwili bez pliku rozszerzenie pokazuje stan zastępczy — bez utraty danych.
 - `ostatnie_miejsce` dla wzoru: `{ ekran: 'licznik', id, wzor }` zamiast `{ ekran: 'wzor', id }` z kontraktu — wpis `ekran: 'wzor'` zgubiłby ostatni licznik startu (F-49, `biezacyLicznik` czyta tylko `ekran: 'licznik'`); wzór i tak otwiera się z licznika (pasek licznika pod wzorem).
 - `sprawdzPdf` nie należy do portu `KonwersjaWzoru` (kontrakt: funkcja modułu `oczko-wzor`) — w przypadkach użycia typ `KonwersjaPlatformy = KonwersjaWzoru & { sprawdzPdf }`, port bez zmian.
 
@@ -50,4 +53,5 @@ Kod 0, 187 zestawów, **2330/2330**.
 Agent: K1–K5 ok. 6–8 h, K6 ok. 8–10 h, K7–K8 ok. 8–12 h (bez kompilacji tutaj — poprawki w oknie maszyn). Czekanie: okno maszyn (K7, W1–W3, E2E iPada), odpowiedzi na S1–S4. Właściciel: identyfikatory App Group i iCloud w portalu (P-233), iPad przy TestFlight (P-226).
 
 ## Dziennik sesji
+- 2026-10-26 ~20:00–20:10 UTC: K1–K2 (f5ac639), P-243 (S1a, S2a), P-244 (gałąź kopii); K3 skrzynka i migawka (adaptery App Group przez expo-file-system `Paths.appleSharedContainers`), K4 argumenty E2E, K5 `ukladOkna` i `politykaPlotna`.
 - 2026-10-26 ~19:40–20:00 UTC: E0 — stan wyjściowy 2330/2330, plan K1–K8, S1–S4; raport do koordynatora (bez czekania).
