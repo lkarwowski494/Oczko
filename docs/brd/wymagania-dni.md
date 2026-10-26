@@ -3,6 +3,8 @@ Stan: rola 01, tryb fix (2026-10-22) · Moduł z ER-11 i ER-12 (P-043, P-044, P-
 
 Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego modułu, dopóki użytkownik sam czegoś nie ustawi (P-046); kalendarz, dzień i podsumowanie okresu to jeden widok w historii albo projekcie, nie osobna zakładka (P-046).
 
+**Dzień z robótką** (P-195 Q3b, ER-55): dzień (RD-16), w którym była praca w rzędach według RD-15 (zmiany +1 i −1 bez cofniętych i bez wpisań) **albo** sesja stopera trwająca co najmniej 1 minutę po korekcie (BR-PRJ-013), liczona w dniu startu sesji (BR-DNI-002, ER-44). Próg 1 minuty wynika z pokazywania czasu w pełnych minutach, nie z wiedzy dziedzinowej. Pojęcie obowiązuje kalendarz (BR-DNI-001), średni czas dnia w RD-18 i „ostatnią pracę” (BR-PRJ-016); dzień limitu (BR-ZAK-005, P-059) się nie zmienia — sesja stopera nie zużywa dnia limitu (P-191 P2a).
+
 ### BR-DNI-001: Kalendarz dni z robótką
 - Przepływ: PR-16 · Reguła: RD-20
 - Dowód potrzeby: J-11; dowód słaby (pochwały istniejącej funkcji, 0 próśb w recenzjach angielskich, P-043): „アクティビティが自動で記録されるのが、後から見返す時に進捗がわかりやすくてありがたいです” (編み物カウンター２, id12699699581); „毎日の編み物の励みになっています。” (編み物カウンター２, id9461069621) · ER-11 (K-1)
@@ -15,6 +17,15 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając, że 19 października użytkownik tylko wpisał wartość licznika przy przeniesieniu robótki i cofnął przypadkowe dodania z historii
     - Gdy otwiera kalendarz
     - Wtedy 19 października nie ma znacznika dnia z robótką (RD-15: wpisania i cofnięte zmiany nie są pracą)
+  - Scenariusz: Dzień z samym stoperem (ER-55)
+    - Zakładając, że 22 października użytkownik dziergał „Szalik” bez liczenia rzędów, a stoper sesji liczył 40 minut
+    - Gdy otwiera kalendarz października i wybiera 22 października
+    - Wtedy 22 października ma znacznik dnia z robótką, a widok dnia pokazuje „Szalik: 40 min” bez rzędów
+    - Oraz w limicie 22 października nie jest dniem limitu (P-059, P-191 P2a)
+  - Scenariusz: Stoper włączony przez pomyłkę (ER-55)
+    - Zakładając, że 24 października użytkownik włączył stoper i zatrzymał go po 20 sekundach, bez zmian rzędów
+    - Gdy otwiera kalendarz października
+    - Wtedy 24 października nie ma znacznika dnia z robótką
   - Scenariusz: Dzień z robótką a dzień limitu (ER-27, P-059)
     - Zakładając, że użytkownik bez Pro dziergał 21 października od 23:40 do 00:10 22 października bez przerwy, a 23 października tylko dodał rząd i go cofnął
     - Gdy otwiera kalendarz października

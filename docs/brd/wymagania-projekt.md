@@ -207,6 +207,7 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
 ### BR-PRJ-016: Projekty dawno nieruszane
 - Przepływ: PR-07
 - Dowód potrzeby: J-05; „come back to a languishing WIP years later and just pick up where I left off” (My Row Counter GB, id14614568294); „put one into “hibernation” for months, and still be able to pick up exactly where I left off” (Crochet and Knit Counter CA, id6825424556) · ER-12 (I-9, P-044); bez progu dni (P-047)
+- Ostatnia praca (P-195 Q5, ER-55): chwila ostatniej zmiany licznika albo końca sesji stopera w projekcie, zależnie od tego, która jest późniejsza; etykieta bez progu dni (P-182, P-183 (1a)).
 - Kryteria akceptacji:
   - Scenariusz: Ostatnia praca na liście
     - Zakładając, że ostatnia zmiana licznika „Swetra” była 47 dni temu
@@ -216,6 +217,10 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
     - Zakładając ten sam projekt
     - Gdy użytkownik stuka w niego na liście
     - Wtedy otwiera się ostatnia część i licznik w miejscu pracy (BR-PRJ-011)
+  - Scenariusz: Ostatnia praca ze stoperem (ER-55)
+    - Zakładając, że ostatnia zmiana licznika „Szalika” była 10 dni temu, a 2 dni temu użytkownik dziergał go 40 minut ze stoperem bez liczenia rzędów
+    - Gdy otwiera listę projektów w toku
+    - Wtedy przy „Szaliku” widzi „ostatnia praca 2 dni temu”
 
 ## Wzór (WZR)
 Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed projektem i wydaniem (P-024, OG-07).

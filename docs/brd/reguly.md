@@ -393,7 +393,7 @@ Liczba dni d z dat (ER-38):
 | RD-17-W12 | 5; 5; 5 | zegarek; zegarek; zegarek | 60; 60; 60 | tak | zegarek | — | granica | rachunek: równy czas, kolejność po identyfikatorze; 5 − 5 ≤ 2 |
 
 ### RD-18: Szacunek „zdążę?” z własnego tempa
-- Wzór: `h = C × H / R`; `dni = ⌈h / h_d⌉`; R i H z ukończonych projektów z sesjami stopera; h_d = średni czas stopera na dzień z robótką
+- Wzór: `h = C × H / R`; `dni = ⌈h / h_d⌉`; R i H z ukończonych projektów z sesjami stopera; h_d = średni czas stopera na dzień z robótką (definicja dnia z robótką: `wymagania-dni.md`, P-195 Q3b — także dzień z samym stoperem)
 - Jednostki: C, R [rz.]; H, h, h_d [h]; dni [dni]
 - Granica: R > 0 i H > 0 (ostre); bez historii brak szacunku
 - Podstawa: rachunek; potrzeba J-11 (P-044, I-4; w zakresie PÓŹNIEJ, P-046)
