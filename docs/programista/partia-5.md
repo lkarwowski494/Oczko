@@ -2,14 +2,22 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków — zgodny; nie w repo)
 Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla wariantów zakresu, bez wzorów, iCloud, sesji i narzędzi), P-180 (PLIK_BAZY, krok CI członkostwa `_shared/Stuknij.swift`, zdjęcie `continue-on-error` pakietu podstawowego E2E, pas przypomnienia po stronie Swift). Wejście: inwentaryzacja koordynatora `oczko-warsztat/koordynacja/2026-10-26-inwentaryzacja-mvp.md` (6575a46), `docs/scope-contract.md` (F-04, F-08, F-09, F-14, F-15, F-17, F-18, F-20, F-33, F-46, F-52, F-54, F-60, F-61), BRD (BR-PRJ-001/002/004/005/007/014/016, BR-LIC-006/011/012/018, BR-DNI-004/005/006, BR-DAN-008), `docs/architektura/moduly.md` „Projekt”, design-spec.
 
-## Stan: STOP (kontekst sesji, P-187 pkt 4) 2026-10-26 — A, C i P-180 przyjęte na Linux (P-188); B częściowo; D, E do zrobienia w nowej sesji
-**Następny krok (nowa sesja, ta sama rola i prompt):** kontynuować grupy B, D, E według P-187 i P-189:
-1. E (projekt jest): F-36 wybór języka (design-spec:245 — wiersz „Language” w Ustawieniach → lista „Same as phone” + 35 nazw z `src/i18n/jezyki.ts`, radio z ✓, `accessibilityLanguage`, wiersz „Change in iOS Settings” → `Linking.openSettings`; klucze `jezyk.*` dopisać z tabeli design-spec; trwały zapis preferencji: dziś pamięć procesu — klucz `ustawienie` czeka na wiersz w `dane.md` (05, zgłoszenie z partii 4) → pytanie do koordynatora); wiersz „Translation quality” (`ustawienia.jakosc_tlumaczenia`, `zglos_tlumaczenie`); „Źródła wiedzy” (design-spec:113, wzorzec `ekrany-zrodla-wiedzy`); F-58 stan zegarka w Stanie danych (`stan_danych.zegarek_*`; trasa `StanDanych` bez trasy, `naStanDanych` no-op).
-2. D (warstwa danych od razu, UI po 04 fix-6): F-37 zapas i zużycie na karcie ukończenia (design-spec:149, wzorzec `ekrany-ukonczenie-ponad-zapas`; zużycie na karcie dziś no-op), F-38 kalkulator (domena `obliczenia/*` jest), F-16 zdjęcia (image-picker, tabela `zdjecie`), F-53 udostępnienie karty.
-3. B UI po 04 fix-6: stoper w aplikacji (B1; przypadki użycia `src/przypadki-uzycia/sesja.ts` gotowe, 72e4ade), lista sesji i korekta (B2; `FormularzKorekty`/klucze `formularz.sesja_*` są), kalendarz/dzień/podsumowanie (B3; `Dni.tsx`, repozytorium `kalendarz.ts`). Kreski posiedzenia od startu stopera (design-spec:236) — `widokLicznika.sesja` liczy dziś tylko z +1.
-4. Przed nocą (okno maszyn): ostatni push ma zawierać wszystko natywne; potem CI iOS (build, swift-test, E2E pakiet podstawowy) → STOP E2 partii.
+## Stan: E1 grup B, D, E w toku (sesja 2, 2026-10-26)
+Potwierdzenie stanu (bez nowego E0): prompt 97ec212 złożony ponownie, 47510 znaków; `npm ci` + `env -u NODE_PATH npm run verify` na 71f8ae3 kod 0, **1875/1875** (jak 1f6ed79). E0/E1 A i C przyjęte (P-182–P-189); P-190 (język), P-191 (04 fix-6 E0), P-192 przeczytane.
 
-Zrobione w B: przypadki użycia stopera (72e4ade: start/pauza/wznów/stop/korekta/odczyt, 5 testów), F-51 data ukończenia na ekranie projektu (610f011). verify kod 0, **1875/1875** (610f011).
+**Zrobione w tej sesji** (każdy commit: test czerwony z właściwego powodu → kod → zielony):
+- E: 0a1c4ed (P-190 `ustawienie.jezyk`, stan urządzenia, aneks dane.md; NAZWY_JEZYKOW z CLDR 47), d013fd7 (Ustawienia › Język, „Translation quality”, „Źródła wiedzy”, język w zgłoszeniu, trasa /stan-danych z „Close”; zegarek: null → Q-E1).
+- D: acbd108 (F-37 krokowiec zużycia na karcie, liniaZapasu, parsujLiczbe P-097 (5a), zapiszZuzycie), 16b5db3 (F-16 dane zdjęć), 43f4693 (adapter wyboru zdjęcia + plugin expo-image-picker — **natywne**).
+- verify kod 0, **2019/2019** (43f4693).
+
+**Następny krok:**
+1. Czekam na koordynatora: Q-E1 (źródło liczby zmian na zegarku, F-58; rekomendacja b) i commit łatki kluczy 04 fix-6 grupy B (w repo: ec5d735, 855230e — nie nakładam bez przekazania).
+2. D bez projektu 04: F-38 (kontrakt `przelicz`/`rozmiarUS` → `Wynik`, moduly.md:131) dopiero z makietą D1; F-53 obraz karty wymaga zależności natywnej do zrzutu widoku → pytanie Q-D1 do koordynatora.
+3. UI B (stoper, sesje, Historia) i D (Narzędzia, zapas, Photos, karta) po łatce 04 fix-6.
+4. Przed nocą: jeden push z natywnymi (plugin image-picker już jest; datetimepicker, Swift pasa, krok członkostwa z partii A); CI iOS w oknie maszyn → STOP E2.
+
+### Sesja 1: STOP (kontekst) po B1 dane i F-51 (1f6ed79)
+Zrobione wtedy w B: przypadki użycia stopera (72e4ade), F-51 (610f011); verify 1875/1875.
 
 ### Poprzedni stan: STOP E1 grup A i C na bramce Linux (P-187, przyjęty P-188)
 P-187: od ok. 15:00 do północy (czas polski) brak maszyn macOS — CI iOS (build, swift-test, E2E) do STOP E2 sprawdzamy w oknie maszyn; zmiany natywne zbierane, ostatni push przed nocą zawiera wszystko natywne. Przebiegi 40335206513 i 40338452515 (próby 1–2) anulowane bez runnera — wg P-187 to nie awaria. Raport (szkic E2, wyniki Linux): `oczko-warsztat/08-programista/2026-10-26-partia5/E2-raport.md` (a825c38).
@@ -96,7 +104,10 @@ Podział: jedna sesja wystarczy (partia 4 miała ok. 40 h w jednej sesji); punkt
 - 2026-10-26: E1 (1) zaległości P-180; A2 (STOP E1 Q2 → P-184); A1; A3/A4/C1. Swift 6.2 zainstalowany lokalnie w /opt/swift (poza repo) — `swift test` przed CI.
 - 2026-10-26: ekrany C3/A4, A5/A3/C2, termin (pytanie Q5 → P-186) i A6; push a51f4b1; czekam na CI iOS.
 - 2026-10-26: CI iOS bez runnera (P-187: okno 15–24 bez macOS); STOP E1 A+C → P-188. Lista luk B/D/E → P-189 (04 fix-6, karta Pro po imporcie poza 1.0). B: dane stopera, F-51. STOP z powodu długości kontekstu.
+- 2026-10-26 (sesja 2): potwierdzenie stanu 1875/1875; E (język P-190, ustawienia, źródła, stan danych); D (F-37 karta, F-16 dane i adapter). Q-E1 wysłane koordynatorowi.
 ### Do raportu E2 (zbierane w trakcie)
+- Sesja 2 — zgłoszenia: (04) klucz `ukonczenie.zapas_juz_zero` przemianowany na `ukonczenie.zapas_juz_pusty` (`_zero` = kategoria liczby mnogiej, typ Klucz obcina); brak klucza komunikatu „zły zapis liczby” (P-097 (5a)) — pole odrzuca wpis po cichu; wiersz „Translation quality” bez zdania „przekład maszynowy” (BR-DAN-010 S1 mówi o informacji — jest tylko etykieta i odnośnik); „Edit stash” ukryty, dopóki nie ma ekranu zapasu (D2). (06/07) `docs/tresci/nazwy-zrodel.json`: dopuszczone klucze `zrodla` (design-spec nadaje kluczom ekranu prefiks `zrodla.*`). (05) aneks dane.md `jezyk`; sygnatury: `magazynJezyka`, `i18n.preferencja`, `zapiszZuzycie`, `dodajZdjecie`/`usunZdjecie`/`zdjecia`, `wybieraczZdjec`, `parsujLiczbe`, `liniaZapasu`/`krokMotkow`, KROK_MOTKA; `KartaUkonczenia.wloczka` z `motki`/`zuzyto`. (09) NAZWY_JEZYKOW z CLDR (aneks 08). Ryzyko: zdjęcie udostępnione z podglądu (P9a Share) niesie EXIF/GPS z aparatu — kopia w magazynie to oryginał (bez przekodowania); P10a usuwa EXIF tylko z obrazu karty → pytanie do 05/koordynatora razem z Q-D1.
+- Zmiany istniejących testów (sesja 2): `tests/ekrany/ukonczenie.test.tsx` (przycisk „Enter yarn left over…” → krokowiec, P-126 (2a)); `tests/dane/czesc-menu.test.ts:48` (model włóczki z `motki`, `zuzyto`).
 - Sygnatury nowych przypadków użycia do przeglądu 05 (P-182 Q3a): `dodajCzescProjektu`, `ustawZnaczenie`, `ustawDrut` (z `narzedzie`), `ustawTermin`, `widokProjektu`, `widokKosza`, `nastepnaCzesc`; repozytoria `elementyKosza`, `dzienProjektu`, `rzedyCzesci`, `celCzesci`.
 - Cel części pary liczony dynamicznie z rzędów pierwszej (BR-PRJ-014 S1, S3) w `widokProjektu`, `widokLicznika`, `nastepnaCzesc`; `dodajCzescPara` nadal kopiuje `cel_rzedow` pierwszej (własny cel wygrywa) — do przeglądu 05.
 - `zrobPonownie` nie kopiuje drutu ani narzędzia (BR-PRJ-007 nie rozstrzyga) — pytanie do 01/05.
