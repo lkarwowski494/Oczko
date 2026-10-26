@@ -37,22 +37,36 @@ function zdarzenieZLinii(linia: string): ZdarzenieWejsciowe | null {
   };
 }
 
-/** Uszkodzona linia (ucięta, zły JSON, brak pola) pominięta; poprzednie zachowane. `uszkodzone` = numery linii od 1. */
+/**
+ * Linia → zdarzenie albo null; linia sklejona z uciętym ogonem (pisarz bez reguły (8A)) daje zdarzenie z reszty linii od najmniejszego
+ * `{` na pozycji k > 0, przy którym reszta spełnia typ (ADR-0008 (8R)); reszta poprawna jako JSON, ale nie zdarzenie, nic nie daje (S-02).
+ */
+function odczytajLinie(linia: string): { zdarzenie: ZdarzenieWejsciowe | null; cala: boolean } {
+  const z = zdarzenieZLinii(linia);
+  if (z) return { zdarzenie: z, cala: true };
+  for (let k = linia.indexOf('{', 1); k > 0; k = linia.indexOf('{', k + 1)) {
+    const reszta = zdarzenieZLinii(linia.slice(k));
+    if (reszta) return { zdarzenie: reszta, cala: false };
+  }
+  return { zdarzenie: null, cala: false };
+}
+
+/** Uszkodzona linia (ucięta, zły JSON, brak pola) zgłoszona; zdarzenie ze sklejonej linii odzyskane (8R); poprzednie zachowane. `uszkodzone` = numery linii od 1. */
 export function parsujDziennik(tekst: string): { zdarzenia: ZdarzenieWejsciowe[]; uszkodzone: number[] } {
   const zdarzenia: ZdarzenieWejsciowe[] = [];
   const uszkodzone: number[] = [];
   tekst.split('\n').forEach((linia, i) => {
     if (!linia.trim()) return; // pusty plik albo `\n` na końcu: brak linii
-    const z = zdarzenieZLinii(linia);
-    if (z) zdarzenia.push(z);
-    else uszkodzone.push(i + 1);
+    const { zdarzenie, cala } = odczytajLinie(linia);
+    if (zdarzenie) zdarzenia.push(zdarzenie);
+    if (!cala) uszkodzone.push(i + 1);
   });
   return { zdarzenia, uszkodzone };
 }
 
 /**
  * Adapter DziennikPlus na pliku (Node, testy; w aplikacji: moduł Swift `oczko-dziennik-plus`, ADR-0008): uszkodzona linia → wiersz `blad`
- * (diagnostyka F-57: numer linii, bez treści). `skroc(doId)` usuwa linie do `doId` włącznie, późniejsze zostają.
+ * (diagnostyka F-57). `skroc(doId)` usuwa linie do `doId` włącznie i ucięty ogon za nim, późniejsze pełne linie zostają (8S).
  */
 export function utworzDziennikNode(sciezka: string, baza: PortBazy): DziennikPlus {
   return {
@@ -65,10 +79,13 @@ export function utworzDziennikNode(sciezka: string, baza: PortBazy): DziennikPlu
     },
     async skroc(doId) {
       if (!istniejePlik(sciezka)) return;
-      const linie = (await czytajTekst(sciezka)).split('\n');
-      const i = linie.findIndex((l) => zdarzenieZLinii(l)?.id === doId);
+      const linie = (await czytajTekst(sciezka)).split('\n'); // ostatni element: bajty po ostatnim `\n` (pusty albo ucięty ogon)
+      const i = linie.findIndex((l) => odczytajLinie(l).zdarzenie?.id === doId); // także w linii sklejonej (8S)
       if (i < 0) return; // nie ma takiej linii: nic do skrócenia (R-024)
-      zapiszTekst(sciezka, linie.slice(i + 1).join('\n'));
+      // (8S): linie do `doId` włącznie i ucięty ogon za nim; pełne linie po `doId` zostają (R-022).
+      const reszta = linie.slice(i + 1);
+      if (reszta.length > 0) reszta[reszta.length - 1] = '';
+      zapiszTekst(sciezka, reszta.join('\n'));
     },
   };
 }
