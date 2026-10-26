@@ -312,6 +312,7 @@ Makiety: `aktywnosc.html`. Wymiary z Apple HIG „Live Activities”, Specificat
 | `aktywnosc.podpis_plus` | tap when row {{n}} is done | karta ekranu blokady (jak `licznik` w aplikacji) |
 | `aktywnosc.przypomnienie` | Row {{n}}: {{tekst}} · {{k}} of {{razy}} | pas przypomnienia: ekran blokady, rozwinięta Dynamic Island, zegarek; Smart Stack w wersji skróconej (NZ-08-P4-04) |
 | `aktywnosc.przypomnienie_a11y` | Row {{n}}: {{tekst}}, {{k}} of {{razy}} | VoiceOver przycisku +1 („Add row. ” + ten tekst) i ogłoszenie przy wejściu w rząd |
+| `aktywnosc.plus_a11y_przypomnienie` | Add row. Row {{n}}: {{tekst}}, {{k}} of {{razy}} | pełna etykieta VoiceOver przycisku +1 przy przypomnieniu (fix NZ-08-P5-BD R2, P-191: zamiast sklejania „Add row. ” + `aktywnosc.przypomnienie_a11y`) |
 | `aktywnosc.przypomnienie_wiecej_one` / `aktywnosc.przypomnienie_wiecej_other` | +{{count}} more reminder in Oczko / +{{count}} more reminders in Oczko | cicha linia pod pasem przy kilku przypomnieniach w rzędzie (P-158 (1.1a)) |
 | `aktywnosc.przypomnienie_krotkie` | Row {{n}}: {{tekst}} | Smart Stack i CarPlay (1 wiersz, wielokropek) |
 | `aktywnosc.zrobione_one` / `_other` | {{count}} row done / {{count}} rows done | VoiceOver karty; podpis na zegarku przy limicie („rows done”) |
