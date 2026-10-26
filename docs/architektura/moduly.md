@@ -212,6 +212,40 @@ function czyProsicOOcene(w: WejscieProsby): boolean;
 - **Testy:** domena — `tests/akceptacja/domena/prosba-o-ocene.test.ts` (wektory; test oczekujący, P-156 Q2a); ekran — test 07 `tests/akceptacja/ekrany/ukonczenie.test.tsx:38` („jedna prośba przy każdym zamknięciu”) do zmiany: zamknięcie karty woła przypadek użycia, a wywołanie systemowe zależy od bramki (prośba przy `true`, brak przy `false`); dane — zapis klucza tylko po udanym wywołaniu, klucz pomijany przy imporcie.
 - Kontrola dokumentu: `docs/architektura/narzedzia/kontrola-fix5.mjs --id po` (wzorzec bramki liczy wektory niezależnie od kodu).
 
+## Kontrakt partii 5 (fix-6 2026-10-26, NZ-P5-PRZEGLAD; P-182 Q3a, P-188, P-191, P-199)
+Sygnatury przypadków użycia, które 08 dopisało w partii 5 i wypisało do przeglądu 05 (precedens partii 4). Przejrzane: wzorzec ADR-0002 bez nowych granic — każdy zapis to jedna instrukcja `UPDATE`/`INSERT` (albo kilka w jednej transakcji) w `operacjaZapisu` (kolejka, transakcja, błąd SQLite → `zapis` i wpis `blad`), walidacja wejścia przed kolejką, wynik `Wynik`; kolumna w `zmienProjekt` z zamkniętej listy (ARCH-17). **Odczyty ekranów idą przez tę samą kolejkę** (`operacjaZapisu`, precedens `widokLicznika`): odczyt nie widzi połowy cudzej operacji; koszt nazwany — błąd odczytu ma w `blad` kod `zapis_<operacja>` i powód `zapis`.
+```ts
+// src/przypadki-uzycia/projekt.ts
+function dodajCzescProjektu(z: Zaleznosci, w: { projektId: string; nazwa: string; cel: number | null }): Promise<Wynik<{ czescId: string; licznikId: string }>>; // BR-PRJ-001, U-5; część z licznikiem rzędów na końcu kolejności
+function ustawDrut(z: Zaleznosci, w: { projektId: string; drutMm: number | null; narzedzie: NarzedzieProjektu }): Promise<Wynik<void>>; // P-184; obie kolumny jedną instrukcją
+function ustawTermin(z: Zaleznosci, w: { projektId: string; terminDzien: string | null }): Promise<Wynik<void>>;                       // BR-DNI-005, F-61; `ostatnia_praca_ms` bez zmian
+// src/przypadki-uzycia/czesc.ts
+function ustawZnaczenie(z: Zaleznosci, w: { licznikId: string; znaczenie: 'skonczone' | 'w_trakcie' }): Promise<Wynik<void>>;           // BR-LIC-012; wołający odświeża stan ekranu blokady (`znaczenie` jest w stanie v3)
+function nastepnaCzesc(z: Zaleznosci, w: { licznikId: string }): Promise<Wynik<NastepnaCzesc>>;                                         // BR-LIC-011/S1, P-182 Q4a; tylko odczyt
+// src/przypadki-uzycia/widok-projektu.ts, widok-kosza.ts
+function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<WidokProjektu>>;                                       // projekt w koszu albo brak → bledne_dane
+function podgladTerminu(z: Zaleznosci, w: { projektId: string; terminDzien: string }): Promise<Wynik<CelDnia | null>>;                 // RD-15 bez zapisu
+function widokKosza(z: Zaleznosci): Promise<Wynik<ElementKosza[]>>;                                                                    // F-33, BR-DAN-008
+// src/przypadki-uzycia/sesja.ts — stoper (F-21, F-51; maszyna „Sesja stopera”)
+function startSesji(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<{ sesjaId: string }>>;   // projekt w toku poza koszem; inna otwarta sesja → niedozwolone_przejscie
+function wstrzymajSesje(z: Zaleznosci, w: { sesjaId: string }): Promise<Wynik<void>>;
+function wznowSesje(z: Zaleznosci, w: { sesjaId: string }): Promise<Wynik<void>>;
+function zakonczSesje(z: Zaleznosci, w: { sesjaId: string }): Promise<Wynik<{ czasMs: number }>>;
+function korygujSesje(z: Zaleznosci, w: { sesjaId: string; startMs: number; koniecMs: number }): Promise<Wynik<void>>;               // przerwy_ms = 0 (P-199 Q4a)
+function otwartaSesja(z: Zaleznosci): Promise<Wynik<SesjaNaEkranie | null>>;
+function sesjeProjektu(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<SesjaNaEkranie[]>>;
+// src/domena/licznik-calosci.ts — P-199 Q1a (łatka A)
+function licznikCalosci(liczniki: readonly LicznikKawalka[], czescId: string): number | null; // LicznikKawalka = { id, czescId, rodzaj, wartosc }
+// src/domena/cel-pary.ts — P-199 Q2a (łatka B)
+function celZPary(w: { cel: number | null; paraZ: string | null; rzedyPary: number }): number | null;
+```
+- **„Stop it and start here?” (P-191 P3a):** `zakonczSesje` innej sesji, potem `startSesji` — dwie pozycje kolejki. Przerwa między nimi nie traci danych (pierwsza sesja zapisana); nieudany start pokazuje błąd i niczego nie cofa. Jedna transakcja nie jest potrzebna (realność: teoretyczna).
+- **Licznik całości (P-199 Q1a; F-46 „bez ustawienia”, propozycja 04 z P-183):** każdy nieusunięty licznik rzędów części jest sekcją; `licznikCalosci` zwraca ich sumę, gdy są ≥ 2, inaczej `null`; liczniki oczek i innych części nie wchodzą (BR-LIC-018 S1–S4). Jedna funkcja dla `widokProjektu` (`calosc`) i `caloscCzesci` (ekran licznika); kompozycja nie liczy własnej reguły (dziś trzy miejsca, ARCH-02). Kolumna `licznik.sekcja` znika z v1: z `schemat.sql` i `0001.sql` razem (v1 niewydany, precedens P-184), z `zrobPonownie` i z typów — nikt jej nie ustawiał, więc nie niesie danych.
+- **Cel części pary (P-199 Q2a; BR-PRJ-014 S1, S3):** cel części = własny `cel_rzedow` albo, w części pary bez własnego, rzędy pierwszej części (`celZPary`) liczone przy każdym odczycie — pojawia się, gdy pierwsza ma rzędy (S3), i idzie za rzędami, nie za celem pierwszej (S1). `dodajCzescPara` nie kopiuje celu (bez kopii `cel_rzedow`, druga część ma `NULL`); własny cel ustawiony później przez `ustawCel` wygrywa. Jedno miejsce reguły: `celZPary` w `widokProjektu`, `celCzesci` (ekran licznika) i `nastepnaCzesc` (`celDrugiej` = rzędy bieżącej części albo `null`). `zrobPonownie` przepisuje `para_z` na id części kopii w tej samej transakcji (para z częścią w koszu, której kopia nie ma, zostaje bez pary) — bez tego „Make another” (J-05, druga skarpeta) gubi parę.
+- **Stoper na ekranie blokady i zegarku (P-199 Q3c, 04-fix6-N1):** stan v3 bez zmian; `sesjaStartMs` = `start_ms + przerwy_ms` sesji projektu licznika w stanie `trwa`, `null` w pauzie i bez sesji (`startSesjiEkranu`, `src/dane/repozytoria/ekran-blokady.ts:20`) — w pauzie czas znika zamiast biec. Każde przejście sesji (start, pauza, wznowienie, koniec, korekta, zamknięcie zapomnianej przy starcie) woła po COMMIT `odswiezEkranBlokady`, inaczej Live Activity zostaje z biegnącym czasem do następnego +1. Widok pauzy (symbol i stały czas) — 1.1, ADR-0008 (fix-6).
+- **Kosz:** `ElementKosza` niesie `projektNienazwany` i `projektUtworzonoMs` rodzica (łatka D); kompozycja pokazuje etykietę projektu roboczego zamiast daty zapasowej, także w podpisie części i licznika (dane.md „Projekt roboczy”).
+- **Łatki dla 08** (P-136, P-199): `oczko-warsztat/05-architekt/2026-10-26-fix6/latki/` — A (licznik całości i kolumna), B (cel pary, `zrobPonownie`), C (N12-07, N12-08, dane.md), D (kosz); każda z testem czerwonym przed i zielonym po.
+
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)
 - **Jedno źródło czasu:** port `Zegar` (`teraz(): { ms, strefa, dzien }`); domena i przypadki użycia nie wołają `Date.now()` ani `new Date()` bez argumentu. Adapter produkcyjny: zegar systemu i strefa urządzenia. Build E2E (`EXPO_PUBLIC_E2E=1`): adapter z `src/platforma/tryb-e2e.ts` czyta argument startu `oczkoE2eTeraz` (e2e/README.md) i zwraca podaną chwilę plus czas, który upłynął od startu procesu (zegar biegnie, RD-17 liczy odstępy); w buildzie wydania argument jest ignorowany (kontrola `TRYB-E2E`, `sprawdz-workflowy.mjs`). Dzięki temu granica miesiąca, północ i nowy dzień limitu są scenariuszami E2E bez zmiany zegara symulatora.
 - **Przeliczenie przy zmianie daty:** przy `AppState → active` i przy powiadomieniu o istotnej zmianie czasu (`significantTimeChange`: północ, zmiana strefy, ręczna zmiana zegara) aplikacja liczy od nowa: dzień (RD-16), stan limitu i strażnika (`mozeZaczacDzien`), cel dzienny i postęp (F-61), bieżący tydzień i miesiąc (F-59, BR-DNI-003), stan Live Activity (ADR-0008 (7)) i stan zegarka. Nic nie odlicza czasu `setInterval`; aplikacja otwarta przez północ przelicza się na tym powiadomieniu.
@@ -263,7 +297,7 @@ Niedozwolone (błąd domeny): `ukoncz` z `ukonczony`, `wznow` z `w_toku`, każda
 | wstrzymana | wznow | trwa | `przerwy_ms += teraz − wstrzymano_ms`, `wstrzymano_ms = NULL` |
 | trwa / wstrzymana | zakoncz | zakonczona | `koniec_ms`; czas = `koniec − start − przerwy` |
 | wstrzymana | zakoncz | zakonczona | jak wyżej, a najpierw `przerwy_ms += teraz − wstrzymano_ms`, `wstrzymano_ms = NULL`: koniec w pauzie dolicza bieżącą przerwę, bo czas pauzy nie jest dzierganiem (fix-2, P-118 W6; jedyna reguła zgodna z formułą P-072) |
-| zakonczona | koryguj | zakonczona | `skorygowano = 1`, nowe `start_ms`/`koniec_ms` (`koniec ≥ start`) |
+| zakonczona | koryguj | zakonczona | `skorygowano = 1`, nowe `start_ms`/`koniec_ms` (`koniec ≥ start`), `przerwy_ms = 0`: czas = `koniec − start` wybrany w formularzu, pauzy przestają się liczyć (arkusz mówi to przed zapisem, tekst 04) — fix-6 2026-10-26, P-199 Q4a, P-195 Q2a (BR-PRJ-013, ER-54); Oczko trzyma sumę pauz, nie przedziały, więc przycięcie sumy zgadywałoby |
 | trwa, `teraz − start_ms ≥ SESJA_MAKS_H` | start aplikacji | zakonczona | `koniec_ms = start + SESJA_MAKS_H`, `do_korekty = 1` (zapomniany stoper) |
 | trwa / wstrzymana | scalenie przynosi otwartą sesję z wcześniejszym `start_ms` | zakonczona | `koniec_ms = start_ms`, `do_korekty = 1` (ADR-0005, uzupełnienie) |
 Po zabiciu procesu sesja „trwa” odtwarza się ze znacznika (zasada 4 modułu tła).

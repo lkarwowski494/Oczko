@@ -29,7 +29,7 @@ const KONTROLE = {
   sygn: [
     ['moduly.md: sekcja „Kontrakt partii 5” z sygnaturą każdej funkcji partii 5 (P-182 Q3a)', () => SYGNATURY_P5.every(([, f]) => f.every((n) => p5.includes(`function ${n}(`)))],
     ['każda z tych funkcji jest eksportowana z pliku wskazanego w kontrakcie', () => SYGNATURY_P5.every(([plik, f]) => f.every((n) => eksporty(plik).includes(n)))],
-    ['kontrakt mówi o odczytach w kolejce i o „Stop it and start here?” jako dwóch pozycjach kolejki (P-191 P3a)', () => /odczyt\w* [^\n]*kolejk/.test(p5) && /P3a/.test(p5)],
+    ['kontrakt mówi o odczytach w kolejce i o „Stop it and start here?” jako dwóch pozycjach kolejki (P-191 P3a)', () => /[Oo]dczyt\w* [^\n]*kolejk/.test(p5) && /P3a/.test(p5)],
   ],
   aneksy: [
     ['dane.md: aneks `projekt.narzedzie` przejrzany przez 05 fix-6 (P-184)', () => /Rodzaj narzędzia projektu[^\n]*przejrzane 05 fix-6/.test(dane) && !/Rodzaj narzędzia projektu[^\n]*do przeglądu 05\)/.test(dane)],
