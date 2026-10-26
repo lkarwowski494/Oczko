@@ -2,7 +2,8 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków; nie w repo)
 Zakres: P-128 (start partii 3), P-123 pkt 12, P-124 (dziennik A + S + R, SQL Q3a), P-126 (1b) (`nienazwany`), P-127 (`pro: true` w Swift, nowy katalog → `tabela-08.mjs`), P-121 (1) (`powtorzenieLicznika`), P-111 (3) (stan v2), P-103 (`karencjaDo`), P-122 (b) (pakiety). Specyfikacja: `oczko-warsztat/05-architekt/2026-10-26-fix3/E2-dowody.md` §3 „Dla 08”, ADR-0002 (7), 0007, 0008 (8A/8S/8R/3′/6′), 0009, 0010, 0016, 0020 (5′); `docs/architektura/moduly.md` (porty, stan v2, czas, konfiguracja), `dane.md:75–85`; `tests/wspolne/xctest-specyfikacja.md`, `tests/wspolne/wzorce.json`; `docs/jakosc/e4-przekazanie.md` („Dla roli 08”, DS-02).
 
-## Stan: E0 → STOP (czeka na koordynatora wg P-087)
+## Stan: E1 3A zakończone → punkt kontrolny STOP (P-129 Q1a); E0 przyjęte jako P-129
+3A (commity 44b73e5…11b21b8): A1 dziennik 8R/8S, A2 `blad` z całą linią i jeden wpis (3′), A3 SQL fix-3 (`ukonczono_dzien`, `nienazwany`, `application_id`, `sprawdzKopie`), A4 ZIP (`za_duze`, szyfrowanie, ZIP64), A5–A6 `CzasWTle` z sygnałem + `przywrocKopie` w jednej pozycji kolejki, A7 `powtorzenieLicznika`, A8 `expo-crypto` + `Identyfikatory`. `npm run verify` kod 0, **1482/1482**; `test:akceptacja` 89, 0 błędów raportu. Dowody, wybory bez decyzji i pomiar referencyjny 400 MB: `oczko-warsztat/08-programista/2026-10-26-partia3/punkt-kontrolny-3A.md`. Następny krok: 3B (pakiet Swift, `swift test` w CI).
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -86,4 +87,5 @@ Poza partią 3 (lista do przekazania): ekrany (partia 4), `przelicz`/`rozmiarUS`
 - Właściciel: nic (P-087); po partii — lista „do urządzenia” (pomiary, intencja przy zablokowanym telefonie, zegarek).
 
 ## Dziennik
-- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1449/1449, akceptacja 98 (5 asercji), plan 3A–3E, Q1–Q8; STOP do koordynatora.
+- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1449/1449, akceptacja 98 (5 asercji), plan 3A–3E, Q1–Q8; STOP do koordynatora. Odpowiedź: P-129.
+- 2026-10-26: E1 3A (A1–A8); punkt kontrolny STOP.
