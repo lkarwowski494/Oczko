@@ -1,48 +1,36 @@
-# Oczko — plan wejścia do App Store (stan 2026-10-25)
+# Oczko — plan do 1.0 i 1.1 (stan 2026-10-26, 16:20)
 
-Autor: koordynator (sesja „Main: Oczko”), według P-002 (kolejność ról), P-087 (decyzje koordynatora) i wzorca Treningu (`trening/docs/48-zgloszenie-1-0.md`, gałąź `zgloszenie-1-0-materialy`, odczyt 25.10.2026).
-Czasy to **[OCENA]**: „agent” = praca agentów, „kalendarz” = z czekaniem na CI, Apple i limit tygodniowy konta, „właściciel” = Twój czas.
+Autor: koordynator (sesja „Main: Oczko”). Czasy to **[OCENA]** liczona z tempa zmierzonego 26.10: partia 5, grupy A i C oraz zaległości, zajęła ok. 1 h 40 min agenta wobec szacunku roli 23–30 h. Okno maszyn macOS: od północy do ok. 15:00 czasu polskiego (P-187).
+Poprzednia wersja planu (25.10, 14–21 dni agentów) — w historii git tego pliku.
 
-## Stan wyjściowy
-- Zrobione: bramka opłacalności, BRD (84 BR), model V4 (P-057), kontrakt zakresu (49 funkcji MVP), projekt UX i marka, architektura (ADR 0001–0021), mechanizm i18n, niezawodność E0–E1, treści (103/103 twierdzeń POPARTE, P-088).
-- Testy na `claude/jolly-thompson-paz6d8`: `npx jest` 956/956 (25.10.2026).
-- Konto Apple (wspólne z Treningiem, według `trening/docs/48`): zgłoszenie do Small Business Program 14.10.2026, status tradera (DSA) zweryfikowany 20.10.2026. Rekord Oczka w App Store Connect istnieje (stara wersja 0.1.0, build 1004 w TestFlight).
+## Stan
+- Inwentaryzacja MVP w kodzie (`oczko-warsztat/koordynacja/2026-10-26-inwentaryzacja-mvp.md`, P-181): rano 18 z 51 funkcji zrobionych. Karta Pro po imporcie jest poza 1.0 (P-189).
+- Partia 4 przyjęta (P-180). Partia 5: grupy A (projekt i części) i C (kosz) gotowe na bramce Linux (P-188), CI iOS w oknie maszyn. W toku: grupy B (sesje, kalendarz), D (narzędzia, zapas, zdjęcia, karta), E (język, stan zegarka). Makiety B i D: 04 fix-6 (P-191). Równolegle 12: niezawodność E2–E3.
+- Zakres 1.0: kierunek C (P-181), do potwierdzenia na przeglądzie zakresu MVP przez właściciela 27–28.10.
 
-## Kroki do zgłoszenia
+## Plan do 1.0 (kierunek C)
+| Kiedy | Co | Właściciel |
+|---|---|---|
+| 26.10 wieczór | 08: B, D, E na bramce Linux; 04 fix-6; 12 E2–E3; zbiorczy przegląd 05/07/01 | 0 |
+| 27.10 noc i rano | CI iOS całej partii 5 → STOP E2 | 0 |
+| 27–28.10 | **przegląd zakresu MVP**; wzór w minimum: import PDF, przeglądarka obok licznika, znacznik rzędu (Swift, testy w oknie rano) | ~30 min |
+| 28–29.10 | 04 audit i poprawki; 09 przekład 35 języków przez API (≤ 6 USD, P-144); 10 strona prywatności, metadane, workflow TestFlight; 07 audyt zmian | sekrety podpisu i token CloudKit ~30 min |
+| ~31.10–1.11 | **TestFlight** | test na telefonie i zegarku 45–75 min |
+| ~2–6.11 | pełny audyt przed App Store, poprawki blokerów, weryfikacja patentowa funkcji wzoru (P-024) | 0 |
+| ~7–8.11 | App Store Connect, „Submit for Review” | 1–1,5 h, scalenie do `main` |
+| ~10–14.11 | przegląd Apple [OTWARTE: brak źródła na czas], wydanie ręczne | odpowiedź, jeśli Apple zapyta |
 
-| # | Krok | Kto | Agent | Kalendarz | Właściciel |
-|---|---|---|---|---|---|
-| 1 | 07-jakość build: strategia testów, testy akceptacyjne czerwone przed kodem, CI (wzór Treningu: podział E2E, ponawianie macOS, podpis bez nowego certyfikatu) | rola 07 | 0,5–1 dnia | 1–2 dni | 0 |
-| 2 | Porównanie z istniejącym kodem (03 audit, P-078): co z kodu 0.1.0 zostaje, co od nowa | rola 03 | 0,5 dnia | 1 dzień | 0 |
-| 2a | Sesja fix ról 01, 02 i 05 przed programowaniem (P-090 Q3a, P-091 pkt 11): spójne kryteria, kontrakt limitu, poprawki ADR-0008/0009 i `scal` | 01, 02, 05 | 0,5–1 dnia | 1 dzień | 0 |
-| 3 | **08 programista partiami**: 49 funkcji MVP, zegarek, widżet/Live Activity, synchronizacja iCloud, limit V4 i zakupy | rola 08 | 6–10 dni | **2–3 tygodnie** | 0 (decyzje: koordynator) |
-| 4 | 04 audit (ekrany wobec wzorców) + poprawki | 04 → 08 | 1–1,5 dnia | 2–3 dni | 0 |
-| 5 | 09 E2–E4: przekład na 35 języków (zestaw roli 06) | rola 09 | 1–2 dni | 2–4 dni | **zgoda na koszt**, jeśli przekład przez API jak w Treningu (tam limit 6 USD) |
-| 6 | 12 E2–E3: kod strażnika startu, kopii i przywracania, ćwiczenia automatem | rola 12 | 1 dzień | 1–2 dni | 0 |
-| 7 | 07 audit: jeden werdykt gotowości (próg: tylko KRYTYCZNE/WYSOKIE), naprawy blokerów; weryfikacja patentowa przed wydaniem (P-024) | 07 → 08 | 1–2 dni | 2–4 dni | 0 |
-| 8 | 10 wydawca: metadane 35 języków, zrzuty, notatka dla recenzenta, workflow TestFlight (kopia z Treningu) | rola 10 | 1 dzień | 1–2 dni | wklejenie sekretów podpisu do repo Oczka (klucz API jak w Treningu) ok. 15 min |
-| 9 | TestFlight wewnętrzny: build + lista kontrolna z telefonu + zakupy w piaskownicy | automat + Ty | — | 1 dzień | 45–75 min |
-| 10 | TestFlight zewnętrzny: test gestu zegarka u ≥ 2 testerek z Apple Watch (nie masz zegarka) | testerki | — | przegląd bety ok. 1 dnia + ok. 1 tygodnia testów (równolegle z krokiem 11) | znalezienie 2 testerek |
-| 11 | App Store Connect: produkty (3, Family Sharing — P-038), prywatność „Data Not Collected”, ocena wieku, kontakt dla recenzenta, build do wersji, „Submit for Review”, wydanie ręczne | Ty (agent przygotowuje każdy krok z adresem Apple) | 0,5 dnia | 1–2 dni | ok. 1–1,5 h w kilku podejściach |
-| 12 | Przegląd Apple | Apple | — | **[OTWARTE]** (brak źródła na czas; ryzyko rundy przy 4.3(b)) | odpowiedź, jeśli Apple zapyta |
-| — | Marketing (11): kręgi, ASO, plan startu — równolegle od kroku 3 | rola 11 | 1–2 dni | równolegle | zatwierdzenie szkiców |
+Ryzyka terminu: okno maszyn macOS (każda poprawka natywna to dzień kalendarza), tygodniowy limit konta, pytania Apple, wynik przeglądu zakresu.
 
-**Razem: ok. 14–21 dni pracy agentów, 4–6 tygodni kalendarza.**
-- Zgłoszenie do Apple: **realnie pierwsza połowa grudnia 2026**; optymistycznie ok. 20.11.2026; pesymistycznie druga połowa grudnia.
-- Pierwszy TestFlight z nową wersją: po krokach 1–4, ok. 2,5–3,5 tygodnia od dziś (połowa listopada).
+## Plan 1.1 (ok. 4–6 tygodni po premierze; nominacja „App Enhancements” min. 3 tygodnie przed, P-147)
+| Co | Ustalenia |
+|---|---|
+| **Atlas technik** w aplikacji i na stronie (P-093, P-095, P-179) | 31 pozycji (5 tabel słownikowych, 26 kart technik, słownik skrótów F-44); języki z przeczytanym źródłem terminologii: en, sv, pt-BR, potem pl (OP-12) |
+| **Rysunki SVG z danych, bez tekstu** (P-192) | Jeden plik SVG na wszystkie języki, bez elementów `<text>` i skrótów. Są tylko geometria, strzałki, numery kroków i własne glify. Podpis, opis kroków i tekst VoiceOver idą przez `t()` i przekład API. Test generatora: żadnych liter w SVG. Bez generatora obrazów AI (P-178) |
+| **Reszta wzorów** z 1.0 | zakreślanie (F-56), Apple Pencil (F-28), WWW i Word (F-55), zdjęcie → PDF i rozszerzenie udostępniania (ADR-0011), układ poziomy |
+| **iCloud** (F-27) | adapter CloudKit, ukryty w 1.0 (P-091 (1)) |
+| Do wyboru po premierze | Siri (F-13), kalkulatory F-39/F-42, szacunek czasu F-22/F-62 — według danych z App Store |
+| Właściciel | decyzja o domenie strony atlasu (koszt) przy starcie 1.1 |
 
-## Co może przesunąć termin (od największego)
-1. **Limit tygodniowy konta Claude** (23.10 skończył się w 99%). Krok 3 to największe zużycie — kontrola limitu przed każdą partią.
-2. **Zegarek i widżety w Expo** (niesprawdzony cel `watch` w narzędziu budowania, RYZ z ADR) — prototyp ryzyka na początku kroku 3; jeśli zawiedzie, zegarek przechodzi do 1.1 (decyzja koordynatora wg P-087, z zapisem).
-3. **CI macOS** (kolejki wieczorami, E2E 30–40 min na przebieg).
-4. **Przegląd Apple** (4.3(b), pierwsza runda pytań).
-5. **Testerki z Apple Watch** — bez nich gest jest niesprawdzony; wtedy w opisie sklepu nie obiecujemy gestu.
-
-## Co tylko Ty (wyjątki P-087)
-- zgoda na koszt przekładu przez API (krok 5) albo wybór przekładu agentami (0 zł, dłużej);
-- sekrety podpisu w repo Oczka (krok 8);
-- CloudKit (P-091 pkt 1): wygenerowanie tokenu zarządzania w CloudKit Console i wklejenie go jako sekretu, potem „Deploy Schema Changes” Development → Production przed wydaniem (ok. 15–20 min, w przeglądarce, bez Maca);
-- ~~testerki (krok 10)~~ — usunięte (P-146: zegarek sprawdzany na produkcji, bez obietnicy gestu w opisie sklepu);
-- App Store Connect i „Submit for Review” (krok 11), wydanie po akceptacji;
-- scalenie gałęzi roboczej do `main` przed buildem wydania;
-- nominacja „App Enhancements” dla 1.1 min. 3 tygodnie przed jej wydaniem (P-147; bez nominacji „App Launch”), agent przygotuje treść.
+## Co tylko właściciel (P-087)
+koszty (przekład ≤ 6 USD bez pytania, domena), sekrety podpisu i token CloudKit, App Store Connect i „Submit for Review”, scalenie do `main`, przegląd zakresu MVP, test TestFlight na urządzeniu, PDF-y książek do OCR (bez terminu).
