@@ -27,7 +27,11 @@ src/
     archiwum.ts           eksport/import .oczko (ADR-0004)
   platforma/              adaptery: sklep (expo-iap 5.8.1), haptyka, ekran-aktywny, live-activity, zegarek, icloud, dziennik-plus, udostepnianie, czas-w-tle, zegar
   ekrany/, komponenty/    interfejs (04 projekt, 08 kod); wołają przypadki użycia lub hooki nad nimi
-modules/                  moduły Expo (Swift): oczko-dziennik-plus, oczko-icloud, oczko-pencilkit, oczko-zegarek, oczko-czas-w-tle
+modules/                  Swift (stan 2026-10-26, fix-4 05; P-129 Q2a, Q3a):
+  oczko-reguly/           pakiet Swift (nie moduł Expo): OczkoReguly (limit, dostęp, stan, dzień) + OczkoDziennik (rdzeń pliku +1, intencja, skrzynka zegarka); `swift test`; cele i moduły dostają kopie źródeł (scripts/natywne/kopie.json)
+  oczko-dziennik-plus/    moduł Expo: jedyny pisarz dziennika +1, Live Activity (ActivityKit) i intencja ±1, SHA-256 plików (CryptoKit), łącze zegarka po stronie telefonu (WCSessionDelegate) — bez osobnego modułu zegarka i Live Activity
+  oczko-czas-w-tle/       moduł Expo: beginBackgroundTask z sygnałem wygaśnięcia (CzasWTle)
+  oczko-icloud/, oczko-pencilkit/   moduły Expo z funkcjami F-27/F-58 i F-28 (jeszcze nie ma; P-129 Q8a)
 targets/                  cele @bacons/apple-targets: widget (Live Activity + LiveActivityIntent), watch, share
 ```
 Kierunek zależności: `ekrany → przypadki-uzycia → domena ← dane, platforma`; `konfiguracja.ts` importują wszyscy, sam nie importuje nic. Swift w `targets/` i `modules/` nie importuje `SQLite3` (ADR-0008). Kontrola: `docs/architektura/narzedzia/granice.mjs` (fix 2026-10-25, Z07-16: importy rozwiązywane kompilatorem TS z `tsconfig.json`; reguły DOMENA, KONFIGURACJA, SQLITE, EKRANY, IOS, SWIFT, ROZMIAR, CYKL, PUSTO; fikstury negatywne `granice-test/obejscia/` w `jakosc:kontrole`). Na `src` jest bramką dopiero po usunięciu kodu 0.1.0 (partia porządkowa 08, P-099 D1a); dziś informacyjnie w `jakosc:info` (14 naruszeń, wszystkie w `core/`, `components/`, `screens/`).
