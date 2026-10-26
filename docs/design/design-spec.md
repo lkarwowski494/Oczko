@@ -1,12 +1,12 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
 |---|---|
 | Tokeny (moduł motywu, propozycja) | `tokeny.json` |
-| Tabela kontrastu (44 pary, kod 0) | `kontrast-tabela.txt` (z `narzedzia/tokeny-kontrast.mjs` + `narzedzia/kontrast.mjs`) |
-| Kluczowe ekrany (7 stanów) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (84 pliki, linia bazowa SP-13) |
+| Tabela kontrastu (62 pary, kod 0) | `kontrast-tabela.txt` (z `narzedzia/tokeny-kontrast.mjs` + `narzedzia/kontrast.mjs`) |
+| Kluczowe ekrany (7 stanów; fix NZ-08-P2-04: +10 nowych, 2 zmienione) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (204 pliki, linia bazowa SP-13); kontrola pokrycia fixu: `narzedzia/kontrola-nz08p204.mjs` |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -200,6 +200,12 @@ Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): 
 | `jezyk.ustawienia_ios_opis` | The app name under the icon and the camera permission text follow the language set for Oczko in iOS Settings. |
 Nazwy języków nie są kluczami `t()`: stała mapa tag → nazwa własna w `jezyki.ts` (09).
 
+## Dla 08 (fix NZ-08-P2-04, partia ekranów)
+- Wszystkie nowe teksty przez `t()` z kluczami z tabel wyżej (źródło en, wpis kontekstu w `en.kontekst.json`, liczba mnoga `_one`/`_other`).
+- Stany do zbudowania (wzorce w `wzorce-zrzuty/ekrany-<stan>-*`): `projekty-robocze`, `projekt-nazwij`, `ukonczenie` (zmieniony), `ukonczenie-ponad-zapas`, `wzor-kierunek`, `wzor-znacznik`, `wzor-koniec-strony`, `uczciwe-zasady`, `zrodla-wiedzy`, `licznik-w-toku` (nowy podpis), `licznik-przez-polnoc`, `jezyk`.
+- Zależności: flaga „nienazwany” (05 fix-3, `dane.md`); `ustawZnacznik` z wymaganym `kierunek` (ekran zawsze go podaje, bez domyślnego); rząd znacznika domyślnie licznik + 1 do potwierdzenia przez 01 (N3); `oknoUczciweZasady` z listą dozwolonych ekranów z sekcji okna; zapas `max(0, zapas − zużycie)` w domenie (partia 2).
+- Kolory znacznika z `tokeny.json` `kolor.wzor`; obrysy krokowca i pól `drugiPrzyciskObrys`.
+
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
 
@@ -213,7 +219,7 @@ Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF,
 Zegarek: `ikona/watch.png` (1088 × 1088). Ikona warstwowa `.icon` (Liquid Glass) wymaga Icon Composer na macOS: warstwy `ikona/tlo.svg` i `ikona/pierwszy-plan*.svg` to paczka dla kroku właściciela; PNG działają bez `.icon`.
 
 ## Poza tym etapem (dla audytu roli 04 po roli 08 albo osobnej sesji)
-Makiety nienarysowane w build: wzór i licznik poziomo (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), zegarek (F-12), sesja na ekranie blokady (F-11, F-21), kalendarz i podsumowanie (F-59), Ustawienia (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
+Makiety nienarysowane w build: wzór poziomo i licznik poziomo (znacznik na wzorze pionowo: fix NZ-08-P2-04) (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), zegarek (F-12), sesja na ekranie blokady (F-11, F-21), kalendarz i podsumowanie (F-59), reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
 
 ## Propozycja wpisu do pamięci portfolio (repo `prompts`, dopisuje właściciel)
 | Aplikacja | Metafora / element firmowy | Paleta (rdzeń) | Kroje | Uwagi właściciela |
