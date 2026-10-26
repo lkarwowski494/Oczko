@@ -301,5 +301,15 @@
  "Smart Stack: ołówek / karta": [
   "#A9ACB2",
   "#1E2024"
+ ],
+ "znak kresek / tło systemowe (grafika, 3:1)": [
+  "#ECECE8",
+  "#000000",
+  3
+ ],
+ "znak kresek / karta Smart Stack (grafika, 3:1)": [
+  "#ECECE8",
+  "#1E2024",
+  3
  ]
 }

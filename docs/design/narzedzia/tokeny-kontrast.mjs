@@ -40,4 +40,10 @@ if (c) {
   pary['Smart Stack: tekst / karta'] = [c.grafit, c.kartaStack];
   pary['Smart Stack: ołówek / karta'] = [c.olowek, c.kartaStack];
 }
+// Znak kresek na czarnym tle i karcie Smart Stack (NZ-08-P4-04): grafika rozpoznawcza obok liczby, 3:1.
+const z = JSON.parse(readFileSync(process.argv[2], 'utf8')).znakKresek;
+if (z && c) {
+  pary['znak kresek / tło systemowe (grafika, 3:1)'] = [z.kolorSystemCzarny, c.tlo, 3];
+  pary['znak kresek / karta Smart Stack (grafika, 3:1)'] = [z.kolorSystemCzarny, c.kartaStack, 3];
+}
 console.log(JSON.stringify(pary, null, 1));
