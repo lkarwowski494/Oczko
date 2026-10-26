@@ -14,7 +14,9 @@ Prompt 97ec212 = 47510 znaków (zgodny). Start: a305c33 po `npm ci` — verify k
 - (6) testy oczekujące 07 (cca1ca9): df261f7 (S3 ostatni kontakt; zglos-stan-danych.test.tsx:44 zmieniony z powodem P-193); tests/akceptacja pusty.
 - (7) a00873e P5a (linia „zapomniany stoper”), f7d438e + 1522237 Q4a (globalna obsługa błędów JS; „Zgłoś problem” w trybie awaryjnym).
 
-**Następny krok:** po północy koordynator uruchamia nocny CI iOS na 0bd9210 (build z nowymi modułami natywnymi, swift-test, E2E podstawowy; informacyjnie 16, 17, 40, 41, 42). Zielony → STOP E2 partii 5 z raportem `oczko-warsztat/08-programista/2026-10-26-partia5/E2-raport.md` (sekcja „Sesja 3”). Czerwony → 08 fix na tej gałęzi. Otwarte: Q-S3-2 (wersja 1.0.0 a strażnik v1.db).
+- Po STOP (koordynator, 18:37 UTC): c601eac łatka 10 P-228 (adres polityki na GitHub Pages); fundament 05 fix-7 (oczko-warsztat f21b8b3) `git am -3` L1 8447a77 (2312/2312), L2 15d4b78, L3a 7318efc, L3b 64623a6, L3c b9aec67 (każda 2315/2315). L3b/L3c: App Group i iCloud — identyfikatory na koncie Apple tworzy właściciel przed podpisanym buildem.
+
+**Następny krok:** po północy koordynator uruchamia nocny CI iOS na b9aec67 (build z nowymi modułami natywnymi, swift-test, E2E podstawowy; informacyjnie 16, 17, 40, 41, 42). Zielony → STOP E2 partii 5 z raportem `oczko-warsztat/08-programista/2026-10-26-partia5/E2-raport.md` (sekcja „Sesja 3”). Czerwony → 08 fix na tej gałęzi. Otwarte: Q-S3-2 (wersja 1.0.0 a strażnik v1.db).
 
 ## Stan: STOP (kontekst sesji 2, P-187 pkt 4) 2026-10-26 ok. 16:45 UTC — B zrobione, D: dane + F-37; reszta D, natywne i zgłoszenia w nowej sesji
 Potwierdzenie stanu sesji 2: prompt 97ec212 = 47510 znaków; start 71f8ae3 verify 1875/1875; koniec a98e651 (po rebase), `env -u NODE_PATH npm run verify` kod 0, **2213/2213**.
