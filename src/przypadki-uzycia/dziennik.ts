@@ -7,6 +7,7 @@ import { startDnia, wolaStraznika } from '../domena/limit';
 import type { PortBazy, WynikPartii, ZdarzenieWejsciowe } from '../domena/porty';
 import { PARTIA_SYNCHRONIZACJI } from '../konfiguracja';
 import { zapiszBladW } from '../dane/repozytoria/bledy';
+import { zapiszUstawienie } from '../dane/repozytoria/ustawienia';
 import {
   dniLimituMiesiaca, dopiszZdarzenie, ostatniPlusPrzed, poczekalnia, stanLicznika, trescZdarzenia, zapiszDzienLimitu, zapiszOstatniaPrace, zdarzenie,
 } from '../dane/repozytoria/liczniki';
@@ -62,6 +63,8 @@ async function scalLinie(tx: PortBazy, linie: readonly ZdarzenieWejsciowe[], ter
     potwierdz(l);
   }
   for (const id of dotkniete) await przeliczLicznik(tx, id, terazMs);
+  // F-58 „ostatni kontakt z zegarkiem” (P-199 Q5a, dane.md): czas odbioru partii z linią zegarka (także samych powtórzeń), w tej transakcji.
+  if (linie.some((l) => l.zrodlo === 'zegarek')) await zapiszUstawienie(tx, 'zegarek_ostatnia_partia_ms', terazMs, terazMs);
   return w;
 }
 
