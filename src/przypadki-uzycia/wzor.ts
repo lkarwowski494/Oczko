@@ -5,7 +5,8 @@ import type { Wynik } from '../domena/bledy';
 import type { CzasWTle, KonwersjaWzoru, PlikWejsciowy, PortBazy } from '../domena/porty';
 import { WZOR_MAKS_MB } from '../konfiguracja';
 import { adresStrony } from '../domena/adres';
-import { licznikZnacznika, znacznikJson } from '../dane/repozytoria/wzory';
+import { licznikZnacznika, znacznikJson, znacznikWzoru } from '../dane/repozytoria/wzory';
+import { polozenieZnacznika } from '../domena/znacznik-wzoru';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { odczytajUstawienie, zapiszUstawienie } from '../dane/repozytoria/ustawienia';
 import { otworzDoCzytania, rozmiar, usunPlik } from '../dane/pliki/system';
@@ -275,5 +276,38 @@ function zapiszFilm(z: Pick<ZaleznosciPlikow, 'baza' | 'zegar'>, projektId: stri
     if (liczbaLubNull(p, 'usunieto_ms') !== null) return blad('niedozwolone_przejscie');
     await tx.run('UPDATE projekt SET film_adres = ?, film_nazwa = ?, zmieniono_ms = ? WHERE id = ?', [adres, nazwa, teraz, projektId]);
     return OK;
+  });
+}
+
+export type WidokWzoru = {
+  wzorId: string; projektId: string; nazwa: string; zrodlo: string;
+  plikPdf: string | null;                         // null: Word w podglądzie zastępczym (pdf_sha256 NULL, P-071 (5a))
+  oryginal: string | null;
+  rysunki: { strona: number; plik: string }[];
+  obroty: Record<number, KatObrotu>;
+  znacznik: { licznikId: string; strona: number; rzad: number; y: number; wysokosc: number; pozaStrona: boolean; przedSchematem: boolean; kierunek: 1 | -1 } | null;
+};
+/** Model odczytu przeglądarki (moduly.md „Kontrakt partii 6”: widok natywny tylko rysuje wynik `polozenieZnacznika`). */
+export function widokWzoru(z: ZaleznosciPlikow, w: { wzorId: string }): Promise<Wynik<WidokWzoru>> {
+  return operacjaZapisu(z, 'widokWzoru', async (tx) => {
+    const stan = await wzorDoZapisu(tx, w.wzorId);
+    if (stan) return blad(stan);
+    const [r] = await wiersze(tx.all('SELECT projekt_id, nazwa, zrodlo, pdf_sha256, oryginal_sha256, obroty FROM wzor WHERE id = ?', [w.wzorId]), 'widokWzoru');
+    const rys = await wiersze(tx.all('SELECT strona, plik_sha256 FROM rysunek WHERE wzor_id = ? ORDER BY strona', [w.wzorId]), 'widokWzoru');
+    const pdf = tekstLubNull(r, 'pdf_sha256'), oryg = tekstLubNull(r, 'oryginal_sha256');
+    const obroty: Record<number, KatObrotu> = {};
+    for (const [k, v] of Object.entries(JSON.parse(tekst(r, 'obroty')) as Record<string, unknown>)) if (/^\d+$/.test(k) && (v === 90 || v === 180 || v === 270)) obroty[Number(k)] = v;
+    let znacznik: WidokWzoru['znacznik'] = null;
+    const zn = await znacznikWzoru(tx, w.wzorId);
+    if (zn) {
+      const [l] = await wiersze(tx.all('SELECT wartosc FROM licznik WHERE id = ?', [zn.licznikId]), 'widokWzoru');
+      const p = l ? polozenieZnacznika(zn, liczba(l, 'wartosc')) : null;
+      if (p?.ok) znacznik = { licznikId: zn.licznikId, strona: p.wartosc.strona, rzad: p.wartosc.rzad, y: p.wartosc.y, wysokosc: zn.wysokoscRzedu, pozaStrona: p.wartosc.pozaStrona, przedSchematem: p.wartosc.przedSchematem, kierunek: zn.kierunek };
+    }
+    return { ok: true, wartosc: {
+      wzorId: w.wzorId, projektId: tekst(r, 'projekt_id'), nazwa: tekst(r, 'nazwa'), zrodlo: tekst(r, 'zrodlo'),
+      plikPdf: pdf ? z.magazyn.sciezka(pdf) : null, oryginal: oryg ? z.magazyn.sciezka(oryg) : null,
+      rysunki: rys.map((x) => ({ strona: liczba(x, 'strona'), plik: z.magazyn.sciezka(tekst(x, 'plik_sha256')) })), obroty, znacznik,
+    } };
   });
 }
