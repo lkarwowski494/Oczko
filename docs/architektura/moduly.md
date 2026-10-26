@@ -158,9 +158,15 @@ export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: st
 // potwierdzone: id linii zrodlo 'zegarek' z partii, które po COMMIT są w `zdarzenie` (nowe albo powtórzone, M-02) albo odrzucone na stałe (brak licznika, R-021);
 // poczekalnia — nie; kolejność pierwszego wystąpienia, bez powtórzeń. Wołający (start, naPierwszyPlan, eksport, odbiór z zegarka) woła
 // zegarek.potwierdz(w.potwierdzone) przed odswiezEkranBlokady, więc lista jedzie z ładunkiem, który już uwzględnia te zdarzenia.
+
+// (a) status zakupu — P-135 Q3a, ADR-0010: anulowanie i oczekiwanie nie są błędem (MON-04); ekran woła komunikatZakupu(status) (dostep.ts, KP-*)
+export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // przeniesiony z src/platforma/sklep.ts; adapter: statusZBledu
+export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<StatusZakupu>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
+// sklepIap traci kupZeStatusem (jedna implementacja odpowiedzialności, ARCH-02); sklepSztuczny.kup zwraca 'sukces'.
 ```
 - **Moduł natywny** (`modules/oczko-dziennik-plus/ios/Zegarek.swift`, `index.ts`): `zegarekWyslij(stanJson: string, potwierdzone: string[])`; `didReceiveUserInfo` przy błędzie `dopisz` nie woła `poZapisie` i niczego nie potwierdza (e1, zegarek ponowi).
 - **Zegarek** (`targets/watch/Aplikacja.swift`, `SkrzynkaZegarka` w pakiecie): kolejka w pliku, kolejność stuknięcia, usuwanie i ponowienie według ADR-0009 (2026-10-26) pkt 1–5; testy X-ZG (`xctest-specyfikacja.md` §4).
+- **Sklep (a):** test oczekujący `tests/akceptacja/dane/sklep-status.test.ts`; `tests/adaptery/sklep.test.ts` (asercje `kup` → `{ ok }` i `kupZeStatusem`) przechodzą na status.
 - **Testy do zmiany mechanicznej przez 08** (asercje bez zmiany sensu): `toEqual({ ok: true, wartosc: { scalono, pominieto } })` w `tests/dane/dziennik*.test.ts` dostaje `potwierdzone`; test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` przenieść do `tests/dane/` w commicie, który go zazielenia.
 
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)

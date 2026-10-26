@@ -83,7 +83,7 @@ export function sklepIap(m: ModulIap, terazMs: () => number = Date.now): Sklep &
     kupZeStatusem,
     async kup(id): Promise<Wynik<void>> {
       const s = await kupZeStatusem(id);
-      return s === 'sukces' ? { ok: true, wartosc: undefined } : { ok: false, powod: 'zapis' }; // status do komunikatu: kupZeStatusem (zgłoszenie do 05)
+      return s === 'sukces' ? { ok: true, wartosc: undefined } : { ok: false, powod: 'zapis' }; // status do komunikatu: kupZeStatusem; kontrakt partii 4: kup → StatusZakupu (moduly.md, P-135 Q3a)
     },
     async przywroc(): Promise<Wynik<void>> {
       try { await polacz(); await m.restorePurchases(); return { ok: true, wartosc: undefined }; } catch { return { ok: false, powod: 'zapis' }; }
