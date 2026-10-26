@@ -1,10 +1,10 @@
 // Tryb awaryjny (ADR-0019, R-079), import „Zastąp” z kopią (R-068), konflikt z urządzeniem i godziną (R-050). Ekrany nienarysowane (Z07-05).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { TrybAwaryjny } from '../../../src/ekrany/TrybAwaryjny';
-import { Import, Konflikt } from '../../../src/ekrany/Dane';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { tEn, tekst } from '../../ekrany/pomoc';
+import { TrybAwaryjny } from '../../src/ekrany/TrybAwaryjny';
+import { Import, Konflikt } from '../../src/ekrany/Dane';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { tEn, tekst } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

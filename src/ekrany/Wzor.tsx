@@ -1,7 +1,8 @@
-// Linki przy wzorze: film z instrukcją (F-55, BR-WZR-007/S4). Ekran nienarysowany (Z07-05).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
-import type React from 'react';
-import { niezaimplementowane } from '../domena/zaslepka';
+// Linki przy wzorze: film z instrukcją (F-55, BR-WZR-007/S4). Ekran nienarysowany (Z07-05). Sygnatura: propozycja 07 (E3), granice 05 (Z07-22).
+// Oczko zapisuje tylko link; bez sieci stuknięcie mówi, że film wymaga połączenia, i niczego nie otwiera.
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { Komunikat, Przycisk } from './Arkusz';
 import type { System, Tlumacz } from './wspolne';
 
 export type PropsLinkuFilmu = {
@@ -9,6 +10,12 @@ export type PropsLinkuFilmu = {
   t: Tlumacz;
   system: System;
 };
-export function LinkFilmu(_p: PropsLinkuFilmu): React.ReactElement {
-  return niezaimplementowane('ekrany/LinkFilmu');
+export function LinkFilmu({ stan, t, system }: PropsLinkuFilmu): React.ReactElement {
+  const [bez, ustaw] = useState(false);
+  return (
+    <View>
+      <Przycisk tekst={stan.tytul} rola="link" rodzaj="tekstowy" onPress={() => { if (stan.siec === 'brak') ustaw(true); else { ustaw(false); system.otworzAdres(stan.url); } }} />
+      {bez && stan.siec === 'brak' && <Komunikat tekst={t('narzedzia.film_bez_sieci')} />}
+    </View>
+  );
 }

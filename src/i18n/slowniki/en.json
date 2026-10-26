@@ -64,7 +64,19 @@
     "jezyk_automatyczny": "Automatic (system)",
     "uklad_miar": "Units",
     "jakosc_tlumaczenia": "Translation quality",
-    "zglos_tlumaczenie": "Report a translation problem"
+    "zglos_tlumaczenie": "Report a translation problem",
+    "oczko_pro": "Oczko Pro",
+    "wibracje": "Vibration",
+    "zglos": "Report a problem",
+    "ocen": "Rate Oczko",
+    "polityka": "Privacy Policy",
+    "zrodla_wiedzy": "About our information",
+    "stan_danych": "Data and sync",
+    "eksport": "Export all data",
+    "import": "Import a backup",
+    "usun_wszystko": "Delete all data",
+    "usun_pytanie": "Delete all projects, history and settings on this iPhone? This can’t be undone.",
+    "usun_potwierdz": "Delete all data"
   },
   "aktywnosc": {
     "plus": "+1 row",
@@ -205,5 +217,91 @@
     "ukonczone": "Finished: {{lista}}",
     "czas": "{{czas}} with the stopwatch",
     "bez_stopera": "Time shows here when you use the stopwatch."
+  },
+  "oferty": {
+    "tytul": "Oczko Pro",
+    "opis": "Knit on as many days as you like. Everything else stays the same.",
+    "plany": "Plans",
+    "miesieczny": "Monthly",
+    "roczny": "Yearly",
+    "dozywotni": "Lifetime",
+    "cena_miesiac": "{{cena}} / month",
+    "cena_rok": "{{cena}} / year",
+    "cena_raz": "{{cena}} once",
+    "odnawianie_miesiac": "Renews every month until you cancel in your Apple ID settings.",
+    "odnawianie_rok": "Renews every year until you cancel in your Apple ID settings.",
+    "raz": "Pay once. Nothing renews.",
+    "bez_pro": "Without Pro: {{limit}} knitting days every month, and all your projects and data, always.",
+    "rodzina": "Shared with your family through Family Sharing.",
+    "kup": "Continue with {{plan}}",
+    "przywroc": "Restore purchases",
+    "polityka": "Privacy Policy",
+    "warunki": "Terms of Use",
+    "zarzadzaj": "Manage subscription",
+    "masz_pro": "You have Oczko Pro.",
+    "brak_sieci": "Prices aren’t available right now. Check your connection.",
+    "ladowanie": "Loading plans…"
+  },
+  "uczciwe": {
+    "tytul": "Your first knitting day is done",
+    "wszystko": "Everything in Oczko works from the first day, with no account and no ads.",
+    "darmowe_one": "Knit {{count}} day every month for free, for as long as you like. Your projects and data always stay yours.",
+    "darmowe_other": "Knit {{count}} days every month for free, for as long as you like. Your projects and data always stay yours.",
+    "pro": "Want more days? Oczko Pro removes the limit, as a subscription or a one-time purchase.",
+    "dalej": "Keep knitting",
+    "plany": "See Oczko Pro"
+  },
+  "awaryjny": {
+    "tytul_petla": "Oczko couldn’t start normally",
+    "tytul_nowsza": "Your data is from a newer Oczko",
+    "tytul_uszkodzony": "Oczko can’t read your data",
+    "opis": "Nothing is changed while this screen is open. Save a copy of your data first.",
+    "zapisz_kopie": "Save a copy of my data",
+    "sprobuj": "Try starting normally",
+    "zglos": "Report a problem",
+    "zapisano": "Copy saved: {{licznosci}}"
+  },
+  "dane": {
+    "import_tytul": "Import a backup",
+    "import_plik": "File: {{plik}}",
+    "scal": "Merge with what’s here",
+    "zastap": "Replace what’s here",
+    "zastapiono": "Done. A copy of your data from before the import is saved as {{nazwa}} in {{miejsce}}.",
+    "konflikt_tytul": "Two versions of {{licznik}}",
+    "konflikt_wybor": "{{wartosc}} rows · {{urzadzenie}} · {{godzina}}",
+    "konflikt_a11y": "Keep {{wartosc}} rows from {{urzadzenie}}, {{godzina}}"
+  },
+  "stan_danych": {
+    "tytul": "Data and sync",
+    "ostatnia": "Last synced {{data}}",
+    "czeka": "Sync is waiting for a network connection.",
+    "zapisane": "Everything is saved on this iPhone.",
+    "wylaczona": "iCloud sync is off.",
+    "aktywna": "iCloud sync is on.",
+    "zegarek_one": "Your watch has {{count}} change waiting.",
+    "zegarek_other": "Your watch has {{count}} changes waiting.",
+    "zegarek_co": "Open Oczko on your watch with your iPhone nearby."
+  },
+  "zglos": {
+    "tytul": "Report a problem",
+    "opis": "This is everything the report contains. Nothing leaves your iPhone until you share it.",
+    "udostepnij": "Share",
+    "pole_wersja": "App version",
+    "pole_system": "iOS",
+    "pole_model": "Device",
+    "pole_synchronizacja": "Sync",
+    "pole_zegarek": "Watch",
+    "pole_bledy": "Recent errors",
+    "plik": "Oczko report"
+  },
+  "narzedzia": {
+    "pielegnacja": "Care",
+    "zdjecie_etykiety": "Photo of the label for {{nazwa}}",
+    "kalk_oczka": "Swatch stitches",
+    "kalk_dlugosc_cm": "Swatch width, cm",
+    "kalk_dlugosc_in": "Swatch width, in",
+    "oblicz": "Calculate",
+    "film_bez_sieci": "This video needs an internet connection. Oczko keeps only the link.",
+    "kalk_cel": "Width you want (same unit)"
   }
 }

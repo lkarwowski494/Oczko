@@ -2,9 +2,9 @@
 // etykiety spoza design-spec są robocze (Z07-05) i czekają na audyt 04; etykiety z innych ekranów 04 cytowane z linią.
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Ustawienia, type PropsUstawien } from '../../../src/ekrany/Ustawienia';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaSystemu, przycisk, tEn } from '../../ekrany/pomoc';
+import { Ustawienia, type PropsUstawien } from '../../src/ekrany/Ustawienia';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { atrapaSystemu, przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

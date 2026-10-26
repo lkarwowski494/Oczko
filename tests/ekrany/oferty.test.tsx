@@ -2,10 +2,10 @@
 // Ceny w danych testu: ceny PL z P-089 (1) jako `cenaWyswietlana` atrapy sklepu. Ceny USD z makiety nie mogą się pojawić (KP-09, R-118).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Oferty, type PropsOfert } from '../../../src/ekrany/Oferty';
-import type { Produkt } from '../../../src/domena/porty';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { przycisk, tEn } from '../../ekrany/pomoc';
+import { Oferty, type PropsOfert } from '../../src/ekrany/Oferty';
+import type { Produkt } from '../../src/domena/porty';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

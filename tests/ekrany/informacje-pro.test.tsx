@@ -3,10 +3,10 @@
 // Makiety brak (Z07-05; P-089: projekt okna według wzorca Treningu robi 04) → zapytania po roli bez etykiety wzorcowej.
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { OknoUczciweZasady } from '../../../src/ekrany/InformacjePro';
-import type { Produkt } from '../../../src/domena/porty';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { przycisk, tEn } from '../../ekrany/pomoc';
+import { OknoUczciweZasady } from '../../src/ekrany/InformacjePro';
+import type { Produkt } from '../../src/domena/porty';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

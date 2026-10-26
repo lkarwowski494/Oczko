@@ -2,10 +2,10 @@
 // Ekrany nienarysowane (design-spec.md:95; Z07-05).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Kalkulator, Wloczka } from '../../../src/ekrany/Narzedzia';
-import { LinkFilmu } from '../../../src/ekrany/Wzor';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaSystemu, tEn } from '../../ekrany/pomoc';
+import { Kalkulator, Wloczka } from '../../src/ekrany/Narzedzia';
+import { LinkFilmu } from '../../src/ekrany/Wzor';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { atrapaSystemu, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

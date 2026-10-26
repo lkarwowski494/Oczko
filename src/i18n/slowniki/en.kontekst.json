@@ -54,7 +54,19 @@
     "jezyk_automatyczny": "Pierwsza pozycja listy języków: język jak w systemie telefonu. Propozycja roli 09, zatwierdza 04. Ok. 25 znaków.",
     "uklad_miar": "Etykieta wiersza w Ustawieniach: metryczne czy imperialne (P-075, 4a). Propozycja roli 09, zatwierdza 04. Ok. 10 znaków.",
     "jakosc_tlumaczenia": "Etykieta wiersza informującego, że przekład jest maszynowy (P-075, 2a). Propozycja roli 09, zatwierdza 04. Ok. 20 znaków.",
-    "zglos_tlumaczenie": "Odnośnik pod wierszem jakości przekładu: otwiera zgłoszenie błędu (F-57) z kodem języka. Propozycja roli 09, zatwierdza 04. Ok. 30 znaków."
+    "zglos_tlumaczenie": "Odnośnik pod wierszem jakości przekładu: otwiera zgłoszenie błędu (F-57) z kodem języka. Propozycja roli 09, zatwierdza 04. Ok. 30 znaków.",
+    "oczko_pro": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Pozycja wejścia do ofert (KP-13).",
+    "wibracje": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07 (BR-LIC-020/S3).",
+    "zglos": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07 (BR-DAN-010).",
+    "ocen": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07 (BR-DAN-012/S3).",
+    "polityka": "Jak w ofertach (design-spec.md:68).",
+    "zrodla_wiedzy": "Tekst z design-spec roli 04.",
+    "stan_danych": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. F-58.",
+    "eksport": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-006.",
+    "import": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-006.",
+    "usun_wszystko": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-009.",
+    "usun_pytanie": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-009: potwierdzenie z czasownikiem.",
+    "usun_potwierdz": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04."
   },
   "aktywnosc": {
     "plus": "Przycisk +1 na ekranie blokady, w rozwiniętej Dynamic Island i na zegarku (P-133 (1.1a): jedyny przycisk Live Activity). Ok. 8 znaków.",
@@ -187,5 +199,89 @@
     "ukonczone": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
     "czas": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
     "bez_stopera": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-DNI-003/S2: zamiast 0 godzin."
+  },
+  "oferty": {
+    "tytul": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "opis": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "plany": "Tekst z ekrany.html roli 04 (ekran ofert). Nazwa grupy planów (radiogroup).",
+    "miesieczny": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "roczny": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "dozywotni": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "cena_miesiac": "Tekst z ekrany.html roli 04 (ekran ofert). {{cena}} = displayPrice ze sklepu (KP-09).",
+    "cena_rok": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "cena_raz": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "odnawianie_miesiac": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "odnawianie_rok": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "raz": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "bez_pro": "Tekst z ekrany.html roli 04 (ekran ofert). {{limit}} = LIMIT_DNI_W_MIESIACU.",
+    "rodzina": "Tekst z ekrany.html roli 04 (ekran ofert). Tylko gdy Family Sharing włączone (P-089 (2)).",
+    "kup": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "przywroc": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "polityka": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "warunki": "Tekst z ekrany.html roli 04 (ekran ofert).",
+    "zarzadzaj": "Tekst z design-spec roli 04. design-spec.md:56.",
+    "masz_pro": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Stan Pro (KP-03).",
+    "brak_sieci": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Macierz 04: brak sieci.",
+    "ladowanie": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04."
+  },
+  "uczciwe": {
+    "tytul": "Tekst z design-spec roli 04.",
+    "wszystko": "Tekst z design-spec roli 04.",
+    "darmowe": "Tekst z design-spec roli 04. Formy _one/_other.",
+    "pro": "Tekst z design-spec roli 04.",
+    "dalej": "Tekst z design-spec roli 04.",
+    "plany": "Tekst z design-spec roli 04."
+  },
+  "awaryjny": {
+    "tytul_petla": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019: pętla nieudanych startów.",
+    "tytul_nowsza": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019: baza nowsza — „Zaktualizuj aplikację”.",
+    "tytul_uszkodzony": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019: plik bazy uszkodzony.",
+    "opis": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "zapisz_kopie": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019 „Zapisz kopię danych”.",
+    "sprobuj": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019 „Spróbuj normalnie”.",
+    "zglos": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "zapisano": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04."
+  },
+  "dane": {
+    "import_tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "import_plik": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "scal": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Import „scal” (P-091 6a).",
+    "zastap": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Import „zastąp”.",
+    "zastapiono": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. R-068, dane.md:69.",
+    "konflikt_tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. NFR-DAN-003, R-050.",
+    "konflikt_wybor": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "konflikt_a11y": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04."
+  },
+  "stan_danych": {
+    "tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "ostatnia": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "czeka": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-011/S1.",
+    "zapisane": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-011/S1.",
+    "wylaczona": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "aktywna": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "zegarek": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-011/S2. Formy _one/_other.",
+    "zegarek_co": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-011/S2: co zrobić."
+  },
+  "zglos": {
+    "tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "opis": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. R-162.",
+    "udostepnij": "Tekst z ekrany.html roli 04 (ekran ukończenia).",
+    "pole_wersja": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "pole_system": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "pole_model": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "pole_synchronizacja": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "pole_zegarek": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "pole_bledy": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "plik": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04."
+  },
+  "narzedzia": {
+    "pielegnacja": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-ZAP-001.",
+    "zdjecie_etykiety": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "kalk_oczka": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. F-38.",
+    "kalk_dlugosc_cm": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. R-131: jednostka przy polu.",
+    "kalk_dlugosc_in": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. R-131.",
+    "oblicz": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
+    "film_bez_sieci": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-WZR-007/S4.",
+    "kalk_cel": "Tekst roboczy 08 (Z07-05) — do zatwierdzenia przez 04. Jednostka tylko przy polu próbki (R-131), cel w tej samej jednostce."
   }
 }

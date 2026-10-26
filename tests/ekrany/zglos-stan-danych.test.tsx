@@ -1,10 +1,10 @@
 // „Zgłoś problem” (F-57, BR-DAN-010, R-162, R-163) i stan danych (F-58, BR-DAN-011). Ekrany nienarysowane (Z07-05).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { ZglosProblem, type PoleDiagnostyki } from '../../../src/ekrany/ZglosProblem';
-import { StanDanych } from '../../../src/ekrany/StanDanych';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaSystemu, tEn } from '../../ekrany/pomoc';
+import { ZglosProblem, type PoleDiagnostyki } from '../../src/ekrany/ZglosProblem';
+import { StanDanych } from '../../src/ekrany/StanDanych';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { atrapaSystemu, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

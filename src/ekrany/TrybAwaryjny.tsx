@@ -1,18 +1,32 @@
 // Ekran trybu awaryjnego (ADR-0019; R-079): „Zapisz kopię danych”, „Spróbuj normalnie”, „Zgłoś problem”. Ekranu nie narysowano (Z07-05).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
-// W tym trybie ekran nie dostaje żadnego portu zapisu do bazy (ADR-0019: „nic nie zmienia danych”).
-import type React from 'react';
-import { niezaimplementowane } from '../domena/zaslepka';
+// W tym trybie ekran nie dostaje żadnego portu zapisu do bazy (ADR-0019: „nic nie zmienia danych”). Sygnatura: propozycja 07, granice 05 (Z07-22).
+import React from 'react';
+import { Arkusz, Przycisk, Tresc } from './Arkusz';
 import type { Tlumacz } from './wspolne';
 
 export type PowodTrybuAwaryjnego = 'petla-startow' | 'wersja_nowsza' | 'uszkodzony';
 export type PropsTrybuAwaryjnego = {
-  stan: { powod: PowodTrybuAwaryjnego };
+  stan: { powod: PowodTrybuAwaryjnego; licznosciKopii?: string | null };
   t: Tlumacz;
   naZapiszKopie(): void;
   naSprobujNormalnie(): void;
   naZglosProblem(): void;
+  /** Panel buildu E2E (`e2e-sha-bazy`, bez t()); w buildzie wydania brak. */
+  panelE2e?: React.ReactNode;
 };
-export function TrybAwaryjny(_p: PropsTrybuAwaryjnego): React.ReactElement {
-  return niezaimplementowane('ekrany/TrybAwaryjny');
+const TYTUL = { 'petla-startow': 'awaryjny.tytul_petla', wersja_nowsza: 'awaryjny.tytul_nowsza', uszkodzony: 'awaryjny.tytul_uszkodzony' } as const;
+export function TrybAwaryjny({ stan, t, naZapiszKopie, naSprobujNormalnie, naZglosProblem, panelE2e }: PropsTrybuAwaryjnego): React.ReactElement {
+  return (
+    <Arkusz tytul={t(TYTUL[stan.powod])} testID="tryb-awaryjny" przyciski={
+      <>
+        <Przycisk tekst={t('awaryjny.zapisz_kopie')} onPress={naZapiszKopie} rodzaj="glowny" testID="awaryjny-zapisz-kopie" />
+        <Przycisk tekst={t('awaryjny.sprobuj')} onPress={naSprobujNormalnie} testID="awaryjny-sprobuj-normalnie" />
+        <Przycisk tekst={t('awaryjny.zglos')} onPress={naZglosProblem} rodzaj="tekstowy" testID="awaryjny-zglos-problem" />
+      </>
+    }>
+      <Tresc>{t('awaryjny.opis')}</Tresc>
+      {stan.licznosciKopii && <Tresc podpis testID="awaryjny-licznosci">{t('awaryjny.zapisano', { licznosci: stan.licznosciKopii })}</Tresc>}
+      {panelE2e}
+    </Arkusz>
+  );
 }
