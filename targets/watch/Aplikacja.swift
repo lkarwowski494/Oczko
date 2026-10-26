@@ -225,8 +225,12 @@ struct EkranZegarka: View {
           } else {
             if let pas = pasPrzypomnienia(s) { PasZegarka(pas: pas, jezyk: j) }
             Text(Teksty.t("teraz", j, ["n": String(rzadWRobocie(s))])).font(.footnote).foregroundStyle(Color("olowek"))
-            if !model.telefonBlisko && !model.skrzynka.oczekujace.isEmpty {
-              Text(Teksty.tl("bez_telefonu", model.skrzynka.oczekujace.count, j)).font(.footnote).foregroundStyle(Color("olowek")).multilineTextAlignment(.center)
+            // P-199 Q6a: linia, gdy najstarsza pozycja kolejki czeka ≥ ZEGAREK_PONOWIENIE_MS (nie z zasięgu WCSession — migotałaby);
+            // odświeżanie co minutę, bo próg mija bez zdarzenia.
+            TimelineView(.periodic(from: .now, by: 60)) { kontekst in
+              if let n = model.skrzynka.niewyslane(teraz: Int64((kontekst.date.timeIntervalSince1970 * 1000).rounded(.down))) {
+                Text(Teksty.tl("bez_telefonu", n, j)).font(.footnote).foregroundStyle(Color("olowek")).multilineTextAlignment(.center)
+              }
             }
           }
           HStack(spacing: 8) {

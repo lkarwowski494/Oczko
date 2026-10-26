@@ -89,6 +89,13 @@ public struct SkrzynkaZegarka: Equatable {
     return w
   }
 
+  /// Linia „iPhone not nearby. N changes are saved on this watch.” (P-199 Q6a): N = liczba linii w kolejce, gdy najstarsza czeka
+  /// ≥ `Stale.zegarekPonowienieMs` od stuknięcia; inaczej nil (bez progu linia zapalałaby się po każdym stuknięciu do potwierdzenia).
+  public func niewyslane(teraz: Int64) -> Int? {
+    guard let najstarsza = oczekujace.map(\.czasMs).min(), teraz - najstarsza >= Stale.zegarekPonowienieMs else { return nil }
+    return oczekujace.count
+  }
+
   /// Linie do `transferUserInfo` (pkt 5): bez tych w toku (`outstandingUserInfoTransfers`), niewysłane w tym uruchomieniu albo wysłane
   /// co najmniej `Stale.zegarekPonowienieMs` temu; zwrócone dostają czas wysyłki `teraz`.
   public mutating func doWyslania(teraz: Int64, wToku: Set<String>) -> [ZdarzenieWejsciowe] {

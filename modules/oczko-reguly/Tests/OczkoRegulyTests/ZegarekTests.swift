@@ -45,6 +45,22 @@ final class ZegarekTests: XCTestCase {
     XCTAssertTrue(nowy.dniWMiesiacu.contains(DzienStanu(dzien: "2026-11-08", pro: true)))
   }
 
+  /// P-199 Q6a (ADR-0009 uzupełnienie fix-6): linia „iPhone not nearby. N changes…” dopiero, gdy najstarsza pozycja kolejki czeka
+  /// ≥ `Stale.zegarekPonowienieMs` (15 min) od stuknięcia; N = cała kolejka; po potwierdzeniu znika. 14:59 → brak, 15:00 → 2.
+  func testLiniaNiewyslanychPoProgu() throws {
+    var s = try nowaSkrzynka()
+    let k = try stan("stan-zegarka-typowy.json")
+    s.przyjmij(k)
+    XCTAssertNil(s.niewyslane(teraz: wieczor), "pusta kolejka")
+    _ = try s.stuknijNaZegarku(.plus, teraz: wieczor, strefa: "Europe/Warsaw", id: "z1", urzadzenie: "zegarek")
+    _ = try s.stuknijNaZegarku(.plus, teraz: wieczor + 10 * 60_000, strefa: "Europe/Warsaw", id: "z2", urzadzenie: "zegarek")
+    XCTAssertEqual(Stale.zegarekPonowienieMs, 900_000)
+    XCTAssertNil(s.niewyslane(teraz: wieczor + 14 * 60_000 + 59_000), "14:59 — jeszcze bez linii (bez migotania po każdym stuknięciu)")
+    XCTAssertEqual(s.niewyslane(teraz: wieczor + 15 * 60_000), 2, "15:00 — linia z liczbą całej kolejki")
+    s.przyjmij(k.po(2, glowa: "z2", czasMs: wieczor + 10 * 60_000, dzien: k.dzien, dni: k.dniWMiesiacu))
+    XCTAssertNil(s.niewyslane(teraz: wieczor + 20 * 60_000), "po potwierdzeniu kolejka pusta")
+  }
+
   /// Kontekst innego licznika: oczekujące poprzedniego licznika nie giną, wartość pokazywana = nowy kontekst.
   func testZmianaLicznika() throws {
     var s = try nowaSkrzynka()
