@@ -24,7 +24,8 @@ export interface Synchronizacja { wlacz(): Promise<Wynik<void>>; wylacz(): Promi
 export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<Wynik<void>>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
 export interface Haptyka { rzad(): void; przypomnienie(): void }               // dwa wzorce F-48; brak dźwięku (BR-LIC-005)
 export interface EkranAktywny { wlacz(tag: string): void; wylacz(tag: string): void } // F-10, każdy tag wyłączany (rejestr Expo 7)
-export interface CzasWTle { chron<T>(nazwa: string, fn: () => Promise<T>): Promise<T> } // beginBackgroundTask (rejestr Apple 17)
+export interface CzasWTle { chron<T>(nazwa: string, fn: (s: SygnalCzasu) => Promise<T>): Promise<T> } // beginBackgroundTask (rejestr Apple 17); wygaśnięcie → sygnał (ADR-0002 (7))
+export type SygnalCzasu = { wygaslo(): boolean };  // sprawdzany między instrukcjami długiej transakcji; true → wyjątek → ROLLBACK
 export interface SkrzynkaImportu { pobierz(): Promise<PlikWejsciowy[]>; usun(id: string): Promise<void> } // ADR-0011
 
 export type StanEkranuBlokady = { licznikId: string; nazwa: string; wartosc: number; glowa: string | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null }; // < 4 KB (rejestr Apple 1b)
@@ -50,5 +51,5 @@ export interface PortArchiwum {                                                 
   zapisz(katalogDocelowy: string): Promise<Wynik<{ sciezka: string; manifest: Manifest }>>; // VACUUM INTO + pliki + manifest
   sprawdz(sciezka: string): Promise<Wynik<ArchiwumSprawdzone>>;                              // manifest, wersje, SHA-256, miejsce; baza bez zmian
   kopiaPrzed(): Promise<Wynik<{ sciezka: string }>>;                                         // „kopia przed importem” (KOPIA_PRZED_IMPORTEM_DNI)
-  wczytaj(a: ArchiwumSprawdzone, tryb: TrybImportu): Promise<Wynik<{ licznosci: Licznosci }>>;
+  wczytaj(a: ArchiwumSprawdzone, tryb: TrybImportu, sygnal?: SygnalCzasu): Promise<Wynik<{ licznosci: Licznosci }>>;
 }

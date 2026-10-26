@@ -84,7 +84,7 @@ export function dziennikTestowy(linie: ZdarzenieWejsciowe[] = []): DziennikTesto
   };
   return d;
 }
-export const czasWTle: CzasWTle = { chron: (_n, fn) => fn() };
+export const czasWTle: CzasWTle = { chron: (_n, fn) => fn({ wygaslo: () => false }) }; // sygnał wygaśnięcia: fix-3 05 (ADR-0002 (7)), 08 partia 3
 
 export function katalogTymczasowy(nazwa = 'oczko-dane-'): string {
   return mkdtempSync(join(tmpdir(), nazwa));

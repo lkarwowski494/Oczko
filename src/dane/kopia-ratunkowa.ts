@@ -3,7 +3,7 @@
 // sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22).
 // Wyjątek nazwany kontroli KOPIA-SAMEGO-DB (e4-przekazanie „Do 12”): surowa kopia kopiuje zawsze oczko.db razem z -wal i -shm.
 import type { Powod, Wynik } from '../domena/bledy';
-import type { Katalogi, PortBazy, Zegar } from '../domena/porty';
+import type { Katalogi, PortBazy, SygnalCzasu, Zegar } from '../domena/porty';
 import { WERSJA_SCHEMATU } from '../konfiguracja';
 import { otworzPortExpo } from './baza/adapter-expo';
 import { powodBledu } from './baza/bledy-sqlite';
@@ -72,7 +72,8 @@ async function kopiaWBiezacymSchemacie(sciezka: string, wersja: number, katalogi
 }
 
 /** ADR-0020 (5): sprawdzKopie → kopia bieżącej bazy do `katalogi.kopie` → dane z kopii do bazy głównej przez kolejkę (bez podmiany pliku). */
-export async function przywrocZKopii(z: { baza: PortBazy; zegar: Zegar; katalogi: Katalogi }, sciezka: string): Promise<Wynik<{ kopiaPrzed: string }>> {
+/** `sygnal`: czas w tle (ADR-0002 (7)); wołający trzyma całość w jednej pozycji kolejki (przypadek użycia `przywrocKopie`, ADR-0020 (5′)). */
+export async function przywrocZKopii(z: { baza: PortBazy; zegar: Zegar; katalogi: Katalogi }, sciezka: string, sygnal?: SygnalCzasu): Promise<Wynik<{ kopiaPrzed: string }>> {
   const s = await sprawdzKopie(sciezka);
   if (!s.ok) return s;
   const ms = z.zegar.teraz().ms;
@@ -84,7 +85,7 @@ export async function przywrocZKopii(z: { baza: PortBazy; zegar: Zegar; katalogi
     const c = await kopiaWBiezacymSchemacie(sciezka, s.wartosc.wersjaSchematu, z.katalogi, ms);
     if (!c.ok) return c;
     if (c.wartosc.robocza) robocza = c.wartosc.sciezka;
-    await zastapZKopii(z.baza, c.wartosc.sciezka); // jedna transakcja: błąd w trakcie zostawia bieżącą bazę bez zmian
+    await zastapZKopii(z.baza, c.wartosc.sciezka, sygnal); // jedna transakcja: błąd w trakcie zostawia bieżącą bazę bez zmian
     return { ok: true, wartosc: { kopiaPrzed } };
   } catch (e) {
     return zapisNieudany(e);

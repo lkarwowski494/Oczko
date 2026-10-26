@@ -1,7 +1,7 @@
 // Przeniesienie danych z kopii bazy (ten sam schemat) do bazy głównej przez port i kolejkę — nigdy podmiana pliku (ADR-0020 (5), R-088):
 // „zastąp” (import, przywrócenie kopii) i „scal” po UUID (import, ADR-0004, dane.md „Import”, P-091 (6a), ER-42).
 // Kopia dołączana `ATTACH` przed transakcją (w transakcji ATTACH jest niedozwolony), odłączana po niej; klucze obce odroczone do COMMIT.
-import type { PortBazy } from '../../domena/porty';
+import type { PortBazy, SygnalCzasu } from '../../domena/porty';
 import { zapiszBladW } from '../repozytoria/bledy';
 import { przeliczLicznik } from '../repozytoria/przelicz';
 import { tekst, wiersze } from '../repozytoria/wiersze';
@@ -21,10 +21,23 @@ async function sprawdzTabele(tx: PortBazy): Promise<void> {
   const nowe = glowne.filter((t) => !znane.includes(t));
   if (nowe.length) throw new Error(`przeniesienie: tabele bez reguły przeniesienia: ${nowe.join(', ')}`); // nowa tabela = decyzja, nie pominięcie
 }
-async function zKopia<T>(baza: PortBazy, sciezkaKopii: string, fn: (tx: PortBazy) => Promise<T>): Promise<T> {
+/** Transakcja, która przed każdą instrukcją sprawdza sygnał czasu w tle; po wygaśnięciu wyjątek → ROLLBACK (ADR-0002 (7)). */
+function pilnowana(tx: PortBazy, sygnal: SygnalCzasu | undefined): PortBazy {
+  if (!sygnal) return tx;
+  const sprawdz = () => { if (sygnal.wygaslo()) throw new Error('czas w tle wygasł: transakcja wycofana (ADR-0002 (7))'); };
+  const t: PortBazy = {
+    run: (sql, p) => { sprawdz(); return tx.run(sql, p); },
+    all: (sql, p) => { sprawdz(); return tx.all(sql, p); },
+    transakcja: (f) => f(t),
+  };
+  return t;
+}
+/** ATTACH → jedna transakcja → DETACH; wołający trzyma całość w jednej pozycji kolejki przypadków użycia (ADR-0020 (5′)). */
+async function zKopia<T>(baza: PortBazy, sciezkaKopii: string, fn: (tx: PortBazy) => Promise<T>, sygnal?: SygnalCzasu): Promise<T> {
   await baza.run('ATTACH DATABASE ? AS kopia', [sciezkaKopii]);
   try {
-    return await baza.transakcja(async (tx) => {
+    return await baza.transakcja(async (surowa) => {
+      const tx = pilnowana(surowa, sygnal);
       await tx.run('PRAGMA defer_foreign_keys = ON'); // w transakcji: sprawdzenie kluczy przy COMMIT (dzieci i rodzice w dowolnej kolejności)
       await sprawdzTabele(tx);
       return fn(tx);
@@ -35,14 +48,14 @@ async function zKopia<T>(baza: PortBazy, sciezkaKopii: string, fn: (tx: PortBazy
 }
 
 /** „Zastąp”: dane z kopii zamiast bieżących, w jednej transakcji; `blad` i klucze stanu urządzenia zostają. */
-export function zastapZKopii(baza: PortBazy, sciezkaKopii: string): Promise<void> {
+export function zastapZKopii(baza: PortBazy, sciezkaKopii: string, sygnal?: SygnalCzasu): Promise<void> {
   return zKopia(baza, sciezkaKopii, async (tx) => {
     for (const t of [...TABELE].reverse()) await tx.run(t === 'ustawienie' ? `DELETE FROM main.ustawienie WHERE klucz NOT IN ${KLUCZE_URZADZENIA}` : `DELETE FROM main.${t}`);
     for (const t of TABELE) {
       const k = (await kolumny(tx, t)).join(', ');
       await tx.run(`INSERT INTO main.${t} (${k}) SELECT ${k} FROM kopia.${t}${t === 'ustawienie' ? ` WHERE klucz NOT IN ${KLUCZE_URZADZENIA}` : ''}`);
     }
-  });
+  }, sygnal);
 }
 
 /** Klucz główny i kolumna czasu zmiany encji (wygrywa nowsza `zmieniono_ms`); bez czasu zmiany: tylko dopisanie brakujących wierszy. */
@@ -61,7 +74,7 @@ const ENCJE: Record<string, { klucz: string; czas: boolean; pomin?: string[] }> 
  * instrukcją `zapis-dnia-limitu.sql` (pro = OR, L-20), okno „Uczciwe zasady” OR (KP-16); potem `scal` nad zdarzeniami każdego licznika z kopii
  * (rozbieżna gałąź = konflikt jak przy iCloud, M-04; drugi import tego samego pliku nic nie zmienia, M-16). Zwraca liczniki w konflikcie.
  */
-export function scalZKopia(baza: PortBazy, sciezkaKopii: string, terazMs: number): Promise<number> {
+export function scalZKopia(baza: PortBazy, sciezkaKopii: string, terazMs: number, sygnal?: SygnalCzasu): Promise<number> {
   return zKopia(baza, sciezkaKopii, async (tx) => {
     const kolizje = await wiersze(tx.all(
       `SELECT k.id FROM kopia.zdarzenie k JOIN main.zdarzenie m ON m.id = k.id
@@ -91,5 +104,5 @@ export function scalZKopia(baza: PortBazy, sciezkaKopii: string, terazMs: number
       if ((await przeliczLicznik(tx, tekst(r, 'licznik_id'), terazMs)) === 'konflikt') konflikty += 1;
     }
     return konflikty;
-  });
+  }, sygnal);
 }

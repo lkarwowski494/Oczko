@@ -135,7 +135,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
     },
 
     /** Migracja kopii tym samym runnerem → pliki do magazynu → dane (zastąp albo scal) w kolejce portu; katalog tymczasowy usuwany na końcu. */
-    async wczytaj(a: ArchiwumSprawdzone, tryb) {
+    async wczytaj(a: ArchiwumSprawdzone, tryb, sygnal) {
       const db = polacz(a.katalog, 'oczko.db');
       try {
         const port = otworzPortExpo(db);
@@ -149,8 +149,8 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
           const r = await z.magazyn.zapisz(polacz(a.katalog, 'pliki', nazwa), nazwa.slice(nazwa.indexOf('.') + 1));
           if (!r.ok) return r;
         }
-        if (tryb === 'zastap') await zastapZKopii(z.baza, db);
-        else await scalZKopia(z.baza, db, z.zegar.teraz().ms);
+        if (tryb === 'zastap') await zastapZKopii(z.baza, db, sygnal);
+        else await scalZKopia(z.baza, db, z.zegar.teraz().ms, sygnal);
         return { ok: true, wartosc: { licznosci: await licznosci(z.baza) } };
       } catch (e) {
         return zapisNieudany(e);

@@ -32,7 +32,7 @@ export function importuj(
   z: ZaleznosciArchiwum,
   w: { sciezka: string; wybierz: (m: Manifest) => Promise<TrybImportu | 'anuluj'> },
 ): Promise<Wynik<WynikImportu>> {
-  return z.czasWTle.chron('import', async () => {
+  return z.czasWTle.chron('import', async (sygnal) => {
     let stan: StanImportu = 'sprawdzanie';
     const a = await z.archiwum.sprawdz(w.sciezka);
     if (!a.ok) { stan = dalej(stan, 'sprawdzono_zle'); return a; }
@@ -48,7 +48,7 @@ export function importuj(
         kopiaPrzed = k.wartosc.sciezka;
       }
       stan = dalej(stan, 'kopia_gotowa');
-      const wynik = await z.archiwum.wczytaj(a.wartosc, tryb);
+      const wynik = await z.archiwum.wczytaj(a.wartosc, tryb, sygnal); // jedna transakcja pod ochroną czasu w tle (ADR-0002 (7))
       if (wynik.ok) { dalej(stan, 'wczytano'); return { ok: true, wartosc: { tryb, kopiaPrzed, licznosci: wynik.wartosc.licznosci } }; }
       dalej(stan, 'blad'); // wycofany: „scal” to jedna transakcja (ROLLBACK), „zastąp” też — kopia przed zostaje do ręcznego przywrócenia (30 dni)
       return wynik;
