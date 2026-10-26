@@ -233,3 +233,47 @@ export async function zapiszRysunek(z: ZaleznosciPlikow, w: { wzorId: string; st
     usunPlik(w.plikTymczasowy);
   }
 }
+
+export type KatObrotu = 0 | 90 | 180 | 270;
+/** Obrót strony w widoku (P-246 S3a; P-218 (2): plik bez zmian): `wzor.obroty` = { "<strona>": kąt }, 0° usuwa wpis; znacznik i rysunki w układzie strony przed obrotem. */
+export function ustawObrot(z: ZaleznosciPlikow, w: { wzorId: string; strona: number; kat: KatObrotu }): Promise<Wynik<void>> {
+  if (!Number.isInteger(w.strona) || w.strona < 0 || ![0, 90, 180, 270].includes(w.kat)) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'ustawObrot', async (tx, teraz) => {
+    const stan = await wzorDoZapisu(tx, w.wzorId);
+    if (stan) return blad(stan);
+    const sciezka = `$."${w.strona}"`;
+    await tx.run(w.kat === 0 ? 'UPDATE wzor SET obroty = json_remove(obroty, ?), zmieniono_ms = ? WHERE id = ?' : 'UPDATE wzor SET obroty = json_set(obroty, ?, ?), zmieniono_ms = ? WHERE id = ?',
+      w.kat === 0 ? [sciezka, teraz, w.wzorId] : [sciezka, w.kat, teraz, w.wzorId]);
+    return OK;
+  });
+}
+export function obrotyWzoru(z: ZaleznosciPlikow, w: { wzorId: string }): Promise<Wynik<Record<number, KatObrotu>>> {
+  return operacjaZapisu(z, 'obrotyWzoru', async (tx) => {
+    const [r] = await wiersze(tx.all('SELECT obroty FROM wzor WHERE id = ?', [w.wzorId]), 'obrotyWzoru');
+    if (!r) return blad('bledne_dane');
+    const o: Record<number, KatObrotu> = {};
+    for (const [k, v] of Object.entries(JSON.parse(tekst(r, 'obroty')) as Record<string, unknown>)) {
+      if (/^\d+$/.test(k) && (v === 90 || v === 180 || v === 270)) o[Number(k)] = v;
+    }
+    return { ok: true, wartosc: o };
+  });
+}
+
+/** Link do filmu projektu (F-55, P-246 S4a; P-218 (4): poza wzorem): jeden na projekt, tylko adres http(s) i opcjonalna nazwa. */
+export function ustawFilm(z: Pick<ZaleznosciPlikow, 'baza' | 'zegar'>, w: { projektId: string; adres: string; nazwa: string }): Promise<Wynik<void>> {
+  const adres = adresStrony(w.adres);
+  if (!adres) return Promise.resolve(blad('bledne_dane'));
+  return zapiszFilm(z, w.projektId, adres, w.nazwa.trim() || null);
+}
+export function usunFilm(z: Pick<ZaleznosciPlikow, 'baza' | 'zegar'>, w: { projektId: string }): Promise<Wynik<void>> {
+  return zapiszFilm(z, w.projektId, null, null);
+}
+function zapiszFilm(z: Pick<ZaleznosciPlikow, 'baza' | 'zegar'>, projektId: string, adres: string | null, nazwa: string | null): Promise<Wynik<void>> {
+  return operacjaZapisu(z, 'film', async (tx, teraz) => {
+    const [p] = await wiersze(tx.all('SELECT usunieto_ms FROM projekt WHERE id = ?', [projektId]), 'film');
+    if (!p) return blad('bledne_dane');
+    if (liczbaLubNull(p, 'usunieto_ms') !== null) return blad('niedozwolone_przejscie');
+    await tx.run('UPDATE projekt SET film_adres = ?, film_nazwa = ?, zmieniono_ms = ? WHERE id = ?', [adres, nazwa, teraz, projektId]);
+    return OK;
+  });
+}

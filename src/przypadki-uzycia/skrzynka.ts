@@ -6,7 +6,7 @@ import type { SkrzynkaImportu, ZlecenieImportu } from '../domena/porty';
 import { zapiszBlad } from '../dane/repozytoria/bledy';
 import { tekst, wiersze } from '../dane/repozytoria/wiersze';
 import { OK, blad, operacjaZapisu } from './zapis';
-import { dodajWzor, type ZaleznosciWzoru, type ZrodloDodania } from './wzor';
+import { dodajWzor, ustawFilm, type ZaleznosciWzoru, type ZrodloDodania } from './wzor';
 
 export type ZaleznosciSkrzynki = ZaleznosciWzoru & { skrzynka: SkrzynkaImportu };
 export type WynikSkrzynki = { zaimportowano: number; doWyboru: ZlecenieImportu[]; czekaSiec: ZlecenieImportu[]; bledy: { zlecenie: ZlecenieImportu; powod: Powod }[] };
@@ -14,6 +14,7 @@ export type WynikSkrzynki = { zaimportowano: number; doWyboru: ZlecenieImportu[]
 const TYP_WORD = /wordprocessingml|msword|\.docx?$/i;
 /** Źródło wzoru ze zlecenia (UTI albo MIME z rozszerzenia); null = typ nieobsługiwany (alert `wzor.blad_typ`). */
 export function zrodloZlecenia(z: ZlecenieImportu): ZrodloDodania | null {
+  if (z.rodzaj === 'film') return null; // film nie jest wzorem
   if (z.rodzaj === 'adres') return z.adres ? { rodzaj: 'adres', adres: z.adres } : null;
   if (!z.sciezka) return null;
   const plik = { id: z.id, nazwa: z.nazwa, sciezka: z.sciezka, typ: z.typ };
@@ -33,12 +34,18 @@ async function projektDostepny(z: ZaleznosciSkrzynki, projektId: string): Promis
 }
 
 /** Zlecenie → wzór w projekcie; po zapisie zlecenie usunięte ze skrzynki. Błąd zostawia zlecenie (wpis w `blad` bez treści — NFR-PRY-001). */
-export async function przypiszZlecenie(z: ZaleznosciSkrzynki, w: { zlecenie: ZlecenieImportu; projektId: string }): Promise<Wynik<{ wzorId: string }>> {
+export async function przypiszZlecenie(z: ZaleznosciSkrzynki, w: { zlecenie: ZlecenieImportu; projektId: string }): Promise<Wynik<{ wzorId: string | null }>> {
   const zrodlo = zrodloZlecenia(w.zlecenie);
-  const wynik = zrodlo ? await dodajWzor(z, { projektId: w.projektId, nazwa: nazwaWzoru(w.zlecenie), zrodlo }) : blad('bledne_dane');
+  const wynik: Wynik<{ wzorId: string | null }> = w.zlecenie.rodzaj === 'film' // „Video link” → film projektu, nie wzór (P-246 S4a, P-218 (4))
+    ? await filmZeZlecenia(z, w.zlecenie, w.projektId)
+    : zrodlo ? await dodajWzor(z, { projektId: w.projektId, nazwa: nazwaWzoru(w.zlecenie), zrodlo }) : blad('bledne_dane');
   if (wynik.ok) await z.skrzynka.usun(w.zlecenie.id);
   else if (wynik.powod !== 'brak_sieci') await zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: 'skrzynka_import', szczegoly: { powod: wynik.powod, rodzaj: w.zlecenie.rodzaj } });
   return wynik;
+}
+async function filmZeZlecenia(z: ZaleznosciSkrzynki, zl: ZlecenieImportu, projektId: string): Promise<Wynik<{ wzorId: null }>> {
+  const r = await ustawFilm(z, { projektId, adres: zl.adres ?? '', nazwa: zl.nazwa });
+  return r.ok ? { ok: true, wartosc: { wzorId: null } } : r;
 }
 export async function odrzucZlecenie(z: Pick<ZaleznosciSkrzynki, 'skrzynka'>, w: { id: string }): Promise<Wynik<void>> {
   await z.skrzynka.usun(w.id);

@@ -15,11 +15,11 @@ function zlecenieZManifestu(tekst: string, katalog: string, id: string): Zleceni
   if (typeof m !== 'object' || m === null) return null;
   const r = m as Record<string, unknown>;
   const napis = (k: string) => (typeof r[k] === 'string' ? (r[k] as string) : null);
-  const rodzaj = r.rodzaj === 'plik' || r.rodzaj === 'adres' ? r.rodzaj : null;
+  const rodzaj = r.rodzaj === 'plik' || r.rodzaj === 'adres' || r.rodzaj === 'film' ? r.rodzaj : null;
   const sciezka = napis('sciezka'), nazwa = napis('nazwa'), typ = napis('typ');
   if (r.id !== id || !rodzaj || !nazwa || typ === null || typeof r.utworzonoMs !== 'number') return null;
   if (rodzaj === 'plik' && (!sciezka || sciezka.includes('/') || !istniejePlik(polacz(katalog, sciezka)))) return null; // tylko plik w katalogu zlecenia
-  if (rodzaj === 'adres' && !napis('adres')) return null;
+  if (rodzaj !== 'plik' && !napis('adres')) return null;
   return { id, rodzaj, nazwa, sciezka: rodzaj === 'plik' && sciezka ? polacz(katalog, sciezka) : null, adres: napis('adres'), typ, projektId: napis('projektId'), utworzonoMs: r.utworzonoMs };
 }
 

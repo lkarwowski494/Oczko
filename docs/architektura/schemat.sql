@@ -21,6 +21,8 @@ CREATE TABLE projekt (                                -- F-14, F-15, F-17, F-18,
   notatka TEXT NOT NULL DEFAULT '',
   drut_mm REAL CHECK (drut_mm IS NULL OR drut_mm > 0),
   narzedzie TEXT NOT NULL DEFAULT 'druty' CHECK (narzedzie IN ('druty', 'szydelko')), -- rodzaj do numeru US: RD-11 druty, RD-19 szydełko (P-184)
+  film_adres TEXT CHECK (film_adres IS NULL OR film_adres GLOB 'http*'),   -- link do filmu projektu (F-55, P-246 S4a; P-218 (4): poza wzorem); tylko link, bez filmu
+  film_nazwa TEXT,
   probka TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(probka)),   -- {oczka, rzedy, na_cm} wpisane raz (U-10)
   termin_dzien TEXT CHECK (termin_dzien IS NULL OR termin_dzien GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   kopia_z TEXT REFERENCES projekt(id) ON DELETE SET NULL,          -- „Zrób taką samą” (F-20)
@@ -135,6 +137,7 @@ CREATE TABLE wzor (                                   -- F-24, F-25, F-26, F-55 
   znacznik TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(znacznik)), -- {licznik_id, strona, y, wysokosc_rzedu, rzad_bazowy, wartosc_przy_ustawieniu, kierunek} (BR-WZR-003); y i wysokosc_rzedu: ułamek wysokości strony 0–1; kierunek 1 (w dół) albo -1 (w górę) (ADR-0011, uzupełnienia; fix-2 P-118 Q2a)
   zmieniono_ms INTEGER NOT NULL,
   usunieto_ms INTEGER,                                              -- usunięty z projektu do kosza (P-220 N4, P-229): przywracany, trwale usunięty przy sprzątaniu po KOSZ_DNI (nagrobek dla iCloud, P-221 Q6a)
+  obroty TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(obroty)),     -- obrót strony w widoku {"<strona>": 90|180|270} (P-246 S3a); plik wzoru bez zmian (P-218 (2)); synchronizowany z wzorem
   CHECK (pdf_sha256 IS NOT NULL OR (zrodlo = 'word' AND oryginal_sha256 IS NOT NULL))
 ) STRICT;
 CREATE INDEX wzor_projekt ON wzor(projekt_id);
