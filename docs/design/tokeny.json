@@ -16,7 +16,9 @@
    "drugiPrzyciskObrys": "#26282C",
    "blad": "#B3261E",
    "kreska": "#26282C",
-   "arkusz": "#FCFCFA"
+   "arkusz": "#FCFCFA",
+   "przyciskNieaktywnyTlo": "#D9DBDF",
+   "przyciskNieaktywnyTekst": "#5E626A"
   },
   "ciemny": {
    "papier": "#1B1C1F",
@@ -33,18 +35,24 @@
    "drugiPrzyciskObrys": "#8C9098",
    "blad": "#F2B8B5",
    "kreska": "#ECECE8",
-   "arkusz": "#2A2C31"
+   "arkusz": "#2A2C31",
+   "przyciskNieaktywnyTlo": "#34363B",
+   "przyciskNieaktywnyTekst": "#A9ACB2"
   },
   "jasnyKontrast": {
    "olowek": "#44474D",
    "linia": "#8F939A",
-   "zakreslaczKrawedz": "#26282C"
+   "zakreslaczKrawedz": "#26282C",
+   "przyciskNieaktywnyTlo": "#8F939A",
+   "przyciskNieaktywnyTekst": "#44474D"
   },
   "ciemnyKontrast": {
    "olowek": "#CDD0D4",
    "linia": "#7A7E85",
    "przyciskObrys": "#CDD0D4",
-   "zakreslaczKrawedz": "#F4ECB4"
+   "zakreslaczKrawedz": "#F4ECB4",
+   "przyciskNieaktywnyTlo": "#7A7E85",
+   "przyciskNieaktywnyTekst": "#CDD0D4"
   },
   "_wloczka": "Kolor włóczki projektu (P-063, wariant): tylko kropka przy nazwie projektu i, jeśli użytkownik włączy, kolor kresek; gdy kontrast koloru do papieru < 3:1, kreski zostają grafitowe, a kolor tylko w kropce z obwódką.",
   "wzor": {
