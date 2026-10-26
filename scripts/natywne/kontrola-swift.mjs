@@ -2,7 +2,9 @@
 //  JEDNA-REGULA: każda reguła wspólna (`func mozeZaczacDzien`, `func startDnia`, `func proZegarka`, `func dzienLokalny`) ma jedną definicję
 //                — w pakiecie modules/oczko-reguly; inny plik .swift z definicją to błąd, chyba że jest wpisaną kopią (niżej);
 //  KOPIA: plik z listy KOPIE (cel natywny dostaje źródło pakietu, bo Xcode nie kompiluje pakietu z modules/) ma bajty równe źródłu;
-//  PUSTO: brak pakietu albo brak definicji reguły to błąd (pusty zbiór to nie zaliczenie).
+//  PUSTO: brak pakietu albo brak definicji reguły to błąd (pusty zbiór to nie zaliczenie);
+//  NAZWA: dwa pliki .swift o tej samej nazwie w jednym celu (targets/<cel>, modules/<moduł>/ios) — Xcode daje „Multiple commands produce
+//         <plik>.stringsdata” (08 partia 4, przebieg 40279470194: widok Aktywnosc.swift i kopia pakietu o tej samej nazwie).
 // Użycie: node scripts/natywne/kontrola-swift.mjs [--katalog <korzeń>]
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -32,6 +34,13 @@ export function kontrolaSwift(korzen, kopie = KOPIE) {
     const wPakiecie = z.filter((p) => p.startsWith(`${PAKIET}/`));
     if (wPakiecie.length !== 1) bledy.push(`JEDNA-REGULA ${r}: ${wPakiecie.length} definicji w ${PAKIET} (oczekiwana 1)`);
     for (const p of z.filter((x) => !x.startsWith(`${PAKIET}/`) && !(x in kopie))) bledy.push(`JEDNA-REGULA ${r}: druga definicja w ${p} (użyj pakietu albo wpisz kopię w KOPIE)`);
+  }
+  const wCelu = new Map();
+  for (const p of pliki.filter((x) => !x.startsWith('modules/oczko-reguly/'))) {
+    const cel = p.split('/').slice(0, 2).join('/'), nazwa = p.split('/').pop();
+    const klucz = `${cel}|${nazwa}`;
+    if (wCelu.has(klucz)) bledy.push(`NAZWA ${nazwa}: dwa pliki w celu ${cel} (${wCelu.get(klucz)}, ${p}) — Xcode: „Multiple commands produce”`);
+    else wCelu.set(klucz, p);
   }
   return bledy;
 }

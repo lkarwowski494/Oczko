@@ -41,9 +41,9 @@
       "modules/oczko-dziennik-plus/ios/Wspolne/Intencja.swift",
       "targets/watch/Wspolne/Intencja.swift"
     ],
-    "modules/oczko-reguly/Sources/OczkoReguly/Aktywnosc.swift": [
-      "modules/oczko-dziennik-plus/ios/Wspolne/Aktywnosc.swift",
-      "targets/widget/Wspolne/Aktywnosc.swift"
+    "modules/oczko-reguly/Sources/OczkoReguly/StanAktywnosci.swift": [
+      "modules/oczko-dziennik-plus/ios/Wspolne/StanAktywnosci.swift",
+      "targets/widget/Wspolne/StanAktywnosci.swift"
     ],
     "modules/oczko-dziennik-plus/ios/Atrybuty.swift": [
       "targets/widget/Atrybuty.swift"
