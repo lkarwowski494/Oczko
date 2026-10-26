@@ -14,7 +14,7 @@ let package = Package(
   ],
   targets: [
     .target(name: "OczkoReguly", path: "Sources/OczkoReguly"),
-    .target(name: "OczkoDziennik", path: "Sources/OczkoDziennik"),
+    .target(name: "OczkoDziennik", dependencies: ["OczkoReguly"], path: "Sources/OczkoDziennik"),
     .testTarget(name: "OczkoRegulyTests", dependencies: ["OczkoReguly", "OczkoDziennik"], path: "Tests/OczkoRegulyTests"),
   ]
 )

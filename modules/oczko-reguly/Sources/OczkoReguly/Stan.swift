@@ -5,17 +5,18 @@ import Foundation
 
 public let wersjaStanu = 2
 
-public struct DzienStanu: Codable, Equatable {
+public struct DzienStanu: Codable, Hashable {
   public let dzien: String
   public let pro: Bool
+  public init(dzien: String, pro: Bool) { self.dzien = dzien; self.pro = pro }
 }
-public struct PrzypomnienieStanu: Codable, Equatable {
+public struct PrzypomnienieStanu: Codable, Hashable {
   public let od: Int
   public let co: Int
   public let razy: Int
   public let tekst: String
 }
-public struct StanEkranuBlokady: Codable, Equatable {
+public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState Live Activity (ActivityKit)
   public enum Znaczenie: String, Codable { case skonczone, w_trakcie }
   public let wersja: Int
   public let licznikId: String
@@ -70,6 +71,20 @@ public struct StanEkranuBlokady: Codable, Equatable {
     try c.encode(ostatniPlusMs, forKey: .ostatniPlusMs); try c.encode(dzien, forKey: .dzien); try c.encode(dzienDozwolony, forKey: .dzienDozwolony)
     try c.encode(sesjaStartMs, forKey: .sesjaStartMs); try c.encode(pro, forKey: .pro); try c.encode(proWaznoscDo, forKey: .proWaznoscDo)
     try c.encode(dniWMiesiacu, forKey: .dniWMiesiacu); try c.encode(przypomnienia, forKey: .przypomnienia)
+  }
+
+  /// Stan po zapisanym stuknięciu (ADR-0008 (1)): wartość ± 1, `glowa` = nowe zdarzenie, `ostatniPlusMs` = czas zdarzenia, dzień i dni limitu.
+  public func po(_ wartoscZmiana: Int, glowa: String, czasMs: Int64, dzien: String, dni: [DzienStanu]) -> StanEkranuBlokady {
+    StanEkranuBlokady(wersja: wersja, licznikId: licznikId, nazwa: nazwa, wartosc: max(0, wartosc + wartoscZmiana), znaczenie: znaczenie, glowa: glowa,
+                      ostatniPlusMs: czasMs, dzien: dzien, dzienDozwolony: true, sesjaStartMs: sesjaStartMs, pro: pro, proWaznoscDo: proWaznoscDo,
+                      dniWMiesiacu: dni, przypomnienia: przypomnienia)
+  }
+
+  public init(wersja: Int, licznikId: String, nazwa: String, wartosc: Int, znaczenie: Znaczenie, glowa: String?, ostatniPlusMs: Int64?, dzien: String,
+              dzienDozwolony: Bool, sesjaStartMs: Int64?, pro: Bool, proWaznoscDo: Int64?, dniWMiesiacu: [DzienStanu], przypomnienia: [PrzypomnienieStanu]) {
+    self.wersja = wersja; self.licznikId = licznikId; self.nazwa = nazwa; self.wartosc = wartosc; self.znaczenie = znaczenie; self.glowa = glowa
+    self.ostatniPlusMs = ostatniPlusMs; self.dzien = dzien; self.dzienDozwolony = dzienDozwolony; self.sesjaStartMs = sesjaStartMs; self.pro = pro
+    self.proWaznoscDo = proWaznoscDo; self.dniWMiesiacu = dniWMiesiacu; self.przypomnienia = przypomnienia
   }
 
   public static func dekoduj(_ dane: Data) throws -> StanEkranuBlokady { try JSONDecoder().decode(StanEkranuBlokady.self, from: dane) }
