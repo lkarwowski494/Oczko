@@ -48,7 +48,7 @@ public func rodzajZalacznika(_ typy: [String]) -> RodzajZalacznika? {
 
 public enum WejscieZlecenia: Sendable {
   case plik(URL, typ: String)
-  case adres(URL, film: Bool) // film: link jako „Video link” (P-218 (4)) — [DO USTALENIA S4] obsługa w aplikacji
+  case adres(URL, film: Bool) // film: „Video link” (P-218 (4)) → zlecenie `rodzaj: "film"`, w aplikacji film projektu (P-246 S4a)
 }
 public enum BladZlecenia: Error, Equatable { case zaDuzy, brakPliku }
 
@@ -97,8 +97,8 @@ public func zapiszZlecenie(grupa: URL, wejscie: WejscieZlecenia, projektId: Stri
     z = ZlecenieImportu(id: id, rodzaj: "plik", nazwa: url.lastPathComponent, sciezka: nazwa, adres: nil, typ: typ, projektId: projektId, utworzonoMs: terazMs)
   case let .adres(url, film):
     try fm.createDirectory(at: katalog, withIntermediateDirectories: true)
-    z = ZlecenieImportu(id: id, rodzaj: "adres", nazwa: url.host ?? url.absoluteString, sciezka: nil, adres: url.absoluteString,
-                        typ: film ? "film" : "public.url", projektId: projektId, utworzonoMs: terazMs)
+    z = ZlecenieImportu(id: id, rodzaj: film ? "film" : "adres", nazwa: url.host ?? url.absoluteString, sciezka: nil, adres: url.absoluteString,
+                        typ: "public.url", projektId: projektId, utworzonoMs: terazMs)
   }
   let tmp = katalog.appendingPathComponent("zlecenie.json.tmp")
   try JSONEncoder().encode(z).write(to: tmp)

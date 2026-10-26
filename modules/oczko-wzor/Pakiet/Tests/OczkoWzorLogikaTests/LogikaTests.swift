@@ -135,7 +135,8 @@ final class ZlecenieTests: XCTestCase {
     XCTAssertEqual(m?["adres"] as? String, "https://example.org/czapka")
     XCTAssertEqual(m?["rodzaj"] as? String, "adres")
     let f = try zapiszZlecenie(grupa: grupa, wejscie: .adres(URL(string: "https://example.org/v")!, film: true), projektId: nil, terazMs: 1, id: "z3")
-    XCTAssertEqual(f.typ, "film")
+    XCTAssertEqual(f.rodzaj, "film") // P-246 S4a: „Video link” = rodzaj film (film projektu, nie wzór)
+    XCTAssertEqual(f.typ, "public.url")
   }
 
   func testZaDuzyBezKopii() throws {
