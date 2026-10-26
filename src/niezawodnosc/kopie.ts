@@ -1,0 +1,99 @@
+// Kopie ratunkowe roli 12 (ADR-0020 (3), (6), P-080 (3b)): sprzątanie katalogu kopii po KOPIE_RATUNKOWE_DNI i ZIP surowej kopii, gdy baza się nie
+// otwiera. Logika wyboru czysta; adaptery tylko przez system plików warstwy danych. Nic tu nie otwiera bazy (działa przy uszkodzonym pliku).
+import type { Wynik } from '../domena/bledy';
+import { KOPIE_RATUNKOWE_DNI } from '../konfiguracja';
+import { zapiszZip, type WpisZip } from '../dane/archiwum/zip';
+import { powodBledu } from '../dane/baza/bledy-sqlite';
+import { sha256PlikuTs } from '../dane/pliki/magazyn';
+import { istniejeKatalog, istniejePlik, lista, otworzDoCzytania, polacz, rozmiar, usunKatalog, usunPlik } from '../dane/pliki/system';
+
+const DOBA_MS = 86_400_000;
+export type WpisKopii = { nazwa: string; katalog: boolean };
+
+// Nazwy kopii z czasem utworzenia (ms): surowa kopia to katalog (ADR-0020 (1)), pozostałe to pliki `VACUUM INTO` (dane.md, ADR-0004, ADR-0020 (5)).
+const SUROWA = /^ratunkowe-(\d{10,})$/;
+const PLIK = /^(?:przed-importem|przed-przywroceniem|przed-migracja-\d+)-(\d{10,})\.db$/;
+
+/**
+ * Kopie starsze niż `dni` (ściśle) do usunięcia. Wołający woła tylko przy kamieniu milowym strażnika (ADR-0019), więc kopia nigdy nie znika przed
+ * udanym startem nowej wersji. Zostaje: nazwa bez czasu albo obca, czas z przyszłości (cofnięty zegar), wpis innego rodzaju niż oczekiwany.
+ */
+export function kopieDoUsuniecia(wpisy: readonly WpisKopii[], terazMs: number, dni = KOPIE_RATUNKOWE_DNI): string[] {
+  return wpisy
+    .filter((w) => {
+      const m = (w.katalog ? SUROWA : PLIK).exec(w.nazwa);
+      if (!m) return false;
+      const ms = Number(m[1]);
+      return ms <= terazMs && terazMs - ms > dni * DOBA_MS;
+    })
+    .map((w) => w.nazwa);
+}
+
+/** Adapter sprzątania: lista katalogu kopii → usunięcie wybranych. Brak katalogu = nic do zrobienia. */
+export function sprzatnijKopie(katalogKopii: string, terazMs: number): Wynik<string[]> {
+  try {
+    const wpisy = lista(katalogKopii).map((nazwa) => ({ nazwa, katalog: istniejeKatalog(polacz(katalogKopii, nazwa)) }));
+    const usun = kopieDoUsuniecia(wpisy, terazMs).sort();
+    for (const n of usun) {
+      const p = polacz(katalogKopii, n);
+      if (istniejeKatalog(p)) usunKatalog(p);
+      else usunPlik(p);
+    }
+    return { ok: true, wartosc: usun };
+  } catch (e) {
+    return { ok: false, powod: powodBledu(e) === 'brak_miejsca' ? 'brak_miejsca' : 'zapis' };
+  }
+}
+
+export type ManifestSurowejKopii = {
+  format: 'oczko-ratunkowa';
+  wersja: 1;
+  aplikacja: string;
+  build: string;
+  utworzono: number;
+  user_version: number | null;
+  application_id: number | null;
+  pliki: { nazwa: string; bajty: number; sha256: string }[];
+};
+
+/** Nagłówek pliku SQLite (sqlite.org/fileformat2.html §1.3): sygnatura 16 B, user_version offset 60, application_id offset 68, big-endian. */
+function naglowekBazy(sciezka: string): { user_version: number | null; application_id: number | null } {
+  const c = otworzDoCzytania(sciezka);
+  try {
+    if (c.rozmiar < 100) return { user_version: null, application_id: null };
+    const b = c.czytaj(0, 100);
+    const sygnatura = 'SQLite format 3\0';
+    for (let i = 0; i < 16; i++) if (b[i] !== sygnatura.charCodeAt(i)) return { user_version: null, application_id: null };
+    const v = new DataView(b.buffer, b.byteOffset, b.byteLength);
+    return { user_version: v.getUint32(60, false), application_id: v.getUint32(68, false) };
+  } finally {
+    c.zamknij();
+  }
+}
+
+/**
+ * ADR-0020 (3), P-080 (3b): jeden ZIP z plikami surowej kopii (`pliki` z wyniku `surowaKopia`: plik bazy oraz jego -wal i -shm, które są)
+ * i `manifest.json` (wersja aplikacji, build, user_version i application_id z nagłówka, SHA-256 plików). Bazy nie otwiera. Nazwy plików bierze
+ * od wołającego (jedno źródło nazwy bazy: sciezki.ts, P-180). Cel nie może istnieć; niepełny plik po błędzie jest usuwany.
+ */
+export async function zipSurowejKopii(katalogSurowej: string, pliki: readonly string[], cel: string, o: { aplikacja: string; build: string; terazMs: number }): Promise<Wynik<ManifestSurowejKopii>> {
+  const nazwy = pliki.filter((n) => istniejePlik(polacz(katalogSurowej, n)));
+  const glowny = nazwy.find((n) => !/-(wal|shm)$/.test(n));
+  if (!glowny) return { ok: false, powod: 'bledne_dane' };
+  const baza = polacz(katalogSurowej, glowny);
+  if (istniejePlik(cel)) return { ok: false, powod: 'zapis' };
+  try {
+    const pliki: ManifestSurowejKopii['pliki'] = [];
+    for (const n of nazwy) {
+      const p = polacz(katalogSurowej, n);
+      pliki.push({ nazwa: n, bajty: rozmiar(p), sha256: await sha256PlikuTs(p) });
+    }
+    const manifest: ManifestSurowejKopii = { format: 'oczko-ratunkowa', wersja: 1, aplikacja: o.aplikacja, build: o.build, utworzono: o.terazMs, ...naglowekBazy(baza), pliki };
+    const wpisy: WpisZip[] = [{ nazwa: 'manifest.json', dane: new TextEncoder().encode(JSON.stringify(manifest, null, 2)) }, ...nazwy.map((n) => ({ nazwa: n, plik: polacz(katalogSurowej, n) }))];
+    const w = zapiszZip(cel, wpisy);
+    return w.ok ? { ok: true, wartosc: manifest } : w;
+  } catch (e) {
+    usunPlik(cel);
+    return { ok: false, powod: powodBledu(e) === 'brak_miejsca' ? 'brak_miejsca' : 'zapis' };
+  }
+}
