@@ -173,11 +173,22 @@ export type WzorzecHaptyki = 'plus' | 'piataKreska' | 'rzadZInstrukcja' | 'minus
 export interface Haptyka { zagraj(w: WzorzecHaptyki): void } // F-48: rozpoznawalne tylko plus i rzadZInstrukcja, reszta systemowa; brak dźwięku (BR-LIC-005)
 // adapter: styl z tekstu tokenu (impactAsync light/medium/soft/rigid, notificationAsync error; rzadZInstrukcja = dwa .medium co 90 ms);
 // błąd modułu pomijany (haptyka nie zmienia wyniku operacji); rzad()/przypomnienie() znikają (= zagraj('plus') / zagraj('rzadZInstrukcja')).
+
+// N1 (P-133) blokada licznika poza aplikacją — P-135 Q7a, ADR-0008 (2026-10-26): stan wersja 3 (WERSJA_STANU = 3), nowe pole na końcu typu
+export type StanEkranuBlokadyV3 = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[]; zablokowany: boolean }; // wersja 3; < 4 KB
+// przy przełączeniu (08) ten typ zastępuje StanEkranuBlokady w „Porty domeny” (nazwa V3 tylko tutaj: test złotych plików czyta typy z całego moduly.md)
+// zablokowany = licznik.zablokowany (F-03, BR-LIC-004) w chwili odczytu stanu; stanEkranuBlokady dostaje licznik.zablokowany (WejscieStanuZegarka),
+// licznikEkranuBlokady czyta kolumnę; przełączenie blokady woła odswiezEkranBlokady po COMMIT (Live Activity i zegarek widzą zmianę od razu).
+// Pliki: tests/wspolne/stan-*.json z generatora w wersji 3, pliki wersji 2 jako *-v2.json (jak v1 przy przełączeniu 1 → 2); wzorce.json wersja_kontraktu: 3.
+// Swift (pakiet OczkoReguly): dekoder przyjmuje wersję 2 bez pola jako zablokowany = false (Live Activity i kontekst zegarka sprzed aktualizacji),
+// wersję 3 tylko z polem (X-ST-01), wersję > 3 odrzuca; reguła `stuknij` (intencja i zegarek): zablokowany → WynikIntencji.zablokowany (przed limitem),
+// bez linii; scalenie na telefonie NIE odrzuca linii zapisanych przed blokadą (stuknięcie było dozwolone w chwili zapisu; −1 cofa przypadkowe +1).
 ```
 - **Moduł natywny** (`modules/oczko-dziennik-plus/ios/Zegarek.swift`, `index.ts`): `zegarekWyslij(stanJson: string, potwierdzone: string[])`; `didReceiveUserInfo` przy błędzie `dopisz` nie woła `poZapisie` i niczego nie potwierdza (e1, zegarek ponowi).
 - **Zegarek** (`targets/watch/Aplikacja.swift`, `SkrzynkaZegarka` w pakiecie): kolejka w pliku, kolejność stuknięcia, usuwanie i ponowienie według ADR-0009 (2026-10-26) pkt 1–5; testy X-ZG (`xctest-specyfikacja.md` §4).
 - **Sklep (a):** test oczekujący `tests/akceptacja/dane/sklep-status.test.ts`; `tests/adaptery/sklep.test.ts` (asercje `kup` → `{ ok }` i `kupZeStatusem`) przechodzą na status.
 - **Haptyka (b):** test oczekujący `tests/akceptacja/dane/haptyka-wzorce.test.ts` (wyrocznia: tokeny 04; zmiana tokenów w 04 czerwieni test, nie przechodzi po cichu).
+- **Blokada (N1):** test oczekujący `tests/akceptacja/dane/stan-blokada.test.ts`; Swift: X-ST-07, X-DZ-15, X-ZG-11 (`xctest-specyfikacja.md`); teksty stanu blokady na ekranie blokady i zegarku: 04.
 - **Testy do zmiany mechanicznej przez 08** (asercje bez zmiany sensu): `toEqual({ ok: true, wartosc: { scalono, pominieto } })` w `tests/dane/dziennik*.test.ts` dostaje `potwierdzone`; test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` przenieść do `tests/dane/` w commicie, który go zazielenia.
 
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)

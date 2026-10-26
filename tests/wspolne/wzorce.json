@@ -67,7 +67,7 @@
     { "plik": "stan-zegarka-najwiekszy-v1.json", "typ": "StanZegarkaV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): duży stan: nazwa 320 znaków CJK, 30 dni w miesiącu; rozmiar < 4096 B" }
   ],
   "zegarek_skrzynka": {
-    "_opis": "Skrzynka zegarka (ADR-0009, uzupełnienie 2026-10-26; NZ-08-P3-05 (e), P-135): scenariusze dla SkrzynkaZegarka w pakiecie OczkoDziennik (X-ZG-01–X-ZG-09, swift test). Kontekst budowany z stan-zegarka-typowy.json z podmienionymi licznikId (A = licznik pliku, B = 11111111-2222-4333-8444-555555555555), wartosc, glowa; potwierdzone = klucz kontekstu aplikacji obok stanu. Czas stuknięcia = 1794340800000 + t (2026-11-10 21:00 Europe/Warsaw), strefa Europe/Warsaw. `wartosc` w sprawdz = pole wartosc stanu pokazywanego (nie liczba na ekranie). `wyslij` = lista linii do transferUserInfo przy danym czasie i liście w toku (outstandingUserInfoTransfers); ponowienie po ZEGAREK_PONOWIENIE_MS = ponowienie_ms.",
+    "_opis": "Skrzynka zegarka (ADR-0009, uzupełnienie 2026-10-26; NZ-08-P3-05 (e), P-135): scenariusze dla SkrzynkaZegarka w pakiecie OczkoDziennik (X-ZG-01–X-ZG-09, swift test). Kontekst budowany z stan-zegarka-typowy.json z podmienionymi licznikId (A = licznik pliku, B = 11111111-2222-4333-8444-555555555555), wartosc, glowa (i zablokowany w stanie v3, domyślnie false); potwierdzone = klucz kontekstu aplikacji obok stanu. Czas stuknięcia = 1794340800000 + t (2026-11-10 21:00 Europe/Warsaw), strefa Europe/Warsaw. `wartosc` w sprawdz = pole wartosc stanu pokazywanego (nie liczba na ekranie). `wyslij` = lista linii do transferUserInfo przy danym czasie i liście w toku (outstandingUserInfoTransfers); ponowienie po ZEGAREK_PONOWIENIE_MS = ponowienie_ms.",
     "licznik_b": "11111111-2222-4333-8444-555555555555",
     "czas_bazowy_ms": 1794340800000,
     "strefa": "Europe/Warsaw",
@@ -518,6 +518,44 @@
                 "b1"
               ],
               "wartosc": 49
+            }
+          }
+        ]
+      },
+      {
+        "id": "ZG-10",
+        "zgloszenie": "N1 (P-133)",
+        "co": "licznik zablokowany w kontekście (stan v3, F-03): stuknięcie odrzucone z wynikiem zablokowany, bez linii w kolejce i bez zmiany wartości; −1 tak samo",
+        "kroki": [
+          {
+            "kontekst": {
+              "licznik": "A",
+              "wartosc": 47,
+              "glowa": "6c5eb071-8d9f-4ea0-b1c2-d3e4f5a6b7c8",
+              "potwierdzone": [],
+              "zablokowany": true
+            }
+          },
+          {
+            "stuknij": {
+              "id": "z1",
+              "rodzaj": "plus",
+              "t": 0,
+              "wynik": "zablokowany"
+            }
+          },
+          {
+            "stuknij": {
+              "id": "z2",
+              "rodzaj": "minus",
+              "t": 1000,
+              "wynik": "zablokowany"
+            }
+          },
+          {
+            "sprawdz": {
+              "kolejka": [],
+              "wartosc": 47
             }
           }
         ]

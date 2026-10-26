@@ -55,6 +55,8 @@ Reguły, których brakowało w kontrakcie intencji i scalania (zgłoszenie Z07-1
 - widok: `uwaga != null` → zamiast przycisku komunikat 04 (P-133 (1.2a): „Rząd {n} nie został dodany” + „Odblokuj iPhone’a, aby liczyć.” albo tekst błędu zapisu z makiety 04); Live Activity ma tylko +1 (P-133 (1.1a));
 - kopia `Atrybuty.swift` w widżecie zostaje identyczna (kopie.json); migawka X-DZ-10 obejmuje pole `uwaga`.
 
+**Blokada licznika poza aplikacją (N1 z P-133, P-135 Q7a).** Stan Live Activity i zegarka dostaje pole `zablokowany` (F-03, BR-LIC-004) → wersja 3 (`moduly.md`, „Kontrakt partii 4”). Intencja i zegarek przy `zablokowany: true` nie zapisują linii (`WynikIntencji.zablokowany`, sprawdzane przed limitem) i pokazują stan blokady (tekst i makieta: 04); Live Activity ma tylko +1 (P-133 (1.1a)), zegarek blokuje +1 i −1. Scalenie dziennika na telefonie nie odrzuca linii zapisanych przed blokadą (utrata stuknięcia gorsza niż przypadkowe +1, które cofa −1; NFR-DAN-003 bez zmian). Zgodność wersji: dekoder Swift przyjmuje wersję 2 jako `zablokowany = false` (żywa Live Activity sprzed aktualizacji, zegarek z kontekstem v2), wersję 3 tylko z polem; stary zegarek z dekoderem v2 odrzuca v3 i zostaje przy ostatnim poprawnym stanie (moduly.md, wersja 2, zasada „dekoder odrzuca wersję nowszą”) — do aktualizacji aplikacji zegarka nie widzi blokady (ryzyko nazwane, brzegowe).
+
 ## Opcje: zalety i wady
 ### A — zalety: brak drugiej kopii SQLite, krótki zapis, idempotencja · wady: opóźnione scalenie, logika limitu na ekranie blokady powielona w Swift.
 ### B — zalety: natychmiast w bazie · wady: natywne API `expo-sqlite` nie jest publicznym kontraktem; transakcja w procesie uruchomionym w tle zwiększa ryzyko `0xdead10cc`; klucze obce trzeba włączyć na kolejnym połączeniu.

@@ -39,6 +39,7 @@ Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-000
 | X-DZ-12 | Odczyt i skrócenie (ADR-0008 (8R), (8S)): wektory `sklejenie` (przyjęte id, zgłoszone linie, odzyskane id) i `skrocenie` (bajty pliku po `skroc(do_id)`; `do_id` także w linii sklejonej) dają wynik z manifestu | `wzorce.json` → `sklejenie`, `skrocenie` |
 | X-DZ-13 | Krótki zapis albo błąd `write`/`fsync` (atrapa uchwytu): plik obcięty do rozmiaru sprzed zapisu, intencja zwraca błąd, stan Live Activity bez zmian (`wartosc`, `glowa`) | ADR-0008 (8A) |
 | X-DZ-14 | Błąd zapisu przy odblokowanym urządzeniu (atrapa, `isProtectedDataAvailable = true`) → intencja zwraca błąd, stan Live Activity z `uwaga: 'blad_zapisu'`; dekoder `StanAktywnosci` bez klucza `uwaga` (Live Activity sprzed aktualizacji) daje `null`, a ze znaną wartością — tę wartość (N2 z P-133, P-135 Q5a) | ADR-0008 (2026-10-26) |
+| X-DZ-15 | Intencja przy `zablokowany: true` (+1) zwraca `WynikIntencji.zablokowany`, nie dopisuje linii, stan Live Activity bez zmian (N1, P-135 Q7a); sprawdzane przed limitem (stan zablokowany i `dzienDozwolony: false` → `zablokowany`) | ADR-0008 (2026-10-26) |
 
 ## 2. Stan Live Activity i zegarka (Z07-12; R-026–R-028, R-031)
 | ID | Test | Wyrocznia |
@@ -49,6 +50,7 @@ Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-000
 | X-ST-04 | Pułapka: plik z polem przemianowanym (`dzien_dozwolony`) nie dekoduje się — test oczekuje błędu | R-027 |
 | X-ST-05 | `stan-zegarka-pro-dozywotni.json`: reguła Pro na zegarku daje „ma Pro” (null = bez końca) | R-031, W-01 |
 | X-ST-06 | `stan-zegarka-pro-subskrypcja.json`: „ma Pro” dla `teraz < proWaznoscDo`, „nie ma” dla `teraz = proWaznoscDo` i `teraz + 1` (granica jak Z07-08) | KP-06, R-114 |
+| X-ST-07 | Stan wersja 3 (N1, P-135 Q7a): plik v3 z `zablokowany` dekoduje się; plik v2 (`*-v2.json`) bez pola → `zablokowany = false`; v3 bez pola → błąd dekodowania; wersja 4 → odrzucona | ADR-0008 (2026-10-26) |
 
 ## 3. Reguły limitu i dostępu w Swift (ADR-0007, ADR-0009; R-032, R-098, R-099)
 | ID | Test | Wyrocznia |
@@ -61,7 +63,7 @@ Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-000
 | X-RG-06 | `dzien` w Swift: kalendarz gregoriański i cyfry ASCII niezależnie od `Locale`/`Calendar` urządzenia (`Calendar(identifier: .japanese)` w teście) | R-134, RD-16 |
 
 ## 4. Skrzynka zegarka (ADR-0009, uzupełnienie 2026-10-26; NZ-08-P3-05 (e), P-135) — `swift test` pakietu, zestaw `ZegarekSkrzynkaTests`
-Wektory: `wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-09); zestaw wypisuje „wykonano N z N” po id scenariuszy (`Wykonane`). `SkrzynkaZegarka` dostaje magazyn (`MagazynSkrzynki`): w X-ZG-01–09 prawdziwy plik `skrzynka-zegarka.jsonl` w katalogu tymczasowym (rdzeń `DziennikPlus`), w X-ZG-02 atrapa rzucająca błąd przy `dopisz`. `restart` = nowa skrzynka z tego samego magazynu i ostatniego kontekstu. Dziś (partia 3) czerwone z właściwego powodu: X-ZG-03 i X-ZG-09 (e3) na asercji — `ZegarekTests.testGlowaInnegoLicznikaNieUsuwa` z `XCTExpectFailure(strict: true)` (P-135: test oczekujący; 08 usuwa `XCTExpectFailure` w commicie poprawki); pozostałe wymagają nowego API (magazyn, `potwierdzone`, `doWyslania`) — czerwień pokazuje 08 przed kodem (odstępstwo nazwane: brak kompilatora Swift w chmurze roli 05).
+Wektory: `wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-10; ZG-10 wymaga stanu v3); zestaw wypisuje „wykonano N z N” po id scenariuszy (`Wykonane`). `SkrzynkaZegarka` dostaje magazyn (`MagazynSkrzynki`): w X-ZG-01–09 prawdziwy plik `skrzynka-zegarka.jsonl` w katalogu tymczasowym (rdzeń `DziennikPlus`), w X-ZG-02 atrapa rzucająca błąd przy `dopisz`. `restart` = nowa skrzynka z tego samego magazynu i ostatniego kontekstu. Dziś (partia 3) czerwone z właściwego powodu: X-ZG-03 i X-ZG-09 (e3) na asercji — `ZegarekTests.testGlowaInnegoLicznikaNieUsuwa` z `XCTExpectFailure(strict: true)` (P-135: test oczekujący; 08 usuwa `XCTExpectFailure` w commicie poprawki); pozostałe wymagają nowego API (magazyn, `potwierdzone`, `doWyslania`) — czerwień pokazuje 08 przed kodem (odstępstwo nazwane: brak kompilatora Swift w chmurze roli 05).
 | ID | Co | Wyrocznia |
 |---|---|---|
 | X-ZG-01 | Stuknięcie zapisane w pliku przetrwa restart skrzynki (kolejka i wartość z pliku) | ZG-01 |
@@ -74,6 +76,7 @@ Wektory: `wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-09); zestaw wypisuje �
 | X-ZG-08 | Restart zapomina czasy wysyłki: wszystkie niepotwierdzone do wysłania | ZG-08 |
 | X-ZG-09 | Potwierdzenie późniejszego zdarzenia licznika usuwa wcześniejsze tego licznika, nie rusza innego; nieznane id bez skutku | ZG-09 |
 | X-ZG-10 | Przepisanie atomowe kolejki przerwane przed `rename` (atrapa): plik `skrzynka-zegarka.jsonl` = stan sprzed usunięcia, plik tymczasowy sprzątany przy odczycie | ADR-0009 (2026-10-26) pkt 1 |
+| X-ZG-11 | Licznik zablokowany w kontekście: +1 i −1 na zegarku → `zablokowany`, kolejka i wartość bez zmian (N1) | ZG-10 |
 
 ## Wynik i raport
 Raport XCTest (`xcresult`) jako artefakt; podsumowanie przebiegu wypisuje dla każdego zestawu „wykonano N z N”. Pierwsze uruchomienie informacyjne; bramka po pierwszym zielonym przebiegu na SHA (zasada roli 8). Do tego czasu: „Nie sprawdzono” w audycie dla R-018, R-022–R-028, R-031, R-032.
