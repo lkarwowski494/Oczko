@@ -19,7 +19,7 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build · Decyzje: P-061 (E0), P
 - Ekran ofert tylko z odnośnika na limicie i z Ustawień (KP-13); przy Pro żadnej z tych linii.
 
 ## Element firmowy
-- **Kreski sesji:** rzędy dodane dziś w projekcie, w piątkach (piąta przekreśla cztery), grafitem na papierze; najwyżej 25 widocznych, liczba zawsze w podpisie nad kreskami („Tonight’s marks: 14 rows since 19:52”). Grafika `aria-hidden`; dane niesie podpis (soczewka VoiceOver, E2).
+- **Kreski sesji:** rzędy dodane w projekcie w bieżącym posiedzeniu (definicja niżej, „Kreski sesji przez północ”), w piątkach (piąta przekreśla cztery), grafitem na papierze; najwyżej 25 widocznych, liczba zawsze w podpisie nad kreskami („Marks this session: 14 rows since 19:52”, klucz `licznik.znaczniki_sesji_other`). Grafika `aria-hidden`; dane niesie podpis (soczewka VoiceOver, E2).
 - **Zakreślenie instrukcji:** rząd z przypomnieniem (F-06) jako pas zakreślacza z krawędzią; treść instrukcji powtórzona w podpisie przycisku +1 i ogłaszana raz przy wejściu w ten rząd (nie przy każdym +1).
 - **Linijka celu (z C):** „Goal 96 rows · 49 to go” pod liczbą, tylko gdy część ma cel (U-8).
 - **Kolor włóczki (z B, wariant):** kropka przy nazwie projektu; nigdy jedyny nośnik informacji.
@@ -52,6 +52,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Ekran | Stany (wzorcowe zrzuty albo prototyp) |
 |---|---|
 | Licznik | pierwsze uruchomienie (`licznik-start`); typowy z instrukcją (`licznik-w-toku`); zablokowany (prototyp); seria stuknięć z banerem (prototyp, z2); na limicie (`limit`); błąd zapisu: „Couldn’t save that row. It’s still on screen; try again.” (do E4); offline: bez zmian (wszystko lokalne, NFR-OFF-001) |
+| Licznik przez północ | posiedzenie trwa po północy, podpis z godziną startu (`licznik-przez-polnoc`) |
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); bez włóczki w projekcie: pytanie pominięte |
@@ -171,6 +172,16 @@ Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): 
 | `wzor.koniec_wzoru` / `wzor.przestaw` | Row {{n}} is past the end of the pattern. / Move marker |
 | `wzor.znacznik_a11y_gora` / `wzor.znacznik_a11y_dol` | Row marker, row {{n}}, rows go up / Row marker, row {{n}}, rows go down |
 | `wzor.nastepna_strona_a11y` | Move to next page |
+
+## Kreski sesji przez północ (NZ-06, P-097 (4a), P-126 (6a), N2)
+- **Posiedzenie** (dla kresek i podpisu): zaczyna je pierwsze +1 w projekcie po przerwie ≥ `PRZERWA_NOWEGO_DNIA_MS` (60 min) bez +1 w tym projekcie albo start stopera sesji (wtedy posiedzenie = sesja stopera); kończy je taka przerwa albo zatrzymanie stopera. **Północ go nie przerywa:** o 00:20 kreski i podpis „since 22:10” zostają — jak sesja stopera liczona do dnia startu (P-097 (4a)).
+- Kalendarz, cel dzienny i limit liczą bez zmian po swojemu: rząd po północy należy do nowego dnia (BR-DNI-002, BR-DNI-005); kreski to widok posiedzenia, nie statystyka dnia, więc na ekranie licznika nie pokazujemy daty przy kreskach.
+- **N2:** podpis neutralny wobec pory dnia (zamiast „wieczornych” znaczników): „Marks this session: {{count}} rows since {{godzina}}”. −1 zdejmuje ostatnią kreskę; po przerwie ≥ 60 min nowe posiedzenie zaczyna się od pustych kresek przy następnym +1 (do tego czasu widać kreski poprzedniego).
+- Odczyt w danych: rzędy posiedzenia = zdarzenia +1/−1 projektu od początku posiedzenia; nic nowego nie trzeba zapisywać (liczone z `zdarzenie` i sesji stopera).
+
+| Klucz | en |
+|---|---|
+| `licznik.znaczniki_sesji_one` / `licznik.znaczniki_sesji_other` | Marks this session: {{count}} row since {{godzina}} / Marks this session: {{count}} rows since {{godzina}} |
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.

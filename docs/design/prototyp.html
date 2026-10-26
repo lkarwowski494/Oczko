@@ -110,7 +110,7 @@ function ekranLicznika() {
   <div class="kartka">
     <div class="liczba"><span class="n" aria-hidden="true">${S.rzedy}</span><span class="sr" aria-live="polite" style="position:absolute;left:-9999px">${S.rzedy}${S.cel ? ' of ' + S.cel : ''} done, now row ${S.rzedy + 1}</span><span class="z">${S.cel ? 'of ' + S.cel : (S.rzedy === 1 ? 'row' : 'rows')}</span></div>
     ${S.cel ? `<div class="cel"><span>Goal ${S.cel} rows</span><span>${Math.max(0, S.cel - S.rzedy)} to go</span></div>` : ''}
-    ${S.rzedy === 0 && !S.projekt ? '<p class="podpis" style="font-size:17px">Tap the big button each time you finish a row. Each row gets a pencil mark here.</p>' : S.nowyDzienNaLimicie ? '' : `<p class="podpis">Tonight’s marks: ${S.sesja} ${S.sesja === 1 ? 'row' : 'rows'}</p>${kreski(S.sesja)}`}
+    ${S.rzedy === 0 && !S.projekt ? '<p class="podpis" style="font-size:17px">Tap the big button each time you finish a row. Each row gets a pencil mark here.</p>' : S.nowyDzienNaLimicie ? '' : `<p class="podpis">Marks this session: ${S.sesja} ${S.sesja === 1 ? 'row' : 'rows'}</p>${kreski(S.sesja)}`}
     ${wTymRzedzie ? `<div class="instr" role="status"><b>Row ${np}: ${S.przyp.tekst}</b><span>${S.przyp.tekstKrotki} ${rzedyPrzyp(S.przyp).indexOf(np) + 1} of ${S.przyp.razy}${rzedyPrzyp(S.przyp)[rzedyPrzyp(S.przyp).indexOf(np) + 1] ? ' · next on row ' + rzedyPrzyp(S.przyp)[rzedyPrzyp(S.przyp).indexOf(np) + 1] : ''}</span></div>` : (np ? `<p class="nastepne">Next: row ${np}, ${S.przyp.tekst}</p>` : '')}
   </div>
   <div class="spacer"></div>
