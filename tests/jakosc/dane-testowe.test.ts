@@ -4,7 +4,10 @@ import { join } from 'node:path';
 
 const KAT = join(__dirname, '../dane');
 const pliki: string[] = [];
-const skan = (d: string) => { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (!n.endsWith('.opis.md') && !n.endsWith('.ts')) pliki.push(p); } }; // *.ts = kod testów warstwy danych (DS-02, strategia §10), nie dane (P-122 (a))
+// Kod testów warstwy danych (DS-02, strategia §10) to nie dane (P-122 (a)): tylko *.test.ts i tests/dane/pomocnicze/;
+// każdy inny plik, także .ts z danymi (np. ślad, wycinek importu), wymaga opisu pochodzenia (F07-13, P-125 Q3a).
+const kodTestow = (p: string) => p.endsWith('.test.ts') || p.startsWith(join(KAT, 'pomocnicze') + '/');
+const skan = (d: string) => { for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (!n.endsWith('.opis.md') && !kodTestow(p)) pliki.push(p); } };
 skan(KAT);
 
 describe('tests/dane (strategia §4)', () => {
