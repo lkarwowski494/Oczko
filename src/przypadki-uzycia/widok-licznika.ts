@@ -8,7 +8,7 @@ import type { PortBazy } from '../domena/porty';
 import type { ZrodloZdarzenia } from '../domena/stany';
 import { PRZERWA_NOWEGO_DNIA_MS, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../konfiguracja';
 import { celProjektu } from '../dane/repozytoria/kalendarz';
-import { dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
+import { celCzesci, dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
 import { odczytajUstawienie, zapiszUstawienie } from '../dane/repozytoria/ustawienia';
 import { liczba, liczbaLubNull, listaTekstow, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { dodajDni } from './daty';
@@ -112,7 +112,7 @@ export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<
       wartosc: {
         licznikId: w.licznikId, projektId: tekst(r, 'projekt_id'), czescId: tekst(r, 'czesc_id'),
         projekt: { nazwa: tekst(r, 'projekt'), nienazwany: liczba(r, 'nienazwany') === 1, utworzonoMs: liczba(r, 'utworzono_ms'), notatka: tekst(r, 'notatka') },
-        czesc: { nazwa: tekst(r, 'czesc'), cel: liczbaLubNull(r, 'cel_rzedow') },
+        czesc: { nazwa: tekst(r, 'czesc'), cel: await celCzesci(tx, { cel: liczbaLubNull(r, 'cel_rzedow'), paraZ: tekstLubNull(r, 'para_z') }) }, // BR-PRJ-014 S1, S3
         nazwa: tekst(r, 'nazwa'), wartosc, glowa,
         znaczenie,
         zablokowany: liczba(r, 'zablokowany') === 1,

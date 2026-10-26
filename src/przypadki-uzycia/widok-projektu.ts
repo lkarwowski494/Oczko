@@ -6,7 +6,7 @@ import { licznikCalosci } from '../domena/licznik-calosci';
 import { rozmiarUS } from '../domena/obliczenia/druty';
 import { postepProcent, type CelDnia } from '../domena/postep';
 import type { NarzedzieProjektu } from '../domena/stany';
-import { celProjektu } from '../dane/repozytoria/kalendarz';
+import { dzienProjektu } from '../dane/repozytoria/kalendarz';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
@@ -19,7 +19,7 @@ export type LicznikWidoku = { id: string; nazwa: string; rodzaj: 'rzedy' | 'oczk
 export type CzescWidoku = { id: string; nazwa: string; rzedy: number; cel: number | null; celZPary: boolean; paraZ: string | null; calosc: number | null; liczniki: LicznikWidoku[] };
 export type WidokProjektu = {
   id: string; nazwa: string; nienazwany: boolean; stan: 'w_toku' | 'ukonczony'; utworzonoMs: number; zmienionoMs: number; ostatniaPracaMs: number;
-  notatka: string; narzedzie: NarzedzieProjektu; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null;
+  notatka: string; narzedzie: NarzedzieProjektu; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null; zrobioneDzis: number;
   postep: { rodzaj: 'procent'; wartosc: number } | { rodzaj: 'brak-celow' }; czesci: CzescWidoku[];
 };
 
@@ -58,13 +58,14 @@ export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
     const drutMm = liczbaLubNull(p, 'drut_mm');
     const narzedzie: NarzedzieProjektu = tekst(p, 'narzedzie') === 'szydelko' ? 'szydelko' : 'druty'; // CHECK schematu: tylko te dwie
     const termin = tekstLubNull(p, 'termin_dzien');
+    const dzien = termin ? await dzienProjektu(tx, w.projektId, termin, chwila.dzien) : { cel: null, zrobioneDzis: 0 };
     return {
       ok: true,
       wartosc: {
         id: w.projektId, nazwa: tekst(p, 'nazwa'), nienazwany: liczba(p, 'nienazwany') === 1, stan: tekst(p, 'stan') === 'ukonczony' ? 'ukonczony' : 'w_toku',
         utworzonoMs: liczba(p, 'utworzono_ms'), zmienionoMs: liczba(p, 'zmieniono_ms'), ostatniaPracaMs: liczba(p, 'ostatnia_praca_ms'),
         notatka: tekst(p, 'notatka'), narzedzie, drutMm, drutUS: drutMm === null ? null : rozmiarUS(drutMm, narzedzie),
-        terminDzien: termin, celDnia: termin ? await celProjektu(tx, w.projektId, termin, chwila.dzien) : null,
+        terminDzien: termin, celDnia: dzien.cel, zrobioneDzis: dzien.zrobioneDzis,
         postep: proc.ok ? { rodzaj: 'procent', wartosc: proc.wartosc } : { rodzaj: 'brak-celow' }, czesci: wynik,
       },
     };

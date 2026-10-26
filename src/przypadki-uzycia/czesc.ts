@@ -2,6 +2,8 @@
 // długość powtórzenia (F-05, RD-12). Każdy zapis to UPDATE/INSERT jednej rzeczy w kolejce (ADR-0002); walidacja reguł w domenie.
 import type { Wynik } from '../domena/bledy';
 import { planPrzypomnien } from '../domena/przypomnienia';
+import { rzedyCzesci } from '../dane/repozytoria/liczniki';
+import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
 import { OK, blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
@@ -49,5 +51,27 @@ export function ustawZnaczenie(z: Zaleznosci, w: { licznikId: string; znaczenie:
   return operacjaZapisu(z, 'ustawZnaczenie', async (tx, teraz) => {
     const r = await tx.run('UPDATE licznik SET znaczenie = ?, zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL', [w.znaczenie, teraz, w.licznikId]);
     return r.zmiany === 1 ? OK : blad('bledne_dane');
+  });
+}
+export type NastepnaCzesc = { rodzaj: 'licznik'; licznikId: string } | { rodzaj: 'koniec'; czescId: string; czesc: string; projekt: string; celDrugiej: number | null };
+/**
+ * „Next part” (BR-LIC-011/S1, P-182 Q4a): następna nieusunięta część projektu (wg kolejności) z licznikiem → jej pierwszy licznik;
+ * brak → `koniec` z danymi arkusza „What’s next?” (cel drugiej z pary = cel części albo jej rzędy, BR-PRJ-014). Tylko odczyt. Sygnatura 08 (przegląd 05).
+ */
+export function nastepnaCzesc(z: Zaleznosci, w: { licznikId: string }): Promise<Wynik<NastepnaCzesc>> {
+  return operacjaZapisu(z, 'nastepnaCzesc', async (tx): Promise<Wynik<NastepnaCzesc>> => {
+    const [c] = await wiersze(tx.all(
+      `SELECT c.id, c.nazwa, c.kolejnosc, c.cel_rzedow, c.projekt_id, p.nazwa AS projekt FROM licznik l JOIN czesc c ON c.id = l.czesc_id JOIN projekt p ON p.id = c.projekt_id
+        WHERE l.id = ? AND l.usunieto_ms IS NULL AND c.usunieto_ms IS NULL AND p.usunieto_ms IS NULL`, [w.licznikId]), 'nastepnaCzesc');
+    if (!c) return blad('bledne_dane');
+    const [n] = await wiersze(tx.all(
+      `SELECT l.id FROM czesc c JOIN licznik l ON l.czesc_id = c.id
+        WHERE c.projekt_id = ? AND c.usunieto_ms IS NULL AND l.usunieto_ms IS NULL AND (c.kolejnosc > ? OR (c.kolejnosc = ? AND c.id > ?))
+        ORDER BY c.kolejnosc, c.id, l.kolejnosc, l.id LIMIT 1`, [tekst(c, 'projekt_id'), liczba(c, 'kolejnosc'), liczba(c, 'kolejnosc'), tekst(c, 'id')]), 'nastepnaCzesc');
+    if (n) return { ok: true, wartosc: { rodzaj: 'licznik', licznikId: tekst(n, 'id') } };
+    const czescId = tekst(c, 'id');
+    const cel = liczbaLubNull(c, 'cel_rzedow');
+    const rzedy = cel === null ? await rzedyCzesci(tx, czescId) : 0;
+    return { ok: true, wartosc: { rodzaj: 'koniec', czescId, czesc: tekst(c, 'nazwa'), projekt: tekst(c, 'projekt'), celDrugiej: cel ?? (rzedy > 0 ? rzedy : null) } };
   });
 }

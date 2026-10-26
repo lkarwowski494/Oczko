@@ -1,9 +1,12 @@
 // Model odczytu listy projektów (F-50, F-54, P-065 (2a); design-spec „Lista projektów”, „Projekt roboczy”): same dane, teksty i wyszukiwanie po
 // etykiecie roboczej liczy kompozycja (etykieta zależy od języka, P-126 (1b)). Kolejność i kosz jak `listaProjektow` (BR-PRJ-012).
 import type { Wynik } from '../domena/bledy';
+import { dniDoTerminu, dzienLokalny, type CelDnia } from '../domena/postep';
 import { mozeZaczacDzien } from '../domena/limit';
 import { LIMIT_DNI_W_MIESIACU } from '../konfiguracja';
 import { dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
+import { dzienProjektu, kolejnoscProjektow } from '../dane/repozytoria/kalendarz';
+import { elementyKosza } from '../dane/repozytoria/kosz';
 import { listaProjektow } from '../dane/repozytoria/projekty';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { dodajDni } from './daty';
@@ -14,8 +17,12 @@ export type ProjektNaEkranie = {
   id: string; nazwa: string; nienazwany: boolean; utworzonoMs: number; ostatniaPracaMs: number;
   /** Pierwszy licznik rzędów pierwszej części (otwierany z listy, F-49); `null` = projekt bez licznika. */
   licznik: { id: string; czesc: string; wartosc: number; cel: number | null } | null;
+  /** Dni kalendarzowe (RD-16) od ostatniej pracy do dziś — „last worked …” bez progu (BR-PRJ-016, P-182, P-183 1a). */
+  dniOdPracy: number;
+  /** Linia terminu na liście (BR-DNI-005/006): cel RD-15 i rzędy zrobione dziś; `null` bez terminu albo bez celów części. */
+  dzis: { cel: CelDnia; zrobione: number } | null;
 };
-export type WidokProjektow = { wToku: ProjektNaEkranie[]; ukonczone: ProjektNaEkranie[]; dni: { zostalo: number; limit: number; dzis: string } | null };
+export type WidokProjektow = { wToku: ProjektNaEkranie[]; ukonczone: ProjektNaEkranie[]; dni: { zostalo: number; limit: number; dzis: string } | null; kosz: number };
 
 export function widokProjektow(z: Zaleznosci): Promise<Wynik<WidokProjektow>> {
   return operacjaZapisu(z, 'widokProjektow', async (tx, teraz, chwila) => {
@@ -34,13 +41,27 @@ export function widokProjektow(z: Zaleznosci): Promise<Wynik<WidokProjektow>> {
       }
       dodatki.set(tekst(r, 'id'), { nienazwany: liczba(r, 'nienazwany') === 1, utworzonoMs: liczba(r, 'utworzono_ms'), licznik });
     }
-    const naEkranie = (p: (typeof l.wToku)[number]): ProjektNaEkranie => {
-      const d = dodatki.get(p.id) ?? { nienazwany: false, utworzonoMs: p.ostatniaPracaMs, licznik: null };
-      return { id: p.id, nazwa: p.nazwa, ostatniaPracaMs: p.ostatniaPracaMs, ...d };
-    };
     const dzis = chwila.dzien;
+    const dniOd = (ms: number): number => {
+      const d = dzienLokalny(ms, chwila.strefa);
+      const n = d.ok ? dniDoTerminu(d.wartosc, dzis) : d;
+      return n.ok ? Math.max(0, n.wartosc - 1) : 0; // dniDoTerminu liczy oba końce (+1); zegar cofnięty → 0, nie liczba ujemna
+    };
+    const terminy = new Map<string, string>();
+    for (const r of await wiersze(tx.all("SELECT id, termin_dzien FROM projekt WHERE termin_dzien IS NOT NULL AND usunieto_ms IS NULL AND stan = 'w_toku'"), 'widokProjektow')) terminy.set(tekst(r, 'id'), tekst(r, 'termin_dzien'));
+    const naEkranie = async (p: (typeof l.wToku)[number]): Promise<ProjektNaEkranie> => {
+      const d = dodatki.get(p.id) ?? { nienazwany: false, utworzonoMs: p.ostatniaPracaMs, licznik: null };
+      const termin = terminy.get(p.id);
+      const dp = termin ? await dzienProjektu(tx, p.id, termin, dzis) : null;
+      return { id: p.id, nazwa: p.nazwa, ostatniaPracaMs: p.ostatniaPracaMs, ...d, dniOdPracy: dniOd(p.ostatniaPracaMs), dzis: dp?.cel ? { cel: dp.cel, zrobione: dp.zrobioneDzis } : null };
+    };
+    const poKolei = async (lista: typeof l.wToku): Promise<ProjektNaEkranie[]> => { const w: ProjektNaEkranie[] = []; for (const p of lista) w.push(await naEkranie(p)); return w; }; // zapytania jedno po drugim w transakcji
+    // Kolejność w toku: BR-DNI-006 (po terminie → cel na dziś malejąco → bez terminu wg ostatniej pracy), `kolejnoscProjektow`.
+    const kolejnosc = new Map((await kolejnoscProjektow(tx, dzis)).map((p, i) => [p.id, i]));
+    const wToku = [...l.wToku].sort((a, b) => (kolejnosc.get(a.id) ?? Infinity) - (kolejnosc.get(b.id) ?? Infinity));
     const pro = z.pro();
     const zaw = mozeZaczacDzien({ dni: await dniLimituMiesiaca(tx, dzis.slice(0, 7)), dzis, teraz, ostatniPlus: await ostatniPlus(tx, dodajDni(dzis, -2)), pro });
-    return { ok: true, wartosc: { wToku: l.wToku.map(naEkranie), ukonczone: l.ukonczone.map(naEkranie), dni: pro ? null : { zostalo: zaw.zostalo, limit: LIMIT_DNI_W_MIESIACU, dzis } } };
+    return { ok: true, wartosc: { wToku: await poKolei(wToku), ukonczone: await poKolei(l.ukonczone), dni: pro ? null : { zostalo: zaw.zostalo, limit: LIMIT_DNI_W_MIESIACU, dzis },
+      kosz: (await elementyKosza(tx, chwila.strefa)).length } };
   });
 }

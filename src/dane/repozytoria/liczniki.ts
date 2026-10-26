@@ -116,3 +116,15 @@ export async function poczekalnia(tx: PortBazy, r: { id: string; dane: string; p
     `INSERT INTO poczekalnia (id, rodzaj_rekordu, dane, powod, zrodlo, przyszlo_ms) VALUES (?, 'zdarzenie', ?, ?, ?, ?)
      ON CONFLICT (id) DO UPDATE SET proby = proby + 1`, [r.id, r.dane, r.powod, r.zrodlo, r.terazMs]);
 }
+
+/** Rzędy części: suma nieusuniętych liczników rzędów (jak r_i w RD-14/RD-15); cel drugiej części pary bez celu (BR-PRJ-014 S1, S3). */
+export async function rzedyCzesci(baza: PortBazy, czescId: string): Promise<number> {
+  const [r] = await wiersze(baza.all("SELECT coalesce(sum(wartosc), 0) AS n FROM licznik WHERE czesc_id = ? AND rodzaj = 'rzedy' AND usunieto_ms IS NULL", [czescId]), 'rzedyCzesci');
+  return r ? liczba(r, 'n') : 0;
+}
+/** Cel części: własny albo — w części pary bez celu — rzędy pierwszej, gdy ma rzędy (BR-PRJ-014 S1; S3: 0 rzędów → brak celu). */
+export async function celCzesci(baza: PortBazy, w: { cel: number | null; paraZ: string | null }): Promise<number | null> {
+  if (w.cel !== null || w.paraZ === null) return w.cel;
+  const n = await rzedyCzesci(baza, w.paraZ);
+  return n > 0 ? n : null;
+}
