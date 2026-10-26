@@ -9,17 +9,18 @@ import { otworzPortExpo } from './baza/adapter-expo';
 import { powodBledu } from './baza/bledy-sqlite';
 import { kopiaBazy } from './baza/kopia';
 import { zastapZKopii } from './baza/przeniesienie';
+import { PLIK_BAZY } from './baza/sciezki';
 import { APPLICATION_ID, migruj } from './migracje/migruj';
 import { istniejePlik, kopiuj, polacz, usunPlik, utworzKatalog } from './pliki/system';
 import { liczbaLubNull, tekst, wiersze } from './repozytoria/wiersze';
 
-const PLIKI_BAZY = ['oczko.db', 'oczko.db-wal', 'oczko.db-shm'];
+const PLIKI_BAZY = [PLIK_BAZY, `${PLIK_BAZY}-wal`, `${PLIK_BAZY}-shm`];
 const zapisNieudany = (e: unknown): { ok: false; powod: Powod } => ({ ok: false, powod: powodBledu(e) === 'brak_miejsca' ? 'brak_miejsca' : 'zapis' });
 
 /** ADR-0020 (1): oczko.db, -wal, -shm do `kopie/ratunkowe-<czas>/`, zanim cokolwiek otworzy bazę. */
 export async function surowaKopia(katalogDanych: string, katalogKopii: string, zegar: Zegar): Promise<Wynik<{ katalog: string; pliki: string[] }>> {
   const obecne = PLIKI_BAZY.filter((n) => istniejePlik(polacz(katalogDanych, n)));
-  if (!obecne.includes('oczko.db')) return { ok: false, powod: 'bledne_dane' }; // nie ma czego ratować
+  if (!obecne.includes(PLIK_BAZY)) return { ok: false, powod: 'bledne_dane' }; // nie ma czego ratować
   const katalog = polacz(katalogKopii, `ratunkowe-${zegar.teraz().ms}`);
   try {
     utworzKatalog(katalog);

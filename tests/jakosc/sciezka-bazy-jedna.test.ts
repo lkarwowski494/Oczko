@@ -25,8 +25,11 @@ test('openDatabase* tylko w adapterze expo-sqlite (katalog jako file://)', () =>
 test('ścieżki danych liczone tylko przez sciezkiDanych: kontener (start normalny) i start-aplikacji (strażnik, tryb awaryjny)', () => {
   expect(gdzie(TS, /sciezkiDanych\(/).filter((p) => p !== 'src/dane/baza/sciezki.ts')).toEqual(['src/kompozycja/kontener.ts', 'src/kompozycja/start-aplikacji.ts']);
 });
-test('literał oczko.db poza sciezki.ts tylko w formacie archiwum, surowej kopii i panelu SHA E2E', () => {
-  expect(gdzie(TS, /[/'"`]oczko\.db['"`-]/)).toEqual(['app/ustawienia.tsx', 'src/dane/archiwum.ts', 'src/dane/baza/sciezki.ts', 'src/dane/kopia-ratunkowa.ts'].sort());
+// Zmiana oczekiwania (P-180): stała PLIK_BAZY zamiast literału w archiwum, surowej kopii i panelu SHA E2E — nazwa pliku w jednym miejscu.
+test('literał oczko.db tylko w sciezki.ts (stała PLIK_BAZY); archiwum, surowa kopia i panel SHA E2E biorą stałą', () => {
+  expect(gdzie(TS, /[/'"`]oczko\.db['"`-]/)).toEqual(['src/dane/baza/sciezki.ts']);
+  expect(readFileSync(join(KORZEN, 'src/dane/baza/sciezki.ts'), 'utf8')).toMatch(/export const PLIK_BAZY = 'oczko\.db';/);
+  expect(gdzie(TS, /\bPLIK_BAZY\b/)).toEqual(['app/ustawienia.tsx', 'src/dane/archiwum.ts', 'src/dane/baza/sciezki.ts', 'src/dane/kopia-ratunkowa.ts'].sort());
 });
 test('Swift nie otwiera bazy (bez SQLite3 i bez ścieżki oczko.db)', () => {
   expect(gdzie(SWIFT, /import SQLite3|sqlite3_open|oczko\.db/)).toEqual([]);

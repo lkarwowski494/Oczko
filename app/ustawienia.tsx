@@ -23,6 +23,7 @@ import { usunWszystkieDane } from '../src/przypadki-uzycia/projekt';
 import { widokProjektow } from '../src/przypadki-uzycia/widok-projektow';
 import { przyTle } from '../src/przypadki-uzycia/start';
 import { sha256PlikuTs } from '../src/dane/pliki/magazyn';
+import { PLIK_BAZY } from '../src/dane/baza/sciezki';
 import { polacz } from '../src/dane/pliki/system';
 
 type Dane =
@@ -54,7 +55,7 @@ export default function EkranUstawien(): React.ReactElement {
       if (w.ok) ustawDni(stanListy(w.wartosc, { zapytanie: '', j: kontener.j, terazMs: ch.ms, strefa: ch.strefa }).dni);
     });
     // ADR-0019 test E2E: SHA-256 pliku bazy po checkpoincie WAL (stan pliku taki, jak po przejściu w tło).
-    if (E2E) void przyTle(z).then(() => sha256PlikuTs(polacz(kontener.katalogDanych, 'oczko.db'))).then(ustawSha);
+    if (E2E) void przyTle(z).then(() => sha256PlikuTs(polacz(kontener.katalogDanych, PLIK_BAZY))).then(ustawSha);
     return koniec;
   }, [kontener, z]));
 

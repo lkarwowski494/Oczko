@@ -10,6 +10,7 @@ import { scalZKopia, zastapZKopii } from './baza/przeniesienie';
 import { sha256 } from './archiwum/sha256';
 import { czytajKatalog, czytajWpis, wypakuj, zapiszZip } from './archiwum/zip';
 import { istniejePlik, lista as listaPlikow, polacz, usunKatalog, usunPlik, utworzKatalog } from './pliki/system';
+import { PLIK_BAZY } from './baza/sciezki';
 import { sprawdzKopie } from './kopia-ratunkowa';
 import { liczba, tekst, wiersze } from './repozytoria/wiersze';
 
@@ -78,7 +79,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
         };
         const zip = zapiszZip(cel, [
           { nazwa: 'manifest.json', dane: new TextEncoder().encode(JSON.stringify(manifest)) },
-          { nazwa: 'oczko.db', plik: baza },
+          { nazwa: PLIK_BAZY, plik: baza },
           ...pliki.map((p) => ({ nazwa: `pliki/${p.sha256}.${p.rozszerzenie}`, plik: z.magazyn.sciezka(p.sha256) })),
         ]);
         if (!zip.ok) return zip; // za_duze (bez ZIP64, ADR-0016): plik archiwum nie powstał albo został usunięty
@@ -100,7 +101,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
       const manifest = surowy ? parsujManifest(surowy) : null;
       if (!manifest) return blad('bledne_dane');
       if (manifest.wersja_formatu > WERSJA_FORMATU_ARCHIWUM || manifest.wersja_schematu > WERSJA_SCHEMATU) return blad('wersja_nowsza'); // bez zapisu (ŚU-10)
-      const wpisBazy = kat.find((w) => w.nazwa === 'oczko.db');
+      const wpisBazy = kat.find((w) => w.nazwa === PLIK_BAZY);
       if (!wpisBazy) return blad('bledne_dane');
       const wpisyPlikow = kat.filter((w) => w.nazwa.startsWith('pliki/'));
       const rozmiarDanych = kat.reduce((s, w) => s + w.rozmiar, 0);
@@ -108,7 +109,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
       const katalog = polacz(z.katalogi.tymczasowy, `import-${z.zegar.teraz().ms}`);
       try {
         utworzKatalog(polacz(katalog, 'pliki'));
-        if (!wypakuj(sciezka, wpisBazy, polacz(katalog, 'oczko.db'))) return odrzuc(katalog, 'uszkodzony');
+        if (!wypakuj(sciezka, wpisBazy, polacz(katalog, PLIK_BAZY))) return odrzuc(katalog, 'uszkodzony');
         const zManifestu = new Set(manifest.pliki.map((p) => `${p.sha256}:${p.bajty}`));
         const wArchiwum = new Set<string>();
         for (const w of wpisyPlikow) {
@@ -124,7 +125,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
           wArchiwum.add(`${m[1]}:${w.rozmiar}`);
         }
         if (zManifestu.size !== wArchiwum.size || [...zManifestu].some((p) => !wArchiwum.has(p))) return odrzuc(katalog, 'uszkodzony');
-        const baza = await sprawdzKopie(polacz(katalog, 'oczko.db'));
+        const baza = await sprawdzKopie(polacz(katalog, PLIK_BAZY));
         if (!baza.ok) return odrzuc(katalog, baza.powod);
         return { ok: true, wartosc: { manifest, katalog } };
       } catch (e) {
@@ -141,7 +142,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
 
     /** Migracja kopii tym samym runnerem → pliki do magazynu → dane (zastąp albo scal) w kolejce portu; katalog tymczasowy usuwany na końcu. */
     async wczytaj(a: ArchiwumSprawdzone, tryb, sygnal) {
-      const db = polacz(a.katalog, 'oczko.db');
+      const db = polacz(a.katalog, PLIK_BAZY);
       try {
         const port = otworzPortExpo(db);
         try {
