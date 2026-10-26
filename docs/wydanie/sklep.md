@@ -27,6 +27,12 @@ Reguły Apple i GitHuba niżej przeczytano 2026-10-26 na surowym tekście stron 
 5. **Po pierwszym zielonym przebiegu dowodowym** usuń stare sekrety repozytorium z 0.1.0: https://github.com/lkarwowski494/Oczko/settings/secrets/actions (`ASC_KEY_P8_BASE64`, `APPLE_TEAM_ID` oraz `ASC_KEY_ID` i `ASC_ISSUER_ID` na poziomie repozytorium, jeśli są). Jeśli klucz 0.1.0 nie jest używany gdzie indziej, unieważnij go w App Store Connect (ta sama strona, **Revoke**).
 6. **Wyciek albo podejrzenie:** natychmiast **Revoke** (Apple: „If you suspect a private key is compromised, immediately revoke the key”), potem nowy klucz i punkt 3.
 
+## 2a. Strona (GitHub Pages; P-219: D1 repo „oczko”, D2 publikacja z gałęzi roboczej przed TestFlight)
+1. Właściciel zmienia nazwę repo: https://github.com/lkarwowski494/Oczko/settings → **Repository name**: `oczko` → **Rename**. Według GitHuba stare adresy git i API są przekierowywane.
+2. Właściciel ustawia źródło Pages: https://github.com/lkarwowski494/oczko/settings/pages → **Build and deployment** → **Source: GitHub Actions**. Domeny własnej w tym repo nie ustawia: dziedziczy ją z apps4brew.com.
+3. Właściciel dopuszcza gałąź roboczą do wdrożeń Pages: https://github.com/lkarwowski494/oczko/settings/environments → `github-pages` → **Deployment branches and tags** → **Add deployment branch or tag rule** → `claude/jolly-thompson-paz6d8`. Regułę usuwa po scaleniu.
+4. Po potwierdzeniu nowej nazwy rola 10 uruchamia ręcznie Actions → „Pages” → Run workflow na gałęzi roboczej. Potem sprawdza `curl` dla `baza`, `baza + polityka` i `baza + wsparcie` (oczekiwane 200) i zapisuje wynik w dzienniku.
+
 ## 2. TestFlight (workflow `.github/workflows/testflight.yml`)
 - Uruchamia się tylko ręcznie: Actions → „TestFlight (testy wewnętrzne)” → Run workflow. Działa tylko w oknie maszyn macOS, od północy do ok. 15:00 (P-187), i tylko za zgodą na ten build.
 - Domyślnie `bez_wysylki = true`. Taki przebieg dowodowy robi pełną budowę, podpis, kontrolę `.ipa` i walidację Apple, ale niczego nie wysyła i nie tworzy tagu. Wysyłka wymaga świadomego odznaczenia tego pola.
