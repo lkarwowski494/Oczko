@@ -68,19 +68,21 @@ export async function podsumowanieTygodnia(baza: PortBazy, w: { dzis: string; pi
 
 /** Projekty w toku (bez kosza) w kolejności P-048 (4): po terminie, potem cel na dziś malejąco, potem bez terminu według ostatniej pracy. */
 export type ProjektDzis = { id: string; nazwa: string; cel: CelDnia | null };
-/** Z_przed = Σ min(r_i, c_i) części z celem, r_i = wartość liczników rzędów części na koniec wczoraj (RD-15 jak RD-14). */
+/** Z_przed = Σ min(r_i, c_i) części z celem, r_i = wartość liczników rzędów części na koniec wczoraj (RD-15 jak RD-14); Z_teraz z bieżącej wartości licznika (`licznik.wartosc` = scal, P-134 Q1a). */
 async function celProjektu(baza: PortBazy, projektId: string, termin: string, dzis: string): Promise<CelDnia | null> {
   const czesci = await wiersze(baza.all('SELECT id, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL AND cel_rzedow IS NOT NULL', [projektId]), 'kolejnosc');
-  let suma = 0, przed = 0;
+  let suma = 0, przed = 0, teraz = 0;
   for (const c of czesci) {
     const cel = liczba(c, 'cel_rzedow');
     const [r] = await wiersze(baza.all(
-      `SELECT coalesce(sum((SELECT z.wartosc_po FROM zdarzenie z WHERE z.licznik_id = l.id AND z.dzien < ? ORDER BY z.czas_ms DESC, z.rowid DESC LIMIT 1)), 0) AS r
+      `SELECT coalesce(sum((SELECT z.wartosc_po FROM zdarzenie z WHERE z.licznik_id = l.id AND z.dzien < ? ORDER BY z.czas_ms DESC, z.rowid DESC LIMIT 1)), 0) AS r,
+              coalesce(sum(l.wartosc), 0) AS t
          FROM licznik l WHERE l.czesc_id = ? AND l.rodzaj = 'rzedy' AND l.usunieto_ms IS NULL`, [dzis, tekst(c, 'id')]), 'kolejnosc');
     suma += cel;
     przed += Math.min(r ? liczba(r, 'r') : 0, cel);
+    teraz += Math.min(r ? liczba(r, 't') : 0, cel);
   }
-  const w = celDzienny({ suma, przedDzis: przed, termin, dzis });
+  const w = celDzienny({ suma, przedDzis: przed, zrobioneTeraz: teraz, termin, dzis });
   return w.ok ? w.wartosc : null; // termin bez celów części (C = 0): brak celu dnia, nie zgadywany cel
 }
 const ranga = (c: CelDnia | null): number => (c === null ? 3 : c.rodzaj === 'po_terminie' ? 0 : c.rodzaj === 'cel' ? 1 : 2);

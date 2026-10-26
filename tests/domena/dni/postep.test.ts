@@ -1,5 +1,5 @@
 // RD-14 postęp projektu (BR-DNI-004, F-60) i RD-15 cel dzienny do terminu (BR-DNI-005, F-61) — poziom domena-Node.
-// Wyrocznia: tests/wektory/brd.json RD-14-W1…W6, RD-15-W1…W7; rachunek na liczbach całkowitych w teście (ER-38, R-127);
+// Wyrocznia: tests/wektory/brd.json RD-14-W1…W7, RD-15-W1…W7 i W11…W16 (P-134 Q1a, NZ-RD15: wejście Z_teraz, wyjście stan/zostało); rachunek na liczbach całkowitych w teście (ER-38, R-127);
 // własności ze wzorów RD-14 i RD-15 (P-047 (3), P-048 (1)). Daty RD-15 jako RRRR-MM-DD (dzień lokalny RD-16).
 import fc from 'fast-check';
 import { postepProcent, celDzienny } from '../../../src/domena/postep';
@@ -98,9 +98,18 @@ describe('RD-15 celDzienny: wektory BRD (dziś = 2026-10-22, termin = dziś + d 
   test.each(wektory.map((w) => [`${KRYTERIA_RD15[w.id] ?? 'BR-DNI-005'} ${w.id} (${w.rodzaj}) C=${w.wejscie['C [rz.]']} Z_przed=${w.wejscie['Z_przed [rz.]']} d=${w.wejscie['d [dni]']}`, w] as const))('%s', (_n, w) => {
     licznik.sprawdz(() => {
       const d = liczba(w.wejscie['d [dni]']);
-      const wynik = celDzienny({ suma: liczba(w.wejscie['C [rz.]']), przedDzis: liczba(w.wejscie['Z_przed [rz.]']), termin: plusDni(DZIS, d - 1), dzis: DZIS });
+      const przedDzis = liczba(w.wejscie['Z_przed [rz.]']);
+      // 08 (partia 4, P-136, P-134 Q1a): tabela W11–W16 podaje Z_teraz; wektory W1–W7 opisują początek dnia (Z_teraz = Z_przed).
+      const zrobioneTeraz = 'Z_teraz [rz.]' in w.wejscie ? liczba(w.wejscie['Z_teraz [rz.]']) : przedDzis;
+      const wynik = celDzienny({ suma: liczba(w.wejscie['C [rz.]']), przedDzis, zrobioneTeraz, termin: plusDni(DZIS, d - 1), dzis: DZIS });
       const o = w.oczekiwane['g [rz.]'];
-      if (o === BLAD_DANYCH) expect(wynik).toEqual({ ok: false, powod: 'bledne_dane' });
+      const stan = w.oczekiwane['stan [-]'];
+      if (stan !== undefined) {
+        // P-134 Q1a: „cel osiągnięty” (g = 0) ma pierwszeństwo przed terminem; „termin minął” → zostało = C − Z_teraz na bieżąco.
+        if (stan === 'cel osiągnięty') expect(wynik).toEqual({ ok: true, wartosc: { rodzaj: 'osiagniety' } });
+        else if (stan === 'termin minął') expect(wynik).toEqual({ ok: true, wartosc: { rodzaj: 'po_terminie', zostalo: liczba(w.oczekiwane['zostało [rz.]']) } });
+        else throw new Error(`Wektor ${w.id}: nieznany stan „${String(stan)}”`);
+      } else if (o === BLAD_DANYCH) expect(wynik).toEqual({ ok: false, powod: 'bledne_dane' });
       else if (typeof o === 'string') {
         const m = /zostało (\d+)/.exec(o);
         if (!m) throw new Error(`Wektor ${w.id}: nieznane oczekiwanie „${o}”`);
@@ -110,39 +119,39 @@ describe('RD-15 celDzienny: wektory BRD (dziś = 2026-10-22, termin = dziś + d 
     });
   });
   test(`RD-15 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
-    expect(wektory.length).toBe(7); // W8–W10 (d z dat): tests/domena/dni/dni-tygodnie.test.ts
+    // 08 (partia 4, P-136): liczność z wektorów — wszystkie wektory RD-15 poza W8–W10 (d z dat: tests/domena/dni/dni-tygodnie.test.ts).
+    expect(wektory.length).toBe(wektoryReguly('RD-15').length - 3);
     // F07-03: oba kształty razem = cała reguła; nowy wektor innego kształtu nie może zostać pominięty po cichu.
     expect(wektoryReguly('RD-15').map((x) => x.id).sort()).toEqual([...wektory.map((x) => x.id), 'RD-15-W8', 'RD-15-W9', 'RD-15-W10'].sort());
     licznik.wynik(wektory.length);
   });
   test('BR-DNI-005/S1 RD-15-W1 kontrola wyprowadzenia daty: termin 2026-11-04 → d = 14 → cel 13', () => {
     expect(plusDni(DZIS, 13)).toBe('2026-11-04');
-    expect(celDzienny({ suma: 320, przedDzis: 140, termin: '2026-11-04', dzis: DZIS })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 13 } });
+    expect(celDzienny({ suma: 320, przedDzis: 140, zrobioneTeraz: 140, termin: '2026-11-04', dzis: DZIS })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 13 } });
   });
 });
 
 describe('RD-15 przez zmianę czasu (ER-38, R-135): dni liczone jako daty, nie jako 24 h', () => {
   test('BR-DNI-005 R-135 wiosna: dziś 2027-03-20, termin 2027-04-02 (przez 2027-03-28) → d = 14 → cel ⌈180/14⌉ = 13', () => {
-    expect(celDzienny({ suma: 320, przedDzis: 140, termin: '2027-04-02', dzis: '2027-03-20' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 13 } });
+    expect(celDzienny({ suma: 320, przedDzis: 140, zrobioneTeraz: 140, termin: '2027-04-02', dzis: '2027-03-20' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 13 } });
   });
   test('BR-DNI-005 R-135 dzień zmiany czasu: dziś 2027-03-28, termin 2027-03-29 → d = 2 → cel 10', () => {
-    expect(celDzienny({ suma: 320, przedDzis: 300, termin: '2027-03-29', dzis: '2027-03-28' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 10 } });
+    expect(celDzienny({ suma: 320, przedDzis: 300, zrobioneTeraz: 300, termin: '2027-03-29', dzis: '2027-03-28' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 10 } });
   });
   test('BR-DNI-005 R-135 jesień: dziś 2026-10-24, termin 2026-10-26 (przez 2026-10-25) → d = 3 → cel 7', () => {
-    expect(celDzienny({ suma: 320, przedDzis: 300, termin: '2026-10-26', dzis: '2026-10-24' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 7 } });
+    expect(celDzienny({ suma: 320, przedDzis: 300, zrobioneTeraz: 300, termin: '2026-10-26', dzis: '2026-10-24' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 7 } });
   });
 });
 
-describe('RD-15 własność: cel = ⌈R / d⌉ (P-047 (3))', () => {
-  test('BR-DNI-005 RD-15 dla C > 0, 0 ≤ Z ≤ C, d ≥ 1: g·d ≥ R i (g − 1)·d < R; R = 0 → osiągnięty; d < 1 → po terminie, zostało R', () => {
+describe('RD-15 własność: cel = ⌈R / d⌉ (P-047 (3)), kolejność gałęzi (P-134 Q1a)', () => {
+  test('BR-DNI-005 RD-15 dla C > 0, 0 ≤ Z_przed, Z_teraz ≤ C: (1) d ≥ 1 i R = 0 albo d < 1 i R_teraz = 0 → osiągnięty; (2) d < 1 → po terminie, zostało R_teraz; (3) g·d ≥ R i (g − 1)·d < R', () => {
     fc.assert(
-      fc.property(fc.integer({ min: 1, max: 5000 }), fc.integer({ min: 0, max: 5000 }), fc.integer({ min: -30, max: 400 }), (C, z, d) => {
-        const Z = Math.min(z, C);
-        const R = C - Z;
-        if (d < 1 && R === 0) return; // po terminie i cel osiągnięty: RD-15 nie mówi, który komunikat — [DO USTALENIA] 01
-        const w = celDzienny({ suma: C, przedDzis: Z, termin: plusDni(DZIS, d - 1), dzis: DZIS });
-        if (d < 1) expect(w).toEqual({ ok: true, wartosc: { rodzaj: 'po_terminie', zostalo: R } });
-        else if (R === 0) expect(w).toEqual({ ok: true, wartosc: { rodzaj: 'osiagniety' } });
+      fc.property(fc.integer({ min: 1, max: 5000 }), fc.integer({ min: 0, max: 5000 }), fc.integer({ min: 0, max: 5000 }), fc.integer({ min: -30, max: 400 }), (C, zp, zt, d) => {
+        const Z = Math.min(zp, C), Zt = Math.min(zt, C);
+        const R = C - Z, Rt = C - Zt;
+        const w = celDzienny({ suma: C, przedDzis: Z, zrobioneTeraz: Zt, termin: plusDni(DZIS, d - 1), dzis: DZIS });
+        if ((d >= 1 && R === 0) || (d < 1 && Rt === 0)) expect(w).toEqual({ ok: true, wartosc: { rodzaj: 'osiagniety' } });
+        else if (d < 1) expect(w).toEqual({ ok: true, wartosc: { rodzaj: 'po_terminie', zostalo: Rt } });
         else {
           expect(w.ok && w.wartosc.rodzaj).toBe('cel');
           if (w.ok && w.wartosc.rodzaj === 'cel') {

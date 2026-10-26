@@ -51,15 +51,16 @@ export function dniDoTerminu(dzis: string, termin: string): Wynik<number> {
   return { ok: true, wartosc: b - a + 1 };
 }
 
-/** RD-15: C = suma celów, przedDzis = rzędy przed dziś (min z celem), daty lokalne RRRR-MM-DD. */
-export function celDzienny(w: { suma: number; przedDzis: number; termin: string; dzis: string }): Wynik<CelDnia> {
-  if (!(Number.isInteger(w.suma) && w.suma > 0) || !calkowita(w.przedDzis)) return BLAD; // RD-15-W7: C > 0 (ostre)
+/** RD-15: C = suma celów, przedDzis = Z_przed (rzędy na koniec wczoraj, min z celem), zrobioneTeraz = Z_teraz (teraz), daty lokalne RRRR-MM-DD. */
+export function celDzienny(w: { suma: number; przedDzis: number; zrobioneTeraz: number; termin: string; dzis: string }): Wynik<CelDnia> {
+  if (!(Number.isInteger(w.suma) && w.suma > 0) || !calkowita(w.przedDzis) || !calkowita(w.zrobioneTeraz)) return BLAD; // RD-15-W7: C > 0 (ostre)
   const d = dniDoTerminu(w.dzis, w.termin);
   if (!d.ok) return d;
   const reszta = w.suma - Math.min(w.przedDzis, w.suma);
-  // R ≤ 0 przed sprawdzeniem terminu: przy d < 1 i R = 0 komunikat jest [DO USTALENIA] 01 (test 07 pomija ten przypadek).
-  if (reszta <= 0) return { ok: true, wartosc: { rodzaj: 'osiagniety' } };
-  if (d.wartosc < 1) return { ok: true, wartosc: { rodzaj: 'po_terminie', zostalo: reszta } };
+  const resztaTeraz = w.suma - Math.min(w.zrobioneTeraz, w.suma);
+  // Gałęzie w kolejności RD-15 (P-134 Q1a): (1) brak rzędów do zrobienia przed terminem; (2) po terminie „zostało” na bieżąco; (3) cel stały w dniu (P-047).
+  if (d.wartosc >= 1 ? reszta <= 0 : resztaTeraz <= 0) return { ok: true, wartosc: { rodzaj: 'osiagniety' } };
+  if (d.wartosc < 1) return { ok: true, wartosc: { rodzaj: 'po_terminie', zostalo: resztaTeraz } };
   return { ok: true, wartosc: { rodzaj: 'cel', rzedy: Math.ceil(reszta / d.wartosc) } };
 }
 

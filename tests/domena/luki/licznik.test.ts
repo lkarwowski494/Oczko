@@ -109,7 +109,7 @@ describe('BR-WZR-003 znacznik bieżącego rzędu idzie z licznikiem — docs/brd
 
 describe('BR-DNI-005 cel stały w ciągu dnia i wykonanie (RD-15, P-047) — docs/brd/wymagania-dni.md:79, :83', () => {
   const DZIS = '2026-10-22';
-  const projekt = { suma: 320, przedDzis: 140, termin: '2026-11-04', dzis: DZIS }; // RD-15-W1: cel 13
+  const projekt = { suma: 320, przedDzis: 140, zrobioneTeraz: 140, termin: '2026-11-04', dzis: DZIS }; // RD-15-W1: cel 13 (zrobioneTeraz: P-136, sygnatura RD-15 z Z_teraz)
   const plus = (n: number, od = 1): ZmianaDnia[] => Array.from({ length: n }, (_, i) => ({ id: `p${od + i}`, rodzaj: 'plus', dzien: DZIS, rodzajLicznika: 'rzedy', cofa: [] }));
   test('BR-DNI-005/S2 5 rzędów dziś → cel nadal 13, wykonanie 5 z 13 (cel nie zależy od dzisiejszej pracy)', () => {
     expect(stanDnia({ ...projekt, zmiany: [] })).toEqual({ ok: true, wartosc: { cel: { rodzaj: 'cel', rzedy: 13 }, wykonanie: 0 } });

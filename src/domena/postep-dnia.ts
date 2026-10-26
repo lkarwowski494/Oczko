@@ -17,8 +17,8 @@ export function wykonanieDnia(zmiany: readonly ZmianaDnia[], dzis: string): numb
   return suma;
 }
 /** Cel na dziś z `przedDzis` (koniec wczoraj) — nie zależy od dzisiejszych zmian; wykonanie „w z g”. */
-export function stanDnia(w: { suma: number; przedDzis: number; termin: string; dzis: string; zmiany: readonly ZmianaDnia[] }): Wynik<{ cel: CelDnia; wykonanie: number }> {
-  const cel = celDzienny(w); // z `przedDzis`: dzisiejsza praca nie zmienia celu (P-047)
+export function stanDnia(w: { suma: number; przedDzis: number; zrobioneTeraz: number; termin: string; dzis: string; zmiany: readonly ZmianaDnia[] }): Wynik<{ cel: CelDnia; wykonanie: number }> {
+  const cel = celDzienny(w); // z `przedDzis`: dzisiejsza praca nie zmienia celu (P-047); po terminie „zostało” z `zrobioneTeraz` (P-134 Q1a)
   if (!cel.ok) return cel;
   return { ok: true, wartosc: { cel: cel.wartosc, wykonanie: wykonanieDnia(w.zmiany, w.dzis) } };
 }
