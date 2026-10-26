@@ -77,8 +77,14 @@ export type KompozycjaLicznika = {
   uslugi: UslugiAplikacji;
   dzialania: DzialaniaLicznika;
   otworz(licznikId: string): Promise<void>;
-  /** Rośnie przy każdym `otworz` — ekran licznika przeładowuje stan po powrocie z listy. */
+  /** Rośnie przy każdym `otworz` i `poZmianie` — ekran licznika przeładowuje stan po powrocie z listy albo arkusza. */
   wersja(): number;
+  /** Bieżący model licznika dla arkuszy (menu, formularze, historia); `null` przed pierwszym +1. */
+  widok(): Promise<WidokLicznika | null>;
+  /** Po zapisie z arkusza: stan ekranu blokady i zegarka, potem przeładowanie ekranu licznika. */
+  poZmianie(): Promise<void>;
+  /** Etykieta projektu jak na ekranie (projekt roboczy przez t(), P-126 (1b)). */
+  nazwaProjektu(w: WidokLicznika): string;
 };
 
 /** `przygotuj` uruchamia dane raz na proces (ADR-0019: błąd → ekran awaryjny, wołający); potem ekran licznika czyta przez `uslugi`. */
@@ -125,6 +131,14 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
       return { ok: true, wartosc: { cel: 'licznik' } };
     },
     wersja: () => wersja,
+    widok: async () => (await stan()).w,
+    async poZmianie() {
+      baner = null;
+      const { w } = await stan();
+      await poZapisie(w);
+      wersja += 1;
+    },
+    nazwaProjektu: (w) => (w.projekt.nienazwany ? etykietaRobocza(w.projekt.utworzonoMs, z.zegar.teraz().ms, j, z.zegar.teraz().strefa) : w.projekt.nazwa),
     async otworz(id) {
       licznikId = id;
       baner = null;
@@ -163,7 +177,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
     },
     dzialania: {
       async naMinus() {
-        if (!licznikId) return { ok: false, powod: 'niedozwolone_przejscie' };
+        if (!licznikId) return { ok: true, wartosc: { skonczone: 0 } }; // −1 przed pierwszym +1: zostaje 0, bez zapisu i bez komunikatu (BR-LIC-002/S3)
         const r = await odejmijRzad(z, { licznikId });
         if (!r.ok) return ekranu(r);
         baner = null;

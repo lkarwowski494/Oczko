@@ -33,7 +33,7 @@ export default function EkranLicznika(): React.ReactElement {
       system={systemAplikacji}
       oglos={oglos}
       t={kontener.j.t}
-      dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty') }}
+      dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu') }}
     />
   );
 }

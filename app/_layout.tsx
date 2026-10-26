@@ -22,7 +22,13 @@ export default function Korzen(): React.ReactElement {
   if (!a || !a.ok) return <View style={{ flex: 1, backgroundColor: k.papier }} testID={a ? 'tryb-awaryjny' : undefined} />;
   return (
     <DostawcaAplikacji wartosc={a.wartosc}>
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: k.papier } }} />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: k.papier } }}>
+        {/* Arkusze systemowe (design-spec „Komponenty”): historia, menu •••, formularze, karta ukończenia. */}
+        <Stack.Screen name="historia" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="menu" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="formularz/[rodzaj]" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="ukonczenie" options={{ presentation: 'modal', gestureEnabled: false }} />
+      </Stack>
     </DostawcaAplikacji>
   );
 }

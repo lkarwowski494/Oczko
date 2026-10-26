@@ -6,6 +6,7 @@ import type { LiveActivity, StanEkranuBlokady, Zegarek } from '../../src/domena/
 import { utworzI18n } from '../../src/i18n/i18n';
 import { ZASOBY } from '../../src/i18n/slowniki';
 import { kompozycjaLicznika, type Jezyk } from '../../src/kompozycja/licznik';
+import { czasPracy, stanUkonczenia } from '../../src/kompozycja/ukonczenie';
 import { czesc, licznik, projekt } from './pomocnicze/dane-wejsciowe';
 import { T0, przygotuj, wykonaj } from './pomocnicze/srodowisko';
 
@@ -100,5 +101,18 @@ describe('kompozycjaLicznika', () => {
     await k.uslugi.start();
     await poKolejce();
     expect(zdarzenia).toEqual(['potwierdz:w1', 'aktualizuj:2', 'zegarek:2', 'start:2']);
+  });
+});
+
+describe('stanUkonczenia (ekrany.html `ukonczenie`)', () => {
+  test('okres „Oct 1 – Oct 21”, czas „18 h 10 min”, bez sesji null; projekt roboczy z etykietą', async () => {
+    const i = await utworzI18n({ magazyn: { odczytaj: async () => null, zapisz: async () => {} }, systemowe: () => ['en-US'], zasoby: ZASOBY });
+    const j: Jezyk = { t: i.t, jezyk: i.jezyk, zegar24h: () => true };
+    const k = { nazwa: '2026-10-01', nienazwany: true, utworzonoMs: Date.UTC(2026, 9, 1, 16, 40), startMs: Date.UTC(2026, 9, 1, 17), ukonczonoMs: Date.UTC(2026, 9, 21, 18),
+      dni: 21, rzedy: 640, czasMs: (18 * 60 + 10) * 60_000, czesci: 4, wloczka: [], zdjecieSha: null };
+    const s = stanUkonczenia(k, { j, terazMs: Date.UTC(2026, 9, 21, 18), strefa: 'Europe/Warsaw', zdjecie: (x) => `/p/${x}` });
+    expect([s.nazwa, s.okres, s.czas]).toEqual(['Counter from Oct 1, 18:40', 'Oct 1 – Oct 21', '18 h 10 min']);
+    expect([czasPracy(45 * 60_000, j), czasPracy(2 * 3_600_000, j)]).toEqual(['45 min', '2 h']);
+    expect(stanUkonczenia({ ...k, czasMs: null }, { j, terazMs: 0, strefa: 'UTC', zdjecie: String }).czas).toBeNull();
   });
 });
