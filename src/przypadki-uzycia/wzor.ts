@@ -4,6 +4,7 @@
 import type { Wynik } from '../domena/bledy';
 import type { CzasWTle, KonwersjaWzoru, PlikWejsciowy, PortBazy } from '../domena/porty';
 import { WZOR_MAKS_MB } from '../konfiguracja';
+import { adresStrony } from '../domena/adres';
 import { licznikZnacznika, znacznikJson } from '../dane/repozytoria/wzory';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { odczytajUstawienie, zapiszUstawienie } from '../dane/repozytoria/ustawienia';
@@ -94,12 +95,7 @@ export type ZrodloDodania =
 const ZRODLO_W_BAZIE = { pdf: 'pdf', word: 'word', obrazy: 'obraz', adres: 'www' } as const;
 const MAKS_BAJTOW = WZOR_MAKS_MB * 1024 * 1024;
 
-/** Tylko http(s) z hostem: inne schematy (file:, javascript:) nie trafiają do konwersji ani do bazy. */
-export function adresStrony(adres: string): string | null {
-  const a = adres.trim();
-  if (!/^https?:\/\/[^\s/?#]+[^\s]*$/i.test(a)) return null;
-  return a;
-}
+export { adresStrony };
 
 /**
  * Jeden import = jeden wzór (P-218 (1), Q6a). Kolejność (moduly.md „Kontrakt partii 6”): rozmiar → konwersja i `sprawdzPdf` poza kolejką

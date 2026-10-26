@@ -6,9 +6,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LiniaKonfliktu, type KonfliktNaLiczniku } from './IcloudKonflikt';
 import type { Haptyka, WzorzecHaptyki } from '../domena/porty';
-import { LIMIT_DNI_W_MIESIACU } from '../konfiguracja';
 import { cel as rozmiary, MAX_SKALA_LICZBY, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import { Kreski } from './Kreski';
+import { ArkuszLimitu } from './LicznikArkuszLimitu';
 import type { Oglos, Tlumacz, WynikEkranu } from './wspolne';
 
 /** Stan limitu dni na liczniku (P-065, design-spec.md:15–19). Decyzję liczy domena (`mozeZaczacDzien`), ekran tylko pokazuje. */
@@ -69,6 +69,7 @@ export type PropsLicznika = {
   naMenu(): void;                      // menu ••• projektu
   naNastepnaCzesc(): void;             // BR-LIC-011/S1 (U-11)
   naProjekty?(): void;                 // „Projects” w pasku nawigacji (powrót do listy, F-50)
+  naWzor?(): void;                     // ikona „Pattern” — tylko gdy projekt ma ≥ 1 wzór (P-220 W2a, P-046); partia 6
   naProjekt?(): void;                  // nazwa projektu nad tytułem części otwiera ekran projektu (design-spec „Ekran projektu”, partia 5)
   /** Stoper sesji (P-191 P1a): pierwszy z prawej grupy paska, przed Historią; działa przy limicie i blokadzie (P2a). Składa kompozycja. */
   stoper?: React.ReactNode;
@@ -151,6 +152,11 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         ) : <View />}
         <View style={st.paskaPrawa}>
           {p.stoper}
+          {p.naWzor && (
+            <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.wzor_a11y')} onPress={p.naWzor} style={st.ikona} testID="licznik-wzor">
+              <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>▤</Text>
+            </Pressable>
+          )}
           <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.historia')} onPress={p.naHistorie} style={st.ikona} testID="licznik-historia">
             <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>◷</Text>
           </Pressable>
@@ -277,25 +283,7 @@ function LinijkaCelu({ s, t, st, naNastepnaCzesc }: { s: StanEkranuLicznika; t: 
   );
 }
 
-function ArkuszLimitu(p: { n: number; s: StanEkranuLicznika; t: Tlumacz; st: Style; naOferty(): void; naZamknij(): void }) {
-  const { t, st, s } = p;
-  return (
-    <View style={st.arkusz} accessibilityViewIsModal>
-      <Text style={st.tytul} accessibilityRole="header" accessibilityLabel={t('limit.nie_dodano', { n: p.n })}>{t('limit.nie_dodano', { n: p.n })}</Text>
-      <Text style={st.tresc}>{t('limit.arkusz_dni', { limit: LIMIT_DNI_W_MIESIACU, miesiac: s.miesiac.nazwa, data: s.miesiac.wznowienie })}</Text>
-      <Text style={st.tresc}>{t('limit.arkusz_zachowane', { count: s.miesiac.rzedyDanych })}</Text>
-      <Text style={st.podpis}>{t('limit.arkusz_pro')}</Text>
-      <Pressable accessibilityRole="button" accessibilityLabel={t('limit.zobacz_pro')} onPress={p.naOferty} style={st.plus}>
-        <Text style={st.plusTekst}>{t('limit.zobacz_pro')}</Text>
-      </Pressable>
-      <Pressable accessibilityRole="button" accessibilityLabel={t('wspolne.nie_teraz')} onPress={p.naZamknij} style={st.drugiPrzycisk}>
-        <Text style={[st.tresc, st.pogrubiony]}>{t('wspolne.nie_teraz')}</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-type Style = ReturnType<typeof style>;
+export type Style = ReturnType<typeof style>;
 function style(k: Kolory) {
   return StyleSheet.create({
     ekran: { flex: 1, backgroundColor: k.papier },

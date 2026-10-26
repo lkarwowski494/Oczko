@@ -44,6 +44,8 @@ export type PropsProjektu = {
   naProbka?(): void; // U-10: kalkulator „Swatch” z próbką projektu
   /** Grupa „Photos” po „Note” (P-191 P9a); składa kompozycja (`GrupaZdjec`). */
   zdjecia?: React.ReactNode;
+  /** Grupa „Pattern(s)” nad „Details” (design-spec W8, partia 6); składa kompozycja (`GrupaWzorow`). */
+  wzory?: React.ReactNode;
 };
 
 export function Projekt(p: PropsProjektu): React.ReactElement {
@@ -185,6 +187,8 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
       )}
 
       {p.zdjecia}
+
+      {p.wzory}
 
       {s.szczegoly && (
         <>
