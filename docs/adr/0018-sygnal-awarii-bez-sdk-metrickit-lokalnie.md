@@ -33,6 +33,10 @@ Opcja B (właściciel: „1b”, P-080).
 - Kontrola w CI: brak pakietów SDK raportowania awarii w `package.json` (lista zakazana ADR-0016).
 - Nie sprawdzono (P-079 (Q2a)): czy prawdziwa awaria na urządzeniu daje raport MetricKit i czy raport z TestFlight jest czytelny — ryzyko szczątkowe dla roli 10.
 
+## Uzupełnienie 2026-10-26 (rola 12 E2, P-194 Q4a; decyzja B bez zmian, termin rozłożony)
+- Przed TestFlight: globalna obsługa błędów JS (wpis `blad` bez treści komunikatu) i „Zgłoś problem” podpięte w trybie awaryjnym (dziś `naZglosProblem={() => undefined}`, `src/kompozycja/EkranAwaryjny.tsx`) — zgłoszenie dla 08.
+- Moduł Swift `Diagnostyka` (MetricKit): w 1.1, przed wydaniem w App Store. Przed premierą raporty awarii testerów daje TestFlight w przeglądarce (runbook §1).
+
 ## Opcje: zalety i wady
 ### A — zalety: zero kodu · wady: awarie z App Store niewidoczne bez Maca; dowiadujesz się z recenzji.
 ### B — zalety: stos awarii od użytkownika bez SDK i bez zmiany etykiety · wady: zależy od zgłoszeń; moduł Swift do utrzymania.

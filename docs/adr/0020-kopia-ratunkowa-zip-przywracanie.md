@@ -39,6 +39,11 @@ Opcja B (właściciel: „3b”, P-080). Zasady:
 - **(2′) `application_id`** (P-123 pkt 11, P-124 Q5a): schemat v1 go nie ustawiał, a `sprawdzKopie` sprawdzało obecność tabel. Kontrakt: wartość 1331919467 w schemacie i kontrola w `sprawdzKopie` (`docs/architektura/dane.md` „Identyfikator pliku bazy”); wdraża 08 w partii 3. Test: plik z innym `application_id` i tabelami Oczka → `obca`, bez zmian w danych.
 - Potwierdzenie bez zmian (testy przywrócenia z licznościami, błąd w trakcie zostawia bazę bez zmian, kopia „przed” istnieje); dochodzi test: `blad` i klucze urządzenia po „zastąp” takie jak przed.
 
+## Uzupełnienie 2026-10-26 (rola 12 E2–E3, P-194; decyzja B i zasady bez zmian)
+- (3) ZIP surowej kopii: `zipSurowejKopii` w `src/niezawodnosc/kopie.ts` — pliki z wyniku `surowaKopia` i `manifest.json` (wersja, build, `user_version` i `application_id` z nagłówka pliku, SHA-256); bazy nie otwiera. Wpięcie w ekran awaryjny: łatka dla 08 (P-194 Q3a).
+- (6) Sprzątanie: `kopieDoUsuniecia` / `sprzatnijKopie`, ściśle starsze niż 30 dni, tylko przy kamieniu milowym; kopia bez czasu w nazwie zostaje. Nazwa kopii przed migracją z czasem: `przed-migracja-<wersja>-<ms>.db` (P-194 Q2a, N12-02), żeby ponowna próba po nieudanej migracji nie trafiała na istniejący plik.
+- Ćwiczenia automatem (pętla, zepsuty plik, brak miejsca, przerwane przywracanie): `tests/niezawodnosc/cwiczenia.test.ts`, wynik w `docs/niezawodnosc/runbook.md` §6.
+
 ## Opcje: zalety i wady
 ### A — zalety: bez zależności · wady: trzy kroki dla zestresowanej osoby; łatwo wysłać sam `.db` bez `-wal` (utrata zapisów).
 ### B — zalety: jeden plik, komplet gwarantowany, SHA-256 do sprawdzenia · wady: zależy od ZIP (ADR-0016).

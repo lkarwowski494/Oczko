@@ -37,6 +37,11 @@ Opcja A (właściciel: „2a”, P-080).
 - Test startu w tle (symulator): uruchomienie intencji +1 bez otwierania aplikacji nie zwiększa licznika nieudanych startów.
 - Kontrola w CI: brak `createInMemoryDatabase`, `:memory:` i otwierania pustej bazy po błędzie w `src/` poza testami.
 
+## Uzupełnienie 2026-10-26 (rola 12 E2–E3, P-194; decyzja A bez zmian)
+- **Kamień milowy po narysowaniu** (P-194 Q1a, N12-01): zapis w efekcie po zatwierdzeniu renderu licznika, nie przed nim; test `tests/akceptacja/ekrany/niezawodnosc-kamien.test.tsx`, łatka dla 08 w `oczko-warsztat/12-niezawodnosc/2026-10-26-build-e2/latki/`.
+- **Okno przed startem JS** (P-177, P-194 Q5a, N12-10): bez znacznika natywnego. Awaria przed zapisem stanu zdarza się tak samo w trybie awaryjnym, więc licznik nie przywróci dostępu. Kontrola: `tests/niezawodnosc/okno-przed-startem.test.ts` (brak I/O przy imporcie modułów).
+- **Integralność przy starcie** ([DO USTALENIA E2] wyżej): pomiar `docs/niezawodnosc/eksperymenty/integrity-pomiar.out`. Baza 19,5 MB (100 000 zdarzeń): `integrity_check` 343 ms, `quick_check` 274 ms na Linuksie (Node 22, SQLite 3.50.4); telefon [DO USTALENIA]. Domyślne zostaje: sprawdzenie dopiero po błędzie, bez kosztu każdego startu (NFR-PIE-001). Ćwiczenie 2 (`tests/niezawodnosc/cwiczenia.test.ts`) pokazało, że uszkodzenie części stron przechodzi przez start i wychodzi dopiero przy odczycie tabeli — ryzyko szczątkowe w runbooku.
+
 ## Opcje: zalety i wady
 ### A — zalety: użytkownik rozumie, co się stało, i ma wybór; „spróbuj normalnie” po poprawce · wady: ekran, teksty, tłumaczenia.
 ### B — zalety: mniej kodu i tekstów · wady: arkusz eksportu bez wyjaśnienia przy każdym starcie; brak drogi „spróbuj normalnie” po aktualizacji z poprawką.
