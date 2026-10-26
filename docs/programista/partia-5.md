@@ -2,7 +2,12 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków — zgodny; nie w repo)
 Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla wariantów zakresu, bez wzorów, iCloud, sesji i narzędzi), P-180 (PLIK_BAZY, krok CI członkostwa `_shared/Stuknij.swift`, zdjęcie `continue-on-error` pakietu podstawowego E2E, pas przypomnienia po stronie Swift). Wejście: inwentaryzacja koordynatora `oczko-warsztat/koordynacja/2026-10-26-inwentaryzacja-mvp.md` (6575a46), `docs/scope-contract.md` (F-04, F-08, F-09, F-14, F-15, F-17, F-18, F-20, F-33, F-46, F-52, F-54, F-60, F-61), BRD (BR-PRJ-001/002/004/005/007/014/016, BR-LIC-006/011/012/018, BR-DNI-004/005/006, BR-DAN-008), `docs/architektura/moduly.md` „Projekt”, design-spec.
 
-## Stan: STOP E0 (2026-10-26) — czeka na odpowiedź koordynatora (P-087)
+## Stan: E1 (2026-10-26) — (1) i warstwa danych A1–A4, C1 zrobione; następne: ekrany A5–A6, C2–C3 (P-185)
+E0 przyjęty: P-182 (Q1a+b, Q2a → poprawione P-184, Q3a, Q4a; uśpione bez progu). 04 fix-5 E2 przyjęty (P-183, P-185): klucze `docs/design/fix5-2026-10-26/klucze.json` nakładam w pierwszym commicie ekranów.
+- (1) 1.1 `PLIK_BAZY` (a429c2f); 1.2–1.3 krok CI członkostwa `Stuknij.swift` + `continue-on-error` tylko dla [e2e-pelny] (22643f9); 1.4 pas przypomnienia Swift + naprawa `rzadWRobocie` w trybie „w trakcie” (ed9f60d; `swift test` lokalnie 45/45, widoki SwiftUI czekają na build CI).
+- A2 zapisy (c73b8fe) i `projekt.narzedzie` w `0001.sql`/`schemat.sql` bez migracji (P-184, 1ba505a; aneks w `dane.md`); A1 `widokProjektu` (d1b98c1); `dzienProjektu` (1c4d8e0, struktura); A3/A4/C1 lista, kosz, „Next part”, cel pary (0b32827).
+- `verify` kod 0, **1831/1831**. „Jakość · iOS”: przebiegi 40331271484 (anulowany przez kolejny push, nie wystartował — brak runnera) i 40333370146 (w kolejce).
+- STOP E1 (Q2 szydełko): migracja 0002 sprzeczna z `dane.md:85` → P-184 (kolumna w 0001.sql). Łatka migracji odłożona poza repo.
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -75,4 +80,12 @@ Agent: (1) 1.1–1.3 ok. 1,5 h, 1.4 ok. 4–6 h; (2) A1–A4 ok. 6–8 h, A5–A
 Podział: jedna sesja wystarczy (partia 4 miała ok. 40 h w jednej sesji); punkt kontrolny po (1) i A1–A4/C1 z wypchniętym plikiem stanu. Jeśli koordynator woli krótsze sesje: 5a = (1) + A1–A4 + C1, 5b = ekrany A5–A6 + C2–C3 (granica = E2 04 fix-5).
 
 ## Dziennik sesji
-- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1801/1801, plan (1)–(4), Q1–Q4; STOP do koordynatora.
+- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1801/1801, plan (1)–(4), Q1–Q4; STOP do koordynatora. Odpowiedź: P-182.
+- 2026-10-26: E1 (1) zaległości P-180; A2 (STOP E1 Q2 → P-184); A1; A3/A4/C1. Swift 6.2 zainstalowany lokalnie w /opt/swift (poza repo) — `swift test` przed CI.
+### Do raportu E2 (zbierane w trakcie)
+- Sygnatury nowych przypadków użycia do przeglądu 05 (P-182 Q3a): `dodajCzescProjektu`, `ustawZnaczenie`, `ustawDrut` (z `narzedzie`), `ustawTermin`, `widokProjektu`, `widokKosza`, `nastepnaCzesc`; repozytoria `elementyKosza`, `dzienProjektu`, `rzedyCzesci`, `celCzesci`.
+- Cel części pary liczony dynamicznie z rzędów pierwszej (BR-PRJ-014 S1, S3) w `widokProjektu`, `widokLicznika`, `nastepnaCzesc`; `dodajCzescPara` nadal kopiuje `cel_rzedow` pierwszej (własny cel wygrywa) — do przeglądu 05.
+- `zrobPonownie` nie kopiuje drutu ani narzędzia (BR-PRJ-007 nie rozstrzyga) — pytanie do 01/05.
+- Licznik całości: flaga `licznik.sekcja` (N2 → 05; propozycja 04: każdy licznik rzędów części to sekcja, całość widać przy ≥ 2).
+- Swift: Smart Stack (`supplementalActivityFamilies`) nie istnieje w celu widżetu — pas krótki (`aktywnosc.przypomnienie_krotkie`) poza partią; etykieta VoiceOver „Add row. ” + `przypomnienie_a11y` wymaga klucza (sklejanie napisów) — zgłoszenie do 04; dziś pas ma własną etykietę, przycisk +1 bez zmian.
+- Błąd naprawiony: `rzadWRobocie` w widżecie i zegarku w trybie „rząd w trakcie” (o 1 za mało wobec aplikacji).
