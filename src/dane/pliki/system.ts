@@ -1,7 +1,7 @@
 // System plików warstwy danych (P-120 Q1a, jak Trening): jedyne miejsce importu expo-file-system w src/dane; ścieżki bezwzględne bez `file://`.
 // Nowe API (File, Directory, FileHandle; expo-file-system 57.0.7, build/File.types.d.ts:80–84) — czytanie i zapis kawałkami, bez wczytania
 // całego pliku do pamięci (archiwum do ok. 415 MB, E0 §3 roli 05). W Jest: tests/narzedzia/expo-file-system-node.ts (prawdziwy dysk).
-import { Directory, File, FileMode } from 'expo-file-system';
+import { Directory, File, FileMode, Paths } from 'expo-file-system';
 
 const uri = (sciezka: string): string => `file://${sciezka.split('/').map(encodeURIComponent).join('/')}`;
 
@@ -38,6 +38,14 @@ export function usunKatalog(sciezka: string): void {
 /** Kopia bajt w bajt; cel nie może istnieć (kopia nigdy nie nadpisuje po cichu). */
 export function kopiuj(zrodlo: string, cel: string): void {
   new File(uri(zrodlo)).copySync(new File(uri(cel)));
+}
+/** Przeniesienie w obrębie woluminu (zmiana nazwy) — zapis pliku tymczasowego, potem nazwa docelowa (bez pliku w połowie pod nazwą docelową). */
+export function przenies(zrodlo: string, cel: string): void {
+  new File(uri(zrodlo)).moveSync(new File(uri(cel)));
+}
+/** Wolne miejsce na woluminie aplikacji w bajtach (required reason E174.1, rejestr Apple 11d). */
+export function wolneMiejsce(): number {
+  return Paths.availableDiskSpace;
 }
 export function czytajTekst(sciezka: string): Promise<string> {
   return new File(uri(sciezka)).text();

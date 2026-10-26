@@ -51,7 +51,7 @@ function parsujManifest(b: Uint8Array): Manifest | null {
   return { format: 'oczko', wersja_formatu: v.wersja_formatu, wersja_schematu: v.wersja_schematu, aplikacja: v.aplikacja, utworzono: v.utworzono, licznosci: licz, pliki };
 }
 
-export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zegar: Zegar; katalogi: Katalogi; migruj: Migruj; aplikacja: string }): PortArchiwum {
+export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zegar: Zegar; katalogi: Katalogi; migruj: Migruj; aplikacja: string; skrot?: (sciezka: string) => Promise<string> }): PortArchiwum {
   async function potrzebneMiejsce(): Promise<number> {
     const [s] = await wiersze(z.baza.all('SELECT (SELECT page_count FROM pragma_page_count()) * (SELECT page_size FROM pragma_page_size()) AS bajty'), 'miejsce');
     const [p] = await wiersze(z.baza.all('SELECT coalesce(sum(bajty), 0) AS bajty FROM plik'), 'miejsce');
@@ -114,8 +114,13 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
         for (const w of wpisyPlikow) {
           const m = /^pliki\/([0-9a-f]{64})\.([A-Za-z0-9]+)$/.exec(w.nazwa);
           if (!m || !SHA.test(m[1])) return odrzuc(katalog, 'uszkodzony');
-          const s = sha256();
-          if (!wypakuj(sciezka, w, polacz(katalog, w.nazwa), (b) => s.dodaj(b)) || s.wynik() !== m[1]) return odrzuc(katalog, 'uszkodzony'); // R-067
+          const plik = polacz(katalog, w.nazwa);
+          if (z.skrot) { // P-130: na urządzeniu natywny SHA-256 strumieniowo po rozpakowaniu; w TS w trakcie rozpakowania
+            if (!wypakuj(sciezka, w, plik) || (await z.skrot(plik)) !== m[1]) return odrzuc(katalog, 'uszkodzony'); // R-067
+          } else {
+            const s = sha256();
+            if (!wypakuj(sciezka, w, plik, (b) => s.dodaj(b)) || s.wynik() !== m[1]) return odrzuc(katalog, 'uszkodzony'); // R-067
+          }
           wArchiwum.add(`${m[1]}:${w.rozmiar}`);
         }
         if (zManifestu.size !== wArchiwum.size || [...zManifestu].some((p) => !wArchiwum.has(p))) return odrzuc(katalog, 'uszkodzony');

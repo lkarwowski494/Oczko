@@ -1,6 +1,6 @@
 // Zastępnik `expo-file-system` (nowe API: File, Directory, FileHandle, Paths) w Jest (P-120 Q1a, jak Trening `tests/setup.js`):
 // podzbiór używany przez src/dane/pliki/system.ts, na prawdziwym dysku (node:fs). Kod testu, nie aplikacji.
-import { closeSync, copyFileSync, existsSync, fstatSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, rmSync, statSync, writeFileSync, appendFileSync, writeSync } from 'node:fs';
+import { closeSync, copyFileSync, existsSync, fstatSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, renameSync, rmSync, statSync, writeFileSync, appendFileSync, writeSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const sciezka = (uri: string): string => (uri.startsWith('file://') ? fileURLToPath(uri) : uri);
@@ -53,6 +53,11 @@ class Plik {
     const c = cel instanceof Katalog ? `${sciezka(cel.uri)}/${this.name}` : sciezka(cel.uri);
     if (existsSync(c)) throw new Error(`cel istnieje: ${c}`);
     copyFileSync(sciezka(this.uri), c);
+  }
+  moveSync(cel: Plik | Katalog): void {
+    const c = cel instanceof Katalog ? `${sciezka(cel.uri)}/${this.name}` : sciezka(cel.uri);
+    if (existsSync(c)) throw new Error(`cel istnieje: ${c}`);
+    renameSync(sciezka(this.uri), c);
   }
   open(tryb: FileMode = FileMode.ReadWrite): FileHandle {
     const flagi = { r: 'r', rw: 'r+', w: 'w', wa: 'a', wt: 'w' }[tryb];
