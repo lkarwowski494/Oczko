@@ -56,6 +56,7 @@ export default function EkranWzoru(): React.ReactElement {
     if (v.ok) await zapamietajWzor(zw, { licznikId: w.licznikId, wzorId });
   }, [licznik, zw]);
   useEffect(() => { void wczytaj(id); setRysikOtwarcie(); }, [wczytaj, id]);
+  useEffect(() => { const o = kontener.porty.orientacja; o.dowolna(); return () => o.tylkoPion(); }, [kontener]); // F-25: wzór w obu położeniach na iPhonie
   const [dodano, ustawDodano] = useState(false); // „Add pattern” z ekranu projektu: źródło od razu, raz (W7a)
   useEffect(() => {
     if (!lw || dodano || !dodajParam || !['plik', 'skan', 'zdjecia', 'link'].includes(dodajParam)) return;

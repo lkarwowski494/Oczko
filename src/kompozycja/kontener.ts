@@ -2,7 +2,8 @@
 // porty platformy, i18n (ADR-0017). Jedyne miejsce, które składa adaptery; ekrany dostają gotowe usługi (moduly.md: ekrany → przypadki użycia).
 import { Platform } from 'react-native';
 import type { Wynik } from '../domena/bledy';
-import type { Haptyka, EkranAktywny, Sklep } from '../domena/porty';
+import type { Haptyka, EkranAktywny, Orientacja, Sklep } from '../domena/porty';
+import { orientacja } from '../platforma/orientacja';
 import { otworzPortExpo } from '../dane/baza/adapter-expo';
 import { otworzBaze } from '../dane/baza/polaczenie';
 import { sciezkiDanych } from '../dane/baza/sciezki';
@@ -41,7 +42,7 @@ export type ZaleznosciAplikacji = ZaleznosciKompozycji & ZaleznosciArchiwum;
 export type Kontener = {
   z: ZaleznosciAplikacji;
   j: Jezyk & { naZmiane(f: (j: string) => void): () => void; preferencja(): PreferencjaJezyka; ustawJezyk(p: PreferencjaJezyka): Promise<void> };
-  porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka };
+  porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka; orientacja: Orientacja };
   dostep: DostepPro;
   katalogDanych: string;
   /** iCloud (partia 7): sterownik albo null, gdy silnika nie ma w buildzie; `widoczny` = wiersz w Data and sync (ZM-06, P-242). */
@@ -121,7 +122,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     wartosc: {
       z,
       j: { t, jezyk, zegar24h, naZmiane: (f) => i18n.naZmiane(f), preferencja: () => i18n.preferencja(), ustawJezyk: (p) => i18n.ustawJezyk(p) },
-      porty: { sklep, ekranAktywny: ekranAktywny(), haptyka: haptyka() },
+      porty: { sklep, ekranAktywny: ekranAktywny(), haptyka: haptyka(), orientacja: orientacja() },
       dostep, katalogDanych, icloud, wzor,
     },
   };
