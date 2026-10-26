@@ -5,7 +5,7 @@
 import type { Wynik } from '../domena/bledy';
 import type { Produkt, Sklep, StatusZakupu, Transakcja } from '../domena/porty';
 import { PRODUKTY_PRO } from '../konfiguracja';
-import { sklepSztuczny } from './sklep-sztuczny';
+import { sklepSztuczny, type ZapisSklepu } from './sklep-sztuczny';
 
 /** Podzbiór expo-iap używany przez adapter (typy paczki 5.8.1: build/index.d.ts, build/types.d.ts). */
 export interface ModulIap {
@@ -101,8 +101,8 @@ export function sklepIap(m: ModulIap, terazMs: () => number = Date.now): Sklep {
 }
 
 /** Sklep aplikacji: sztuczny w buildzie E2E (`EXPO_PUBLIC_STORE_FAKE=1`, e2e/README.md), inaczej expo-iap ładowane leniwie. */
-export function sklepAplikacji(): Sklep {
-  if (process.env.EXPO_PUBLIC_STORE_FAKE === '1') return sklepSztuczny();
+export function sklepAplikacji(zapisE2e?: ZapisSklepu, terazMs?: () => number): Sklep {
+  if (process.env.EXPO_PUBLIC_STORE_FAKE === '1') return sklepSztuczny(terazMs, zapisE2e);
   // eslint-disable-next-line @typescript-eslint/no-require-imports -- leniwie: w testach i bez modułu natywnego pakiet nie jest ładowany
   const m: ModulIap = require('expo-iap');
   return sklepIap(m);
