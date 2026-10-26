@@ -75,6 +75,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/widok-projektu.test.ts` | zielony (główny zestaw) | 10 | BR-LIC-018, BR-PRJ-004/S3, BR-PRJ-005, BR-PRJ-014, P-184, RD-11, RD-14, RD-15, RD-19 | `src/przypadki-uzycia/widok-projektu` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/wzory.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-001/S2, BR-WZR-003/S2, BR-WZR-008/S2, P-120 | `src/dane/baza/adapter-node`<br>`src/dane/repozytoria/wzory`<br>`src/przypadki-uzycia/wzor` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/zapis-licznika.test.ts` | zielony (główny zestaw) | 18 | BR-DAN-001/S1, BR-LIC-001/S3, BR-LIC-003, BR-LIC-003/S2, BR-LIC-006/S1, BR-LIC-017, BR-LIC-017/S2, BR-LIC-017/S3, KP-12, NFR-DAN-002, P-026, P-041, P-091, R-003, R-004, R-101, R-185, RD-15, RD-16 | `src/dane/repozytoria/dni`<br>`src/domena/porty`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/projekt` | Z07-22 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/zdjecia.test.ts` | zielony (główny zestaw) | 4 | BR-PRJ-003, P-191 | `src/przypadki-uzycia/zdjecia` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/zegarek-potwierdzenia.test.ts` | zielony (główny zestaw) | 6 | P-135, P-139, R-021 | `src/domena/porty`<br>`src/konfiguracja`<br>`src/platforma/zegarek`<br>`src/przypadki-uzycia/dziennik` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/niezawodnosc-kamien.test.tsx` | oczekuje | 2 | P-080 | `src/kompozycja/Kontekst` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/aplikacja.test.tsx` | zielony (główny zestaw) | 6 | BR-DAN-012/S2, BR-LIC-001, BR-LIC-001/S1, KP-07, KP-08, KP-13, NFR-DAN-002, NFR-PIE-001, R-020, R-091 | `src/domena/porty`<br>`src/ekrany/Aplikacja`<br>`src/ekrany/wspolne` | Z07-11, Z07-22 |
@@ -109,10 +110,11 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/sklep-status.test.ts` | zielony (główny zestaw) | 1 | KP-13, P-135 | `src/domena/dostep`<br>`src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
 | 9 ? | `tests/adaptery/sklep.test.ts` | zielony (główny zestaw) | 7 | KP-06, P-103, P-135 | `src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
 | 9 ? | `tests/adaptery/teksty-natywne.test.ts` | zielony (główny zestaw) | 5 | P-115, P-139, P-143 | `src/i18n/jezyki`<br>`src/i18n/plural`<br>`src/i18n/slowniki/en.json` | — |
+| 9 ? | `tests/adaptery/zdjecia.test.ts` | zielony (główny zestaw) | 3 | P-191 | `src/platforma/zdjecia` | — |
 | 9 ? | `tests/domena/prosba-o-ocene.test.ts` | zielony (główny zestaw) | 1 | P-150, P-156 | `src/domena/ocena`<br>`src/domena/zaslepka` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, P-135, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
 | 9 ? | `tests/domena/straznik-startu.test.ts` | zielony (główny zestaw) | 8 | P-080 | `src/konfiguracja`<br>`src/niezawodnosc/start` | — |
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 111; zależnych od poprawek: 78.
+Razem plików testów: 113; zależnych od poprawek: 78.
