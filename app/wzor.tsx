@@ -17,7 +17,7 @@ import { alertImportu, nazwaDomyslna } from '../src/kompozycja/wzor-dodawanie';
 import { wybierzPlikWzoru } from '../src/platforma/system-plikow-uzytkownika';
 import { paneleE2e, szerokoscOknaE2e } from '../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../src/platforma/zdjecia';
-import { dodajWzor, listaWzorow, usunWzor, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek, ustawZnacznik, type ZrodloDodania } from '../src/przypadki-uzycia/wzor';
+import { dodajNotatkeWzoru, dodajWzor, listaWzorow, usunWzor, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek, ustawZnacznik, type ZrodloDodania } from '../src/przypadki-uzycia/wzor';
 import { ustawObrot, widokWzoru, type WidokWzoru } from '../src/przypadki-uzycia/wzor-widok';
 import type { WidokLicznika } from '../src/przypadki-uzycia/widok-licznika';
 import { KOSZ_DNI } from '../src/konfiguracja';
@@ -142,6 +142,7 @@ export default function EkranWzoru(): React.ReactElement {
         naNarzedzie={ustawNarzedzie}
         naCofnij={() => ustawCofnij((n) => n + 1)}
         naZaznaczRzad={(kierunek) => void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: strona ? strona.n - 1 : 0, y: 0.5, wysokoscRzedu: zn?.wysokosc ?? 0.02, rzadBazowy: lw.wartosc + 1, kierunek }).then(() => wczytaj(widok.wzorId))}
+        naNotatka={(tekst) => void dodajNotatkeWzoru(zw, { wzorId: widok.wzorId, rzad: zn?.rzad ?? lw.wartosc + 1, tekst })}
         naObroc={() => void ustawObrot(zw, { wzorId: widok.wzorId, strona: strona ? strona.n - 1 : 0, kat: (((widok.obroty[strona ? strona.n - 1 : 0] ?? 0) + 90) % 360) as 0 | 90 | 180 | 270 }).then(() => wczytaj(widok.wzorId))}
         naUsun={() => void usunWzor(zw, { wzorId: widok.wzorId }).then(async (r) => { if (r.ok) { await kontener.wzor.k.odswiezMigawke(); await wczytaj(); } })}
         potwierdz={(tytul, opis, przycisk, f) => Alert.alert(tytul, opis, [{ text: t('wspolne.anuluj'), style: 'cancel' }, { text: przycisk, style: 'destructive', onPress: f }])}

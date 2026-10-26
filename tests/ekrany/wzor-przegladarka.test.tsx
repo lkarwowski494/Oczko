@@ -118,3 +118,31 @@ test('P-126 (3a): pierwszy znacznik we wzorze pyta o kierunek (bez wartości dom
   fireEvent.press(screen.getByRole('button', { name: 'Mark row' }));
   expect(w.naZaznaczRzad).toHaveBeenLastCalledWith(1);
 });
+
+describe('notatka wzoru (design-spec „Notatka wzoru bez znacznika”, P-124 Q6a)', () => {
+  test('bez znacznika: „Add note” pokazuje pasek z „Mark row” i „Cancel” (bez błędu); „Mark row” → pytanie o kierunek → po wyborze arkusz notatki', () => {
+    const w = { ...wywolania(), naNotatka: jest.fn() };
+    render(<PrzegladarkaWzoru stan={stan({ kierunek: null })} t={t} widok={widok} {...w} />);
+    fireEvent.press(screen.getByRole('button', { name: 'Add note' }));
+    expect(screen.getByText('A note sits next to a row.')).toBeTruthy();
+    expect(screen.getByText('Mark the row on the pattern first, then write the note.')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('wzor-notatka-zaznacz'));
+    fireEvent.press(screen.getByRole('button', { name: 'Down, like written steps' }));
+    expect(w.naZaznaczRzad).toHaveBeenLastCalledWith(1);
+    fireEvent.changeText(screen.getByTestId('wzor-notatka-pole'), 'decrease every 4 rows');
+    fireEvent.press(screen.getByRole('button', { name: 'Save' }));
+    expect(w.naNotatka).toHaveBeenCalledWith('decrease every 4 rows');
+  });
+  test('ze znacznikiem: „Add note” otwiera arkusz od razu; „Cancel” na pasku bez znacznika nic nie zmienia', () => {
+    const w = { ...wywolania(), naNotatka: jest.fn() };
+    const r = render(<PrzegladarkaWzoru stan={stan({ kierunek: -1 })} t={t} widok={widok} {...w} />);
+    fireEvent.press(screen.getByRole('button', { name: 'Add note' }));
+    expect(screen.getByTestId('wzor-notatka-pole')).toBeTruthy();
+    r.rerender(<PrzegladarkaWzoru stan={stan({ kierunek: null })} t={t} widok={widok} {...w} />);
+    fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Add note' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByText('A note sits next to a row.')).toBeNull();
+    expect(w.naZaznaczRzad).not.toHaveBeenCalled();
+  });
+});

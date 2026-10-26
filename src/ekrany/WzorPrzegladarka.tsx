@@ -2,7 +2,7 @@
 // Strona PDF z rysunkami i znacznikiem to widok modułu natywnego `oczko-wzor` (slot `widok`, składa kompozycja); ekran rysuje pasek nawigacji,
 // narzędzia, plakietkę strony i pasek licznika (te same testID co licznik). Jeden wzór widoczny naraz; obok wzoru tylko licznik (P-218 (3)).
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { Narzedzie } from '../domena/rysik';
 import type { Uklad } from '../domena/uklad';
 import { cel as rozmiary, MAX_SKALA_LICZBY, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
@@ -32,6 +32,7 @@ export type PropsPrzegladarki = {
   naNarzedzie(n: Narzedzie): void;
   naCofnij(): void;
   naZaznaczRzad(kierunek: 1 | -1): void;
+  naNotatka?(tekst: string): void;              // notatka przy rzędzie znacznika (BR-WZR-008/S2; bez znacznika — najpierw „Mark row”, P-124 Q6a)
   naObroc(): void;
   naUsun(): void;
   potwierdz(tytul: string, opis: string, przycisk: string, f: () => void): void;
@@ -46,7 +47,11 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
   const [menu, ustawMenu] = useState<'brak' | 'opcje' | 'wzory'>('brak');
   const [blad, ustawBlad] = useState(false);
   const [pytanie, ustawPytanie] = useState(false); // „Which way do rows go on this page?” (3a: bez wartości domyślnej)
-  const zaznacz = () => { if (s.kierunek === 1 || s.kierunek === -1) p.naZaznaczRzad(s.kierunek); else ustawPytanie(true); };
+  const [notatka, ustawNotatke] = useState<'brak' | 'pasek' | 'arkusz'>('brak');
+  const [tekst, ustawTekst] = useState('');
+  const [notatkaPo, ustawNotatkaPo] = useState(false); // po ustawieniu znacznika arkusz notatki otwiera się sam (design-spec)
+  const znacznikUstawiony = (kier: 1 | -1) => { p.naZaznaczRzad(kier); if (notatkaPo) { ustawNotatkaPo(false); ustawNotatke('arkusz'); } };
+  const zaznacz = () => { if (s.kierunek === 1 || s.kierunek === -1) znacznikUstawiony(s.kierunek); else ustawPytanie(true); };
   const ipad = s.uklad.klasa === 'regular';
   const tryb = s.narzedzie !== 'brak';
   const obok = s.uklad.wzor === 'obok';
@@ -92,6 +97,11 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
             <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>▭</Text>
           </Pressable>
         )}
+        {!s.word && p.naNotatka && (
+          <Pressable accessibilityRole="button" accessibilityLabel={t('wzor.dodaj_notatke')} onPress={() => ustawNotatke(s.kierunek ? 'arkusz' : 'pasek')} style={st.ikona}>
+            <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>✎</Text>
+          </Pressable>
+        )}
         {!s.word && !ipad && narzedzie('zakreslacz', 'wzor.zakreslacz', 'wzor-zakreslacz', '🖍')}
         <Pressable accessibilityRole="button" accessibilityLabel={t('wzor.menu_a11y')} onPress={() => ustawMenu('opcje')} style={st.ikona} testID="wzor-menu">
           <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>•••</Text>
@@ -110,11 +120,37 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
         </View>
       )}
       {s.word && <Text style={[st.tresc, st.informacja]} accessibilityRole="text">{t('wzor.word_podglad')}</Text>}
+      {notatka === 'pasek' && (
+        <View style={st.informacja} accessibilityRole="summary">
+          <Text style={st.tresc}>{t('wzor.notatka_bez_znacznika')}</Text>
+          <Text style={st.podpis}>{t('wzor.notatka_zaznacz')}</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('wzor.zaznacz_rzad')} testID="wzor-notatka-zaznacz" style={st.pozycja}
+            onPress={() => { ustawNotatke('brak'); ustawNotatkaPo(true); zaznacz(); }}>
+            <Text style={[st.tresc, st.pogrubiony]}>{t('wzor.zaznacz_rzad')}</Text>
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('wspolne.anuluj')} onPress={() => ustawNotatke('brak')} style={st.pozycja}>
+            <Text style={st.tresc}>{t('wspolne.anuluj')}</Text>
+          </Pressable>
+        </View>
+      )}
+      {notatka === 'arkusz' && (
+        <View style={st.informacja}>
+          <Text style={st.tresc} accessibilityRole="header">{t('licznik.notatka')}</Text>
+          <TextInput accessibilityLabel={t('licznik.notatka')} value={tekst} onChangeText={ustawTekst} testID="wzor-notatka-pole" multiline style={[st.tresc, st.pole]} />
+          <Pressable accessibilityRole="button" accessibilityLabel={t('wspolne.zapisz')} style={st.pozycja}
+            onPress={() => { if (tekst.trim()) p.naNotatka?.(tekst.trim()); ustawTekst(''); ustawNotatke('brak'); }}>
+            <Text style={[st.tresc, st.pogrubiony]}>{t('wspolne.zapisz')}</Text>
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('wspolne.anuluj')} onPress={() => { ustawTekst(''); ustawNotatke('brak'); }} style={st.pozycja}>
+            <Text style={st.tresc}>{t('wspolne.anuluj')}</Text>
+          </Pressable>
+        </View>
+      )}
       {pytanie && (
         <View style={st.informacja} accessibilityRole="summary" testID="wzor-kierunek">
           <Text style={st.tresc}>{t('wzor.kierunek_pytanie')}</Text>
           {([[-1, 'wzor.kierunek_gora', 'wzor.kierunek_gora_opis', '↑'], [1, 'wzor.kierunek_dol', 'wzor.kierunek_dol_opis', '↓']] as const).map(([kier, k1, k2, znak]) => (
-            <Pressable key={kier} accessibilityRole="button" accessibilityLabel={`${t(k1)}, ${t(k2)}`} onPress={() => { ustawPytanie(false); p.naZaznaczRzad(kier); }} style={st.pozycja}>
+            <Pressable key={kier} accessibilityRole="button" accessibilityLabel={`${t(k1)}, ${t(k2)}`} onPress={() => { ustawPytanie(false); znacznikUstawiony(kier); }} style={st.pozycja}>
               <Text style={st.tresc}>{`${znak} ${t(k1)}, ${t(k2)}`}</Text>
             </Pressable>
           ))}
@@ -230,5 +266,6 @@ function style(k: Kolory) {
     menu: { maxHeight: '60%', margin: odstep.l, borderRadius: promien.grupa, backgroundColor: k.arkusz },
     pozycja: { minHeight: rozmiary.minimum, justifyContent: 'center', paddingHorizontal: odstep.l, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: k.linia },
     niszczaca: { color: k.blad },
+    pole: { minHeight: rozmiary.minimum, borderRadius: promien.pole, backgroundColor: k.papier, padding: odstep.s },
   });
 }
