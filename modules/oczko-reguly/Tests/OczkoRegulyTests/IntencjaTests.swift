@@ -58,4 +58,30 @@ final class IntencjaTests: XCTestCase {
     guard case let .zapisz(z, _) = try stuknij(.minus, stan: pro, teraz: waw(10, 21), strefa: "Europe/Warsaw", id: "m2", urzadzenie: "u") else { return XCTFail() }
     XCTAssertEqual([z.rodzaj.rawValue, String(z.pro), z.zrodlo.rawValue], ["minus", "true", "ekran_blokady"])
   }
+
+  /// Stan z podmienioną blokadą (pole `zablokowany`, stan v3).
+  func zablokowany(_ s: StanEkranuBlokady, _ z: Bool = true) -> StanEkranuBlokady {
+    StanEkranuBlokady(wersja: s.wersja, licznikId: s.licznikId, nazwa: s.nazwa, wartosc: s.wartosc, znaczenie: s.znaczenie, glowa: s.glowa, ostatniPlusMs: s.ostatniPlusMs,
+                      dzien: s.dzien, dzienDozwolony: s.dzienDozwolony, sesjaStartMs: s.sesjaStartMs, pro: s.pro, proWaznoscDo: s.proWaznoscDo,
+                      dniWMiesiacu: s.dniWMiesiacu, przypomnienia: s.przypomnienia, zablokowany: z)
+  }
+
+  /// X-DZ-15 (N1, P-135 Q7a): `zablokowany: true` → `.zablokowany`, bez linii; przed limitem (zablokowany i `dzienDozwolony: false` → zablokowany); −1 też.
+  func testZablokowanyPrzedLimitem() throws {
+    XCTExpectFailure("08 partia 4 C1: reguła blokady w stuknij czeka na kod (ADR-0008, 2026-10-26)", strict: true)
+    XCTAssertEqual(try stuknij(.plus, stan: zablokowany(try stan("stan-ekranu-blokady-typowy.json")), teraz: waw(10, 21), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u"), .zablokowany)
+    XCTAssertEqual(try stuknij(.plus, stan: zablokowany(try stan("stan-ekranu-blokady-limit.json")), teraz: waw(7, 9), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u"), .zablokowany)
+    XCTAssertEqual(try stuknij(.minus, stan: zablokowany(try stan("stan-ekranu-blokady-typowy.json")), teraz: waw(10, 21), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u"), .zablokowany)
+    guard case .zapisz = try stuknij(.plus, stan: zablokowany(try stan("stan-ekranu-blokady-typowy.json"), false), teraz: waw(10, 21), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u") else { return XCTFail("odblokowany licznik ma liczyć") }
+  }
+
+  /// P-138, P-132 (2c): `ostatniPlusMs` = ostatnie +1 (wejście przerwy nowego dnia) — −1 go nie zmienia, +1 ustawia na czas stuknięcia (jak TS `ostatniPlus`).
+  func testOstatniPlusTylkoPoPlus() throws {
+    XCTExpectFailure("08 partia 4 C1: ostatniPlusMs po −1 czeka na poprawkę (P-138)", strict: true)
+    let s = try stan("stan-ekranu-blokady-typowy.json")
+    guard case let .zapisz(_, poMinus) = try stuknij(.minus, stan: s, teraz: waw(10, 21, 30), strefa: "Europe/Warsaw", id: "m", urzadzenie: "u") else { return XCTFail() }
+    XCTAssertEqual(poMinus.ostatniPlusMs, s.ostatniPlusMs, "−1 nie przesuwa ostatniego +1")
+    guard case let .zapisz(_, poPlus) = try stuknij(.plus, stan: poMinus, teraz: waw(10, 21, 31), strefa: "Europe/Warsaw", id: "p", urzadzenie: "u") else { return XCTFail() }
+    XCTAssertEqual(poPlus.ostatniPlusMs, waw(10, 21, 31))
+  }
 }

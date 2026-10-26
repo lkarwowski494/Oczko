@@ -50,7 +50,7 @@ final class ModelZegarka: NSObject, ObservableObject, WCSessionDelegate {
         if WCSession.default.activationState == .activated { WCSession.default.transferUserInfo(["linia": z.linia]) }
         limit = false
       case .limit: limit = true
-      case .bezZmiany: break
+      case .bezZmiany, .zablokowany: break // zablokowany: widok i haptyka — następny commit 08 (partia 4, N1)
       }
     } catch { limit = false }
   }

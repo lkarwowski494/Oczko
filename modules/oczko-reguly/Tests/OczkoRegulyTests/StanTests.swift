@@ -54,4 +54,27 @@ final class StanTests: XCTestCase {
     XCTAssertFalse(sub.maPro(teraz: koniec + Stale.oknoOfflineProMs))
     XCTAssertFalse(try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/stan-zegarka-typowy.json")).maPro(teraz: 0))
   }
+
+  /// X-ST-07 (N1, P-135 Q7a): plik v3 z `zablokowany` dekoduje się; plik v2 (`*-v2.json`) bez pola → `false`; v3 bez pola → błąd; wersja 4 → odrzucona.
+  func testWersja3Blokada() throws {
+    XCTExpectFailure("08 partia 4 C1: ścisły dekoder v3 czeka na kod (ADR-0008, 2026-10-26)", strict: true)
+    let v3 = try Repo.tekst("tests/wspolne/stan-zegarka-typowy.json")
+    XCTAssertEqual(try StanEkranuBlokady.dekoduj(Data(v3.utf8)).zablokowany, false)
+    let v3z = v3.replacingOccurrences(of: "\"zablokowany\": false", with: "\"zablokowany\": true")
+    XCTAssertNotEqual(v3z, v3)
+    XCTAssertEqual(try StanEkranuBlokady.dekoduj(Data(v3z.utf8)).zablokowany, true)
+    let pliki = try (Repo.json("tests/wspolne/wzorce.json")["stany"]?.tablica ?? [])
+      .filter { ["StanEkranuBlokadyV2", "StanZegarkaV2"].contains($0["typ"]?.tekst ?? "") }.compactMap { $0["plik"]?.tekst }
+    let w = Wykonane("stany v2 (zgodność)")
+    for p in pliki {
+      w.dodaj(p)
+      let s = try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/\(p)"))
+      XCTAssertEqual([s.wersja, s.zablokowany ? 1 : 0], [2, 0], p)
+    }
+    w.sprawdz(oczekiwane: pliki, minimum: 7)
+    let bezPola = v3.replacingOccurrences(of: ",\n  \"zablokowany\": false", with: "")
+    XCTAssertNotEqual(bezPola, v3)
+    XCTAssertThrowsError(try StanEkranuBlokady.dekoduj(Data(bezPola.utf8)), "v3 bez pola zablokowany")
+    XCTAssertThrowsError(try StanEkranuBlokady.dekoduj(Data(v3.replacingOccurrences(of: "\"wersja\": 3", with: "\"wersja\": 4").utf8)), "wersja 4")
+  }
 }

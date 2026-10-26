@@ -94,6 +94,8 @@ public final class DziennikPlus {
   let sciezka: String
   let otworz: (String) throws -> UchwytDziennika
   let kolejka = DispatchQueue(label: "oczko.dziennik-plus") // jedyny pisarz w procesie (ADR-0008 (8A))
+  /// Tylko test (X-ZG-10): wołane w `zastap` po zapisie pliku tymczasowego, przed `rename` — błąd symuluje przerwanie procesu.
+  public var przedPodmiana: (() throws -> Void)?
 
   public init(sciezka: String, otworz: @escaping (String) throws -> UchwytDziennika = { try UchwytPosix(sciezka: $0) }) {
     self.sciezka = sciezka

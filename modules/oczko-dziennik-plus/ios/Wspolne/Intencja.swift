@@ -13,6 +13,8 @@ public enum WynikIntencji: Equatable {
   case limit
   /// −1 przy wartości 0: bez linii (licznik nie schodzi poniżej zera, CHECK `wartosc >= 0`).
   case bezZmiany
+  /// Licznik zablokowany w stanie (F-03, N1, stan v3): bez linii, przed limitem (ADR-0008, 2026-10-26).
+  case zablokowany
 }
 
 /// Stuknięcie w chwili `teraz` w strefie urządzenia; `id` = nowy UUID, `urzadzenie` = identyfikator urządzenia z aplikacji.

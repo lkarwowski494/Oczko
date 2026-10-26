@@ -21,7 +21,7 @@ public enum IntencjaEkranuBlokady {
     case .limit:
       let dzis = try dzienLokalny(ms: teraz, strefa: TimeZone.current.identifier)
       if stan.dzienDozwolony || stan.dzien != dzis { await aktywnosc.update(ActivityContent(state: stan.zLimitem(dzien: dzis), staleDate: nil)) }
-    case .bezZmiany:
+    case .bezZmiany, .zablokowany: // zablokowany: widok blokady i odświeżenie stanu — następny commit 08 (partia 4, N1)
       break
     }
   }

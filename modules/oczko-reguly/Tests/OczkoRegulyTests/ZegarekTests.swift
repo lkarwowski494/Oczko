@@ -1,16 +1,21 @@
 // Skrzynka zegarka (ADR-0009 uzupełnienie, NFR-ZEG-001, P-039): stuknięcia bez telefonu, potwierdzenie przez `glowa` kontekstu, Pro ze StoreKit
-// zegarka (KP-17, OR źródeł) na złotych plikach stanu v2.
+// zegarka (KP-17, OR źródeł) na złotych plikach stanu. 08 partia 4: skrzynka z magazynem (plik w katalogu tymczasowym, ADR-0009 2026-10-26 pkt 1).
 import Foundation
 import OczkoDziennik
 import OczkoReguly
 import XCTest
+
+/// Pusta skrzynka na nowym pliku w katalogu tymczasowym (08 partia 4: skrzynka wymaga magazynu).
+func nowaSkrzynka(_ magazyn: MagazynSkrzynki = PlikSkrzynki(sciezka: FileManager.default.temporaryDirectory.appendingPathComponent("oczko-skrzynka-\(UUID().uuidString).jsonl").path)) throws -> SkrzynkaZegarka {
+  try SkrzynkaZegarka(magazyn: magazyn)
+}
 
 final class ZegarekTests: XCTestCase {
   func stan(_ plik: String) throws -> StanEkranuBlokady { try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/\(plik)")) }
   let wieczor: Int64 = 1_794_340_800_000 // 2026-11-10 21:00 Europe/Warsaw
 
   func testBezTelefonuIPotwierdzenie() throws {
-    var s = SkrzynkaZegarka()
+    var s = try nowaSkrzynka()
     XCTAssertEqual(try s.stuknijNaZegarku(.plus, teraz: wieczor, strefa: "Europe/Warsaw", id: "z0", urzadzenie: "zegarek"), .bezZmiany, "przed pierwszym kontekstem")
     let k = try stan("stan-zegarka-typowy.json")
     s.przyjmij(k)
@@ -29,7 +34,7 @@ final class ZegarekTests: XCTestCase {
 
   /// P-039, ADR-0009 D: limit na zegarku bez telefonu; Pro ze StoreKit zegarka zdejmuje limit (OR źródeł).
   func testLimitIProZeSklepu() throws {
-    var s = SkrzynkaZegarka()
+    var s = try nowaSkrzynka()
     let limit = try stan("stan-ekranu-blokady-limit.json") // 2026-11-07, 5 darmowych dni użytych
     s.przyjmij(limit)
     let rano: Int64 = 1794124800000 // 2026-11-08 09:00 Europe/Warsaw (nowy dzień)
@@ -42,7 +47,7 @@ final class ZegarekTests: XCTestCase {
 
   /// Kontekst innego licznika: oczekujące poprzedniego licznika nie giną, wartość pokazywana = nowy kontekst.
   func testZmianaLicznika() throws {
-    var s = SkrzynkaZegarka()
+    var s = try nowaSkrzynka()
     let k = try stan("stan-zegarka-typowy.json")
     s.przyjmij(k)
     _ = try s.stuknijNaZegarku(.plus, teraz: wieczor, strefa: "Europe/Warsaw", id: "a", urzadzenie: "zegarek")
@@ -56,7 +61,7 @@ final class ZegarekTests: XCTestCase {
   /// 08 usuwa `XCTExpectFailure` w commicie poprawki (strict: przejście testu bez poprawki też jest czerwone).
   func testGlowaInnegoLicznikaNieUsuwa() throws {
     XCTExpectFailure("NZ-08-P3-05 (e3): czeka na poprawkę 08 (ADR-0009, uzupełnienie 2026-10-26 pkt 4)", strict: true)
-    var s = SkrzynkaZegarka()
+    var s = try nowaSkrzynka()
     let a = try stan("stan-zegarka-typowy.json")
     s.przyjmij(a)
     _ = try s.stuknijNaZegarku(.plus, teraz: wieczor, strefa: "Europe/Warsaw", id: "a1", urzadzenie: "zegarek")
@@ -72,14 +77,15 @@ final class ZegarekTests: XCTestCase {
 
 final class ZegarekTrwaloscTests: XCTestCase {
   /// Trwały zapis zegarka: kontekst i linie oczekujących → po odtworzeniu ten sam stan pokazywany (zegarek uruchomiony ponownie bez telefonu).
+  /// 08 partia 4: kolejka z pliku magazynu (nie z pamięci ustawień, ADR-0009 2026-10-26 pkt 1), kontekst z utrwalonego JSON.
   func testOdtworzenie() throws {
-    var s = SkrzynkaZegarka()
+    XCTExpectFailure("08 partia 4 C1: zapis do magazynu czeka na kod (ADR-0009, 2026-10-26 pkt 1)", strict: true)
+    let magazyn = PlikSkrzynki(sciezka: FileManager.default.temporaryDirectory.appendingPathComponent("oczko-skrzynka-\(UUID().uuidString).jsonl").path)
+    var s = try nowaSkrzynka(magazyn)
     let k = try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/stan-zegarka-typowy.json"))
     s.przyjmij(k)
     _ = try s.stuknijNaZegarku(.plus, teraz: 1_794_340_800_000, strefa: "Europe/Warsaw", id: "a", urzadzenie: "zegarek")
-    let linie = s.oczekujace.map(\.linia)
-    let odtworzona = SkrzynkaZegarka(kontekst: try JSONDecoder().decode(StanEkranuBlokady.self, from: JSONEncoder().encode(k)),
-                                     oczekujace: linie.compactMap { ZdarzenieWejsciowe.zLinii(Substring($0)) })
+    let odtworzona = try SkrzynkaZegarka(magazyn: magazyn, kontekst: try JSONDecoder().decode(StanEkranuBlokady.self, from: JSONEncoder().encode(k)))
     XCTAssertEqual(odtworzona, s)
   }
 }
