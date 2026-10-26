@@ -1,7 +1,9 @@
 # Stan roli 07-jakosc — fix-2 NZ-08-P2-07 (2026-10-26)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P2-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2-2026-10-26.md`.
-- E0 plan: **STOP** — przegląd 12 zmian i 5 testów 08 (zgodne; 2 luki), F07-10…F07-13, pytania Q1–Q3 do koordynatora (P-087). Wejście a33d1fb: verify 1445/1445.
-- Następny krok: odpowiedź koordynatora, potem E1 (jeden commit na ID).
+- E0 plan: przyjęty (P-125: Q1a–Q3a; F07-11 i F07-12 w tej sesji). Przegląd 12 zmian i 5 testów 08: zgodne, 2 luki (F07-11, F07-12).
+- E1: F07-10…F07-13 naprawione-do-weryfikacji, commity 5ab8a12, f1ad9c7, 5928b7a, d99245e (jeden na ID).
+- E2 dowody: **STOP** — `oczko-warsztat/07-jakosc/2026-10-26-fix2/E2-dowody.md`. Wejście a33d1fb: verify 1445/1445; wyjście d99245e: verify 1449/1449.
+- Następny krok: decyzja koordynatora o E2; zgłoszenia dla 05, 08, 07 audit w E2-dowody §4.
 
 # Stan roli 07-jakosc — fix NZ-08-P1-07 (2026-10-25)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P1-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2026-10-25.md`.
