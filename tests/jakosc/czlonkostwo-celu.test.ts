@@ -54,7 +54,7 @@ describe('jakosc-ios.yml (P-180)', () => {
     expect(prebuild).toBeGreaterThanOrEqual(0);
     expect(krok).toBeGreaterThan(prebuild);
   });
-  test('e2e: pakiet podstawowy jest bramką — zadanie bez continue-on-error (zmiana 07: F07-15, P-198 Q1a; reguła kroków w e2e-bramka.test.ts)', () => {
-    expect(wf.jobs.e2e['continue-on-error']).toBeUndefined();
+  test('e2e: pakiet podstawowy jest bramką — continue-on-error tylko dla pozycji iPada (07: F07-15, P-198 Q1a, P-225 Q1a; reguła kroków w e2e-bramka.test.ts)', () => {
+    expect(String(wf.jobs.e2e['continue-on-error'])).toBe("${{ matrix.urzadzenie == 'ipad' }}");
   });
 });

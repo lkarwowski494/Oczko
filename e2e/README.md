@@ -23,17 +23,19 @@ Stan: rola 07, E3 (testy akceptacyjne przed kodem), 2026-10-25. Scenariusze **ni
 | `podstawowy` | pakiet bramki TestFlight (P-091 9a): pierwsze +1 świeżej instalacji offline (01–03), +1/−1/cofnij (04), limit zawczasu (05), zakup i przywrócenie na sztucznym sklepie (06), okno „Uczciwe zasady” (07), eksport/import (08), start awaryjny ADR-0019 (09) |
 | `podstawowy` w pakiecie pełnym | porażka scenariusza z tagiem `podstawowy` czerwieni zadanie także przy `[e2e-pelny]`; porażka pozostałych to „czerwony-informacyjnie” w podsumowaniu (wyjście `bramka` planu części; F07-15, P-198 Q1a) |
 | `stan-licznika` | asercja wartości licznika — bez ponowień (P-091 9a) |
+| `ipad` | scenariusz iPada: tylko pakiet `ipad` (pozycja macierzy `e2e` na symulatorze iPada, przy `[e2e-pelny]` albo `[e2e-ipad]` w commicie); poza pakietem podstawowym i pełnym; bez bramki do pierwszego zielonego (P-225 Q1a) |
 | `osobny-krok` | workflow uruchamia scenariusz w osobnym kroku swojej części (30: rozmiar tekstu AX5 przez `simctl ui … content_size`) |
 | `wzor`, `zegarek`, `pomiar` | grupy informacyjne (filtr `--include-tags`); `pomiar` = wynik informacyjny bez progu (OP-17) |
 | ID kryterium | np. `NFR-PIE-001`, `BR-LIC-001-S1`, `P-089-3a`, `ADR-0019` |
 
 ## Build E2E (dla 08 i workflowu `jakosc-ios.yml`)
-Build Release na symulator bez podpisu (`CODE_SIGNING_ALLOWED=NO`, DS-07). Przełączniki ustawiane **tylko** w kroku buildu E2E (kontrola repo: poza tym krokiem nie występują; `sprawdz-ipa.mjs`: brak w buildzie wydania):
+Build Release na symulator bez podpisu (`CODE_SIGNING_ALLOWED=NO`, DS-07). Przełączniki ustawiane **tylko** w kroku buildu E2E (kontrola repo: poza tym krokiem nie występują; `sprawdz-workflowy.mjs`: workflow wydania ich nie ustawia). Kontroli napisów testowych w `.ipa` wydania jeszcze nie ma (`scripts/wydanie/kontrola-ipa.sh` roli 10 jej nie robi; zgłoszenie 07 fix-3) — wcześniejsze zdanie o `sprawdz-ipa.mjs` było nieprawdziwe (JAK-15):
 | Zmienna buildu | Co włącza |
 |---|---|
 | `EXPO_PUBLIC_E2E=1` | odczyt argumentów startu `oczkoE2e*` (niżej), panele `e2e-*` (bez `t()`, jak „Test store” Treningu `app/paywall.tsx:108-113`), plik `e2e-sha-bazy` w Ustawieniach i na ekranie awaryjnym |
 | `EXPO_PUBLIC_STORE_FAKE=1` | sztuczny sklep (wzór Treningu `lib/store-fake.ts`): ceny testowe, zakup bez okna Apple, `e2e-sklep-wygas`; transakcje zapisane w pliku buildu E2E, żeby przeżyły restart [DO USTALENIA 08: Trening trzyma je w pamięci] |
 | `EXPO_PUBLIC_WATCH_FAKE=1` | udawany zegarek: `Zegarek.wyslijStan` zapisuje stan do panelu `e2e-zegarek-stan` (transferUserInfo nie działa w symulatorze, ADR-0009) |
+| `EXPO_PUBLIC_ICLOUD_FAKE=1` | atrapa silnika iCloud w procesie (port `Synchronizacja`, bez sieci; zapis wysłanych rekordów i usunięcia strefy w pliku buildu E2E); czytają tylko `src/platforma/icloud.ts`, `icloud-atrapa.ts`, `tryb-e2e.ts` (kontrola `ATRAPA-ICLOUD`; P-230, moduly.md „Atrapa silnika w E2E”) |
 Przełączniki czyta wyłącznie `src/platforma/tryb-e2e.ts` (E2E, zegarek) i adapter sklepu `src/platforma/sklep*.ts` (sztuczny sklep); kontrole `TRYB-E2E` i `SZTUCZNY-SKLEP` w `scripts/jakosc/kontrole-repo.mjs`, a workflow wydania nie może ich ustawiać (`sprawdz-workflowy.mjs`).
 
 Argumenty startu (`launchApp: arguments:`; na iOS Maestro przekazuje je jako argumenty procesu — w RN czytelne przez `Settings.get(klucz)` z domeny argumentów `NSUserDefaults` [DO USTALENIA: potwierdzić w pierwszym przebiegu]); bez `EXPO_PUBLIC_E2E=1` ignorowane:
@@ -42,6 +44,9 @@ Argumenty startu (`launchApp: arguments:`; na iOS Maestro przekazuje je jako arg
 | `oczkoE2eTeraz` | czas lokalny ISO bez strefy, np. `2026-11-07T20:00:00` | port `Zegar` (Z07-18): `teraz()` = podana chwila + czas, który upłynął od startu procesu (zegar **biegnie**: RD-17 liczy odstępy); `strefa` = strefa symulatora; `dzien` z podanej daty |
 | `oczkoE2eSiec` | `brak` | adapter sieci zwraca „brak połączenia”, każde wywołanie sieci = błąd w logu (NFR-OFF-001) |
 | `oczkoE2eAwariaStartu` | `przed-kamieniem` | wymuszona awaria procesu przed kamieniem milowym ADR-0019 (start liczony jako nieudany); po zapisie stanu startu pusty ekran z `testID` `e2e-awaria-startu` |
+| `oczkoE2eIcloud` | `wlaczony` \| `wylaczony` \| `brak-konta` \| `brak-miejsca` \| `konflikt` | atrapa iCloud (tylko z `EXPO_PUBLIC_ICLOUD_FAKE=1`): stan konta; `konflikt` = przy starcie druga wersja pierwszego licznika: wartość +5, urządzenie „iPad (test)”, teraz − 1 min (P-230) |
+| `oczkoE2eSkrzynka` | `pdf` | przed pierwszym ekranem testowy PDF (jak `e2e-wzor-pdf`) jako zlecenie bez projektu w skrzynce App Group (P-230 Q2a) |
+| `oczkoE2eSzerokoscOkna` | liczba pt, np. `375` | aplikacja rysuje się w kontenerze tej szerokości (układ compact na iPadzie; P-225 Q2a — nazwany wyjątek: bez klasy rozmiaru systemu; prawdziwe okno na urządzeniu, P-226) — **kontrakt 07 do dopisania w moduly.md / tryb-e2e.ts (08)** |
 
 ## testID (propozycja 07 dla 08; zmiana nazwy = zmiana scenariuszy)
 Wiersze `projekt-*`, `kosz-*`, `co-dalej-*`, `projekty-kosz`, `projekty-ostatnia-praca`, `licznik-nastepna-czesc`, `menu-znaczenie` i `formularz-*` arkuszy projektu dopisała rola 08 w partii 5 według propozycji 04 fix-5 („Dla 08”, P-183) — do przeglądu 07. Potwierdzenia usuwania to alerty systemowe (bez testID; scenariusz stuka w tekst przycisku). Wiersze grup B i D (`licznik-stoper`, `stoper-*`, `sesje-*`, `historia-*`, `narzedzia-*`, `probka-*`, `projekt-sesje`, `projekt-zdjecia`, `projekt-probka`, `zapas-filtr`, `zdjecie-usun`, `karta-udostepnij`) dopisała rola 07 z „Dla 08” 04 fix-6 (P-191, P-205); usunięte `menu-sesja`, `sesja-trwa`, `sesja-zakoncz`, `menu-zdjecia`, `zdjecia-licznik`, `nav-zapas` (zastąpione przez 04 fix-6; F07-17). Id `nav-narzedzia`, `zapas-dlugosc`, `zapas-jednostka-yd`, `zapas-przeliczone` (spoza listy 04) koordynator przyjął jako kontrakt 07 (2026-10-26, po zamknięciu 04 fix-6); wdraża 08. Wiersze `licznik-wzor`, `wzor-dodaj-film`, `wzor-przelacz`, `wzor-menu`, `wzor-obroc`, `wzor-usun`, `wzor-gumka`, `wzor-pioro`, `wzor-cofnij-rysunek`, `wzor-link-pole`, `wzor-film-wiersz`, `wzor-czeka-siec` — z „Dla 07” 04 fix-7 (grupa W, `docs/design/fix7-2026-10-26.md`), dopisane przed listą w design-spec (nazwany wyjątek 04). Tak samo grupy R i I (`udostepnij-*`, `skrzynka*`, `icloud-*`, `licznik-konflikt`, `usun-z-icloud`; „Dla 07 (grupy R i I)”, P-229).
@@ -159,6 +164,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `ustawienia-jezyk` | Ustawienia | wiersz „Language” (F-36, P-190) | „Language” | |
 | `jezyk-auto` | Language | „Same as phone” (radio; etykieta z „, selected” przy wyborze) | „Same as phone” / „Same as phone, selected” | |
 | `jezyk-pl` | Language | wiersz języka (wzorzec `jezyk-<kod>`, nazwa własna języka; tu polski) | „Polski” / „Polski, selected” | |
+| `ustawienia` | Ustawienia | kontener ekranu (ScrollView) | — | |
 | `ustawienia-dni-darmowe` | Ustawienia | licznik dni (tylko bez Pro) | „4 of 5 free knitting days left in November” | |
 | `ustawienia-oczko-pro` | Ustawienia | wejście do ofert (KP-13) | „Oczko Pro” | |
 | `ustawienia-eksport` | Ustawienia | eksport wszystkich danych | — | |
@@ -232,6 +238,8 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `e2e-sha-bazy` | Ustawienia i ekran awaryjny (build E2E) | SHA-256 pary pliku bazy i `-wal` (64 znaki hex), liczone **bez checkpointu**; ukryty w trakcie liczenia (F07-19, P-203 Q6a) | bez `t()` | |
 | `e2e-wal-bajty` | Ustawienia i ekran awaryjny (build E2E) | rozmiar pliku `-wal` w bajtach („0”, gdy brak) — dowód, że SHA liczono przy niepustym WAL (F07-19) | bez `t()` | |
 | `e2e-awaria-startu` | pusty ekran wymuszonej awarii startu (build E2E, `oczkoE2eAwariaStartu`) | tło papieru po zapisie „start w toku” (ADR-0019) | bez tekstu | |
+| `e2e-icloud-wyslane` | Data and sync (build E2E, atrapa iCloud) | liczba rekordów wysłanych przez atrapę od instalacji (P-230) | bez `t()` | |
+| `e2e-icloud-usuniete` | Data and sync (build E2E, atrapa iCloud) | „tak” / „nie” — usunięcie strefy po „Also delete from iCloud” | bez `t()` | |
 | `e2e-pliki-zachowaj-eksport` | Ustawienia (build E2E) | zachowanie ostatniego eksportu w katalogu testowym | bez `t()` | |
 | `e2e-pliki-stan` | Ustawienia (build E2E) | „Saved: N file” | bez `t()` | |
 | `e2e-pliki-importuj-ostatni` | Ustawienia (build E2E) | import ostatniego eksportu bez okna Pliki | bez `t()` | |
@@ -283,6 +291,15 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | BR-KAL-003/S1, BR-KAL-001/S1 | `41-br-kal-003-s1-probka-w-calach.yaml` |
 | P-191 (P9a) zdjęcie | `42-p-191-zdjecie-usun.yaml` |
 | BR-PRJ-015/S2 (połączenie; EXIF/GPS w Node) | `43-br-prj-015-s2-udostepnienie-karty.yaml` |
+| BR-WZR-005/S2 (iPad) | `44-br-wzr-005-s2-ipad-poziomo-pionowo.yaml` (pakiet `ipad`) |
+| BR-WZR-005/S3 (częściowo: strona i licznik; znacznik — ADR-0011 w Node) | `45-br-wzr-005-s3-obrot-strona-licznik.yaml` |
+| BR-WZR-005/S4, NFR-UKL-001 (zrzuty, P-225 Q3c) | `46-br-wzr-005-s4-waskie-okno.yaml` (pakiet `ipad`) |
+| BR-WZR-008/S4 (część palcem; rysik — test `pencilOnly`, P-226) | `47-br-wzr-008-s4-ipad-bez-rysika.yaml` (pakiet `ipad`) |
+| BR-DAN-002/S3 | `48-br-dan-002-s3-icloud-wylaczony.yaml` |
+| NFR-DAN-003, BR-DAN-002/S2 (atrapa) | `49-nfr-dan-003-konflikt-icloud.yaml` |
+| P-230 problemy konta iCloud | `50-p-230-icloud-problemy-konta.yaml` |
+| BR-DAN-009 z iCloud | `51-br-dan-009-usun-takze-z-icloud.yaml` |
+| P-230 skrzynka rozszerzenia | `52-p-230-skrzynka-rozszerzenia.yaml` |
 | (przepływy pakietu podstawowego spoza poziomu E2E) BR-LIC-002/S1–S3, BR-LIC-019/S1, BR-LIC-003/S2 · BR-ZAK-006/S1, KP-13 · BR-ZAK-001/S1, PR-09 · P-089 (3a) · BR-DAN-005/S1, BR-DAN-006/S1, P-113 Q2a (bez karty) · ADR-0019 | `04`, `05`, `06`, `07`, `08`, `09` |
 
 Kryteria „tylko-urządzenie” (18, `kryteria.json`) nie mają scenariusza — lista telefonu (strategia §8, TT-01–TT-09) albo „Nie sprawdzono”.

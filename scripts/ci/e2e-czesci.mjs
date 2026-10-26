@@ -6,7 +6,9 @@
 //   node scripts/ci/e2e-czesci.mjs --plan          [...]                                                → oba plany jako tabela (podgląd dla człowieka)
 //   node scripts/ci/e2e-czesci.mjs czesc N [--out .maestro-czesc] [...]                                 → katalog części N (scenariusze + subflows)
 // Środowisko: ONLY ("04 31") — wybrane numery (wejście workflow; ma pierwszeństwo przed pakietem i NIE zmienia numeru części scenariusza);
-// PAKIET = podstawowy | pelny (puste → podstawowy, chyba że COMMIT_MSG zawiera „[e2e-pelny]”, DS-11a / P-092).
+// PAKIET = podstawowy | pelny | ipad (puste → podstawowy, chyba że COMMIT_MSG zawiera „[e2e-pelny]”, DS-11a / P-092).
+// Tag `ipad` (P-225 Q1a): scenariusze iPada tylko w pakiecie `ipad` (osobna pozycja macierzy na symulatorze iPada, `czesci_ipad` maszyn),
+// uruchamiane tylko, gdy COMMIT_MSG zawiera „[e2e-pelny]” albo „[e2e-ipad]” (przebieg nocny); nie wchodzą do pakietu podstawowego ani pełnego.
 // Pakiet podstawowy = scenariusze z tagiem `podstawowy` (bramka TestFlight, P-091 9a); liczy własny plan na `czesci_podstawowy` maszynach
 // (jak Trening). Pełny i wybrane: plan liczony ZAWSZE dla pełnego zestawu, dopiero potem filtrowany.
 // Waga scenariusza: `wagi_s[plik]` (pomiar z przebiegu) albo szacunek z liczby kroków: 50 s + 1,86 s × krok (regresja Treningu na 25 zmierzonych
@@ -103,7 +105,7 @@ export function wybierzPliki(lista, only) {
 export function wybierzPakiet(env) {
   if ((env.ONLY || '').trim()) return 'wybrane';
   const p = (env.PAKIET || '').trim();
-  if (p) { if (!['podstawowy', 'pelny'].includes(p)) throw new Error(`Pakiet musi być „podstawowy” albo „pelny” (jest: ${p})`); return p; }
+  if (p) { if (!['podstawowy', 'pelny', 'ipad'].includes(p)) throw new Error(`Pakiet musi być „podstawowy”, „pelny” albo „ipad” (jest: ${p})`); return p; }
   return /\[e2e-pelny\]/.test(env.COMMIT_MSG || '') ? 'pelny' : 'podstawowy';
 }
 
@@ -121,16 +123,21 @@ function main() {
   const katalog = path.resolve(arg('--dir', DOMYSLNY_KATALOG));
   const cfg = czytajKonfiguracje(path.resolve(arg('--config', DOMYSLNA_KONFIGURACJA)));
   const wszystkie = plikiScenariuszy(katalog);
-  const planPodstawowy = () => buildPlan(katalog, cfg, { files: plikiPakietu(katalog, wszystkie), czesci: cfg.czesci_podstawowy });
-  if (cmd === 'plan') { console.log(JSON.stringify(buildPlan(katalog, cfg), null, 2)); return; }
+  const telefon = wszystkie.filter(f => !maTag(katalog, f, 'ipad')), ipad = wszystkie.filter(f => maTag(katalog, f, 'ipad'));
+  const planPodstawowy = () => buildPlan(katalog, cfg, { files: plikiPakietu(katalog, telefon), czesci: cfg.czesci_podstawowy });
+  const planPelny = () => buildPlan(katalog, cfg, { files: telefon });
+  if (cmd === 'plan') { console.log(JSON.stringify(planPelny(), null, 2)); return; }
   if (cmd === 'plan-podstawowy') { console.log(JSON.stringify(planPodstawowy(), null, 2)); return; }
-  if (cmd === '--plan') { console.log(tabela('Pełny katalog', buildPlan(katalog, cfg)) + '\n' + tabela('Pakiet podstawowy', planPodstawowy())); return; }
+  if (cmd === '--plan') { console.log(tabela('Pełny katalog', planPelny()) + '\n' + tabela('Pakiet podstawowy', planPodstawowy()) + (ipad.length ? '\n' + tabela('Pakiet iPada', buildPlan(katalog, cfg, { files: ipad, czesci: cfg.czesci_ipad ?? 1 })) : '')); return; }
   if (cmd !== 'czesc') { console.error('Użycie: e2e-czesci.mjs plan | plan-podstawowy | --plan | czesc N'); process.exit(2); }
   const only = process.env.ONLY || '';
   let pakiet; try { pakiet = wybierzPakiet(process.env); } catch (e) { console.error(e.message); process.exit(2); }
   const n = Number(process.argv[3]);
   if (!Number.isInteger(n) || n < 1 || n > cfg.czesci) { console.error(`Numer części musi być od 1 do ${cfg.czesci} (jest: ${process.argv[3]})`); process.exit(2); }
-  const parts = pakiet === 'podstawowy' ? planPodstawowy() : buildPlan(katalog, cfg);
+  const ipadZadany = /\[e2e-(pelny|ipad)\]/.test(process.env.COMMIT_MSG || '');
+  const parts = pakiet === 'podstawowy' ? planPodstawowy()
+    : pakiet === 'ipad' ? (ipadZadany ? buildPlan(katalog, cfg, { files: ipad, czesci: cfg.czesci_ipad ?? 1 }) : [])
+    : planPelny();
   const unknown = only.split(/[\s,]+/).filter(Boolean).filter(x => !wybierzPliki(wszystkie, x).length);
   if (unknown.length) console.log(`::warning::Wybrane numery bez scenariusza: ${unknown.join(' ')}`);
   /* pakiet podstawowy ma mniej części niż macierz workflow — nadmiarowe maszyny kończą od razu (any=false) */
@@ -142,7 +149,7 @@ function main() {
   for (const f of zwykle) fs.copyFileSync(path.join(katalog, f), path.join(out, f));
   if (osobne.length) { fs.mkdirSync(path.join(out, 'osobne'), { recursive: true }); fs.cpSync(path.join(katalog, 'subflows'), path.join(out, 'osobne', 'subflows'), { recursive: true }); for (const f of osobne) fs.copyFileSync(path.join(katalog, f), path.join(out, 'osobne', f)); }
   const wybrane = [...zwykle, ...osobne];
-  const bezPon = wybrane.filter(f => moja.bez_ponowien.includes(f)), pon = wybrane.filter(f => moja.ponawialne.includes(f)), bramka = wybrane.filter(f => moja.bramka.includes(f));
+  const bezPon = wybrane.filter(f => moja.bez_ponowien.includes(f)), pon = wybrane.filter(f => moja.ponawialne.includes(f)), bramka = pakiet === 'ipad' ? [] : wybrane.filter(f => moja.bramka.includes(f));
   console.log(`Pakiet: ${pakiet}. Część ${n}/${parts.length}: ${zwykle.length} scenariuszy${osobne.length ? ` + ${osobne.length} w osobnym kroku` : ''} (waga ok. ${Math.round(moja.waga_s / 60)} min; bez ponowień P-091 9a: ${bezPon.length})`);
   for (const f of zwykle) console.log(`  ${f}${bezPon.includes(f) ? ' (stan-licznika: bez ponowienia)' : ''}${bramka.includes(f) ? '' : ' (informacyjnie)'}`);
   for (const f of osobne) console.log(`  ${f} (osobny krok)`);

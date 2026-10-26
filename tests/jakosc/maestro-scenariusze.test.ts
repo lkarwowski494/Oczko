@@ -20,7 +20,7 @@ const scen = pliki.map(f => wczytaj(path.join(KAT, f)));
 const subs = podpliki.map(f => wczytaj(path.join(SUB, f)));
 const wszystkie = [...scen, ...subs];
 const nazwa = (s: Scenariusz) => path.relative(KAT, s.plik);
-const OGOLNE = new Set(['podstawowy', 'stan-licznika', 'osobny-krok', 'wzor', 'zegarek', 'pomiar']);
+const OGOLNE = new Set(['podstawowy', 'stan-licznika', 'osobny-krok', 'wzor', 'zegarek', 'pomiar', 'ipad']); // ipad: P-225 Q1a
 const opisy = opisyIdentyfikatorow(README);
 const liczbowe = new Set([...opisy].filter(([, o]) => o.klawiatura === 'liczbowa').map(([id]) => id));
 const zYaml = (plik: string, tekst: string): Scenariusz => { const docs = YAML.parseAllDocuments(tekst).map(d => d.toJS()); return { plik, naglowek: docs.length > 1 ? docs[0] : {}, polecenia: docs[docs.length - 1] }; };

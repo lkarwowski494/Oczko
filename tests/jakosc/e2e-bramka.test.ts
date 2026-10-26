@@ -22,14 +22,15 @@ function uruchom(nazwa: RegExp, pliki: string[], czerwone: string[], env: Record
   fs.writeFileSync(path.join(bin, 'xcrun'), '#!/bin/bash\nexit 0\n', { mode: 0o755 });
   fs.writeFileSync(path.join(bin, 'python3'), '#!/bin/bash\nexit 0\n', { mode: 0o755 });
   const skrypt = path.join(d, 'krok.sh'); const podsumowanie = path.join(d, 'summary.md'); fs.writeFileSync(podsumowanie, '');
-  fs.writeFileSync(skrypt, krok(nazwa).run!.replace(/\$\{\{ matrix\.czesc \}\}/g, '1'));
+  fs.writeFileSync(skrypt, krok(nazwa).run!.replace(/\$\{\{ matrix\.czesc \}\}/g, '1').replace(/\$\{\{ matrix\.urzadzenie \}\}/g, 'iphone'));
   const r = spawnSync('bash', ['-e', skrypt], { cwd: d, encoding: 'utf8', env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, SIM: 'sim', GITHUB_STEP_SUMMARY: podsumowanie, PONAWIALNE: '', BRAMKA: '', ...env } });
   return { kod: r.status, podsumowanie: fs.readFileSync(podsumowanie, 'utf8') };
 }
 
 describe('jakosc-ios.yml: bramka pakietu podstawowego w każdym pakiecie (F07-15, P-198 Q1a)', () => {
-  test('zadanie e2e bez continue-on-error (inaczej „[e2e-pelny]” wyłącza bramkę scenariuszy podstawowych)', () => {
-    expect(wf.jobs.e2e['continue-on-error']).toBeUndefined();
+  test('zadanie e2e: continue-on-error tylko dla pozycji iPada (inaczej „[e2e-pelny]” wyłącza bramkę scenariuszy podstawowych; P-225 Q1a)', () => {
+    expect(String(wf.jobs.e2e['continue-on-error']).replace(/\s+/g, ' ')).toBe("${{ matrix.urzadzenie == 'ipad' }}");
+    expect(JSON.stringify(yamlKroki(wf, 'e2e').find((x) => /^Plan części$/.test(x.name ?? '')))).toMatch(/matrix\.urzadzenie == 'ipad' && 'ipad'/);
   });
 
   test('krok „Scenariusze” dostaje listę bramki z planu części', () => {

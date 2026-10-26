@@ -1,0 +1,31 @@
+# BR-DAN-009 (usunięcie wszystkich danych) z iCloud (design-spec „Delete all data”, P-229): przy włączonej synchronizacji arkusz ma przełącznik
+# „Also delete from iCloud” (domyślnie wyłączony); włączony → atrapa dostaje usunięcie strefy (e2e-icloud-usuniete = „tak”). Pakiet pełny.
+appId: com.apps4brew.knitting
+name: "BR-DAN-009 · Delete all data z „Also delete from iCloud”: strefa iCloud usunięta"
+tags:
+  - BR-DAN-009
+---
+- launchApp:
+    clearState: true
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:30:00"
+      oczkoE2eIcloud: "wlaczony"
+- extendedWaitUntil: { visible: { id: "licznik-plus" }, timeout: 60000 }
+- runFlow: subflows/otworz-stan-danych.yaml
+- tapOn: { id: "icloud-przelacznik" }
+- assertVisible: "Turn on"
+- tapOn: "Turn on"
+- assertVisible: { id: "icloud-przelacznik", checked: true }
+- assertVisible: { id: "e2e-icloud-usuniete", text: "nie" }
+- tapOn: { id: "arkusz-zamknij", optional: true }
+- assertVisible: { id: "ustawienia" }
+- scrollUntilVisible: { element: { id: "ustawienia-usun-wszystko" } }
+- tapOn: { id: "ustawienia-usun-wszystko" }
+- assertVisible: { id: "usun-z-icloud", checked: false }
+- tapOn: { id: "usun-z-icloud" }
+- assertVisible: { id: "usun-z-icloud", checked: true }
+- takeScreenshot: 51-usun-z-icloud
+- tapOn: { id: "potwierdz-usun-wszystko" }
+- extendedWaitUntil: { visible: { id: "licznik-plus|projekty-lista" }, timeout: 60000 }
+- runFlow: subflows/otworz-stan-danych.yaml
+- assertVisible: { id: "e2e-icloud-usuniete", text: "tak" }

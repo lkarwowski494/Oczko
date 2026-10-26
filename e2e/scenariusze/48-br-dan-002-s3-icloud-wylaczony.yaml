@@ -1,0 +1,28 @@
+# BR-DAN-002/S3 „Synchronizacja wyłączona” (docs/brd/wymagania-dane.md:14, P-021): przełącznik domyślnie wyłączony, zmiany nie wychodzą poza
+# urządzenie (atrapa silnika liczy wysyłki: e2e-icloud-wyslane = 0); po włączeniu (alert „Turn on”) atrapa potwierdza wysyłkę jak serwer.
+# Atrapa iCloud w buildzie E2E (P-230 Q1a, kontrakt docs/jakosc/plan-partia-7-icloud.md, moduly.md „Atrapa silnika w E2E”). Pakiet pełny.
+appId: com.apps4brew.knitting
+name: "BR-DAN-002/S3 · iCloud wyłączony domyślnie: 0 wysłanych mimo zmian; po włączeniu wysyłka"
+tags:
+  - BR-DAN-002-S3
+  - stan-licznika
+---
+- launchApp:
+    clearState: true
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:30:00"
+      oczkoE2eIcloud: "wlaczony"
+- extendedWaitUntil: { visible: { id: "licznik-plus" }, timeout: 60000 }
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- runFlow: subflows/otworz-stan-danych.yaml
+- assertVisible: { id: "icloud-przelacznik", checked: false }
+- assertVisible: { id: "e2e-icloud-wyslane", text: "0" }
+- takeScreenshot: 48-wylaczony
+- tapOn: { id: "icloud-przelacznik" }
+- assertVisible: "Turn on iCloud sync\\?"
+- tapOn: "Turn on"
+- assertVisible: { id: "icloud-przelacznik", checked: true }
+- extendedWaitUntil: { visible: { id: "e2e-icloud-wyslane", text: "[1-9][0-9]*" }, timeout: 20000 }
+- assertVisible: { id: "icloud-stan" }
+- takeScreenshot: 48-wlaczony

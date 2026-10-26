@@ -130,16 +130,22 @@ jobs:
           path: ios/xcodebuild.log
           retention-days: 3
   e2e:
-    name: e2e (część ${{ matrix.czesc }})
+    name: e2e (część ${{ matrix.czesc }}, ${{ matrix.urzadzenie }})
     needs: build
     runs-on: macos-26
     # Pakiet podstawowy jest bramką od pierwszego zielonego przebiegu 40313538454 (P-180) — w KAŻDYM pakiecie: kroki liczą porażki tylko
     # scenariuszy z wyjścia `bramka` (tag `podstawowy`), resztę pełnego pakietu wypisują jako „czerwony-informacyjnie” (F07-15, P-198 Q1a).
-    # Bez continue-on-error na zadaniu: przy „[e2e-pelny]” wyłączał też bramkę scenariuszy podstawowych (test tests/jakosc/e2e-bramka.test.ts).
+    # Bez continue-on-error na zadaniu iPhone'a: przy „[e2e-pelny]” wyłączał też bramkę scenariuszy podstawowych (test tests/jakosc/e2e-bramka.test.ts).
+    # iPad (tag `ipad`, P-225 Q1a): informacyjnie do pierwszego zielonego przebiegu (zasada roli 07 nr 8); scenariusze tylko przy [e2e-pelny]/[e2e-ipad].
+    continue-on-error: ${{ matrix.urzadzenie == 'ipad' }}
     strategy:
       fail-fast: false
       matrix:
+        urzadzenie: [iphone, ipad]
         czesc: [1, 2, 3] # = "czesci" w e2e/czesci.json (pakiet podstawowy: 2; część 3 kończy się wtedy bez symulatora)
+        exclude: # iPad: jedna maszyna (czesci_ipad w e2e/czesci.json)
+          - { urzadzenie: ipad, czesc: 2 }
+          - { urzadzenie: ipad, czesc: 3 }
     timeout-minutes: 150 # rozruch symulatora ~8 min + krok Maestro z limitem timeout_min z planu (30 + 4 × scenariusze części)
     steps:
       - uses: actions/checkout@v5
@@ -154,6 +160,7 @@ jobs:
         id: plan
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
+          PAKIET: ${{ matrix.urzadzenie == 'ipad' && 'ipad' || '' }} # iPad: pakiet `ipad` (bez [e2e-pelny]/[e2e-ipad] w commicie część kończy bez pracy)
         run: node scripts/ci/e2e-czesci.mjs czesc "${{ matrix.czesc }}" --out e2e-czesc
       - name: Xcode 26.x
         if: steps.plan.outputs.any == 'true'
@@ -169,17 +176,20 @@ jobs:
           name: oczko-sim-app
       - name: Symulator
         if: steps.plan.outputs.any == 'true'
+        env:
+          URZADZENIE: ${{ matrix.urzadzenie }}
         run: |
           mkdir -p app-sim && unzip -q oczko-sim.zip -d app-sim
           SDK=$(xcrun --sdk iphonesimulator --show-sdk-version)
           LIST=$(xcrun simctl list devices available | awk -v h="-- iOS $SDK --" '$0 == h { f = 1; next } /^-- / { f = 0 } f')
           [ -n "$LIST" ] || LIST=$(xcrun simctl list devices available)
           DEV=""
-          for pat in "iPhone 17 \(" "iPhone 16 \(" "iPhone"; do
+          if [ "$URZADZENIE" = ipad ]; then WZORY=("iPad Air" "iPad Pro" "iPad"); else WZORY=("iPhone 17 \(" "iPhone 16 \(" "iPhone"); fi
+          for pat in "${WZORY[@]}"; do
             DEV=$(printf '%s\n' "$LIST" | node .github/scripts/jakosc/sim-wybor.mjs "$pat" || true)
             [ -n "$DEV" ] && break
           done
-          [ -n "$DEV" ] || { echo "::error::Brak symulatora iPhone'a"; exit 1; }
+          [ -n "$DEV" ] || { echo "::error::Brak symulatora ($URZADZENIE)"; exit 1; }
           echo "Symulator: $DEV (iOS $SDK)" | tee -a "$GITHUB_STEP_SUMMARY"
           echo "SIM=$DEV" >> "$GITHUB_ENV"
           xcrun simctl boot "$DEV" || true
@@ -217,7 +227,7 @@ jobs:
               python3 .github/scripts/jakosc/maestro-failures.py "e2e-out/$n" || true
             fi
           done
-          { echo "### Część ${{ matrix.czesc }}"; sort e2e-out/wyniki.txt | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo "### Część ${{ matrix.czesc }} (${{ matrix.urzadzenie }})"; sort e2e-out/wyniki.txt | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
           exit $porazki
       - name: Scenariusze w osobnym kroku (duży tekst AX5)
         if: steps.plan.outputs.osobne == 'true'
@@ -239,6 +249,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always() && steps.plan.outputs.any == 'true'
         with:
-          name: e2e-czesc-${{ matrix.czesc }}
+          name: e2e-czesc-${{ matrix.czesc }}-${{ matrix.urzadzenie }}
           path: e2e-out.zip
           retention-days: 3

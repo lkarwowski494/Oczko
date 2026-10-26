@@ -45,3 +45,12 @@ flows:
   - 41-br-kal-003-s1-probka-w-calach.yaml
   - 42-p-191-zdjecie-usun.yaml
   - 43-br-prj-015-s2-udostepnienie-karty.yaml
+  - 44-br-wzr-005-s2-ipad-poziomo-pionowo.yaml
+  - 45-br-wzr-005-s3-obrot-strona-licznik.yaml
+  - 46-br-wzr-005-s4-waskie-okno.yaml
+  - 47-br-wzr-008-s4-ipad-bez-rysika.yaml
+  - 48-br-dan-002-s3-icloud-wylaczony.yaml
+  - 49-nfr-dan-003-konflikt-icloud.yaml
+  - 50-p-230-icloud-problemy-konta.yaml
+  - 51-br-dan-009-usun-takze-z-icloud.yaml
+  - 52-p-230-skrzynka-rozszerzenia.yaml

@@ -1,0 +1,12 @@
+# Podprzepływ (partia 6): licznik → ••• → „Pattern” / „Add pattern…” → źródło testowe PDF (build E2E, e2e-wzor-pdf) → przeglądarka wzoru.
+appId: com.apps4brew.knitting
+name: "podprzepływ: wzór PDF testowy otwarty"
+---
+- tapOn: { id: "licznik-menu" }
+- assertVisible: { id: "menu-wzor" }
+- tapOn: { id: "menu-wzor" }
+- assertVisible: { id: "wzor-dodaj" }
+- tapOn: { id: "wzor-dodaj" }
+- assertVisible: { id: "e2e-wzor-pdf" }
+- tapOn: { id: "e2e-wzor-pdf" }
+- extendedWaitUntil: { visible: { id: "wzor-widok" }, timeout: 30000 }

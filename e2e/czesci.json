@@ -2,6 +2,7 @@
   "_opis": "Podział scenariuszy Maestro (e2e/scenariusze) na części w jakosc-ios.yml (scripts/ci/e2e-czesci.mjs, port e2e-shards.mjs Treningu @928d0ff). Wagi w sekundach. 2026-10-25: WSZYSTKIE wagi to SZACUNEK z liczby kroków (czas ≈ 50 s + 1,86 s × krok, kroki rekurencyjnie z retry i runFlow; regresja Treningu na 25 zmierzonych scenariuszach, docs/38:120 tamtego repo) — scenariusze jeszcze nie biegły na symulatorze; odświeżyć z logu pierwszego zielonego przebiegu (linie „[Passed] nazwa (1m 40s)”). Szacunek nie liczy czekania podprzepływu odstep.yaml (2,2 s) ani pominiętych stuknięć optional (do kilku s), więc zaniża scenariusze z wieloma odstępami. Scenariusz bez wpisu dostaje szacunek z kroków i trafia do dokładnie jednej części (nic nie jest pomijane); wagi tylko równoważą obciążenie. Pakiet podstawowy = tag podstawowy w pliku scenariusza (nie lista tutaj). narzut_osobnego_kroku_s: zmiana rozmiaru tekstu simctl i ponowny start symulatora dla tagu osobny-krok [OCENA].",
   "czesci": 3,
   "czesci_podstawowy": 2,
+  "czesci_ipad": 1,
   "narzut_osobnego_kroku_s": 60,
   "wagi_s": {
     "01-nfr-pie-001-pierwsze-liczenie.yaml": 100,
@@ -46,6 +47,15 @@
     "40-br-zap-001-s1-wloczka-w-jardach.yaml": 123,
     "41-br-kal-003-s1-probka-w-calach.yaml": 104,
     "42-p-191-zdjecie-usun.yaml": 85,
-    "43-br-prj-015-s2-udostepnienie-karty.yaml": 119
+    "43-br-prj-015-s2-udostepnienie-karty.yaml": 119,
+    "44-br-wzr-005-s2-ipad-poziomo-pionowo.yaml": 98,
+    "45-br-wzr-005-s3-obrot-strona-licznik.yaml": 95,
+    "46-br-wzr-005-s4-waskie-okno.yaml": 100,
+    "47-br-wzr-008-s4-ipad-bez-rysika.yaml": 100,
+    "48-br-dan-002-s3-icloud-wylaczony.yaml": 91,
+    "49-nfr-dan-003-konflikt-icloud.yaml": 104,
+    "50-p-230-icloud-problemy-konta.yaml": 110,
+    "51-br-dan-009-usun-takze-z-icloud.yaml": 113,
+    "52-p-230-skrzynka-rozszerzenia.yaml": 123
   }
 }

@@ -30,7 +30,7 @@ describe('podział na części (pełny katalog)', () => {
 
   test('każdy scenariusz w dokładnie jednej części, bez dubli i obcych plików; liczba części = konfiguracji', () => {
     const p = plan(); const all = wszystkieZ(p);
-    expect([...all].sort()).toEqual(scenariusze(katalog));
+    expect([...all].sort()).toEqual(scenariusze(katalog).filter(f => !maTag(f, 'ipad')));
     expect(new Set(all).size).toBe(all.length);
     expect(p).toHaveLength(cfg.czesci);
     expect(cfg.czesci).toBeGreaterThanOrEqual(2);
@@ -46,7 +46,7 @@ describe('podział na części (pełny katalog)', () => {
   test('wagi: bez przestarzałych wpisów (plik istnieje) i dodatnie liczby całkowite; suma części = suma wag (+ narzut osobnych kroków)', () => {
     for (const [f, v] of Object.entries(cfg.wagi_s)) expect({ f, istnieje: fs.existsSync(path.join(katalog, f)), calkowita: Number.isInteger(v) && v > 0 }).toEqual({ f, istnieje: true, calkowita: true });
     const p = plan(); const osobne = p.flatMap(c => c.osobne).length;
-    const suma = scenariusze(katalog).reduce((s, f) => s + cfg.wagi_s[f], 0);
+    const suma = scenariusze(katalog).filter(f => !maTag(f, 'ipad')).reduce((s, f) => s + cfg.wagi_s[f], 0);
     expect(p.reduce((s, c) => s + c.waga_s, 0)).toBe(suma + osobne * cfg.narzut_osobnego_kroku_s);
   });
 
@@ -57,8 +57,8 @@ describe('podział na części (pełny katalog)', () => {
   test('P-091 (9a): scenariusze z tagiem stan-licznika są w bez_ponowien, pozostałe w ponawialne; zbiory rozłączne i pełne', () => {
     const p = plan();
     const bez = p.flatMap(c => c.bez_ponowien).sort(); const pon = p.flatMap(c => c.ponawialne).sort();
-    expect(bez).toEqual(scenariusze(katalog).filter(f => maTag(f, 'stan-licznika')));
-    expect(pon).toEqual(scenariusze(katalog).filter(f => !maTag(f, 'stan-licznika')));
+    expect(bez).toEqual(scenariusze(katalog).filter(f => !maTag(f, 'ipad') && maTag(f, 'stan-licznika')));
+    expect(pon).toEqual(scenariusze(katalog).filter(f => !maTag(f, 'ipad') && !maTag(f, 'stan-licznika')));
     expect(bez.length).toBeGreaterThan(0); expect(pon.length).toBeGreaterThan(0);
     for (const c of p) expect([...c.bez_ponowien, ...c.ponawialne].sort()).toEqual([...c.files, ...c.osobne].sort());
   });
@@ -82,7 +82,7 @@ describe('scenariusz bez wagi i katalogi brzegowe', () => {
     fs.writeFileSync(path.join(d, '90-nowy-bez-wagi.yaml'), 'appId: x\nname: Nowy\n---\n- launchApp\n- extendedWaitUntil: { visible: "x", timeout: 1 }\n- tapOn: "a"\n- assertVisible: "b"\n');
     fs.writeFileSync(path.join(d, '91-drugi.yaml'), 'appId: x\nname: Drugi\n---\n- launchApp\n- assertVisible: "b"\n- runFlow: subflows/odstep.yaml\n');
     const p = plan(d); const all = wszystkieZ(p);
-    expect([...all].sort()).toEqual(scenariusze(d));
+    expect([...all].sort()).toEqual(scenariusze(d).filter(f => !maTag(f, 'ipad', d)));
     expect(all.filter(f => /^9[01]-/.test(f))).toHaveLength(2);
     expect(Object.keys(cfg.wagi_s)).not.toContain('90-nowy-bez-wagi.yaml');
     /* suma wag rośnie dokładnie o szacunki: 4 kroki → 57 s; 3 kroki + podprzepływ (1 krok) → 4 kroki → 57 s */
@@ -139,7 +139,7 @@ describe('polecenie „czesc” (krok „Plan części” w jakosc-ios.yml)', ()
       expect(r.o.bez_ponowien.split(' ').filter(Boolean).sort()).toEqual(p[i].bez_ponowien);
       expect(r.o.ponawialne.split(' ').filter(Boolean).sort()).toEqual(p[i].ponawialne);
     });
-    expect(rs.flatMap(r => [...r.pliki, ...r.osobne]).sort()).toEqual(scenariusze(katalog));
+    expect(rs.flatMap(r => [...r.pliki, ...r.osobne]).sort()).toEqual(scenariusze(katalog).filter(f => !maTag(f, 'ipad')));
   });
 
   test('domyślnie (bez PAKIET) pakiet podstawowy; nadmiarowa część kończy bez pracy (any=false)', () => {
@@ -151,7 +151,7 @@ describe('polecenie „czesc” (krok „Plan części” w jakosc-ios.yml)', ()
 
   test('DS-11a: „[e2e-pelny]” w treści commitu włącza pełny katalog; jawny PAKIET ma pierwszeństwo; zły PAKIET to błąd', () => {
     const rs = plan().map(c => run(c.czesc, { COMMIT_MSG: '08 build: licznik [e2e-pelny]' }));
-    expect(rs.flatMap(r => [...r.pliki, ...r.osobne]).sort()).toEqual(scenariusze(katalog));
+    expect(rs.flatMap(r => [...r.pliki, ...r.osobne]).sort()).toEqual(scenariusze(katalog).filter(f => !maTag(f, 'ipad')));
     expect(run(1, { COMMIT_MSG: '[e2e-pelny]', PAKIET: 'podstawowy' }).log).toMatch(/^Pakiet: podstawowy\./);
     expect(() => execFileSync('node', [skrypt, 'czesc', '1', '--out', path.join(tmp(), 'x')], { stdio: 'pipe', env: { ...process.env, PAKIET: 'wszystko' } })).toThrow();
   });
@@ -173,6 +173,20 @@ describe('polecenie „czesc” (krok „Plan części” w jakosc-ios.yml)', ()
     const podstawowy = Array.from({ length: cfg.czesci }, (_, i) => run(i + 1));
     podstawowy.forEach(r => expect(lista(r.o.bramka)).toEqual([...r.pliki, ...r.osobne].sort()));
     expect(podst.length).toBeGreaterThan(0);
+  });
+
+  test('P-225 Q1a: tag ipad — poza pakietem podstawowym i pełnym; PAKIET=ipad daje tylko je na czesci_ipad maszynach; bez [e2e-pelny]/[e2e-ipad] w commicie część iPada nie pracuje', () => {
+    const ipad = scenariusze(katalog).filter(f => maTag(f, 'ipad'));
+    expect(ipad.length).toBeGreaterThan(0);
+    const pelny = plan().map(c => run(c.czesc, { PAKIET: 'pelny' }));
+    expect(pelny.flatMap(r => [...r.pliki, ...r.osobne]).filter(f => ipad.includes(f))).toEqual([]);
+    expect(wszystkieZ(planPodst()).filter(f => ipad.includes(f))).toEqual([]);
+    const r = run(1, { PAKIET: 'ipad', COMMIT_MSG: '08: wzory [e2e-pelny]' });
+    expect([...r.pliki, ...r.osobne].sort()).toEqual(ipad);
+    expect(r.o.bramka).toBe(''); /* iPad bez bramki do pierwszego zielonego (P-225 Q1a) */
+    expect(run(1, { PAKIET: 'ipad', COMMIT_MSG: 'x [e2e-ipad]' }).o.any).toBe('true');
+    expect(run(1, { PAKIET: 'ipad', COMMIT_MSG: '08: zwykły push' }).o.any).toBe('false');
+    expect(run(2, { PAKIET: 'ipad', COMMIT_MSG: '[e2e-pelny]' }).o.any).toBe('false');
   });
 
   test('zły numer części kończy się błędem', () => {

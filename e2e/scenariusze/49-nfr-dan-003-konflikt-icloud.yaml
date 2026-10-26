@@ -1,0 +1,40 @@
+# NFR-DAN-003 (docs/brd/wymagania.md:81) i BR-DAN-002/S2 „Konflikt”: druga wersja licznika z iCloud (atrapa: +5, „iPad (test)”, minuta wcześniej)
+# → linia konfliktu pod liczbą, nic nie wybrane po cichu; „Choose” → arkusz z dwiema wersjami → wybór wersji z iPada → licznik ma tę wartość.
+# Lokalnie 1 (jedno +1), zdalnie 1 + 5 = 6 (kontrakt atrapy). Pakiet pełny.
+appId: com.apps4brew.knitting
+name: "NFR-DAN-003 · Konflikt iCloud: obie wersje widoczne, wybór „6 rows · iPad (test)”"
+tags:
+  - NFR-DAN-003
+  - BR-DAN-002-S2
+  - stan-licznika
+---
+- launchApp:
+    clearState: true
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:30:00"
+      oczkoE2eIcloud: "wlaczony"
+- extendedWaitUntil: { visible: { id: "licznik-plus" }, timeout: 60000 }
+- tapOn: { id: "licznik-plus" }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- runFlow: subflows/otworz-stan-danych.yaml
+- tapOn: { id: "icloud-przelacznik" }
+- assertVisible: "Turn on"
+- tapOn: "Turn on"
+- assertVisible: { id: "icloud-przelacznik", checked: true }
+- stopApp
+- launchApp:
+    clearState: false
+    arguments:
+      oczkoE2eTeraz: "2026-11-10T19:40:00"
+      oczkoE2eIcloud: "konflikt"
+- extendedWaitUntil: { visible: { id: "licznik-konflikt" }, timeout: 60000 }
+- assertVisible: { id: "licznik-wartosc", text: "1" }
+- assertVisible: "Two versions of this counter"
+- takeScreenshot: 49-konflikt
+- tapOn: "Choose"
+- assertVisible: "6 rows · iPad \\(test\\).*"
+- assertVisible: "1 rows? · .*"
+- takeScreenshot: 49-wybor
+- tapOn: "6 rows · iPad \\(test\\).*"
+- assertVisible: { id: "licznik-wartosc", text: "6" }
+- assertNotVisible: { id: "licznik-konflikt" }
