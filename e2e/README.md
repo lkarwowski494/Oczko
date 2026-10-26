@@ -44,7 +44,7 @@ Argumenty startu (`launchApp: arguments:`; na iOS Maestro przekazuje je jako arg
 | `oczkoE2eAwariaStartu` | `przed-kamieniem` | wymuszona awaria procesu przed kamieniem milowym ADR-0019 (start liczony jako nieudany); po zapisie stanu startu pusty ekran z `testID` `e2e-awaria-startu` |
 
 ## testID (propozycja 07 dla 08; zmiana nazwy = zmiana scenariuszy)
-Wiersze `projekt-*`, `kosz-*`, `co-dalej-*`, `projekty-kosz`, `projekty-ostatnia-praca`, `licznik-nastepna-czesc`, `menu-znaczenie` i `formularz-*` arkuszy projektu dopisała rola 08 w partii 5 według propozycji 04 fix-5 („Dla 08”, P-183) — do przeglądu 07. Potwierdzenia usuwania to alerty systemowe (bez testID; scenariusz stuka w tekst przycisku).
+Wiersze `projekt-*`, `kosz-*`, `co-dalej-*`, `projekty-kosz`, `projekty-ostatnia-praca`, `licznik-nastepna-czesc`, `menu-znaczenie` i `formularz-*` arkuszy projektu dopisała rola 08 w partii 5 według propozycji 04 fix-5 („Dla 08”, P-183) — do przeglądu 07. Potwierdzenia usuwania to alerty systemowe (bez testID; scenariusz stuka w tekst przycisku). Wiersze grup B i D (`licznik-stoper`, `stoper-*`, `sesje-*`, `historia-*`, `narzedzia-*`, `probka-*`, `projekt-sesje`, `projekt-zdjecia`, `projekt-probka`, `zapas-filtr`, `zdjecie-usun`, `karta-udostepnij`) dopisała rola 07 z „Dla 08” 04 fix-6 (P-191, P-205); usunięte `menu-sesja`, `sesja-trwa`, `sesja-zakoncz`, `menu-zdjecia`, `zdjecia-licznik`, `nav-zapas` (zastąpione przez 04 fix-6; F07-17). Wiersze z dopiskiem „propozycja 07” czekają na potwierdzenie 04/08.
 
 Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`; „—” = tekst ustala 04 (Z07-05), scenariusz używa tylko id. Kolumna ostatnia: klawiatura pola (`liczbowa`, `tekstowa`) albo puste.
 
@@ -73,8 +73,6 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `menu-wpisz-wartosc` | menu ••• | pozycja wpisania wartości (F-45) | — | |
 | `menu-przypomnienie` | menu ••• | pozycja | „Add a reminder (“every N rows”)” | |
 | `menu-wzor` | menu ••• | wzór projektu | — | |
-| `menu-zdjecia` | menu ••• | zdjęcia projektu | — | |
-| `menu-sesja` | menu ••• | start stopera sesji (F-21) | — | |
 | `menu-ukoncz` | menu ••• | ukończenie | „Mark project as finished” | |
 | `formularz-nazwa-projektu` | formularz nazwy | pole nazwy | etykieta „Project” | tekstowa |
 | `formularz-zapisz` | formularze w arkuszach | przycisk zapisu (zawsze widoczny) | „Save” | |
@@ -85,14 +83,41 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `przypomnienie-co-robic` | przypomnienie | pole (ostatnie w formularzu) | „What to do” | tekstowa |
 | `przypomnienie-podglad` | przypomnienie | podgląd planu rzędów | „You’ll be reminded on rows: …” | |
 | `przypomnienie-zapisz` | przypomnienie | przycisk | „Save reminder” | |
-| `sesja-trwa` | licznik | wskaźnik trwającej sesji | — | |
-| `sesja-zakoncz` | licznik | zakończenie sesji | — | |
 | `ukonczenie-potwierdz` | ukończenie | potwierdzenie | „Mark as finished” | |
 | `ukonczenie-karta` | ukończenie | karta z pytaniem o włóczkę (U-9) | — | |
 | `ukonczenie-gotowe` | ukończenie | „Done” | „Done” | |
+| `licznik-stoper` | licznik | stoper sesji w pasku: ikona (bez sesji), po starcie kapsuła z czasem — ten sam id, stan w etykiecie (04 fix-6 B, P-191 P1a) | „Start session timer” / „Session timer, {czas}, running. Pause or stop” / „…, paused. Resume or stop” | |
+| `stoper-wstrzymaj` | menu kapsuły | Pause timer albo Resume timer (ta sama pozycja menu) | „Pause timer” / „Resume timer” | |
+| `stoper-zatrzymaj` | menu kapsuły | Stop timer (bez potwierdzenia) | „Stop timer” | |
+| `stoper-inny-potwierdz` | alert sesji w innym projekcie (P-191 P3a) | Stop and start here | „Stop and start here” | |
+| `stoper-sprawdz` | licznik | linia „zapomniany stoper” z odnośnikiem do korekty (P-191 P5a) | „Check the end time” | |
+| `projekt-sesje` | ekran projektu, grupa „Time” | wiersz „Sessions” (P-191 P4a) | „Sessions” | |
+| `sesje-lista` | Sessions | lista sesji; wiersz z etykietą `sesje.wiersz_a11y` | „{data}, {start} to {koniec}, {czas}. Edit” | |
+| `sesje-do-sprawdzenia` | Sessions | druga linia sesji do sprawdzenia (powtarzalna) | „Stopped after {n} hours. Check the end time.” | |
+| `formularz-sesja-start` | arkusz korekty sesji | wiersz początku (systemowy wybór daty i godziny) | — | |
+| `formularz-sesja-koniec` | arkusz korekty sesji | wiersz końca | — | |
+| `historia-kalendarz` | History | kalendarz miesiąca (P-191 P6a) | — | |
+| `historia-dzien` | History | grupa wybranego dnia | — | |
+| `historia-tydzien` | History | blok tygodnia | — | |
+| `historia-miesiac` | History | blok miesiąca | — | |
+| `narzedzia-wloczki` | Tools | wiersz „Yarn” (04 fix-6 D, P-191 P7a) | „Yarn” | |
+| `narzedzia-druty` | Tools | wiersz „Needles and hooks” | — | |
+| `narzedzia-probka` | Tools | kalkulator „Swatch calculator” | „Swatch calculator” | |
+| `probka-oczka` | Swatch | oczka w próbce (na 10 cm domyślnie przy układzie metrycznym) | „Stitches in your swatch” | liczbowa |
+| `probka-szerokosc` | Swatch | szerokość docelowa | „Width you want, cm” | liczbowa |
+| `probka-wynik-oczka` | Swatch | wynik „liczba oczek” (na żywo, bez przycisku) | „{n} stitches” | |
+| `probka-wynik-grubosc` | Swatch | blok kategorii grubości | — | |
+| `projekt-probka` | ekran projektu, „Details” | wiersz próbki projektu (U-10) | — | |
+| `zapas-filtr` | zapas | chipy kategorii (rola radio) | „All”, „Weight {n}” | |
+| `zapas-dlugosc` | formularz włóczki | długość motka — **propozycja 07, do potwierdzenia przez 04/08** | „Length per skein” | liczbowa |
+| `zapas-jednostka-yd` | formularz włóczki | przełącznik jednostki długości na jardy — **propozycja 07** | „yd” | |
+| `zapas-przeliczone` | formularz włóczki | przeliczenie pod polem (RD-03) — **propozycja 07** | „≈ {n} m” | |
+| `projekt-zdjecia` | ekran projektu | grupa „Photos” (P-191 P9a) | „Photos” | |
+| `zdjecie-usun` | podgląd zdjęcia | Delete photo (alert z potwierdzeniem, bez kosza) | „Delete photo” | |
+| `karta-udostepnij` | karta ukończenia | Share: obraz 1080 × 1350 bez EXIF/GPS (P-191 P10a) | „Share” | |
 | `nav-projekty` | licznik | powrót do listy projektów | „Projects” | |
 | `nav-ustawienia` | lista projektów | wejście do Ustawień | — | |
-| `nav-zapas` | lista projektów | wejście do zapasu | — | |
+| `nav-narzedzia` | lista projektów | wejście do „Tools” (zapas, druty, kalkulator; P-191 P7a) — **propozycja 07, do potwierdzenia przez 04/08** (design-spec nie podaje id wejścia) | „Tools” | |
 | `nav-wstecz` | ekrany wtórne | systemowy „Back” | „Back” | |
 | `projekty-lista` | lista projektów | lista | „Projects” | |
 | `projekty-wiersz` | lista projektów | wiersz projektu (powtarzalny, `index`) | nazwa · część · rząd | |
@@ -161,15 +186,14 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `awaryjny-sprobuj-normalnie` | ekran awaryjny | „Spróbuj normalnie” | — | |
 | `awaryjny-zglos-problem` | ekran awaryjny | „Zgłoś problem” (F-57) | — | |
 | `awaryjny-licznosci` | ekran awaryjny | liczności zapisanej kopii | jak `eksport-licznosci` | |
-| `zapas-lista` | zapas | lista włóczek | — | |
-| `zapas-dodaj` | zapas | dodanie włóczki | — | |
+| `zapas-lista` | zapas („Tools” → „Yarn”) | lista włóczek | — | |
+| `zapas-dodaj` | zapas | „+” dodanie włóczki (04 fix-6 D) | „Add yarn” | |
 | `zapas-nazwa` | formularz włóczki | pole nazwy | — | tekstowa |
 | `zapas-szukaj` | zapas | wyszukiwarka | — | tekstowa |
 | `zapas-wynik` | zapas | wiersz wyniku | nazwa włóczki | |
 | `zapas-brak-wynikow` | zapas | pusty wynik | — | |
-| `zdjecia-dodaj` | zdjęcia projektu | dodanie zdjęcia | — | |
-| `zdjecia-miniatura` | zdjęcia projektu | miniatura | — | |
-| `zdjecia-licznik` | zdjęcia projektu | liczba zdjęć | „1 photo” | |
+| `zdjecia-dodaj` | ekran projektu, grupa „Photos”; formularz włóczki | kafel dodania zdjęcia → arkusz systemowy Take photo / Choose from library (04 fix-6 D, P-191 P9a) | „Add photo” | |
+| `zdjecia-miniatura` | ekran projektu, grupa „Photos” | miniatura (powtarzalna, `index`) | „Photo 1 of 1” (`zdjecia.a11y`) | |
 | `wzor-dodaj` | wzór | dodanie wzoru | — | |
 | `wzor-widok` | wzór | widok dokumentu (jeden naraz, OG-07) | — | |
 | `wzor-zrodlo` | wzór | rodzaj źródła | „PDF”, „Photo”, „Web page”, „Word document” | |

@@ -11,7 +11,10 @@ tags:
       TERAZ: "2026-11-10T12:00:00"
 - tapOn: { id: "nav-projekty" }
 - assertVisible: { id: "projekty-lista" }
-- tapOn: { id: "nav-zapas" }
+# Wejście: „Tools” → „Yarn” (04 fix-6 D, P-191 P7a; F07-17 zamiast nav-zapas).
+- tapOn: { id: "nav-narzedzia" }
+- assertVisible: { id: "narzedzia-wloczki" }
+- tapOn: { id: "narzedzia-wloczki" }
 - assertVisible: { id: "zapas-lista" }
 - tapOn: { id: "zapas-dodaj" }
 - assertVisible: { id: "zapas-nazwa" }

@@ -23,13 +23,14 @@ tags:
 - assertVisible: { id: "licznik-plus" }
 - runFlow: subflows/nazwij-projekt.yaml
 # --- PR-14: stoper sesji ---
-- tapOn: { id: "licznik-menu" }
-- assertVisible: { id: "menu-sesja" }
-- tapOn: { id: "menu-sesja" }
-- assertVisible: { id: "sesja-trwa" }
+# Stoper w pasku licznika (04 fix-6 B, P-191 P1a; F07-17 zamiast menu-sesja / sesja-trwa / sesja-zakoncz): start → kapsuła → menu → Stop.
+- tapOn: { id: "licznik-stoper" }
+- assertVisible: { id: "licznik-stoper", text: "Session timer, .*, running.*" }
 - takeScreenshot: 28-sesja-trwa
-- tapOn: { id: "sesja-zakoncz" }
-- assertNotVisible: { id: "sesja-trwa" }
+- tapOn: { id: "licznik-stoper" }
+- assertVisible: { id: "stoper-zatrzymaj" }
+- tapOn: { id: "stoper-zatrzymaj" }
+- assertVisible: { id: "licznik-stoper", text: "Start session timer" }
 # --- PR-07: ukończenie projektu (U-9) ---
 - tapOn: { id: "licznik-menu" }
 - assertVisible: { id: "menu-ukoncz" }

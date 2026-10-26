@@ -3,7 +3,7 @@ Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zada
 - E0 plan: **STOP** — przegląd wyjątków P-176, P-177, P-183, `WYLACZONE` (rola 12, c1d3a51), `test:akceptacja` (P-180): przyjęte, poprawki F07-16, F07-17; „Źródła wiedzy” zgodne z P-108/P-112, luka strażnika F07-14; bramka `[e2e-pelny]` F07-15 (P1); scenariusze 33–43 F07-18. Pytania Q1–Q7 do koordynatora (Q6, Q7 z P-197: N12-11 → F07-19, N-03 → F07-20).
 - Wejście 855230e: `env -u NODE_PATH npm run verify` kod 0, 1974/1974; `test:akceptacja` kod 0 (3 testy).
 - E0 przyjęty: **P-198** (koordynator wg P-087): Q1a–Q5a; push wszystkich commitów (także `e2e/**`, `jakosc-ios.yml`, `scripts/ci/**`) najpóźniej 22:30 UTC; listę testID grupy D wysłać koordynatorowi (dla 04). Q6, Q7 (P-197) — czekają.
-- E1: F07-15 (bramka w pakiecie pełnym), F07-14 (strażnik nazw źródeł: tylko klucz `zrodla.linia_standardow`), F07-16 (pusty `test:akceptacja` tylko przy katalogu bez plików testów) — zrobione.
+- E1: F07-15 (bramka w pakiecie pełnym), F07-14 (strażnik nazw źródeł: tylko klucz `zrodla.linia_standardow`), F07-16 (pusty `test:akceptacja` tylko przy katalogu bez plików testów), F07-17 (kontrakt testID B i D z 04 fix-6; scenariusze 16, 17, 28) — zrobione.
 
 # Stan roli 07-jakosc — fix-2 NZ-08-P2-07 (2026-10-26)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P2-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2-2026-10-26.md`.
