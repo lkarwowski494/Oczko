@@ -33,6 +33,8 @@ export type PropsAplikacji = {
   oglos: Oglos;
   t: Tlumacz;
   dzialania?: DzialaniaLicznika;
+  /** Stoper sesji w pasku licznika (P-191 P1a), składany w trasie „/”. */
+  stoper?: React.ReactNode;
 };
 
 const nic = () => undefined;
@@ -108,6 +110,7 @@ export function Aplikacja(p: PropsAplikacji): React.ReactElement {
       naNastepnaCzesc={d.naNastepnaCzesc ?? nic}
       naProjekty={d.naProjekty}
       naProjekt={d.naProjekt}
+      stoper={p.stoper}
     />
   );
 }

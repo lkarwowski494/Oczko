@@ -1,0 +1,95 @@
+// Stoper sesji na liczniku (F-21, U-4; design-spec „Stoper, sesje i Historia”, P-191 P1a–P3a; makiety sesje-historia `licznik-stoper*`).
+// Bez sesji: ikona w pasku (start jednym stuknięciem). Trwa: kapsuła (tokeny przycisku głównego) z czasem liczonym od znacznika przez
+// komponent czasu, nie przez stan ekranu. Wstrzymana: kapsuła z obrysem i symbolem pauzy, czas stoi. Stuknięcie w kapsułę: menu.
+// Odstępstwo nazwane (jak R8, P-191): menu i alert „inny projekt” jako widoki w ekranie, nie systemowy arkusz akcji / Alert.
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
+import { Przycisk } from './Arkusz';
+import type { Tlumacz } from './wspolne';
+
+/** `znacznikMs` = start_ms + przerwy_ms (czas = teraz − znacznik); wstrzymana: czas stały. */
+export type StanStopera = { rodzaj: 'brak' } | { rodzaj: 'trwa'; znacznikMs: number; startGodzina: string } | { rodzaj: 'wstrzymana'; czasMs: number; startGodzina: string };
+export type PropsStopera = {
+  stan: StanStopera;
+  inny: { projekt: string; biezacy: string } | null; // P3a: otwarta sesja w innym projekcie
+  t: Tlumacz;
+  teraz(): number;
+  naStart(): void; naWstrzymaj(): void; naWznow(): void; naZatrzymaj(): void; naInnyPotwierdz(): void; naInnyAnuluj(): void;
+};
+
+/** „m:ss” albo „h:mm:ss” (design-spec: kapsuła); ujemne = 0. */
+export function czasStopera(ms: number): string {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = String(s % 60).padStart(2, '0');
+  return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`;
+}
+
+/** Komponent czasu: odświeża sam siebie co sekundę od znacznika (moduly.md „Jedno źródło czasu”); ekran nie trzyma tykającego stanu. */
+function useCzas(stan: StanStopera, teraz: () => number): string {
+  const policz = () => (stan.rodzaj === 'trwa' ? czasStopera(teraz() - stan.znacznikMs) : stan.rodzaj === 'wstrzymana' ? czasStopera(stan.czasMs) : '');
+  const [czas, ustaw] = useState(policz);
+  useEffect(() => {
+    ustaw(policz());
+    if (stan.rodzaj !== 'trwa') return undefined;
+    const id = setInterval(() => ustaw(policz()), 1000);
+    return () => clearInterval(id);
+  }, [stan]); // eslint-disable-line react-hooks/exhaustive-deps
+  return czas;
+}
+
+export function Stoper(p: PropsStopera): React.ReactElement {
+  const { stan: s, t } = p;
+  const st = style(useKolory());
+  const czas = useCzas(s, p.teraz);
+  const [menu, ustawMenu] = useState(false);
+  const wybierz = (f: () => void) => () => { ustawMenu(false); f(); };
+  return (
+    <View>
+      {s.rodzaj === 'brak' ? (
+        <Pressable accessibilityRole="button" accessibilityLabel={t('stoper.start_a11y')} onPress={p.naStart} style={st.ikona} testID="licznik-stoper">
+          <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>⏱</Text>
+        </Pressable>
+      ) : (
+        <Pressable accessibilityRole="button" testID="licznik-stoper"
+          accessibilityLabel={t(s.rodzaj === 'trwa' ? 'stoper.trwa_a11y' : 'stoper.wstrzymana_a11y', { czas })}
+          onPress={() => ustawMenu((m) => !m)} style={[st.kapsula, s.rodzaj === 'wstrzymana' && st.kapsulaPauza]}>
+          <Text style={[st.kapsulaTekst, s.rodzaj === 'wstrzymana' && st.kapsulaTekstPauza]} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+            {`${s.rodzaj === 'trwa' ? '⏱' : '⏸'} `}<Text>{czas}</Text>
+          </Text>
+        </Pressable>
+      )}
+      {menu && s.rodzaj !== 'brak' && (
+        <View style={st.menu} testID="licznik-stoper-menu">
+          <Text style={st.naglowek}>{t('stoper.menu_naglowek', { godzina: s.startGodzina })}</Text>
+          {s.rodzaj === 'trwa'
+            ? <Przycisk tekst={t('stoper.wstrzymaj')} onPress={wybierz(p.naWstrzymaj)} rodzaj="tekstowy" testID="stoper-wstrzymaj" />
+            : <Przycisk tekst={t('stoper.wznow')} onPress={wybierz(p.naWznow)} rodzaj="tekstowy" testID="stoper-wznow" />}
+          <Przycisk tekst={t('stoper.zatrzymaj')} onPress={wybierz(p.naZatrzymaj)} rodzaj="tekstowy" testID="stoper-zatrzymaj" />
+        </View>
+      )}
+      {p.inny && (
+        <View accessibilityRole="alert" style={st.menu} testID="licznik-stoper-inny">
+          <Text style={[st.naglowek, st.pogrubiony]}>{t('stoper.inny_tytul', { projekt: p.inny.projekt })}</Text>
+          <Text style={st.naglowek}>{t('stoper.inny_opis', { biezacy: p.inny.biezacy })}</Text>
+          <Przycisk tekst={t('stoper.inny_potwierdz')} onPress={p.naInnyPotwierdz} rodzaj="glowny" testID="stoper-inny-potwierdz" />
+          <Przycisk tekst={t('wspolne.anuluj')} onPress={p.naInnyAnuluj} rodzaj="tekstowy" />
+        </View>
+      )}
+    </View>
+  );
+}
+
+function style(k: Kolory) {
+  return StyleSheet.create({
+    ikona: { minWidth: cel.minimum, minHeight: cel.minimum, alignItems: 'center', justifyContent: 'center' },
+    ikonaTekst: { ...typografia.instrukcja, color: k.grafit },
+    kapsula: { minHeight: cel.minimum, borderRadius: promien.przyciskGlowny, backgroundColor: k.przyciskTlo, justifyContent: 'center', paddingHorizontal: odstep.m },
+    kapsulaPauza: { backgroundColor: k.papier, borderWidth: 2, borderColor: k.drugiPrzyciskObrys },
+    kapsulaTekst: { ...typografia.przycisk, color: k.przyciskTekst, fontVariant: ['tabular-nums'] },
+    kapsulaTekstPauza: { color: k.grafit },
+    menu: { position: 'absolute', top: cel.minimum + odstep.xs, right: 0, minWidth: 240, zIndex: 10, borderRadius: promien.grupa, backgroundColor: k.papierGrupa, padding: odstep.s, gap: odstep.xs },
+    naglowek: { ...typografia.podpis, color: k.olowek, paddingHorizontal: odstep.m },
+    pogrubiony: { color: k.grafit, fontWeight: '700' },
+  });
+}

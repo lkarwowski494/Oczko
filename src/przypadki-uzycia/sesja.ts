@@ -82,3 +82,22 @@ export function sesjeProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
     ok: true, wartosc: (await wiersze(tx.all(`SELECT ${KOLUMNY} FROM sesja WHERE projekt_id = ? ORDER BY start_ms DESC, id`, [w.projektId]), 'sesjeProjektu')).map(naEkranie),
   }));
 }
+/** P-191 P3a „Stop and start here”: otwarta sesja innego projektu kończy się (jak `zakonczSesje`) i nowa zaczyna — jedna transakcja. */
+export function przelaczSesje(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<{ sesjaId: string }>> {
+  return operacjaZapisu(z, 'przelaczSesje', async (tx, teraz, chwila) => {
+    const [p] = await wiersze(tx.all('SELECT stan, usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'przelaczSesje');
+    if (!p) return blad('bledne_dane');
+    if (liczbaLubNull(p, 'usunieto_ms') !== null || tekst(p, 'stan') !== 'w_toku') return blad('niedozwolone_przejscie');
+    for (const r of await wiersze(tx.all(`SELECT ${KOLUMNY} FROM sesja WHERE stan IN ('trwa', 'wstrzymana')`), 'przelaczSesje')) {
+      const o = naEkranie(r);
+      const n = przejdzSesje({ stan: o.stan, startMs: o.startMs, koniecMs: o.koniecMs, przerwyMs: o.przerwyMs, wstrzymanoMs: o.wstrzymanoMs, skorygowano: o.skorygowano, doSprawdzenia: o.doKorekty },
+        { rodzaj: 'zakoncz' }, teraz, SESJA_MAKS_H);
+      if (!n.ok) return n;
+      await tx.run('UPDATE sesja SET stan = ?, wstrzymano_ms = ?, przerwy_ms = ?, koniec_ms = ? WHERE id = ?', [n.wartosc.stan, n.wartosc.wstrzymanoMs, n.wartosc.przerwyMs, n.wartosc.koniecMs, o.id]);
+      if (n.wartosc.koniecMs !== null) await pracaDoKonca(tx, o.id, n.wartosc.koniecMs);
+    }
+    const sesjaId = z.id.nowy();
+    await tx.run("INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien) VALUES (?, ?, 'trwa', ?, ?, ?)", [sesjaId, w.projektId, teraz, chwila.strefa, chwila.dzien]);
+    return { ok: true, wartosc: { sesjaId } };
+  });
+}

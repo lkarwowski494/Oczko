@@ -10,6 +10,7 @@ import { cyklAplikacji, oglos, systemAplikacji } from '../src/kompozycja/system'
 import { nastepnaCzesc } from '../src/przypadki-uzycia/czesc';
 import { pokazacOknoUczciweZasady } from '../src/przypadki-uzycia/informacje-pro';
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
+import { StoperLicznika } from '../src/kompozycja/StoperLicznika';
 import { powodAwaryjny, zapiszKamien } from '../src/kompozycja/start-aplikacji';
 
 export default function EkranLicznika(): React.ReactElement {
@@ -19,6 +20,8 @@ export default function EkranLicznika(): React.ReactElement {
   const [gotowe, ustawGotowe] = useState(false);
   const [awaria, ustawAwarie] = useState<'wersja_nowsza' | 'uszkodzony' | null>(null);
   const [wersja, ustawWersje] = useState(licznik.wersja());
+  const [projektId, ustawProjekt] = useState<string | null>(null); // stoper sesji w pasku (P-191 P1a) — projekt bieżącego licznika
+  useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik]);
   useEffect(() => {
     let zywy = true;
     void licznik.przygotuj().then((w) => {
@@ -60,6 +63,10 @@ export default function EkranLicznika(): React.ReactElement {
         dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty'),
           naProjekt: () => void licznik.widok().then((w) => { if (w) router.push({ pathname: '/projekt/[id]', params: { id: w.projektId } }); }),
           naNastepnaCzesc: () => void naNastepnaCzesc() }}
+        stoper={projektId ? (
+          <StoperLicznika z={kontener.z} j={kontener.j} projektId={projektId} oglos={oglos}
+            poZmianie={async () => { await licznik.poZmianie(); ustawWersje(licznik.wersja()); }} />
+        ) : null}
       />
     </Bezpieczny>
   );

@@ -68,6 +68,8 @@ export type PropsLicznika = {
   naNastepnaCzesc(): void;             // BR-LIC-011/S1 (U-11)
   naProjekty?(): void;                 // „Projects” w pasku nawigacji (powrót do listy, F-50)
   naProjekt?(): void;                  // nazwa projektu nad tytułem części otwiera ekran projektu (design-spec „Ekran projektu”, partia 5)
+  /** Stoper sesji (P-191 P1a): pierwszy z prawej grupy paska, przed Historią; działa przy limicie i blokadzie (P2a). Składa kompozycja. */
+  stoper?: React.ReactNode;
 };
 
 /** F-48: rozpoznawalne są tylko dwa wzorce — rząd i rząd „ze znaczeniem” (instrukcja, koniec powtórzenia, cel dnia lub części). */
@@ -143,6 +145,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
           </Pressable>
         ) : <View />}
         <View style={st.paskaPrawa}>
+          {p.stoper}
           <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.historia')} onPress={p.naHistorie} style={st.ikona} testID="licznik-historia">
             <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>◷</Text>
           </Pressable>

@@ -1,0 +1,62 @@
+// Kontener stopera na liczniku (F-21; P-191 P1a–P3a; P-199 Q3c): czyta otwartą sesję, woła przypadki użycia sesji, ogłasza wynik dopiero
+// po zapisie (R-148) i po każdym przejściu woła `poZmianie` (stan ekranu blokady i zegarka, przeładowanie kresek licznika).
+import React, { useCallback, useEffect, useState } from 'react';
+import { Stoper, czasStopera, type StanStopera } from '../ekrany/Stoper';
+import type { Oglos } from '../ekrany/wspolne';
+import { formatujGodzine } from '../i18n/format';
+import { otwartaSesja, przelaczSesje, startSesji, wstrzymajSesje, wznowSesje, zakonczSesje, type SesjaNaEkranie } from '../przypadki-uzycia/sesja';
+import type { Zaleznosci } from '../przypadki-uzycia/zaleznosci';
+import { czasPracy } from './ukonczenie';
+import { etykietaRobocza, type Jezyk } from './licznik';
+
+export function StoperLicznika({ z, j, projektId, oglos, poZmianie }: { z: Zaleznosci; j: Jezyk; projektId: string; oglos: Oglos; poZmianie(): Promise<void> }): React.ReactElement {
+  const [sesja, ustawSesje] = useState<SesjaNaEkranie | null>(null);
+  const [inny, ustawInny] = useState<{ projekt: string; biezacy: string } | null>(null);
+  const wczytaj = useCallback(async () => { const o = await otwartaSesja(z); ustawSesje(o.ok ? o.wartosc : null); }, [z]);
+  useEffect(() => { void wczytaj(); }, [wczytaj]);
+
+  const ch = z.zegar.teraz();
+  const godzina = (ms: number) => formatujGodzine(new Date(ms), j.jezyk(), { uses24h: j.zegar24h(), strefa: ch.strefa });
+  const stan: StanStopera = !sesja || sesja.projektId !== projektId ? { rodzaj: 'brak' }
+    : sesja.stan === 'trwa' ? { rodzaj: 'trwa', znacznikMs: sesja.startMs + sesja.przerwyMs, startGodzina: godzina(sesja.startMs) }
+    : { rodzaj: 'wstrzymana', czasMs: (sesja.wstrzymanoMs ?? ch.ms) - sesja.startMs - sesja.przerwyMs, startGodzina: godzina(sesja.startMs) };
+
+  async function nazwa(id: string): Promise<string> {
+    const [p] = await z.baza.all<{ nazwa: string; nienazwany: number; utworzono_ms: number }>('SELECT nazwa, nienazwany, utworzono_ms FROM projekt WHERE id = ?', [id]);
+    if (!p) return '';
+    return p.nienazwany === 1 ? etykietaRobocza(p.utworzono_ms, z.zegar.teraz().ms, j, z.zegar.teraz().strefa) : p.nazwa;
+  }
+  async function po(ok: boolean, tekst: () => string): Promise<void> {
+    if (!ok) return;
+    await wczytaj();
+    oglos(tekst());
+    await poZmianie();
+  }
+  const sekundyTeraz = () => (stan.rodzaj === 'trwa' ? z.zegar.teraz().ms - stan.znacznikMs : 0);
+
+  return (
+    <Stoper stan={stan} inny={inny} t={j.t} teraz={() => z.zegar.teraz().ms}
+      naStart={() => void (async () => {
+        if (sesja && sesja.projektId !== projektId) { ustawInny({ projekt: await nazwa(sesja.projektId), biezacy: await nazwa(projektId) }); return; }
+        const w = await startSesji(z, { projektId });
+        await po(w.ok, () => j.t('stoper.uruchomiono'));
+      })()}
+      naWstrzymaj={() => void (async () => {
+        if (!sesja) return;
+        const czas = czasStopera(sekundyTeraz());
+        await po((await wstrzymajSesje(z, { sesjaId: sesja.id })).ok, () => j.t('stoper.wstrzymano', { czas }));
+      })()}
+      naWznow={() => void (async () => { if (sesja) await po((await wznowSesje(z, { sesjaId: sesja.id })).ok, () => j.t('stoper.wznowiono')); })()}
+      naZatrzymaj={() => void (async () => {
+        if (!sesja) return;
+        const w = await zakonczSesje(z, { sesjaId: sesja.id });
+        await po(w.ok, () => j.t('stoper.zapisano', { czas: w.ok ? czasPracy(w.wartosc.czasMs, j) : '' }));
+      })()}
+      naInnyPotwierdz={() => void (async () => {
+        ustawInny(null);
+        await po((await przelaczSesje(z, { projektId })).ok, () => j.t('stoper.uruchomiono'));
+      })()}
+      naInnyAnuluj={() => ustawInny(null)}
+    />
+  );
+}
