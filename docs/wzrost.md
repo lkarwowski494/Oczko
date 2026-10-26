@@ -70,17 +70,17 @@ Szczegóły z adresami, wątkami i cytatami regulaminów: `oczko-warsztat/11-wzr
 Skala [OCENA]: efekt 0–3 (zasięg wśród person), pewność 0–2 (przeczytana reguła i dowód niszy), godziny właściciela na tydzień. Heurystyka roli, nie norma.
 
 ## ASO — propozycja dla roli 10 (P-145 D2a; P-148 E1-3a)
-Znaki i bajty UTF-8 policzone skryptem; nazwa ≤ 30, podtytuł ≤ 30, słowa ≤ 100 B, każde > 2 znaki, bez nazw innych firm i aplikacji.
+Znaki i bajty UTF-8 policzone skryptem; nazwa ≤ 30, podtytuł ≤ 30, słowa ≤ 100 B, każde > 2 znaki, bez nazw innych firm i aplikacji. Nazwy ja, nb, de-DE, fr-FR zmienione 2026-10-26 według P-157 (słowo marki lokalne, sekcja „Nazwa w sklepie”).
 
 | Lok. | Nazwa | Podtytuł | Słowa kluczowe | B |
 |---|---|---|---|---|
 | en-US | Oczko: Row Counter | Knit & crochet, no account | knitting,stitch,tracker,pattern,pdf,yarn,stash,needles,project,tally,gauge,notes,hook,reminder | 94 |
 | en-GB | Oczko: Row Counter | Knit & crochet, no account | knitting,stitch,tracker,pattern,pdf,yarn,wool,stash,needles,project,tally,gauge,notes,hook,reminder | 99 |
 | pl | Oczko: Licznik rzędów | Druty i szydełko, bez konta | dzierganie,włóczka,oczka,rzędy,wzór,pdf,projekt,robótki,szydełkowanie,drutach,notatki,zapas | 97 |
-| ja | Oczko: 編み物カウンター | かぎ針・棒針の段数と編み図 | 棒針編み,かぎ針編み,あみぐるみ,目数計算,リマインド,PDF,メモ帳,毛糸管理 | 100 |
-| nb | Oczko: Strikk og hekle | Teller for omganger og pinner | strikking,hekling,strikkeapp,omgangsteller,garn,oppskrift,prosjekter,masker,notater,strikkeprosjekt | 99 |
-| de-DE | Oczko: Reihenzähler | Häkeln, Stricken, eigenes PDF | Strickzähler,Maschenzähler,Wolle,Garn,Nadeln,Strickmuster,Häkelmuster,Handarbeit,Projekte | 92 |
-| fr-FR | Oczko: Compteur de rangs | Tricot & crochet, votre patron | tricoter,crocheter,laine,pelote,aiguilles,mailles,projet,modèle,amigurumi,PDF,notes | 84 |
+| ja | 編み目: 編み物カウンター | かぎ針・棒針の段数と編み図 | 棒針編み,かぎ針編み,あみぐるみ,目数計算,リマインド,PDF,メモ帳,毛糸管理 | 100 |
+| nb | Maske: Strikk og hekle | Teller for omganger og pinner | strikking,hekling,strikkeapp,omgangsteller,garn,oppskrift,prosjekter,masker,notater,strikkeprosjekt | 99 |
+| de-DE | Masche: Reihenzähler | Häkeln, Stricken, eigenes PDF | Strickzähler,Maschenzähler,Wolle,Garn,Nadeln,Strickmuster,Häkelmuster,Handarbeit,Projekte | 92 |
+| fr-FR | Maille: Compteur de rangs | Tricot & crochet, votre patron | tricoter,crocheter,laine,pelote,aiguilles,mailles,projet,modèle,amigurumi,PDF,notes | 84 |
 
 Warunki: słowa o wzorze (pattern, pdf, wzór, 編み図, oppskrift, Strickmuster, eigenes PDF, modèle, votre patron) tylko po potwierdzeniu funkcji wzoru (OG-07); bez słów o zegarku, ekranie blokady i widżecie do potwierdzenia przez 07 (P-146); bez słów o dodawaniu i ujmowaniu oczek (F-40 PÓŹNIEJ). Do przeglądu native speakera: ja 目数計算 i あみぐるみ, nb omgang/pinne, de umlauty, fr patron/modèle, wymowa „Oczko” w ja. Kategoria: wyniki fraz to głównie Lifestyle (rekomendacja badania), decyduje rola 10. Nie wiemy: liczby wyszukań (bez płatnych narzędzi) ani tego, czy storefront z językiem dodatkowym indeksuje słowa tej lokalizacji.
 
@@ -164,55 +164,80 @@ Cel pobrań (rachunek, [OCENA]): tempo progu opłacalności ≈ 1944 zł/rok ÷ 
 
 Pliki: `docs/wzrost/hipotezy.json` (progi), `docs/wzrost/hipotezy.mjs` (z modułu roli, przedział Wilsona, z = 1,645); `node docs/wzrost/hipotezy.mjs docs/wzrost/hipotezy.json` — kod 0 (2026-10-26). Dane zmierzone tylko w `oczko-warsztat/11-wzrost/`. Próba z opt-in i źródła ruchu nie są losowe — przedział to uproszczenie. Nazwa źródła „App Store Search” z Treningu (`docs/45`), dziś nieodczytana (strona pomocy ładuje treść skryptem) — sprawdzi właściciel przy pierwszym odczycie.
 
-## Nazwa w sklepie (P-149: reguła jak Trening)
-Reguła (Trening: `store/app-store-names.json`, `lib/i18n.ts` `APP_NAME`, `docs/16-jezyki-i-marka.md`): „<słowo marki>: <opis z badania fraz>”, słowo marki = lokalny termin dziewiarski na „oczko”, gdy brzmi podobnie, inaczej angielskie „Stitch”; pole Name ≤ 30 znaków; to samo słowo marki pod ikoną (`CFBundleDisplayName`) i przed dwukropkiem w sklepie.
+## Nazwa w sklepie (P-157: lokalne słowo marki w każdym języku; kontrole P-159)
+Reguła (P-157, zmienia P-149/P-152): „<lokalny termin dziewiarski na »oczko«>: <opis z badania fraz>”, pole Name ≤ 30 znaków; to samo słowo pod ikoną (`CFBundleDisplayName` w `locales/systemowe/<język>.json`, ADR-0017) i przed dwukropkiem w sklepie. Kontrole na każdy język (odczyt 2026-10-26, rola 11 fix P-157-NAZWY):
+1. **Termin** z przeczytanego źródła szczebla ≤ 3 (P-017): rejestr 06 (`oczko-warsztat/06-tresci/`, DROPS jako pojedyncze terminy — P-104, P-106, P-159 (b)), inwentarz S-* (`strona-katalog/…/B-inwentarz-jezyki-rysunki.md` §0) i runda P-159 (c): źródła Z-* w `oczko-warsztat/11-wzrost/2026-10-26-fix/zrodla/REJESTR.md`. Źródło poniżej szczebla 3 nie potwierdza — zapas.
+2. **App Store:** wyszukiwarka sklepu (iTunes Search API) w storefroncie kraju i w US; kolizja = aplikacja, której nazwa zaczyna się od tego słowa, w tej samej niszy (robótki, liczenie rzędów). Aplikacje innych branż o tej samej nazwie opisane, nie blokują.
+3. **Znaki towarowe USA** (USPTO, API wyszukiwarki znaków): kolizja = żywy znak słowny identyczny z terminem (bez diakrytyków, cyrylica i CJK w transliteracji) w klasie 9 albo 41 (P-159 Q3a, jak P-152).
+4. **Zapas „Oczko”** przy kolizji albo braku źródła, z powodem w tabeli (P-157 (4)); „Oczko” sprawdzone: P-152, P-155.
 
-**Kontrola (2) z P-149 — wynik: „Stitch” odpada, słowo zapasowe „Oczko” (odczyt 2026-10-26):**
-- Znaki towarowe USA (USPTO, wyszukiwarka znaków, API publiczne): słowo „STITCH” ma **16 żywych rejestracji i zgłoszeń** w różnych klasach, w tym **klasa 9 (oprogramowanie) — 2** i **klasa 41 — 1** (numery rejestracji w warsztacie); do tego złożenia ze „STITCH” w klasie 9 dla programów do robótek. Ryzyko kolizji: realne [OCENA, bez porady prawnej].
-- App Store (US): istnieje już aplikacja z nazwą zaczynającą się od „Stitch:” w tej samej niszy (licznik rzędów), oraz kilka innych „Stitch”. „Oczko”, „Očko”, „Očica”: żadnej aplikacji z nazwą zaczynającą się od tego słowa (US, PL, CZ, SK, HR, DE, JP); USPTO: „OCZKO” — 0 żywych znaków.
-- **UE (EUIPO / TMview): nie sprawdzono** — z kontenera brak połączenia. Krok właściciela (ok. 10 min): https://www.tmdn.org/tmview/ → wyszukać „Oczko”, „Očko”, „Očica”, klasy 9 i 41, urzędy UE i krajowe (PL, CZ, SK, HR).
-- Lokalne słowo podobne do „Oczko” mają tylko cs i sk („očko”) i hr („očica”); źródła to dziś szczebel 4–5 (encyklopedia otwarta, blog) — **[OTWARTE]: potwierdzenie przez rolę 06 w źródle terminologii** (P-149 (1)); bez potwierdzenia — „Oczko”. Podobieństwo „Očica” do „Oczko” jest brzegowe (wspólny rdzeń „oč-”, inne zakończenie) [OCENA].
+Wynik: **21 języków z lokalnym słowem** (w tym pl), **14 z zapasem „Oczko”** (en, cs, bg, lt, lv, it, es, es-419, pt-BR, nl, tr, id, vi, ko). Nazwy aplikacji i firm z wyników — tylko w warsztacie (`e1/terminy-*-wynik.json`), tu opisowo.
 
-| Język aplikacji | Lokalizacja App Store | Pod ikoną | Pełna nazwa w sklepie | Znaki | Słowo marki: źródło | Część opisowa |
-|---|---|---|---|---|---|---|
-| pl | pl | Oczko | Oczko: Licznik rzędów | 21 | termin PL (06, zrodla-pl) | badanie fraz E1 |
-| en | en-US, en-GB, en-AU, en-CA | Oczko | Oczko: Row Counter | 18 | zapasowe: „Stitch” koliduje | badanie fraz E1 |
-| cs | cs | Očko | Očko: počítadlo řad | 19 | cs.wikipedia „Pletení” („očka”) — szczebel 5, [OTWARTE] 06 | przekład roboczy — badanie fraz: rola 10 |
-| sk | sk | Očko | Očko: počítadlo radov | 21 | blog o pletení („veľkosť očiek”) — szczebel 4–5, [OTWARTE] 06 | przekład roboczy — badanie fraz: rola 10 |
-| hr | hr | Oczko | Oczko: brojač redova | 20 | „očica” (hr.wikipedia „Pletenje”) — podobieństwo brzegowe, P-153: „Oczko” | przekład roboczy — badanie fraz: rola 10 |
-| sl | sl | Oczko | Oczko: števec vrst | 18 | termin „zanka” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| sr | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin „петља” niepodobny (sr.wikipedia); zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| bg | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| uk | uk | Oczko | Oczko: лічильник рядів | 22 | termin „петля” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| ru | ru | Oczko | Oczko: счётчик рядов | 20 | termin „петля” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| lt | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| lv | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| et | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| hu | hu | Oczko | Oczko: sorszámláló | 18 | termin „szem” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| ro | ro | Oczko | Oczko: numărător de rânduri | 27 | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| de | de-DE | Oczko | Oczko: Reihenzähler | 19 | termin „Masche” niepodobny; zapasowe | badanie fraz E1 |
-| fr | fr-FR | Oczko | Oczko: Compteur de rangs | 24 | termin „maille” niepodobny; zapasowe | badanie fraz E1 |
-| it | it | Oczko | Oczko: contagiri per maglia | 27 | termin „maglia” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| es | es-ES | Oczko | Oczko: contador de vueltas | 26 | termin „punto” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| es-419 | es-MX | Oczko | Oczko: contador de vueltas | 26 | jw. | przekład roboczy — badanie fraz: rola 10 |
-| pt | pt-PT | Oczko | Oczko: contador de carreiras | 28 | termin „ponto” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| pt-BR | pt-BR | Oczko | Oczko: contador de carreiras | 28 | jw. | przekład roboczy — badanie fraz: rola 10 |
-| nl | nl-NL | Oczko | Oczko: toerenteller | 19 | termin „steek” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| sv | sv | Oczko | Oczko: varvräknare | 18 | termin „maska” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| da | da | Oczko | Oczko: pindetæller | 18 | termin „maske” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| nb | no | Oczko | Oczko: Strikk og hekle | 22 | termin „maske” niepodobny; zapasowe | badanie fraz E1 |
-| fi | fi | Oczko | Oczko: kerroslaskuri | 20 | termin „silmukka” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| tr | tr | Oczko | Oczko: sıra sayacı | 18 | termin „ilmek” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| el | el | Oczko | Oczko: μετρητής σειρών | 22 | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| id | id | Oczko | Oczko: penghitung baris rajut | 29 | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| ms | ms | Oczko | Oczko: pembilang baris kait | 27 | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| vi | vi | Oczko | Oczko: đếm hàng đan móc | 23 | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| ja | ja | Oczko | Oczko: 編み物カウンター | 15 | pismo inne (目); zapasowe | badanie fraz E1 |
-| ko | ko | Oczko | Oczko: 뜨개질 단수 카운터 | 17 | pismo inne (코); zapasowe | przekład roboczy — badanie fraz: rola 10 |
-| zh-Hant | zh-Hant | Oczko | Oczko: 編織段數計數器 | 14 | pismo inne (針); zapasowe | przekład roboczy — badanie fraz: rola 10 |
+| Język aplikacji | Lokalizacja App Store | Pod ikoną | Pełna nazwa w sklepie | Znaki | Słowo marki: termin i źródło | Kontrole (App Store, USPTO kl. 9/41) | Część opisowa |
+|---|---|---|---|---|---|---|---|
+| pl | pl | Oczko | Oczko: Licznik rzędów | 21 | oczko — zrodla-pl (książki, szczebel 3), DROPS | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41; TMview: P-155 | badanie fraz E1 |
+| en | en-US, en-GB, en-AU, en-CA | Oczko | Oczko: Row Counter | 18 | zapas: „stitch” (CYC) koliduje — P-152 | — | badanie fraz E1 |
+| cs | cs | Oczko | Oczko: počítadlo řad | 20 | zapas: „oko” (DROPS cs) — USPTO: 4 identyczne znaki w kl. 9/41 | — | przekład roboczy — badanie fraz: rola 10 |
+| sk | sk | Očko | Očko: počítadlo radov | 21 | očko — Z-sk (instytucja rzemiosła, szczebel 3) | App Store: brak w niszy (1 aplikacja innej branży o tej nazwie); USPTO: brak identycznego w kl. 9/41; TMview: pilne (CZ/SK) | przekład roboczy — badanie fraz: rola 10 |
+| hr | hr | Očica | Očica: brojač redova | 20 | očica — Z-hr (encyklopedia instytutu leksykograficznego, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| sl | sl | Petlja | Petlja: števec vrst | 19 | petlja — Z-sl (państwowy schemat kwalifikacji rzemiosła, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| sr | — (brak w ASC) | Петља | — (brak lokalizacji w ASC) | — | петља — Z-sr (czasopismo muzeum narodowego, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 (PETLJA) | przekład roboczy — badanie fraz: rola 10 |
+| bg | — (brak w ASC) | Oczko | — (brak lokalizacji w ASC) | — | zapas: „бримка” tylko ze źródła poniżej szczebla 3 | — | przekład roboczy — badanie fraz: rola 10 |
+| uk | uk | Петля | Петля: лічильник рядів | 22 | петля — zrodla-uk (podręcznik szkolny, s. 34, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 (PETLYA, PETLIA) | przekład roboczy — badanie fraz: rola 10 |
+| ru | ru | Петля | Петля: счётчик рядов | 20 | петля — zrodla-ru (książka wydawcy, s. 6, szczebel 3) | App Store: brak w niszy (1 gra o innej nazwie); USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| lt | — (brak w ASC) | Oczko | — (brak lokalizacji w ASC) | — | zapas: „akis” tylko ze wzoru sklepu (szczebel 4) | — | przekład roboczy — badanie fraz: rola 10 |
+| lv | — (brak w ASC) | Oczko | — (brak lokalizacji w ASC) | — | zapas: brak przeczytanego źródła (hosty .lv niedostępne) | — | przekład roboczy — badanie fraz: rola 10 |
+| et | — (brak w ASC) | Silmus | — (brak lokalizacji w ASC) | — | silmus — DROPS et (szczebel 3, P-159) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| hu | hu | Szem | Szem: sorszámláló | 17 | szem — DROPS hu (szczebel 3, P-159) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| ro | ro | Ochi | Ochi: numărător de rânduri | 26 | ochi (l.mn. ochiuri) — Z-ro (podręcznik ministerstwa, Mołdawia, szczebel 3) | App Store: brak w niszy (aplikacje innej branży); USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| de | de-DE | Masche | Masche: Reihenzähler | 20 | Masche — S-JUN, DROPS de (szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | badanie fraz E1 |
+| fr | fr-FR | Maille | Maille: Compteur de rangs | 25 | maille — DROPS fr (szczebel 3, P-159) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 (8 identycznych w innych klasach) | badanie fraz E1 |
+| it | it | Oczko | Oczko: contagiri per maglia | 27 | zapas: „maglia” (S-LG, DROPS) — App Store: aplikacje w tej samej niszy | — | przekład roboczy — badanie fraz: rola 10 |
+| es | es-ES | Oczko | Oczko: contador de vueltas | 26 | zapas: „punto” (S-KAT, DROPS) — App Store: aplikacja w tej samej niszy | — | przekład roboczy — badanie fraz: rola 10 |
+| es-419 | es-MX | Oczko | Oczko: contador de vueltas | 26 | zapas: „punto” (Z-es419, producent MX, szczebel 3) — kolizja jak es | — | przekład roboczy — badanie fraz: rola 10 |
+| pt | pt-PT | Malha | Malha: contador de carreiras | 28 | malha — DROPS pt „malha ou ponto” (szczebel 3, P-159); wariant PT [OCENA]: słownik nie wskazuje kraju, „ponto” odpada w pt-BR | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| pt-BR | pt-BR | Oczko | Oczko: contador de carreiras | 28 | zapas: „ponto” (S-CIR) — USPTO: identyczny znak w kl. 41 | — | przekład roboczy — badanie fraz: rola 10 |
+| nl | nl-NL | Oczko | Oczko: toerenteller | 19 | zapas: „steek” (S-SCH, DROPS) — USPTO: identyczny znak w kl. 9 | — | przekład roboczy — badanie fraz: rola 10 |
+| sv | sv | Maska | Maska: varvräknare | 18 | maska — S-JAR, DROPS sv (szczebel 3) | App Store: brak w niszy (aplikacje innej branży); USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| da | da | Maske | Maske: pindetæller | 18 | maske — S-HJE, DROPS da (szczebel 3) | App Store: brak w niszy (1 aplikacja innej branży o tej nazwie); USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| nb | no | Maske | Maske: Strikk og hekle | 22 | maske — S-SAN, DROPS nb (szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | badanie fraz E1 |
+| fi | fi | Silmukka | Silmukka: kerroslaskuri | 23 | silmukka — S-TAI, DROPS fi (szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| tr | tr | Oczko | Oczko: sıra sayacı | 18 | zapas: „ilmek” (Z-tr, podręcznik ministerstwa) — App Store: aplikacja w tej samej niszy | — | przekład roboczy — badanie fraz: rola 10 |
+| el | el | Πόντος | Πόντος: μετρητής σειρών | 23 | πόντος — Z-el (strona wydawcy, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 (PONTOS: 4 identyczne w innych klasach) | przekład roboczy — badanie fraz: rola 10 |
+| id | id | Oczko | Oczko: penghitung baris rajut | 29 | zapas: „tusuk” tylko ze źródła poniżej szczebla 3 i w innym znaczeniu (rodzaj ściegu) | — | przekład roboczy — badanie fraz: rola 10 |
+| ms | ms | Gelungan | Gelungan: pembilang baris kait | 30 | gelungan — Z-ms (słownik narodowego instytutu języka, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 | przekład roboczy — badanie fraz: rola 10 |
+| vi | vi | Oczko | Oczko: đếm hàng đan móc | 23 | zapas: brak przeczytanego źródła („mũi” — [OTWARTE]) | — | przekład roboczy — badanie fraz: rola 10 |
+| ja | ja | 編み目 | 編み目: 編み物カウンター | 13 | 編み目 — S-NV (wydawca, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 (AMIME) | badanie fraz E1 |
+| ko | ko | Oczko | Oczko: 뜨개질 단수 카운터 | 17 | zapas: „코” (Z-ko, producent) — USPTO: transliteracja KO ma identyczne znaki w kl. 9/41; „코” to też „nos” | — | przekład roboczy — badanie fraz: rola 10 |
+| zh-Hant | zh-Hant | 針目 | 針目: 編織段數計數器 | 11 | 針目 — Z-zh-Hant (baza terminów instytutu państwowego, szczebel 3) | App Store: brak w niszy; USPTO: brak identycznego w kl. 9/41 (ZHENMU) | przekład roboczy — badanie fraz: rola 10 |
 
+Lokalizacje bez strony w App Store Connect (sr, bg, lt, lv, et) mają tylko nazwę pod ikoną. Części opisowe poza 7 lokalizacjami z badania fraz to przekład roboczy (badanie fraz i przegląd tłumacza: rola 10, P-145 D2a). Długości policzone skryptem (`oczko-warsztat/11-wzrost/2026-10-26-fix/e1/tabela-p157.py`); kontrola tabeli `oczko-warsztat/11-wzrost/2026-10-26-fix/kontrola-p157.mjs`. [OTWARTE] dla 06: vi („mũi”), lv („valdziņš”), bg, lt, id — źródło szczebla ≤ 3 przywraca lokalne słowo w kolejnej wersji, jeśli kontrole 2–3 przejdą.
 
-Lokalizacje bez strony w App Store Connect (bg, et, lt, lv, sr) mają tylko nazwę pod ikoną. Części opisowe poza 7 lokalizacjami z badania fraz to przekład roboczy (rola 10 robi badanie fraz i przegląd tłumacza, P-145 D2a). Długości policzone skryptem (`oczko-warsztat/11-wzrost/2026-10-26-build/e2-nazwa/tabela-35.py`, kod 0). Do zrobienia przez 08/10: test zgodności słowa marki pod ikoną z nazwą w sklepie (jak Trening).
+**Krok właściciela przed wpisem nazw w App Store Connect — TMview (ok. 15 min):** https://www.tmdn.org/tmview/ → dla każdego hasła: „Trade mark name” = hasło (dokładne), „Nice class” = 9 i 41, status: zarejestrowane i zgłoszone; zapisz liczbę trafień w tych klasach i (przy trafieniu) właściciela i towary. Kolizja = identyczny znak w kl. 9 lub 41 → w tym języku „Oczko”.
+| Nr | Hasło | Język | Uwaga |
+|---|---|---|---|
+| 1 | Očko | sk | **najpierw** — możliwy znak telewizji muzycznej w kl. 41 (CZ/SK) |
+| 2 | Očica | hr | — |
+| 3 | Petlja | sl (i sr) | — |
+| 4 | Петля / Petlya | uk, ru | w TMview także urząd UA |
+| 5 | Петља | sr | — |
+| 6 | Silmus | et | — |
+| 7 | Szem | hu | — |
+| 8 | Ochi | ro | — |
+| 9 | Masche | de | — |
+| 10 | Maille | fr | — |
+| 11 | Malha | pt | — |
+| 12 | Maska | sv | — |
+| 13 | Maske | da, nb | — |
+| 14 | Silmukka | fi | — |
+| 15 | Πόντος / Pontos | el | — |
+| 16 | 編み目 / Amime | ja | urząd JP w TMview |
+„Oczko” sprawdzone (P-155); ms „Gelungan” i zh-Hant „針目” — urzędy MY i TW poza zakresem listy (USPTO bez trafień) [OCENA: ryzyko niskie].
+
+**Przekazanie P-157:**
+- **09 Lokalizacja:** `CFBundleDisplayName` w `locales/systemowe/<język>.json` = kolumna „Pod ikoną” (35 języków; dane: `oczko-warsztat/11-wzrost/2026-10-26-fix/e1/tabela-p157.json`); przegląd native speakera, czy słowo marki brzmi naturalnie jako nazwa (zwłaszcza el „Πόντος” — też „punkt/morze”, ro „Ochi” — też „oczy”, sl „Petlja”).
+- **10 Wydawca:** pole Name = kolumna „Pełna nazwa w sklepie” po kroku TMview; słowa marki nie powtarzać w słowach kluczowych (np. fr „mailles”, de „Maschenzähler” — do rewizji przy ASO).
+- **08 Programista:** test zgodności słowa pod ikoną z częścią przed „:” w nazwie sklepu i długości ≤ 30 (jak Trening).
 
 ## Decyzje E2 (przyjęte: P-150 — E2-1a, E2-2a, E2-3a; nazwa: P-149, P-152; aneks: P-153 — E2-4a, E2-5a)
 | ID | Pytanie | Opcje | Rekomendacja |
@@ -228,7 +253,7 @@ Szkice poza publicznym repo: `oczko-warsztat/11-wzrost/2026-10-26-build/szkice/`
 
 | Krok | Kiedy | Kanał | Szkic / wejście | Kto | Zgoda (słowa, data) | Wynik |
 |---|---|---|---|---|---|---|
-| 1 | przed wpisem nazwy w ASC | rejestr znaków UE (TMview): „Oczko”, „Očko”, „Očica”, klasy 9 i 41 | link w sekcji „Nazwa w sklepie” | właściciel | — (odczyt, nie publikacja) | — |
+| 1 | przed wpisem nazwy w ASC | rejestr znaków UE (TMview): 16 haseł z listy P-157, klasy 9 i 41 (ok. 15 min) | lista w sekcji „Nazwa w sklepie” | właściciel | — (odczyt, nie publikacja) | — |
 | 2 | przy kroku 11 planu | App Store Connect: nazwa, podtytuł, słowa kluczowe, kategoria (35 lokalizacji) | pola 7 lokalizacji + tabela nazw (rola 10 robi resztę po zamrożeniu) | rola 10 przygotowuje, właściciel wpisuje | — (wydanie: P-087 wyjątek) | — |
 | 3 | ok. 12–14.11.2026 | wydanie ręczne po akceptacji Apple (P-147) | — | właściciel | — | — |
 | 4 | co tydzień, 8 tygodni | odpowiedzi na recenzje (en, pl zawsze; inne ≤ 3★) | `szkice/odpowiedzi-na-recenzje.md` (7 szablonów EN/PL) | właściciel | [czeka: zgoda na sposób pracy] | — |
@@ -255,7 +280,7 @@ Plan na złe przyjęcie: krytyczną recenzję zostawiamy i odpowiadamy rzeczowo 
 - **07 Jakość:** test akceptacyjny z wektorów PO-01–PO-11 (dziś `ukonczenie.test.tsx:38` woła prośbę przy każdym zamknięciu karty — zmiana wyroczni po decyzji 03).
 - **08 Programista:** funkcja i wywołanie po decyzji 03; test zgodności słowa marki pod ikoną z nazwą w sklepie (jak Trening).
 - **04 Studio:** brak nowych tekstów (okno systemowe); ton F-54 i celu dziennego neutralny; „knitting days” → przez 02 (P-148 E1-4a).
-- **06 Treści:** potwierdzić terminy „očko” (cs, sk) i „očica” (hr) w źródle terminologii (P-149 (1)); nowych twierdzeń dziedzinowych w pozycjonowaniu brak.
+- **06 Treści:** terminy cs/sk/hr rozstrzygnięte w P-157 (cs „oko” koliduje → „Oczko”; sk, hr ze źródeł Z-sk, Z-hr); [OTWARTE] vi, lv, bg, lt, id — sekcja „Nazwa w sklepie”; nowych twierdzeń dziedzinowych w pozycjonowaniu brak.
 - **09 Lokalizacja:** przegląd native speakera fraz ASO (ja 目数計算, あみぐるみ; nb omgang/pinne; de umlauty; fr patron/modèle) i wymowy „Oczko” w ja.
 - **10 Wydawca:** pozycjonowanie (sekcja „Pozycjonowanie” z warunkami), pola ASO 7 lokalizacji, tabela nazw 35 lokalizacji, kategoria (rekomendacja badania: Lifestyle), badanie fraz dla pozostałych 28 lokalizacji po zamrożeniu funkcji; warunek OG-07 dla słów o wzorze.
-- **Właściciel:** TMview przed wpisem nazwy (ok. 10 min); recenzje co tydzień (15–30 min); odczyt App Analytics 2027-01-09 (ok. 20 min); nominacja 1.1 ≥ 3 tygodnie przed jej datą. Po dacie oceny: `node tools/assemble.mjs 11-wzrost --tryb reaudit --baza <sha>`.
+- **Właściciel:** TMview przed wpisem nazwy (lista P-157, ok. 15 min); recenzje co tydzień (15–30 min); odczyt App Analytics 2027-01-09 (ok. 20 min); nominacja 1.1 ≥ 3 tygodnie przed jej datą. Po dacie oceny: `node tools/assemble.mjs 11-wzrost --tryb reaudit --baza <sha>`.
