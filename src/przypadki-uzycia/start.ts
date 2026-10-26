@@ -11,7 +11,8 @@ import { wKolejce } from './kolejka';
 import { wTransakcji } from './zapis';
 import type { ZaleznosciDziennika, ZaleznosciStartu } from './zaleznosci';
 
-export type WynikStartuDanych = { migracja: { z: number; do: number }; scalono: number; sprzatnieto: number; domknieteSesje: number };
+// potwierdzone: id linii zegarka do `Zegarek.potwierdz` przed `odswiezEkranBlokady` (ADR-0009, 2026-10-26 pkt 3; woła kompozycja aplikacji).
+export type WynikStartuDanych = { migracja: { z: number; do: number }; scalono: number; potwierdzone: string[]; sprzatnieto: number; domknieteSesje: number };
 
 /** Zapomniany stoper (P-072 (7a)): sesja „trwa” od co najmniej SESJA_MAKS_H kończy się na start + SESJA_MAKS_H z `do_korekty = 1`. */
 function domknijSesje(z: ZaleznosciStartu): Promise<Wynik<number>> {
@@ -45,15 +46,15 @@ export function uruchomDane(z: ZaleznosciStartu): Promise<Wynik<WynikStartuDanyc
     });
     if (!start.ok) return start;
     const k = kosz.wartosc;
-    return { ok: true, wartosc: { migracja: migracja.wartosc, scalono: scalono.wartosc.scalono, sprzatnieto: k.projekty + k.czesci + k.liczniki, domknieteSesje: sesje.wartosc } };
+    return { ok: true, wartosc: { migracja: migracja.wartosc, scalono: scalono.wartosc.scalono, potwierdzone: scalono.wartosc.potwierdzone, sprzatnieto: k.projekty + k.czesci + k.liczniki, domknieteSesje: sesje.wartosc } };
   });
 }
 
 /** `AppState → active`: scalenie dziennika w kolejce przed pierwszym zapisem po powrocie (Z07-11, R-020). */
-export function naPierwszyPlan(z: ZaleznosciDziennika): Promise<Wynik<{ scalono: number }>> {
+export function naPierwszyPlan(z: ZaleznosciDziennika): Promise<Wynik<{ scalono: number; potwierdzone: string[] }>> {
   // Pozycja kolejki powstaje synchronicznie w chwili wywołania, więc zapis z ekranu wywołany później jej nie wyprzedzi (ADR-0008 (2)).
   return wKolejce(z.baza, async () => {
     const w = await scalDziennikWKolejce(z);
-    return w.ok ? { ok: true, wartosc: { scalono: w.wartosc.scalono } } : w;
+    return w.ok ? { ok: true, wartosc: { scalono: w.wartosc.scalono, potwierdzone: w.wartosc.potwierdzone } } : w;
   });
 }

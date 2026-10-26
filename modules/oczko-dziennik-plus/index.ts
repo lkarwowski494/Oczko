@@ -10,7 +10,7 @@ export interface OczkoDziennikPlusNatywny {
   liveZakoncz(): Promise<void>;
   liveDostepne(): boolean;
   sha256Pliku(sciezka: string): Promise<string>;
-  zegarekWyslij(stanJson: string): Promise<void>;
+  zegarekWyslij(stanJson: string, potwierdzone: string[]): Promise<void>; // updateApplicationContext({ stan, potwierdzone }), ADR-0009 (2026-10-26) pkt 3
   addListener(nazwa: 'zegarekZdarzenia', fn: (e: { linie: string[] }) => void): { remove(): void };
 }
 

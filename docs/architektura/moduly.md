@@ -58,7 +58,14 @@ export interface DziennikPlus {                                                 
   skroc(doId: string): Promise<void>;         // do doId włącznie (także w linii sklejonej) + ucięty ogon bez \n za doId (ADR-0008 (8S)); zapis linii: (8A), tylko Swift
 }
 export interface LiveActivity { start(s: StanEkranuBlokady): Promise<Wynik<void>>; aktualizuj(s: StanEkranuBlokady): Promise<void>; zakoncz(): Promise<void> }
-export interface Zegarek { wyslijStan(s: StanZegarka): Promise<void>; odbieraj(fn: (z: ZdarzenieWejsciowe[]) => void): () => void }
+// (e) kolejka zegarka (08 partia 4: przeniesione z „Kontrakt partii 4”) — ADR-0009, uzupełnienie 2026-10-26 pkt 3: potwierdzenia jadą w kontekście aplikacji obok stanu
+export interface Zegarek { wyslijStan(s: StanZegarka): Promise<void>; potwierdz(ids: readonly string[]): void; odbieraj(fn: (z: ZdarzenieWejsciowe[]) => void): () => void } // ADR-0009 (2026-10-26) pkt 3
+// potwierdz: dopisuje id do listy ostatnich ZEGAREK_POTWIERDZENIA_MAKS (bez powtórzeń; ponowne id przechodzi na koniec, najstarsze wypadają; pamięć procesu);
+// wyslijStan: moduł natywny dostaje (stanJson, lista) i wysyła updateApplicationContext({ stan, potwierdzone }) — oba klucze zawsze razem.
+export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: string[] }; // scalDziennik: id linii zegarka w `zdarzenie` po COMMIT albo odrzucone na stałe
+// potwierdzone: id linii zrodlo 'zegarek' z partii, które po COMMIT są w `zdarzenie` (nowe albo powtórzone, M-02) albo odrzucone na stałe (brak licznika, R-021);
+// poczekalnia — nie; kolejność pierwszego wystąpienia, bez powtórzeń. Wołający (start, naPierwszyPlan, eksport, odbiór z zegarka) woła
+// zegarek.potwierdz(w.potwierdzone) przed odswiezEkranBlokady, więc lista jedzie z ładunkiem, który już uwzględnia te zdarzenia.
 export interface Synchronizacja { wlacz(): Promise<Wynik<void>>; wylacz(): Promise<void>; stan(): StanSynchronizacji; zglosZmiane(encja: string, id: string): void }
 export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<Wynik<void>>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
 export interface Haptyka { rzad(): void; przypomnienie(): void }               // dwa wzorce F-48; brak dźwięku (BR-LIC-005)
@@ -154,14 +161,6 @@ export type StanZegarkaV1 = StanEkranuBlokadyV1 & { pro: boolean; proWaznoscDo: 
 ## Kontrakt partii 4 (fix-4 2026-10-26, NZ-08-P3-05, P-135)
 Zmiany sygnatur portów i typów, które wdraża 08 na początku partii 4 (przed ekranami) **razem z adapterami i wywołaniami**. Do tego czasu `src/domena/porty.ts` i blok „Porty domeny” zostają bez zmian (zmiana typu bez adaptera nie przechodzi `typecheck`), a ten blok jest kontraktem docelowym. **Wyjątek nazwany (P-135):** `sprawdz-porty.mjs` porównuje tylko blok „Porty domeny”; rozjazd z tym blokiem jest zamierzony do commitu 08, który przenosi te deklaracje do „Porty domeny” i `porty.ts` i usuwa je stąd. Kontrola dokumentu: `docs/architektura/narzedzia/kontrola-fix4.mjs`.
 ```ts
-// (e) kolejka zegarka — ADR-0009, uzupełnienie 2026-10-26 pkt 3: potwierdzenia jadą w kontekście aplikacji obok stanu
-export interface Zegarek { wyslijStan(s: StanZegarka): Promise<void>; potwierdz(ids: readonly string[]): void; odbieraj(fn: (z: ZdarzenieWejsciowe[]) => void): () => void }
-// potwierdz: dopisuje id do listy ostatnich ZEGAREK_POTWIERDZENIA_MAKS (bez powtórzeń; ponowne id przechodzi na koniec, najstarsze wypadają; pamięć procesu);
-// wyslijStan: moduł natywny dostaje (stanJson, lista) i wysyła updateApplicationContext({ stan, potwierdzone }) — oba klucze zawsze razem.
-export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: string[] }; // wynik scalDziennikWKolejce/scalDziennik (src/przypadki-uzycia/dziennik.ts)
-// potwierdzone: id linii zrodlo 'zegarek' z partii, które po COMMIT są w `zdarzenie` (nowe albo powtórzone, M-02) albo odrzucone na stałe (brak licznika, R-021);
-// poczekalnia — nie; kolejność pierwszego wystąpienia, bez powtórzeń. Wołający (start, naPierwszyPlan, eksport, odbiór z zegarka) woła
-// zegarek.potwierdz(w.potwierdzone) przed odswiezEkranBlokady, więc lista jedzie z ładunkiem, który już uwzględnia te zdarzenia.
 
 // (a) status zakupu — P-135 Q3a, ADR-0010: anulowanie i oczekiwanie nie są błędem (MON-04); ekran woła komunikatZakupu(status) (dostep.ts, KP-*)
 export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // przeniesiony z src/platforma/sklep.ts; adapter: statusZBledu

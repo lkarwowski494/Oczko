@@ -12,7 +12,7 @@ async function stan(zablokowany: 0 | 1) {
   await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód'), ...licznik('l1', 'c1', 3, { zablokowany })]);
   const wyslane: StanEkranuBlokady[] = [];
   const liveActivity: LiveActivity = { start: async () => ({ ok: true, wartosc: undefined }), aktualizuj: async (x) => { wyslane.push(x); }, zakoncz: async () => undefined };
-  const zegarek: Zegarek = { wyslijStan: async (x) => { wyslane.push(x); }, odbieraj: () => () => undefined };
+  const zegarek: Zegarek = { potwierdz: () => undefined, wyslijStan: async (x) => { wyslane.push(x); }, odbieraj: () => () => undefined };
   const w = await odswiezEkranBlokady({ ...s.z, liveActivity, zegarek }, { licznikId: 'l1', nazwa: 'Sweter', dostep: { pro: false, wygasa: null } });
   return { w, wyslane };
 }

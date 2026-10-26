@@ -27,7 +27,7 @@ describe('dziennik +1 (ADR-0008)', () => {
   test('ŚU-02 M-02: trzy linie dziennika → +3, skrócenie do ostatniej; ponowne scalenie tych samych linii nie dubluje', async () => {
     const s = await zLicznikiem(20);
     s.dziennik.linie.push(...trzy('l1-z20'));
-    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 3, pominieto: 0 } });
+    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 3, pominieto: 0, potwierdzone: [] } });
     expect(await stan(s)).toEqual({ wartosc: 23, glowa: 'd3', konflikt: 0 });
     expect(s.dziennik.skrocono).toEqual(['d3']);
     s.dziennik.linie.push(...trzy('l1-z20')); // skrócenie nie doszło (zabicie procesu po COMMIT) — te same linie drugi raz
@@ -45,7 +45,7 @@ describe('dziennik +1 (ADR-0008)', () => {
     expect(parsowany).toEqual({ zdarzenia: [a, b], uszkodzone: [3] });
     const bladPrzed = await ile(s.baza, 'blad');
     const z = { ...s.z, dziennik: utworzDziennikNode(plik, s.baza) };
-    expect(await scalDziennik(z)).toEqual({ ok: true, wartosc: { scalono: 2, pominieto: 0 } });
+    expect(await scalDziennik(z)).toEqual({ ok: true, wartosc: { scalono: 2, pominieto: 0, potwierdzone: [] } });
     expect(await stan(s)).toMatchObject({ wartosc: 7, glowa: 'd2' });
     expect(await ile(s.baza, 'blad')).toBe(bladPrzed + 1);
     expect(await ile(s.baza, 'blad', "kod LIKE '%dziennik%'")).toBe(1);
@@ -54,7 +54,7 @@ describe('dziennik +1 (ADR-0008)', () => {
   test('R-021 Z07-11: zatruta linia (licznik spoza bazy) pominięta i zgłoszona; pozostałe linie scalone, dziennik skrócony do końca', async () => {
     const s = await zLicznikiem(10);
     s.dziennik.linie.push(linia('d1', ['l1-z10']), linia('x1', [], 'licznik-usuniety'), linia('d2', ['d1'], 'l1', 1));
-    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 2, pominieto: 1 } });
+    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 2, pominieto: 1, potwierdzone: [] } });
     expect(await stan(s)).toMatchObject({ wartosc: 12, glowa: 'd2' });
     expect(await ile(s.baza, 'blad')).toBeGreaterThanOrEqual(1);
     expect(s.dziennik.skrocono).toEqual(['d2']);
@@ -65,7 +65,7 @@ describe('dziennik +1 (ADR-0008)', () => {
     const s = await zLicznikiem(20);
     s.dziennik.linie.push(...trzy('l1-z20'));
     const [scal, plus] = await Promise.all([naPierwszyPlan(s.z), dodajRzad(s.z, { licznikId: 'l1' })]);
-    expect(scal).toEqual({ ok: true, wartosc: { scalono: 3 } });
+    expect(scal).toEqual({ ok: true, wartosc: { scalono: 3, potwierdzone: [] } });
     expect(plus).toMatchObject({ ok: true, wartosc: { wartosc: 24 } });
     expect(await stan(s)).toMatchObject({ wartosc: 24, konflikt: 0 });
     if (plus.ok) expect(await jeden(s.baza, 'SELECT rodzice FROM zdarzenie WHERE id = ?', [plus.wartosc.zdarzenieId])).toEqual({ rodzice: '["d3"]' });

@@ -24,7 +24,7 @@ describe('NZ-05-04 P-111 (2): pro z linii dziennika', () => {
   test('ADR-0008 (6) P-103: stuknięcie z Pro, scalenie po wygaśnięciu Pro → dzień z pro = 1 (niepewność na korzyść użytkowniczki)', async () => {
     const s = await srodowisko(false);
     s.dziennik.linie.push(linia('d1', [], waw(11, 20), '2026-11-11', true));
-    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 1, pominieto: 0 } });
+    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 1, pominieto: 0, potwierdzone: [] } });
     expect(await dniLimitu(s)).toEqual([{ dzien: '2026-11-11', pro: 1 }]);
   });
 
@@ -45,7 +45,7 @@ describe('NZ-05-04 P-111 (2): pro z linii dziennika', () => {
   test('L-16 ADR-0008 (6): pięć darmowych dni w miesiącu, scalenie stuknięcia z szóstego dnia → zapisane, wiersz dnia dopisany', async () => {
     const s = await srodowisko(false, ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05'].map((d) => dzienLimitu(d, `z-${d}`)));
     s.dziennik.linie.push(linia('d1', [], waw(11, 20), '2026-11-11', false));
-    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 1, pominieto: 0 } });
+    expect(await scalDziennik(s.z)).toEqual({ ok: true, wartosc: { scalono: 1, pominieto: 0, potwierdzone: [] } });
     expect((await dniLimitu(s)).length).toBe(6);
   });
 

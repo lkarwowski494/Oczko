@@ -29,9 +29,9 @@ public class OczkoDziennikPlusModule: Module {
     AsyncFunction("sha256Pliku") { (sciezka: String) throws -> String in try Skrot.sha256Pliku(sciezka) }
 
     Events("zegarekZdarzenia")
-    AsyncFunction("zegarekWyslij") { (stanJson: String) throws in
-      _ = try StanEkranuBlokady.dekoduj(Data(stanJson.utf8)) // zegarek dostaje tylko poprawny stan v2
-      try ZegarekHub.shared.wyslijStan(stanJson)
+    AsyncFunction("zegarekWyslij") { (stanJson: String, potwierdzone: [String]) throws in
+      _ = try StanEkranuBlokady.dekoduj(Data(stanJson.utf8)) // zegarek dostaje tylko poprawny stan
+      try ZegarekHub.shared.wyslijStan(stanJson, potwierdzone: potwierdzone)
     }
     OnStartObserving { ZegarekHub.shared.poZapisie = { [weak self] linie in self?.sendEvent("zegarekZdarzenia", ["linie": linie]) } }
     OnStopObserving { ZegarekHub.shared.poZapisie = nil }

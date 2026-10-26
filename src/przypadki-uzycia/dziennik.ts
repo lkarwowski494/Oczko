@@ -4,7 +4,7 @@
 // ADR-0008 (6): strażnik nie jest wołany ponownie; dzień limitu = `dzien` linii z `pro` z linii (P-111 (2), niepewność na korzyść użytkowniczki).
 import type { Wynik } from '../domena/bledy';
 import { startDnia, wolaStraznika } from '../domena/limit';
-import type { PortBazy, ZdarzenieWejsciowe } from '../domena/porty';
+import type { PortBazy, WynikPartii, ZdarzenieWejsciowe } from '../domena/porty';
 import { PARTIA_SYNCHRONIZACJI } from '../konfiguracja';
 import { zapiszBladW } from '../dane/repozytoria/bledy';
 import {
@@ -16,17 +16,19 @@ import { przeliczLicznik } from '../dane/repozytoria/przelicz';
 import { blad, czyBladDanych } from './zapis';
 import type { ZaleznosciDziennika } from './zaleznosci';
 
-type WynikPartii = { scalono: number; pominieto: number };
 const BEZ_LIMITU = Number.MAX_SAFE_INTEGER; // scalenie niczego nie odrzuca z powodu limitu (L-16); liczy tylko, czy dzień się zaczął (L-04)
 
 async function scalLinie(tx: PortBazy, linie: readonly ZdarzenieWejsciowe[], terazMs: number): Promise<WynikPartii> {
-  const w: WynikPartii = { scalono: 0, pominieto: 0 };
+  const w: WynikPartii = { scalono: 0, pominieto: 0, potwierdzone: [] };
   const dotkniete = new Set<string>();
+  // ADR-0009 (2026-10-26) pkt 3: id linii z zegarka, które po COMMIT są w `zdarzenie` albo odrzucone na stałe; poczekalnia — nie.
+  const potwierdz = (l: ZdarzenieWejsciowe) => { if (l.zrodlo === 'zegarek' && !w.potwierdzone.includes(l.id)) w.potwierdzone.push(l.id); };
   for (const l of linie) {
     const s = await stanLicznika(tx, l.licznikId);
     if (!s) { // zatruta linia (R-021): licznika nie ma w bazie
       await zapiszBladW(tx, { czasMs: terazMs, kod: 'dziennik_brak_licznika', szczegoly: { zdarzenie: l.id, licznik: l.licznikId } });
       w.pominieto += 1;
+      potwierdz(l);
       continue;
     }
     const byl = await trescZdarzenia(tx, l.id);
@@ -34,6 +36,7 @@ async function scalLinie(tx: PortBazy, linie: readonly ZdarzenieWejsciowe[], ter
       if (byl.licznikId !== l.licznikId || byl.rodzaj !== l.rodzaj || JSON.stringify(byl.rodzice) !== JSON.stringify(l.rodzice)) {
         await zapiszBladW(tx, { czasMs: terazMs, kod: 'dziennik_kolizja_id', szczegoly: { zdarzenie: l.id } });
       }
+      potwierdz(l); // kolizja to też odrzucenie na stałe: ponowienie z zegarka dałoby ten sam wynik
       continue;
     }
     const rodzice = await Promise.all(l.rodzice.map((r) => zdarzenie(tx, r)));
@@ -56,6 +59,7 @@ async function scalLinie(tx: PortBazy, linie: readonly ZdarzenieWejsciowe[], ter
     await zapiszOstatniaPrace(tx, s.projektId, l.czasMs);
     dotkniete.add(l.licznikId);
     w.scalono += 1;
+    potwierdz(l);
   }
   for (const id of dotkniete) await przeliczLicznik(tx, id, terazMs);
   return w;
@@ -65,13 +69,14 @@ async function scalLinie(tx: PortBazy, linie: readonly ZdarzenieWejsciowe[], ter
 export async function scalDziennikWKolejce(z: ZaleznosciDziennika): Promise<Wynik<WynikPartii>> {
   const terazMs = z.zegar.teraz().ms;
   const linie = await z.dziennik.odczytaj(); // przed transakcją: w transakcji nie czeka się na nic poza bazą (ADR-0002)
-  const suma: WynikPartii = { scalono: 0, pominieto: 0 };
+  const suma: WynikPartii = { scalono: 0, pominieto: 0, potwierdzone: [] };
   if (!linie.length) return { ok: true, wartosc: suma };
   try {
     for (let i = 0; i < linie.length; i += PARTIA_SYNCHRONIZACJI) {
       const czesc = await z.baza.transakcja((tx) => scalLinie(tx, linie.slice(i, i + PARTIA_SYNCHRONIZACJI), terazMs));
       suma.scalono += czesc.scalono;
       suma.pominieto += czesc.pominieto;
+      for (const id of czesc.potwierdzone) if (!suma.potwierdzone.includes(id)) suma.potwierdzone.push(id);
     }
   } catch (e) {
     return blad(czyBladDanych(e) ? 'bledne_dane' : 'zapis'); // nic nie skracamy: linie zostają do następnego scalenia (zabicie procesu, NFR-DAN-002)
@@ -80,7 +85,7 @@ export async function scalDziennikWKolejce(z: ZaleznosciDziennika): Promise<Wyni
   return { ok: true, wartosc: suma };
 }
 
-/** `pominieto`: linie bez licznika w bazie (zatruta linia, R-021) — wpis w `blad`, reszta scalona. */
-export function scalDziennik(z: ZaleznosciDziennika): Promise<Wynik<{ scalono: number; pominieto: number }>> {
+/** `pominieto`: linie bez licznika w bazie (zatruta linia, R-021) — wpis w `blad`, reszta scalona. `potwierdzone`: dla `Zegarek.potwierdz` przed `odswiezEkranBlokady`. */
+export function scalDziennik(z: ZaleznosciDziennika): Promise<Wynik<WynikPartii>> {
   return wKolejce(z.baza, () => scalDziennikWKolejce(z));
 }

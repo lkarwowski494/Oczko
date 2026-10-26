@@ -3,12 +3,12 @@
 // w commicie, który go zazielenia (DS-02). Wyrocznia: kontrakt ADR-0009 (pkt 3) — id linii `zrodlo: 'zegarek'` z partii scalenia, które po
 // COMMIT są w `zdarzenie` (nowe albo powtórzone) albo odrzucone na stałe (brak licznika, R-021); poczekalnia i ekran blokady — nie.
 // Sygnatury: „Kontrakt partii 4” w docs/architektura/moduly.md (P-135: porty.ts zmienia 08 razem z adapterem).
-import type { StanZegarka, ZdarzenieWejsciowe } from '../../../src/domena/porty';
-import { ZEGAREK_POTWIERDZENIA_MAKS } from '../../../src/konfiguracja';
-import { scalDziennik } from '../../../src/przypadki-uzycia/dziennik';
-import { zegarek } from '../../../src/platforma/zegarek';
-import { czesc, licznik, projekt } from '../../dane/pomocnicze/dane-wejsciowe';
-import { przygotuj, wykonaj } from '../../dane/pomocnicze/srodowisko';
+import type { StanZegarka, ZdarzenieWejsciowe } from '../../src/domena/porty';
+import { ZEGAREK_POTWIERDZENIA_MAKS } from '../../src/konfiguracja';
+import { scalDziennik } from '../../src/przypadki-uzycia/dziennik';
+import { zegarek } from '../../src/platforma/zegarek';
+import { czesc, licznik, projekt } from './pomocnicze/dane-wejsciowe';
+import { przygotuj, wykonaj } from './pomocnicze/srodowisko';
 
 const T = Date.UTC(2026, 10, 10, 20); // 2026-11-10 21:00 Europe/Warsaw
 const linia = (id: string, licznikId: string, rodzice: string[], zrodlo: ZdarzenieWejsciowe['zrodlo'] = 'zegarek'): ZdarzenieWejsciowe => ({

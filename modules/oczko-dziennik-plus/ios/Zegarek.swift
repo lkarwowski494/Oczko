@@ -1,4 +1,5 @@
-// Łącze z zegarkiem po stronie telefonu (ADR-0009, P-110 Q8a): stan → zegarek przez updateApplicationContext (`{ "stan": <StanZegarka v2> }`);
+// Łącze z zegarkiem po stronie telefonu (ADR-0009, P-110 Q8a): stan → zegarek przez updateApplicationContext (`{ "stan": <StanZegarka>, "potwierdzone": [id] }`,
+// oba klucze zawsze razem — ADR-0009, 2026-10-26 pkt 3);
 // zdarzenia z zegarka (transferUserInfo `{ "linia": <ZdarzenieWejsciowe> }`) zapisuje jedyny pisarz dziennika +1 (DziennikPlus.wspolny),
 // także gdy JS nie działa (aktywacja przy starcie procesu: ZegarekAppDelegate). Skrzynka nie jest kasowana przed COMMIT scalenia (ADR-0008 (3)).
 import ExpoModulesCore
@@ -17,9 +18,9 @@ final class ZegarekHub: NSObject, WCSessionDelegate {
     if s.activationState != .activated { s.activate() }
   }
 
-  func wyslijStan(_ json: String) throws {
+  func wyslijStan(_ json: String, potwierdzone: [String]) throws {
     guard let s = sesja, s.activationState == .activated, s.isPaired, s.isWatchAppInstalled else { return } // bez zegarka: nic do wysłania
-    try s.updateApplicationContext(["stan": json])
+    try s.updateApplicationContext(["stan": json, "potwierdzone": potwierdzone])
   }
 
   func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
@@ -28,8 +29,8 @@ final class ZegarekHub: NSObject, WCSessionDelegate {
       try DziennikPlus.wspolny.dopisz(z)
       poZapisie?([z.linia])
     } catch {
-      // Nieudany zapis: transferUserInfo nie ponawia dostarczenia. Kontrakt (ADR-0009, 2026-10-26 pkt 6; NZ-08-P3-05 e1): bez potwierdzenia
-      // i bez poZapisie — zegarek trzyma linię w kolejce i ponawia (wdraża 08 w partii 4).
+      // Nieudany zapis (ADR-0009, 2026-10-26 pkt 6; e1): bez potwierdzenia i bez poZapisie — zegarek trzyma linię w kolejce i ponawia
+      // po ZEGAREK_PONOWIENIE_MS; jedyne źródło ponowienia jest na zegarku, scalenie pominie duplikat (M-02).
       NSLog("OczkoZegarek: zapis linii z zegarka nieudany: %@", String(describing: error))
     }
   }
