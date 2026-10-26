@@ -27,6 +27,16 @@ async function licznosci(port: PortBazy): Promise<Licznosci> {
   }
   return w;
 }
+/** N12-12 (P-197): kopia VACUUM INTO zdrowa przed spakowaniem — integrity_check = ok i pusty foreign_key_check; osobne połączenie tylko do odczytu,
+ *  bez kontroli wersji (tryb awaryjny eksportuje bazę nowszą). */
+async function kopiaZdrowa(sciezka: string): Promise<boolean> {
+  const port = otworzPortExpo(sciezka, { tylkoOdczyt: true });
+  try {
+    const [i] = await wiersze(port.all('PRAGMA integrity_check'), 'kopiaZdrowa');
+    return !!i && tekst(i, 'integrity_check') === 'ok' && (await wiersze(port.all('PRAGMA foreign_key_check'), 'kopiaZdrowa')).length === 0;
+  } finally { await port.zamknij(); }
+}
+
 async function licznosciPliku(sciezka: string): Promise<Licznosci> {
   const port = otworzPortExpo(sciezka, { tylkoOdczyt: true });
   try { return await licznosci(port); } finally { await port.zamknij(); }
@@ -70,6 +80,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
       try {
         const k = await kopiaBazy(z.baza, baza);
         if (!k.ok) return k;
+        if (!(await kopiaZdrowa(baza))) return blad('uszkodzony'); // nie udostępniamy uszkodzonej kopii jako zapasowej (N12-12)
         const pliki = (await wiersze(z.baza.all('SELECT sha256, rozszerzenie, bajty FROM plik ORDER BY sha256'), 'eksport'))
           .map((r) => ({ sha256: tekst(r, 'sha256'), rozszerzenie: tekst(r, 'rozszerzenie'), bajty: liczba(r, 'bajty') }));
         const manifest: Manifest = {
