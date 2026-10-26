@@ -25,6 +25,9 @@
       "bundleIdentifier": "com.apps4brew.knitting",
       "deploymentTarget": "18.0",
       "appleTeamId": "8NQ9GHY8GF",
+      "entitlements": {
+        "com.apple.security.application-groups": ["group.com.apps4brew.knitting"]
+      },
       "buildNumber": "1",
       "privacyManifests": {
         "NSPrivacyTracking": false,
