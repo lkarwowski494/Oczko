@@ -1330,7 +1330,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek",
-    "miejsce": "docs/brd/reguly.md:232"
+    "miejsce": "docs/brd/reguly.md:234"
   },
   {
     "regula": "RD-13",
@@ -1347,7 +1347,7 @@
     "tolerancja": null,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 6 + 4 × 6",
-    "miejsce": "docs/brd/reguly.md:233"
+    "miejsce": "docs/brd/reguly.md:235"
   },
   {
     "regula": "RD-13",
@@ -1364,7 +1364,7 @@
     "tolerancja": null,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: szóste wyzwolenie",
-    "miejsce": "docs/brd/reguly.md:234"
+    "miejsce": "docs/brd/reguly.md:236"
   },
   {
     "regula": "RD-13",
@@ -1381,7 +1381,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: przed s",
-    "miejsce": "docs/brd/reguly.md:235"
+    "miejsce": "docs/brd/reguly.md:237"
   },
   {
     "regula": "RD-13",
@@ -1398,7 +1398,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: N < 1",
-    "miejsce": "docs/brd/reguly.md:236"
+    "miejsce": "docs/brd/reguly.md:238"
   },
   {
     "regula": "RD-13",
@@ -1417,7 +1417,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: wpisanie, przeskok przez 12 i 18; jedno przypomnienie dla 18 (P-097 (3.2a))",
-    "miejsce": "docs/brd/reguly.md:242"
+    "miejsce": "docs/brd/reguly.md:244"
   },
   {
     "regula": "RD-13",
@@ -1436,7 +1436,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: zwykłe +1",
-    "miejsce": "docs/brd/reguly.md:243"
+    "miejsce": "docs/brd/reguly.md:245"
   },
   {
     "regula": "RD-13",
@@ -1455,7 +1455,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: spadek przy wpisaniu, bez przypomnienia",
-    "miejsce": "docs/brd/reguly.md:244"
+    "miejsce": "docs/brd/reguly.md:246"
   },
   {
     "regula": "RD-13",
@@ -1474,7 +1474,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: wpisanie do ostatniego wyzwolenia 6 + 4 × 6",
-    "miejsce": "docs/brd/reguly.md:245"
+    "miejsce": "docs/brd/reguly.md:247"
   },
   {
     "regula": "RD-13",
@@ -1493,7 +1493,301 @@
     "tolerancja": null,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: przeskok po końcu serii (36 to szóste wyzwolenie)",
-    "miejsce": "docs/brd/reguly.md:246"
+    "miejsce": "docs/brd/reguly.md:248"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W11",
+    "wejscie": {
+      "skończone [rz.]": 47,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 10
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 47,
+      "rząd pasa [rz.]": 48,
+      "k [-]": 8
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-22, S-43 i rachunek: w = 47 + 1 = 48, (48 − 6) / 6 = 7 < 10, k = 8 (makieta 04 fix-4)",
+    "miejsce": "docs/brd/reguly.md:254"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W12",
+    "wejscie": {
+      "skończone [rz.]": 47,
+      "tryb [-]": "rząd w trakcie",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 10
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 48,
+      "rząd pasa [rz.]": 48,
+      "k [-]": 8
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: licznik 47 + 1 = 48, rząd w robocie ten sam co W11",
+    "miejsce": "docs/brd/reguly.md:255"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W13",
+    "wejscie": {
+      "skończone [rz.]": 48,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 10
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 48,
+      "rząd pasa [rz.]": null,
+      "k [-]": null
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: rząd 48 skończony, w = 49 nie wyzwala — pas znika",
+    "miejsce": "docs/brd/reguly.md:256"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W14",
+    "wejscie": {
+      "skończone [rz.]": 0,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 1,
+      "N [rz.]": 4,
+      "M [-]": 3
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 0,
+      "rząd pasa [rz.]": 1,
+      "k [-]": 1
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: pierwszy rząd przed pierwszym +1, w = 1 = s (P-161 Q3)",
+    "miejsce": "docs/brd/reguly.md:257"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W15",
+    "wejscie": {
+      "skończone [rz.]": 5,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 5,
+      "rząd pasa [rz.]": 6,
+      "k [-]": 1
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: w = 6 = s",
+    "miejsce": "docs/brd/reguly.md:258"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W16",
+    "wejscie": {
+      "skończone [rz.]": 4,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 4,
+      "rząd pasa [rz.]": null,
+      "k [-]": null
+    },
+    "tolerancja": null,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: w = 5 < s",
+    "miejsce": "docs/brd/reguly.md:259"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W17",
+    "wejscie": {
+      "skończone [rz.]": 29,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 29,
+      "rząd pasa [rz.]": 30,
+      "k [-]": 5
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: ostatnie powtórzenie w = 6 + 4 × 6 = 30",
+    "miejsce": "docs/brd/reguly.md:260"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W18",
+    "wejscie": {
+      "skończone [rz.]": 35,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 35,
+      "rząd pasa [rz.]": null,
+      "k [-]": null
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: w = 36 byłoby szóstym wyzwoleniem",
+    "miejsce": "docs/brd/reguly.md:261"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W19",
+    "wejscie": {
+      "skończone [rz.]": -1,
+      "tryb [-]": "skończone rzędy",
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": "błąd danych",
+      "rząd pasa [rz.]": "błąd danych",
+      "k [-]": "błąd danych"
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: skończone < 0",
+    "miejsce": "docs/brd/reguly.md:262"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W20",
+    "wejscie": {
+      "skończone przed [rz.]": 47,
+      "skończone po [rz.]": 48,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 10
+    },
+    "oczekiwane": {
+      "rząd sygnału [rz.]": null,
+      "rząd pasa po zmianie [rz.]": null
+    },
+    "tolerancja": null,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: +1 kończy rząd 48, w = 49 nie wyzwala",
+    "miejsce": "docs/brd/reguly.md:268"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W21",
+    "wejscie": {
+      "skończone przed [rz.]": 46,
+      "skończone po [rz.]": 47,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 10
+    },
+    "oczekiwane": {
+      "rząd sygnału [rz.]": 48,
+      "rząd pasa po zmianie [rz.]": 48
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: +1, wejście w rząd 48",
+    "miejsce": "docs/brd/reguly.md:269"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W22",
+    "wejscie": {
+      "skończone przed [rz.]": 48,
+      "skończone po [rz.]": 47,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 10
+    },
+    "oczekiwane": {
+      "rząd sygnału [rz.]": null,
+      "rząd pasa po zmianie [rz.]": 48
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: cofnięcie −1, rząd 48 robi się od nowa — pas bez sygnału (P-161 Q2a)",
+    "miejsce": "docs/brd/reguly.md:270"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W23",
+    "wejscie": {
+      "skończone przed [rz.]": 10,
+      "skończone po [rz.]": 20,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "rząd sygnału [rz.]": 18,
+      "rząd pasa po zmianie [rz.]": null
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: wpisanie, (11, 21] przez 12 i 18 — jeden sygnał dla 18 (P-097 (3.2a))",
+    "miejsce": "docs/brd/reguly.md:271"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W24",
+    "wejscie": {
+      "skończone przed [rz.]": 10,
+      "skończone po [rz.]": 23,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "rząd sygnału [rz.]": 24,
+      "rząd pasa po zmianie [rz.]": 24
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: wpisanie, (11, 24] — największy 24 to rząd w robocie",
+    "miejsce": "docs/brd/reguly.md:272"
+  },
+  {
+    "regula": "RD-13",
+    "id": "RD-13-W25",
+    "wejscie": {
+      "skończone przed [rz.]": 28,
+      "skończone po [rz.]": 40,
+      "s [rz.]": 6,
+      "N [rz.]": 6,
+      "M [-]": 5
+    },
+    "oczekiwane": {
+      "rząd sygnału [rz.]": 30,
+      "rząd pasa po zmianie [rz.]": null
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: (29, 41], ostatnie wyzwolenie 30; 36 to szóste",
+    "miejsce": "docs/brd/reguly.md:273"
   },
   {
     "regula": "RD-14",
@@ -1518,7 +1812,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: ⌊100 × 140 / 320⌋ = ⌊43,75⌋",
-    "miejsce": "docs/brd/reguly.md:260"
+    "miejsce": "docs/brd/reguly.md:287"
   },
   {
     "regula": "RD-14",
@@ -1543,7 +1837,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: wszystkie cele osiągnięte",
-    "miejsce": "docs/brd/reguly.md:261"
+    "miejsce": "docs/brd/reguly.md:288"
   },
   {
     "regula": "RD-14",
@@ -1558,7 +1852,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: ⌊99⌋, brak 100% przed końcem",
-    "miejsce": "docs/brd/reguly.md:262"
+    "miejsce": "docs/brd/reguly.md:289"
   },
   {
     "regula": "RD-14",
@@ -1583,7 +1877,7 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: min(120, 100) = 100; ⌊31,25⌋",
-    "miejsce": "docs/brd/reguly.md:263"
+    "miejsce": "docs/brd/reguly.md:290"
   },
   {
     "regula": "RD-14",
@@ -1598,7 +1892,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: zgodnie z BR-PRJ-009",
-    "miejsce": "docs/brd/reguly.md:264"
+    "miejsce": "docs/brd/reguly.md:291"
   },
   {
     "regula": "RD-14",
@@ -1619,7 +1913,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: Σ c_i = 0, postęp nieokreślony",
-    "miejsce": "docs/brd/reguly.md:265"
+    "miejsce": "docs/brd/reguly.md:292"
   },
   {
     "regula": "RD-14",
@@ -1634,7 +1928,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: ⌊100 × 29 / 100⌋ = 29; pułapka zmiennoprzecinkowa: 100 × 0,29 = 28,999… daje 28 (ER-38)",
-    "miejsce": "docs/brd/reguly.md:266"
+    "miejsce": "docs/brd/reguly.md:293"
   },
   {
     "regula": "RD-15",
@@ -1650,7 +1944,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: ⌈180 / 14⌉ = ⌈12,86⌉; d dla 2026-10-22 → 2026-11-04",
-    "miejsce": "docs/brd/reguly.md:278"
+    "miejsce": "docs/brd/reguly.md:305"
   },
   {
     "regula": "RD-15",
@@ -1666,7 +1960,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 180 / 12 = 15 bez zaokrąglenia",
-    "miejsce": "docs/brd/reguly.md:279"
+    "miejsce": "docs/brd/reguly.md:306"
   },
   {
     "regula": "RD-15",
@@ -1682,7 +1976,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: termin dziś, całe R dziś",
-    "miejsce": "docs/brd/reguly.md:280"
+    "miejsce": "docs/brd/reguly.md:307"
   },
   {
     "regula": "RD-15",
@@ -1698,7 +1992,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: d < 1; zasada po terminie z P-047",
-    "miejsce": "docs/brd/reguly.md:281"
+    "miejsce": "docs/brd/reguly.md:308"
   },
   {
     "regula": "RD-15",
@@ -1714,7 +2008,7 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: ⌈20 / 2⌉",
-    "miejsce": "docs/brd/reguly.md:282"
+    "miejsce": "docs/brd/reguly.md:309"
   },
   {
     "regula": "RD-15",
@@ -1730,7 +2024,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: R = 0, cel osiągnięty",
-    "miejsce": "docs/brd/reguly.md:283"
+    "miejsce": "docs/brd/reguly.md:310"
   },
   {
     "regula": "RD-15",
@@ -1746,7 +2040,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: brak celów części",
-    "miejsce": "docs/brd/reguly.md:284"
+    "miejsce": "docs/brd/reguly.md:311"
   },
   {
     "regula": "RD-15",
@@ -1765,7 +2059,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: d < 1 i R_teraz = 0 → gałąź (1) przed (2)",
-    "miejsce": "docs/brd/reguly.md:290"
+    "miejsce": "docs/brd/reguly.md:317"
   },
   {
     "regula": "RD-15",
@@ -1784,7 +2078,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: 3 dni po terminie, nic nie zostało",
-    "miejsce": "docs/brd/reguly.md:291"
+    "miejsce": "docs/brd/reguly.md:318"
   },
   {
     "regula": "RD-15",
@@ -1803,7 +2097,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 320 − 310, na bieżąco (nie 320 − 300 = 20)",
-    "miejsce": "docs/brd/reguly.md:292"
+    "miejsce": "docs/brd/reguly.md:319"
   },
   {
     "regula": "RD-15",
@@ -1822,7 +2116,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 20 rzędów dokończonych dziś po terminie → od razu cel osiągnięty",
-    "miejsce": "docs/brd/reguly.md:293"
+    "miejsce": "docs/brd/reguly.md:320"
   },
   {
     "regula": "RD-15",
@@ -1841,7 +2135,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: prucie 5 rzędów po terminie, 320 − 295",
-    "miejsce": "docs/brd/reguly.md:294"
+    "miejsce": "docs/brd/reguly.md:321"
   },
   {
     "regula": "RD-15",
@@ -1860,7 +2154,7 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: termin dziś (d = 1), R = 0 → gałąź (1)",
-    "miejsce": "docs/brd/reguly.md:295"
+    "miejsce": "docs/brd/reguly.md:322"
   },
   {
     "regula": "RD-15",
@@ -1876,7 +2170,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: daty kalendarzowe; 2027-03-28 ma 23 h, różnica chwil = 12,958 doby (pułapka)",
-    "miejsce": "docs/brd/reguly.md:301"
+    "miejsce": "docs/brd/reguly.md:328"
   },
   {
     "regula": "RD-15",
@@ -1892,7 +2186,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: daty kalendarzowe; 2026-10-25 ma 25 h, różnica chwil = 13,042 doby (pułapka)",
-    "miejsce": "docs/brd/reguly.md:302"
+    "miejsce": "docs/brd/reguly.md:329"
   },
   {
     "regula": "RD-15",
@@ -1908,7 +2202,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: termin dziś w dniu zmiany czasu",
-    "miejsce": "docs/brd/reguly.md:303"
+    "miejsce": "docs/brd/reguly.md:330"
   },
   {
     "regula": "RD-16",
@@ -1924,7 +2218,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: UTC−4 (czas letni), 21:30 lokalnie",
-    "miejsce": "docs/brd/reguly.md:314"
+    "miejsce": "docs/brd/reguly.md:341"
   },
   {
     "regula": "RD-16",
@@ -1940,7 +2234,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: UTC+2, 03:30 lokalnie",
-    "miejsce": "docs/brd/reguly.md:315"
+    "miejsce": "docs/brd/reguly.md:342"
   },
   {
     "regula": "RD-16",
@@ -1956,7 +2250,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 00:00:00 lokalnie",
-    "miejsce": "docs/brd/reguly.md:316"
+    "miejsce": "docs/brd/reguly.md:343"
   },
   {
     "regula": "RD-16",
@@ -1972,7 +2266,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: 23:59:59 lokalnie",
-    "miejsce": "docs/brd/reguly.md:317"
+    "miejsce": "docs/brd/reguly.md:344"
   },
   {
     "regula": "RD-16",
@@ -1988,7 +2282,7 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: 00:00:01 lokalnie",
-    "miejsce": "docs/brd/reguly.md:318"
+    "miejsce": "docs/brd/reguly.md:345"
   },
   {
     "regula": "RD-16",
@@ -2004,7 +2298,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: zmiana bez chwili",
-    "miejsce": "docs/brd/reguly.md:319"
+    "miejsce": "docs/brd/reguly.md:346"
   },
   {
     "regula": "RD-16",
@@ -2020,7 +2314,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: UTC+1 (zima), 23:59:59 lokalnie (ER-37)",
-    "miejsce": "docs/brd/reguly.md:320"
+    "miejsce": "docs/brd/reguly.md:347"
   },
   {
     "regula": "RD-16",
@@ -2036,7 +2330,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: UTC+1, 00:00:00 lokalnie",
-    "miejsce": "docs/brd/reguly.md:321"
+    "miejsce": "docs/brd/reguly.md:348"
   },
   {
     "regula": "RD-16",
@@ -2052,7 +2346,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 00:00 UTC+1 w dniu wiosennej zmiany czasu",
-    "miejsce": "docs/brd/reguly.md:322"
+    "miejsce": "docs/brd/reguly.md:349"
   },
   {
     "regula": "RD-16",
@@ -2068,7 +2362,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 02:00 UTC+1 → 03:00 UTC+2, ta sama data",
-    "miejsce": "docs/brd/reguly.md:323"
+    "miejsce": "docs/brd/reguly.md:350"
   },
   {
     "regula": "RD-16",
@@ -2084,7 +2378,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: 23:59:59 UTC+2 przed jesienną zmianą",
-    "miejsce": "docs/brd/reguly.md:324"
+    "miejsce": "docs/brd/reguly.md:351"
   },
   {
     "regula": "RD-16",
@@ -2100,7 +2394,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 00:00 UTC+2",
-    "miejsce": "docs/brd/reguly.md:325"
+    "miejsce": "docs/brd/reguly.md:352"
   },
   {
     "regula": "RD-16",
@@ -2116,7 +2410,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 02:59:59 UTC+2, przed cofnięciem zegara",
-    "miejsce": "docs/brd/reguly.md:326"
+    "miejsce": "docs/brd/reguly.md:353"
   },
   {
     "regula": "RD-16",
@@ -2132,7 +2426,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 02:00:00 UTC+1, po cofnięciu zegara",
-    "miejsce": "docs/brd/reguly.md:327"
+    "miejsce": "docs/brd/reguly.md:354"
   },
   {
     "regula": "RD-16",
@@ -2148,7 +2442,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: UTC+5:30, 23:59:59 lokalnie",
-    "miejsce": "docs/brd/reguly.md:328"
+    "miejsce": "docs/brd/reguly.md:355"
   },
   {
     "regula": "RD-16",
@@ -2164,7 +2458,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: UTC+5:30, 00:00 lokalnie",
-    "miejsce": "docs/brd/reguly.md:329"
+    "miejsce": "docs/brd/reguly.md:356"
   },
   {
     "regula": "RD-16",
@@ -2180,7 +2474,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: UTC+14, 23:59:59 lokalnie",
-    "miejsce": "docs/brd/reguly.md:330"
+    "miejsce": "docs/brd/reguly.md:357"
   },
   {
     "regula": "RD-16",
@@ -2196,7 +2490,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: UTC+14, 00:00 lokalnie",
-    "miejsce": "docs/brd/reguly.md:331"
+    "miejsce": "docs/brd/reguly.md:358"
   },
   {
     "regula": "RD-16",
@@ -2212,7 +2506,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: UTC+11 (czas letni, zmiana o 30 min), 00:00 lokalnie",
-    "miejsce": "docs/brd/reguly.md:332"
+    "miejsce": "docs/brd/reguly.md:359"
   },
   {
     "regula": "RD-16",
@@ -2228,7 +2522,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: UTC+10:30 (czas zimowy), 00:00 lokalnie",
-    "miejsce": "docs/brd/reguly.md:333"
+    "miejsce": "docs/brd/reguly.md:360"
   },
   {
     "regula": "RD-16",
@@ -2244,7 +2538,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: UTC−10, 23:59:59 lokalnie",
-    "miejsce": "docs/brd/reguly.md:334"
+    "miejsce": "docs/brd/reguly.md:361"
   },
   {
     "regula": "RD-16",
@@ -2260,7 +2554,7 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: przejście na UTC+14, 2011-12-30 pominięty",
-    "miejsce": "docs/brd/reguly.md:335"
+    "miejsce": "docs/brd/reguly.md:362"
   },
   {
     "regula": "RD-16",
@@ -2276,7 +2570,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: UTC−4, 23:59:59 lokalnie",
-    "miejsce": "docs/brd/reguly.md:336"
+    "miejsce": "docs/brd/reguly.md:363"
   },
   {
     "regula": "RD-16",
@@ -2292,7 +2586,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: zmiana czasu o 00:00, północy nie ma; 01:00 UTC−3",
-    "miejsce": "docs/brd/reguly.md:337"
+    "miejsce": "docs/brd/reguly.md:364"
   },
   {
     "regula": "RD-16",
@@ -2308,7 +2602,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: zapis gregoriański mimo kalendarza japońskiego (Intl daje „R8/10/23”)",
-    "miejsce": "docs/brd/reguly.md:338"
+    "miejsce": "docs/brd/reguly.md:365"
   },
   {
     "regula": "RD-16",
@@ -2324,7 +2618,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: cyfry ASCII mimo cyfr arabsko-indyjskich regionu (Intl daje „٢٣‏/١٠‏/٢٠٢٦”)",
-    "miejsce": "docs/brd/reguly.md:339"
+    "miejsce": "docs/brd/reguly.md:366"
   },
   {
     "regula": "RD-17",
@@ -2344,7 +2638,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 0,8 − 0 ≤ 2",
-    "miejsce": "docs/brd/reguly.md:350"
+    "miejsce": "docs/brd/reguly.md:377"
   },
   {
     "regula": "RD-17",
@@ -2362,7 +2656,7 @@
     "tolerancja": null,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: 2 − 0 = 2, włącznie",
-    "miejsce": "docs/brd/reguly.md:351"
+    "miejsce": "docs/brd/reguly.md:378"
   },
   {
     "regula": "RD-17",
@@ -2380,7 +2674,7 @@
     "tolerancja": null,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: 2,01 > 2",
-    "miejsce": "docs/brd/reguly.md:352"
+    "miejsce": "docs/brd/reguly.md:379"
   },
   {
     "regula": "RD-17",
@@ -2397,7 +2691,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: tylko 2 dodania (nadrobienie zapomnianego rzędu)",
-    "miejsce": "docs/brd/reguly.md:353"
+    "miejsce": "docs/brd/reguly.md:380"
   },
   {
     "regula": "RD-17",
@@ -2415,7 +2709,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: zwykłe dzierganie",
-    "miejsce": "docs/brd/reguly.md:354"
+    "miejsce": "docs/brd/reguly.md:381"
   },
   {
     "regula": "RD-17",
@@ -2433,7 +2727,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: kolejność dowolna, po sortowaniu 0; 0,5; 1 (P-091 (4b); wcześniej „błąd danych”)",
-    "miejsce": "docs/brd/reguly.md:355"
+    "miejsce": "docs/brd/reguly.md:382"
   },
   {
     "regula": "RD-17",
@@ -2451,7 +2745,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: dodanie bez czasu zdarzenia",
-    "miejsce": "docs/brd/reguly.md:356"
+    "miejsce": "docs/brd/reguly.md:383"
   },
   {
     "regula": "RD-17",
@@ -2486,7 +2780,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: seria w czasie zdarzenia (np. 21:14), scalona naraz po 46 min",
-    "miejsce": "docs/brd/reguly.md:362"
+    "miejsce": "docs/brd/reguly.md:389"
   },
   {
     "regula": "RD-17",
@@ -2515,7 +2809,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: wieczór z ekranu blokady scalony naraz; czas dostarczenia się nie liczy",
-    "miejsce": "docs/brd/reguly.md:363"
+    "miejsce": "docs/brd/reguly.md:390"
   },
   {
     "regula": "RD-17",
@@ -2544,7 +2838,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: osobno dla źródeł, w aplikacji 2 dodania",
-    "miejsce": "docs/brd/reguly.md:364"
+    "miejsce": "docs/brd/reguly.md:391"
   },
   {
     "regula": "RD-17",
@@ -2576,7 +2870,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: w aplikacji 0; 0,5; 1",
-    "miejsce": "docs/brd/reguly.md:365"
+    "miejsce": "docs/brd/reguly.md:392"
   },
   {
     "regula": "RD-17",
@@ -2605,7 +2899,7 @@
     "tolerancja": null,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: równy czas, kolejność po identyfikatorze; 5 − 5 ≤ 2",
-    "miejsce": "docs/brd/reguly.md:366"
+    "miejsce": "docs/brd/reguly.md:393"
   },
   {
     "regula": "RD-18",
@@ -2623,7 +2917,7 @@
     "tolerancja": 0.01,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: 320 × 20 / 600; ⌈10,67 / 1⌉",
-    "miejsce": "docs/brd/reguly.md:378"
+    "miejsce": "docs/brd/reguly.md:405"
   },
   {
     "regula": "RD-18",
@@ -2641,7 +2935,7 @@
     "tolerancja": 0.01,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: ⌈10,67 / 2⌉",
-    "miejsce": "docs/brd/reguly.md:379"
+    "miejsce": "docs/brd/reguly.md:406"
   },
   {
     "regula": "RD-18",
@@ -2659,7 +2953,7 @@
     "tolerancja": null,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: R = 0, pierwszy projekt",
-    "miejsce": "docs/brd/reguly.md:380"
+    "miejsce": "docs/brd/reguly.md:407"
   },
   {
     "regula": "RD-18",
@@ -2677,7 +2971,7 @@
     "tolerancja": null,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: H = 0, brak sesji stopera",
-    "miejsce": "docs/brd/reguly.md:381"
+    "miejsce": "docs/brd/reguly.md:408"
   },
   {
     "regula": "RD-18",
@@ -2695,7 +2989,7 @@
     "tolerancja": 0.01,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: tempo 10 rz./h",
-    "miejsce": "docs/brd/reguly.md:382"
+    "miejsce": "docs/brd/reguly.md:409"
   },
   {
     "regula": "RD-18",
@@ -2713,7 +3007,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: C < 0",
-    "miejsce": "docs/brd/reguly.md:383"
+    "miejsce": "docs/brd/reguly.md:410"
   },
   {
     "regula": "RD-19",
@@ -2727,7 +3021,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "S-18",
-    "miejsce": "docs/brd/reguly.md:394"
+    "miejsce": "docs/brd/reguly.md:421"
   },
   {
     "regula": "RD-19",
@@ -2741,7 +3035,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "S-18",
-    "miejsce": "docs/brd/reguly.md:395"
+    "miejsce": "docs/brd/reguly.md:422"
   },
   {
     "regula": "RD-19",
@@ -2755,7 +3049,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "S-18",
-    "miejsce": "docs/brd/reguly.md:396"
+    "miejsce": "docs/brd/reguly.md:423"
   },
   {
     "regula": "RD-19",
@@ -2769,7 +3063,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "S-18: wiersz bez oznaczenia US",
-    "miejsce": "docs/brd/reguly.md:397"
+    "miejsce": "docs/brd/reguly.md:424"
   },
   {
     "regula": "RD-19",
@@ -2783,7 +3077,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "S-18 i rachunek: rozmiar spoza tabeli, bez najbliższej wartości",
-    "miejsce": "docs/brd/reguly.md:398"
+    "miejsce": "docs/brd/reguly.md:425"
   },
   {
     "regula": "RD-19",
@@ -2797,7 +3091,7 @@
     "tolerancja": null,
     "rodzaj": "typowy",
     "pochodzenie": "S-18 i rachunek: 3,125 po zaokrągleniu do 0,001 mm",
-    "miejsce": "docs/brd/reguly.md:399"
+    "miejsce": "docs/brd/reguly.md:426"
   },
   {
     "regula": "RD-19",
@@ -2811,7 +3105,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: d ≤ 0",
-    "miejsce": "docs/brd/reguly.md:400"
+    "miejsce": "docs/brd/reguly.md:427"
   },
   {
     "regula": "RD-20",
@@ -2826,7 +3120,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: środa, 2 dni po poniedziałku (P-110 Q7)",
-    "miejsce": "docs/brd/reguly.md:411"
+    "miejsce": "docs/brd/reguly.md:438"
   },
   {
     "regula": "RD-20",
@@ -2841,7 +3135,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: poniedziałek zaczyna własny tydzień",
-    "miejsce": "docs/brd/reguly.md:412"
+    "miejsce": "docs/brd/reguly.md:439"
   },
   {
     "regula": "RD-20",
@@ -2856,7 +3150,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: niedziela, ostatni dzień tygodnia od 19.10",
-    "miejsce": "docs/brd/reguly.md:413"
+    "miejsce": "docs/brd/reguly.md:440"
   },
   {
     "regula": "RD-20",
@@ -2871,7 +3165,7 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: następny poniedziałek, nowy tydzień",
-    "miejsce": "docs/brd/reguly.md:414"
+    "miejsce": "docs/brd/reguly.md:441"
   },
   {
     "regula": "RD-20",
@@ -2886,7 +3180,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek i P-110 Q7: region zaczyna tydzień w niedzielę (`firstDay: 7`), wynik bez zmian",
-    "miejsce": "docs/brd/reguly.md:415"
+    "miejsce": "docs/brd/reguly.md:442"
   },
   {
     "regula": "RD-20",
@@ -2901,7 +3195,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek i P-110 Q7: region zaczyna tydzień w sobotę (`firstDay: 6`), wynik bez zmian",
-    "miejsce": "docs/brd/reguly.md:416"
+    "miejsce": "docs/brd/reguly.md:443"
   },
   {
     "regula": "RD-20",
@@ -2916,7 +3210,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: piątek, tydzień zaczęty w poprzednim roku",
-    "miejsce": "docs/brd/reguly.md:417"
+    "miejsce": "docs/brd/reguly.md:444"
   },
   {
     "regula": "RD-20",
@@ -2931,7 +3225,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: środa, tydzień zaczęty w lutym roku przestępnego (29.02 w środku)",
-    "miejsce": "docs/brd/reguly.md:418"
+    "miejsce": "docs/brd/reguly.md:445"
   },
   {
     "regula": "RD-20",
@@ -2946,7 +3240,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: data spoza kalendarza",
-    "miejsce": "docs/brd/reguly.md:419"
+    "miejsce": "docs/brd/reguly.md:446"
   },
   {
     "regula": "RD-21",
@@ -2962,7 +3256,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "S-43: rząd w robocie = 11 + 1",
-    "miejsce": "docs/brd/reguly.md:432"
+    "miejsce": "docs/brd/reguly.md:459"
   },
   {
     "regula": "RD-21",
@@ -2978,7 +3272,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "S-43 i BR-LIC-012: licznik 11 + 1, znacznik ten sam",
-    "miejsce": "docs/brd/reguly.md:433"
+    "miejsce": "docs/brd/reguly.md:460"
   },
   {
     "regula": "RD-21",
@@ -2994,7 +3288,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: nic nie zrobiono, w robocie rząd 1",
-    "miejsce": "docs/brd/reguly.md:434"
+    "miejsce": "docs/brd/reguly.md:461"
   },
   {
     "regula": "RD-21",
@@ -3012,7 +3306,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: +1 przesuwa o rząd (BR-WZR-003/S1)",
-    "miejsce": "docs/brd/reguly.md:440"
+    "miejsce": "docs/brd/reguly.md:467"
   },
   {
     "regula": "RD-21",
@@ -3030,7 +3324,7 @@
     "tolerancja": 0,
     "rodzaj": "typowy",
     "pochodzenie": "rachunek: schemat od rzędu po ściągaczu, 1 + 5; notatka 45 + 1",
-    "miejsce": "docs/brd/reguly.md:441"
+    "miejsce": "docs/brd/reguly.md:468"
   },
   {
     "regula": "RD-21",
@@ -3048,7 +3342,7 @@
     "tolerancja": 0,
     "rodzaj": "poniżej",
     "pochodzenie": "rachunek: prucie poniżej początku schematu, 1 + (38 − 40) (P-134 Q3a)",
-    "miejsce": "docs/brd/reguly.md:442"
+    "miejsce": "docs/brd/reguly.md:469"
   },
   {
     "regula": "RD-21",
@@ -3066,7 +3360,7 @@
     "tolerancja": null,
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: s < 0",
-    "miejsce": "docs/brd/reguly.md:443"
+    "miejsce": "docs/brd/reguly.md:470"
   },
   {
     "regula": "RD-21",
@@ -3084,7 +3378,7 @@
     "tolerancja": 0,
     "rodzaj": "granica",
     "pochodzenie": "rachunek: powrót po pruciu, 1 + (40 − 40); rząd 1 należy do schematu",
-    "miejsce": "docs/brd/reguly.md:444"
+    "miejsce": "docs/brd/reguly.md:471"
   },
   {
     "regula": "RD-21",
@@ -3102,6 +3396,6 @@
     "tolerancja": 0,
     "rodzaj": "powyżej",
     "pochodzenie": "rachunek: 1 + (41 − 40)",
-    "miejsce": "docs/brd/reguly.md:445"
+    "miejsce": "docs/brd/reguly.md:472"
   }
 ]

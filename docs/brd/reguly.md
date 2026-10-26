@@ -197,7 +197,7 @@ Zasady wspólne reguł:
 | RD-11-W7 | 3,126 | brak | — | typowy | S-18 i rachunek: 3,126 nie ma w tabeli, bez najbliższej wartości |
 
 ### RD-12: Numer powtórzenia i rząd w powtórzeniu
-- Wzór: `powtórzenie = ⌊(r − 1) / n⌋ + 1`; `rząd_w = ((r − 1) mod n) + 1` dla r ≥ 1; dla r = 0 powtórzenie 1 i rząd_w 0 („0 z n”: jeszcze nic, P-097 (3.1a)). r to liczba pokazana na liczniku (BR-LIC-012): w trybie „skończone rzędy” r = skończone, w trybie „rząd w trakcie” r = skończone + 1 (ER-40)
+- Wzór: `powtórzenie = ⌊(r − 1) / n⌋ + 1`; `rząd_w = ((r − 1) mod n) + 1` dla r ≥ 1; dla r = 0 powtórzenie 1 i rząd_w 0 („0 z n”: jeszcze nic, P-097 (3.1a)). r to liczba pokazana na liczniku (BR-LIC-012): w trybie „skończone rzędy” r = skończone, w trybie „rząd w trakcie” r = skończone + 1 (ER-40). RD-13 (przypomnienie) liczy się z rzędu w robocie skończone + 1, nie z r (P-161)
 - Jednostki: r, n, rząd_w, skończone [rz.]; powtórzenie [-]
 - Granica: r ≥ 0, n ≥ 1 (włączne); r < 0 to błąd danych
 - Podstawa: rachunek; potrzeba J-02
@@ -221,11 +221,13 @@ Tryb licznika (BR-LIC-012, ER-40):
 | RD-12-W9 | 12 | skończone rzędy | 8 | 2 | 4 | 0 | typowy | rachunek: r = 12 |
 
 ### RD-13: Przypomnienie „co N rzędów, M razy, od rzędu s”
-- Wzór: rząd r wyzwala przypomnienie, gdy `r ≥ s`, `(r − s) mod N = 0` i `(r − s) / N < M`. Zmiana wartości licznika z a na b: przy b = a + 1 sprawdza się r = b; przy wpisaniu b > a + 1 (BR-LIC-017) przypomnienie pojawia się raz, dla największego rzędu wyzwalającego w (a, b]; przy spadku (b < a) nie pojawia się; zdarzenia scalone z zegarka nie wywołują na telefonie przypomnienia, które zegarek już pokazał (BR-LIC-015; P-097 (3.2a), ER-40)
-- Jednostki: r, s, N [rz.]; M [-]
-- Granica: ostatnie wyzwolenie w rzędzie `s + (M − 1) × N` (włączne)
-- Podstawa: rachunek; potrzeba J-03. Odczyt instrukcji wzoru („co 6 rzędów” liczone od rzędu 6 czy od 1) zależy od wzoru: aplikacja pyta o s, nie zgaduje (OP-06)
+- Wzór: rząd r wyzwala przypomnienie, gdy `r ≥ s`, `(r − s) mod N = 0` i `(r − s) / N < M`; numer przypomnienia `k = (r − s) / N + 1` z M. **r to rząd w robocie** `w = skończone + 1`, niezależnie od trybu licznika (BR-LIC-012) — instrukcję rzędu stosuje się w trakcie tego rzędu, więc musi być widoczna przed jego rozpoczęciem (S-22, S-43; P-161, ER-51); to nie jest r z RD-12. **Pas (stan):** przypomnienie dla rzędu w widać od skończenia rzędu w − 1 do skończenia rzędu w, w obu trybach (w trybie „skończone rzędy” przy liczniku w − 1, w trybie „rząd w trakcie” przy liczniku w); liczy się zawsze ze stanu, także po otwarciu aplikacji, po scaleniu zdarzeń z zegarka, po zapisaniu instrukcji na bieżący rząd i przy pierwszym rzędzie przed pierwszym +1 (P-161 Q3). **Sygnał (wibracja, ogłoszenie VoiceOver; BR-LIC-009)** tylko przy zmianie skończonych z a na b: przy b = a + 1 — gdy rząd w robocie b + 1 wyzwala; przy wpisaniu b > a + 1 (BR-LIC-017) — raz, dla największego rzędu wyzwalającego w (a + 1, b + 1]; przy spadku (b < a, także cofnięcie −1) — bez sygnału, a pas wraca, jeśli rząd w robocie b + 1 wyzwala (P-161 Q2a); zdarzenia scalone z zegarka nie wywołują na telefonie sygnału, który zegarek już dał (BR-LIC-015; P-097 (3.2a), ER-40)
+- Jednostki: r, w, s, N, skończone, a, b, liczba na liczniku, rząd pasa, rząd sygnału [rz.]; M, k, tryb [-]
+- Granica: ostatnie wyzwolenie w rzędzie `s + (M − 1) × N` (włączne); pierwszy rząd w = 1 przy skończone = 0; skończone < 0 to błąd danych
+- Podstawa: rachunek; S-22 (szczebel 1: instrukcja „Row 1” opisuje pracę w trakcie rzędu 1) i S-43 (szczebel 2: wskazanie nad rzędem w robocie, przesuwane po skończeniu rzędu) — chwila przypomnienia (P-161); potrzeba J-03. Odczyt instrukcji wzoru („co 6 rzędów” liczone od rzędu 6 czy od 1) zależy od wzoru: aplikacja pyta o s, nie zgaduje (OP-06)
 - Krytyczna: nie
+
+Predykat na numerze rzędu (r = rząd w robocie; P-161 Q1a):
 
 | ID | r [rz.] | s [rz.] | N [rz.] | M [-] | Oczekiwane: przypomnienie [-] | Tolerancja | Rodzaj | Pochodzenie |
 |---|---|---|---|---|---|---|---|---|
@@ -235,7 +237,7 @@ Tryb licznika (BR-LIC-012, ER-40):
 | RD-13-W4 | 5 | 6 | 6 | 5 | nie | — | poniżej | rachunek: przed s |
 | RD-13-W5 | 12 | 6 | 0 | 5 | błąd danych | — | błąd | rachunek: N < 1 |
 
-Zmiana wartości z a na b (ER-40):
+Zmiana z a na b, wartości jako rząd w robocie (a, b = skończone + 1; funkcja wewnętrzna; ER-40, P-161 Q1a):
 
 | ID | a [rz.] | b [rz.] | s [rz.] | N [rz.] | M [-] | Oczekiwane: przypomnienie [-] | Oczekiwane: rząd przypomnienia [rz.] | Tolerancja | Rodzaj | Pochodzenie |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -244,6 +246,31 @@ Zmiana wartości z a na b (ER-40):
 | RD-13-W8 | 20 | 10 | 6 | 6 | 5 | nie | — | — | poniżej | rachunek: spadek przy wpisaniu, bez przypomnienia |
 | RD-13-W9 | 25 | 30 | 6 | 6 | 5 | tak | 30 | 0 | granica | rachunek: wpisanie do ostatniego wyzwolenia 6 + 4 × 6 |
 | RD-13-W10 | 31 | 40 | 6 | 6 | 5 | nie | — | — | powyżej | rachunek: przeskok po końcu serii (36 to szóste wyzwolenie) |
+
+Chwila przypomnienia — wejście ze skończonych rzędów i trybu (funkcja wejścia liczy w = skończone + 1; P-161):
+
+| ID | skończone [rz.] | tryb [-] | s [rz.] | N [rz.] | M [-] | Oczekiwane: liczba na liczniku [rz.] | Oczekiwane: rząd pasa [rz.] | Oczekiwane: k [-] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| RD-13-W11 | 47 | skończone rzędy | 6 | 6 | 10 | 47 | 48 | 8 | 0 | typowy | S-22, S-43 i rachunek: w = 47 + 1 = 48, (48 − 6) / 6 = 7 < 10, k = 8 (makieta 04 fix-4) |
+| RD-13-W12 | 47 | rząd w trakcie | 6 | 6 | 10 | 48 | 48 | 8 | 0 | typowy | rachunek: licznik 47 + 1 = 48, rząd w robocie ten sam co W11 |
+| RD-13-W13 | 48 | skończone rzędy | 6 | 6 | 10 | 48 | — | — | — | powyżej | rachunek: rząd 48 skończony, w = 49 nie wyzwala — pas znika |
+| RD-13-W14 | 0 | skończone rzędy | 1 | 4 | 3 | 0 | 1 | 1 | 0 | granica | rachunek: pierwszy rząd przed pierwszym +1, w = 1 = s (P-161 Q3) |
+| RD-13-W15 | 5 | skończone rzędy | 6 | 6 | 5 | 5 | 6 | 1 | 0 | granica | rachunek: w = 6 = s |
+| RD-13-W16 | 4 | skończone rzędy | 6 | 6 | 5 | 4 | — | — | — | poniżej | rachunek: w = 5 < s |
+| RD-13-W17 | 29 | skończone rzędy | 6 | 6 | 5 | 29 | 30 | 5 | 0 | granica | rachunek: ostatnie powtórzenie w = 6 + 4 × 6 = 30 |
+| RD-13-W18 | 35 | skończone rzędy | 6 | 6 | 5 | 35 | — | — | — | powyżej | rachunek: w = 36 byłoby szóstym wyzwoleniem |
+| RD-13-W19 | -1 | skończone rzędy | 6 | 6 | 5 | błąd danych | błąd danych | błąd danych | — | błąd | rachunek: skończone < 0 |
+
+Sygnał przy zmianie skończonych rzędów (P-097 (3.2a) przeniesione na rząd w robocie; P-161):
+
+| ID | skończone przed [rz.] | skończone po [rz.] | s [rz.] | N [rz.] | M [-] | Oczekiwane: rząd sygnału [rz.] | Oczekiwane: rząd pasa po zmianie [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|---|---|
+| RD-13-W20 | 47 | 48 | 6 | 6 | 10 | — | — | — | powyżej | rachunek: +1 kończy rząd 48, w = 49 nie wyzwala |
+| RD-13-W21 | 46 | 47 | 6 | 6 | 10 | 48 | 48 | 0 | typowy | rachunek: +1, wejście w rząd 48 |
+| RD-13-W22 | 48 | 47 | 6 | 6 | 10 | — | 48 | 0 | poniżej | rachunek: cofnięcie −1, rząd 48 robi się od nowa — pas bez sygnału (P-161 Q2a) |
+| RD-13-W23 | 10 | 20 | 6 | 6 | 5 | 18 | — | 0 | typowy | rachunek: wpisanie, (11, 21] przez 12 i 18 — jeden sygnał dla 18 (P-097 (3.2a)) |
+| RD-13-W24 | 10 | 23 | 6 | 6 | 5 | 24 | 24 | 0 | granica | rachunek: wpisanie, (11, 24] — największy 24 to rząd w robocie |
+| RD-13-W25 | 28 | 40 | 6 | 6 | 5 | 30 | — | 0 | granica | rachunek: (29, 41], ostatnie wyzwolenie 30; 36 to szóste |
 
 **Bez reguły (OP):** karczek raglanowy i czapka. Rachunek jest prosty, ale głębokość karczka, ujemny luz czapki i średnie zużycie na rodzaj odzieży nie mają przeczytanego źródła szczebla 1–3, a recenzje nie dają dowodu potrzeby (soczewka zaawansowana: 2 trafienia). OP-07.
 

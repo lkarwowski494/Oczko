@@ -133,27 +133,44 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`; dowody
 ### BR-LIC-009: Przypomnienie „co N rzędów, M razy”
 - Przepływ: PR-04 · Reguła: RD-13
 - Dowód potrzeby: J-03; przypomnienie przeoczone, bo za mało widoczne (編み物カウンター２, id13310860035); „the reminder needs an audio queue” (My Row Counter, id11943122526)
+- Chwila: przypomnienie dotyczy rzędu w robocie (skończone + 1) i jest widoczne, zanim użytkownik zacznie ten rząd, w obu trybach licznika (RD-13; P-161, ER-51)
 - Kryteria akceptacji:
   - Scenariusz: Przypomnienie w trakcie serii
-    - Zakładając, że instrukcja to: od rzędu 6, co 6 rzędów, 5 razy
-    - Gdy licznik rzędów osiąga 12
-    - Wtedy aplikacja pokazuje przypomnienie z numerem 2 z 5, zmienia wygląd całego ekranu licznika i potwierdza je wibracją (RD-13-W1)
+    - Zakładając, że instrukcja to: od rzędu 6, co 6 rzędów, 5 razy, a licznik jest w trybie „skończone rzędy”
+    - Gdy użytkownik kończy rząd 11 i licznik pokazuje 11
+    - Wtedy aplikacja pokazuje przypomnienie dla rzędu 12 z numerem 2 z 5, zmienia wygląd całego ekranu licznika i potwierdza je wibracją (RD-13-W1)
   - Scenariusz: Ostatnie przypomnienie
     - Zakładając tę samą instrukcję
-    - Gdy licznik osiąga 30
-    - Wtedy aplikacja pokazuje przypomnienie 5 z 5 (RD-13-W2)
+    - Gdy użytkownik kończy rząd 29
+    - Wtedy aplikacja pokazuje przypomnienie dla rzędu 30, 5 z 5 (RD-13-W2, RD-13-W17)
   - Scenariusz: Po zakończeniu serii
     - Zakładając tę samą instrukcję
-    - Gdy licznik osiąga 36
-    - Wtedy aplikacja nie pokazuje przypomnienia (RD-13-W3)
+    - Gdy użytkownik kończy rząd 35
+    - Wtedy aplikacja nie pokazuje przypomnienia (RD-13-W3, RD-13-W18)
   - Scenariusz: Wpisanie wartości przez kilka przypomnień (ER-40)
     - Zakładając tę samą instrukcję i licznik 10
     - Gdy użytkownik wpisuje wartość 20
-    - Wtedy aplikacja pokazuje jedno przypomnienie, dla rzędu 18, a nie dla 12 (RD-13-W6)
+    - Wtedy aplikacja pokazuje jedno przypomnienie, dla rzędu 18, a nie dla 12 (RD-13-W23)
   - Scenariusz: Wpisanie mniejszej wartości (ER-40)
     - Zakładając tę samą instrukcję i licznik 20
     - Gdy użytkownik wpisuje wartość 10
     - Wtedy aplikacja nie pokazuje przypomnienia (RD-13-W8)
+  - Scenariusz: Tryb „rząd w trakcie” (ER-51)
+    - Zakładając instrukcję: od rzędu 6, co 6 rzędów, 10 razy, tryb „rząd w trakcie” i 47 skończonych rzędów
+    - Gdy użytkownik patrzy na licznik
+    - Wtedy licznik pokazuje „rząd 48”, a przypomnienie dla rzędu 48 z numerem 8 z 10 jest widoczne — to samo co przy liczniku 47 w trybie „skończone rzędy” (RD-13-W11, RD-13-W12)
+  - Scenariusz: Rząd z przypomnieniem skończony (ER-51)
+    - Zakładając tę samą instrukcję, tryb „skończone rzędy” i licznik 47 z przypomnieniem dla rzędu 48
+    - Gdy użytkownik dodaje rząd i licznik pokazuje 48
+    - Wtedy przypomnienie znika i nie ma wibracji (RD-13-W13, RD-13-W20)
+  - Scenariusz: Cofnięcie na rząd z przypomnieniem (ER-51)
+    - Zakładając tę samą instrukcję i licznik 48 w trybie „skończone rzędy”
+    - Gdy użytkownik cofa ostatni rząd i licznik pokazuje 47
+    - Wtedy przypomnienie dla rzędu 48 znów jest widoczne, bez wibracji (RD-13-W22; P-161 Q2a)
+  - Scenariusz: Przypomnienie dla pierwszego rzędu (ER-51)
+    - Zakładając instrukcję: od rzędu 1, co 4 rzędy, 3 razy, i licznik 0
+    - Gdy użytkownik zapisuje instrukcję
+    - Wtedy przypomnienie dla rzędu 1 z numerem 1 z 3 jest widoczne od razu, bez wibracji (RD-13-W14; P-161 Q3)
 
 ### BR-LIC-010: Plan rzędów z instrukcji wzoru
 - Przepływ: PR-04 · Reguła: RD-13
