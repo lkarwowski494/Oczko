@@ -50,3 +50,6 @@ Nawigacja (np. `expo-router`) i `react-native-svg`: decyzja roli 08 przy ekranac
 ### A — zalety: mało zależności, znane manifesty · wady: kod Swift.
 ### B — zalety: mniej własnego kodu · wady: młode lub nieutrzymywane paczki w krytycznych miejscach (rejestr Expo 10).
 ### C — zalety: kod poprzedniej wersji do ponownego użycia · wady: zależności bez przepływu w kontrakcie (zasada architekta 1).
+
+## Uzupełnienie 2026-10-26 (atlas 1.1, rola 05; nie dotyczy 1.0)
+Szkic wiersza do tabeli „Decyzja” przy wdrożeniu atlasu (P-179, ADR-0024, P-201 Q1a); wpisuje go rola 08 razem z instalacją: `react-native-svg` 15.15.4 (dokładnie; `bundledNativeModules.json` SDK 57; wydana 2026-03-18, ≥ 14 dni wg P-036; MIT) | atlas A2–A3 (`docs/atlas/e0-rozpoznanie.md` §3) | `expo-image` z plikiem SVG, PNG (ADR-0024). Do tego czasu pakietu nie ma w `package.json` (kontrola `ZALEZNOSC-BEZ-ADR` sprawdza kierunek zależność → wiersz).

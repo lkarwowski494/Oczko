@@ -1,6 +1,6 @@
 # Kontrakt danych karty atlasu i kroków rysunku — wersja 0 (robocza)
 
-Właściciel kontraktu: rola 05 (ADR-0023, w przygotowaniu). Wypełnia: rola 06. Stan: **wersja 0, 2026-10-26** — wiąże po E2 roli 05 (JSON Schema `docs/atlas/katalog.schema.json` i walidator). Do tego czasu zmiany pól tylko przez ten plik: 06 dopisuje pytania w sekcji „Pytania 06”, 05 odpowiada zmianą wersji.
+Właściciel kontraktu: rola 05 (ADR-0023, w przygotowaniu). Wypełnia: rola 06. Stan: **wersja 0.1, 2026-10-26** (0.1: `operacja.kolumna`) — wiąże po E2 roli 05 (JSON Schema `docs/atlas/katalog.schema.json` i walidator). Do tego czasu zmiany pól tylko przez ten plik: 06 dopisuje pytania w sekcji „Pytania 06”, 05 odpowiada zmianą wersji.
 
 ## Zasady (dlaczego tak)
 
@@ -39,10 +39,12 @@ Właściciel kontraktu: rola 05 (ADR-0023, w przygotowaniu). Wypełnia: rola 06.
 
 | `typ` | Pola | Przykład |
 |---|---|---|
-| `"oczko"` | `strona`: `"prawe"`\|`"lewe"` | oczko prawe / lewe |
-| `"scal"` | `zuzywa` (2–3), `strona`, `na_wierzchu`: `"lewe"`\|`"prawe"`\|`"srodkowe"` | k2tog: `zuzywa 2, strona prawe, na_wierzchu lewe` |
+| `"oczko"` | `strona`: `"prawe"`\|`"lewe"`, `kolumna` | oczko prawe / lewe |
+| `"scal"` | `zuzywa` (2–3), `strona`, `na_wierzchu`: `"lewe"`\|`"prawe"`\|`"srodkowe"`, `kolumna` | k2tog: `zuzywa 2, strona prawe, na_wierzchu lewe, kolumna 1` |
 | `"narzut"` | — | yo (+1, kolumna bez rodzica) |
 | `"z_nitki_poziomej"` | `skret`: `"lewy"`\|`"prawy"` | M1L / M1R |
+
+`kolumna` (od 0.1, opcjonalne): pierwsza kolumna próbki, na której działa operacja; brak = środek próbki. Operacja działa w najwyższym rzędzie próbki (`rzedy − 1`).
 
 Bilans oczek (`daje − zuzywa`) i kierunek pochylenia **wylicza silnik** z operacji; test porównuje je z twierdzeniami karty.
 
@@ -79,6 +81,8 @@ Słownik `faza` (silnik rysuje tylko te; nowa faza = nowa wersja kontraktu):
 
 ## Przykład (k2tog) — `[PRZYKŁAD]`, ID twierdzeń do nadania przez 06
 
+Karty próbne przechodzące silnik i testy: `docs/atlas/prototyp/karty/` (oczko prawe, oczko lewe, k2tog; `probka.rzedy` 3).
+
 ```json
 {
   "id": "druty.ujecie.k2tog",
@@ -92,9 +96,9 @@ Słownik `faza` (silnik rysuje tylko te; nowa faza = nowa wersja kontraktu):
   "jezyki_gotowe": ["en-US"],
   "rysunek": {
     "rodzina": "siatka-petli",
-    "probka": { "kolumny": 4, "rzedy": 2 },
+    "probka": { "kolumny": 4, "rzedy": 3 },
     "tlo": "prawe",
-    "operacja": { "typ": "scal", "zuzywa": 2, "strona": "prawe", "na_wierzchu": "lewe" }
+    "operacja": { "typ": "scal", "zuzywa": 2, "strona": "prawe", "na_wierzchu": "lewe", "kolumna": 1 }
   },
   "kroki": [
     { "faza": "tkanina", "petle": [{ "rzad": 1, "kolumna": 1 }, { "rzad": 1, "kolumna": 2 }], "wyroznij": [{ "rzad": 1, "kolumna": 1 }, { "rzad": 1, "kolumna": 2 }], "kierunek": null, "strzalka": null, "klucz": "atlas.druty.ujecie.k2tog.krok1" },
