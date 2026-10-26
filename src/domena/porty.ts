@@ -48,13 +48,13 @@ export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boo
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
 export type ZlecenieImportu = { id: string; rodzaj: 'plik' | 'adres'; nazwa: string; sciezka: string | null; adres: string | null; typ: string; projektId: string | null; utworzonoMs: number }; // ADR-0011 fix-7: manifest zlecenia w skrzynce
 export type ProjektMigawki = { id: string; nazwa: string; nienazwany: boolean; utworzonoMs: number }; // tylko projekty w toku poza koszem (P-220 N2)
-export type ZrodloWzoru = { rodzaj: 'adres'; adres: string } | { rodzaj: 'word'; sciezka: string } | { rodzaj: 'obrazy'; sciezki: readonly string[] }; // PDF bez konwersji (importujWzor)
+export type ZrodloWzoru = { rodzaj: 'adres'; adres: string } | { rodzaj: 'word'; sciezka: string } | { rodzaj: 'obrazy'; sciezki: string[] }; // PDF bez konwersji (importujWzor)
 export type StatusKonta = 'dostepne' | 'brak_konta' | 'ograniczone' | 'tymczasowo_niedostepne' | 'nieznany'; // CKAccountStatus (P-220 N3); iCloud wyłączony dla aplikacji: [DO USTALENIA] okno maszyn
 export type ZdarzenieKonta = 'zalogowano' | 'wylogowano' | 'zmiana_konta'; // CKSyncEngine accountChange (rejestr Apple 21c)
-export type RekordIcloud = { encja: string; klucz: string; pola: Record<string, string | number | null>; plik: string | null }; // encja/klucz jak w zmiana_icloud; plik = ścieżka zasobu (tabela plik)
-export type ZmianaDoWyslania = { encja: string; klucz: string; nr: number; rekord: RekordIcloud | null }; // null = usunięcie (zmiana_icloud.usuniete = 1)
-export type PartiaIcloud = { rekordy: readonly RekordIcloud[]; usuniete: readonly { encja: string; klucz: string }[]; stanSilnika: Uint8Array | null };
-export type PotwierdzenieIcloud = { wyslane: readonly { encja: string; klucz: string; nr: number }[]; stanSilnika: Uint8Array | null };
+export interface RekordIcloud { encja: string; klucz: string; pola: Record<string, string | number | null>; plik: string | null } // encja/klucz jak w zmiana_icloud; plik = ścieżka zasobu (tabela plik)
+export interface ZmianaDoWyslania { encja: string; klucz: string; nr: number; rekord: RekordIcloud | null } // null = usunięcie (zmiana_icloud.usuniete = 1)
+export interface PartiaIcloud { rekordy: readonly RekordIcloud[]; usuniete: readonly { encja: string; klucz: string }[]; stanSilnika: Uint8Array | null }
+export interface PotwierdzenieIcloud { wyslane: readonly { encja: string; klucz: string; nr: number }[]; stanSilnika: Uint8Array | null }
 
 // Archiwum, migracje i katalogi (ADR-0004, dane.md; przeniesione z src/przypadki-uzycia/porty-propozycja.ts, Z07-22).
 export interface Licznosci { [tabela: string]: number }    // tabela → liczba wierszy
