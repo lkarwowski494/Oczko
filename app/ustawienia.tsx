@@ -13,6 +13,7 @@ import { ADRESY } from '../src/kompozycja/adresy';
 import { licznosciTekst, wynikScalenia } from '../src/kompozycja/dane';
 import { plikiE2e } from '../src/kompozycja/e2e-pliki';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
+import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { stanListy } from '../src/kompozycja/projekty';
 import { systemAplikacji } from '../src/kompozycja/system';
 import { E2E } from '../src/platforma/tryb-e2e';
@@ -107,27 +108,29 @@ export default function EkranUstawien(): React.ReactElement {
   ) : null;
 
   return (
-    <Ustawienia
-      stan={{ pro: dostep.aktywne, dni: dostep.pro ? null : dni, wibracje }}
-      t={t}
-      system={systemAplikacji}
-      adresy={{ polityka: ADRESY.polityka, recenzja: ADRESY.recenzja }}
-      naOferty={() => router.push('/oferty')}
-      naWstecz={() => router.back()}
-      naWibracje={(w) => { preferencje.ustaw({ wibracje: w }); ustawWibracje(w); }}
-      naZglosProblem={() => router.push('/zglos')}
-      naStanDanych={() => undefined /* stan danych (F-58): synchronizacja iCloud poza tą partią */}
-      dane={{
-        naEksport: () => void eksport().then((s) => { if (s && !E2E) void udostepnijPlik(s); }),
-        naImport: () => void wybierzArchiwum().then((p) => { if (p) void importZ(p); }),
-        naUsunWszystko: () => void usunWszystkieDane(z).then((w) => {
-          if (!w.ok) { ustawDane({ rodzaj: 'blad' }); return; }
-          licznik.zresetuj();
-          router.dismissTo('/projekty');
-        }),
-      }}
-      wynikDanych={wynikDanych}
-      panelE2e={panelE2e}
-    />
+    <Bezpieczny>
+      <Ustawienia
+        stan={{ pro: dostep.aktywne, dni: dostep.pro ? null : dni, wibracje }}
+        t={t}
+        system={systemAplikacji}
+        adresy={{ polityka: ADRESY.polityka, recenzja: ADRESY.recenzja }}
+        naOferty={() => router.push('/oferty')}
+        naWstecz={() => router.back()}
+        naWibracje={(w) => { preferencje.ustaw({ wibracje: w }); ustawWibracje(w); }}
+        naZglosProblem={() => router.push('/zglos')}
+        naStanDanych={() => undefined /* stan danych (F-58): synchronizacja iCloud poza tą partią */}
+        dane={{
+          naEksport: () => void eksport().then((s) => { if (s && !E2E) void udostepnijPlik(s); }),
+          naImport: () => void wybierzArchiwum().then((p) => { if (p) void importZ(p); }),
+          naUsunWszystko: () => void usunWszystkieDane(z).then((w) => {
+            if (!w.ok) { ustawDane({ rodzaj: 'blad' }); return; }
+            licznik.zresetuj();
+            router.dismissTo('/projekty');
+          }),
+        }}
+        wynikDanych={wynikDanych}
+        panelE2e={panelE2e}
+      />
+    </Bezpieczny>
   );
 }

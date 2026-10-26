@@ -5,6 +5,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { ListaProjektow, type StanListyProjektow } from '../src/ekrany/ListaProjektow';
 import { useKolory } from '../src/ekrany/motyw';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
+import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { stanListy } from '../src/kompozycja/projekty';
 import { widokProjektow, type WidokProjektow } from '../src/przypadki-uzycia/widok-projektow';
 
@@ -24,17 +25,19 @@ export default function EkranProjektow(): React.ReactElement {
   const stan: StanListyProjektow = stanListy(widok, { zapytanie, j: kontener.j, terazMs: ch.ms, strefa: ch.strefa });
   const wroc = () => (router.canGoBack() ? router.back() : router.replace('/'));
   return (
-    <ListaProjektow
-      stan={stan}
-      t={kontener.j.t}
-      naSzukaj={ustawZapytanie}
-      naOtworz={(id) => {
-        const p = [...widok.wToku, ...widok.ukonczone].find((x) => x.id === id);
-        if (!p?.licznik) return;
-        void licznik.otworz(p.licznik.id).then(wroc);
-      }}
-      naNowy={() => undefined /* formularz nowego projektu: krok 3B (formularze) */}
-      naUstawienia={() => router.push('/ustawienia')}
-    />
+    <Bezpieczny>
+      <ListaProjektow
+        stan={stan}
+        t={kontener.j.t}
+        naSzukaj={ustawZapytanie}
+        naOtworz={(id) => {
+          const p = [...widok.wToku, ...widok.ukonczone].find((x) => x.id === id);
+          if (!p?.licznik) return;
+          void licznik.otworz(p.licznik.id).then(wroc);
+        }}
+        naNowy={() => undefined /* formularz nowego projektu: krok 3B (formularze) */}
+        naUstawienia={() => router.push('/ustawienia')}
+      />
+    </Bezpieczny>
   );
 }

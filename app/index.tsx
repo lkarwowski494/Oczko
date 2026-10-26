@@ -5,6 +5,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { Aplikacja } from '../src/ekrany/Aplikacja';
 import { useKolory } from '../src/ekrany/motyw';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
+import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { cyklAplikacji, oglos, systemAplikacji } from '../src/kompozycja/system';
 import { pokazacOknoUczciweZasady } from '../src/przypadki-uzycia/informacje-pro';
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
@@ -33,18 +34,20 @@ export default function EkranLicznika(): React.ReactElement {
     return () => { zywy = false; };
   }, [licznik, router, kontener]);
   useFocusEffect(useCallback(() => { ustawWersje(licznik.wersja()); }, [licznik]));
-  if (awaria) return <EkranAwaryjny powod={awaria} t={kontener.j.t} naNormalnie={() => router.replace('/')} />;
+  if (awaria) return <Bezpieczny><EkranAwaryjny powod={awaria} t={kontener.j.t} naNormalnie={() => router.replace('/')} /></Bezpieczny>;
   if (!gotowe) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   return (
-    <Aplikacja
-      key={wersja}
-      porty={kontener.porty}
-      uslugi={licznik.uslugi}
-      cykl={cyklAplikacji}
-      system={systemAplikacji}
-      oglos={oglos}
-      t={kontener.j.t}
-      dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty') }}
-    />
+    <Bezpieczny>
+      <Aplikacja
+        key={wersja}
+        porty={kontener.porty}
+        uslugi={licznik.uslugi}
+        cykl={cyklAplikacji}
+        system={systemAplikacji}
+        oglos={oglos}
+        t={kontener.j.t}
+        dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty') }}
+      />
+    </Bezpieczny>
   );
 }

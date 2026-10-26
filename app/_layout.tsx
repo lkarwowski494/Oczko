@@ -9,6 +9,7 @@ import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
 import { powodAwaryjny, rozpocznijStart } from '../src/kompozycja/start-aplikacji';
 import { tAwaryjny } from '../src/kompozycja/jezyk-awaryjny';
 import { DostawcaAplikacji, type Aplikacja } from '../src/kompozycja/Kontekst';
+import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { utworzKontener } from '../src/kompozycja/kontener';
 import { kompozycjaLicznika } from '../src/kompozycja/licznik';
 import { preferencje } from '../src/kompozycja/preferencje';
@@ -74,5 +75,5 @@ function EkranAwaryjnyZJezykiem(p: { powod: PowodTrybuAwaryjnego; naNormalnie():
   const [t, ustawT] = useState<Awaited<ReturnType<typeof tAwaryjny>> | null>(null);
   useEffect(() => { void tAwaryjny().then((x) => ustawT(() => x)); }, []);
   if (!t) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
-  return <EkranAwaryjny powod={p.powod} t={t} naNormalnie={p.naNormalnie} />;
+  return <Bezpieczny><EkranAwaryjny powod={p.powod} t={t} naNormalnie={p.naNormalnie} /></Bezpieczny>;
 }
