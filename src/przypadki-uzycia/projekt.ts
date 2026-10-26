@@ -106,14 +106,15 @@ export const przywrocCzesc = (z: Zaleznosci, w: { czescId: string }): Promise<Wy
 /** „Zrób taką samą” (F-20): części (z celem) i przypomnienia skopiowane, liczniki 0, `kopia_z` = oryginał; oryginał bez zmian. */
 export function zrobPonownie(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<{ projektId: string }>> {
   return operacjaZapisu(z, 'zrobPonownie', async (tx, teraz, chwila) => {
-    const [p] = await wiersze(tx.all('SELECT nazwa, nienazwany, usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'zrobPonownie');
+    const [p] = await wiersze(tx.all('SELECT nazwa, nienazwany, narzedzie, drut_mm, usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'zrobPonownie');
     if (!p) return blad('bledne_dane');
     if (liczbaLubNull(p, 'usunieto_ms') !== null) return blad('niedozwolone_przejscie');
     const projektId = z.id.nowy();
     // Z projektu roboczego powstaje roboczy z własną datą startu jako nazwą zapasową (dane.md, P-126 (1b)).
     const roboczy = liczba(p, 'nienazwany') === 1;
-    await tx.run('INSERT INTO projekt (id, nazwa, nienazwany, kopia_z, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [projektId, roboczy ? chwila.dzien : tekst(p, 'nazwa'), roboczy ? 1 : 0, w.projektId, teraz, teraz, teraz]);
+    // P-195 Q4a (BR-PRJ-007): narzędzie i rozmiar z oryginału; bez stanu (wartości, historii, sesji, dat, zdjęć, notatki, terminu).
+    await tx.run('INSERT INTO projekt (id, nazwa, nienazwany, narzedzie, drut_mm, kopia_z, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [projektId, roboczy ? chwila.dzien : tekst(p, 'nazwa'), roboczy ? 1 : 0, tekst(p, 'narzedzie'), liczbaLubNull(p, 'drut_mm'), w.projektId, teraz, teraz, teraz]);
     const czesci = await wiersze(tx.all('SELECT id, nazwa, kolejnosc, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc', [w.projektId]), 'zrobPonownie');
     for (const c of czesci) {
       const czescId = z.id.nowy();

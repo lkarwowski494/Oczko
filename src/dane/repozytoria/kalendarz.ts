@@ -4,6 +4,7 @@
 // Praca dnia = zmiany +1/−1 liczników rzędów z dniem zdarzenia (RD-16), bez wpisań, zerowań i zmian cofniętych z historii (RD-15, P-048 (3)).
 import { celDzienny, type CelDnia } from '../../domena/postep';
 import type { PortBazy } from '../../domena/porty';
+import { SESJA_DNIA_MIN_MS } from '../../konfiguracja';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from './wiersze';
 
 const nastepnyDzien = (dzien: string, dni: number): string => {
@@ -18,9 +19,16 @@ const PRACA = `FROM zdarzenie z JOIN licznik l ON l.id = z.licznik_id
 const ZMIANA = "CASE z.rodzaj WHEN 'plus' THEN 1 ELSE -1 END";
 const zakres = (od: string, doWyl: string): string[] => [od, doWyl, od, doWyl];
 
-/** Dni miesiąca `RRRR-MM` z robótką: zmiana +1/−1 licznika rzędów (dzień ze zdarzenia, RD-16), bez wpisań, zerowań i zmian cofniętych. Rosnąco. */
+/**
+ * Dni miesiąca `RRRR-MM` z robótką (wymagania-dni.md „Dzień z robótką”, P-195 Q3b): zmiana +1/−1 licznika rzędów (dzień ze zdarzenia, RD-16),
+ * bez wpisań, zerowań i zmian cofniętych, albo zakończona sesja stopera ≥ SESJA_DNIA_MIN_MS po korekcie, w dniu startu sesji. Rosnąco.
+ */
 export async function dniZRobotka(baza: PortBazy, miesiac: string): Promise<string[]> {
-  const w = await wiersze(baza.all(`SELECT DISTINCT z.dzien AS dzien ${PRACA} ORDER BY z.dzien`, zakres(`${miesiac}-01`, `${miesiac}-32`)), 'dniZRobotka');
+  const [od, doWyl] = [`${miesiac}-01`, `${miesiac}-32`];
+  const w = await wiersze(baza.all(
+    `SELECT z.dzien AS dzien ${PRACA}
+     UNION SELECT s.dzien FROM sesja s WHERE s.dzien >= ? AND s.dzien < ? AND s.stan = 'zakonczona' AND s.koniec_ms - s.start_ms - s.przerwy_ms >= ?
+     ORDER BY dzien`, [...zakres(od, doWyl), od, doWyl, SESJA_DNIA_MIN_MS]), 'dniZRobotka');
   return w.map((r) => tekst(r, 'dzien'));
 }
 

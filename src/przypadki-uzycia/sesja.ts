@@ -42,6 +42,10 @@ export function startSesji(z: Zaleznosci, w: { projektId: string }): Promise<Wyn
   });
 }
 
+/** Ostatnia praca = później z ostatniej zmiany licznika i końca sesji stopera (BR-PRJ-016, P-195 Q5); wcześniejszy koniec po korekcie nie cofa. */
+export async function pracaDoKonca(tx: PortBazy, sesjaId: string, koniecMs: number): Promise<void> {
+  await tx.run('UPDATE projekt SET ostatnia_praca_ms = max(ostatnia_praca_ms, ?) WHERE id = (SELECT projekt_id FROM sesja WHERE id = ?)', [koniecMs, sesjaId]);
+}
 /** Przejście maszyny na zapisanej sesji (UPDATE jednej sesji); `po` mapuje nowy stan na wynik przypadku użycia. */
 function przejscie<T>(z: Zaleznosci, operacja: string, id: string, zd: ZdarzenieSesji, po: (s: Sesja) => T): Promise<Wynik<T>> {
   return operacjaZapisu(z, operacja, async (tx, teraz) => {
@@ -53,6 +57,7 @@ function przejscie<T>(z: Zaleznosci, operacja: string, id: string, zd: Zdarzenie
     const x = n.wartosc;
     await tx.run('UPDATE sesja SET stan = ?, start_ms = ?, wstrzymano_ms = ?, przerwy_ms = ?, koniec_ms = ?, skorygowano = ?, do_korekty = ? WHERE id = ?',
       [x.stan, x.startMs, x.wstrzymanoMs, x.przerwyMs, x.koniecMs, x.skorygowano ? 1 : 0, zd.rodzaj === 'koryguj' ? 0 : x.doSprawdzenia ? 1 : 0, id]); // korekta rozstrzyga „do sprawdzenia”
+    if (x.koniecMs !== null) await pracaDoKonca(tx, id, x.koniecMs);
     return { ok: true, wartosc: po(x) };
   });
 }

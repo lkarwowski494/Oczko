@@ -9,6 +9,7 @@ export const KOSZ_DNI = 30; // dni; P-026
 export const KROK_MOTKA = 0.5; // motki; krok krokowca zużycia na karcie ukończenia (design-spec „Zużycie włóczki przy ukończeniu”, P-126 (2a))
 export const KOPIA_PRZED_IMPORTEM_DNI = 30; // dni; ADR-0004
 export const SESJA_MAKS_H = 8; // h; P-072 (7a)
+export const SESJA_DNIA_MIN_MS = 60_000; // ms; P-195 Q3b: sesja stopera ≥ 1 min po korekcie czyni dzień dniem z robótką (czas w pełnych minutach)
 export const WERSJA_SCHEMATU = 1; // schemat.sql
 export const WERSJA_FORMATU_ARCHIWUM = 1; // ADR-0004
 export const ROZSZERZENIE_ARCHIWUM = '.oczko'; // ADR-0004

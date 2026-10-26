@@ -6,6 +6,7 @@ import { SESJA_MAKS_H } from '../konfiguracja';
 import { zapiszUstawienie } from '../dane/repozytoria/ustawienia';
 import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
 import { scalDziennikWKolejce } from './dziennik';
+import { pracaDoKonca } from './sesja';
 import { sprzatnijKoszWKolejce } from './kosz';
 import { wKolejce } from './kolejka';
 import { wTransakcji } from './zapis';
@@ -23,6 +24,7 @@ function domknijSesje(z: ZaleznosciStartu): Promise<Wynik<number>> {
       const w = przejdzSesje(s, { rodzaj: 'start_aplikacji' }, teraz, SESJA_MAKS_H);
       if (!w.ok || w.wartosc.stan !== 'zakonczona') continue;
       await tx.run("UPDATE sesja SET stan = 'zakonczona', koniec_ms = ?, do_korekty = 1 WHERE id = ?", [w.wartosc.koniecMs, tekst(r, 'id')]);
+      if (w.wartosc.koniecMs !== null) await pracaDoKonca(tx, tekst(r, 'id'), w.wartosc.koniecMs); // P-195 Q5
       n += 1;
     }
     return { ok: true, wartosc: n };
