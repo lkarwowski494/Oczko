@@ -5,7 +5,7 @@ Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla w
 ## Stan: STOP (kontekst sesji 2, P-187 pkt 4) 2026-10-26 ok. 16:45 UTC — B zrobione, D: dane + F-37; reszta D, natywne i zgłoszenia w nowej sesji
 Potwierdzenie stanu sesji 2: prompt 97ec212 = 47510 znaków; start 71f8ae3 verify 1875/1875; koniec a98e651 (po rebase), `env -u NODE_PATH npm run verify` kod 0, **2213/2213**.
 
-**Zrobione w sesji 2** (każdy commit: test czerwony z właściwego powodu → kod → zielony; skróty po rebase):
+**Zrobione w sesji 2** (P-203 domknięte panelami e2e-sha-bazy/e2e-wal-bajty w ac?; każdy commit: test czerwony z właściwego powodu → kod → zielony; skróty po rebase):
 - E: 0a1c4ed (P-190 język), d013fd7 (Ustawienia › Język, „Translation quality”, „Źródła wiedzy”, /stan-danych).
 - D: acbd108 (F-37 krokowiec zużycia), 9eb02db (F-16 dane zdjęć), 76d9118 (adapter zdjęć + plugin image-picker, **natywne**).
 - B: 7cb914a (kreski od startu stopera), 91573da (B1 stoper w pasku, przelaczSesje, P-199 Q3c), 2bed45c (B2 „Time”, „Sessions”, korekta z wyborem daty), a98e651 (B3 „History” /dni, wejścia nav-historia i nav-narzedzia na liście).
@@ -16,8 +16,9 @@ Potwierdzenie stanu sesji 2: prompt 97ec212 = 47510 znaków; start 71f8ae3 verif
 2. **D UI** (makiety `docs/design/fix6-2026-10-26/narzedzia-zdjecia.html`, design-spec „Narzędzia, zapas, zdjęcia i obraz karty” i „Dla 08 grupa D”; testID 04 + 07: nav-narzedzia, zapas-*, zdjecia-miniatura „Photo 1 of 1”): ekran Tools (route + `naNarzedzia` w app/projekty.tsx — prop już jest w ListaProjektow), kalkulator „Swatch” (domena `obliczenia/{oczka,grubosc,jednostki}`; kontrakt `przelicz`/`rozmiarUS` → `Wynik` z moduly.md:131; wiersz „Swatch” w projekcie U-10, `projekt.probka` JSON), zapas (lista, chipy, arkusz włóczki), druty (lista, arkusz), grupa „Photos” na projekcie (dane: `przypadki-uzycia/zdjecia.ts`, adapter `platforma/zdjecia.ts`), podgląd i usuwanie z potwierdzeniem. **„Share” zdjęć i karty nieaktywne** do decyzji właściciela (Q-D1, koordynator 15:47 UTC); nie dodawać view-shot ani image-manipulator.
 3. P-209 kosz dla włóczki i drutu (kontrakt dane.md e3b29d7 „Usuwanie włóczki i narzędzia przez kosz”; podpisy kosz.wloczka/kosz.narzedzie robocze „do zatwierdzenia przez 04”).
 4. Zgłoszenia 10 (P-206, `docs/wydanie/sklep.md` §7): app.json `version` 1.0.0 i nowy opis; typ pliku `.oczko` (UTI/dokument) do importu; potwierdzić drogę Ustawienia → oferty bez 5 dni z robótką (jest: „Oczko Pro” w Ustawieniach — sprawdzić testem); ADRESY.recenzja i FAMILY_SHARING bez zmian.
-5. Przed TestFlight: P-194 Q4a globalna obsługa błędów JS (bez treści komunikatu w logu) i „Zgłoś problem” w trybie awaryjnym (EkranAwaryjny `naZglosProblem` = no-op); P5a linia „zapomniany stoper” na liczniku (`stoper.sprawdz_*`, testID `stoper-sprawdz`).
-6. Po nocnym CI iOS (build, swift-test, E2E podstawowy) → STOP E2 partii; raport `oczko-warsztat/08-programista/2026-10-26-partia5/E2-raport.md`.
+5. Testy oczekujące 07 (cca1ca9) `tests/akceptacja/ekrany/p202-stan-danych-korekta.test.tsx`: BR-DAN-011/S3 — Stan danych pokazuje „ostatni kontakt z zegarkiem” z `ustawienie.zegarek_ostatnia_partia_ms` (klucz 04 do sprawdzenia; dziś app/stan-danych.tsx podaje `zegarek: null`); `tests/ekrany/zglos-stan-danych.test.tsx:44` („3 zmiany na telefonie”) sprzeczny z P-193 — zmienić z powodem.
+6. Przed TestFlight: P-194 Q4a globalna obsługa błędów JS (bez treści komunikatu w logu) i „Zgłoś problem” w trybie awaryjnym (EkranAwaryjny `naZglosProblem` = no-op); P5a linia „zapomniany stoper” na liczniku (`stoper.sprawdz_*`, testID `stoper-sprawdz`).
+7. Po nocnym CI iOS (build, swift-test, E2E podstawowy) → STOP E2 partii; raport `oczko-warsztat/08-programista/2026-10-26-partia5/E2-raport.md`.
 
 ### Sesja 1: STOP (kontekst) po B1 dane i F-51 (1f6ed79)
 Zrobione wtedy w B: przypadki użycia stopera (72e4ade), F-51 (610f011); verify 1875/1875.
