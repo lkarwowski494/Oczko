@@ -13,5 +13,9 @@ export function zapiszBlad(baza: PortBazy, w: { czasMs: number; kod: string; szc
 /** Ten sam zapis w trwającej transakcji (zatruta linia dziennika zapisywana razem z resztą partii, ADR-0008 (3)). */
 export async function zapiszBladW(tx: PortBazy, w: { czasMs: number; kod: string; szczegoly?: Szczegoly }): Promise<void> {
   await tx.run('INSERT INTO blad (czas_ms, kod, szczegoly) VALUES (?, ?, ?)', [w.czasMs, w.kod, JSON.stringify(w.szczegoly ?? {})]);
+  await przytnijBledy(tx);
+}
+/** Przycięcie tabeli do BLEDY_MAKS_WIERSZY najnowszych wpisów. */
+export async function przytnijBledy(tx: PortBazy): Promise<void> {
   await tx.run('DELETE FROM blad WHERE id <= (SELECT max(id) FROM blad) - ?', [BLEDY_MAKS_WIERSZY]);
 }

@@ -4,7 +4,8 @@
 // wektory `sklejenie`, `skrocenie` w tests/wspolne/wzorce.json, test oczekujący tests/akceptacja/dane/dziennik-sklejenie.test.ts.
 // `pro` w linii: stan uprawnienia urządzenia w chwili stuknięcia (P-111 (2), ADR-0008 (6)); linia bez `pro` nie spełnia typu.
 import type { DziennikPlus, PortBazy, ZdarzenieWejsciowe } from '../domena/porty';
-import { zapiszBlad } from './repozytoria/bledy';
+import { DZIENNIK_BLAD_TEKST_MAKS } from '../konfiguracja';
+import { przytnijBledy } from './repozytoria/bledy';
 import { czytajTekst, istniejePlik, zapiszTekst } from './pliki/system';
 
 const RODZAJE: readonly string[] = ['plus', 'minus'];
@@ -51,17 +52,39 @@ function odczytajLinie(linia: string): { zdarzenie: ZdarzenieWejsciowe | null; c
   return { zdarzenie: null, cala: false };
 }
 
-/** Uszkodzona linia (ucięta, zły JSON, brak pola) zgłoszona; zdarzenie ze sklejonej linii odzyskane (8R); poprzednie zachowane. `uszkodzone` = numery linii od 1. */
-export function parsujDziennik(tekst: string): { zdarzenia: ZdarzenieWejsciowe[]; uszkodzone: number[] } {
+/** Odczyt pliku: zdarzenia (także odzyskane ze sklejonych linii, 8R) i uszkodzone linie z numerem od 1 i treścią (diagnostyka ADR-0008 (3′)). */
+function odczytajTekst(tekst: string): { zdarzenia: ZdarzenieWejsciowe[]; uszkodzone: { linia: number; tekst: string }[] } {
   const zdarzenia: ZdarzenieWejsciowe[] = [];
-  const uszkodzone: number[] = [];
+  const uszkodzone: { linia: number; tekst: string }[] = [];
   tekst.split('\n').forEach((linia, i) => {
     if (!linia.trim()) return; // pusty plik albo `\n` na końcu: brak linii
     const { zdarzenie, cala } = odczytajLinie(linia);
     if (zdarzenie) zdarzenia.push(zdarzenie);
-    if (!cala) uszkodzone.push(i + 1);
+    if (!cala) uszkodzone.push({ linia: i + 1, tekst: linia });
   });
   return { zdarzenia, uszkodzone };
+}
+
+/** Uszkodzona linia (ucięta, zły JSON, brak pola) zgłoszona; zdarzenie ze sklejonej linii odzyskane (8R); poprzednie zachowane. `uszkodzone` = numery linii od 1. */
+export function parsujDziennik(tekst: string): { zdarzenia: ZdarzenieWejsciowe[]; uszkodzone: number[] } {
+  const { zdarzenia, uszkodzone } = odczytajTekst(tekst);
+  return { zdarzenia, uszkodzone: uszkodzone.map((u) => u.linia) };
+}
+
+/**
+ * ADR-0008 (3′): wpis `blad` z całą linią (najwyżej DZIENNIK_BLAD_TEKST_MAKS znaków; linia ma tylko identyfikatory, czas i strefę, NFR-PRY-001);
+ * ta sama linia nie dostaje drugiego wpisu przy kolejnych scaleniach (samotny ogon, którego R-024 nie pozwala skrócić).
+ */
+function zapiszUszkodzonaLinie(baza: PortBazy, czasMs: number, linia: number, tekst: string): Promise<void> {
+  const t = tekst.slice(0, DZIENNIK_BLAD_TEKST_MAKS);
+  return baza.transakcja(async (tx) => {
+    await tx.run(
+      `INSERT INTO blad (czas_ms, kod, szczegoly) SELECT ?, 'dziennik_uszkodzona_linia', ?
+       WHERE NOT EXISTS (SELECT 1 FROM blad WHERE kod = 'dziennik_uszkodzona_linia' AND json_extract(szczegoly, '$.tekst') = ?)`,
+      [czasMs, JSON.stringify({ linia, tekst: t }), t],
+    );
+    await przytnijBledy(tx);
+  }).catch(() => undefined); // diagnostyka nie zmienia wyniku odczytu (jak zapiszBlad)
 }
 
 /**
@@ -72,9 +95,9 @@ export function utworzDziennikNode(sciezka: string, baza: PortBazy): DziennikPlu
   return {
     async odczytaj() {
       if (!istniejePlik(sciezka)) return [];
-      const { zdarzenia, uszkodzone } = parsujDziennik(await czytajTekst(sciezka));
+      const { zdarzenia, uszkodzone } = odczytajTekst(await czytajTekst(sciezka));
       // Chwila zapisu diagnostyki: zegar systemu w adapterze platformy (przypadki użycia biorą czas z portu Zegar).
-      for (const linia of uszkodzone) await zapiszBlad(baza, { czasMs: Date.now(), kod: 'dziennik_uszkodzona_linia', szczegoly: { linia } });
+      for (const u of uszkodzone) await zapiszUszkodzonaLinie(baza, Date.now(), u.linia, u.tekst);
       return zdarzenia;
     },
     async skroc(doId) {
