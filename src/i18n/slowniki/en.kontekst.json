@@ -218,12 +218,18 @@
     "jednostka": "Tekst z ekrany.html roli 04.",
     "czesci": "Tekst z ekrany.html roli 04. Formy _one/_other.",
     "dni": "Tekst z ekrany.html roli 04. Formy _one/_other.",
-    "wloczka": "Tekst z ekrany.html roli 04.",
-    "wloczka_wpisz": "Etykieta z ekrany.html (wersja E3, ekrany.html:206 w teście 07).",
     "zdjecie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Etykieta VoiceOver zdjęcia na karcie.",
     "czas_h": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera.",
     "czas_hmin": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera.",
-    "czas_min": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera."
+    "czas_min": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera.",
+    "wloczka_naglowek": "Nagłówek grupy zużycia włóczki na karcie ukończenia. Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "w_zapasie": "Podpis wiersza włóczki: zapas przed zapisem; {{count}} może być ułamkiem (0,5 motka). Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "zuzycie_etykieta": "Etykieta VoiceOver pola adjustable; {{nazwa}} = nazwa włóczki. Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "zuzycie_mniej": "Etykieta przycisku − krokowca (krok 0,5 motka; wariant „Half a skein less” [DO USTALENIA] z 09). Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "zuzycie_wiecej": "Etykieta przycisku + krokowca (krok 0,5 motka). Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "zuzycie_ponad_zapas": "Linia informacji, gdy zużycie przekracza zapas; nie komunikat błędu. Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "zapas_juz_pusty": "Linia informacji, gdy zapas tej włóczki już wynosi 0. Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a)).",
+    "edytuj_zapas": "Odnośnik: otwiera tę włóczkę w zapasie; karta zostaje. Tekst z design-spec roli 04 („Zużycie włóczki przy ukończeniu”, P-126 (2a))."
   },
   "projekt": {
     "czesc_cel": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Podpis wiersza części z celem.",

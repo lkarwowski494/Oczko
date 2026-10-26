@@ -6,6 +6,7 @@ export const OKNO_OFFLINE_PRO_MS = 7 * 86_400_000; // ms; P-103 (3a): pamięć P
 export const STRAZNIK_SERIA_ZDARZEN = 3; // liczba dodań; RD-17, P-047
 export const STRAZNIK_OKNO_S = 2; // s; RD-17, P-047
 export const KOSZ_DNI = 30; // dni; P-026
+export const KROK_MOTKA = 0.5; // motki; krok krokowca zużycia na karcie ukończenia (design-spec „Zużycie włóczki przy ukończeniu”, P-126 (2a))
 export const KOPIA_PRZED_IMPORTEM_DNI = 30; // dni; ADR-0004
 export const SESJA_MAKS_H = 8; // h; P-072 (7a)
 export const WERSJA_SCHEMATU = 1; // schemat.sql

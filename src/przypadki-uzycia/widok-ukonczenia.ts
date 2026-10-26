@@ -8,7 +8,7 @@ import type { Zaleznosci } from './zaleznosci';
 export type KartaUkonczenia = {
   nazwa: string; nienazwany: boolean; utworzonoMs: number; startMs: number; ukonczonoMs: number | null;
   dni: number; rzedy: number; czasMs: number | null; czesci: number;
-  wloczka: { id: string; nazwa: string }[]; zdjecieSha: string | null;
+  wloczka: { id: string; nazwa: string; motki: number; zuzyto: number | null }[]; zdjecieSha: string | null; // motki = zapas przed zapisem
 };
 
 export function kartaUkonczenia(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<KartaUkonczenia>> {
@@ -23,7 +23,7 @@ export function kartaUkonczenia(z: Zaleznosci, w: { projektId: string }): Promis
         WHERE c.projekt_id = ? AND c.usunieto_ms IS NULL`, [w.projektId]), 'kartaUkonczenia');
     const [s] = await wiersze(tx.all(
       "SELECT count(*) AS n, coalesce(sum(max(0, koniec_ms - start_ms - przerwy_ms)), 0) AS ms FROM sesja WHERE projekt_id = ? AND stan = 'zakonczona'", [w.projektId]), 'kartaUkonczenia');
-    const wl = await wiersze(tx.all('SELECT w.id, w.nazwa FROM projekt_wloczka pw JOIN wloczka w ON w.id = pw.wloczka_id WHERE pw.projekt_id = ? AND w.usunieto_ms IS NULL ORDER BY w.nazwa', [w.projektId]), 'kartaUkonczenia');
+    const wl = await wiersze(tx.all('SELECT w.id, w.nazwa, w.motki, pw.zuzyto_motki FROM projekt_wloczka pw JOIN wloczka w ON w.id = pw.wloczka_id WHERE pw.projekt_id = ? AND w.usunieto_ms IS NULL ORDER BY w.nazwa', [w.projektId]), 'kartaUkonczenia');
     const [zd] = await wiersze(tx.all('SELECT plik_sha256 FROM zdjecie WHERE projekt_id = ? ORDER BY utworzono_ms DESC LIMIT 1', [w.projektId]), 'kartaUkonczenia');
     const utworzono = liczba(p, 'utworzono_ms');
     return {
@@ -33,7 +33,7 @@ export function kartaUkonczenia(z: Zaleznosci, w: { projektId: string }): Promis
         startMs: (d && liczbaLubNull(d, 'start')) ?? utworzono, ukonczonoMs: liczbaLubNull(p, 'ukonczono_ms'),
         dni: d ? liczba(d, 'dni') : 0, rzedy: r ? liczba(r, 'rzedy') : 0, czesci: r ? liczba(r, 'czesci') : 0,
         czasMs: s && liczba(s, 'n') > 0 ? liczba(s, 'ms') : null,
-        wloczka: wl.map((x) => ({ id: tekst(x, 'id'), nazwa: tekst(x, 'nazwa') })), zdjecieSha: zd ? tekstLubNull(zd, 'plik_sha256') : null,
+        wloczka: wl.map((x) => ({ id: tekst(x, 'id'), nazwa: tekst(x, 'nazwa'), motki: liczba(x, 'motki'), zuzyto: liczbaLubNull(x, 'zuzyto_motki') })), zdjecieSha: zd ? tekstLubNull(zd, 'plik_sha256') : null,
       },
     };
   });

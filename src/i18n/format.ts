@@ -20,3 +20,15 @@ export function ukladMiar(preferencja: PreferencjaMiar, systemowy: 'metric' | 'u
   if (preferencja === 'metric' || preferencja === 'imperial') return preferencja;
   return systemowy === 'us' || systemowy === 'uk' ? 'imperial' : 'metric';
 }
+
+/**
+ * Wpis liczby nieujemnej w polu (P-097 (5a)): cyfry ASCII i jeden separator dziesiętny języka (CLDR przez Intl.NumberFormat), bez separatorów
+ * tysięcy i znaku. Zapis niezgodny albo pusty = null (pole odrzuca wpis). Cyfry regionu: wszystkie 35 lokalizacji (D-026) piszą cyframi ASCII.
+ */
+export function parsujLiczbe(tekst: string, jezyk: string): number | null {
+  const sep = new Intl.NumberFormat(jezyk).formatToParts(1.5).find((c) => c.type === 'decimal')?.value ?? '.';
+  const t = tekst.trim();
+  const [cale, ulamek, ...reszta] = t.split(sep);
+  if (reszta.length > 0 || !/^\d*$/.test(cale ?? '') || (ulamek !== undefined && !/^\d*$/.test(ulamek)) || (cale ?? '') + (ulamek ?? '') === '') return null;
+  return Number(`${cale || '0'}.${ulamek ?? ''}`.replace(/\.$/, ''));
+}

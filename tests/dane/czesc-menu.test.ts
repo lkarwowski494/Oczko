@@ -45,7 +45,7 @@ describe('kartaUkonczenia (BR-PRJ-015)', () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód'), czesc('c2', 'p1', 'Tył', 2), ...licznik('l1', 'c1', 3), ...licznik('l2', 'c2', 2, { t: T0 + DOBA }), wloczka('w1', 'Fjord'), projektWloczka('p1', 'w1')]);
     let k = await kartaUkonczenia(s.z, { projektId: 'p1' });
-    expect(k.ok && [k.wartosc.dni, k.wartosc.rzedy, k.wartosc.czesci, k.wartosc.czasMs, k.wartosc.wloczka]).toEqual([2, 5, 2, null, [{ id: 'w1', nazwa: 'Fjord' }]]);
+    expect(k.ok && [k.wartosc.dni, k.wartosc.rzedy, k.wartosc.czesci, k.wartosc.czasMs, k.wartosc.wloczka]).toEqual([2, 5, 2, null, [{ id: 'w1', nazwa: 'Fjord', motki: 3, zuzyto: null }]]); // F-37 (partia 5): model karty niesie zapas i poprzednie zużycie
     await wykonaj(s.baza, [["INSERT INTO sesja (id, projekt_id, stan, start_ms, koniec_ms, przerwy_ms, strefa, dzien) VALUES ('s1', 'p1', 'zakonczona', ?, ?, ?, 'Europe/Warsaw', '2026-10-22')", [T0, T0 + 2 * GODZ, 10 * MIN]]]);
     k = await kartaUkonczenia(s.z, { projektId: 'p1' });
     expect(k.ok && k.wartosc.czasMs).toBe(2 * GODZ - 10 * MIN);

@@ -9,12 +9,13 @@ let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
 // BR-PRJ-015/S1: 1–21 października, 640 rzędów, 18 godzin, włóczka i zdjęcie
 const STAN: StanUkonczenia = { nazwa: 'Harbor Sweater', okres: 'Oct 1 – Oct 21', dni: 21, rzedy: 640, czas: '18 h', czesci: 4,
-  wloczka: [{ id: 'w1', nazwa: 'Fjord Wool, Slate' }], zdjecie: 'file:///zdjecie.jpg' };
+  wloczka: [{ id: 'w1', nazwa: 'Fjord Wool, Slate', motki: 2, zuzyto: null }], zdjecie: 'file:///zdjecie.jpg' };
+const LICZBY = { formatuj: (n: number) => String(n), parsuj: (x: string) => (x.trim() === '' || Number.isNaN(Number(x)) ? null : Number(x)) };
 function pokaz(s: Partial<StanUkonczenia> = {}) {
   const system = atrapaSystemu();
   const oglos = jest.fn();
-  const w = { naWloczka: jest.fn(), naUdostepnij: jest.fn(), naGotowe: jest.fn() };
-  render(<Ukonczenie stan={{ ...STAN, ...s }} t={t} oglos={oglos} system={system} {...w} />);
+  const w = { naUdostepnij: jest.fn(), naGotowe: jest.fn() };
+  render(<Ukonczenie stan={{ ...STAN, ...s }} t={t} oglos={oglos} system={system} liczby={LICZBY} {...w} />);
   return { system, oglos, w };
 }
 
@@ -49,13 +50,16 @@ describe('Ukonczenie', () => {
     expect(oglos).toHaveBeenCalledWith('Harbor Sweater moved to Finished.');
   });
 
-  test('BR-PRJ-015 [macierz 04]: pytanie o włóczkę; bez włóczki w zapasie pominięte (design-spec.md:57, ekrany.html:206)', () => {
-    const { w } = pokaz();
-    // ekrany.html:206 aria-label="Enter yarn left over for Fjord Wool, Slate"
-    fireEvent.press(przycisk('Enter yarn left over for Fjord Wool, Slate', 'button'));
-    expect(w.naWloczka).toHaveBeenCalledWith('w1');
+  // Zmiana 08 (partia 5, F-37): przycisk „Enter yarn left over for …” z ekrany.html:206 zastąpiła grupa „Yarn used” z krokowcem zużycia
+  // (design-spec „Zużycie włóczki przy ukończeniu”, P-126 (2a): makieta ma pytać „zużyto motków” jak BR-ZAP-002). Sens bez zmian: pytanie
+  // o każdą włóczkę projektu, bez włóczki — pominięte. Szczegóły krokowca: tests/ekrany/ukonczenie-zapas.test.tsx.
+  test('BR-PRJ-015 [macierz 04]: pytanie o włóczkę; bez włóczki w zapasie pominięte (design-spec „Zużycie włóczki przy ukończeniu”)', () => {
+    pokaz();
+    expect(screen.getByText('Yarn used')).toBeTruthy();
+    expect(screen.getByRole('adjustable', { name: 'Skeins of Fjord Wool, Slate used' })).toBeTruthy();
     screen.unmount();
     pokaz({ wloczka: [] });
-    expect(screen.queryByRole('button', { name: /^Enter yarn left over/ })).toBeNull();
+    expect(screen.queryByText('Yarn used')).toBeNull();
+    expect(screen.queryByRole('adjustable')).toBeNull();
   });
 });

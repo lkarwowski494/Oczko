@@ -239,12 +239,20 @@
     "czesci_other": "{{count}} parts",
     "dni_one": "{{count}} knitting day",
     "dni_other": "{{count}} knitting days",
-    "wloczka": "Yarn used",
-    "wloczka_wpisz": "Enter yarn left over for {{nazwa}}",
     "zdjecie": "Photo of {{nazwa}}",
     "czas_h": "{{h}} h",
     "czas_hmin": "{{h}} h {{min}} min",
-    "czas_min": "{{min}} min"
+    "czas_min": "{{min}} min",
+    "wloczka_naglowek": "Yarn used",
+    "w_zapasie_one": "{{count}} skein in your stash",
+    "w_zapasie_other": "{{count}} skeins in your stash",
+    "zuzycie_etykieta": "Skeins of {{nazwa}} used",
+    "zuzycie_mniej": "One skein less",
+    "zuzycie_wiecej": "One skein more",
+    "zuzycie_ponad_zapas_one": "That’s more than the {{count}} skein in your stash. Your stash will show 0.",
+    "zuzycie_ponad_zapas_other": "That’s more than the {{count}} skeins in your stash. Your stash will show 0.",
+    "zapas_juz_pusty": "Your stash already shows 0 for this yarn.",
+    "edytuj_zapas": "Edit stash"
   },
   "projekt": {
     "czesc_cel": "{{rzedy}} of {{cel}} rows",
