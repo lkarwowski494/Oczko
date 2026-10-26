@@ -1,0 +1,58 @@
+# Rola 08 (programista), build, partia 4: łatka NZ-RD15, zegarek (e) + N1, warstwa 4 (ekrany)
+Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków; nie w repo)
+Zakres: P-138 (start partii 4), P-136 (łatka NZ-RD15 + test 07 + kod RD-15), P-134 Q1a, P-135 (Q1a–Q7a), P-137 (N3, pora ukończenia), P-133 (tylko +1 na Live Activity), P-126 (1b), P-129 Q6b, P-118 Q1a, P-114 Q1a, P-036. Specyfikacja: ADR-0009 „Uzupełnienie 2026-10-26” pkt 1–7, ADR-0008 „Uzupełnienie 2026-10-26 (fix-4)”, `docs/architektura/moduly.md` „Kontrakt partii 4”, `docs/architektura/fix-4-2026-10-26.md`, `oczko-warsztat/05-architekt/2026-10-26-fix4/E2-dowody.md` „Dla 08”, `tests/wspolne/wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-10), `tests/wspolne/xctest-specyfikacja.md` §4 (X-ZG-01–11), `docs/design/design-spec.md` („Dla 08” z P-126, P-133, P-137), `docs/jakosc/e4/tabela-08.md` („4 ekrany”).
+
+## Stan: E0 → STOP E0 (plan, pytania Q1–Q4)
+
+## E0.1 Środowisko
+| Sprawdzenie | Wynik |
+|---|---|
+| System, Node, git | Linux 6.18 x86_64, Node v22.22.0, chmura; tożsamość git „Łukasz Karwowski <336954459+lkarwowski494@users.noreply.github.com>” (P-132 (3)) |
+| GitHub | push na gałąź roboczą; `oczko-warsztat` z zapisem (P-010), HEAD f3000f1; `prompts` 97ec212 (prompt 47510 znaków — zgodny) |
+| Xcode / Swift / symulator | brak — `swift test`, build i E2E tylko w CI „Jakość · iOS” (`macos-26`); na gałęzi pushuje też 04 fix-3 (tylko `docs/design/`) |
+| Repo | publiczne: bez sekretów, danych osobowych i nowych nazw innych firm/aplikacji (P-121 (5)) |
+
+## E0.2 Stan wyjściowy (HEAD 02cd508, `npm ci`, `env -u NODE_PATH`)
+| Komenda | Wynik |
+|---|---|
+| `npm run verify` | kod 0, 78 zestawów, **1553/1553** |
+| `npm run test:akceptacja` | kod 0, 110 testów: znacznik 89 (ekrany), **asercja 20** (fix-4: `zegarek-potwierdzenia` 6, `sklep-status` 5, `haptyka-wzorce` 6, `stan-blokada` 3), zielony-ok 1 |
+
+## E0.3 Plan (każdy push: `npx jest`, `typecheck`, `lint`, `jakosc:kontrole` zielone; krok natywny czeka na zielone „Jakość · iOS”)
+Procedura DS-02 jak w partiach 1–3. Swift: test najpierw czerwony w CI na asercji (patrz Q2), potem kod.
+
+**(1) Łatka NZ-RD15 — jeden push (P-136)**
+| Krok | Zachowanie → test | Pliki |
+|---|---|---|
+| 1.1 | `git am --3way` łatki (konflikt `brd.json` → generator 01); `kontrola-brd --zgodnosc` kod 0; czerwień 4 testów `postep.test.ts` (dowód) | `docs/brd/*`, `tests/wektory/brd.json` |
+| 1.2 | test 07 dopasowany do nowej reguły (P-134 Q1a): wejście `Z_teraz`, wyjście `stan`/`zostało`, liczność z wektorów obu kształtów; odsyłacz P-134 w komentarzu; własność fast-check bez pominięcia „d < 1 i R = 0” | `tests/domena/dni/postep.test.ts` |
+| 1.3 | `celDzienny` dostaje `zrobioneTeraz` (Z_teraz); gałęzie w kolejności RD-15 (1)–(3); wołający: `celProjektu` liczy Z_teraz (ostatnia `wartosc_po` bez filtra dnia), `stanDnia` przekazuje dalej | `src/domena/postep.ts`, `postep-dnia.ts`, `src/dane/repozytoria/kalendarz.ts` |
+
+**(2) Zegarek (e) i kontrakt partii 4 — przed ekranami (P-135, P-138)**
+| Krok | Zachowanie → test | Pliki |
+|---|---|---|
+| 2.1 | (e) telefon: `WynikPartii.potwierdzone` (zegarek: w `zdarzenie` po COMMIT albo R-021; poczekalnia nie); `Zegarek.potwierdz` (lista `ZEGAREK_POTWIERDZENIA_MAKS`, ponowne id na koniec); `zegarekWyslij(stanJson, potwierdzone)`; wołający przed `odswiezEkranBlokady` → `zegarek-potwierdzenia.test.ts` (6 czerwonych) → `tests/dane/`; mechanicznie `potwierdzone` w `tests/dane/dziennik*.test.ts`; porty z „Kontrakt partii 4” do „Porty domeny” i `porty.ts` | `src/domena/porty.ts`, `src/przypadki-uzycia/dziennik.ts`, `ekran-blokady.ts`, `start.ts`, `src/platforma/zegarek.ts`, `modules/oczko-dziennik-plus/index.ts`, `ios/Zegarek.swift`, `moduly.md` |
+| 2.2 | N1: stan v3 `zablokowany` (`WERSJA_STANU` = 3, złote pliki v3 + `*-v2.json`, `wersja_kontraktu: 3`), `licznikEkranuBlokady` czyta kolumnę, przełączenie blokady woła `odswiezEkranBlokady` → `stan-blokada.test.ts` (3) → `tests/dane/` | `src/konfiguracja.ts`, `src/domena/zegarek.ts`, repozytoria, generator złotych plików |
+| 2.3 | (a) `Sklep.kup` → `StatusZakupu` (bez `kupZeStatusem`; sztuczny `'sukces'`) → `sklep-status.test.ts` (5) → `tests/adaptery/`; `tests/adaptery/sklep.test.ts` na status (zmiana mechaniczna z powodem) | `src/platforma/sklep.ts`, `sklep-sztuczny.ts`, porty |
+| 2.4 | (b) `Haptyka.zagraj(WzorzecHaptyki)` z tokenów → `haptyka-wzorce.test.ts` (6) → `tests/adaptery/`; wołający `rzad()`/`przypomnienie()` → `zagraj` | `src/platforma/haptyka.ts`, porty, wołający |
+| 2.5 | Swift, pakiet `OczkoReguly`/`OczkoDziennik`: dekoder v3 (v2 → `zablokowany = false`, > 3 odrzuca; X-ST-07), `stuknij` → `.zablokowany` przed limitem (X-DZ-15, X-ZG-11), `ostatniPlusMs` tylko po +1 (wektor w `IntencjaTests`, P-138), `StanAktywnosci` z `uwaga` (brak klucza = null; X-DZ-07, X-DZ-14, migawka X-DZ-10) | `modules/oczko-reguly/Sources/**`, testy, kopie (`kopiuj-zrodla.mjs`) |
+| 2.6 | Swift, skrzynka zegarka (e2–e5): `MagazynSkrzynki` (plik `.jsonl` rdzeniem `DziennikPlus`, przepisanie atomowe, sprzątanie pliku tymczasowego), `przyjmij(stan, potwierdzone)` z usuwaniem w obrębie licznika, `doWyslania(teraz, wToku)` z `zegarekPonowienieMs`, `stuknijNaZegarku` rzuca błąd zapisu; X-ZG-01–11 na wektorach ZG-01–ZG-10; `testGlowaInnegoLicznikaNieUsuwa` bez `XCTExpectFailure` | `OczkoDziennik/Zegarek.swift`, `ZegarekTests.swift`, `kopie.json` (+ `Dziennik.swift` dla watch) |
+| 2.7 | Cel watch: kolejność zapis → stan → haptyka → wysyłka; ponowienie przy aktywacji, starcie, pierwszym planie, kontekście, `didFinish` z błędem, po stuknięciu; widok: stan blokady i „nie zapisano” (teksty po E2 04 fix-3, Q3); Live Activity: widok `uwaga` i stan blokady (tylko +1, P-133) | `targets/watch/Aplikacja.swift`, `Teksty.swift`, `targets/widget/Aktywnosc.swift`, `_shared/Stuknij.swift` |
+| 2.8 | N3: `poZmianieJezyka` (przypadek użycia) → `odswiezEkranBlokady` (wpięcie w ekran Ustawień w (3)); pora ukończenia (P-137): `zmienDateUkonczenia` liczy `ukonczonoMs` = nowy dzień + pora pierwotnego ukończenia w strefie z `Zegar` (test 08 z wyrocznią: 2026-11-10 21:37 Warszawa → 2026-11-08 → 21:37; doba przez zmianę czasu) | `src/przypadki-uzycia/projekt.ts`, nowy `src/przypadki-uzycia/jezyk.ts` |
+| 2.9 | Punkt kontrolny: `env -u NODE_PATH npm run verify`, zielone „Jakość · iOS” (swift test + build celów) → **STOP** | plik stanu, dowody w `oczko-warsztat/08-programista/2026-10-26-partia4/` |
+
+**(3) Ekrany, warstwa 4 — po punkcie kontrolnym (Q1)**
+15 plików testów (`tests/akceptacja/ekrany/`, 90 wywołań w tabeli 08), kompozycja expo-router (`app/`, P-114 Q1a), `src/platforma/tryb-e2e.ts`, scenariusze `e2e/` (testID), `odswiezEkranBlokady` po zapisach, `przelicz`/`rozmiarUS` → `Wynik` (P-118 Q1a), etykieta robocza (P-126 1b), teksty tylko przez `t()` z kluczami design-spec, pakiety image-picker / sharing / store-review (wiek ≥ 14 dni, wiersze ADR-0016), Intl ze strefą na Hermes w pierwszym scenariuszu E2E z datą (P-129 Q6b); przed STOP E2 jeden pełny przebieg E2E bez anulowania.
+
+## E0.4 Luki i pytania (STOP E0)
+- **Q1 Organizacja (zakres ekranów).** Szacunek: (1) ok. 1 h; (2) ok. 10–14 h agenta + 6–10 przebiegów „Jakość · iOS” (15–40 min każdy); (3) ok. 25–35 h agenta + przebiegi E2E. (a) Jedna sesja: (1) → (2) → STOP punkt kontrolny → (3) w trzech krokach (3A kompozycja, licznik, lista, aplikacja i E2E; 3B projekt, dni, ukończenie, historia, formularze; 3C oferty, Pro, ustawienia, dane, awaryjny, narzędzia, zgłoszenie) z wypchniętym plikiem stanu po każdym; decyzja o podziale na STOP punktu kontrolnego, po pomiarze (2). (b) Partia 4 = (1) + (2), STOP E2; ekrany jako partia 5 w nowej sesji. **Rekomendacja: (a)** — zasada „jedna sesja na rolę”, kontekst (2) potrzebny przy wpięciu wyzwalaczy w ekrany; podział tylko, jeśli kontekst zacznie się gubić (wtedy STOP z propozycją, jak w poleceniu).
+- **Q2 Czerwień Swift przed kodem przy zielonej gałęzi.** Nowe API (magazyn, `potwierdzone`, `doWyslania`, `.zablokowany`) nie kompiluje się przed kodem (zły powód). (a) Commit 1: sygnatury Swift z najprostszym wynikiem (jak zaślepka TS) + testy X-ZG/X-ST-07/X-DZ-15 pod `XCTExpectFailure(strict: true)` → CI zielone i dowodzi czerwieni na asercji (wzór 05 fix-4 dla e3); commit 2: kod i zdjęcie `XCTExpectFailure` (strict: test przechodzący pod nim pada, więc nie zostanie po cichu). (b) Push z czerwonym `swift test`, potem kod — gałąź czerwona między pushami (blokuje 04 fix-3 i koordynatora). **Rekomendacja: (a).**
+- **Q3 Teksty zegarka i Live Activity przed E2 04 fix-3** („nie zapisano”, stan blokady). (a) Logika, stany i testy teraz; w widoku zegarka i Live Activity przy blokadzie brak przycisków (jak makieta limitu), przy błędzie zapisu haptyka `bladZapisu` i istniejący klucz `aktywnosc` najbliższy znaczeniowo, nazwany w raporcie; teksty 04 podmieniam po sygnale koordynatora (jeden commit). (b) Wstrzymać 2.7 do E2 04 fix-3. **Rekomendacja: (a)** — kolejka bez utraty danych nie czeka na tekst; brak przycisków przy blokadzie spełnia N1 bez nowego tekstu.
+- **Q4 N3 i pora ukończenia bez kontraktu 05.** `moduly.md` nie opisuje N3 ani pory (P-137 przekazał do 05 fix-4, E2-dowody 05 ich nie wymieniają w „Dla 08”). (a) 08 wdraża według P-137 („ta sama pora co pierwotnie”, strefa z `Zegar`) i dopisuje N3 jako wyzwalacz w moduly.md „Czas w przypadkach użycia” (jedna linia, zgłoszenie do 05 do przeglądu); `zmienDateUkonczenia` przyjmuje tylko `ukonczonoDzien`, `ukonczonoMs` liczy przypadek użycia. (b) Zgłoszenie do 05, wdrożenie po jego fixie. **Rekomendacja: (a)** — decyzja merytoryczna już zapadła (P-137), brakuje tylko zapisu; sygnatura przypadku użycia należy do 08 (P-114 Q2a).
+- Sygnatura RD-15 (bez pytania, P-114 Q2a): `celDzienny({ suma, przedDzis, zrobioneTeraz, termin, dzis })`.
+
+## Czas (zasada 9)
+Agent: E0 ok. 1 h; (1)+(2) ok. 11–15 h; (3) ok. 25–35 h. Czekanie: CI iOS (każdy krok natywny), E2 04 fix-3 (teksty), odpowiedzi koordynatora. Właściciel: nic (lista TT bez zmian).
+
+## Dziennik sesji
+- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1553/1553, akceptacja 110 (20 asercji), plan (1)–(3), Q1–Q4; STOP do koordynatora.
