@@ -1,0 +1,70 @@
+// Model odczytu ekranu projektu (08 partia 5, A1; sygnatura 08 do przeglądu 05, P-182 Q3a): części w kolejności z licznikami (F-04, F-14),
+// licznik całości sekcji (F-46, BR-LIC-018), cel części z pary (F-52, BR-PRJ-014 S1/S3), postęp (F-60, RD-14), termin i cel na dziś (F-61, RD-15),
+// notatka (F-15), drut z numerem US (F-17, RD-11), powrót po przerwie (F-18, BR-PRJ-005). Same dane; teksty i daty formatuje kompozycja.
+import type { Wynik } from '../domena/bledy';
+import { licznikCalosci } from '../domena/licznik-calosci';
+import { rozmiarUS } from '../domena/obliczenia/druty';
+import { postepProcent, type CelDnia } from '../domena/postep';
+import { celProjektu } from '../dane/repozytoria/kalendarz';
+import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
+import { blad, operacjaZapisu } from './zapis';
+import type { Zaleznosci } from './zaleznosci';
+
+export type LicznikWidoku = { id: string; nazwa: string; rodzaj: 'rzedy' | 'oczka'; sekcja: boolean; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie' };
+/**
+ * `rzedy` = suma liczników rzędów części (jak RD-14/RD-15 w `celProjektu`); `cel` = własny cel albo, w części pary bez celu, rzędy pierwszej
+ * części, gdy ma rzędy (`celZPary`, BR-PRJ-014 S1; S3: pierwsza bez rzędów → brak celu); `calosc` = suma sekcji rzędów albo null bez sekcji.
+ */
+export type CzescWidoku = { id: string; nazwa: string; rzedy: number; cel: number | null; celZPary: boolean; paraZ: string | null; calosc: number | null; liczniki: LicznikWidoku[] };
+export type WidokProjektu = {
+  id: string; nazwa: string; nienazwany: boolean; stan: 'w_toku' | 'ukonczony'; utworzonoMs: number; zmienionoMs: number; ostatniaPracaMs: number;
+  notatka: string; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null;
+  postep: { rodzaj: 'procent'; wartosc: number } | { rodzaj: 'brak-celow' }; czesci: CzescWidoku[];
+};
+
+const rodzaj = (t: string): LicznikWidoku['rodzaj'] => (t === 'oczka' ? 'oczka' : 'rzedy'); // CHECK schematu: tylko te dwie wartości
+const znaczenie = (t: string): LicznikWidoku['znaczenie'] => (t === 'w_trakcie' ? 'w_trakcie' : 'skonczone');
+
+/** Projekt w koszu albo nieistniejący → `bledne_dane` (jak `widokLicznika`). */
+export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<WidokProjektu>> {
+  return operacjaZapisu(z, 'widokProjektu', async (tx, _teraz, chwila) => {
+    const [p] = await wiersze(tx.all(
+      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, termin_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
+      [w.projektId]), 'widokProjektu');
+    if (!p) return blad('bledne_dane');
+    const czesci = await wiersze(tx.all('SELECT id, nazwa, cel_rzedow, para_z FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc, id', [w.projektId]), 'widokProjektu');
+    const liczniki = await wiersze(tx.all(
+      `SELECT l.id, l.czesc_id, l.nazwa, l.rodzaj, l.sekcja, l.wartosc, l.znaczenie FROM licznik l JOIN czesc c ON c.id = l.czesc_id
+        WHERE c.projekt_id = ? AND c.usunieto_ms IS NULL AND l.usunieto_ms IS NULL ORDER BY l.kolejnosc, l.id`, [w.projektId]), 'widokProjektu');
+    const kawalek = liczniki.map((l) => ({ id: tekst(l, 'id'), czescId: tekst(l, 'czesc_id'), rodzaj: rodzaj(tekst(l, 'rodzaj')), sekcja: liczba(l, 'sekcja') === 1, wartosc: liczba(l, 'wartosc') }));
+    const rzedyCzesci = new Map<string, number>();
+    for (const l of kawalek) if (l.rodzaj === 'rzedy') rzedyCzesci.set(l.czescId, (rzedyCzesci.get(l.czescId) ?? 0) + l.wartosc);
+    const wynik: CzescWidoku[] = czesci.map((c) => {
+      const id = tekst(c, 'id');
+      const paraZ = tekstLubNull(c, 'para_z');
+      const wlasny = liczbaLubNull(c, 'cel_rzedow');
+      const zPary = wlasny === null && paraZ !== null ? rzedyCzesci.get(paraZ) ?? 0 : 0;
+      const sekcje = kawalek.some((l) => l.czescId === id && l.sekcja && l.rodzaj === 'rzedy');
+      return {
+        id, nazwa: tekst(c, 'nazwa'), rzedy: rzedyCzesci.get(id) ?? 0, cel: wlasny ?? (zPary > 0 ? zPary : null), celZPary: wlasny === null && zPary > 0, paraZ,
+        calosc: sekcje ? licznikCalosci(kawalek, id) : null,
+        liczniki: liczniki.filter((l) => tekst(l, 'czesc_id') === id).map((l) => ({
+          id: tekst(l, 'id'), nazwa: tekst(l, 'nazwa'), rodzaj: rodzaj(tekst(l, 'rodzaj')), sekcja: liczba(l, 'sekcja') === 1, wartosc: liczba(l, 'wartosc'), znaczenie: znaczenie(tekst(l, 'znaczenie')),
+        })),
+      };
+    });
+    const proc = postepProcent(wynik.map((c) => ({ rzedy: c.rzedy, cel: c.cel })));
+    const drutMm = liczbaLubNull(p, 'drut_mm');
+    const termin = tekstLubNull(p, 'termin_dzien');
+    return {
+      ok: true,
+      wartosc: {
+        id: w.projektId, nazwa: tekst(p, 'nazwa'), nienazwany: liczba(p, 'nienazwany') === 1, stan: tekst(p, 'stan') === 'ukonczony' ? 'ukonczony' : 'w_toku',
+        utworzonoMs: liczba(p, 'utworzono_ms'), zmienionoMs: liczba(p, 'zmieniono_ms'), ostatniaPracaMs: liczba(p, 'ostatnia_praca_ms'),
+        notatka: tekst(p, 'notatka'), drutMm, drutUS: drutMm === null ? null : rozmiarUS(drutMm, 'druty'), // szydełko: decyzja STOP E1 Q2 (P-182)
+        terminDzien: termin, celDnia: termin ? await celProjektu(tx, w.projektId, termin, chwila.dzien) : null,
+        postep: proc.ok ? { rodzaj: 'procent', wartosc: proc.wartosc } : { rodzaj: 'brak-celow' }, czesci: wynik,
+      },
+    };
+  });
+}
