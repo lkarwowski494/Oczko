@@ -14,7 +14,7 @@
   --zakreslacz: #F6E04A; --na-zakreslaczu: #1B1C1F; --zakr-krawedz: #8C7A00;
   --p-tlo: #26282C; --p-tekst: #FCFCFA; --p-obrys: #26282C; --wloczka: #4F6F94;
   --tapeta: #56606B; --dt: 1; --w: 393px; --zw: 176px; --zh: 215px;
-  --tytul: "Libre Franklin"; --tresc: "Source Sans 3";
+  --sw: 165px; --sh: 72.5px; --tytul: "Libre Franklin"; --tresc: "Source Sans 3";
   /* Dynamic Island i zegarek: tło systemowe czarne, kolory z motywu ciemnego */
   --c-papier: #000000; --c-grafit: #ECECE8; --c-olowek: #A9ACB2; --c-p-tlo: #2E3136; --c-p-tekst: #ECECE8; --c-p-obrys: #8C9098;
   --c-zakreslacz: #38351F; --c-na-zakreslaczu: #F4ECB4; --c-zakr-krawedz: #E2CB3A;
@@ -73,7 +73,17 @@ section[data-ekran^="wyspa"] { width: var(--w); background: var(--tapeta); paddi
 
 /* Zegarek: ekran czarny; własne kształty tylko dla +1 i −1 */
 section[data-ekran^="zegarek"] { width: var(--zw); height: var(--zh); background: #000; color: var(--c-grafit); border-radius: 36px; padding: 10px 10px 8px; display: flex; flex-direction: column; overflow: hidden; }
-section[data-ekran^="zegarek-smart-stack"] { height: auto; min-height: var(--zh); justify-content: center; gap: 8px; }
+/* Smart Stack (rozmiar mały, NZ-08-P4-04): stałe wymiary HIG (--sw × --sh: 40 mm 152×69,5 … 49 mm 198×81,5; CarPlay 170×78, 240×100); karta rysowana przez system */
+section[data-ekran^="zegarek-smart-stack"] { width: var(--sw); height: var(--sh); min-height: 0; background: #1E2024; border-radius: 18px; padding: 4px 10px; justify-content: center; gap: 0; }
+/* Wiersz 1: znak + liczba + nazwa (ucinana) + czas; wiersz 2: stan na całą szerokość (najważniejsza informacja, nie ucina się przy 40 mm) */
+.ss-gora { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ss-gora .n { font-size: calc(30px * min(var(--dt), 1.15)); flex-shrink: 0; }
+.ss-gora .nazwa { display: block; flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: calc(13px * var(--dt)); color: var(--c-olowek); align-self: center; }
+.ss-gora .godz { flex-shrink: 0; font: 600 calc(13px * var(--dt)) var(--tresc); color: var(--c-grafit); }
+.ss-stan { font: 600 calc(15px * var(--dt)) / 1.25 var(--tresc); color: var(--c-grafit); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+section[data-ekran^="zegarek-smart-stack"] .zakr { margin: 0; padding: 1px 6px 1px 8px; }
+section[data-ekran^="zegarek-smart-stack"] .zakr span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: calc(15px * var(--dt)); }
+:root[data-duzy="true"] section[data-ekran^="zegarek-smart-stack"] .godz { display: none; }
 .z-gora { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; font-size: calc(13px * var(--dt)); color: var(--c-olowek); padding: 0 6px; }
 .z-gora .nazwa { font-size: inherit; display: block; min-width: 0; }
 .z-srodek { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; } /* na zegarku przewijany; przyciski zostają na dole */
@@ -97,10 +107,6 @@ section[data-ekran^="zegarek-nie-zapisano"] .z-dol .plus, section[data-ekran^="z
 section[data-ekran^="zegarek"] .zakr::before { background: var(--c-zakreslacz); border-left-color: var(--c-zakr-krawedz); }
 section[data-ekran^="zegarek"] .zakr span { color: var(--c-na-zakreslaczu); font-size: calc(13px * var(--dt)); }
 section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(13px * var(--dt)); padding: 0 6px; }
-.stack { background: #1E2024; border-radius: 18px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-.stack .z-gora { padding: 0; }
-.stack .z-liczba { padding: 0; }
-.stack .z-liczba .n { font-size: calc(30px * min(var(--dt), 1.15)); }
 .uwagi { width: 393px; background: #fff; color: #222; padding: 16px 20px; font: 15px/1.4 var(--tresc); }
 .uwagi h3 { font: 700 18px var(--tytul); margin: 0 0 6px; }
 </style>
@@ -351,25 +357,40 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="z-tekst" style="margin-top:auto;margin-bottom:auto">Open Oczko on your iPhone to start counting.</div>
 </section>
 
-<!-- 12. Smart Stack: Live Activity na zegarku (bez przycisku; dotknięcie otwiera aplikację zegarka, HIG) -->
-<section data-ekran="zegarek-smart-stack">
-  <div class="stack" aria-label="Harbor Sweater, 47 rows done, now row 48, session 42 minutes">
-    <div class="z-gora"><span class="nazwa"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg> Harbor Sweater</span><span class="godz">0:42</span></div>
-    <div class="z-liczba"><span class="n">47</span><small>Now row 48</small></div>
-  </div>
+<!-- 12. Smart Stack (rozmiar mały, własny widok przez supplementalActivityFamilies; bez przycisku — dotknięcie otwiera aplikację zegarka; ten sam widok w CarPlay) -->
+<section data-ekran="zegarek-smart-stack" aria-label="Harbor Sweater, 47 rows done, now row 48, session 42 minutes">
+  <div class="ss-gora"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg><span class="n">47</span><span class="nazwa">Harbor Sweater</span><span class="godz">0:42</span></div>
+  <div class="ss-stan">Now row 48</div>
 </section>
-
+<!-- 12b. Smart Stack: rząd z przypomnieniem — pas skrócony do 1 wiersza (aktywnosc.przypomnienie_krotkie), tylko pierwsze przypomnienie -->
+<section data-ekran="zegarek-smart-stack-przypomnienie" aria-label="Harbor Sweater, 47 rows done, row 48: decrease at both ends, 7 of 8">
+  <div class="ss-gora"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg><span class="n">47</span><span class="nazwa">Harbor Sweater</span><span class="godz">0:58</span></div>
+  <div class="zakr"><span>Row 48: decrease at both ends</span></div>
+</section>
+<!-- 12c. Smart Stack: limit wyczerpany (bez daty i oferty; szczegóły po dotknięciu) -->
+<section data-ekran="zegarek-smart-stack-limit" aria-label="Harbor Sweater, 47 rows done, counting paused">
+  <div class="ss-gora"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg><span class="n">47</span><span class="nazwa">Harbor Sweater</span></div>
+  <div class="ss-stan">Counting paused</div>
+</section>
 <!-- 12a. Smart Stack: licznik zablokowany -->
-<section data-ekran="zegarek-smart-stack-zablokowany">
-  <div class="stack" aria-label="Harbor Sweater, 47 rows done, counter locked">
-    <div class="z-gora"><span class="nazwa"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg> Harbor Sweater</span><span class="godz">0:42</span></div>
-    <div class="z-liczba"><span class="n">47</span><small>Counter locked</small></div>
-  </div>
+<section data-ekran="zegarek-smart-stack-zablokowany" aria-label="Harbor Sweater, 47 rows done, counter locked">
+  <div class="ss-gora"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg><span class="n">47</span><span class="nazwa">Harbor Sweater</span><span class="godz">0:42</span></div>
+  <div class="ss-stan">Counter locked</div>
+</section>
+<!-- 12d. Smart Stack: bez sesji stopera — bez czasu, nazwa ma całą szerokość -->
+<section data-ekran="zegarek-smart-stack-bez-sesji" aria-label="Harbor Sweater, 47 rows done, now row 48">
+  <div class="ss-gora"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg><span class="n">47</span><span class="nazwa">Harbor Sweater</span></div>
+  <div class="ss-stan">Now row 48</div>
+</section>
+<!-- 12e. Smart Stack: projekt roboczy — etykieta krótka z daty startu -->
+<section data-ekran="zegarek-smart-stack-robocza" aria-label="Counter from Oct 26, 47 rows done, now row 48">
+  <div class="ss-gora"><svg class="znak-kresek maly" aria-hidden="true"><use href="#kreski"/></svg><span class="n">47</span><span class="nazwa">Counter from Oct 26</span></div>
+  <div class="ss-stan">Now row 48</div>
 </section>
 
 <div class="uwagi">
   <h3>Notes</h3>
-  The Lock Screen card uses the app’s paper and graphite tokens (custom background is allowed only there, HIG). Dynamic Island, watch and Smart Stack keep the system black background with dark-theme tokens. Brand element on the Lock Screen: highlighter on a reminder row; in the Dynamic Island the tally mark from the icon. Session marks are not shown: the Live Activity state carries no session row count.
+  The Lock Screen card uses the app’s paper and graphite tokens (custom background is allowed only there, HIG). Dynamic Island, watch and Smart Stack keep the system black background with dark-theme tokens. Brand element on the Lock Screen: highlighter on a reminder row; in the Dynamic Island, Smart Stack and CarPlay the tally mark from the icon (no container). Smart Stack ignores the “wasn’t added” note: it has no button. Session marks are not shown: the Live Activity state carries no session row count.
 </div>
 </body>
 </html>

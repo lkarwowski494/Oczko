@@ -39,6 +39,7 @@ if (c) {
   pary['system czarny: krawędź zakreślenia / tło (element, 3:1)'] = [c.zakreslaczKrawedz, c.tlo, 3];
   pary['Smart Stack: tekst / karta'] = [c.grafit, c.kartaStack];
   pary['Smart Stack: ołówek / karta'] = [c.olowek, c.kartaStack];
+  pary['Smart Stack: krawędź zakreślenia / karta (element, 3:1)'] = [c.zakreslaczKrawedz, c.kartaStack, 3];
 }
 // Znak kresek na czarnym tle i karcie Smart Stack (NZ-08-P4-04): grafika rozpoznawcza obok liczby, 3:1.
 const z = JSON.parse(readFileSync(process.argv[2], 'utf8')).znakKresek;

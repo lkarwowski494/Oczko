@@ -68,5 +68,6 @@ OK   10.31:1 (min 4.5) system czarny: tekst na zakreślaczu #F4ECB4 na #38351F
 OK   12.84:1 (min 3) system czarny: krawędź zakreślenia / tło (element, 3:1) #E2CB3A na #000000
 OK   13.77:1 (min 4.5) Smart Stack: tekst / karta #ECECE8 na #1E2024
 OK   7.17:1 (min 4.5) Smart Stack: ołówek / karta #A9ACB2 na #1E2024
+OK   9.97:1 (min 3) Smart Stack: krawędź zakreślenia / karta (element, 3:1) #E2CB3A na #1E2024
 OK   17.73:1 (min 3) znak kresek / tło systemowe (grafika, 3:1) #ECECE8 na #000000
 OK   13.77:1 (min 3) znak kresek / karta Smart Stack (grafika, 3:1) #ECECE8 na #1E2024
