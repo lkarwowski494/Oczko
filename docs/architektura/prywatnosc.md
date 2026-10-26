@@ -12,7 +12,9 @@ Zasada: aplikacja zbiera tylko to, czego wymaga przepływ z kontraktu (zasada ar
 | Uprawnienie Pro | App Store | StoreKit (system); ostatni stan dla zegarka w `ustawienie` | między urządzeniami użytkownika (StoreKit, WatchConnectivity) | dostęp Pro | system |
 | Stan licznika dla ekranu blokady i zegarka | aplikacja | Live Activity (system, ≤ 4 KB), kontekst WatchConnectivity | zegarek użytkownika (sparowany) | F-11, F-12 | do końca Live Activity / następnego stanu |
 | Dziennik +1 z ekranu blokady | intencja | `Application Support/dziennik-plus.jsonl` | nie | ADR-0008 | do scalenia |
-| Skrzynka importu | rozszerzenie udostępniania | kontener App Group | nie | ADR-0011 | do importu |
+| Skrzynka importu (plik wzoru albo adres strony, manifest zlecenia z wybranym projektem) | rozszerzenie udostępniania | kontener App Group `skrzynka/` | nie | ADR-0011 | do importu; porzucone zlecenie bez manifestu po `SKRZYNKA_PORZUCONE_H` |
+| Migawka projektów w toku (id, nazwa, flaga „nienazwany”, data utworzenia) | aplikacja | kontener App Group `projekty-migawka.json` (fix-7, P-220 N2) | nie (czyta tylko rozszerzenie Oczka na tym urządzeniu) | wybór projektu w arkuszu „Udostępnij do Oczka” | nadpisywana po każdej zmianie listy; pusta po „Usuń wszystkie dane” |
+| Skan stron wzoru | systemowy skaner dokumentów (aparat) | katalog tymczasowy → PDF w `Application Support/pliki/` | jak wzory | F-24 (P-220 W7a) | pliki tymczasowe usuwane po imporcie |
 | Diagnostyka (błędy: kod, czas, wersje, liczności; bez nazw, notatek, wzorów, zdjęć) | aplikacja | tabela `blad` (≤ 200 wierszy) | tylko gdy użytkownik wybierze „Zgłoś problem” i kanał w arkuszu udostępniania, po podglądzie (F-57) — **OP-25** (czy to „optional disclosure”, S-37): rola 10 | wsparcie | przycinane do 200 wierszy |
 | Prośba o ocenę | system (`SKStoreReview` przez `expo-store-review`) | system | system Apple | BR-DAN-012 | system |
 | Lokalizacja, kontakty, mikrofon, zdrowie, identyfikator reklamowy | — | **nie zbierane** | — | — | — |
@@ -26,7 +28,7 @@ Usługi zewnętrzne: brak serwera i konta (P-021, NFR-KOS-001). Sieć: App Store
 | bez `NSPhotoLibraryUsageDescription` dla wyboru zdjęć | systemowy wybór zdjęć bez uprawnienia (wyjątki: wideo z `allowsEditing: false` i `Passthrough` — nieużywane) | rejestr Expo 8 |
 | `NSSupportsLiveActivities = true` | F-11, F-21 | rejestr Apple 19d |
 | `UIBackgroundModes: remote-notification` + `aps-environment` + iCloud (CloudKit) | **tylko** synchronizacja F-27: „`CKSyncEngine` requires the CloudKit and Remote notifications entitlements”; „To receive background notifications, you must add the remote notifications background mode to your app.” (rejestr Apple 19a, 19b) | App Review 2.5.4 (rejestr Apple 10a): cel zgodny z przeznaczeniem; bez prośby o zgodę na powiadomienia (zgoda tylko dla alertów i dźwięków, rejestr Apple 19c) |
-| App Group (wspólny kontener) | tylko skrzynka importu z rozszerzenia udostępniania (ADR-0011); baza **nie** w App Group | rejestr Apple 2a |
+| App Group (wspólny kontener) | skrzynka importu i migawka projektów dla rozszerzenia udostępniania (ADR-0011, uzupełnienie fix-7); baza **nie** w App Group; widżet bez grupy (biblioteka celów kopiuje ją tylko do celu z kluczem `entitlements`) | rejestr Apple 2a |
 | Inne `UIBackgroundModes` (location, audio, fetch, processing) | **brak** — żaden przepływ kontraktu ich nie wymaga | zasada 7 modułu tła |
 | Powiadomienia lokalne | **brak** (przypomnienie F-06 na ekranie licznika; 04 nie użyło powiadomień) | design-spec |
 
