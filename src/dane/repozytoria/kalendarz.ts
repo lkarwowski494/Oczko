@@ -50,18 +50,15 @@ async function rzedyOkresu(baza: PortBazy, od: string, doWyl: string): Promise<n
   const [w] = await wiersze(baza.all(`SELECT sum(${ZMIANA}) AS n ${PRACA}`, zakres(od, doWyl)), 'podsumowanie');
   return (w ? liczbaLubNull(w, 'n') : null) ?? 0;
 }
-/**
- * Ukończone w okresie: `ukonczono_ms` w dniach [od, do] liczonych w UTC — sygnatura nie podaje strefy urządzenia, więc projekt ukończony
- * tuż przy północy może wpaść do sąsiedniego tygodnia [DO USTALENIA 05: strefa w wejściu albo `ukonczono_dzien`].
- */
+/** Ukończone w tygodniu po dniu lokalnym zapisanym przy ukończeniu (`ukonczono_dzien`, moduly.md „Ukończone w tygodniu…”, fix-3 05). */
 export async function podsumowanieTygodnia(baza: PortBazy, w: { dzis: string; pierwszyDzienTygodnia: 1 | 2 | 3 | 4 | 5 | 6 | 7 }): Promise<Podsumowanie> {
   const [r, m, d] = w.dzis.split('-').map(Number);
   const iso = ((new Date(Date.UTC(r, m - 1, d)).getUTCDay() + 6) % 7) + 1; // 1 = pon … 7 = nd
   const od = nastepnyDzien(w.dzis, -((iso - w.pierwszyDzienTygodnia + 7) % 7));
   const doWyl = nastepnyDzien(od, 7);
   const [s] = await wiersze(baza.all(`SELECT count(*) AS k, sum(${CZAS_SESJI}) AS ms FROM sesja s WHERE s.dzien >= ? AND s.dzien < ?`, [od, doWyl]), 'podsumowanie');
-  const [u] = await wiersze(baza.all("SELECT count(*) AS n FROM projekt WHERE stan = 'ukonczony' AND usunieto_ms IS NULL AND ukonczono_ms >= ? AND ukonczono_ms < ?",
-    [Date.parse(`${od}T00:00:00Z`), Date.parse(`${doWyl}T00:00:00Z`)]), 'podsumowanie');
+  const [u] = await wiersze(baza.all("SELECT count(*) AS n FROM projekt WHERE stan = 'ukonczony' AND usunieto_ms IS NULL AND ukonczono_dzien >= ? AND ukonczono_dzien < ?",
+    [od, doWyl]), 'podsumowanie');
   return {
     od, do: nastepnyDzien(od, 6), rzedy: await rzedyOkresu(baza, od, doWyl),
     czasMs: s && liczba(s, 'k') > 0 ? liczba(s, 'ms') : null, ukonczone: u ? liczba(u, 'n') : 0,

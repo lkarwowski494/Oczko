@@ -134,7 +134,7 @@ ok(rzuca(() => migruj(db3, [...MIGRACJE, zla])) !== null && db3.prepare('PRAGMA 
 const dbp = otworz(); migruj(dbp, MIGRACJE);
 const insZ = dbp.prepare(`INSERT INTO zdarzenie (id, licznik_id, rodzaj, wartosc_po, rodzice, zrodlo, urzadzenie, czas_ms, strefa, dzien) VALUES (?, ?, 'plus', ?, '[]', 'aplikacja', 'i', ?, 'Europe/Warsaw', ?)`);
 dbp.exec('BEGIN');
-for (let p = 0; p < 45; p++) { dbp.exec(`INSERT INTO projekt (id, nazwa, stan, utworzono_ms, zmieniono_ms, ostatnia_praca_ms, ukonczono_ms) VALUES ('p${p}', 'P${p}', '${p < 40 ? 'ukonczony' : 'w_toku'}', 1, 1, ${p}, ${p < 40 ? 1 : 'NULL'})`);
+for (let p = 0; p < 45; p++) { dbp.exec(`INSERT INTO projekt (id, nazwa, stan, utworzono_ms, zmieniono_ms, ostatnia_praca_ms, ukonczono_ms, ukonczono_dzien) VALUES ('p${p}', 'P${p}', '${p < 40 ? 'ukonczony' : 'w_toku'}', 1, 1, ${p}, ${p < 40 ? "1, '1970-01-01'" : 'NULL, NULL'})`); // ukonczono_dzien: fix-3 (08 partia 3)
   for (let c = 0; c < 4; c++) { dbp.exec(`INSERT INTO czesc VALUES ('c${p}_${c}', 'p${p}', 'C', ${c}, NULL, NULL, 1, NULL); INSERT INTO licznik (id, czesc_id, kolejnosc, zmieniono_ms) VALUES ('l${p}_${c}', 'c${p}_${c}', 0, 1);`); } }
 for (let i = 0; i < 150000; i++) { const czas = Date.UTC(2024, 0, 1) + i * 600000; insZ.run('z' + i, `l${Math.floor(i / 833) % 45}_${i % 4}`, i, czas, new Date(czas).toISOString().slice(0, 10)); }
 for (let y = 0; y < 300; y++) dbp.exec(`INSERT INTO wloczka (id, nazwa, motki, kategoria, zmieniono_ms) VALUES ('y${y}', 'W${y}', 1, ${y % 8}, 1)`);

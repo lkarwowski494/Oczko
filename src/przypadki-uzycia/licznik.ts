@@ -130,7 +130,7 @@ export function dodajLicznik(z: Zaleznosci, w: { czescId: string; rodzaj: Rodzaj
 }
 /**
  * Licznik od pierwszego uruchomienia bez nazwy (BR-LIC-001, NFR-PIE-001): projekt roboczy z jedną częścią.
- * Nazwa robocza = data utworzenia (RD-16), bo schemat wymaga niepustej nazwy, a warstwa danych nie zna języka; tekst na ekranie: [DO USTALENIA 04/05].
+ * `nienazwany = 1`, nazwa zapasowa = data startu (RD-16); etykieta w bieżącym języku liczona przy wyświetlaniu (dane.md „Projekt roboczy bez nazwy”, P-126 (1b)).
  */
 export function utworzSzybkiLicznik(z: Zaleznosci): Promise<Wynik<{ projektId: string; czescId: string; licznikId: string }>> {
   return wKolejce(z.baza, async () => {
@@ -138,7 +138,7 @@ export function utworzSzybkiLicznik(z: Zaleznosci): Promise<Wynik<{ projektId: s
     const projektId = z.id.nowy(), czescId = z.id.nowy(), licznikId = z.id.nowy();
     try {
       await z.baza.transakcja(async (tx) => {
-        await tx.run('INSERT INTO projekt (id, nazwa, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?)', [projektId, teraz.dzien, teraz.ms, teraz.ms, teraz.ms]);
+        await tx.run('INSERT INTO projekt (id, nazwa, nienazwany, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, 1, ?, ?, ?)', [projektId, teraz.dzien, teraz.ms, teraz.ms, teraz.ms]);
         await tx.run('INSERT INTO czesc (id, projekt_id, nazwa, kolejnosc, zmieniono_ms) VALUES (?, ?, ?, 1, ?)', [czescId, projektId, teraz.dzien, teraz.ms]);
         await tx.run('INSERT INTO licznik (id, czesc_id, kolejnosc, zmieniono_ms) VALUES (?, ?, 1, ?)', [licznikId, czescId, teraz.ms]);
       });

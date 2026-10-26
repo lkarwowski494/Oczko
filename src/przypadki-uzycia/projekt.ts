@@ -5,6 +5,7 @@ import { przejdzProjekt, type ZdarzenieProjektu } from '../domena/maszyny/projek
 import type { PortBazy } from '../domena/porty';
 import { stanProjektu, ustawUsuniecie, usunietoMs, zapiszStanProjektu, type TabelaKosza } from '../dane/repozytoria/projekty-zapis';
 import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
+import { jestDniem } from './daty';
 import { OK, blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci, ZaleznosciPlikow } from './zaleznosci';
 
@@ -37,7 +38,7 @@ export function utworzProjekt(z: Zaleznosci, w: { nazwa: string; czesci: string[
 export function nazwijProjekt(z: Zaleznosci, w: { projektId: string; nazwa: string }): Promise<Wynik<void>> {
   if (!niepusta(w.nazwa)) return Promise.resolve(blad('bledne_dane'));
   return operacjaZapisu(z, 'nazwijProjekt', async (tx, teraz) => {
-    const r = await tx.run('UPDATE projekt SET nazwa = ?, zmieniono_ms = ? WHERE id = ?', [w.nazwa.trim(), teraz, w.projektId]);
+    const r = await tx.run('UPDATE projekt SET nazwa = ?, nienazwany = 0, zmieniono_ms = ? WHERE id = ?', [w.nazwa.trim(), teraz, w.projektId]); // jedną instrukcją (P-126 (1b))
     return r.zmiany === 1 ? OK : blad('bledne_dane');
   });
 }
@@ -49,12 +50,12 @@ export function zapiszNotatke(z: Zaleznosci, w: { projektId: string; tekst: stri
 }
 
 function przejscie(z: Zaleznosci, projektId: string, zd: ZdarzenieProjektu): Promise<Wynik<void>> {
-  return operacjaZapisu(z, `projekt_${zd}`, async (tx, teraz) => {
+  return operacjaZapisu(z, `projekt_${zd}`, async (tx, teraz, chwila) => {
     const p = await stanProjektu(tx, projektId);
     if (!p) return blad('bledne_dane');
     const nowy = przejdzProjekt(p, zd, teraz);
     if (!nowy.ok) return nowy;
-    await zapiszStanProjektu(tx, projektId, nowy.wartosc, teraz);
+    await zapiszStanProjektu(tx, projektId, nowy.wartosc, teraz, zd === 'ukoncz' ? chwila.dzien : undefined);
     return OK;
   });
 }
@@ -63,13 +64,14 @@ export const wznowProjekt = (z: Zaleznosci, w: { projektId: string }): Promise<W
 export const usunProjekt = (z: Zaleznosci, w: { projektId: string }): Promise<Wynik<void>> => przejscie(z, w.projektId, 'usun');
 export const przywrocProjekt = (z: Zaleznosci, w: { projektId: string }): Promise<Wynik<void>> => przejscie(z, w.projektId, 'przywroc');
 
-export function zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoMs: number }): Promise<Wynik<void>> {
-  if (!Number.isInteger(w.ukonczonoMs)) return Promise.resolve(blad('bledne_dane'));
+/** Data ukończenia wybrana na ekranie: chwila i dzień lokalny razem (moduly.md „Ukończone w tygodniu…”, fix-3 05). */
+export function zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoMs: number; ukonczonoDzien: string }): Promise<Wynik<void>> {
+  if (!Number.isInteger(w.ukonczonoMs) || !jestDniem(w.ukonczonoDzien)) return Promise.resolve(blad('bledne_dane'));
   return operacjaZapisu(z, 'zmienDateUkonczenia', async (tx, teraz) => {
     const p = await stanProjektu(tx, w.projektId);
     if (!p) return blad('bledne_dane');
     if (p.stan !== 'ukonczony' || p.usunietoMs !== null) return blad('niedozwolone_przejscie');
-    await zapiszStanProjektu(tx, w.projektId, { ...p, ukonczonoMs: w.ukonczonoMs }, teraz);
+    await zapiszStanProjektu(tx, w.projektId, { ...p, ukonczonoMs: w.ukonczonoMs }, teraz, w.ukonczonoDzien);
     return OK;
   });
 }
@@ -91,12 +93,15 @@ export const przywrocCzesc = (z: Zaleznosci, w: { czescId: string }): Promise<Wy
 
 /** „Zrób taką samą” (F-20): części (z celem) i przypomnienia skopiowane, liczniki 0, `kopia_z` = oryginał; oryginał bez zmian. */
 export function zrobPonownie(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<{ projektId: string }>> {
-  return operacjaZapisu(z, 'zrobPonownie', async (tx, teraz) => {
-    const [p] = await wiersze(tx.all('SELECT nazwa, usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'zrobPonownie');
+  return operacjaZapisu(z, 'zrobPonownie', async (tx, teraz, chwila) => {
+    const [p] = await wiersze(tx.all('SELECT nazwa, nienazwany, usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'zrobPonownie');
     if (!p) return blad('bledne_dane');
     if (liczbaLubNull(p, 'usunieto_ms') !== null) return blad('niedozwolone_przejscie');
     const projektId = z.id.nowy();
-    await tx.run('INSERT INTO projekt (id, nazwa, kopia_z, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?, ?)', [projektId, tekst(p, 'nazwa'), w.projektId, teraz, teraz, teraz]);
+    // Z projektu roboczego powstaje roboczy z własną datą startu jako nazwą zapasową (dane.md, P-126 (1b)).
+    const roboczy = liczba(p, 'nienazwany') === 1;
+    await tx.run('INSERT INTO projekt (id, nazwa, nienazwany, kopia_z, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [projektId, roboczy ? chwila.dzien : tekst(p, 'nazwa'), roboczy ? 1 : 0, w.projektId, teraz, teraz, teraz]);
     const czesci = await wiersze(tx.all('SELECT id, nazwa, kolejnosc, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc', [w.projektId]), 'zrobPonownie');
     for (const c of czesci) {
       const czescId = z.id.nowy();

@@ -16,6 +16,7 @@ CREATE TABLE plik (                                   -- pliki poza bazą: Appli
 CREATE TABLE projekt (                                -- F-14, F-15, F-17, F-18, F-19, F-20, F-49, F-50, F-54, F-61
   id TEXT PRIMARY KEY NOT NULL,
   nazwa TEXT NOT NULL CHECK (length(nazwa) > 0),
+  nienazwany INTEGER NOT NULL DEFAULT 0 CHECK (nienazwany IN (0, 1)),   -- 1 = projekt roboczy z BR-LIC-001 „Nazwanie później”; etykieta liczona przy wyświetlaniu (P-126 (1b))
   stan TEXT NOT NULL DEFAULT 'w_toku' CHECK (stan IN ('w_toku', 'ukonczony')),
   notatka TEXT NOT NULL DEFAULT '',
   drut_mm REAL CHECK (drut_mm IS NULL OR drut_mm > 0),
@@ -26,8 +27,9 @@ CREATE TABLE projekt (                                -- F-14, F-15, F-17, F-18,
   zmieniono_ms INTEGER NOT NULL,
   ostatnia_praca_ms INTEGER NOT NULL,
   ukonczono_ms INTEGER,
+  ukonczono_dzien TEXT CHECK (ukonczono_dzien IS NULL OR ukonczono_dzien GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),   -- dzień lokalny RD-16 przy ukończeniu (P-124 Q5a)
   usunieto_ms INTEGER,
-  CHECK ((stan = 'ukonczony') = (ukonczono_ms IS NOT NULL))
+  CHECK ((stan = 'ukonczony') = (ukonczono_ms IS NOT NULL) AND (ukonczono_ms IS NULL) = (ukonczono_dzien IS NULL))
 ) STRICT;
 CREATE INDEX projekt_lista ON projekt(stan, ostatnia_praca_ms DESC) WHERE usunieto_ms IS NULL;
 CREATE INDEX projekt_kopia_z ON projekt(kopia_z);
@@ -235,3 +237,5 @@ CREATE TABLE blad (                                   -- diagnostyka lokalna F-5
   kod TEXT NOT NULL CHECK (length(kod) > 0),
   szczegoly TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(szczegoly))
 ) STRICT;
+
+PRAGMA application_id = 1331919467;                   -- 0x4F637A6B, ASCII „Oczk” (dane.md „Identyfikator pliku bazy”, P-124 Q5a)

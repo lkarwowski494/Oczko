@@ -9,7 +9,7 @@ import { otworzPortExpo } from './baza/adapter-expo';
 import { powodBledu } from './baza/bledy-sqlite';
 import { kopiaBazy } from './baza/kopia';
 import { zastapZKopii } from './baza/przeniesienie';
-import { migruj } from './migracje/migruj';
+import { APPLICATION_ID, migruj } from './migracje/migruj';
 import { istniejePlik, kopiuj, polacz, usunPlik, utworzKatalog } from './pliki/system';
 import { liczbaLubNull, tekst, wiersze } from './repozytoria/wiersze';
 
@@ -30,7 +30,7 @@ export async function surowaKopia(katalogDanych: string, katalogKopii: string, z
   }
 }
 
-/** ADR-0020 (2), (5): integrity_check, foreign_key_check, user_version w zakresie; nowsza → `wersja_nowsza`, obca/pusta → `bledne_dane`. */
+/** ADR-0020 (2), (5): integrity_check, foreign_key_check, user_version w zakresie, application_id Oczka; nowsza → `wersja_nowsza`, obca/pusta → `bledne_dane`. */
 export async function sprawdzKopie(sciezka: string): Promise<Wynik<{ wersjaSchematu: number }>> {
   if (!istniejePlik(sciezka)) return { ok: false, powod: 'bledne_dane' };
   let port: Awaited<ReturnType<typeof otworzPortExpo>> | null = null;
@@ -40,6 +40,9 @@ export async function sprawdzKopie(sciezka: string): Promise<Wynik<{ wersjaSchem
     const wersja = v ? liczbaLubNull(v, 'user_version') : null;
     if (wersja === null) return { ok: false, powod: 'bledne_dane' };
     if (wersja > WERSJA_SCHEMATU) return { ok: false, powod: 'wersja_nowsza' };
+    // Plik innej aplikacji (inny identyfikator) = obca baza, przed kontrolą tabel (dane.md „Identyfikator pliku bazy”, P-124 Q5a).
+    const [a] = await wiersze(port.all('PRAGMA application_id'), 'sprawdzKopie');
+    if (!a || liczbaLubNull(a, 'application_id') !== APPLICATION_ID) return { ok: false, powod: 'bledne_dane' };
     const tabele = (await wiersze(port.all("SELECT name FROM sqlite_schema WHERE type = 'table'"), 'sprawdzKopie')).map((r) => tekst(r, 'name'));
     if (wersja < 1 || !['projekt', 'licznik', 'zdarzenie'].every((t) => tabele.includes(t))) return { ok: false, powod: 'bledne_dane' }; // obca albo pusta baza
     const [integralnosc] = await wiersze(port.all('PRAGMA integrity_check'), 'sprawdzKopie');

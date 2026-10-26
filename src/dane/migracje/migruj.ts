@@ -10,6 +10,9 @@ import { instrukcjeSql } from '../baza/parametry';
 import { powodBledu } from '../baza/bledy-sqlite';
 import { MIGRACJE } from './sql';
 
+/** Identyfikator pliku bazy Oczka (PRAGMA application_id w 0001.sql, dane.md „Identyfikator pliku bazy”, P-124 Q5a). */
+export const APPLICATION_ID = 1331919467; // 0x4F637A6B
+
 export type OpcjeMigracji = { dodatkowe?: readonly Migracja[]; katalogKopii?: string };
 
 async function wersjaBazy(port: PortBazy): Promise<number> {

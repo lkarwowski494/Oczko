@@ -8,8 +8,17 @@ export async function stanProjektu(tx: PortBazy, projektId: string): Promise<Pro
   if (!w) return null;
   return { stan: tekst(w, 'stan') === 'ukonczony' ? 'ukonczony' : 'w_toku', ukonczonoMs: liczbaLubNull(w, 'ukonczono_ms'), usunietoMs: liczbaLubNull(w, 'usunieto_ms') };
 }
-export async function zapiszStanProjektu(tx: PortBazy, projektId: string, p: Projekt, terazMs: number): Promise<void> {
-  await tx.run('UPDATE projekt SET stan = ?, ukonczono_ms = ?, usunieto_ms = ?, zmieniono_ms = ? WHERE id = ?', [p.stan, p.ukonczonoMs, p.usunietoMs, terazMs, projektId]);
+/**
+ * `ukonczonoDzien`: dzień lokalny RD-16 zapisany przy ukończeniu (moduly.md „Ukończone w tygodniu…”, P-124 Q5a); `undefined` = kolumna bez zmian
+ * (usuń, przywróć), a ukończenie zdjęte (`ukonczonoMs = null`) zawsze czyści też dzień (CHECK tabeli).
+ */
+export async function zapiszStanProjektu(tx: PortBazy, projektId: string, p: Projekt, terazMs: number, ukonczonoDzien?: string | null): Promise<void> {
+  const dzien = p.ukonczonoMs === null ? null : ukonczonoDzien;
+  if (dzien === undefined) {
+    await tx.run('UPDATE projekt SET stan = ?, ukonczono_ms = ?, usunieto_ms = ?, zmieniono_ms = ? WHERE id = ?', [p.stan, p.ukonczonoMs, p.usunietoMs, terazMs, projektId]);
+  } else {
+    await tx.run('UPDATE projekt SET stan = ?, ukonczono_ms = ?, ukonczono_dzien = ?, usunieto_ms = ?, zmieniono_ms = ? WHERE id = ?', [p.stan, p.ukonczonoMs, dzien, p.usunietoMs, terazMs, projektId]);
+  }
 }
 /** Usunięcie (kosz) części albo licznika: `usunieto_ms`; tabela z zamkniętej listy (nazwa tabeli nie jest parametrem SQL). */
 export type TabelaKosza = 'czesc' | 'licznik';

@@ -11,9 +11,11 @@ export const SCHEMAT_V1 = readFileSync(join(KORZEN, 'docs/architektura/schemat.s
 export const STANY_JSON: Record<string, string[]> = JSON.parse(readFileSync(join(KORZEN, 'docs/architektura/stany.json'), 'utf8'));
 
 export type Instr = [string, unknown[]];
+// ukonczono_dzien (fix-3 05, 08 partia 3): dzień lokalny Europe/Warsaw chwili ukończenia, jak `dzien` zdarzenia niżej.
+const dzienWaw = (ms: number) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Warsaw', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(ms));
 const P = (id: string, nazwa: string, t = T0, ext: { stan?: string; ukonczono?: number | null; usunieto?: number | null; ostatnia?: number; notatka?: string } = {}): Instr => [
-  'INSERT INTO projekt (id, nazwa, stan, notatka, utworzono_ms, zmieniono_ms, ostatnia_praca_ms, ukonczono_ms, usunieto_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-  [id, nazwa, ext.stan ?? 'w_toku', ext.notatka ?? '', t, t, ext.ostatnia ?? t, ext.ukonczono ?? null, ext.usunieto ?? null],
+  'INSERT INTO projekt (id, nazwa, stan, notatka, utworzono_ms, zmieniono_ms, ostatnia_praca_ms, ukonczono_ms, ukonczono_dzien, usunieto_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  [id, nazwa, ext.stan ?? 'w_toku', ext.notatka ?? '', t, t, ext.ostatnia ?? t, ext.ukonczono ?? null, ext.ukonczono == null ? null : dzienWaw(ext.ukonczono), ext.usunieto ?? null],
 ];
 export const projekt = P;
 export const czesc = (id: string, projektId: string, nazwa: string, kolejnosc = 1, ext: { cel?: number | null; paraZ?: string | null; usunieto?: number | null } = {}): Instr => [

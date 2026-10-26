@@ -13,7 +13,7 @@ import { uruchomDane } from '../../src/przypadki-uzycia/start';
 import { utworzPortNode } from '../../src/dane/baza/adapter-node';
 import { join } from 'node:path';
 import { czesc, dzienLimitu, licznik, plik, projekt, przypomnienie, sesja, wzor, zycie, type Instr } from './pomocnicze/dane-wejsciowe';
-import { DOBA, GODZ, MIN, T0, ile, jeden, licznosci, migawka, przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
+import { DOBA, GODZ, MIN, T0, dzienLokalny, ile, jeden, licznosci, migawka, przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
 
 const OK = { ok: true, wartosc: undefined };
 /** Warunek wstępny W2 (P-118, P-120 Q3a): poprzedni start aplikacji teraz — sprzątanie wymaga dwóch startów po terminie (moduly.md). */
@@ -241,7 +241,7 @@ describe('projekty i części (BR-PRJ-*)', () => {
   test('BR-PRJ-013/S2: data ukończenia zmieniona na 3 dni wcześniej → lista ukończonych pokazuje tę datę', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Sweter', T0, { stan: 'ukonczony', ukonczono: T0 })]);
-    expect(await zmienDateUkonczenia(s.z, { projektId: 'p1', ukonczonoMs: T0 - 3 * DOBA })).toEqual(OK);
+    expect(await zmienDateUkonczenia(s.z, { projektId: 'p1', ukonczonoMs: T0 - 3 * DOBA, ukonczonoDzien: dzienLokalny(T0 - 3 * DOBA, 'Europe/Warsaw') })).toEqual(OK);
     expect((await listaProjektow(s.baza)).ukonczone.map((p) => p.ukonczonoMs)).toEqual([T0 - 3 * DOBA]);
   });
 
