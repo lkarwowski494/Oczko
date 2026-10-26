@@ -1,17 +1,17 @@
 // Raport czerwieni testów przed kodem (DS-02): klasyfikuje powód porażki na sztucznym wyniku Jest (bez uruchamiania testów).
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const SKRYPT = join(__dirname, '../../scripts/jakosc/akceptacja-raport.mjs');
 type Test = { title: string; status: string; failureMessages?: string[] };
-function raport(testy: Test[], zestawNieZaladowany = false) {
+function raport(testy: Test[], zestawNieZaladowany = false, opcje: { bezPlikow?: boolean; katalog?: string } = {}) {
   const k = mkdtempSync(join(tmpdir(), 'raport-'));
   const plik = join(k, 'w.json');
-  const testResults = [{ name: join(process.cwd(), 'tests/akceptacja/x.test.ts'), status: zestawNieZaladowany ? 'failed' : 'passed', message: zestawNieZaladowany ? "Cannot find module '../x'" : '', assertionResults: testy.map((t) => ({ ancestorTitles: [], failureMessages: [], ...t })) }];
+  const testResults = opcje.bezPlikow ? [] : [{ name: join(process.cwd(), 'tests/akceptacja/x.test.ts'), status: zestawNieZaladowany ? 'failed' : 'passed', message: zestawNieZaladowany ? "Cannot find module '../x'" : '', assertionResults: testy.map((t) => ({ ancestorTitles: [], failureMessages: [], ...t })) }];
   writeFileSync(plik, JSON.stringify({ testResults }));
-  return spawnSync('node', [SKRYPT, '--json', plik], { encoding: 'utf8' });
+  return spawnSync('node', [SKRYPT, '--json', plik, ...(opcje.katalog ? ['--katalog', opcje.katalog] : [])], { encoding: 'utf8' });
 }
 
 describe('akceptacja-raport.mjs (zasada roli 07 nr 3)', () => {
@@ -45,5 +45,14 @@ describe('akceptacja-raport.mjs (zasada roli 07 nr 3)', () => {
   test('R-171 zestaw, który się nie załadował, i pusty zbiór → kod 1', () => {
     expect(raport([], true).status).toBe(1);
     expect(raport([]).status).toBe(1);
+  });
+  test('F07-16 (P-198 Q2a): pusty zbiór jest zaliczeniem tylko przy katalogu bez plików testów; pliki są, a Jest nic nie zebrał → kod 1', () => {
+    const pusty = mkdtempSync(join(tmpdir(), 'akc-pusty-'));
+    const zPlikiem = mkdtempSync(join(tmpdir(), 'akc-plik-')); mkdirSync(join(zPlikiem, 'dane')); writeFileSync(join(zPlikiem, 'dane', 'x.test.ts'), '');
+    const ok = raport([], false, { bezPlikow: true, katalog: pusty });
+    expect(ok.status).toBe(0);
+    expect(ok.stdout).toContain('brak testów oczekujących');
+    expect(raport([], false, { bezPlikow: true, katalog: zPlikiem }).status).toBe(1);
+    expect(raport([], false, { katalog: pusty }).status).toBe(1); /* Jest zgłosił plik, ale bez testów */
   });
 });

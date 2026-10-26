@@ -1,9 +1,11 @@
 // Raport testów akceptacyjnych przed kodem (DS-02, zasada roli 07 nr 3): każdy test oczekujący ładuje się i pada
 // na znaczniku `NIEZAIMPLEMENTOWANE:` albo na asercji; nigdy na imporcie, składni ani typie. Test zielony przed kodem
 // jest błędem (nie może paść), chyba że ma w nazwie `[ZIELONY-OK: powód]` (np. kontrola, która już działa).
-// Użycie: node scripts/jakosc/akceptacja-raport.mjs [--wynik plik.md] [--json plik.json]  (kod 0 = wszystko czerwone z właściwego powodu)
+// Użycie: node scripts/jakosc/akceptacja-raport.mjs [--wynik plik.md] [--json plik.json] [--katalog tests/akceptacja]  (kod 0 = wszystko czerwone z właściwego powodu)
+// Pusty zbiór (F07-16, P-198 Q2a): zaliczenie tylko, gdy w katalogu nie ma żadnego pliku *.test.* (wszystkie kryteria przeniesione przez 08);
+// pliki są, a Jest nic nie zebrał (zła konfiguracja testMatch) albo plik bez testów → błąd.
 import { spawnSync } from 'node:child_process';
-import { readFileSync, writeFileSync, mkdtempSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 
@@ -50,5 +52,9 @@ if (wynik) {
 }
 console.log(`testy: ${wiersze.length}; ` + Object.entries(liczby).map(([k, v]) => `${k}: ${v}`).join(', '));
 for (const b of bledy) console.log('BŁĄD ' + b);
-if (wiersze.length === 0) console.log('BŁĄD brak testów akceptacyjnych (pusty zbiór to nie zaliczenie)');
-process.exit(bledy.length || wiersze.length === 0 ? 1 : 0);
+const katalog = arg('--katalog') ?? 'tests/akceptacja';
+const plikiTestow = existsSync(katalog) ? readdirSync(katalog, { recursive: true }).map(String).filter((f) => /\.test\.[jt]sx?$/.test(f)) : [];
+const pustyOk = wiersze.length === 0 && raport.testResults.length === 0 && plikiTestow.length === 0;
+if (pustyOk) console.log(`brak testów oczekujących: ${katalog} bez plików *.test.* (kryteria przeniesione do głównego zestawu)`);
+else if (wiersze.length === 0) console.log(`BŁĄD brak testów akceptacyjnych przy ${plikiTestow.length} plikach testów w ${katalog} i ${raport.testResults.length} zestawach w wyniku Jest (pusty zbiór to nie zaliczenie)`);
+process.exit(bledy.length || (wiersze.length === 0 && !pustyOk) ? 1 : 0);
