@@ -33,6 +33,8 @@ Reguły Apple i GitHuba niżej przeczytano 2026-10-26 na surowym tekście stron 
 3. Właściciel dopuszcza gałąź roboczą do wdrożeń Pages: https://github.com/lkarwowski494/oczko/settings/environments → `github-pages` → **Deployment branches and tags** → **Add deployment branch or tag rule** → `claude/jolly-thompson-paz6d8`. Regułę usuwa po scaleniu.
 4. Po potwierdzeniu nowej nazwy rola 10 uruchamia ręcznie Actions → „Pages” → Run workflow na gałęzi roboczej. Potem sprawdza `curl` dla `baza`, `baza + polityka` i `baza + wsparcie` (oczekiwane 200) i zapisuje wynik w dzienniku.
 
+**Wynik 2026-10-26:** Pages repo `oczko` działa pod `https://lkarwowski494.github.io/oczko/`; `apps4brew.com/oczko/` daje 404, bo apps4brew.com publikuje repo `apps4brew-www` (Trening ma tam `trening/` z kopią swoich stron). Wybór drogi: D10 (koordynator).
+
 ## 2. TestFlight (workflow `.github/workflows/testflight.yml`)
 - Uruchamia się tylko ręcznie: Actions → „TestFlight (testy wewnętrzne)” → Run workflow. Działa tylko w oknie maszyn macOS, od północy do ok. 15:00 (P-187), i tylko za zgodą na ten build.
 - Domyślnie `bez_wysylki = true`. Taki przebieg dowodowy robi pełną budowę, podpis, kontrolę `.ipa` i walidację Apple, ale niczego nie wysyła i nie tworzy tagu. Wysyłka wymaga świadomego odznaczenia tego pola.
