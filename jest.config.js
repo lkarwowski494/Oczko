@@ -16,7 +16,7 @@ module.exports = {
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|standard-navigation)',
   ],
   // Testy oczekujące są poza głównym zestawem (DS-02): npm run test:akceptacja.
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/akceptacja/'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/akceptacja/', '<rootDir>/.claude/'], // .claude/: worktree pod-agentów (08 partia 6)
   testTimeout: 30000,
   workerIdleMemoryLimit: '800MB',
 };
