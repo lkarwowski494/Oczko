@@ -41,3 +41,4 @@ Czas agenta: scenariusze 44–48 i lista TT ok. 1,5 h po „Dla 08” roli 04; z
 
 ## Decyzja
 **P-225** (koordynator wg P-087, 2026-10-26): Q1a (zadanie `e2e-ipad` w `jakosc-ios.yml`, ten sam build, nocą/ręcznie, bez bramki do pierwszego zielonego), Q2 (a)+(c) (argument `oczkoE2eSzerokoscOkna` + krok na urządzeniu), Q3c (zrzuty + przegląd 04 teraz, audyt XCUITest w 1.1). Pytanie o iPada i Apple Pencil — u właściciela przez koordynatora. Scenariusze po „Dla 08” roli 04 fix-7.
+**P-226**: właściciel ma iPada, nie ma Apple Pencil — lista „tylko urządzenie”: układy iPada, zakreślanie palcem, NFR-UKL-001; rysik tylko testem jednostkowym `pencilOnly`, reszta to nazwane ryzyko szczątkowe (strategia §9).
