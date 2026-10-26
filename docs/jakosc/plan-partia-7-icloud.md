@@ -38,3 +38,14 @@ Przełącznik atrapy (`EXPO_PUBLIC_ICLOUD_FAKE=1`) tylko w kroku buildu E2E, z k
 
 ## Szacunek
 Czas agenta: testy oczekujące Node/RNTL ok. 2 h po sygnaturach 05 (fundament P-221 Q7a); scenariusze E2E ok. 1,5 h po kodzie 08; lista urządzenia 30 min. Czekanie: fundament 05, kod 08 partii 7, okno maszyn. Od właściciela: przejście listy urządzenia (iPhone + iPad, jedno konto iCloud) przed wydaniem z iCloud.
+
+## Decyzja i kontrakt atrapy iCloud (dla kontraktu partii 7)
+**P-230** (koordynator wg P-087, 2026-10-26): Q1a, Q2a. Kontrakt poniżej przekazany 05 fix-7 przez koordynatora (zmiana nazwy = zmiana scenariuszy 07 i kontroli repo).
+| Element | Kontrakt |
+|---|---|
+| Zmienna buildu | `EXPO_PUBLIC_ICLOUD_FAKE=1` — ustawiana **tylko** w kroku buildu E2E `jakosc-ios.yml` (obok `EXPO_PUBLIC_STORE_FAKE`); czytana wyłącznie przez adapter silnika synchronizacji (`src/platforma/…icloud*`, nazwa pliku — 05) i `src/platforma/tryb-e2e.ts`; bez niej atrapy nie ma w bundlu wydania |
+| Atrapa | silnik w procesie z tym samym portem co prawdziwy (ADR-0005): pamięta wysłane rekordy i usunięcia strefy w pliku buildu E2E (przeżywa restart, jak transakcje sztucznego sklepu); nie wykonuje żadnej sieci |
+| Argument startu `oczkoE2eIcloud` | `wlaczony` (konto dostępne), `wylaczony` (przełącznik off), `brak-konta`, `brak-miejsca`, `konflikt` (przy starcie wstrzykuje drugą wersję pierwszego licznika: wartość +5, urządzenie „iPad (test)”, godzina = teraz − 1 min); bez `EXPO_PUBLIC_E2E=1` ignorowany |
+| Panele E2E (bez `t()`) | `e2e-icloud-wyslane` = liczba rekordów wysłanych przez atrapę od instalacji; `e2e-icloud-usuniete` = „tak”/„nie” (usunięcie strefy po „Also delete from iCloud”) — w Data and sync |
+| Kontrole repo | nowa kontrola `ATRAPA-ICLOUD` w `scripts/jakosc/kontrole-repo.mjs` (zmienna poza dozwolonymi plikami → błąd, z pułapką), `sprawdz-workflowy.mjs`: workflow wydania nie ustawia `EXPO_PUBLIC_ICLOUD_FAKE`, `sprawdz-ipa.mjs`: brak napisu atrapy w buildzie wydania (jak `SZTUCZNY-SKLEP`) — pisze 07 przy partii 7 |
+| Skrzynka (grupa R, Q2a) | argument `oczkoE2eSkrzynka=pdf` wkłada testowy PDF (ten sam co `e2e-wzor-pdf`) do skrzynki App Group przed pierwszym ekranem |
