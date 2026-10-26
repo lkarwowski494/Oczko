@@ -533,6 +533,7 @@
     "pusto": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): pusty zapas; pod spodem przycisk zapas.dodaj.",
     "filtr_pusto": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): brak wyników filtra (gdy po edycji zniknie ostatnia); obok odnośnik zapas.pokaz_wszystkie.",
     "pokaz_wszystkie": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): odnośnik zdejmujący filtr.",
+    "brak_wynikow": "Tekst roboczy 08 (partia 5, grupa D) — do zatwierdzenia przez 04. Wyszukiwanie w zapasie bez wyników (testID zapas-brak-wynikow, BR-ZAP-004 S2); wzór: projekty.brak_wynikow.",
     "pole_nazwa": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): pole formularza (wymagane; pusta nazwa — Add nieaktywny).",
     "pole_producent": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): pole opcjonalne.",
     "pole_sklad": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): pole opcjonalne (skład włókien).",

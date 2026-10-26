@@ -526,6 +526,7 @@
   "zapas.pusto": "⟦Ñö ýàŕñ ýét. Àdd ýàŕñ fŕöm îtš làbél tö šéé whàt ýöû hàvé, évéñ wîthöût à çöññéçtîöñ.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
   "zapas.filtr_pusto": "⟦Ñö ýàŕñ îñ wéîght {{n}}.~~~~~~~~~~~~⟧",
   "zapas.pokaz_wszystkie": "⟦Šhöw àll~~~~~~~⟧",
+  "zapas.brak_wynikow": "⟦Ñö ýàŕñ çàlléd “{{zapytanie}}”.~~~~~~~~~~⟧",
   "zapas.pole_nazwa": "⟦Ñàmé~~~~⟧",
   "zapas.pole_producent": "⟦Bŕàñd~~~~~⟧",
   "zapas.pole_sklad": "⟦Fîbéŕ~~~~~⟧",

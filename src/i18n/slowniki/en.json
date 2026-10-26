@@ -583,6 +583,7 @@
     "pusto": "No yarn yet. Add yarn from its label to see what you have, even without a connection.",
     "filtr_pusto": "No yarn in weight {{n}}.",
     "pokaz_wszystkie": "Show all",
+    "brak_wynikow": "No yarn called “{{zapytanie}}”.",
     "pole_nazwa": "Name",
     "pole_producent": "Brand",
     "pole_sklad": "Fiber",

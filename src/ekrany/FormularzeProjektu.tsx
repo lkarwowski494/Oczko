@@ -8,8 +8,8 @@ import { Arkusz, Komunikat, Pole, Przycisk, Tresc, Wybor, liczbaZPola, style as 
 import { useKolory } from './motyw';
 import type { Tlumacz, WynikEkranu } from './wspolne';
 
-type Zapis<T> = (w: T) => Promise<WynikEkranu<unknown>>;
-function Przyciski(p: { t: Tlumacz; naZapisz(): void; naAnuluj(): void; tekst?: string; wylaczony?: boolean }): React.ReactElement {
+export type Zapis<T> = (w: T) => Promise<WynikEkranu<unknown>>;
+export function Przyciski(p: { t: Tlumacz; naZapisz(): void; naAnuluj(): void; tekst?: string; wylaczony?: boolean }): React.ReactElement {
   return (
     <>
       <Przycisk tekst={p.tekst ?? p.t('wspolne.zapisz')} onPress={p.naZapisz} rodzaj="glowny" testID="formularz-zapisz" wylaczony={p.wylaczony} />
@@ -18,7 +18,7 @@ function Przyciski(p: { t: Tlumacz; naZapisz(): void; naAnuluj(): void; tekst?: 
   );
 }
 /** Nieudany zapis → komunikat „Couldn’t save…” (jak arkusz nazwy), wpisane dane zostają. */
-function useZapis(): [boolean, <T>(f: Zapis<T>, w: T) => void] {
+export function useZapis(): [boolean, <T>(f: Zapis<T>, w: T) => void] {
   const [blad, ustaw] = useState(false);
   return [blad, (f, w) => { ustaw(false); void f(w).then((r) => { if (!r.ok) ustaw(true); }); }];
 }

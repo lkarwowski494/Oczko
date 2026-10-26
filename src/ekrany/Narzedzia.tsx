@@ -28,7 +28,7 @@ export function Wloczka({ stan, t }: PropsWloczki): React.ReactElement {
 export function WierszGrupy(p: { tekst: string; opis?: string; wartosc?: string; onPress(): void; testID?: string; ostatni?: boolean }): React.ReactElement {
   const st = style(useKolory());
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={p.wartosc ? `${p.tekst}, ${p.wartosc}` : p.tekst} accessibilityHint={p.opis}
+    <Pressable accessibilityRole="button" accessibilityLabel={[p.tekst, p.opis, p.wartosc].filter(Boolean).join(', ')}
       onPress={p.onPress} testID={p.testID} style={[st.wiersz, p.ostatni && st.wierszOstatni]}>
       <View style={st.wierszTekst}>
         <Text style={st.nazwa}>{p.tekst}</Text>

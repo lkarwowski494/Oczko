@@ -5,12 +5,11 @@ import { Probka } from '../src/ekrany/Narzedzia';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { stanProbki } from '../src/kompozycja/probka';
-import { ukladMiar } from '../src/i18n/format';
-import { miaraSystemowa } from '../src/platforma/lokalizacja';
+import { imperialny } from '../src/kompozycja/miary';
 
 export default function EkranProbki(): React.ReactElement {
   const { kontener } = useAplikacja();
-  const cm = ukladMiar('auto', miaraSystemowa()) === 'metric';
+  const cm = !imperialny();
   return (
     <Bezpieczny>
       <Probka t={kontener.j.t} jednostka={cm ? 'cm' : 'in'} poczatek={{ oczka: '', na: cm ? '10cm' : '4in' }} licz={(w) => stanProbki(w, kontener.j)} />
