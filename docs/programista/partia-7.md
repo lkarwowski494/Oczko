@@ -1,7 +1,7 @@
 # Rola 08 (programista), build, partia 7: synchronizacja iCloud
 Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-thompson-paz6d8` · zakres: „Kontrakt partii 7” w `docs/architektura/moduly.md` (F-27, F-58 część synchronizacji, BR-DAN-002 S1–S3), projekt `docs/design/fix7-2026-10-26.md` i `udostepnij-icloud.html`, plan 07 `docs/jakosc/plan-partia-7-icloud.md`; decyzje P-217, P-218 Q5a, P-220 I1a/N3/N5, P-221 Q5a, P-229, P-230, P-233, P-241. Prompt roli: [OTWARTE] — repo `prompts` niedostępne w tej sesji (add_repo zablokowane przez kontrolę uprawnień), praca wg CLAUDE.md, kontraktu i polecenia koordynatora.
 
-## Stan: kod TS kompletny i wypchnięty; moduł Swift na gałęzi kopii `claude/kopia-partia-7` (181a992) do okna maszyn · 2026-10-26 ok. 20:45 UTC
+## Stan: kod TS kompletny i wypchnięty; moduł Swift na gałęzi kopii `claude/kopia-partia-7` (ostatni commit gałęzi, zawsze natywny na końcu) do okna maszyn · 2026-10-26 ok. 20:45 UTC
 **Następny krok (okno maszyn, po sygnale koordynatora):** przenieść commit modułu `modules/oczko-icloud` (kopia → gałąź robocza), build „Jakość · iOS” (kompilacja Swift — kod CloudKit nie był kompilowany, bo na Linuksie nie ma CloudKit), scenariusze 48–51 w pakiecie pełnym, `cktool validate-schema` dla `cloudkit/schemat.ckdb` (właściciel: kontener `iCloud.com.apps4brew.knitting`), XCTest odwzorowania `RekordIcloud` ↔ `CKRecord` [OTWARTE: nie napisany — wymaga celu testów w oknie maszyn]. Potem test ZM-06 na urządzeniach właściciela (P-233) → koordynator ustawia `ICLOUD_W_1_0`.
 
 ## E0 Środowisko i stan wyjściowy
@@ -40,4 +40,5 @@ Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-tho
 | 5 ekrany i kompozycja | (ten commit) | RNTL `icloud-stan-danych` 10/10, `icloud-licznik` 2/2, `icloud-konflikt` 1/1, `tests/dane/kompozycja-icloud` 2/2 (czerwone przed kodem); verify kod 0, 2408/2408; `jakosc:slady-wydania` kod 0; eksport wydania: 0 × „iPad (test)”, eksport E2E z atrapą: 1× |
 | U6a rodzaj urządzenia; „Zastąp”/przywrócenie przy iCloud | (ten commit), ebbb591 | `tests/dane/icloud-rodzaj-urzadzenia.test.ts` 2/2, `icloud-zastap` 2/2 (czerwone przed kodem); verify 2468/2468 |
 | 6a generator `cloudkit/schemat.ckdb` | (ten commit) | `tests/narzedzia/icloud-schemat-ckdb.test.ts` 2/2 (czerwone przed kodem); składnia jak `cktool export-schema` [DO USTALENIA: `cktool validate-schema` na koncie właściciela] |
-| 6b moduł Swift `oczko-icloud` | 181a992 (tylko `claude/kopia-partia-7`) | brak kompilacji na Linuksie (CloudKit); `kontrola-swift` 0 błędów; verify 2480/2480 z modułem w drzewie; `jakosc:slady-wydania` kod 0 na 3d8b7c9 |
+| 6b moduł Swift `oczko-icloud` | ostatni commit `claude/kopia-partia-7` (cherry-pick w oknie maszyn) | brak kompilacji na Linuksie (CloudKit); `kontrola-swift` 0 błędów; verify 2480/2480 z modułem w drzewie; `jakosc:slady-wydania` kod 0 na 3d8b7c9 |
+| przegląd 48–51 | 4d8a800 | 50: włączenie wysyła przy pustej skrzynce (zapis strefy) — test przed kodem; RYZYKO 49: etykieta VoiceOver przycisków wyboru (`dane.konflikt_a11y`) a selektor tekstowy scenariusza — do sprawdzenia w oknie maszyn (zgłoszone koordynatorowi) |
