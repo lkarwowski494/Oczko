@@ -59,5 +59,20 @@ Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-000
 | X-RG-05 | Wektory dostępu `decyzja` i `odczytajPamiec` z `wektory-dostepu.json` (Pro na zegarku bez telefonu) | ADR-0009 D, P-039 |
 | X-RG-06 | `dzien` w Swift: kalendarz gregoriański i cyfry ASCII niezależnie od `Locale`/`Calendar` urządzenia (`Calendar(identifier: .japanese)` w teście) | R-134, RD-16 |
 
+## 4. Skrzynka zegarka (ADR-0009, uzupełnienie 2026-10-26; NZ-08-P3-05 (e), P-135) — `swift test` pakietu, zestaw `ZegarekSkrzynkaTests`
+Wektory: `wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-09); zestaw wypisuje „wykonano N z N” po id scenariuszy (`Wykonane`). `SkrzynkaZegarka` dostaje magazyn (`MagazynSkrzynki`): w X-ZG-01–09 prawdziwy plik `skrzynka-zegarka.jsonl` w katalogu tymczasowym (rdzeń `DziennikPlus`), w X-ZG-02 atrapa rzucająca błąd przy `dopisz`. `restart` = nowa skrzynka z tego samego magazynu i ostatniego kontekstu. Dziś (partia 3) czerwone z właściwego powodu: X-ZG-03 i X-ZG-09 (e3) na asercji — `ZegarekTests.testGlowaInnegoLicznikaNieUsuwa` z `XCTExpectFailure(strict: true)` (P-135: test oczekujący; 08 usuwa `XCTExpectFailure` w commicie poprawki); pozostałe wymagają nowego API (magazyn, `potwierdzone`, `doWyslania`) — czerwień pokazuje 08 przed kodem (odstępstwo nazwane: brak kompilatora Swift w chmurze roli 05).
+| ID | Co | Wyrocznia |
+|---|---|---|
+| X-ZG-01 | Stuknięcie zapisane w pliku przetrwa restart skrzynki (kolejka i wartość z pliku) | ZG-01 |
+| X-ZG-02 | Błąd `dopisz` (pełny dysk): `stuknijNaZegarku` rzuca, kolejka, stan pokazywany i plik bez zmian; haptyka i wysyłka nie są wołane (model aplikacji zegarka) | ZG-02 |
+| X-ZG-03 | Głowa kontekstu innego licznika nie usuwa zdarzenia z kolejki | ZG-03 |
+| X-ZG-04 | Głowa w obrębie licznika usuwa siebie i wcześniejsze zdarzenia tego licznika; późniejsze nakładane na kontekst | ZG-04 |
+| X-ZG-05 | `potwierdzone` usuwa zdarzenie, gdy głowa jest zdarzeniem telefonu (bez podwójnego liczenia) | ZG-05 |
+| X-ZG-06 | `doWyslania(teraz:wToku:)`: niewysłane od razu; ponownie po `Stale.zegarekPonowienieMs`, z pominięciem `wToku` (`outstandingUserInfoTransfers`) | ZG-06 |
+| X-ZG-07 | Brak potwierdzenia po wysłaniu (telefon nie zapisał): kolejka zostaje, ponowienie, potwierdzenie usuwa | ZG-07 |
+| X-ZG-08 | Restart zapomina czasy wysyłki: wszystkie niepotwierdzone do wysłania | ZG-08 |
+| X-ZG-09 | Potwierdzenie późniejszego zdarzenia licznika usuwa wcześniejsze tego licznika, nie rusza innego; nieznane id bez skutku | ZG-09 |
+| X-ZG-10 | Przepisanie atomowe kolejki przerwane przed `rename` (atrapa): plik `skrzynka-zegarka.jsonl` = stan sprzed usunięcia, plik tymczasowy sprzątany przy odczycie | ADR-0009 (2026-10-26) pkt 1 |
+
 ## Wynik i raport
 Raport XCTest (`xcresult`) jako artefakt; podsumowanie przebiegu wypisuje dla każdego zestawu „wykonano N z N”. Pierwsze uruchomienie informacyjne; bramka po pierwszym zielonym przebiegu na SHA (zasada roli 8). Do tego czasu: „Nie sprawdzono” w audycie dla R-018, R-022–R-028, R-031, R-032.

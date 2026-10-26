@@ -9,4 +9,6 @@ public enum Stale {
   public static let oknoOfflineProMs: Int64 = 604800000
   /// PRODUKTY_PRO
   public static let produktyPro: [String] = ["oczko.pro.lifetime","oczko.pro.monthly","oczko.pro.yearly"]
+  /// ZEGAREK_PONOWIENIE_MS
+  public static let zegarekPonowienieMs: Int64 = 900000
 }

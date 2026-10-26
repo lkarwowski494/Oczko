@@ -28,7 +28,8 @@ final class ZegarekHub: NSObject, WCSessionDelegate {
       try DziennikPlus.wspolny.dopisz(z)
       poZapisie?([z.linia])
     } catch {
-      // Nieudany zapis: transferUserInfo nie ponawia dostarczenia — linia zostaje w diagnostyce systemu; [DO USTALENIA 05: ponowienie z zegarka]
+      // Nieudany zapis: transferUserInfo nie ponawia dostarczenia. Kontrakt (ADR-0009, 2026-10-26 pkt 6; NZ-08-P3-05 e1): bez potwierdzenia
+      // i bez poZapisie — zegarek trzyma linię w kolejce i ponawia (wdraża 08 w partii 4).
       NSLog("OczkoZegarek: zapis linii z zegarka nieudany: %@", String(describing: error))
     }
   }

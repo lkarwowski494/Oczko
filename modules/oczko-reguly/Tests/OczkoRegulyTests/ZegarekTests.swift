@@ -50,6 +50,24 @@ final class ZegarekTests: XCTestCase {
     s.przyjmij(inny)
     XCTAssertEqual([s.oczekujace.map(\.id), [String(s.pokazywany?.wartosc ?? -1)]], [["a"], [String(inny.wartosc)]])
   }
+
+  /// NZ-08-P3-05 (e3), P-135, X-ZG-03 (wektor ZG-03): głowa kontekstu licznika B nie usuwa niepotwierdzonego zdarzenia licznika A.
+  /// Test oczekujący (roli 05, fix-4): dziś czerwony na asercji — `przyjmij` usuwa wszystko do pozycji `glowa` w kolejce (Zegarek.swift).
+  /// 08 usuwa `XCTExpectFailure` w commicie poprawki (strict: przejście testu bez poprawki też jest czerwone).
+  func testGlowaInnegoLicznikaNieUsuwa() throws {
+    XCTExpectFailure("NZ-08-P3-05 (e3): czeka na poprawkę 08 (ADR-0009, uzupełnienie 2026-10-26 pkt 4)", strict: true)
+    var s = SkrzynkaZegarka()
+    let a = try stan("stan-zegarka-typowy.json")
+    s.przyjmij(a)
+    _ = try s.stuknijNaZegarku(.plus, teraz: wieczor, strefa: "Europe/Warsaw", id: "a1", urzadzenie: "zegarek")
+    let tekstB = try Repo.tekst("tests/wspolne/stan-zegarka-typowy.json").replacingOccurrences(of: a.licznikId, with: "11111111-2222-4333-8444-555555555555")
+    let b = try StanEkranuBlokady.dekoduj(Data(tekstB.utf8))
+    s.przyjmij(b.po(5 - b.wartosc, glowa: "b0", czasMs: wieczor, dzien: b.dzien, dni: b.dniWMiesiacu))
+    _ = try s.stuknijNaZegarku(.plus, teraz: wieczor + 60_000, strefa: "Europe/Warsaw", id: "b1", urzadzenie: "zegarek")
+    s.przyjmij(b.po(6 - b.wartosc, glowa: "b1", czasMs: wieczor + 60_000, dzien: b.dzien, dni: b.dniWMiesiacu))
+    XCTAssertEqual(s.oczekujace.map(\.id), ["a1"], "zdarzenie licznika A zniknęło z kolejki po głowie licznika B (utrata stuknięcia)")
+    XCTAssertEqual(s.pokazywany?.wartosc, 6)
+  }
 }
 
 final class ZegarekTrwaloscTests: XCTestCase {

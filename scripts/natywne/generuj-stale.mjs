@@ -12,6 +12,7 @@ const STALE = {
   przerwaNowegoDniaMs: ['PRZERWA_NOWEGO_DNIA_MS', 'Int64'],
   oknoOfflineProMs: ['OKNO_OFFLINE_PRO_MS', 'Int64'],
   produktyPro: ['PRODUKTY_PRO', '[String]'],
+  zegarekPonowienieMs: ['ZEGAREK_PONOWIENIE_MS', 'Int64'], // kolejka zegarka (ADR-0009, 2026-10-26; fix-4 05)
 };
 const wartosci = Object.fromEntries(Object.entries(STALE).map(([n, [z]]) => {
   if (!(z in k)) throw new Error(`generuj-stale: brak ${z} w src/konfiguracja.ts`);

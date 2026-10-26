@@ -6,5 +6,6 @@
     "oczko.pro.lifetime",
     "oczko.pro.monthly",
     "oczko.pro.yearly"
-  ]
+  ],
+  "zegarekPonowienieMs": 900000
 }

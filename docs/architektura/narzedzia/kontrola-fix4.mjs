@@ -1,0 +1,67 @@
+// kontrola-fix4.mjs — kontrola dokumentów roli 05 fix-4 (NZ-08-P3-05, P-135): dla każdego zgłoszenia (a)–(h), N1, N2 sprawdza, że
+// kontrakt jest zapisany tam, gdzie czyta go rola 08. Przed poprawką czerwone (dowód stanu wyjściowego), po poprawce zielone.
+// Użycie: node docs/architektura/narzedzia/kontrola-fix4.mjs [--id e,a,...]   (kod 1, gdy któraś pozycja nie przechodzi)
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const K = join(import.meta.dirname, '../../..');
+const czytaj = (p) => (existsSync(join(K, p)) ? readFileSync(join(K, p), 'utf8') : '');
+const sekcja = (tekst, naglowek) => tekst.split(/^## /m).find((s) => s.startsWith(naglowek)) ?? '';
+const moduly = czytaj('docs/architektura/moduly.md');
+const partia4 = sekcja(moduly, 'Kontrakt partii 4');
+const konfiguracja = sekcja(moduly, 'Konfiguracja');
+
+/** id → lista [opis, warunek]. */
+const KONTROLE = {
+  e: [
+    ['rejestr Apple 4f–4i (transferUserInfo, didFinish, outstanding, UserDefaults)', () => ['4f', '4g', '4h', '4i'].every((n) => new RegExp(`^\\| ${n} \\|`, 'm').test(czytaj('docs/architektura/rejestr/apple.md')))],
+    ['ADR-0009: uzupełnienie 2026-10-26 z kolejką w pliku, potwierdzeniem i ponowieniem', () => {
+      const u = sekcja(czytaj('docs/adr/0009-zegarek-transport-limit-pro.md'), 'Uzupełnienie 2026-10-26');
+      return ['skrzynka-zegarka.jsonl', '`potwierdzone`', 'ZEGAREK_PONOWIENIE_MS', 'outstandingUserInfoTransfers', 'fsync'].every((s) => u.includes(s));
+    }],
+    ['wektory tests/wspolne/wzorce.json → zegarek_skrzynka: ≥ 9 scenariuszy ZG-*, id bez powtórzeń', () => {
+      try {
+        const w = JSON.parse(czytaj('tests/wspolne/wzorce.json')).zegarek_skrzynka;
+        const id = w.scenariusze.map((s) => s.id);
+        return id.length >= 9 && new Set(id).size === id.length && id.every((i) => /^ZG-\d{2}$/.test(i));
+      } catch { return false; }
+    }],
+    ['specyfikacja X-ZG-01–X-ZG-09 w tests/wspolne/xctest-specyfikacja.md', () => Array.from({ length: 9 }, (_, i) => `X-ZG-0${i + 1}`).every((x) => czytaj('tests/wspolne/xctest-specyfikacja.md').includes(`| ${x} |`))],
+    ['ZEGAREK_PONOWIENIE_MS i ZEGAREK_POTWIERDZENIA_MAKS w src/konfiguracja.ts i w tabeli „Konfiguracja”', () => ['ZEGAREK_PONOWIENIE_MS', 'ZEGAREK_POTWIERDZENIA_MAKS'].every((n) => new RegExp(`export const ${n} =`).test(czytaj('src/konfiguracja.ts')) && konfiguracja.includes(`\`${n}\``))],
+    ['port Zegarek.potwierdz i WynikPartii.potwierdzone w „Kontrakt partii 4”', () => partia4.includes('potwierdz(ids: readonly string[]): void') && partia4.includes('potwierdzone: string[]')],
+    ['test oczekujący strony telefonu tests/akceptacja/dane/zegarek-potwierdzenia.test.ts', () => czytaj('tests/akceptacja/dane/zegarek-potwierdzenia.test.ts').includes('P-135')],
+  ],
+  a: [['Sklep.kup → Promise<StatusZakupu> w „Kontrakt partii 4”', () => partia4.includes('kup(id: string): Promise<StatusZakupu>') && partia4.includes("export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'")]],
+  b: [['Haptyka.zagraj(w: WzorzecHaptyki) z kluczami tokenów 04', () => {
+    const klucze = Object.keys(JSON.parse(czytaj('docs/design/tokeny.json') || '{}').haptyka ?? {}).filter((k) => !k.startsWith('_'));
+    const m = partia4.match(/export type WzorzecHaptyki = ([^;]+);/);
+    const typ = m ? [...m[1].matchAll(/'(\w+)'/g)].map((x) => x[1]) : [];
+    return partia4.includes('zagraj(w: WzorzecHaptyki): void') && klucze.length === 6 && typ.length === klucze.length && klucze.every((k) => typ.includes(k));
+  }]],
+  c: [['drzewo moduly.md: bez oczko-zegarek, z oczko-reguly', () => {
+    const d = sekcja(moduly, 'Drzewo katalogów');
+    return !d.includes('oczko-zegarek') && d.includes('oczko-reguly');
+  }]],
+  d: [
+    ['ADR-0008: stan Live Activity z polem `uwaga` (odblokuj, blad_zapisu)', () => /`uwaga`[^\n]*'odblokuj'[^\n]*'blad_zapisu'/.test(czytaj('docs/adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md'))],
+    ['X-DZ-07 i X-DZ-14 (błąd zapisu) w specyfikacji z polem `uwaga`', () => /\| X-DZ-07 \|[^\n]*`uwaga: 'odblokuj'`/.test(czytaj('tests/wspolne/xctest-specyfikacja.md')) && /\| X-DZ-14 \|[^\n]*`uwaga: 'blad_zapisu'`/.test(czytaj('tests/wspolne/xctest-specyfikacja.md'))],
+  ],
+  n1: [['stan wersja 3 z `zablokowany: boolean` w „Kontrakt partii 4” i regułą w ADR-0008', () => partia4.includes('zablokowany: boolean') && partia4.includes('WERSJA_STANU = 3') && /zablokowany/.test(sekcja(czytaj('docs/adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md'), 'Uzupełnienie 2026-10-26'))]],
+  f: [['wiersz DZIENNIK_BLAD_TEKST_MAKS w tabeli „Konfiguracja”', () => /\| `DZIENNIK_BLAD_TEKST_MAKS` \(znaki\) \| 4096 \|/.test(konfiguracja)]],
+  g: [['opis ostatniPlusMs = ostatnie +1 w dowolnym projekcie', () => /`ostatniPlusMs`: czas ostatniego \+1 w dowolnym projekcie/.test(moduly) && !moduly.includes('`ostatniPlusMs`: czas ostatniej zmiany licznika')]],
+  h: [['budżet SHA-256/CRC-32 jako nazwany stan „do ustalenia po pomiarze na urządzeniu” (ADR-0016, e3 §3)', () => czytaj('docs/adr/0016-zaleznosci-wersji-1.md').includes('do ustalenia po pomiarze na urządzeniu') && /\| Sprawdzenie archiwum[^\n]*do ustalenia po pomiarze na urządzeniu/.test(czytaj('docs/architektura/e3-tlo-bledy-prywatnosc-wydajnosc.md'))]],
+};
+
+const i = process.argv.indexOf('--id');
+const wybrane = i > 0 ? process.argv[i + 1].split(',') : Object.keys(KONTROLE);
+let zle = 0, razem = 0;
+for (const id of wybrane) {
+  for (const [opis, warunek] of KONTROLE[id] ?? [[`nieznane id ${id}`, () => false]]) {
+    razem += 1;
+    const ok = warunek();
+    if (!ok) zle += 1;
+    console.log(`${ok ? 'OK  ' : 'BRAK'} (${id}) ${opis}`);
+  }
+}
+console.log(`kontrola fix-4: ${razem - zle}/${razem}`);
+process.exit(zle ? 1 : 0);

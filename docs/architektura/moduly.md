@@ -147,6 +147,22 @@ export type StanZegarkaV1 = StanEkranuBlokadyV1 & { pro: boolean; proWaznoscDo: 
 - Czytelnik pomija nieznane pola (vN czyta vN+1); dekoder Swift odrzuca ładunek z `wersja` większą niż znana i bez wymaganego pola (bez wartości domyślnych, X-ST-01), a Live Activity pokazuje wtedy ostatni poprawny stan.
 - **Przełączenie v1 → v2** (jeden commit 07 + 08, kolejność z `tests/wspolne/README.md`): typy v2 zastępują v1 w „Porty domeny” (`porty.ts`), pliki `tests/wspolne/stan-*.json` i `wzorce.json` (`wersja_kontraktu: 2`, pliki v1 jako `*-v1.json` dla zgodności) uzupełnione, listy pól w `tests/jakosc/zlote-pliki.test.ts` i wejście `stanZegarka` w `tests/akceptacja/domena/luki/zegarek.test.ts` dopasowane; złote pliki stanu od tej chwili tworzy generator z kodu TS (`stanZegarka`, jak generator tekstów Swift w ADR-0017), a test pilnuje, że generator i pliki się zgadzają.
 
+## Kontrakt partii 4 (fix-4 2026-10-26, NZ-08-P3-05, P-135)
+Zmiany sygnatur portów i typów, które wdraża 08 na początku partii 4 (przed ekranami) **razem z adapterami i wywołaniami**. Do tego czasu `src/domena/porty.ts` i blok „Porty domeny” zostają bez zmian (zmiana typu bez adaptera nie przechodzi `typecheck`), a ten blok jest kontraktem docelowym. **Wyjątek nazwany (P-135):** `sprawdz-porty.mjs` porównuje tylko blok „Porty domeny”; rozjazd z tym blokiem jest zamierzony do commitu 08, który przenosi te deklaracje do „Porty domeny” i `porty.ts` i usuwa je stąd. Kontrola dokumentu: `docs/architektura/narzedzia/kontrola-fix4.mjs`.
+```ts
+// (e) kolejka zegarka — ADR-0009, uzupełnienie 2026-10-26 pkt 3: potwierdzenia jadą w kontekście aplikacji obok stanu
+export interface Zegarek { wyslijStan(s: StanZegarka): Promise<void>; potwierdz(ids: readonly string[]): void; odbieraj(fn: (z: ZdarzenieWejsciowe[]) => void): () => void }
+// potwierdz: dopisuje id do listy ostatnich ZEGAREK_POTWIERDZENIA_MAKS (bez powtórzeń; ponowne id przechodzi na koniec, najstarsze wypadają; pamięć procesu);
+// wyslijStan: moduł natywny dostaje (stanJson, lista) i wysyła updateApplicationContext({ stan, potwierdzone }) — oba klucze zawsze razem.
+export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: string[] }; // wynik scalDziennikWKolejce/scalDziennik (src/przypadki-uzycia/dziennik.ts)
+// potwierdzone: id linii zrodlo 'zegarek' z partii, które po COMMIT są w `zdarzenie` (nowe albo powtórzone, M-02) albo odrzucone na stałe (brak licznika, R-021);
+// poczekalnia — nie; kolejność pierwszego wystąpienia, bez powtórzeń. Wołający (start, naPierwszyPlan, eksport, odbiór z zegarka) woła
+// zegarek.potwierdz(w.potwierdzone) przed odswiezEkranBlokady, więc lista jedzie z ładunkiem, który już uwzględnia te zdarzenia.
+```
+- **Moduł natywny** (`modules/oczko-dziennik-plus/ios/Zegarek.swift`, `index.ts`): `zegarekWyslij(stanJson: string, potwierdzone: string[])`; `didReceiveUserInfo` przy błędzie `dopisz` nie woła `poZapisie` i niczego nie potwierdza (e1, zegarek ponowi).
+- **Zegarek** (`targets/watch/Aplikacja.swift`, `SkrzynkaZegarka` w pakiecie): kolejka w pliku, kolejność stuknięcia, usuwanie i ponowienie według ADR-0009 (2026-10-26) pkt 1–5; testy X-ZG (`xctest-specyfikacja.md` §4).
+- **Testy do zmiany mechanicznej przez 08** (asercje bez zmiany sensu): `toEqual({ ok: true, wartosc: { scalono, pominieto } })` w `tests/dane/dziennik*.test.ts` dostaje `potwierdzone`; test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` przenieść do `tests/dane/` w commicie, który go zazielenia.
+
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)
 - **Jedno źródło czasu:** port `Zegar` (`teraz(): { ms, strefa, dzien }`); domena i przypadki użycia nie wołają `Date.now()` ani `new Date()` bez argumentu. Adapter produkcyjny: zegar systemu i strefa urządzenia. Build E2E (`EXPO_PUBLIC_E2E=1`): adapter z `src/platforma/tryb-e2e.ts` czyta argument startu `oczkoE2eTeraz` (e2e/README.md) i zwraca podaną chwilę plus czas, który upłynął od startu procesu (zegar biegnie, RD-17 liczy odstępy); w buildzie wydania argument jest ignorowany (kontrola `TRYB-E2E`, `sprawdz-workflowy.mjs`). Dzięki temu granica miesiąca, północ i nowy dzień limitu są scenariuszami E2E bez zmiany zegara symulatora.
 - **Przeliczenie przy zmianie daty:** przy `AppState → active` i przy powiadomieniu o istotnej zmianie czasu (`significantTimeChange`: północ, zmiana strefy, ręczna zmiana zegara) aplikacja liczy od nowa: dzień (RD-16), stan limitu i strażnika (`mozeZaczacDzien`), cel dzienny i postęp (F-61), bieżący tydzień i miesiąc (F-59, BR-DNI-003), stan Live Activity (ADR-0008 (7)) i stan zegarka. Nic nie odlicza czasu `setInterval`; aplikacja otwarta przez północ przelicza się na tym powiadomieniu.
@@ -244,6 +260,8 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `WZOR_MAKS_MB` (MB) | 200 | [OCENA] roli 05 (Z07-17): największy plik przyjmowany przez rozszerzenie udostępniania; do korekty po pomiarze |
 | `PIERWSZY_DZIEN_TYGODNIA` (1 = poniedziałek) | 1 | P-110 (Q7): tydzień od poniedziałku dla wszystkich języków, jak Trening |
 | `POCZEKALNIA_DNI` (dni) | 7 | P-110 (Q1a): po tym czasie „niepełna historia” w Stanie danych, rekord zostaje |
+| `ZEGAREK_PONOWIENIE_MS` (ms) | 900 000 (15 min) | [OCENA] roli 05 (fix-4, P-135 Q2a): ponowna wysyłka niepotwierdzonej linii z kolejki zegarka (ADR-0009, 2026-10-26 pkt 5); ta sama liczba w stałych Swift (`zegarekPonowienieMs`, generator) i w wektorach `zegarek_skrzynka` |
+| `ZEGAREK_POTWIERDZENIA_MAKS` (id) | 256 | [OCENA] roli 05 (fix-4, P-135 Q2a): ostatnie potwierdzone id zegarka w kontekście aplikacji (ok. 9 KB); nadmiar wraca ponowieniem i potwierdza się w następnej partii |
 | `PARTIA_SYNCHRONIZACJI` (wiersze na transakcję) | 200 | [OCENA] roli 05: krótkie transakcje przy scalaniu iCloud i importu (E3 §1); do korekty po pomiarze |
 | `MIN_IOS` / `MIN_WATCHOS` | 18.0 / 11.0 | P-070, ADR-0006 |
 | `PRODUKTY_PRO` (ID) | [DO USTALENIA] | P-038 (przy konfiguracji App Store Connect) |

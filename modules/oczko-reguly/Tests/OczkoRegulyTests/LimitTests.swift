@@ -84,6 +84,9 @@ final class LimitTests: XCTestCase {
     XCTAssertEqual(Stale.przerwaNowegoDniaMs, stale["przerwaNowegoDniaMs"]?.calkowita)
     XCTAssertEqual(Stale.oknoOfflineProMs, stale["oknoOfflineProMs"]?.calkowita)
     XCTAssertEqual(Stale.produktyPro, stale["produktyPro"]?.tablica?.compactMap(\.tekst))
+    // Kolejka zegarka (ADR-0009, 2026-10-26; fix-4 05): ta sama liczba w stałych i w wektorach skrzynki (ZG-06).
+    XCTAssertEqual(Stale.zegarekPonowienieMs, stale["zegarekPonowienieMs"]?.calkowita)
+    XCTAssertEqual(Stale.zegarekPonowienieMs, try Repo.json("tests/wspolne/wzorce.json")["zegarek_skrzynka"]?["ponowienie_ms"]?.calkowita)
   }
 
   /// X-RG-03: mutant `<` → `<=` w porównaniu przerwy czerwieni wektor graniczny L-04c (60 min); poprawna reguła — żadnego.
