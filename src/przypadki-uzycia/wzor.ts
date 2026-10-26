@@ -65,7 +65,7 @@ export function ustawZnacznik(
     return OK;
   });
 }
-/** Notatka przy rzędzie wzoru; plik wzoru bez zmian (BR-WZR-008/S2). Wzór bez znacznika (bez licznika) → `niedozwolone_przejscie` [DO USTALENIA 05]. */
+/** Notatka przy rzędzie wzoru; plik wzoru bez zmian (BR-WZR-008/S2). Wzór bez znacznika (bez licznika) → `niedozwolone_przejscie` (ADR-0011 uzupełnienie 2026-10-26, P-124 Q6a). */
 export function dodajNotatkeWzoru(z: ZaleznosciPlikow, w: { wzorId: string; rzad: number; tekst: string }): Promise<Wynik<void>> {
   if (!Number.isInteger(w.rzad) || w.rzad < 1 || !w.tekst.trim()) return Promise.resolve(blad('bledne_dane'));
   return operacjaZapisu(z, 'dodajNotatkeWzoru', async (tx, teraz) => {
