@@ -3,14 +3,13 @@
 // po zapisie „start w toku” proces nie idzie dalej (pusty ekran), więc następny start liczy go jako nieudany.
 import type { Powod } from '../domena/bledy';
 import type { Licznosci } from '../domena/porty';
-import { otworzPortExpo } from '../dane/baza/adapter-expo';
 import { sciezkiDanych } from '../dane/baza/sciezki';
-import { utworzArchiwum } from '../dane/archiwum';
 import { surowaKopia } from '../dane/kopia-ratunkowa';
-import { utworzMagazyn, sha256PlikuTs } from '../dane/pliki/magazyn';
+import { sha256PlikuTs } from '../dane/pliki/magazyn';
 import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
 import Constants from 'expo-constants';
 import { sprzatnijKopie, zipSurowejKopii } from '../niezawodnosc/kopie';
+import { kopiaAwaryjna } from './kopia-awaryjna';
 import { kamienMilowy, odczytajStan, poczatekStartu, sprobujNormalnie, type StanStartu } from '../niezawodnosc/start';
 import { awariaStartu, zegarAplikacji } from '../platforma/tryb-e2e';
 
@@ -56,22 +55,13 @@ export function trybAwaryjny() {
   utworzKatalog(katalogi.kopie);
   utworzKatalog(katalogi.tymczasowy);
   const kopia = surowaKopia(s.katalogDanych, s.kopie, zegar);
+  const archiwum = kopiaAwaryjna({ sciezkaBazy: s.baza, pliki: s.pliki, zegar, katalogi }); // P-203: połączenie bez zamknięcia (bez checkpointu)
   return {
     kopia,
     sha: () => (istniejePlik(s.baza) ? sha256PlikuTs(s.baza) : Promise.resolve('')),
     async zapiszKopie(): Promise<{ sciezka: string; licznosci: Licznosci } | null> {
       await kopia;
-      let baza: ReturnType<typeof otworzPortExpo> | null = null;
-      try {
-        baza = otworzPortExpo(s.baza);
-        const a = utworzArchiwum({ baza, magazyn: utworzMagazyn(s.pliki), zegar, katalogi, migruj: () => Promise.resolve({ ok: true, wartosc: { z: 0, do: 0 } }), aplikacja: 'oczko' });
-        const w = await a.zapisz(katalogi.tymczasowy);
-        return w.ok ? { sciezka: w.wartosc.sciezka, licznosci: w.wartosc.manifest.licznosci } : null;
-      } catch {
-        return null;
-      } finally {
-        await baza?.zamknij().catch(() => undefined);
-      }
+      return archiwum.zapisz();
     },
     /** ADR-0020 (3): baza się nie otwiera albo archiwum zawiodło → jeden ZIP surowej kopii (trzy pliki + manifest) do arkusza udostępniania. */
     async zipSurowej(): Promise<string | null> {

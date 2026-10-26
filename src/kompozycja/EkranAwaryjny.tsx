@@ -19,7 +19,7 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
     <TrybAwaryjny
       stan={{ powod, licznosciKopii: licznosci }}
       t={t}
-      naZapiszKopie={() => void a.zapiszKopie().then(async (k) => {
+      naZapiszKopie={() => { if (E2E) ustawSha(''); /* P-203, F07-19: panel ukryty, dopóki SHA po kopii się nie policzy */ void a.zapiszKopie().then(async (k) => {
         if (!k) { // ADR-0020 (3): baza się nie otwiera → ZIP surowej kopii; plik tymczasowy usuwany po udostępnieniu
           const zip = await a.zipSurowej();
           if (zip && !E2E) void udostepnijPlik(zip).finally(() => usunPlik(zip));
@@ -27,7 +27,7 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
         }
         ustawLicznosci(licznosciTekst(k.licznosci, t));
         if (E2E) void a.sha().then(ustawSha); else void udostepnijPlik(k.sciezka);
-      })}
+      }); }}
       naSprobujNormalnie={() => void sprobujNormalnieTeraz().then(naNormalnie)}
       naZglosProblem={() => undefined}
       panelE2e={E2E && sha ? <Text testID="e2e-sha-bazy" selectable>{sha}</Text> : null}
