@@ -22,15 +22,26 @@ test('krótka data z dnia RRRR-MM-DD bez przesunięcia strefy', () => {
 });
 test('kosz: podpisy z rodzicem i terminem; licznik bez nazwy dostaje nazwę rodzaju', () => {
   const s = stanKosza([
-    { rodzaj: 'licznik', id: 'l2', nazwa: '', nienazwany: false, rodzajLicznika: 'oczka', projekt: 'Harbor', czesc: 'Back', usunietoMs: 0, doDnia: '2026-11-21' },
-    { rodzaj: 'czesc', id: 'c2', nazwa: 'Sleeve', nienazwany: false, rodzajLicznika: null, projekt: 'Harbor', czesc: null, usunietoMs: 0, doDnia: '2026-11-22' },
-    { rodzaj: 'projekt', id: 'p2', nazwa: 'Scarf', nienazwany: false, rodzajLicznika: null, projekt: 'Scarf', czesc: null, usunietoMs: 0, doDnia: '2026-11-23' },
-  ], j);
+    { rodzaj: 'licznik', id: 'l2', nazwa: '', rodzajLicznika: 'oczka', projekt: 'Harbor', projektNienazwany: false, projektUtworzonoMs: 0, czesc: 'Back', usunietoMs: 0, doDnia: '2026-11-21' },
+    { rodzaj: 'czesc', id: 'c2', nazwa: 'Sleeve', rodzajLicznika: null, projekt: 'Harbor', projektNienazwany: false, projektUtworzonoMs: 0, czesc: null, usunietoMs: 0, doDnia: '2026-11-22' },
+    { rodzaj: 'projekt', id: 'p2', nazwa: 'Scarf', rodzajLicznika: null, projekt: 'Scarf', projektNienazwany: false, projektUtworzonoMs: 0, czesc: null, usunietoMs: 0, doDnia: '2026-11-23' },
+  ], j, { terazMs: 0, strefa: 'UTC' });
   expect(s).toEqual({ dni: 30, pozycje: [
     { rodzaj: 'licznik', id: 'l2', nazwa: 'Stitches', podpis: 'Counter in Harbor, Back · until Nov 21' },
     { rodzaj: 'czesc', id: 'c2', nazwa: 'Sleeve', podpis: 'Part of Harbor · until Nov 22' },
     { rodzaj: 'projekt', id: 'p2', nazwa: 'Scarf', podpis: 'Project · until Nov 23' },
   ] });
+});
+test('kosz: projekt roboczy (sam i jako rodzic części) → etykieta „Counter from …”, nie data zapasowa (05 fix-6, dane.md „Projekt roboczy”)', () => {
+  const u = Date.UTC(2026, 9, 20, 9, 5);
+  const s = stanKosza([
+    { rodzaj: 'czesc', id: 'c1', nazwa: 'Sleeve', rodzajLicznika: null, projekt: '2026-10-20', projektNienazwany: true, projektUtworzonoMs: u, czesc: null, usunietoMs: 0, doDnia: '2026-11-22' },
+    { rodzaj: 'projekt', id: 'p1', nazwa: '2026-10-20', rodzajLicznika: null, projekt: '2026-10-20', projektNienazwany: true, projektUtworzonoMs: u, czesc: null, usunietoMs: 0, doDnia: '2026-11-23' },
+  ], j, { terazMs: Date.UTC(2026, 9, 22), strefa: 'UTC' });
+  expect(s.pozycje.map((p) => [p.nazwa, p.podpis])).toEqual([
+    ['Sleeve', 'Part of Counter from Oct 20, 9:05 AM · until Nov 22'],
+    ['Counter from Oct 20, 9:05 AM', 'Project · until Nov 23'],
+  ]);
 });
 test('stanListy: linie terminu i ostatniej pracy tylko w toku; liczba kosza', () => {
   const p = { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: 0, ostatniaPracaMs: 0, licznik: null, dniOdPracy: 41, dzis: { cel: { rodzaj: 'cel' as const, rzedy: 10 }, zrobione: 3 } };
@@ -45,12 +56,12 @@ const W: WidokProjektu = {
   notatka: '', narzedzie: 'druty', drutMm: 4, drutUS: '6', terminDzien: '2026-10-31', celDnia: { rodzaj: 'cel', rzedy: 10 }, zrobioneDzis: 3,
   postep: { rodzaj: 'procent', wartosc: 51 }, ukonczonoDzien: null,
   czesci: [
-    { id: 'c1', nazwa: 'Back', rzedy: 60, cel: 96, celZPary: false, paraZ: null, calosc: null, liczniki: [{ id: 'l1', nazwa: '', rodzaj: 'rzedy', sekcja: false, wartosc: 60, znaczenie: 'skonczone' }] },
-    { id: 'c2', nazwa: 'Blanket', rzedy: 20, cel: null, celZPary: false, paraZ: null, calosc: null, liczniki: [
-      { id: 'l2', nazwa: 'Square 1', rodzaj: 'rzedy', sekcja: false, wartosc: 12, znaczenie: 'skonczone' }, { id: 'l3', nazwa: '', rodzaj: 'rzedy', sekcja: false, wartosc: 8, znaczenie: 'skonczone' }] },
+    { id: 'c1', nazwa: 'Back', rzedy: 60, cel: 96, celZPary: false, paraZ: null, calosc: null, liczniki: [{ id: 'l1', nazwa: '', rodzaj: 'rzedy', wartosc: 60, znaczenie: 'skonczone' }] },
+    { id: 'c2', nazwa: 'Blanket', rzedy: 20, cel: null, celZPary: false, paraZ: null, calosc: 20, liczniki: [
+      { id: 'l2', nazwa: 'Square 1', rodzaj: 'rzedy', wartosc: 12, znaczenie: 'skonczone' }, { id: 'l3', nazwa: '', rodzaj: 'rzedy', wartosc: 8, znaczenie: 'skonczone' }] },
   ],
 };
-test('stanProjektu: termin, szczegóły z US, pusta notatka = null, liczniki z nazwą rodzaju, całość przy ≥ 2 licznikach rzędów (propozycja 04 N2)', () => {
+test('stanProjektu: termin, szczegóły z US, pusta notatka = null, liczniki z nazwą rodzaju, całość z modelu (`licznikCalosci`, P-199 Q1a)', () => {
   const s = stanProjektu(W, { j, terazMs: Date.UTC(2026, 9, 22, 12), strefa: 'UTC' });
   expect(s.termin).toBe('Done by Oct 31 · today 3 of 10 rows');
   expect(s.szczegoly).toEqual({ narzedzie: 'Needles', rozmiar: '4 mm (US 6)', termin: 'Oct 31' });

@@ -2,6 +2,7 @@
 // licznik całości sekcji (F-46, BR-LIC-018), cel części z pary (F-52, BR-PRJ-014 S1/S3), postęp (F-60, RD-14), termin i cel na dziś (F-61, RD-15),
 // notatka (F-15), drut z numerem US (F-17, RD-11), powrót po przerwie (F-18, BR-PRJ-005). Same dane; teksty i daty formatuje kompozycja.
 import type { Wynik } from '../domena/bledy';
+import { celZPary } from '../domena/cel-pary';
 import { licznikCalosci } from '../domena/licznik-calosci';
 import { rozmiarUS } from '../domena/obliczenia/druty';
 import { postepProcent, type CelDnia } from '../domena/postep';
@@ -12,10 +13,10 @@ import { jestDniem } from './daty';
 import { blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
-export type LicznikWidoku = { id: string; nazwa: string; rodzaj: 'rzedy' | 'oczka'; sekcja: boolean; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie' };
+export type LicznikWidoku = { id: string; nazwa: string; rodzaj: 'rzedy' | 'oczka'; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie' };
 /**
  * `rzedy` = suma liczników rzędów części (jak RD-14/RD-15 w `celProjektu`); `cel` = własny cel albo, w części pary bez celu, rzędy pierwszej
- * części, gdy ma rzędy (`celZPary`, BR-PRJ-014 S1; S3: pierwsza bez rzędów → brak celu); `calosc` = suma sekcji rzędów albo null bez sekcji.
+ * części, gdy ma rzędy (`celZPary`, BR-PRJ-014 S1; S3: pierwsza bez rzędów → brak celu); `calosc` = `licznikCalosci` (≥ 2 liczniki rzędów, P-199 Q1a) albo null.
  */
 export type CzescWidoku = { id: string; nazwa: string; rzedy: number; cel: number | null; celZPary: boolean; paraZ: string | null; calosc: number | null; liczniki: LicznikWidoku[] };
 export type WidokProjektu = {
@@ -37,22 +38,21 @@ export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
     if (!p) return blad('bledne_dane');
     const czesci = await wiersze(tx.all('SELECT id, nazwa, cel_rzedow, para_z FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc, id', [w.projektId]), 'widokProjektu');
     const liczniki = await wiersze(tx.all(
-      `SELECT l.id, l.czesc_id, l.nazwa, l.rodzaj, l.sekcja, l.wartosc, l.znaczenie FROM licznik l JOIN czesc c ON c.id = l.czesc_id
+      `SELECT l.id, l.czesc_id, l.nazwa, l.rodzaj, l.wartosc, l.znaczenie FROM licznik l JOIN czesc c ON c.id = l.czesc_id
         WHERE c.projekt_id = ? AND c.usunieto_ms IS NULL AND l.usunieto_ms IS NULL ORDER BY l.kolejnosc, l.id`, [w.projektId]), 'widokProjektu');
-    const kawalek = liczniki.map((l) => ({ id: tekst(l, 'id'), czescId: tekst(l, 'czesc_id'), rodzaj: rodzaj(tekst(l, 'rodzaj')), sekcja: liczba(l, 'sekcja') === 1, wartosc: liczba(l, 'wartosc') }));
+    const kawalek = liczniki.map((l) => ({ id: tekst(l, 'id'), czescId: tekst(l, 'czesc_id'), rodzaj: rodzaj(tekst(l, 'rodzaj')), wartosc: liczba(l, 'wartosc') }));
     const rzedyCzesci = new Map<string, number>();
     for (const l of kawalek) if (l.rodzaj === 'rzedy') rzedyCzesci.set(l.czescId, (rzedyCzesci.get(l.czescId) ?? 0) + l.wartosc);
     const wynik: CzescWidoku[] = czesci.map((c) => {
       const id = tekst(c, 'id');
       const paraZ = tekstLubNull(c, 'para_z');
       const wlasny = liczbaLubNull(c, 'cel_rzedow');
-      const zPary = wlasny === null && paraZ !== null ? rzedyCzesci.get(paraZ) ?? 0 : 0;
-      const sekcje = kawalek.some((l) => l.czescId === id && l.sekcja && l.rodzaj === 'rzedy');
+      const cel = celZPary({ cel: wlasny, paraZ, rzedyPary: paraZ === null ? 0 : rzedyCzesci.get(paraZ) ?? 0 });
       return {
-        id, nazwa: tekst(c, 'nazwa'), rzedy: rzedyCzesci.get(id) ?? 0, cel: wlasny ?? (zPary > 0 ? zPary : null), celZPary: wlasny === null && zPary > 0, paraZ,
-        calosc: sekcje ? licznikCalosci(kawalek, id) : null,
+        id, nazwa: tekst(c, 'nazwa'), rzedy: rzedyCzesci.get(id) ?? 0, cel, celZPary: wlasny === null && cel !== null, paraZ,
+        calosc: licznikCalosci(kawalek, id),
         liczniki: liczniki.filter((l) => tekst(l, 'czesc_id') === id).map((l) => ({
-          id: tekst(l, 'id'), nazwa: tekst(l, 'nazwa'), rodzaj: rodzaj(tekst(l, 'rodzaj')), sekcja: liczba(l, 'sekcja') === 1, wartosc: liczba(l, 'wartosc'), znaczenie: znaczenie(tekst(l, 'znaczenie')),
+          id: tekst(l, 'id'), nazwa: tekst(l, 'nazwa'), rodzaj: rodzaj(tekst(l, 'rodzaj')), wartosc: liczba(l, 'wartosc'), znaczenie: znaczenie(tekst(l, 'znaczenie')),
         })),
       };
     });

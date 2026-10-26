@@ -59,11 +59,12 @@ describe('widokProjektu', () => {
     expect(p2.map((c) => [c.id, c.cel, c.celZPary])).toEqual([['d1', null, false], ['d2', null, false], ['d3', 50, false]]);
   });
 
-  test('BR-LIC-018 (F-46): część z sekcjami ma licznik całości = suma sekcji rzędów; bez sekcji całość null', async () => {
+  test('BR-LIC-018 (F-46, P-199 Q1a): ≥ 2 liczniki rzędów części → całość = ich suma, bez ustawienia; jeden licznik albo licznik w koszu → null', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Koc'), czesc('c1', 'p1', 'Kwadrat'), ...licznik('l1', 'c1', 12), ...licznik('l2', 'c1', 8, { kolejnosc: 2 }),
-      ["UPDATE licznik SET sekcja = 1 WHERE id IN ('l1', 'l2')", []], czesc('c2', 'p1', 'Brzeg', 2), ...licznik('l3', 'c2', 4)]);
-    expect((await widok(s)).czesci.map((c) => [c.id, c.calosc])).toEqual([['c1', 20], ['c2', null]]);
+      ...licznik('o1', 'c1', 30, { kolejnosc: 3, rodzaj: 'oczka' }), czesc('c2', 'p1', 'Brzeg', 2), ...licznik('l3', 'c2', 4),
+      czesc('c3', 'p1', 'Rog', 3), ...licznik('l4', 'c3', 5), ...licznik('l5', 'c3', 6, { kolejnosc: 2 }), ["UPDATE licznik SET usunieto_ms = 1 WHERE id = 'l5'", []]]);
+    expect((await widok(s)).czesci.map((c) => [c.id, c.calosc])).toEqual([['c1', 20], ['c2', null], ['c3', null]]);
   });
 
   test('RD-15: termin z celem na dziś; bez terminu celDnia null', async () => {

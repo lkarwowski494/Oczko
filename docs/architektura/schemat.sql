@@ -53,7 +53,6 @@ CREATE TABLE licznik (                                -- F-01, F-03, F-04, F-05,
   czesc_id TEXT NOT NULL REFERENCES czesc(id) ON DELETE CASCADE,
   nazwa TEXT NOT NULL DEFAULT '',
   rodzaj TEXT NOT NULL DEFAULT 'rzedy' CHECK (rodzaj IN ('rzedy', 'oczka')),
-  sekcja INTEGER NOT NULL DEFAULT 0 CHECK (sekcja IN (0, 1)),      -- sekcje rzędów kawałka zasilają licznik całości (BR-LIC-018; całość liczona, nie zapisywana)
   znaczenie TEXT NOT NULL DEFAULT 'skonczone' CHECK (znaczenie IN ('skonczone', 'w_trakcie')),
   dlugosc_powtorzenia INTEGER CHECK (dlugosc_powtorzenia IS NULL OR dlugosc_powtorzenia >= 1), -- RD-12-W5
   zablokowany INTEGER NOT NULL DEFAULT 0 CHECK (zablokowany IN (0, 1)),

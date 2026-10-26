@@ -41,6 +41,11 @@ async function licznosciPliku(sciezka: string): Promise<Licznosci> {
   const port = otworzPortExpo(sciezka, { tylkoOdczyt: true });
   try { return await licznosci(port); } finally { await port.zamknij(); }
 }
+/** `PRAGMA user_version` migawki, która trafia do archiwum (N12-07, dane.md): w trybie awaryjnym baza bywa niezmigrowana, więc nie stała aplikacji. */
+async function wersjaPliku(sciezka: string): Promise<number> {
+  const port = otworzPortExpo(sciezka, { tylkoOdczyt: true });
+  try { const [v] = await wiersze(port.all('PRAGMA user_version'), 'wersjaPliku'); return v ? liczba(v, 'user_version') : 0; } finally { await port.zamknij(); }
+}
 
 /** manifest.json z `unknown` (plik z zewnątrz): zły kształt → null (= „bledne_dane”), bez zgadywania pól. */
 function parsujManifest(b: Uint8Array): Manifest | null {
@@ -84,7 +89,7 @@ export function utworzArchiwum(z: { baza: PortBazy; magazyn: MagazynPlikow; zega
         const pliki = (await wiersze(z.baza.all('SELECT sha256, rozszerzenie, bajty FROM plik ORDER BY sha256'), 'eksport'))
           .map((r) => ({ sha256: tekst(r, 'sha256'), rozszerzenie: tekst(r, 'rozszerzenie'), bajty: liczba(r, 'bajty') }));
         const manifest: Manifest = {
-          format: 'oczko', wersja_formatu: WERSJA_FORMATU_ARCHIWUM, wersja_schematu: WERSJA_SCHEMATU, aplikacja: z.aplikacja, utworzono: teraz.ms,
+          format: 'oczko', wersja_formatu: WERSJA_FORMATU_ARCHIWUM, wersja_schematu: await wersjaPliku(baza), aplikacja: z.aplikacja, utworzono: teraz.ms,
           licznosci: await licznosciPliku(baza), // liczności z migawki, która trafia do archiwum
           pliki: pliki.map((p) => ({ sha256: p.sha256, bajty: p.bajty })),
         };

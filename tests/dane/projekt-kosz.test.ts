@@ -1,6 +1,7 @@
 // Projekt, części, kosz 30 dni i sprzątanie (moduly.md „Projekt”, ADR-0013, P-026, P-047 (7), P-072): ścieżki ŚU-14, ŚU-15, ŚU-19, ŚU-22 (dane.md),
 // BR-DAN-008/S1–S4, BR-DAN-009/S1, BR-PRJ-*. Wyrocznie: BRD (wymagania-dane.md, wymagania-projekt.md), dane.md, P-026, P-072, konfiguracja (KOSZ_DNI, SESJA_MAKS_H).
 import { migruj } from '../../src/dane/migracje/migruj';
+import { widokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
 import { listaProjektow } from '../../src/dane/repozytoria/projekty';
 import { KOSZ_DNI, SESJA_MAKS_H } from '../../src/konfiguracja';
 import { sprzatnijKosz } from '../../src/przypadki-uzycia/kosz';
@@ -246,12 +247,45 @@ describe('projekty i części (BR-PRJ-*)', () => {
     expect((await listaProjektow(s.baza)).ukonczone.map((p) => p.ukonczonoMs)).toEqual([T0 - 3 * DOBA]);
   });
 
-  test('BR-PRJ-014/S1: drugi rękaw jako para pierwszego (96 rzędów, ukończony) → cel 96, para_z = pierwszy', async () => {
+  // P-199 Q2a (05 fix-6): para bez kopii celu — cel drugiej liczą widoki z rzędów pierwszej (celZPary), więc S1 i S3 sprawdza widok projektu.
+  test('BR-PRJ-014/S1: drugi rękaw jako para pierwszego (96 rzędów, ukończony) → cel 96 z rzędów, para_z = pierwszy, bez kopii celu', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Rękaw lewy', 1, { cel: 96 }), ...licznik('l1', 'c1', 96)]);
     const w = await dodajCzescPara(s.z, { czescId: 'c1', nazwa: 'Rękaw prawy' });
     if (!w.ok) throw new Error(w.powod);
-    expect(await jeden(s.baza, 'SELECT cel_rzedow, para_z, projekt_id FROM czesc WHERE id = ?', [w.wartosc.czescId])).toEqual({ cel_rzedow: 96, para_z: 'c1', projekt_id: 'p1' });
+    expect(await jeden(s.baza, 'SELECT cel_rzedow, para_z, projekt_id FROM czesc WHERE id = ?', [w.wartosc.czescId])).toEqual({ cel_rzedow: null, para_z: 'c1', projekt_id: 'p1' });
+    const v = await widokProjektu(s.z, { projektId: 'p1' });
+    expect(v.ok && v.wartosc.czesci.map((c) => [c.nazwa, c.cel, c.celZPary])).toEqual([['Rękaw lewy', 96, false], ['Rękaw prawy', 96, true]]);
+  });
+
+  test('BR-PRJ-014/S1: pierwszy skończony na 98 rzędach przy celu 96 → cel drugiego 98 (rzędy pierwszej, nie jej cel)', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Rękaw lewy', 1, { cel: 96 }), ...licznik('l1', 'c1', 98)]);
+    const w = await dodajCzescPara(s.z, { czescId: 'c1', nazwa: 'Rękaw prawy' });
+    if (!w.ok) throw new Error(w.powod);
+    const v = await widokProjektu(s.z, { projektId: 'p1' });
+    expect(v.ok && v.wartosc.czesci.find((c) => c.id === w.wartosc.czescId)?.cel).toBe(98);
+  });
+
+  test('BR-PRJ-014/S3: pierwsza z celem 100 i 0 rzędów → druga bez celu; po 10 rzędach pierwszej cel drugiej 10', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', 'Skarpety'), czesc('c1', 'p1', 'Pierwsza', 1, { cel: 100 }), ...licznik('l1', 'c1', 0)]);
+    const w = await dodajCzescPara(s.z, { czescId: 'c1', nazwa: 'Druga' });
+    if (!w.ok) throw new Error(w.powod);
+    const cel = async () => { const v = await widokProjektu(s.z, { projektId: 'p1' }); return v.ok ? v.wartosc.czesci.find((c) => c.id === w.wartosc.czescId)?.cel : 'blad'; };
+    expect(await cel()).toBeNull();
+    await wykonaj(s.baza, [["UPDATE licznik SET wartosc = 10 WHERE id = 'l1'", []]]);
+    expect(await cel()).toBe(10);
+  });
+
+  test('BR-PRJ-007 + BR-PRJ-014 (F-20, F-52, P-199 Q2a): „zrób ponownie” zachowuje parę — para_z kopii wskazuje część kopii', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', 'Skarpety'), czesc('c1', 'p1', 'Lewa', 1), czesc('c2', 'p1', 'Prawa', 2, { paraZ: 'c1' }), ...licznik('l1', 'c1', 72), ...licznik('l2', 'c2', 72)]);
+    const w = await zrobPonownie(s.z, { projektId: 'p1' });
+    if (!w.ok) throw new Error(w.powod);
+    const c = await s.baza.all<{ id: string; nazwa: string; para_z: string | null }>('SELECT id, nazwa, para_z FROM czesc WHERE projekt_id = ? ORDER BY kolejnosc', [w.wartosc.projektId]);
+    expect(c.map((x) => [x.nazwa, x.para_z])).toEqual([['Lewa', null], ['Prawa', c[0].id]]);
+    expect(await jeden(s.baza, "SELECT para_z FROM czesc WHERE id = 'c2'", [])).toEqual({ para_z: 'c1' }); // oryginał bez zmian
   });
 
   test('BR-PRJ-016/S1: ostatnia zmiana „Swetra” 47 dni temu → na liście ostatnia praca = teraz − 47 dni i niżej niż nowsze', async () => {

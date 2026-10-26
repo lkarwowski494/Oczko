@@ -18,7 +18,7 @@ export default function EkranKosza(): React.ReactElement {
   const [stan, ustaw] = useState<StanKosza | null>(null);
   const wczytaj = useCallback(async () => {
     const w = await widokKosza(kontener.z);
-    if (w.ok) ustaw(stanKosza(w.wartosc, kontener.j));
+    if (w.ok) { const c = kontener.z.zegar.teraz(); ustaw(stanKosza(w.wartosc, kontener.j, { terazMs: c.ms, strefa: c.strefa })); }
   }, [kontener]);
   useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
   if (!stan) return <View style={{ flex: 1, backgroundColor: k.papier }} />;

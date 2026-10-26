@@ -49,8 +49,8 @@ describe('BR-LIC-017 wpisanie wartości w nowym dniu a limit (ER-27, P-057 D4, K
 
 describe('BR-LIC-018 licznik całości z sekcji jednego kawałka — docs/brd/wymagania-licznik.md:254–265', () => {
   const korpus = (gladki: number): LicznikKawalka[] => [
-    { id: 'sciagacz', czescId: 'korpus', rodzaj: 'rzedy', sekcja: true, wartosc: 20 },
-    { id: 'gladki', czescId: 'korpus', rodzaj: 'rzedy', sekcja: true, wartosc: gladki },
+    { id: 'sciagacz', czescId: 'korpus', rodzaj: 'rzedy', wartosc: 20 },
+    { id: 'gladki', czescId: 'korpus', rodzaj: 'rzedy', wartosc: gladki },
   ];
   test('BR-LIC-018/S1 ściągacz 20 + gładki 5 = 25; +1 w „gładki” (6) → całość 26', () => {
     expect(licznikCalosci(korpus(5), 'korpus')).toBe(25);
@@ -62,13 +62,13 @@ describe('BR-LIC-018 licznik całości z sekcji jednego kawałka — docs/brd/wy
   });
   test('BR-LIC-018/S3 osobne kawałki „przód” i „rękaw lewy”: +1 w rękawie nie zmienia całości przodu', () => {
     const sweter = (rekaw: number): LicznikKawalka[] => [
-      { id: 'p1', czescId: 'przod', rodzaj: 'rzedy', sekcja: true, wartosc: 30 },
-      { id: 'p2', czescId: 'przod', rodzaj: 'rzedy', sekcja: true, wartosc: 12 },
-      { id: 'r1', czescId: 'rekaw-lewy', rodzaj: 'rzedy', sekcja: true, wartosc: rekaw },
+      { id: 'p1', czescId: 'przod', rodzaj: 'rzedy', wartosc: 30 },
+      { id: 'p2', czescId: 'przod', rodzaj: 'rzedy', wartosc: 12 },
+      { id: 'r1', czescId: 'rekaw-lewy', rodzaj: 'rzedy', wartosc: rekaw },
     ];
     expect(licznikCalosci(sweter(10), 'przod')).toBe(42);
     expect(licznikCalosci(sweter(11), 'przod')).toBe(42);
-    expect(licznikCalosci(sweter(11), 'rekaw-lewy')).toBe(11);
+    expect(licznikCalosci(sweter(11), 'rekaw-lewy')).toBeNull(); // jeden licznik rzędów: bez całości (P-199 Q1a, zmiana 05 fix-6 — wyjątek nazwany jak P-176)
   });
 });
 

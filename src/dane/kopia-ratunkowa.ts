@@ -65,7 +65,7 @@ async function kopiaWBiezacymSchemacie(sciezka: string, wersja: number, katalogi
   kopiuj(sciezka, robocza);
   const port = otworzPortExpo(robocza);
   try {
-    const m = await migruj(port);
+    const m = await migruj(port, { katalogKopii: katalogi.tymczasowy }); // kopia przed przebudową obok kopii roboczej (N12-08, dane.md)
     return m.ok ? { ok: true, wartosc: { sciezka: robocza, robocza: true } } : m;
   } finally {
     await port.zamknij();

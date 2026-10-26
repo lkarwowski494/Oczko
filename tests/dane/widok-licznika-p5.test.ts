@@ -1,5 +1,5 @@
-// BR-LIC-018/S1 na ekranie licznika (partia 5): licznik w części z ≥ 2 licznikami rzędów albo z sekcją → całość części; inaczej null.
-// Reguła „≥ 2 liczniki rzędów” = propozycja 04 do N2 (P-183), flaga `sekcja` ma pierwszeństwo; decyzja 05 przy przeglądzie sygnatur.
+// BR-LIC-018/S1 na ekranie licznika (partia 5): licznik w części z ≥ 2 licznikami rzędów → całość części; inaczej null.
+// Reguła „≥ 2 liczniki rzędów” bez flagi: P-199 Q1a (05 fix-6), ta sama funkcja domeny co ekran projektu.
 import { widokLicznika } from '../../src/przypadki-uzycia/widok-licznika';
 import { czesc, licznik, projekt } from './pomocnicze/dane-wejsciowe';
 import { przygotuj, wykonaj } from './pomocnicze/srodowisko';

@@ -85,6 +85,14 @@ describe('widokKosza (C1, BR-DAN-008)', () => {
     ]);
   });
 
+  test('projekt roboczy: część w koszu niesie flagę i chwilę startu rodzica (etykieta zamiast daty zapasowej; 05 fix-6, P-199)', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', '2026-10-20', T0 - 2 * DOBA), ["UPDATE projekt SET nienazwany = 1 WHERE id = 'p1'", []], czesc('c1', 'p1', 'Tył'), ...licznik('l1', 'c1', 0)]);
+    await usunCzesc(s.z, { czescId: 'c1' });
+    const w = await widokKosza(s.z);
+    expect(w.ok && w.wartosc.map((e) => [e.rodzaj, e.projekt, e.projektNienazwany, e.projektUtworzonoMs])).toEqual([['czesc', '2026-10-20', true, T0 - 2 * DOBA]]);
+  });
+
   test('pusty kosz → pusta lista', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'A')]);
@@ -100,7 +108,7 @@ describe('nastepnaCzesc (A3, BR-LIC-011/S1, P-182 Q4a)', () => {
     expect(await nastepnaCzesc(s.z, { licznikId: 'l1' })).toEqual({ ok: true, wartosc: { rodzaj: 'licznik', licznikId: 'l3' } });
   });
 
-  test('ostatnia część → koniec z celem drugiej (cel pierwszej, a bez celu jej rzędy; 0 rzędów → null)', async () => {
+  test('ostatnia część → koniec z celem drugiej = rzędy tej części (BR-PRJ-014 S1, P-199 Q2a); 0 rzędów → null', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Skarpety'), czesc('c1', 'p1', 'Pierwsza', 1, { cel: 60 }), ...licznik('l1', 'c1', 60),
       projekt('p2', 'Rękawy'), czesc('d1', 'p2', 'Lewy'), ...licznik('m1', 'd1', 88), projekt('p3', 'Puste'), czesc('e1', 'p3', 'X'), ...licznik('n1', 'e1', 0)]);
@@ -109,6 +117,13 @@ describe('nastepnaCzesc (A3, BR-LIC-011/S1, P-182 Q4a)', () => {
     const p3 = await nastepnaCzesc(s.z, { licznikId: 'n1' });
     expect(p3.ok && p3.wartosc.rodzaj === 'koniec' && p3.wartosc.celDrugiej).toBeNull();
     expect(await nastepnaCzesc(s.z, { licznikId: 'brak' })).toEqual({ ok: false, powod: 'bledne_dane' });
+  });
+
+  test('cel części 60, zrobione 64 rzędy → celDrugiej 64, nie 60 (P-199 Q2a)', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', 'Skarpety'), czesc('c1', 'p1', 'Pierwsza', 1, { cel: 60 }), ...licznik('l1', 'c1', 64)]);
+    const w = await nastepnaCzesc(s.z, { licznikId: 'l1' });
+    expect(w.ok && w.wartosc.rodzaj === 'koniec' && w.wartosc.celDrugiej).toBe(64);
   });
 });
 

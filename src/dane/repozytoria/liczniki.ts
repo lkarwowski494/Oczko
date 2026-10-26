@@ -4,6 +4,8 @@ import type { DzienLimitu } from '../../domena/limit';
 import type { ZdarzenieLicznika } from '../../domena/scal';
 import type { PortBazy } from '../../domena/porty';
 import { BladDanych } from '../../domena/bledy';
+import { celZPary } from '../../domena/cel-pary';
+import { licznikCalosci } from '../../domena/licznik-calosci';
 import { STANY, type RodzajZdarzenia, type ZrodloZdarzenia } from '../../domena/stany';
 import { liczba, liczbaLubNull, listaTekstow, tekst, tekstLubNull, wiersze } from './wiersze';
 
@@ -122,18 +124,12 @@ export async function rzedyCzesci(baza: PortBazy, czescId: string): Promise<numb
   const [r] = await wiersze(baza.all("SELECT coalesce(sum(wartosc), 0) AS n FROM licznik WHERE czesc_id = ? AND rodzaj = 'rzedy' AND usunieto_ms IS NULL", [czescId]), 'rzedyCzesci');
   return r ? liczba(r, 'n') : 0;
 }
-/** Cel części: własny albo — w części pary bez celu — rzędy pierwszej, gdy ma rzędy (BR-PRJ-014 S1; S3: 0 rzędów → brak celu). */
+/** Cel części: własny albo — w części pary bez celu — rzędy pierwszej (`celZPary`, BR-PRJ-014 S1, S3; P-199 Q2a). */
 export async function celCzesci(baza: PortBazy, w: { cel: number | null; paraZ: string | null }): Promise<number | null> {
-  if (w.cel !== null || w.paraZ === null) return w.cel;
-  const n = await rzedyCzesci(baza, w.paraZ);
-  return n > 0 ? n : null;
+  return celZPary({ ...w, rzedyPary: w.cel === null && w.paraZ !== null ? await rzedyCzesci(baza, w.paraZ) : 0 });
 }
-/**
- * Licznik całości części na ekranie licznika (BR-LIC-018/S1): suma liczników rzędów części, gdy ma ≥ 2 liczniki rzędów albo sekcję; inaczej null.
- * „≥ 2” = propozycja 04 do N2 (P-183), do decyzji 05 przy przeglądzie sygnatur; licznik oczek nie wchodzi.
- */
+/** Licznik całości części na ekranie licznika (BR-LIC-018/S1): `licznikCalosci` z domeny na nieusuniętych licznikach części (P-199 Q1a). */
 export async function caloscCzesci(baza: PortBazy, czescId: string): Promise<number | null> {
-  const [r] = await wiersze(baza.all(
-    "SELECT count(*) AS n, coalesce(max(sekcja), 0) AS s, coalesce(sum(wartosc), 0) AS suma FROM licznik WHERE czesc_id = ? AND rodzaj = 'rzedy' AND usunieto_ms IS NULL", [czescId]), 'caloscCzesci');
-  return r && (liczba(r, 'n') >= 2 || liczba(r, 's') === 1) ? liczba(r, 'suma') : null;
+  const w = await wiersze(baza.all('SELECT id, rodzaj, wartosc FROM licznik WHERE czesc_id = ? AND usunieto_ms IS NULL', [czescId]), 'caloscCzesci');
+  return licznikCalosci(w.map((r) => ({ id: tekst(r, 'id'), czescId, rodzaj: tekst(r, 'rodzaj') === 'oczka' ? 'oczka' : 'rzedy', wartosc: liczba(r, 'wartosc') })), czescId);
 }

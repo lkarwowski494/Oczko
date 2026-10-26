@@ -36,23 +36,25 @@ export function krotkaData(dzien: string, jezyk: string): string {
 export const nazwaLicznika = (nazwa: string, rodzaj: 'rzedy' | 'oczka', t: Tlumacz): string => nazwa || t(rodzaj === 'oczka' ? 'formularz.rodzaj_oczka' : 'formularz.rodzaj_rzedy');
 
 /** Ekran „Recently deleted”: podpis gdzie wróci i do kiedy (`kosz.projekt` / `kosz.czesc` / `kosz.licznik`). */
-export function stanKosza(elementy: readonly ElementKosza[], j: Jezyk): StanKosza {
+/** Projekt roboczy (sam i jako rodzic) dostaje etykietę zamiast daty zapasowej (dane.md „Projekt roboczy”; 05 fix-6, P-199). */
+export function stanKosza(elementy: readonly ElementKosza[], j: Jezyk, o: { terazMs: number; strefa: string }): StanKosza {
   const t = j.t;
   return {
     dni: KOSZ_DNI,
     pozycje: elementy.map((e) => {
       const data = krotkaData(e.doDnia, j.jezyk());
-      const nazwa = e.rodzaj === 'licznik' ? nazwaLicznika(e.nazwa, e.rodzajLicznika ?? 'rzedy', t) : e.nazwa;
+      const projekt = e.projektNienazwany ? etykietaRobocza(e.projektUtworzonoMs, o.terazMs, j, o.strefa) : e.projekt;
+      const nazwa = e.rodzaj === 'licznik' ? nazwaLicznika(e.nazwa, e.rodzajLicznika ?? 'rzedy', t) : e.rodzaj === 'projekt' ? projekt : e.nazwa;
       const podpis = e.rodzaj === 'projekt' ? t('kosz.projekt', { data })
-        : e.rodzaj === 'czesc' ? t('kosz.czesc', { projekt: e.projekt, data })
-        : t('kosz.licznik', { projekt: e.projekt, czesc: e.czesc ?? '', data });
+        : e.rodzaj === 'czesc' ? t('kosz.czesc', { projekt, data })
+        : t('kosz.licznik', { projekt, czesc: e.czesc ?? '', data });
       return { rodzaj: e.rodzaj, id: e.id, nazwa, podpis };
     }),
   };
 }
 /**
  * Stan ekranu projektu z `widokProjektu` (design-spec „Ekran projektu”): linia terminu wg gałęzi RD-15, szczegóły z numerem US, liczniki z nazwą
- * rodzaju, „Whole piece” przy ≥ 2 licznikach rzędów części (propozycja 04 do N2 — rozstrzyga 05; flaga `sekcja` z modelu ma pierwszeństwo).
+ * rodzaju, „Whole piece” = `calosc` z modelu (`licznikCalosci`: ≥ 2 liczniki rzędów części, P-199 Q1a).
  * Licznik oczek: opis = sama liczba (klucz „{n} stitches” przyjdzie z partii licznika oczek, design-spec).
  */
 export function stanProjektu(w: WidokProjektu, o: { j: Jezyk; terazMs: number; strefa: string }): PropsProjektu['stan'] {
@@ -80,10 +82,9 @@ export function stanProjektu(w: WidokProjektu, o: { j: Jezyk; terazMs: number; s
       termin,
     },
     czesci: w.czesci.map((c) => {
-      const rzedow = c.liczniki.filter((l) => l.rodzaj === 'rzedy').length;
       return {
         id: c.id, nazwa: c.nazwa, rzedy: c.rzedy, cel: c.cel, paraZ: c.paraZ, paraNazwa: c.paraZ ? w.czesci.find((x) => x.id === c.paraZ)?.nazwa ?? null : null,
-        calosc: c.calosc ?? (rzedow >= 2 ? c.rzedy : null),
+        calosc: c.calosc,
         liczniki: c.liczniki.map((l) => ({
           id: l.id, nazwa: nazwaLicznika(l.nazwa, l.rodzaj, t),
           opis: l.rodzaj === 'rzedy' ? t('projekt.czesc_rzedy', { count: l.wartosc }) : formatujLiczbe(l.wartosc, jezyk),

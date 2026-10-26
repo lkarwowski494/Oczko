@@ -6,7 +6,7 @@ import { STANY, type NarzedzieProjektu } from '../domena/stany';
 import { chwilaOPorze } from '../domena/postep';
 import type { PortBazy } from '../domena/porty';
 import { stanProjektu, ustawUsuniecie, usunietoMs, zapiszStanProjektu, type TabelaKosza } from '../dane/repozytoria/projekty-zapis';
-import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
+import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { jestDniem } from './daty';
 import { OK, blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci, ZaleznosciPlikow } from './zaleznosci';
@@ -103,7 +103,7 @@ export const przywrocLicznik = (z: Zaleznosci, w: { licznikId: string }): Promis
 export const usunCzesc = (z: Zaleznosci, w: { czescId: string }): Promise<Wynik<void>> => kosz(z, 'czesc', w.czescId, true);
 export const przywrocCzesc = (z: Zaleznosci, w: { czescId: string }): Promise<Wynik<void>> => kosz(z, 'czesc', w.czescId, false);
 
-/** „Zrób taką samą” (F-20): części (z celem) i przypomnienia skopiowane, liczniki 0, `kopia_z` = oryginał; oryginał bez zmian. */
+/** „Zrób taką samą” (F-20): części (z celem i parą `para_z` przepisaną na nowe części, P-199 Q2a) i przypomnienia skopiowane, liczniki 0, `kopia_z` = oryginał; oryginał bez zmian. */
 export function zrobPonownie(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<{ projektId: string }>> {
   return operacjaZapisu(z, 'zrobPonownie', async (tx, teraz, chwila) => {
     const [p] = await wiersze(tx.all('SELECT nazwa, nienazwany, narzedzie, drut_mm, usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'zrobPonownie');
@@ -115,17 +115,19 @@ export function zrobPonownie(z: Zaleznosci, w: { projektId: string }): Promise<W
     // P-195 Q4a (BR-PRJ-007): narzędzie i rozmiar z oryginału; bez stanu (wartości, historii, sesji, dat, zdjęć, notatki, terminu).
     await tx.run('INSERT INTO projekt (id, nazwa, nienazwany, narzedzie, drut_mm, kopia_z, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [projektId, roboczy ? chwila.dzien : tekst(p, 'nazwa'), roboczy ? 1 : 0, tekst(p, 'narzedzie'), liczbaLubNull(p, 'drut_mm'), w.projektId, teraz, teraz, teraz]);
-    const czesci = await wiersze(tx.all('SELECT id, nazwa, kolejnosc, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc', [w.projektId]), 'zrobPonownie');
+    const czesci = await wiersze(tx.all('SELECT id, nazwa, kolejnosc, cel_rzedow, para_z FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc', [w.projektId]), 'zrobPonownie');
+    const noweId = new Map<string, string>(); // część oryginału → część kopii (para wskazuje część kopii, nie oryginału)
     for (const c of czesci) {
       const czescId = z.id.nowy();
+      noweId.set(tekst(c, 'id'), czescId);
       await tx.run('INSERT INTO czesc (id, projekt_id, nazwa, kolejnosc, cel_rzedow, zmieniono_ms) VALUES (?, ?, ?, ?, ?, ?)', [czescId, projektId, tekst(c, 'nazwa'), liczba(c, 'kolejnosc'), liczbaLubNull(c, 'cel_rzedow'), teraz]);
       const liczniki = await wiersze(tx.all(
-        'SELECT id, nazwa, rodzaj, sekcja, znaczenie, dlugosc_powtorzenia, kolejnosc FROM licznik WHERE czesc_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc', [tekst(c, 'id')]), 'zrobPonownie');
+        'SELECT id, nazwa, rodzaj, znaczenie, dlugosc_powtorzenia, kolejnosc FROM licznik WHERE czesc_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc', [tekst(c, 'id')]), 'zrobPonownie');
       for (const l of liczniki) {
         const licznikId = z.id.nowy();
         await tx.run(
-          'INSERT INTO licznik (id, czesc_id, nazwa, rodzaj, sekcja, znaczenie, dlugosc_powtorzenia, kolejnosc, zmieniono_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [licznikId, czescId, tekst(l, 'nazwa'), tekst(l, 'rodzaj'), liczba(l, 'sekcja'), tekst(l, 'znaczenie'), liczbaLubNull(l, 'dlugosc_powtorzenia'), liczba(l, 'kolejnosc'), teraz],
+          'INSERT INTO licznik (id, czesc_id, nazwa, rodzaj, znaczenie, dlugosc_powtorzenia, kolejnosc, zmieniono_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          [licznikId, czescId, tekst(l, 'nazwa'), tekst(l, 'rodzaj'), tekst(l, 'znaczenie'), liczbaLubNull(l, 'dlugosc_powtorzenia'), liczba(l, 'kolejnosc'), teraz],
         );
         for (const r of await wiersze(tx.all('SELECT od_rzedu, co_n, razy, tekst FROM przypomnienie WHERE licznik_id = ?', [tekst(l, 'id')]), 'zrobPonownie')) {
           await tx.run('INSERT INTO przypomnienie (id, licznik_id, od_rzedu, co_n, razy, tekst, zmieniono_ms) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -133,17 +135,21 @@ export function zrobPonownie(z: Zaleznosci, w: { projektId: string }): Promise<W
         }
       }
     }
+    for (const c of czesci) {
+      const para = tekstLubNull(c, 'para_z'), nowa = para === null ? undefined : noweId.get(para);
+      if (nowa) await tx.run('UPDATE czesc SET para_z = ? WHERE id = ?', [nowa, noweId.get(tekst(c, 'id'))]); // para z częścią spoza kopii (w koszu) — bez pary
+    }
     return { ok: true, wartosc: { projektId } };
   });
 }
-/** Druga część pary (bliźniak, BR-PRJ-014): `para_z`, cel z pierwszej części (brak celu zostaje brakiem). */
+/** Druga część pary (bliźniak, BR-PRJ-014): `para_z` bez własnego celu — cel liczą widoki z rzędów pierwszej (`celZPary`, S1, S3; P-199 Q2a). */
 export function dodajCzescPara(z: Zaleznosci, w: { czescId: string; nazwa: string }): Promise<Wynik<{ czescId: string; licznikId: string }>> {
   if (!niepusta(w.nazwa)) return Promise.resolve(blad('bledne_dane'));
   return operacjaZapisu(z, 'dodajCzescPara', async (tx, teraz) => {
-    const [c] = await wiersze(tx.all('SELECT projekt_id, cel_rzedow, usunieto_ms FROM czesc WHERE id = ?', [w.czescId]), 'dodajCzescPara');
+    const [c] = await wiersze(tx.all('SELECT projekt_id, usunieto_ms FROM czesc WHERE id = ?', [w.czescId]), 'dodajCzescPara');
     if (!c) return blad('bledne_dane');
     if (liczbaLubNull(c, 'usunieto_ms') !== null) return blad('niedozwolone_przejscie');
-    const nowa = await dodajCzesc(tx, z, { projektId: tekst(c, 'projekt_id'), nazwa: w.nazwa, cel: liczbaLubNull(c, 'cel_rzedow'), paraZ: w.czescId, terazMs: teraz });
+    const nowa = await dodajCzesc(tx, z, { projektId: tekst(c, 'projekt_id'), nazwa: w.nazwa, cel: null, paraZ: w.czescId, terazMs: teraz });
     return { ok: true, wartosc: nowa };
   });
 }
