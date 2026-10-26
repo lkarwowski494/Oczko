@@ -77,14 +77,17 @@ describe('Data and sync: przełącznik iCloud', () => {
 });
 
 describe('Delete all data z „Also delete from iCloud” (BR-DAN-009, P-229)', () => {
-  const props = (icloudWlaczona: boolean, naUsunWszystko = jest.fn()) => ({
-    stan: { pro: null, dni: null, wibracje: true }, t, system: atrapaSystemu(), adresy: { polityka: 'p', recenzja: 'r' },
-    naOferty: jest.fn(), naWibracje: jest.fn(), naZglosProblem: jest.fn(), naStanDanych: jest.fn(),
-    dane: { naEksport: jest.fn(), naImport: jest.fn(), naUsunWszystko }, icloudWlaczona,
-  });
+  const props = (icloudWlaczona: boolean) => {
+    const naUsunWszystko = jest.fn();
+    return {
+      stan: { pro: null, dni: null, wibracje: true }, t, system: atrapaSystemu(), adresy: { polityka: 'p', recenzja: 'r' },
+      naOferty: jest.fn(), naWibracje: jest.fn(), naZglosProblem: jest.fn(), naStanDanych: jest.fn(),
+      dane: { naEksport: jest.fn(), naImport: jest.fn(), naUsunWszystko }, icloudWlaczona,
+    } satisfies React.ComponentProps<typeof Ustawienia>;
+  };
   test('synchronizacja wyłączona: bez przełącznika; potwierdzenie usuwa bez iCloud', () => {
     const p = props(false);
-    render(<Ustawienia {...(p as never)} />);
+    render(<Ustawienia {...p} />);
     fireEvent.press(screen.getByTestId('ustawienia-usun-wszystko'));
     expect(screen.queryByTestId('usun-z-icloud')).toBeNull();
     fireEvent.press(screen.getByTestId('potwierdz-usun-wszystko'));
@@ -92,7 +95,7 @@ describe('Delete all data z „Also delete from iCloud” (BR-DAN-009, P-229)', 
   });
   test('włączona: przełącznik domyślnie wyłączony z „Data in iCloud … stays”; włączony → usunięcie także z iCloud', () => {
     const p = props(true);
-    render(<Ustawienia {...(p as never)} />);
+    render(<Ustawienia {...p} />);
     fireEvent.press(screen.getByTestId('ustawienia-usun-wszystko'));
     const s = screen.getByTestId('usun-z-icloud');
     expect(s.props.accessibilityState).toMatchObject({ checked: false });

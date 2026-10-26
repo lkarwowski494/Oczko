@@ -23,7 +23,9 @@ import { identyfikatory } from '../platforma/identyfikatory';
 import { liveActivity } from '../platforma/live-activity';
 import { tagiSystemowe, zegar24h } from '../platforma/lokalizacja';
 import { sklepAplikacji } from '../platforma/sklep';
-import { zegarAplikacji } from '../platforma/tryb-e2e';
+import { trybIcloudE2e, zegarAplikacji } from '../platforma/tryb-e2e';
+import { przelacznikIcloudWidoczny, silnikIcloud, type SilnikIcloud } from '../platforma/icloud';
+import { sterownikSynchronizacji, type Sterownik } from '../przypadki-uzycia/synchronizacja';
 import { zegarek } from '../platforma/zegarek';
 import type { Tlumacz } from '../ekrany/wspolne';
 import type { Jezyk, ZaleznosciKompozycji } from './licznik';
@@ -36,6 +38,8 @@ export type Kontener = {
   porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka };
   dostep: DostepPro;
   katalogDanych: string;
+  /** iCloud (partia 7): sterownik albo null, gdy silnika nie ma w buildzie; `widoczny` = wiersz w Data and sync (ZM-06, P-242). */
+  icloud: { sterownik: Sterownik; widoczny: boolean; e2e: SilnikIcloud['e2e']; naPartie(f: () => void): () => void } | null;
 };
 
 /**
@@ -84,8 +88,18 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     liveActivity: liveActivity(id, undefined, jezyk),
     zegarek: zegarek(undefined, jezyk),
   };
+  // iCloud (partia 7): silnik (moduł Swift albo atrapa E2E) i sterownik na czas procesu; start po danych startu (kompozycja licznika).
+  const plikIcloud = polacz(katalogDanych, 'icloud-atrapa.json');
+  const stanIcloudE2e = istniejePlik(plikIcloud) ? await czytajTekst(plikIcloud) : null; // tylko atrapa E2E czyta ten plik
+  const silnik = silnikIcloud({ tryb: trybIcloudE2e(), baza, zegar, plik: { czytaj: () => stanIcloudE2e, zapisz: (t) => zapiszTekst(plikIcloud, t) } });
+  const poPartii = new Set<() => void>();
+  const icloud = silnik ? {
+    sterownik: sterownikSynchronizacji({ ...z0, synchronizacja: silnik, magazyn: z0.magazyn }, () => { for (const f of poPartii) f(); }),
+    widoczny: przelacznikIcloudWidoczny(), e2e: silnik.e2e,
+    naPartie: (f: () => void) => { poPartii.add(f); return () => { poPartii.delete(f); }; },
+  } : null;
   const z: ZaleznosciAplikacji = {
-    ...z0, czasWTle: czasWTle(),
+    ...z0, czasWTle: czasWTle(), ...(silnik ? { synchronizacja: silnik } : {}),
     archiwum: utworzArchiwum({ baza, magazyn: z0.magazyn, zegar, katalogi: z0.katalogi, migruj: z0.migruj, aplikacja: 'oczko' }),
   };
   const t: Tlumacz = (k, p) => i18n.t(k, p);
@@ -95,7 +109,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
       z,
       j: { t, jezyk, zegar24h, naZmiane: (f) => i18n.naZmiane(f), preferencja: () => i18n.preferencja(), ustawJezyk: (p) => i18n.ustawJezyk(p) },
       porty: { sklep, ekranAktywny: ekranAktywny(), haptyka: haptyka() },
-      dostep, katalogDanych,
+      dostep, katalogDanych, icloud,
     },
   };
 }

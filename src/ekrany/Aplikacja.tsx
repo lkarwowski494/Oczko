@@ -113,6 +113,7 @@ export function Aplikacja(p: PropsAplikacji): React.ReactElement {
       naProjekt={d.naProjekt}
       stoper={p.stoper}
       sprawdzStopera={p.sprawdzStopera}
+      naKonflikt={d.naKonflikt}
     />
   );
 }

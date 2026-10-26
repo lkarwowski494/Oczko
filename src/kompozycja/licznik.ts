@@ -13,6 +13,7 @@ import { naPierwszyPlan, przyTle, uruchomDane, type WynikStartuDanych } from '..
 import { widokProjektu } from '../przypadki-uzycia/widok-projektu';
 import { biezacyLicznik, widokLicznika, zapamietajLicznik, type WidokLicznika } from '../przypadki-uzycia/widok-licznika';
 import type { ZaleznosciDziennika, ZaleznosciStartu } from '../przypadki-uzycia/zaleznosci';
+import { kandydaciKonfliktu, rozstrzygnijKonflikt } from '../przypadki-uzycia/synchronizacja';
 
 export type ZaleznosciKompozycji = ZaleznosciStartu & ZaleznosciDziennika & ZaleznosciEkranuBlokady;
 export type Jezyk = { t: Tlumacz; jezyk(): string; zegar24h(): boolean };
@@ -93,10 +94,15 @@ export type KompozycjaLicznika = {
   zresetuj(): void;
   /** Etykieta projektu jak na ekranie (projekt roboczy przez t(), P-126 (1b)). */
   nazwaProjektu(w: WidokLicznika): string;
+  /** Licznik w konflikcie iCloud (partia 7, P-220 I1a): wybory arkusza (`dane.konflikt_wybor`, `dane.konflikt_a11y`) i wybór wersji. */
+  konflikt: { kandydaci(): Promise<WyborKonfliktu[]>; wybierz(glowa: string): Promise<WynikEkranu<void>> };
 };
+export type WyborKonfliktu = { glowa: string; wartosc: number; tekst: string; etykieta: string };
+/** Opcje: `icloud` = sterownik synchronizacji (partia 7), uruchamiany po danych startu i poza kolejką `uruchomDane`. */
+export type OpcjeKompozycji = { wibracje(): boolean; icloud?: { start(): Promise<void> } };
 
 /** `przygotuj` uruchamia dane raz na proces (ADR-0019: błąd → ekran awaryjny, wołający); potem ekran licznika czyta przez `uslugi`. */
-export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibracje(): boolean } = { wibracje: () => true }): KompozycjaLicznika {
+export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKompozycji = { wibracje: () => true }): KompozycjaLicznika {
   let licznikId: string | null = null;
   let start: Promise<Wynik<WynikStartuDanych>> | null = null;
   let baner: BanerLicznika = null;
@@ -110,7 +116,16 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
       const r = await widokLicznika(z, { licznikId });
       if (r.ok) w = r.wartosc;
     }
-    return { s: stanEkranu(w, { j, dzis: ch.dzien, terazMs: ch.ms, strefa: ch.strefa, baner, wibracje: o.wibracje() }), w };
+    const s = stanEkranu(w, { j, dzis: ch.dzien, terazMs: ch.ms, strefa: ch.strefa, baner, wibracje: o.wibracje() });
+    return { s: { ...s, konflikt: licznikId ? await liniaKonfliktu(licznikId) : null }, w };
+  }
+  /** Linia konfliktu (P-220 I1a): liczba = wersja tego urządzenia, druga = najnowsza z innego urządzenia; null bez konfliktu. */
+  async function liniaKonfliktu(id: string): Promise<StanEkranuLicznika['konflikt']> {
+    const k = await kandydaciKonfliktu(z, id);
+    if (!k) return null;
+    const tutaj = k.find((x) => x.tutaj);
+    const inna = k.find((x) => !x.tutaj) ?? k.find((x) => x !== tutaj);
+    return inna ? { lokalna: tutaj?.wartosc ?? 0, zdalna: inna.wartosc, urzadzenie: inna.urzadzenie } : null;
   }
   async function poZapisie(w: WidokLicznika | null): Promise<void> {
     if (!w) return;
@@ -126,7 +141,10 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
 
   const k: KompozycjaLicznika = {
     async przygotuj() {
-      const d = await (start ??= uruchomDane(z));
+      const d = await (start ??= uruchomDane(z).then(async (r) => {
+        if (r.ok && o.icloud) await o.icloud.start().catch(() => undefined); // iCloud nie blokuje startu; błąd silnika = stan w Data and sync
+        return r;
+      }));
       if (!d.ok) return d;
       potwierdz(d.wartosc.potwierdzone);
       const b = await biezacyLicznik(z);
@@ -156,6 +174,25 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
       const { w } = await stan();
       await poZapisie(w);
       wersja += 1;
+    },
+    konflikt: {
+      async kandydaci() {
+        if (!licznikId) return [];
+        const ch = z.zegar.teraz();
+        const godz = (ms: number) => formatujGodzine(new Date(ms), j.jezyk(), { uses24h: j.zegar24h(), strefa: ch.strefa });
+        return ((await kandydaciKonfliktu(z, licznikId)) ?? []).map((x) => ({
+          glowa: x.glowa, wartosc: x.wartosc,
+          tekst: j.t('dane.konflikt_wybor', { wartosc: x.wartosc, urzadzenie: x.urzadzenie, godzina: godz(x.czasMs) }),
+          etykieta: j.t('dane.konflikt_a11y', { wartosc: x.wartosc, urzadzenie: x.urzadzenie, godzina: godz(x.czasMs) }),
+        }));
+      },
+      async wybierz(glowa) {
+        if (!licznikId) return { ok: false, powod: 'bledne_dane' };
+        const r = await rozstrzygnijKonflikt(z, { licznikId, glowa });
+        if (!r.ok) return ekranu(r);
+        await k.poZmianie();
+        return { ok: true, wartosc: undefined };
+      },
     },
     nazwaProjektu: (w) => (w.projekt.nienazwany ? etykietaRobocza(w.projekt.utworzonoMs, z.zegar.teraz().ms, j, z.zegar.teraz().strefa) : w.projekt.nazwa),
     async otworz(id) {

@@ -20,6 +20,7 @@ import { udostepnijPlik, wybierzArchiwum } from '../src/platforma/system-plikow-
 import { eksportuj, importuj } from '../src/przypadki-uzycia/archiwum';
 import { usunWszystkieDane } from '../src/przypadki-uzycia/projekt';
 import { widokProjektow } from '../src/przypadki-uzycia/widok-projektow';
+import { stanBazy } from '../src/dane/repozytoria/icloud';
 
 type Dane =
   | { rodzaj: 'eksport'; licznosci: string }
@@ -38,11 +39,13 @@ export default function EkranUstawien(): React.ReactElement {
   const [dostep, ustawDostep] = useState(kontener.dostep.stan());
   const [dane, ustawDane] = useState<Dane>(null);
   const [ostatniEksport, ustawOstatni] = useState<string | null>(null);
+  const [icloudWlaczona, ustawIcloud] = useState(false); // partia 7: „Also delete from iCloud” tylko przy włączonej synchronizacji (P-229)
   const wybor = useRef<((t: TrybImportu | 'anuluj') => void) | null>(null);
   const { import: plikImportu } = useLocalSearchParams<{ import?: string }>(); // plik `.oczko` otwarty z Plików (ADR-0004, +native-intent)
 
   useFocusEffect(useCallback(() => {
     const koniec = kontener.dostep.naZmiane(ustawDostep);
+    if (kontener.icloud) void stanBazy(z.baza).then((s) => ustawIcloud(s.wlaczona));
     void widokProjektow(z).then((w) => {
       const ch = z.zegar.teraz();
       if (w.ok) ustawDni(stanListy(w.wartosc, { zapytanie: '', j: kontener.j, terazMs: ch.ms, strefa: ch.strefa }).dni);
@@ -108,14 +111,20 @@ export default function EkranUstawien(): React.ReactElement {
         dane={{
           naEksport: () => void eksport().then((s) => { if (s && !E2E) void udostepnijPlik(s); }),
           naImport: () => void wybierzArchiwum().then((p) => { if (p) void importZ(p); }),
-          naUsunWszystko: () => void usunWszystkieDane(z).then((w) => {
+          naUsunWszystko: (takzeZIcloud) => void usunWszystkieDane(z).then(async (w) => {
             if (!w.ok) { ustawDane({ rodzaj: 'blad' }); return; }
+            if (kontener.icloud) { // L1: skrzynka pusta i synchronizacja wyłączona przed usunięciem wierszy; strefa iCloud tylko na życzenie (P-229)
+              await kontener.icloud.sterownik.wylacz();
+              if (takzeZIcloud) await kontener.icloud.sterownik.usunZIcloud();
+              ustawIcloud(false);
+            }
             licznik.zresetuj();
             router.dismissTo('/projekty');
           }),
         }}
         wynikDanych={wynikDanych}
         panelE2e={panelE2e}
+        icloudWlaczona={icloudWlaczona}
       />
     </Bezpieczny>
   );

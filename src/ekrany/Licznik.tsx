@@ -4,6 +4,7 @@
 // ekran pokazuje stan, który dostał; ogłoszenie i haptyka dopiero po wyniku ok (R-148).
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LiniaKonfliktu, type KonfliktNaLiczniku } from './IcloudKonflikt';
 import type { Haptyka, WzorzecHaptyki } from '../domena/porty';
 import { LIMIT_DNI_W_MIESIACU } from '../konfiguracja';
 import { cel as rozmiary, MAX_SKALA_LICZBY, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
@@ -41,6 +42,7 @@ export type StanEkranuLicznika = {
   blizniak: { rzad: number; notatka: string | null; przypomnienie: string | null } | null; // BR-PRJ-014/S2
   wibracje: boolean;                   // ustawienie (BR-LIC-020/S3)
   calosc?: { czesc: string; rzedy: number } | null; // licznik sekcji: „{część} in total: N rows” (BR-LIC-018/S1, partia 5)
+  konflikt?: KonfliktNaLiczniku;
 };
 
 /** Co zaszło w rzędzie po +1 (haptyka F-48: dwa wzorce; ogłoszenie przy wejściu w rząd z instrukcją). */
@@ -72,6 +74,7 @@ export type PropsLicznika = {
   stoper?: React.ReactNode;
   /** Linia „zapomniany stoper” (P-191 P5a) pod kreskami sesji; składa kompozycja. */
   sprawdzStopera?: React.ReactNode;
+  naKonflikt?(): void;
 };
 
 /** F-48: rozpoznawalne są tylko dwa wzorce — rząd i rząd „ze znaczeniem” (instrukcja, koniec powtórzenia, cel dnia lub części). */
@@ -188,6 +191,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
           <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(liczba)}</Text>
           <Text style={st.podpis}>{s.cel !== null ? t('licznik.z_celu', { cel: s.cel }) : t('licznik.jednostka')}</Text>
         </View>
+        {s.konflikt && <LiniaKonfliktu k={s.konflikt} t={t} oglos={p.oglos} na={p.naKonflikt} />}
         {start && <Text style={st.tresc}>{t('licznik.podpowiedz_start')}</Text>}
         {s.cel !== null && <LinijkaCelu s={s} t={t} st={st} naNastepnaCzesc={p.naNastepnaCzesc} />}
         {s.calosc && <Text style={st.podpis}>{t('licznik.calosc', { czesc: s.calosc.czesc, count: s.calosc.rzedy })}</Text>}

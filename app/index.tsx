@@ -27,6 +27,8 @@ export default function EkranLicznika(): React.ReactElement {
   }), [licznik]);
   const [projektId, ustawProjekt] = useState<string | null>(null); // stoper sesji w pasku (P-191 P1a) — projekt bieżącego licznika
   useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik]);
+  // Partia z iCloud (partia 7): stan ekranu blokady i licznik od nowa (np. linia konfliktu, P-220 I1a).
+  useEffect(() => kontener.icloud?.naPartie(() => { void licznik.poZmianie().then(() => ustawWersje(licznik.wersja())); }), [kontener, licznik]);
   useEffect(() => {
     let zywy = true;
     void licznik.przygotuj().then((w) => {
@@ -67,7 +69,7 @@ export default function EkranLicznika(): React.ReactElement {
         t={kontener.j.t}
         dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty'),
           naProjekt: () => void licznik.widok().then((w) => { if (w) router.push({ pathname: '/projekt/[id]', params: { id: w.projektId } }); }),
-          naNastepnaCzesc: () => void naNastepnaCzesc() }}
+          naNastepnaCzesc: () => void naNastepnaCzesc(), naKonflikt: () => router.push('/konflikt') }}
         stoper={projektId ? (
           <StoperLicznika z={kontener.z} j={kontener.j} projektId={projektId} oglos={oglos}
             poZmianie={async () => { await licznik.poZmianie(); ustawWersje(licznik.wersja()); }} />
