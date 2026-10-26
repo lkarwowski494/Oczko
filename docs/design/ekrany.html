@@ -383,6 +383,19 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="grupa"><div class="el"><div class="tx">Change in iOS Settings<small>The app name under the icon and the camera permission text follow the language set for Oczko in iOS Settings.</small></div><span aria-hidden="true">›</span></div></div>
 </main>
 
+<!-- 13. Notatka wzoru bez znacznika (ADR-0011 uzupełnienie 2026-10-26, P-124 Q6a): zamiast błędu prowadzenie do znacznika -->
+<main data-ekran="wzor-notatka-bez-znacznika">
+  <div class="status"><span>21:15</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Left sleeve</a><div class="ikony"><span class="ikona" role="button" aria-label="Add note">✎</span><span class="ikona" role="button" aria-label="Mark row">⌗</span></div></div>
+  <div class="wzor-strona"><div class="tekst-wzoru"></div></div>
+  <div class="pasek-znacznika" role="status">
+    <b>A note sits next to a row.</b>
+    <span>Mark the row on the pattern first, then write the note.</span>
+    <button class="przycisk-pelny">Mark row</button>
+    <button class="przycisk-tekst">Cancel</button>
+  </div>
+</main>
+
 <section class="uwagi">
   <h2>Notes for the reviewer</h2>
   <p>Body text: SF Pro on iOS; Source Sans 3 here as a stand-in. Lock, history, share: SF Symbols in the app. Prices come from the App Store product (KP-09); amounts here are the US base prices from P-057.</p>

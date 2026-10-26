@@ -57,7 +57,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); bez włóczki w projekcie: pytanie pominięte |
-| Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); Word w podglądzie zastępczym: bez znacznika |
+| Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); notatka bez znacznika (`wzor-notatka-bez-znacznika`); Word w podglądzie zastępczym: bez znacznika |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Język | lista z „Same as phone” (`jezyk`); język telefonu spoza 35: angielski bez podpowiedzi (P-115); uszkodzony zapis: „Same as phone” |
@@ -175,6 +175,20 @@ Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): 
 | `wzor.koniec_wzoru` / `wzor.przestaw` | Row {{n}} is past the end of the pattern. / Move marker |
 | `wzor.znacznik_a11y_gora` / `wzor.znacznik_a11y_dol` | Row marker, row {{n}}, rows go up / Row marker, row {{n}}, rows go down |
 | `wzor.nastepna_strona_a11y` | Move to next page |
+
+## Notatka wzoru bez znacznika (BR-WZR-008, ADR-0011 uzupełnienie 2026-10-26, P-124 Q6a)
+- Notatka tekstowa na wzorze należy do rzędu (wiersz `notatka_rzedu`), a miejsce na stronie wynika ze znacznika. Bez znacznika `dodajNotatkeWzoru` zwraca `niedozwolone_przejscie` — ekran **nie pokazuje błędu**, tylko prowadzi do ustawienia znacznika.
+- **Przepływ:** „Add note” (✎) w pasku nawigacji jest zawsze widoczne. Bez znacznika stuknięcie otwiera na dole pasek (ten sam komponent co pasek znacznika): „A note sits next to a row.” / „Mark the row on the pattern first, then write the note.” / [Mark row] / [Cancel]. „Mark row” zaczyna ustawianie znacznika (przy pierwszym razie w tym wzorze z pytaniem o kierunek, `wzor-kierunek`); po „Done” arkusz notatki otwiera się sam dla rzędu znacznika. „Cancel” zamyka pasek, nic się nie zmienia.
+- Odrzucone: ukrycie „Add note” bez znacznika — funkcja byłaby nieodkrywalna. Zakreślanie i odręczne notatki (PencilKit, ADR-0012) działają bez znacznika — bez zmian.
+- **VoiceOver:** pasek jako `status`, ogłaszany raz; fokus na „Mark row”.
+
+| Klucz | en |
+|---|---|
+| `wzor.dodaj_notatke` | Add note |
+| `wzor.notatka_bez_znacznika` | A note sits next to a row. |
+| `wzor.notatka_zaznacz` | Mark the row on the pattern first, then write the note. |
+| `wzor.zaznacz_rzad` | Mark row (istniejący klucz) |
+| `wspolne.anuluj` | Cancel |
 
 ## Kreski sesji przez północ (NZ-06, P-097 (4a), P-126 (6a), N2)
 - **Posiedzenie** (dla kresek i podpisu): zaczyna je pierwsze +1 w projekcie po przerwie ≥ `PRZERWA_NOWEGO_DNIA_MS` (60 min) bez +1 w tym projekcie albo start stopera sesji (wtedy posiedzenie = sesja stopera); kończy je taka przerwa albo zatrzymanie stopera. **Północ go nie przerywa:** o 00:20 kreski i podpis „since 22:10” zostają — jak sesja stopera liczona do dnia startu (P-097 (4a)).
