@@ -3,10 +3,11 @@
 import type { Wynik } from '../domena/bledy';
 import { mozeZaczacDzien, wznowienieLimitu } from '../domena/limit';
 import { planPrzypomnien, przypomnienieChwili, type PlanPrzypomnienia } from '../domena/przypomnienia';
+import { posiedzenie } from '../domena/posiedzenie';
 import { serieDoSprawdzenia } from '../domena/straznik-tempa';
 import type { PortBazy } from '../domena/porty';
 import type { ZrodloZdarzenia } from '../domena/stany';
-import { PRZERWA_NOWEGO_DNIA_MS, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../konfiguracja';
+import { STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../konfiguracja';
 import { celProjektu } from '../dane/repozytoria/kalendarz';
 import { caloscCzesci, celCzesci, dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
 import { odczytajUstawienie, zapiszUstawienie } from '../dane/repozytoria/ustawienia';
@@ -31,7 +32,7 @@ export type WidokLicznika = {
   /** Plany przypomnień licznika — do sygnału przy zmianie (`sygnalZmiany`, RD-13-W20–W25) w kompozycji. */
   plany: (PlanPrzypomnienia & { tekst: string })[];
   powtorzenie: { numer: number; rzadW: number; dlugosc: number } | null;
-  /** Kreski posiedzenia: dodania +1 bez przerwy ≥ PRZERWA_NOWEGO_DNIA_MS, liczone wstecz od ostatniego. */
+  /** Kreski posiedzenia (domena/posiedzenie.ts): od startu stopera albo +1 bez przerwy ≥ PRZERWA_NOWEGO_DNIA_MS; zostają do następnego +1. */
   sesja: { rzedy: number; odMs: number } | null;
   limit: 'zawczasu' | 'ostatni-darmowy' | 'brak';
   dzis: string;
@@ -54,11 +55,10 @@ async function ostatnieDodania(tx: PortBazy, licznikId: string): Promise<Plus[]>
   return r.filter((w) => tekst(w, 'rodzaj') === 'plus' && !cofniete.has(tekst(w, 'id')))
     .map((w) => ({ id: tekst(w, 'id'), czasMs: liczba(w, 'czas_ms'), zrodlo: tekst(w, 'zrodlo') as ZrodloZdarzenia }));
 }
-function sesja(dodania: readonly Plus[], terazMs: number): WidokLicznika['sesja'] {
-  if (dodania.length === 0 || terazMs - dodania[0].czasMs >= PRZERWA_NOWEGO_DNIA_MS) return null;
-  let i = 0;
-  while (i + 1 < dodania.length && dodania[i].czasMs - dodania[i + 1].czasMs < PRZERWA_NOWEGO_DNIA_MS) i += 1;
-  return { rzedy: i + 1, odMs: dodania[i].czasMs };
+/** Ostatnia sesja stopera projektu (granica posiedzenia, design-spec:242); null bez sesji. */
+async function ostatniStoper(tx: PortBazy, projektId: string): Promise<{ startMs: number; koniecMs: number | null } | null> {
+  const [r] = await wiersze(tx.all('SELECT start_ms, koniec_ms FROM sesja WHERE projekt_id = ? ORDER BY start_ms DESC LIMIT 1', [projektId]), 'widokLicznika');
+  return r ? { startMs: liczba(r, 'start_ms'), koniecMs: liczbaLubNull(r, 'koniec_ms') } : null;
 }
 /** Pytanie o serię tylko, gdy seria kończy się ostatnim dodaniem i nic po nim nie zmieniło licznika (cofnięcie serii na końcu historii, F-47). */
 function seria(dodania: readonly Plus[], glowa: string | null): WidokLicznika['seria'] {
@@ -121,7 +121,7 @@ export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<
         przypomnienie: pas(lista, wartosc, znaczenie),
         plany: lista,
         powtorzenie: dl ? { numer: Math.floor(wartosc / dl) + 1, rzadW: (wartosc % dl) + 1, dlugosc: dl } : null, // RD-12-W5
-        sesja: sesja(dodania, teraz),
+        sesja: posiedzenie({ dodaniaMs: dodania.map((d) => d.czasMs), stoper: await ostatniStoper(tx, tekst(r, 'projekt_id')) }),
         limit: zaw.limitZawczasu ? 'zawczasu' : zaw.ostatniDarmowy ? 'ostatni-darmowy' : 'brak',
         dzis, wznowienie: wznowienieLimitu({ dzis }),
         seria: seria(dodania, glowa),

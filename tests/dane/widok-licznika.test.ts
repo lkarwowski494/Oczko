@@ -4,6 +4,7 @@
 import { utworzSzybkiLicznik, dodajRzad } from '../../src/przypadki-uzycia/licznik';
 import { biezacyLicznik, historiaLicznika, widokLicznika, zapamietajLicznik } from '../../src/przypadki-uzycia/widok-licznika';
 import { widokProjektow } from '../../src/przypadki-uzycia/widok-projektow';
+import { startSesji, zakonczSesje } from '../../src/przypadki-uzycia/sesja';
 import { PRZERWA_NOWEGO_DNIA_MS } from '../../src/konfiguracja';
 import { czesc, dzienLimitu, licznik, notatkaRzedu, projekt, przypomnienie, zdarzenie, ustawGlowe } from './pomocnicze/dane-wejsciowe';
 import { MIN, T0, ile, przygotuj, wykonaj } from './pomocnicze/srodowisko';
@@ -37,10 +38,24 @@ describe('widokLicznika: dane ekranu licznika z bazy', () => {
     expect((await widok(s)).przypomnienie).toBeNull();
   });
 
-  test('kreski: trzy +1 co minutę → 3 rzędy od pierwszego; przerwa ≥ PRZERWA_NOWEGO_DNIA_MS od ostatniego → brak posiedzenia', async () => {
+  // Zmiana 08 (partia 5): design-spec:244 (N2, P-126 (6a)) — po przerwie ≥ 60 min kreski poprzedniego posiedzenia zostają do następnego +1;
+  // wcześniej test oczekiwał braku posiedzenia. Nowe posiedzenie przy następnym +1: tests/domena/posiedzenie/posiedzenie.test.ts.
+  test('kreski: trzy +1 co minutę → 3 rzędy od pierwszego; przerwa ≥ PRZERWA_NOWEGO_DNIA_MS od ostatniego → kreski zostają do następnego +1', async () => {
     const s = await z(licznik('l1', 'c1', 3), T0 + 3 * MIN);
     expect((await widok(s)).sesja).toEqual({ rzedy: 3, odMs: T0 });
     s.zegar.ustaw(T0 + 2 * MIN + PRZERWA_NOWEGO_DNIA_MS);
+    expect((await widok(s)).sesja).toEqual({ rzedy: 3, odMs: T0 });
+  });
+
+  test('kreski od startu stopera (design-spec:242): posiedzenie = sesja stopera; po zatrzymaniu +1 sprzed zatrzymania nie wracają', async () => {
+    const s = await z(licznik('l1', 'c1', 2), T0 + 10 * MIN);
+    const start = await startSesji(s.z, { projektId: 'p1' });
+    expect((await widok(s)).sesja).toEqual({ rzedy: 0, odMs: T0 + 10 * MIN });
+    s.zegar.ustaw(T0 + 11 * MIN);
+    await dodajRzad(s.z, { licznikId: 'l1' });
+    expect((await widok(s)).sesja).toEqual({ rzedy: 1, odMs: T0 + 10 * MIN });
+    s.zegar.ustaw(T0 + 12 * MIN);
+    if (start.ok) await zakonczSesje(s.z, { sesjaId: start.wartosc.sesjaId });
     expect((await widok(s)).sesja).toBeNull();
   });
 
