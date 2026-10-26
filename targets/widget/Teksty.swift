@@ -3,7 +3,7 @@ import Foundation
 
 enum Teksty {
   static let tabela: [String: [String: String]] = [
-    "en": ["dodaj": "+1 row", "limit": "No free knitting days left this month.", "odejmij": "−1 row"],
+    "en": ["dodaj": "+1 row", "limit": "No free knitting days left this month.", "odejmij": "−1 row", "polacz": "Open Oczko on your iPhone"],
   ]
   /// Język z preferencji systemu (pierwszy obsługiwany), zapas: angielski.
   static func t(_ klucz: String) -> String {

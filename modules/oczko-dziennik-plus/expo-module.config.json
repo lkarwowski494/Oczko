@@ -1,4 +1,4 @@
 {
   "platforms": ["apple"],
-  "apple": { "modules": ["OczkoDziennikPlusModule"], "podspecPath": "OczkoDziennikPlus.podspec" }
+  "apple": { "modules": ["OczkoDziennikPlusModule"], "appDelegateSubscribers": ["ZegarekAppDelegate"], "podspecPath": "OczkoDziennikPlus.podspec" }
 }

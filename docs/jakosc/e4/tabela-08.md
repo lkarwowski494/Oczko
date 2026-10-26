@@ -67,8 +67,8 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/zglos-stan-danych.test.tsx` | oczekuje | 4 | BR-DAN-010, BR-DAN-010/S1, BR-DAN-010/S2, BR-DAN-011, BR-DAN-011/S1, BR-DAN-011/S2, R-162, R-163 | `src/ekrany/StanDanych`<br>`src/ekrany/ZglosProblem`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 9 ? | `tests/adaptery/czas-w-tle.test.ts` | zielony (główny zestaw) | 2 | — | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/platforma/czas-w-tle`<br>`src/przypadki-uzycia/archiwum` | Z07-22 |
 | 9 ? | `tests/adaptery/identyfikatory.test.ts` | zielony (główny zestaw) | 2 | — | `src/platforma/identyfikatory` | — |
-| 9 ? | `tests/adaptery/live-activity.test.ts` | zielony (główny zestaw) | 4 | — | `src/domena/porty`<br>`src/platforma/dziennik-plus`<br>`src/platforma/live-activity` | Z07-22 |
-| 9 ? | `tests/adaptery/teksty-natywne.test.ts` | zielony (główny zestaw) | 5 | — | `src/i18n/slowniki/en.json` | — |
+| 9 ? | `tests/adaptery/live-activity.test.ts` | zielony (główny zestaw) | 5 | — | `src/domena/porty`<br>`src/platforma/dziennik-plus`<br>`src/platforma/live-activity`<br>`src/platforma/zegarek` | Z07-22 |
+| 9 ? | `tests/adaptery/teksty-natywne.test.ts` | zielony (główny zestaw) | 4 | — | `src/i18n/slowniki/en.json` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
 
 Razem plików testów: 67; zależnych od poprawek: 55.

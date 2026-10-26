@@ -10,6 +10,8 @@ export interface OczkoDziennikPlusNatywny {
   liveZakoncz(): Promise<void>;
   liveDostepne(): boolean;
   sha256Pliku(sciezka: string): Promise<string>;
+  zegarekWyslij(stanJson: string): Promise<void>;
+  addListener(nazwa: 'zegarekZdarzenia', fn: (e: { linie: string[] }) => void): { remove(): void };
 }
 
 export const natywny = (): OczkoDziennikPlusNatywny => requireNativeModule<OczkoDziennikPlusNatywny>('OczkoDziennikPlus');

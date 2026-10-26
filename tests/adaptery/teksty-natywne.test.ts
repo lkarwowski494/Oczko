@@ -7,7 +7,7 @@ import en from '../../src/i18n/slowniki/en.json';
 
 const KORZEN = join(__dirname, '../..');
 const SLOWNIKI = join(KORZEN, 'src/i18n/slowniki');
-const CEL = join(KORZEN, 'targets/widget/Teksty.swift');
+const CELE = ['targets/widget/Teksty.swift', 'targets/watch/Teksty.swift'].map((c) => join(KORZEN, c)); // ta sama tabela w widżecie i na zegarku
 const KLUCZE = Object.keys(en.aktywnosc).sort();
 
 /** Napis Swift: ucieczka `\` i `"` (teksty bez znaków sterujących — sprawdza test niżej). */
@@ -38,17 +38,17 @@ function generuj(): string {
   ].join('\n');
 }
 
-test('targets/widget/Teksty.swift = tabela wygenerowana ze słowników t()', () => {
+test.each(CELE.map((c) => [c.slice(KORZEN.length + 1), c] as const))('%s = tabela wygenerowana ze słowników t()', (_n, cel) => {
   const g = generuj();
-  if (process.env.UPDATE_TEKSTY_NATYWNE === '1') writeFileSync(CEL, g);
-  expect(readFileSync(CEL, 'utf8')).toBe(g);
+  if (process.env.UPDATE_TEKSTY_NATYWNE === '1') writeFileSync(cel, g);
+  expect(readFileSync(cel, 'utf8')).toBe(g);
 });
-test('klucze widżetu w źródle en: dodaj, limit, odejmij; bez znaków sterujących', () => {
-  expect(KLUCZE).toEqual(['dodaj', 'limit', 'odejmij']);
+test('klucze celów natywnych w źródle en: dodaj, limit, odejmij, polacz; bez znaków sterujących', () => {
+  expect(KLUCZE).toEqual(['dodaj', 'limit', 'odejmij', 'polacz']);
   expect(Object.values(en.aktywnosc).filter((t) => /[\u0000-\u001f]/.test(t))).toEqual([]);
 });
-test('każdy klucz Teksty.t("…") użyty w Swift widżetu jest w tabeli', () => {
-  const swiftKod = readdirSync(join(KORZEN, 'targets/widget')).filter((n) => n.endsWith('.swift')).map((n) => readFileSync(join(KORZEN, 'targets/widget', n), 'utf8')).join('\n');
+test('każdy klucz Teksty.t("…") użyty w Swift widżetu i zegarka jest w tabeli', () => {
+  const swiftKod = ['targets/widget', 'targets/watch'].flatMap((k) => readdirSync(join(KORZEN, k)).filter((n) => n.endsWith('.swift')).map((n) => readFileSync(join(KORZEN, k, n), 'utf8'))).join('\n');
   const uzyte = [...new Set([...swiftKod.matchAll(/Teksty\.t\("([^"]+)"\)/g)].map((m) => m[1]))].sort();
   expect(uzyte.length).toBeGreaterThan(0);
   expect(uzyte.filter((k) => !KLUCZE.includes(k ?? ''))).toEqual([]);

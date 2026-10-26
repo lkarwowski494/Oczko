@@ -1,5 +1,5 @@
 // Most JS ↔ Swift (Expo Modules API, ADR-0007): dziennik +1 (odczyt i skrócenie przez kolejkę jedynego pisarza, ADR-0008), Live Activity
-// (start, aktualizacja, koniec; stan = StanEkranuBlokady v2 w JSON) i SHA-256 pliku (P-130). Adaptery TS: src/platforma/.
+// (start, aktualizacja, koniec; stan = StanEkranuBlokady v2 w JSON), SHA-256 pliku (P-130) i łącze z zegarkiem (ADR-0009). Adaptery TS: src/platforma/.
 import ActivityKit
 import ExpoModulesCore
 import Foundation
@@ -27,5 +27,13 @@ public class OczkoDziennikPlusModule: Module {
     Function("liveDostepne") { () -> Bool in ActivityAuthorizationInfo().areActivitiesEnabled }
 
     AsyncFunction("sha256Pliku") { (sciezka: String) throws -> String in try Skrot.sha256Pliku(sciezka) }
+
+    Events("zegarekZdarzenia")
+    AsyncFunction("zegarekWyslij") { (stanJson: String) throws in
+      _ = try StanEkranuBlokady.dekoduj(Data(stanJson.utf8)) // zegarek dostaje tylko poprawny stan v2
+      try ZegarekHub.shared.wyslijStan(stanJson)
+    }
+    OnStartObserving { ZegarekHub.shared.poZapisie = { [weak self] linie in self?.sendEvent("zegarekZdarzenia", ["linie": linie]) } }
+    OnStopObserving { ZegarekHub.shared.poZapisie = nil }
   }
 }

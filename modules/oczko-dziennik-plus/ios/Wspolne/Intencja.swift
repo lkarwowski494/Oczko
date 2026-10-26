@@ -16,9 +16,12 @@ public enum WynikIntencji: Equatable {
 }
 
 /// Stuknięcie w chwili `teraz` w strefie urządzenia; `id` = nowy UUID, `urzadzenie` = identyfikator urządzenia z aplikacji.
-public func stuknij(_ rodzaj: ZdarzenieWejsciowe.Rodzaj, stan: StanEkranuBlokady, teraz: Int64, strefa: String, id: String, urzadzenie: String) throws -> WynikIntencji {
+/// `zrodlo`: ekran blokady (intencja) albo zegarek (ta sama reguła na stanie z kontekstu telefonu, ADR-0009).
+public func stuknij(_ rodzaj: ZdarzenieWejsciowe.Rodzaj, stan: StanEkranuBlokady, teraz: Int64, strefa: String, id: String, urzadzenie: String,
+                    zrodlo: ZdarzenieWejsciowe.Zrodlo = .ekran_blokady, proZegarkaSklep: [Uprawnienie] = []) throws -> WynikIntencji {
   let dzis = try dzienLokalny(ms: teraz, strefa: strefa)
-  let pro = stan.maPro(teraz: teraz)
+  // KP-17: Pro, gdy potwierdza je stan od telefonu albo StoreKit zegarka (OR, proZegarka).
+  let pro = proZegarka([.telefon(pro: stan.pro, wygasa: stan.proWaznoscDo)] + (proZegarkaSklep.isEmpty ? [] : [.zegarek(proZegarkaSklep)]), teraz: teraz)
   let miesiac = String(dzis.prefix(7))
   var dni = stan.dniWMiesiacu.filter { $0.dzien.hasPrefix(miesiac) }.map { DzienLimitu(data: $0.dzien, pro: $0.pro) }
   if rodzaj == .minus {
@@ -31,7 +34,7 @@ public func stuknij(_ rodzaj: ZdarzenieWejsciowe.Rodzaj, stan: StanEkranuBlokady
     if let z = start.zapis { dni.append(z) }
   }
   let zdarzenie = ZdarzenieWejsciowe(id: id, licznikId: stan.licznikId, rodzaj: rodzaj, rodzice: stan.glowa.map { [$0] } ?? [], czasMs: teraz,
-                                     strefa: strefa, dzien: dzis, zrodlo: .ekran_blokady, urzadzenie: urzadzenie, pro: pro)
+                                     strefa: strefa, dzien: dzis, zrodlo: zrodlo, urzadzenie: urzadzenie, pro: pro)
   let nowy = stan.po(zdarzenie, dni: dni.map { DzienStanu(dzien: $0.data, pro: $0.pro) })
   return .zapisz(zdarzenie, nowy)
 }

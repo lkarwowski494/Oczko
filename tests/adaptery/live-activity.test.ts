@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import type { StanEkranuBlokady } from '../../src/domena/porty';
 import { dziennikUrzadzenia } from '../../src/platforma/dziennik-plus';
 import { liveActivity } from '../../src/platforma/live-activity';
+import { zegarek } from '../../src/platforma/zegarek';
 import { przygotuj } from '../dane/pomocnicze/srodowisko';
 
 const KAT = join(__dirname, '../wspolne');
@@ -47,5 +48,26 @@ describe('DziennikPlus na module Swift', () => {
     expect(await s.baza.all("SELECT kod FROM blad WHERE kod = 'dziennik_uszkodzona_linia'")).toEqual([{ kod: 'dziennik_uszkodzona_linia' }]);
     await d.skroc('4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6');
     expect(skrocone).toEqual(['4a3c9e5f-6b7d-4c8e-9fa0-b1c2d3e4f5a6']);
+  });
+});
+
+describe('Zegarek na module Swift', () => {
+  test('wyslijStan: JSON stanu v2; odbieraj: linie z modułu → zdarzenia zegarka, zła linia pominięta; wyrejestrowanie', async () => {
+    const wyslane: string[] = [];
+    let fnModulu: ((e: { linie: string[] }) => void) | null = null;
+    let usunieto = false;
+    const z = zegarek({
+      zegarekWyslij: async (j) => { wyslane.push(j); },
+      addListener: (_n, fn) => { fnModulu = fn; return { remove: () => { usunieto = true; } }; },
+    });
+    await z.wyslijStan(stan);
+    expect(wyslane).toEqual([JSON.stringify(stan)]);
+    const odebrane: string[][] = [];
+    const stop = z.odbieraj((zd) => odebrane.push(zd.map((x) => `${x.id}:${x.zrodlo}`)));
+    const linia = { ...JSON.parse(readFileSync(join(KAT, 'dziennik-plus-poprawny.jsonl'), 'utf8').split('\n')[0] ?? '{}'), zrodlo: 'zegarek' };
+    fnModulu!({ linie: [JSON.stringify(linia), '{"zla":'] });
+    expect(odebrane).toEqual([[`${linia.id}:zegarek`]]);
+    stop();
+    expect(usunieto).toBe(true);
   });
 });
