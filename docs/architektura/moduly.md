@@ -272,6 +272,7 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `ROZSZERZENIE_ARCHIWUM` | `.oczko` | ADR-0004 |
 | `ZAPAS_MIEJSCA_EKSPORTU` (×rozmiar) | 2 | [OCENA] roli 05: archiwum + plik tymczasowy; do korekty po pomiarze |
 | `BLEDY_MAKS_WIERSZY` (wiersze) | 200 | [OCENA] roli 05 (F-57: ostatnie błędy bez treści) |
+| `DZIENNIK_BLAD_TEKST_MAKS` (znaki) | 4096 | ADR-0008 (3′) (fix-3 05, P-124): najdłuższy tekst uszkodzonej linii dziennika +1 w `blad` (linia ma tylko identyfikatory, czas i strefę, NFR-PRY-001) |
 | `PLIKI_OCHRONA_MIN` (min) | 10 | [OCENA] roli 05 (Z07-15): plik młodszy niż to nie jest sprzątany przy starcie (zapis pliku przed wierszem odwołania) |
 | `RYSUNEK_ZAPIS_MS` (ms) | 1000 | ADR-0012 (uzupełnienie, Z07-17): najdłuższe opóźnienie zapisu rysunku |
 | `WZOR_MAKS_MB` (MB) | 200 | [OCENA] roli 05 (Z07-17): największy plik przyjmowany przez rozszerzenie udostępniania; do korekty po pomiarze |
