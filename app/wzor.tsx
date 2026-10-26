@@ -65,12 +65,13 @@ export default function EkranWzoru(): React.ReactElement {
   }, [lw, dodano, dodajParam]);
   function setRysikOtwarcie() { ustawRysik((s) => poDotyku(s, 'otwarcie')); }
 
-  async function dodaj(zrodlo: ZrodloDodaniaEkranu | { rodzaj: 'adres'; adres: string } | { rodzaj: 'e2e-pdf' | 'e2e-zdjecie'; sciezka: string }): Promise<void> {
+  async function dodaj(zrodlo: ZrodloDodaniaEkranu | { rodzaj: 'adres'; adres: string } | { rodzaj: 'e2e-pdf' | 'e2e-zdjecie' | 'e2e-word'; sciezka: string }): Promise<void> {
     if (!lw) return;
     const data = krotkaData(zw.zegar.teraz().dzien, kontener.j.jezyk());
     let z: ZrodloDodania | null = null, nazwa = '', plik = '';
     if (typeof zrodlo === 'object') {
       if (zrodlo.rodzaj === 'adres') { z = { rodzaj: 'adres', adres: zrodlo.adres }; nazwa = nazwaDomyslna(zrodlo, t, data); plik = nazwa; }
+      else if (zrodlo.rodzaj === 'e2e-word') { z = { rodzaj: 'word', plik: { id: 'e2e', nazwa: 'Test pattern.docx', sciezka: zrodlo.sciezka, typ: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' } }; nazwa = 'Test pattern'; }
       else if (zrodlo.rodzaj === 'e2e-pdf') { z = { rodzaj: 'pdf', plik: { id: 'e2e', nazwa: 'Test pattern.pdf', sciezka: zrodlo.sciezka, typ: 'application/pdf' } }; nazwa = 'Test pattern'; }
       else { z = { rodzaj: 'obrazy', sciezki: [zrodlo.sciezka] }; nazwa = nazwaDomyslna({ rodzaj: 'zdjecia' }, t, data); }
     } else if (zrodlo === 'link') { ustawLink(true); return; }
@@ -109,7 +110,8 @@ export default function EkranWzoru(): React.ReactElement {
       <Bezpieczny>
         <View style={{ flex: 1, padding: 16, backgroundColor: k.papier }}>
           <GrupaWzorow wzory={[]} oczekujace={[]} skaner={kontener.wzor.platforma.skanerDostepny()} t={t} naOtworz={(w) => void wczytaj(w)} naDodaj={(z) => void dodaj(z)} naUsunOczekujacy={() => undefined}
-            panelE2e={paneleE2e ? <paneleE2e.PanelWzoru katalogTymczasowy={kontener.z.katalogi.tymczasowy} naPdf={(s) => void dodaj({ rodzaj: 'e2e-pdf', sciezka: s })} naZdjecie={(s) => void dodaj({ rodzaj: 'e2e-zdjecie', sciezka: s })} /> : null} />
+            panelE2e={paneleE2e ? <paneleE2e.PanelWzoru katalogTymczasowy={kontener.z.katalogi.tymczasowy} naPdf={(s) => void dodaj({ rodzaj: 'e2e-pdf', sciezka: s })} naZdjecie={(s) => void dodaj({ rodzaj: 'e2e-zdjecie', sciezka: s })}
+              naWord={(s) => void dodaj({ rodzaj: 'e2e-word', sciezka: s })} naAdres={(a) => void dodaj({ rodzaj: 'adres', adres: a })} /> : null} />
         </View>
       </Bezpieczny>
     );

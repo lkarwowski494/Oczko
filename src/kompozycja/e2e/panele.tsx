@@ -10,6 +10,7 @@ import { polacz, zapiszTekst } from '../../dane/pliki/system';
 import { plikiE2e } from '../e2e-pliki';
 import { zdjecieTestowe } from '../e2e-zdjecie';
 import { pdfTestowy } from './skrzynka';
+import { ADRES_STRONY_TESTOWEJ, wordTestowy } from './pliki-wzoru';
 
 /** Oferty: „wygaś dostęp” sztucznego sklepu (app/oferty.tsx). */
 export function PanelSklepu({ naWygas }: { naWygas(): void }): React.ReactElement {
@@ -78,8 +79,8 @@ export function PanelIcloud({ wyslane, usuniete }: { wyslane: number; usuniete: 
   );
 }
 
-/** Dodanie wzoru (partia 6, e2e/README.md `e2e-wzor-pdf`, `e2e-wzor-zdjecie`): pliki testowe bez okna Plików i Zdjęć (subflow otworz-wzor-pdf, scenariusze 21, 22). */
-export function PanelWzoru(p: { katalogTymczasowy: string; naPdf(sciezka: string): void; naZdjecie(sciezka: string): void }): React.ReactElement {
+/** Dodanie wzoru (partia 6, e2e/README.md `e2e-wzor-pdf`, `e2e-wzor-zdjecie`): pliki testowe bez okna Plików i Zdjęć (subflow otworz-wzor-pdf, scenariusze 21, 22, 24, 25). */
+export function PanelWzoru(p: { katalogTymczasowy: string; naPdf(sciezka: string): void; naZdjecie(sciezka: string): void; naWord(sciezka: string): void; naAdres(adres: string): void }): React.ReactElement {
   return (
     <View>
       <Pressable accessibilityRole="button" testID="e2e-wzor-pdf" onPress={() => p.naPdf(pdfTestowyPlik(p.katalogTymczasowy))} style={{ padding: 12 }}>
@@ -87,6 +88,12 @@ export function PanelWzoru(p: { katalogTymczasowy: string; naPdf(sciezka: string
       </Pressable>
       <Pressable accessibilityRole="button" testID="e2e-wzor-zdjecie" onPress={() => p.naZdjecie(zdjecieTestowe(p.katalogTymczasowy))} style={{ padding: 12 }}>
         <Text>Test pattern (photo)</Text>
+      </Pressable>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-www" onPress={() => p.naAdres(ADRES_STRONY_TESTOWEJ)} style={{ padding: 12 }}>
+        <Text>Test pattern (web page)</Text>
+      </Pressable>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-word" onPress={() => p.naWord(wordTestowy(p.katalogTymczasowy))} style={{ padding: 12 }}>
+        <Text>Test pattern (Word)</Text>
       </Pressable>
     </View>
   );
