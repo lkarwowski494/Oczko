@@ -54,7 +54,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `licznik-projekt` | licznik | nazwa projektu nad tytułem części | nazwa użytkownika | |
 | `licznik-menu` | licznik | menu ••• | „Project options: name, goal, reminder, lock, finish” | |
 | `licznik-historia` | licznik | przycisk historii | „History” | |
-| `kreski-podpis` | licznik | podpis nad kreskami sesji | „Tonight’s marks: 14 rows since 19:52” | |
+| `kreski-podpis` | licznik | podpis nad kreskami sesji | „Marks this session: 14 rows since 19:52” (godzina w formacie regionu; P-176) | |
 | `baner-serii` | licznik | baner strażnika RD-17 | „Added 3 rows in 1 s. Undo?” | |
 | `baner-serii-cofnij` | licznik | przycisk w banerze | „Undo 3 rows” | |
 | `pasek-blokady-odblokuj` | licznik | „Unlock” w pasku „Counter locked · Unlock” | „Unlock” | |
