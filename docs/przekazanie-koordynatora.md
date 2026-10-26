@@ -12,7 +12,7 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 
 ## Stan (2026-10-26 21:05 UTC)
 - **Zakres 1.0:** pełne MVP z wzorami (F) i iCloud (G), P-217. Plan: `docs/plan-app-store.md` (do odświeżenia pod P-217).
-- **Partia 5:** kod gotowy (verify 2330/2330 na d427d34, swift 46/46); czeka na nocny przebieg iOS. Zielony → STOP E2 partii 5 (zapis P-nnn). Czerwony → diagnoza, poprawka w nowej sesji 08.
+- **Partia 5:** kod gotowy (verify 2330/2330 na d427d34, swift 46/46). Pakiet podstawowy iOS zielony na 80bdeb5 (przebieg 113, zakończony 22:13 UTC). **Nocny pełny przebieg 114** (`[e2e-pelny]`, 94f678b, wypchnięty 22:17 UTC) w kolejce: https://github.com/lkarwowski494/oczko/actions/runs/40411351211 — od teraz żadnych pushy ścieżek kodu/`e2e/**` na roboczą do jego końca (docs/ nie wyzwala). Zielony → STOP E2 partii 5 (zapis P-nnn). Czerwony → diagnoza, poprawka w nowej sesji 08.
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 
