@@ -38,3 +38,6 @@ Dopisuję do audytu wydania (moduł `wydanie`, strategia §8/§10) listę kontro
 
 ## Szacunek
 Czas agenta: scenariusze 44–48 i lista TT ok. 1,5 h po „Dla 08” roli 04; zadanie CI `e2e-ipad` ok. 1 h (z testem jak `e2e-bramka`); lista kontrolna OG-07 w strategii 30 min. Czekanie: kod 08 partii 6, makiety 04, okno maszyn macOS. Od właściciela: odpowiedź, czy ma iPada i Apple Pencil (lista „tylko urządzenie”).
+
+## Decyzja
+**P-225** (koordynator wg P-087, 2026-10-26): Q1a (zadanie `e2e-ipad` w `jakosc-ios.yml`, ten sam build, nocą/ręcznie, bez bramki do pierwszego zielonego), Q2 (a)+(c) (argument `oczkoE2eSzerokoscOkna` + krok na urządzeniu), Q3c (zrzuty + przegląd 04 teraz, audyt XCUITest w 1.1). Pytanie o iPada i Apple Pencil — u właściciela przez koordynatora. Scenariusze po „Dla 08” roli 04 fix-7.
