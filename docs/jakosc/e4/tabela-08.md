@@ -63,6 +63,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/prosba-o-ocene-zapis.test.ts` | zielony (główny zestaw) | 3 | P-156 | `src/dane/baza/przeniesienie`<br>`src/dane/repozytoria/ustawienia`<br>`src/przypadki-uzycia/ocena`<br>`src/przypadki-uzycia/start` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/przy-tle.test.ts` | zielony (główny zestaw) | 1 | R-091 | `src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/start` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/schemat-migracje.test.ts` | zielony (główny zestaw) | 11 | BR-DAN-003/S1, BR-DAN-003/S2, NFR-DAN-001, P-072, R-054, R-072, R-076, R-077, R-078, R-079, R-096 | `src/dane/baza/adapter-node`<br>`src/dane/migracje/migruj`<br>`src/konfiguracja` | Z07-15, Z07-22 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/sesja.test.ts` | zielony (główny zestaw) | 5 | BR-PRJ-008, BR-PRJ-008/S1, BR-PRJ-013, P-072 | `src/domena/maszyny/sesja`<br>`src/przypadki-uzycia/sesja` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/stan-blokada.test.ts` | zielony (główny zestaw) | 3 | BR-LIC-004, P-133, P-135 | `src/domena/porty`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/ekran-blokady` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/start-kopie.test.ts` | zielony (główny zestaw) | 8 | BR-DAN-004/S1, BR-DAN-010/S3, NFR-PRY-001, P-047, P-070, P-080, R-082, R-088, R-089 | `src/dane/baza/kopia`<br>`src/dane/baza/polaczenie`<br>`src/dane/baza/sciezki`<br>`src/dane/kopia-ratunkowa`<br>`src/dane/migracje/migruj`<br>`src/domena/porty`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/start`<br>`src/przypadki-uzycia/zgloszenie` | Z07-21, Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/ukonczenie-pora.test.ts` | zielony (główny zestaw) | 0 | P-137, RD-16 | `src/przypadki-uzycia/projekt` | Z07-22 |
@@ -106,4 +107,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/straznik-startu.test.ts` | zielony (główny zestaw) | 8 | P-080 | `src/konfiguracja`<br>`src/niezawodnosc/start` | — |
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 
-Razem plików testów: 102; zależnych od poprawek: 74.
+Razem plików testów: 103; zależnych od poprawek: 74.
