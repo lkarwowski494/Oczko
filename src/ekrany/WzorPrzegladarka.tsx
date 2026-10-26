@@ -18,6 +18,7 @@ export type StanPrzegladarki = {
   zakreslenia: number;
   narzedzie: Narzedzie;
   word: boolean;                                  // podgląd zastępczy Worda: bez znacznika i rysowania (W11)
+  kierunek?: 1 | -1 | null;                       // kierunek rzędów zapisany w znaczniku; null = pierwsze ustawienie pyta (P-126 (3a))
   licznik: { liczba: number; dziergany: number };
   uklad: Uklad;
 };
@@ -30,7 +31,7 @@ export type PropsPrzegladarki = {
   naPrzelacz(wzorId: string): void;
   naNarzedzie(n: Narzedzie): void;
   naCofnij(): void;
-  naZaznaczRzad(): void;
+  naZaznaczRzad(kierunek: 1 | -1): void;
   naObroc(): void;
   naUsun(): void;
   potwierdz(tytul: string, opis: string, przycisk: string, f: () => void): void;
@@ -44,6 +45,8 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
   const st = style(k);
   const [menu, ustawMenu] = useState<'brak' | 'opcje' | 'wzory'>('brak');
   const [blad, ustawBlad] = useState(false);
+  const [pytanie, ustawPytanie] = useState(false); // „Which way do rows go on this page?” (3a: bez wartości domyślnej)
+  const zaznacz = () => { if (s.kierunek === 1 || s.kierunek === -1) p.naZaznaczRzad(s.kierunek); else ustawPytanie(true); };
   const ipad = s.uklad.klasa === 'regular';
   const tryb = s.narzedzie !== 'brak';
   const obok = s.uklad.wzor === 'obok';
@@ -85,7 +88,7 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
       </View>
       <View style={st.grupa}>
         {!s.word && (
-          <Pressable accessibilityRole="button" accessibilityLabel={t('wzor.zaznacz_rzad')} onPress={p.naZaznaczRzad} style={st.ikona}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('wzor.zaznacz_rzad')} onPress={zaznacz} style={st.ikona}>
             <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>▭</Text>
           </Pressable>
         )}
@@ -107,6 +110,16 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
         </View>
       )}
       {s.word && <Text style={[st.tresc, st.informacja]} accessibilityRole="text">{t('wzor.word_podglad')}</Text>}
+      {pytanie && (
+        <View style={st.informacja} accessibilityRole="summary" testID="wzor-kierunek">
+          <Text style={st.tresc}>{t('wzor.kierunek_pytanie')}</Text>
+          {([[-1, 'wzor.kierunek_gora', 'wzor.kierunek_gora_opis', '↑'], [1, 'wzor.kierunek_dol', 'wzor.kierunek_dol_opis', '↓']] as const).map(([kier, k1, k2, znak]) => (
+            <Pressable key={kier} accessibilityRole="button" accessibilityLabel={`${t(k1)}, ${t(k2)}`} onPress={() => { ustawPytanie(false); p.naZaznaczRzad(kier); }} style={st.pozycja}>
+              <Text style={st.tresc}>{`${znak} ${t(k1)}, ${t(k2)}`}</Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
       {!s.word && <Text style={st.podpis} testID="wzor-zakreslenia">{t('wzor.zakreslenia', { count: s.zakreslenia })}</Text>}
       {tryb && !ipad && <Text style={st.podpis}>{t('wzor.zakreslacz_podpowiedz')}</Text>}
       <View style={[st.strona, ipad && !obok && st.stronaIpad]} testID="wzor-widok">

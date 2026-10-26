@@ -105,3 +105,16 @@ test('Word w podglądzie zastępczym: linia informacji, bez „Mark row” i zak
   expect(screen.queryByTestId('wzor-zakreslacz')).toBeNull();
   expect(screen.queryByRole('button', { name: 'Mark row' })).toBeNull();
 });
+
+test('P-126 (3a): pierwszy znacznik we wzorze pyta o kierunek (bez wartości domyślnej); „Up” → kierunek −1; znany kierunek → bez pytania', () => {
+  const w = wywolania();
+  const r = render(<PrzegladarkaWzoru stan={stan({ kierunek: null })} t={t} widok={widok} {...w} />);
+  fireEvent.press(screen.getByRole('button', { name: 'Mark row' }));
+  expect(w.naZaznaczRzad).not.toHaveBeenCalled();
+  expect(screen.getByText('Which way do rows go on this page?')).toBeTruthy();
+  fireEvent.press(screen.getByRole('button', { name: 'Up, like a chart' }));
+  expect(w.naZaznaczRzad).toHaveBeenLastCalledWith(-1);
+  r.rerender(<PrzegladarkaWzoru stan={stan({ kierunek: 1 })} t={t} widok={widok} {...w} />);
+  fireEvent.press(screen.getByRole('button', { name: 'Mark row' }));
+  expect(w.naZaznaczRzad).toHaveBeenLastCalledWith(1);
+});

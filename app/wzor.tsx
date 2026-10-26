@@ -125,8 +125,8 @@ export default function EkranWzoru(): React.ReactElement {
       onStrona={(e) => ustawStrone({ n: e.nativeEvent.strona + 1, razem: e.nativeEvent.stron })}
       onPierwszyRysik={() => ustawRysik((s) => poDotyku(s, 'rysik'))}
       onZakreslenia={(e) => ustawZakreslenia(e.nativeEvent.liczba)}
-      onStukniecie={(e) => void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: e.nativeEvent.strona, y: Math.min(e.nativeEvent.y, 0.98), wysokoscRzedu: zn?.wysokosc ?? 0.02,
-        rzadBazowy: lw.wartosc + 1, kierunek: zn?.kierunek ?? 1 }).then(() => wczytaj(widok.wzorId))} />
+      onStukniecie={(e) => zn && void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: e.nativeEvent.strona, y: Math.min(e.nativeEvent.y, 0.98), wysokoscRzedu: zn?.wysokosc ?? 0.02,
+        rzadBazowy: lw.wartosc + 1, kierunek: zn.kierunek }).then(() => wczytaj(widok.wzorId))} /> // przytrzymanie przestawia znacznik o znanym kierunku; pierwszy: „Mark row” z pytaniem (3a)
   ) : <View style={{ flex: 1 }} />;
   const liczba = lw.znaczenie === 'w_trakcie' ? lw.wartosc + 1 : lw.wartosc;
   const strony = strona?.razem ?? 0;
@@ -134,14 +134,14 @@ export default function EkranWzoru(): React.ReactElement {
     <Bezpieczny pelnaSzerokosc>
       <PrzegladarkaWzoru
         stan={{ nazwa: widok.nazwa, opis: t('wzor.wiersz_opis', { rodzaj: t(RODZAJ[widok.zrodlo] ?? 'wzor.rodzaj_pdf'), strony: t('wzor.strony', { count: strony }) }), czesc: lw.czesc.nazwa,
-          wzory, wzorId: widok.wzorId, strona, zakreslenia, narzedzie, word: plikPdf === null, licznik: { liczba, dziergany: lw.wartosc + 1 }, uklad }}
+          wzory, wzorId: widok.wzorId, strona, zakreslenia, narzedzie, word: plikPdf === null, kierunek: zn?.kierunek ?? null, licznik: { liczba, dziergany: lw.wartosc + 1 }, uklad }}
         t={t} widok={natywny}
         terminKosza={krotkaData(dodajDni(zw.zegar.teraz().dzien, KOSZ_DNI), kontener.j.jezyk())}
         naWstecz={() => router.back()}
         naPrzelacz={(w) => void wczytaj(w)}
         naNarzedzie={ustawNarzedzie}
         naCofnij={() => ustawCofnij((n) => n + 1)}
-        naZaznaczRzad={() => void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: strona ? strona.n - 1 : 0, y: 0.5, wysokoscRzedu: zn?.wysokosc ?? 0.02, rzadBazowy: lw.wartosc + 1, kierunek: zn?.kierunek ?? 1 }).then(() => wczytaj(widok.wzorId))}
+        naZaznaczRzad={(kierunek) => void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: strona ? strona.n - 1 : 0, y: 0.5, wysokoscRzedu: zn?.wysokosc ?? 0.02, rzadBazowy: lw.wartosc + 1, kierunek }).then(() => wczytaj(widok.wzorId))}
         naObroc={() => void ustawObrot(zw, { wzorId: widok.wzorId, strona: strona ? strona.n - 1 : 0, kat: (((widok.obroty[strona ? strona.n - 1 : 0] ?? 0) + 90) % 360) as 0 | 90 | 180 | 270 }).then(() => wczytaj(widok.wzorId))}
         naUsun={() => void usunWzor(zw, { wzorId: widok.wzorId }).then(async (r) => { if (r.ok) { await kontener.wzor.k.odswiezMigawke(); await wczytaj(); } })}
         potwierdz={(tytul, opis, przycisk, f) => Alert.alert(tytul, opis, [{ text: t('wspolne.anuluj'), style: 'cancel' }, { text: przycisk, style: 'destructive', onPress: f }])}
