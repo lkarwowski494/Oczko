@@ -32,13 +32,17 @@ tags:
     arguments:
       oczkoE2eTeraz: "2026-11-10T19:40:00"
       oczkoE2eAwariaStartu: "przed-kamieniem"
-- extendedWaitUntil: { notVisible: { id: "licznik-plus" }, timeout: 15000 }
+# Znacznik buildu E2E po zapisie stanu startu: bez niego Maestro zabijał proces ~1,5 s po aktywacji, przed JS (E2E 40306542928).
+- extendedWaitUntil: { visible: { id: "e2e-awaria-startu" }, timeout: 60000 }
+- assertNotVisible: { id: "licznik-plus" }
 - launchApp:
     clearState: false
     arguments:
       oczkoE2eTeraz: "2026-11-10T19:41:00"
       oczkoE2eAwariaStartu: "przed-kamieniem"
-- extendedWaitUntil: { notVisible: { id: "licznik-plus" }, timeout: 15000 }
+# Znacznik buildu E2E po zapisie stanu startu: bez niego Maestro zabijał proces ~1,5 s po aktywacji, przed JS (E2E 40306542928).
+- extendedWaitUntil: { visible: { id: "e2e-awaria-startu" }, timeout: 60000 }
+- assertNotVisible: { id: "licznik-plus" }
 # --- trzeci start (bez przełącznika): ekran trybu awaryjnego, baza nietknięta ---
 - launchApp:
     clearState: false

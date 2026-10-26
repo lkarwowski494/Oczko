@@ -40,7 +40,7 @@ Argumenty startu (`launchApp: arguments:`; na iOS Maestro przekazuje je jako arg
 |---|---|---|
 | `oczkoE2eTeraz` | czas lokalny ISO bez strefy, np. `2026-11-07T20:00:00` | port `Zegar` (Z07-18): `teraz()` = podana chwila + czas, który upłynął od startu procesu (zegar **biegnie**: RD-17 liczy odstępy); `strefa` = strefa symulatora; `dzien` z podanej daty |
 | `oczkoE2eSiec` | `brak` | adapter sieci zwraca „brak połączenia”, każde wywołanie sieci = błąd w logu (NFR-OFF-001) |
-| `oczkoE2eAwariaStartu` | `przed-kamieniem` | wymuszona awaria procesu przed kamieniem milowym ADR-0019 (start liczony jako nieudany) |
+| `oczkoE2eAwariaStartu` | `przed-kamieniem` | wymuszona awaria procesu przed kamieniem milowym ADR-0019 (start liczony jako nieudany); po zapisie stanu startu pusty ekran z `testID` `e2e-awaria-startu` |
 
 ## testID (propozycja 07 dla 08; zmiana nazwy = zmiana scenariuszy)
 Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`; „—” = tekst ustala 04 (Z07-05), scenariusz używa tylko id. Kolumna ostatnia: klawiatura pola (`liczbowa`, `tekstowa`) albo puste.
@@ -146,6 +146,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `e2e-nigdy` | — | element, którego nie ma (podprzepływ `odstep.yaml`) | — | |
 | `e2e-sklep-wygas` | oferty (build E2E) | „Test store: expire access” | bez `t()` | |
 | `e2e-sha-bazy` | Ustawienia i ekran awaryjny (build E2E) | SHA-256 pliku bazy (64 znaki hex) | bez `t()` | |
+| `e2e-awaria-startu` | pusty ekran wymuszonej awarii startu (build E2E, `oczkoE2eAwariaStartu`) | tło papieru po zapisie „start w toku” (ADR-0019) | bez tekstu | |
 | `e2e-pliki-zachowaj-eksport` | Ustawienia (build E2E) | zachowanie ostatniego eksportu w katalogu testowym | bez `t()` | |
 | `e2e-pliki-stan` | Ustawienia (build E2E) | „Saved: N file” | bez `t()` | |
 | `e2e-pliki-importuj-ostatni` | Ustawienia (build E2E) | import ostatniego eksportu bez okna Pliki | bez `t()` | |

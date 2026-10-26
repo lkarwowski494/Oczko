@@ -51,6 +51,8 @@ export default function Korzen(): React.ReactElement {
     return () => { zywy = false; koniecNasluchu?.(); };
   }, [proba]);
   if (faza.rodzaj === 'awaryjny') return <EkranAwaryjnyZJezykiem powod={faza.powod} naNormalnie={() => { ustaw({ rodzaj: 'czeka' }); ustawProbe((n) => n + 1); }} />;
+  // Build E2E: znacznik po zapisie „start w toku” (scenariusz 09 czeka na niego, zanim zabije proces; E2E 40306542928).
+  if (faza.rodzaj === 'awaria-e2e') return <View testID="e2e-awaria-startu" style={{ flex: 1, backgroundColor: k.papier }} />;
   if (faza.rodzaj !== 'gotowe') return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   const a = faza.a;
   return (
