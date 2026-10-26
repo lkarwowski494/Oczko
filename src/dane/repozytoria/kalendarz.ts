@@ -69,7 +69,7 @@ export async function podsumowanieTygodnia(baza: PortBazy, w: { dzis: string; pi
 /** Projekty w toku (bez kosza) w kolejności P-048 (4): po terminie, potem cel na dziś malejąco, potem bez terminu według ostatniej pracy. */
 export type ProjektDzis = { id: string; nazwa: string; cel: CelDnia | null };
 /** Z_przed = Σ min(r_i, c_i) części z celem, r_i = wartość liczników rzędów części na koniec wczoraj (RD-15 jak RD-14); Z_teraz z bieżącej wartości licznika (`licznik.wartosc` = scal, P-134 Q1a). */
-async function celProjektu(baza: PortBazy, projektId: string, termin: string, dzis: string): Promise<CelDnia | null> {
+export async function celProjektu(baza: PortBazy, projektId: string, termin: string, dzis: string): Promise<CelDnia | null> {
   const czesci = await wiersze(baza.all('SELECT id, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL AND cel_rzedow IS NOT NULL', [projektId]), 'kolejnosc');
   let suma = 0, przed = 0, teraz = 0;
   for (const c of czesci) {
