@@ -1,6 +1,6 @@
 // Model odczytu przeglądarki wzoru (moduly.md „Kontrakt partii 6”: WidokWzoru dostaje plik PDF, rysunki stron i wynik `polozenieZnacznika`;
 // P-246 S3a obroty; W9b wzory projektu do przełączania). Wyrocznie: kontrakt, ADR-0011 (znacznik idzie z licznikiem), schemat v1.
-import { widokWzoru } from '../../src/przypadki-uzycia/wzor';
+import { widokWzoru } from '../../src/przypadki-uzycia/wzor-widok';
 import { czesc, licznik, plik, projekt, rysunek, wzor } from './pomocnicze/dane-wejsciowe';
 import { przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
 

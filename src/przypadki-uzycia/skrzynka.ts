@@ -6,7 +6,8 @@ import type { SkrzynkaImportu, ZlecenieImportu } from '../domena/porty';
 import { zapiszBlad } from '../dane/repozytoria/bledy';
 import { tekst, wiersze } from '../dane/repozytoria/wiersze';
 import { OK, blad, operacjaZapisu } from './zapis';
-import { dodajWzor, ustawFilm, type ZaleznosciWzoru, type ZrodloDodania } from './wzor';
+import { dodajWzor, type ZaleznosciWzoru, type ZrodloDodania } from './wzor';
+import { ustawFilm } from './film';
 
 export type ZaleznosciSkrzynki = ZaleznosciWzoru & { skrzynka: SkrzynkaImportu };
 export type WynikSkrzynki = { zaimportowano: number; doWyboru: ZlecenieImportu[]; czekaSiec: ZlecenieImportu[]; bledy: { zlecenie: ZlecenieImportu; powod: Powod }[] };
