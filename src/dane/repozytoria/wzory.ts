@@ -39,7 +39,8 @@ export async function odczytajZnacznik(baza: PortBazy, wzorId: string): Promise<
   const [l] = await wiersze(baza.all('SELECT wartosc FROM licznik WHERE id = ?', [z.licznikId]), 'wzor');
   if (!l) return null; // licznik trwale usunięty: znacznik bez licznika nie wskazuje rzędu
   const p = polozenieZnacznika(z, liczba(l, 'wartosc'));
-  return { licznikId: z.licznikId, strona: p.strona, rzad: p.rzad };
+  if (!p.ok) return null; // CHECK wartosc >= 0 w schemacie: nieosiągalne bez uszkodzonej bazy
+  return { licznikId: z.licznikId, strona: p.wartosc.strona, rzad: p.wartosc.rzad };
 }
 export async function notatkiWzoru(baza: PortBazy, wzorId: string): Promise<{ rzad: number; tekst: string }[]> {
   const licznikId = await licznikZnacznika(baza, wzorId);

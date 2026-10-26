@@ -89,9 +89,11 @@ describe('BR-WZR-003 znacznik bieżącego rzędu idzie z licznikiem — docs/brd
   // Jednostki według ADR-0011 (uzupełnienie Z07-17, fix-2 W7): y i wysokość rzędu jako ułamek strony, kierunek w znaczniku (P-120 Q4a).
   const z = { strona: 2, y: 0.5, wysokoscRzedu: 0.1, rzadBazowy: 12, wartoscPrzyUstawieniu: 12, kierunek: -1 as const };
   test('BR-WZR-003/S1 znacznik na rzędzie 12 przy liczniku 12; +1 → rząd 13, przesunięcie o jedną wysokość rzędu, ta sama strona', () => {
-    const przed = polozenieZnacznika(z, 12);
-    const po = polozenieZnacznika(z, 13);
-    expect(przed).toEqual({ strona: 2, rzad: 12, y: 0.5, pozaStrona: false });
+    // 08 partia 4 (P-139, RD-21): wynik w Wynik z polami przedSchematem i rzadNotatki — te same asercje rzędu, strony i przesunięcia.
+    const p0 = polozenieZnacznika(z, 12), p1 = polozenieZnacznika(z, 13);
+    if (!p0.ok || !p1.ok) throw new Error('polozenieZnacznika: bledne_dane');
+    const przed = p0.wartosc, po = p1.wartosc;
+    expect(przed).toEqual({ strona: 2, rzad: 12, y: 0.5, pozaStrona: false, przedSchematem: false, rzadNotatki: 13 });
     expect(po.rzad).toBe(13);
     expect(po.strona).toBe(2);
     expect(Math.abs(po.y - przed.y)).toBeCloseTo(0.1, 9); // kierunek w znaczniku (P-118 Q2a); wyrocznia kierunku: znacznik-kierunek.test.ts
@@ -100,7 +102,7 @@ describe('BR-WZR-003 znacznik bieżącego rzędu idzie z licznikiem — docs/brd
     fc.assert(
       fc.property(fc.integer({ min: 1, max: 500 }), fc.integer({ min: 0, max: 500 }), fc.integer({ min: 0, max: 50 }), (bazowy, przyUst, krok) => {
         const p = polozenieZnacznika({ ...z, rzadBazowy: bazowy, wartoscPrzyUstawieniu: przyUst }, przyUst + krok);
-        expect(p.rzad).toBe(bazowy + krok);
+        expect(p.ok && p.wartosc.rzad).toBe(bazowy + krok);
       }),
       opcjeWlasnosci(),
     );
