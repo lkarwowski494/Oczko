@@ -6,5 +6,6 @@ Aktualizacja: 2026-10-26 · tryb build · prompt `prompts@97ec212` (`10-wydanie 
 - **Nic nie uruchomiono** (P-187), nic nie wysłano, żadnych sekretów.
 - **P-219:** D1 repo „oczko” (adres /oczko/ bez zmian), D2 Pages z gałęzi roboczej dozwolone; `pages.yml` jak Trening (v5/v4), kroki właściciela `sklep.md` §2a. Pages uruchamiam po potwierdzeniu nowej nazwy przez koordynatora, potem `curl` na adresy.
 - **Pages (2026-10-26):** wdrożone (przebieg 40366704274), strona żyje pod `lkarwowski494.github.io/oczko/` (200); `apps4brew.com/oczko/` → 404, bo domena jest w repo `apps4brew-www` (Trening: `apps4brew-www/trening/`, w aplikacji `apps4brew.com/trening/privacy.html`). STOP: D10 do koordynatora.
+- **P-226 (2026-10-26):** strony `apps4brew-www/oczko/` (szablon marki jak Piekarz, etap 3), karta i stopka przygotowane lokalnie, `node --test` 61/61; **push na main nie wykonany** — filtr uprawnień sesji odrzucił commit/push do tamtego repo. Czeka na zgodę właściciela (opcja a) albo łatkę (b).
 - **Czeka:** przegląd zakresu 27–28.10 → opisy, zrzuty, ścieżki w notatce; raport 07 → E3; pierwszy przebieg dowodowy `bez_wysylki` za zgodą w oknie macOS.
 - **Następny krok po akceptacji:** po D1/D2 — potwierdzenie adresu po wdrożeniu Pages; po przeglądzie zakresu — E2 metadane (opisy, słowa, zrzuty) i notatka ze ścieżkami.
