@@ -1,6 +1,6 @@
 {
   "z": 1.645,
-  "uwaga": "Progi: propozycja roli 11 jak Trening (H-51–H-53, decyzja właściciela Treningu 21.10.2026), do decyzji E2-2; po decyzji pole prog.decyzja = ID P-nnn. Zmierzone dane (pole dane) tylko w oczko-warsztat/11-wzrost/, nigdy tutaj. Data oceny: premiera ok. 12–14.11.2026 (P-147) + 8 tygodni.",
+  "uwaga": "Progi: propozycja roli 11 jak Trening (H-51–H-53, decyzja właściciela Treningu 21.10.2026), przyjęte w P-150 (E2-2a). Zmierzone dane (pole dane) tylko w oczko-warsztat/11-wzrost/, nigdy tutaj. Data oceny: premiera ok. 12–14.11.2026 (P-147) + 8 tygodni.",
   "hipotezy": [
     {
       "id": "H-11",
@@ -8,7 +8,7 @@
       "metryka": "pobrania pierwszorazowe ze źródła App Store Search ÷ wszystkie pobrania pierwszorazowe, wszystkie storefronty, 8 tygodni od premiery",
       "zrodlo": "App Analytics (Sources), odczyt właściciela",
       "mierzalnosc": { "oczekiwane_n": 250, "metoda_n": "tempo progu opłacalności: 1944 zł/rok ÷ 26 477 zł/rok × ok. 22 500 instalacji/rok (rachunek 02, normalny) ≈ 1650/rok ≈ 250 w 8 tygodniach [OCENA, proporcja liniowa]", "zastepnik": "wyświetlenia (impressions) z wyszukiwania w tygodniu" },
-      "prog": { "wartosc": 0.5, "kierunek": ">=", "decyzja": "E2-2 (do decyzji)" },
+      "prog": { "wartosc": 0.5, "kierunek": ">=", "decyzja": "P-150" },
       "min_proba": 100,
       "data_oceny": "2027-01-09"
     },
@@ -18,7 +18,7 @@
       "metryka": "pobrania pierwszorazowe ÷ odsłony strony produktu, źródło App Store Search, 8 tygodni od premiery",
       "zrodlo": "App Analytics (Sources, Conversion Rate), odczyt właściciela",
       "mierzalnosc": { "oczekiwane_n": 400, "metoda_n": "mianownik = odsłony strony z wyszukiwania; przy ok. 125 pobraniach z wyszukiwania (H-11 × 0,5) i konwersji ok. 30% ≈ 400 odsłon [OCENA]", "zastepnik": "pobrania z wyszukiwania w tygodniu" },
-      "prog": { "wartosc": 0.3, "kierunek": ">=", "decyzja": "E2-2 (do decyzji)" },
+      "prog": { "wartosc": 0.3, "kierunek": ">=", "decyzja": "P-150" },
       "min_proba": 100,
       "data_oceny": "2027-01-09"
     },
@@ -28,7 +28,7 @@
       "metryka": "pobrania pierwszorazowe z App Store Search ÷ wszystkie pobrania pierwszorazowe w storefrontach JP, NO, DE, FR (lokalizacje ja, nb, de-DE, fr-FR), 8 tygodni od premiery",
       "zrodlo": "App Analytics (Sources, filtr Territory), odczyt właściciela",
       "mierzalnosc": { "oczekiwane_n": 45, "metoda_n": "udział JP+NO+DE+FR w ocenach/rok narzędzi z listy krótkiej 02: (424+384+182+133)/6243 ≈ 18% × 250 ≈ 45 [OCENA]", "zastepnik": "wyświetlenia z wyszukiwania w JP" },
-      "prog": { "wartosc": 0.4, "kierunek": ">=", "decyzja": "E2-2 (do decyzji)" },
+      "prog": { "wartosc": 0.4, "kierunek": ">=", "decyzja": "P-150" },
       "min_proba": 30,
       "data_oceny": "2027-01-09"
     }

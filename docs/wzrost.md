@@ -1,6 +1,6 @@
 # Wzrost — Oczko — 2026-10-26
 
-Rola 11-wzrost, tryb build (prompt `prompts` @97ec212). Stan: **STOP E2** (powrót, opinie, pomiar, nazwa w 35 lokalizacjach); E0: P-145, E1: P-148; zmiany P-146, P-147. Szczegóły, nazwy miejsc i aplikacji, kopie źródeł: `oczko-warsztat/11-wzrost/2026-10-26-build/` (prywatne; P-107, P-121 (5)). Niczego nie publikujemy: szkice przygotowuje rola 11, publikuje właściciel ze swojego konta twórcy (jak Trening).
+Rola 11-wzrost, tryb build (prompt `prompts` @97ec212). Stan: **STOP E3** (lista startowa, szkice, przekazanie); E0: P-145, E1: P-148, nazwa: P-149, E2: P-150; zmiany P-146, P-147. Szczegóły, nazwy miejsc i aplikacji, kopie źródeł: `oczko-warsztat/11-wzrost/2026-10-26-build/` (prywatne; P-107, P-121 (5)). Niczego nie publikujemy: szkice przygotowuje rola 11, publikuje właściciel ze swojego konta twórcy (jak Trening).
 
 ## Rama (E0)
 - **Aplikacja niewydana:** poprzednia wersja tylko w TestFlight; zgłoszenie 1.0 realnie w 1. poł. grudnia 2026 (`docs/plan-app-store.md`). Danych App Analytics nie ma.
@@ -19,7 +19,7 @@ Rola 11-wzrost, tryb build (prompt `prompts` @97ec212). Stan: **STOP E2** (powr�
 | 4.5.4, 5.6.1, sekcja 3, 5.6.3 | powiadomienia nie są warunkiem działania; ocena tylko przez API; bez „paid, incentivized, filtered, or fake feedback”; bez manipulacji wyszukiwaniem i recenzjami | App Review Guidelines |
 | nominacja „App Launch” | „minimum lead time of 3 weeks” | App Store Connect Help, nominate your app for featuring |
 
-## Decyzje E0 (do odpowiedzi koordynatora wg P-087)
+## Decyzje E0 (przyjęte: P-145 — D1a–D5a)
 | ID | Pytanie | Opcje | Rekomendacja |
 |---|---|---|---|
 | D1 | budżet czasu właściciela | (a) 1 h/tydz. × 8 tygodni od premiery; (b) 2–3 h/tydz. z kontaktem z twórcami | (a) |
@@ -34,7 +34,7 @@ E1 ludzie, kanały, pozycjonowanie i frazy (3–5 h agenta) → E2 powrót, pro�
 ## Budżet i horyzont
 Ok. 1 h tygodniowo przez 8 tygodni od premiery, czyli do ok. 7–9.01.2027 (P-145 D1a, do weta właściciela). Jednorazowy wpis metadanych i zrzutów w App Store Connect należy do kroku 11 planu i roli 10, nie do tego budżetu.
 
-## Pozycjonowanie (E1, do decyzji E1-2)
+## Pozycjonowanie (E1; przyjęte P-148 E1-2a)
 *For knitters and crocheters who lose count: one tap adds a row, undo takes it back, and your own pattern sits beside the counter. It opens where you stopped. No account, no ads, no tracking.*
 
 | Twierdzenie | Dowód (kontrakt 1.0; potwierdza 07 audit) | Warunek |
@@ -53,7 +53,7 @@ Ok. 1 h tygodniowo przez 8 tygodni od premiery, czyli do ok. 7–9.01.2027 (P-14
 
 Różnica wobec alternatyw: kartka i licznik mechaniczny gubią liczbę przy przerwie i nie mają historii ani wzoru obok; arkusz nie daje +1 jednym ruchem przy zajętych rękach; w recenzjach innych aplikacji najostrzejsze skargi to utrata danych i zakupu oraz przypadkowe stuknięcia (BRD, J-01, J-07). Ograniczenia jawne: iPhone i iPad (zegarek warunkowo), bez biblioteki wzorów, bez słownika i nauki w 1.0, limit 5 dni bez Pro, kalkulatory tylko podstawowe.
 
-## Kanały (E1, do decyzji E1-1)
+## Kanały (E1; przyjęte P-148 E1-1a)
 Szczegóły z adresami, wątkami i cytatami regulaminów: `oczko-warsztat/11-wzrost/2026-10-26-build/e1/B-kanaly.md`.
 
 | Kanał | Dowód niszy | Reguła (2026-10-26) | Forma | Godz./tydz. | Efekt × pewność ÷ godziny [OCENA] | Decyzja |
@@ -69,7 +69,7 @@ Szczegóły z adresami, wątkami i cytatami regulaminów: `oczko-warsztat/11-wzr
 
 Skala [OCENA]: efekt 0–3 (zasięg wśród person), pewność 0–2 (przeczytana reguła i dowód niszy), godziny właściciela na tydzień. Heurystyka roli, nie norma.
 
-## ASO — propozycja dla roli 10 (P-145 D2a; do decyzji E1-3)
+## ASO — propozycja dla roli 10 (P-145 D2a; P-148 E1-3a)
 Znaki i bajty UTF-8 policzone skryptem; nazwa ≤ 30, podtytuł ≤ 30, słowa ≤ 100 B, każde > 2 znaki, bez nazw innych firm i aplikacji.
 
 | Lok. | Nazwa | Podtytuł | Słowa kluczowe | B |
@@ -95,8 +95,6 @@ Trzy najczęściej oceniane aplikacje tej samej pracy i jedna szybko rosnąca (s
 | E1-3 | ASO | pola 7 lokalizacji dla roli 10 z warunkami; albo wariant pl z angielskimi frazami | przyjąć pola |
 | E1-4 | „knitting days” w opisie sklepu | zgłoszenie do 02/04: „5 project days” (en) | przekazać do 02 |
 
-## Lista startowa
-[E3]
 ## Powrót i opinie (E2)
 ### Rytm pracy i co daje powrót
 - **Rytm:** praca J-01 to każda sesja przy robótce (od kilku minut do godzin), J-05 to powrót po tygodniach albo latach (`docs/brd/odkrywanie.md`, J-01, J-05, „Kontekst użycia”). Typ aplikacji: narzędzie na sesję — liczy się szybki start w ostatnim miejscu.
@@ -160,9 +158,9 @@ Cel pobrań (rachunek, [OCENA]): tempo progu opłacalności ≈ 1944 zł/rok ÷ 
 
 | H | Pytanie (decyzja) | Metryka i źródło | Mierzalność: oczekiwane n, zastępnik | Próg | Min. próba | Data oceny | Werdykt |
 |---|---|---|---|---|---|---|---|
-| H-11 | czy ASO działa (sam sklep czy powrót do społeczności) | pobrania z App Store Search ÷ wszystkie pobrania, App Analytics | ok. 250 [OCENA]; wyświetlenia z wyszukiwania | ≥ 50% (E2-2) | 100 | 2027-01-09 | czeka na dane |
-| H-12 | czy strona produktu przekonuje (zrzuty, podtytuł) | pobrania ÷ odsłony strony z App Store Search | ok. 400 odsłon [OCENA]; pobrania z wyszukiwania w tygodniu | ≥ 30% (E2-2) | 100 | 2027-01-09 | czeka na dane |
-| H-13 | czy metadane w języku kraju działają (kolejność 09, ASO kolejnych języków) | pobrania z wyszukiwania ÷ wszystkie w JP, NO, DE, FR | ok. 45 [OCENA]; wyświetlenia z wyszukiwania w JP | ≥ 40% (E2-2) | 30 | 2027-01-09 | czeka na dane |
+| H-11 | czy ASO działa (sam sklep czy powrót do społeczności) | pobrania z App Store Search ÷ wszystkie pobrania, App Analytics | ok. 250 [OCENA]; wyświetlenia z wyszukiwania | ≥ 50% (P-150) | 100 | 2027-01-09 | czeka na dane |
+| H-12 | czy strona produktu przekonuje (zrzuty, podtytuł) | pobrania ÷ odsłony strony z App Store Search | ok. 400 odsłon [OCENA]; pobrania z wyszukiwania w tygodniu | ≥ 30% (P-150) | 100 | 2027-01-09 | czeka na dane |
+| H-13 | czy metadane w języku kraju działają (kolejność 09, ASO kolejnych języków) | pobrania z wyszukiwania ÷ wszystkie w JP, NO, DE, FR | ok. 45 [OCENA]; wyświetlenia z wyszukiwania w JP | ≥ 40% (P-150) | 30 | 2027-01-09 | czeka na dane |
 
 Pliki: `docs/wzrost/hipotezy.json` (progi), `docs/wzrost/hipotezy.mjs` (z modułu roli, przedział Wilsona, z = 1,645); `node docs/wzrost/hipotezy.mjs docs/wzrost/hipotezy.json` — kod 0 (2026-10-26). Dane zmierzone tylko w `oczko-warsztat/11-wzrost/`. Próba z opt-in i źródła ruchu nie są losowe — przedział to uproszczenie. Nazwa źródła „App Store Search” z Treningu (`docs/45`), dziś nieodczytana (strona pomocy ładuje treść skryptem) — sprawdzi właściciel przy pierwszym odczycie.
 
@@ -216,7 +214,7 @@ Reguła (Trening: `store/app-store-names.json`, `lib/i18n.ts` `APP_NAME`, `docs/
 
 Lokalizacje bez strony w App Store Connect (bg, et, lt, lv, sr) mają tylko nazwę pod ikoną. Części opisowe poza 7 lokalizacjami z badania fraz to przekład roboczy (rola 10 robi badanie fraz i przegląd tłumacza, P-145 D2a). Długości policzone skryptem (`oczko-warsztat/11-wzrost/2026-10-26-build/e2-nazwa/tabela-35.py`, kod 0). Do zrobienia przez 08/10: test zgodności słowa marki pod ikoną z nazwą w sklepie (jak Trening).
 
-## Decyzje E2 (do odpowiedzi koordynatora wg P-087; nazwa — właściciel)
+## Decyzje E2 (przyjęte: P-150 — E2-1a, E2-2a, E2-3a; nazwa według P-149; E2-4 i E2-5 z aneksu czekają na odpowiedź)
 | ID | Pytanie | Opcje | Rekomendacja |
 |---|---|---|---|
 | E2-1 | prośba o ocenę (OP-33) | (a) chwila bez zmian + odstęp 14 dni i 1 na wersję, czysta funkcja z wektorami PO-01–PO-11 (jak Trening); (b) tylko limit systemowy (3 w 365 dni), bez własnego | (a) |
@@ -225,5 +223,39 @@ Lokalizacje bez strony w App Store Connect (bg, et, lt, lv, sr) mają tylko nazw
 | E2-4 | słowo marki w cs, sk, hr | (a) „Očko” (cs, sk) i „Očica” (hr) po potwierdzeniu terminu przez 06, reszta „Oczko”; (b) „Oczko” we wszystkich 35 językach | (a) dla cs i sk; hr — (b) „Oczko” (podobieństwo brzegowe) |
 | E2-5 | znaki towarowe UE | właściciel sprawdza TMview (ok. 10 min) przed wpisem nazwy w App Store Connect; albo bez sprawdzenia | sprawdzić |
 
-## Lista startowa
-[E3]
+## Lista startowa (E3; P-148 E1-1a: przez 8 tygodni tylko sklep)
+Szkice poza publicznym repo: `oczko-warsztat/11-wzrost/2026-10-26-build/szkice/`. Każde działanie zewnętrzne osobno za zgodą właściciela, wpis w `docs/wzrost/dziennik.md` **przed** działaniem. Kampanie (`ct=`): brak — `pt` z App Store Connect dostępny dopiero po pierwszych danych.
+
+| Krok | Kiedy | Kanał | Szkic / wejście | Kto | Zgoda (słowa, data) | Wynik |
+|---|---|---|---|---|---|---|
+| 1 | przed wpisem nazwy w ASC | rejestr znaków UE (TMview): „Oczko”, „Očko”, „Očica”, klasy 9 i 41 | link w sekcji „Nazwa w sklepie” | właściciel | — (odczyt, nie publikacja) | — |
+| 2 | przy kroku 11 planu | App Store Connect: nazwa, podtytuł, słowa kluczowe, kategoria (35 lokalizacji) | pola 7 lokalizacji + tabela nazw (rola 10 robi resztę po zamrożeniu) | rola 10 przygotowuje, właściciel wpisuje | — (wydanie: P-087 wyjątek) | — |
+| 3 | ok. 12–14.11.2026 | wydanie ręczne po akceptacji Apple (P-147) | — | właściciel | — | — |
+| 4 | co tydzień, 8 tygodni | odpowiedzi na recenzje (en, pl zawsze; inne ≤ 3★) | `szkice/odpowiedzi-na-recenzje.md` (7 szablonów EN/PL) | właściciel | [czeka: zgoda na sposób pracy] | — |
+| 5 | 2027-01-09 | odczyt App Analytics dla H-11–H-13 (ok. 20 min), dane do warsztatu | `docs/wzrost/hipotezy.json` | właściciel → rola 11 reaudit | — | — |
+| 6 | punkt kontrolny (2027-01-09) | decyzja: społeczności (szkice próśb o zgodę administracji) albo dalej sam sklep | E1 kanały, wynik H-11 | koordynator / właściciel | — | — |
+| 7 | ≥ 3 tygodnie przed 1.1 | nominacja „App Enhancements” (P-147) | `szkice/nominacja-app-enhancements-1-1.md` | właściciel | [czeka] | — |
+
+Plan na złe przyjęcie: krytyczną recenzję zostawiamy i odpowiadamy rzeczowo (szablony 1–3, 5–6); błąd → zgłoszenie do 07/08 (szybka poprawka, ADR-0021) albo ER do 01; prośba o funkcję → ZM do 03. Utrata danych w recenzji = P0 od razu.
+
+## Definicja ukończenia (build), punkt po punkcie
+| Punkt | Wynik | Dowód |
+|---|---|---|
+| plan w budżecie godzin właściciela; płatne tylko jako decyzja | tak: 1 h/tydz. × 8 tyg. (recenzje 15–30 min/tydz., jeden odczyt Analytics); 0 zł; płatnych opcji brak | P-145 D1a; lista startowa |
+| każdy kanał na liście startowej ma adres, dowód niszy i regułę z datą | tak: na liście tylko sklep (reguły Apple z odczytem 2026-10-26); fora poza listą, bo bez zgody administracji albo bez odczytu regulaminu | E1 „Kanały”; `oczko-warsztat/…/e1/B-kanaly.md` |
+| każde twierdzenie w pozycjonowaniu i szkicach z dowodem; zero statystyk rynkowych bez źródła | tak: tabela dowodów z ID F/BR/P; szkice bez liczb rynkowych; liczby w ASO to odczyty iTunes Search z datą | „Pozycjonowanie”; szkice |
+| funkcje powrotu, polecenia i opinii mają ZM w 03 i przeszły tabelę etyki | częściowo: nowych funkcji powrotu i polecenia brak (tabela etyki zgodna); **ZM dla OP-33 (P-150 E2-1a) do zapisania przez 03** | „Powrót i opinie”; przekazanie 03 |
+| najwyżej 3 aktywne H z kontrolą mierzalności, progiem i próbą z ID decyzji, datą oceny; `hipotezy.mjs` kod 0 | tak: progi przyjęte w P-150 (E2-2a), `prog.decyzja` = P-150 | `node docs/wzrost/hipotezy.mjs docs/wzrost/hipotezy.json` kod 0 |
+| linki kampanii tylko z `pt`; SDK analityki tylko z ADR | tak: bez linków kampanii; bez SDK (ADR-0016, `prywatnosc.md`) | „Pomiar” |
+| działania zewnętrzne ze zgodą w dzienniku; nic nie opublikowano; `git diff --cached` bez danych osób i sekretów | tak: dziennik pusty, nic nie wysłano; kontrola `marki.mjs` i przegląd diffu przed każdym commitem | `docs/wzrost/dziennik.md` |
+
+## Przekazanie (E3)
+- **03 Zakres:** zapisać ZM dla OP-33 (P-150 E2-1a: odstęp ≥ 14 dni, 1 na wersję, `czyProsicOOcene`, PO-01–PO-11) i zamknąć OP-33 w BR-DAN-012 (z rolą 01); powiadomień w 1.0 brak (P-150 E2-3a).
+- **05 Architekt:** pole `ostatniaProsba { wersja, dzien }` w konfiguracji, stałe `ODSTEP_PROSBY_DNI = 14`, `PROSB_NA_WERSJE = 1` (ARCH-05); PKE art. 399 — `[DO USTALENIA]` jak w module.
+- **07 Jakość:** test akceptacyjny z wektorów PO-01–PO-11 (dziś `ukonczenie.test.tsx:38` woła prośbę przy każdym zamknięciu karty — zmiana wyroczni po decyzji 03).
+- **08 Programista:** funkcja i wywołanie po decyzji 03; test zgodności słowa marki pod ikoną z nazwą w sklepie (jak Trening).
+- **04 Studio:** brak nowych tekstów (okno systemowe); ton F-54 i celu dziennego neutralny; „knitting days” → przez 02 (P-148 E1-4a).
+- **06 Treści:** potwierdzić terminy „očko” (cs, sk) i „očica” (hr) w źródle terminologii (P-149 (1)); nowych twierdzeń dziedzinowych w pozycjonowaniu brak.
+- **09 Lokalizacja:** przegląd native speakera fraz ASO (ja 目数計算, あみぐるみ; nb omgang/pinne; de umlauty; fr patron/modèle) i wymowy „Oczko” w ja.
+- **10 Wydawca:** pozycjonowanie (sekcja „Pozycjonowanie” z warunkami), pola ASO 7 lokalizacji, tabela nazw 35 lokalizacji, kategoria (rekomendacja badania: Lifestyle), badanie fraz dla pozostałych 28 lokalizacji po zamrożeniu funkcji; warunek OG-07 dla słów o wzorze.
+- **Właściciel:** TMview przed wpisem nazwy (ok. 10 min); recenzje co tydzień (15–30 min); odczyt App Analytics 2027-01-09 (ok. 20 min); nominacja 1.1 ≥ 3 tygodnie przed jej datą. Po dacie oceny: `node tools/assemble.mjs 11-wzrost --tryb reaudit --baza <sha>`.
