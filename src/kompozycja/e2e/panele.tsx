@@ -66,3 +66,13 @@ export function PanelAwaryjny({ sha }: { sha: { sha: string; walBajty: number } 
 export function ZnacznikAwarii({ kolor }: { kolor: string }): React.ReactElement {
   return <View testID="e2e-awaria-startu" style={{ flex: 1, backgroundColor: kolor }} />;
 }
+
+/** Data and sync (partia 7, P-230 Q1a): liczba rekordów wysłanych przez atrapę iCloud i usunięcie strefy („tak” / „nie”), bez t(). */
+export function PanelIcloud({ wyslane, usuniete }: { wyslane: number; usuniete: boolean }): React.ReactElement {
+  return (
+    <View style={{ gap: 4 }}>
+      <Text testID="e2e-icloud-wyslane">{String(wyslane)}</Text>
+      <Text testID="e2e-icloud-usuniete">{usuniete ? 'tak' : 'nie'}</Text>
+    </View>
+  );
+}

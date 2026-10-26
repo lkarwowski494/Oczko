@@ -36,3 +36,5 @@ export function zegarAplikacji(teraz: () => number = Date.now): Zegar {
 export const siecWylaczona = (): boolean => argument('oczkoE2eSiec') === 'brak';
 /** `oczkoE2eAwariaStartu=przed-kamieniem` (ADR-0019): wymuszona awaria przed kamieniem milowym startu. */
 export const awariaStartu = (): boolean => argument('oczkoE2eAwariaStartu') === 'przed-kamieniem';
+/** `oczkoE2eIcloud` (P-230 Q1a): tryb atrapy iCloud (`wlaczony` | `wylaczony` | `brak-konta` | `brak-miejsca` | `konflikt`); działa tylko z atrapą (icloud.ts). */
+export const trybIcloudE2e = (): string | null => argument('oczkoE2eIcloud');

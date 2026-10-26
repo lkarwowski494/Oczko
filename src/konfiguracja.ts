@@ -25,6 +25,7 @@ export const ZEGAREK_POTWIERDZENIA_MAKS = 256; // id; [OCENA] roli 05 (fix-4, P-
 export const ODSTEP_PROSBY_DNI = 14; // dni kalendarzowe; P-150 E2-1a (jak Trening REVIEW.MIN_GAP_DAYS; HIG: „a week or two between requests”)
 export const PROSB_NA_WERSJE = 1; // prośby na wersję aplikacji; P-150 E2-1a (jak Trening); inna wartość wymaga licznika w zapisie (zmiana kontraktu)
 export const PARTIA_SYNCHRONIZACJI = 200; // wiersze na transakcję; [OCENA] roli 05
+export const ICLOUD_W_1_0 = false; // ZM-06 (P-218 Q5a, P-233): przełącznik iCloud w wydaniu dopiero po teście „rekord z telefonu widoczny na iPadzie”; zmienia koordynator
 export const MIN_IOS = '18.0'; // P-070, ADR-0006
 export const MIN_WATCHOS = '11.0'; // P-070, ADR-0006
 export const PROG_NIEUDANYCH_STARTOW = 2; // P-080 (interpretacja do weta), ADR-0019

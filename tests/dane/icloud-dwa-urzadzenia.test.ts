@@ -6,7 +6,7 @@ import fc from 'fast-check';
 import type { PartiaIcloud, PortBazy, RekordIcloud } from '../../src/domena/porty';
 import { TABELE_ICLOUD } from '../../src/domena/icloud/kontrakt';
 import { dodajRzad, utworzSzybkiLicznik } from '../../src/przypadki-uzycia/licznik';
-import { sterownikSynchronizacji, type Sterownik } from '../../src/przypadki-uzycia/synchronizacja';
+import { kandydaciKonfliktu, rozstrzygnijKonflikt, sterownikSynchronizacji, type Sterownik } from '../../src/przypadki-uzycia/synchronizacja';
 import { usunWszystkieDane } from '../../src/przypadki-uzycia/projekt';
 import { przygotuj, sha256, MIN, type Srodowisko } from './pomocnicze/srodowisko';
 import { serwerIcloud, type SerwerTestowy, type UrzadzenieTestowe } from './pomocnicze/serwer-icloud';
@@ -95,6 +95,27 @@ describe('BR-DAN-002/S1 i S2: drugie urządzenie, konflikt', () => {
     expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 6, konflikt: 1 }]);
     const plus = await dodajRzad(a.s.z, { licznikId: l });
     expect(plus.ok).toBe(true);
+  });
+  test('wybór wersji (P-220 I1a): kandydaci z urządzeniem i godziną, rozstrzygnięcie łączy gałęzie, konflikt znika na obu po wymianie', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz(); await b.st.wlacz(); await b.u.dostarcz();
+    await dodajRzad(a.s.z, { licznikId: l });
+    b.s.zegar.przesun(MIN);
+    for (let i = 0; i < 5; i += 1) await dodajRzad(b.s.z, { licznikId: l });
+    await b.st.wyslijZaleglosci(); await a.u.dostarcz();
+    const k = await kandydaciKonfliktu(a.s.z, l);
+    expect(k?.map((x) => [x.wartosc, x.urzadzenie, x.tutaj])).toEqual([[6, 'ipad', false], [2, 'iphone', true]]);
+    expect(await kandydaciKonfliktu(b.s.z, l)).toBeNull(); // B jeszcze nie zna gałęzi A
+    expect(await rozstrzygnijKonflikt(a.s.z, { licznikId: l, glowa: 'zła' })).toEqual({ ok: false, powod: 'bledne_dane' });
+    expect(await rozstrzygnijKonflikt(a.s.z, { licznikId: l, glowa: k![0].glowa })).toEqual({ ok: true, wartosc: { wartosc: 6 } });
+    expect(await licznik(a.s.baza, l)).toEqual([{ wartosc: 6, konflikt: 0 }]);
+    expect(await kandydaciKonfliktu(a.s.z, l)).toBeNull();
+    await a.st.wyslijZaleglosci(); await b.u.dostarcz();
+    expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 6, konflikt: 0 }]);
   });
   test('usunięcie projektu na A → kaskada na B (nagrobki), bez wpisów w skrzynce B', async () => {
     const serwer = serwerIcloud();

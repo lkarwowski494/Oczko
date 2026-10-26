@@ -49,7 +49,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik-sklejenie.test.ts` | zielony (główny zestaw) | 1 | P-123, P-124, R-022, R-023 | `src/dane/dziennik`<br>`src/domena/porty` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik.test.ts` | zielony (główny zestaw) | 5 | NFR-DAN-003, R-020, R-021 | `src/dane/dziennik`<br>`src/domena/porty`<br>`src/przypadki-uzycia/dziennik`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/start` | Z07-11, Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/ekran-blokady.test.ts` | zielony (główny zestaw) | 3 | P-135 | `src/domena/porty`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/ekran-blokady`<br>`src/przypadki-uzycia/licznik` | Z07-22 |
-| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-dwa-urzadzenia.test.ts` | zielony (główny zestaw) | 14 | BR-DAN-002, BR-DAN-002/S1, BR-DAN-002/S3, NFR-DAN-003 | `src/domena/icloud/kontrakt`<br>`src/domena/porty`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/projekt`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-dwa-urzadzenia.test.ts` | zielony (główny zestaw) | 15 | BR-DAN-002, BR-DAN-002/S1, BR-DAN-002/S3, NFR-DAN-003, P-220 | `src/domena/icloud/kontrakt`<br>`src/domena/porty`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/projekt`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-skrzynka.test.ts` | zielony (główny zestaw) | 10 | BR-DAN-002/S3, P-110, P-220, P-221 | `src/dane/baza/adapter-node`<br>`src/dane/migracje/migruj`<br>`src/przypadki-uzycia/projekt` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/informacje-pro.test.ts` | zielony (główny zestaw) | 2 | KP-16, P-089 | `src/przypadki-uzycia/informacje-pro`<br>`src/przypadki-uzycia/licznik` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/instrukcje-wyzwalacze.test.ts` | zielony (główny zestaw) | 2 | P-221 | `src/dane/baza/parametry` | — |
@@ -140,6 +140,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/archiwum-skrot.test.ts` | zielony (główny zestaw) | 2 | P-130, R-067 | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/dane/pliki/magazyn` | Z07-22 |
 | 9 ? | `tests/adaptery/czas-w-tle.test.ts` | zielony (główny zestaw) | 2 | — | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/platforma/czas-w-tle`<br>`src/przypadki-uzycia/archiwum` | Z07-22 |
 | 9 ? | `tests/adaptery/haptyka-wzorce.test.ts` | zielony (główny zestaw) | 2 | P-135 | `src/platforma/haptyka` | — |
+| 9 ? | `tests/adaptery/icloud-platforma.test.ts` | zielony (główny zestaw) | 9 | P-230, P-242 | `src/domena/porty`<br>`src/platforma/icloud`<br>`src/platforma/icloud-atrapa`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
 | 9 ? | `tests/adaptery/identyfikatory.test.ts` | zielony (główny zestaw) | 2 | — | `src/platforma/identyfikatory` | — |
 | 9 ? | `tests/adaptery/jpeg-metadane.test.ts` | zielony (główny zestaw) | 2 | P-219 | `src/dane/pliki/jpeg`<br>`src/kompozycja/e2e-zdjecie` | — |
 | 9 ? | `tests/adaptery/live-activity.test.ts` | zielony (główny zestaw) | 7 | P-115, P-139 | `src/domena/porty`<br>`src/platforma/dziennik-plus`<br>`src/platforma/live-activity`<br>`src/platforma/zegarek` | Z07-22 |
@@ -157,4 +158,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 153; zależnych od poprawek: 105.
+Razem plików testów: 154; zależnych od poprawek: 106.

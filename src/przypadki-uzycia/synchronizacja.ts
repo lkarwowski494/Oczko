@@ -7,7 +7,12 @@ import { tabelaIcloud } from '../domena/icloud/kontrakt';
 import { PARTIA_SYNCHRONIZACJI } from '../konfiguracja';
 import { zapiszBladW } from '../dane/repozytoria/bledy';
 import { potwierdzWyslane, stanBazy, wlaczWBazie, wylaczWBazie, zaleglosci, zastosujPartie, type WynikPartii } from '../dane/repozytoria/icloud';
+import { scal } from '../domena/scal';
+import { dopiszZdarzenie, zdarzeniaDoScalenia } from '../dane/repozytoria/liczniki';
+import { przeliczLicznik } from '../dane/repozytoria/przelicz';
+import { liczba, tekst, wiersze } from '../dane/repozytoria/wiersze';
 import { wKolejce } from './kolejka';
+import { operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
 export type ZaleznosciSynchronizacji = Zaleznosci & { synchronizacja: Synchronizacja; magazyn: MagazynPlikow };
@@ -127,4 +132,37 @@ export function sterownikSynchronizacji(z: ZaleznosciSynchronizacji, poPartii: (
     obserwuj(fn) { sluchacze.add(fn); return () => { sluchacze.delete(fn); }; },
     zakoncz() { for (const o of odpiecia.splice(0)) o(); },
   };
+}
+
+/** Wersja licznika w konflikcie do wyboru (P-220 I1a, design-spec „iCloud”): wartość gałęzi, urządzenie i czas jej ostatniej zmiany. */
+export type KandydatKonfliktu = { glowa: string; wartosc: number; urzadzenie: string; czasMs: number; tutaj: boolean };
+
+/** Kandydaci liczeni przy pokazaniu (moduly.md „Ścieżka zapisu +1”: +1 w konflikcie zmienia lokalną gałąź); null = brak konfliktu. Najnowsza pierwsza. */
+export async function kandydaciKonfliktu(z: Pick<Zaleznosci, 'baza' | 'urzadzenie'>, licznikId: string): Promise<KandydatKonfliktu[] | null> {
+  const w = scal(await zdarzeniaDoScalenia(z.baza, licznikId));
+  if (w.stan !== 'konflikt') return null;
+  const out: KandydatKonfliktu[] = [];
+  for (const k of w.kandydaci) {
+    const [r] = await wiersze(z.baza.all('SELECT urzadzenie, czas_ms FROM zdarzenie WHERE id = ?', [k.glowa]), 'kandydaciKonfliktu');
+    if (r) out.push({ glowa: k.glowa, wartosc: k.wartosc, urzadzenie: tekst(r, 'urzadzenie'), czasMs: liczba(r, 'czas_ms'), tutaj: tekst(r, 'urzadzenie') === z.urzadzenie });
+  }
+  return out.sort((a, b) => b.czasMs - a.czasMs || a.glowa.localeCompare(b.glowa));
+}
+
+/**
+ * Wybór wersji: zdarzenie `rozstrzygniecie` z rodzicami = wszystkie głowy i wartością wybranej (jedyne zdarzenie łączące gałęzie, M-09); nie zaczyna dnia
+ * limitu (`edycja-historii`, P-067). Druga wersja zostaje w historii. Głowa spoza bieżących kandydatów → `bledne_dane` (ekran pokazał stary stan).
+ */
+export function rozstrzygnijKonflikt(z: Zaleznosci, w: { licznikId: string; glowa: string }): Promise<Wynik<{ wartosc: number }>> {
+  return operacjaZapisu(z, 'rozstrzygnijKonflikt', async (tx, terazMs, chwila) => {
+    const s = scal(await zdarzeniaDoScalenia(tx, w.licznikId));
+    const wybrany = s.stan === 'konflikt' ? s.kandydaci.find((k) => k.glowa === w.glowa) : undefined;
+    if (s.stan !== 'konflikt' || !wybrany) return { ok: false, powod: 'bledne_dane' };
+    await dopiszZdarzenie(tx, {
+      id: z.id.nowy(), licznikId: w.licznikId, rodzaj: 'rozstrzygniecie', wartosc: wybrany.wartosc, wartoscPo: wybrany.wartosc, rodzice: [...s.glowy], cofa: [],
+      zrodlo: 'aplikacja', urzadzenie: z.urzadzenie, czasMs: terazMs, strefa: chwila.strefa, dzien: chwila.dzien,
+    });
+    await przeliczLicznik(tx, w.licznikId, terazMs);
+    return { ok: true, wartosc: { wartosc: wybrany.wartosc } };
+  });
 }
