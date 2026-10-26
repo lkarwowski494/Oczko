@@ -1,5 +1,8 @@
 // kontrola-fix4.mjs — kontrola dokumentów roli 05 fix-4 (NZ-08-P3-05, P-135): dla każdego zgłoszenia (a)–(h), N1, N2 sprawdza, że
 // kontrakt jest zapisany tam, gdzie czyta go rola 08. Przed poprawką czerwone (dowód stanu wyjściowego), po poprawce zielone.
+// fix-5 (NZ-08-P4-05, P-151): 08 w partii 4 przeniosło deklaracje (e), (a), (b), (n1) z „Kontrakt partii 4” do „Porty domeny”
+// i `src/domena/porty.ts` (`WERSJA_STANU` do `src/konfiguracja.ts`), a test (e) do `tests/dane/`; kontrola szuka tych samych napisów
+// w nowych miejscach — w dokumencie i w kodzie (sprawdz-porty.mjs pilnuje ich równości) — a dla testu (e) także braku kopii w akceptacji.
 // Użycie: node docs/architektura/narzedzia/kontrola-fix4.mjs [--id e,a,...]   (kod 1, gdy któraś pozycja nie przechodzi)
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -9,6 +12,10 @@ const czytaj = (p) => (existsSync(join(K, p)) ? readFileSync(join(K, p), 'utf8')
 const sekcja = (tekst, naglowek) => tekst.split(/^## /m).find((s) => s.startsWith(naglowek)) ?? '';
 const moduly = czytaj('docs/architektura/moduly.md');
 const partia4 = sekcja(moduly, 'Kontrakt partii 4');
+const portyDok = sekcja(moduly, 'Porty domeny');
+const portyKod = czytaj('src/domena/porty.ts');
+/** Napis w bloku „Porty domeny” i w `src/domena/porty.ts` (miejsce po przeniesieniu przez 08, fix-5). */
+const wPortach = (...napisy) => napisy.every((n) => portyDok.includes(n) && portyKod.includes(n));
 const konfiguracja = sekcja(moduly, 'Konfiguracja');
 
 /** id → lista [opis, warunek]. */
@@ -28,15 +35,14 @@ const KONTROLE = {
     }],
     ['specyfikacja X-ZG-01–X-ZG-09 w tests/wspolne/xctest-specyfikacja.md', () => Array.from({ length: 9 }, (_, i) => `X-ZG-0${i + 1}`).every((x) => czytaj('tests/wspolne/xctest-specyfikacja.md').includes(`| ${x} |`))],
     ['ZEGAREK_PONOWIENIE_MS i ZEGAREK_POTWIERDZENIA_MAKS w src/konfiguracja.ts i w tabeli „Konfiguracja”', () => ['ZEGAREK_PONOWIENIE_MS', 'ZEGAREK_POTWIERDZENIA_MAKS'].every((n) => new RegExp(`export const ${n} =`).test(czytaj('src/konfiguracja.ts')) && konfiguracja.includes(`\`${n}\``))],
-    ['port Zegarek.potwierdz i WynikPartii.potwierdzone w „Kontrakt partii 4”', () => partia4.includes('potwierdz(ids: readonly string[]): void') && partia4.includes('potwierdzone: string[]')],
-    ['test oczekujący strony telefonu tests/akceptacja/dane/zegarek-potwierdzenia.test.ts', () => czytaj('tests/akceptacja/dane/zegarek-potwierdzenia.test.ts').includes('P-135')],
+    ['port Zegarek.potwierdz i WynikPartii.potwierdzone w „Porty domeny” i src/domena/porty.ts', () => wPortach('potwierdz(ids: readonly string[]): void', 'potwierdzone: string[]')],
+    ['test strony telefonu w głównym zestawie tests/dane/zegarek-potwierdzenia.test.ts, bez kopii w tests/akceptacja/', () => czytaj('tests/dane/zegarek-potwierdzenia.test.ts').includes('P-135') && !existsSync(join(K, 'tests/akceptacja/dane/zegarek-potwierdzenia.test.ts'))],
   ],
-  a: [['Sklep.kup → Promise<StatusZakupu> w „Kontrakt partii 4”', () => partia4.includes('kup(id: string): Promise<StatusZakupu>') && partia4.includes("export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'")]],
+  a: [['Sklep.kup → Promise<StatusZakupu> w „Porty domeny” i src/domena/porty.ts', () => wPortach('kup(id: string): Promise<StatusZakupu>', "export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'")]],
   b: [['Haptyka.zagraj(w: WzorzecHaptyki) z kluczami tokenów 04', () => {
     const klucze = Object.keys(JSON.parse(czytaj('docs/design/tokeny.json') || '{}').haptyka ?? {}).filter((k) => !k.startsWith('_'));
-    const m = partia4.match(/export type WzorzecHaptyki = ([^;]+);/);
-    const typ = m ? [...m[1].matchAll(/'(\w+)'/g)].map((x) => x[1]) : [];
-    return partia4.includes('zagraj(w: WzorzecHaptyki): void') && klucze.length === 6 && typ.length === klucze.length && klucze.every((k) => typ.includes(k));
+    const typy = [portyDok, portyKod].map((t) => { const m = t.match(/export type WzorzecHaptyki = ([^;]+);/); return m ? [...m[1].matchAll(/'(\w+)'/g)].map((x) => x[1]) : []; });
+    return wPortach('zagraj(w: WzorzecHaptyki): void') && klucze.length === 6 && typy.every((typ) => typ.length === klucze.length && klucze.every((k) => typ.includes(k)));
   }]],
   c: [['drzewo moduly.md: bez oczko-zegarek, z oczko-reguly', () => {
     const d = sekcja(moduly, 'Drzewo katalogów');
@@ -46,7 +52,7 @@ const KONTROLE = {
     ['ADR-0008: stan Live Activity z polem `uwaga` (odblokuj, blad_zapisu)', () => /`uwaga`[^\n]*'odblokuj'[^\n]*'blad_zapisu'/.test(czytaj('docs/adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md'))],
     ['X-DZ-07 i X-DZ-14 (błąd zapisu) w specyfikacji z polem `uwaga`', () => /\| X-DZ-07 \|[^\n]*`uwaga: 'odblokuj'`/.test(czytaj('tests/wspolne/xctest-specyfikacja.md')) && /\| X-DZ-14 \|[^\n]*`uwaga: 'blad_zapisu'`/.test(czytaj('tests/wspolne/xctest-specyfikacja.md'))],
   ],
-  n1: [['stan wersja 3 z `zablokowany: boolean` w „Kontrakt partii 4” i regułą w ADR-0008', () => partia4.includes('zablokowany: boolean') && partia4.includes('WERSJA_STANU = 3') && /zablokowany/.test(sekcja(czytaj('docs/adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md'), 'Uzupełnienie 2026-10-26 (fix-4'))]],
+  n1: [['stan wersja 3: `zablokowany: boolean` w StanEkranuBlokady („Porty domeny”, porty.ts), WERSJA_STANU = 3 w src/konfiguracja.ts i opisie stanu, reguła w ADR-0008', () => [portyDok, portyKod].every((t) => /export type StanEkranuBlokady = \{[^\n]*zablokowany: boolean \}/.test(t)) && /export const WERSJA_STANU = 3;/.test(czytaj('src/konfiguracja.ts')) && /`WERSJA_STANU` = 3/.test(sekcja(moduly, 'Stan Live Activity i zegarka')) && /zablokowany/.test(sekcja(czytaj('docs/adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md'), 'Uzupełnienie 2026-10-26 (fix-4'))]],
   n3: [['ADR-0008 (fix-4): zmiana języka aplikacji jako wyzwalacz odświeżenia stanu (P-137)', () => /zmian\w* języka aplikacji/.test(sekcja(czytaj('docs/adr/0008-plus-jeden-z-ekranu-blokady-dziennik.md'), 'Uzupełnienie 2026-10-26 (fix-4'))]],
   uk: [['zmienDateUkonczenia: ta sama pora dnia, zmienia się tylko data (P-137), w „Kontrakt partii 4”', () => partia4.includes('zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoDzien: string })') && /ta sama pora/.test(partia4)]],
   rd15: [['celDzienny z Z_teraz (RD-15, P-136) w „Kontrakt partii 4”', () => /celDzienny\(w: \{ suma: number; przedDzis: number; zrobioneTeraz: number; termin: string; dzis: string \}\)/.test(partia4)]],
