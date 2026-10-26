@@ -156,6 +156,9 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `formularz-termin-data` | arkusz terminu | systemowy wybór daty (inline) | — | |
 | `formularz-termin-brak` | arkusz terminu | No date | „No date” | |
 | `menu-znaczenie` | menu ••• licznika | What the number shows (F-09) | „What the number shows” | |
+| `ustawienia-jezyk` | Ustawienia | wiersz „Language” (F-36, P-190) | „Language” | |
+| `jezyk-auto` | Language | „Same as phone” (radio; etykieta z „, selected” przy wyborze) | „Same as phone” / „Same as phone, selected” | |
+| `jezyk-pl` | Language | wiersz języka (wzorzec `jezyk-<kod>`, nazwa własna języka; tu polski) | „Polski” / „Polski, selected” | |
 | `ustawienia-dni-darmowe` | Ustawienia | licznik dni (tylko bez Pro) | „4 of 5 free knitting days left in November” | |
 | `ustawienia-oczko-pro` | Ustawienia | wejście do ofert (KP-13) | „Oczko Pro” | |
 | `ustawienia-eksport` | Ustawienia | eksport wszystkich danych | — | |
@@ -245,6 +248,17 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | NFR-DOS-002 | `30-nfr-dos-002-duzy-tekst.yaml` |
 | NFR-WYD-001 | `31-nfr-wyd-001-reakcja-licznika.yaml` |
 | NFR-SYS-001 | `32-nfr-sys-001-nowy-ios.yaml` |
+| BR-PRJ-001/S1 | `33-br-prj-001-s1-nowy-projekt-z-czesciami.yaml` (pełny; do podstawowego po 1. zielonym, P-198 Q3a) |
+| BR-LIC-011/S1, BR-PRJ-014/S1 | `34-br-lic-011-s1-nastepna-czesc-blizniak.yaml` |
+| BR-DNI-005/S1 | `35-br-dni-005-s1-termin-cel-dnia.yaml` |
+| BR-DAN-008/S1 | `36-br-dan-008-s1-usun-przywroc-z-kosza.yaml` (pełny; do podstawowego po 1. zielonym, P-198 Q3a) |
+| P-191 (P1a) stoper | `37-p-191-stoper-start-pauza-stop.yaml` |
+| BR-PRJ-013/S1 (częściowo) | `38-br-prj-013-s1-korekta-sesji.yaml` |
+| P-190 język | `39-p-190-jezyk-trwaly.yaml` |
+| BR-ZAP-001/S1 | `40-br-zap-001-s1-wloczka-w-jardach.yaml` |
+| BR-KAL-003/S1, BR-KAL-001/S1 | `41-br-kal-003-s1-probka-w-calach.yaml` |
+| P-191 (P9a) zdjęcie | `42-p-191-zdjecie-usun.yaml` |
+| BR-PRJ-015/S2 (połączenie; EXIF/GPS w Node) | `43-br-prj-015-s2-udostepnienie-karty.yaml` |
 | (przepływy pakietu podstawowego spoza poziomu E2E) BR-LIC-002/S1–S3, BR-LIC-019/S1, BR-LIC-003/S2 · BR-ZAK-006/S1, KP-13 · BR-ZAK-001/S1, PR-09 · P-089 (3a) · BR-DAN-005/S1, BR-DAN-006/S1, P-113 Q2a (bez karty) · ADR-0019 | `04`, `05`, `06`, `07`, `08`, `09` |
 
 Kryteria „tylko-urządzenie” (18, `kryteria.json`) nie mają scenariusza — lista telefonu (strategia §8, TT-01–TT-09) albo „Nie sprawdzono”.

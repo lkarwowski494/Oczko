@@ -1,0 +1,32 @@
+# P-190 (F-36, P-141 jak Trening): wybór języka w Ustawieniach jest trwały — po zabiciu procesu ten sam wybór; „Same as phone” wraca do automatu.
+# Słowników poza en jeszcze nie ma (tłumaczenia po roli 08, CLAUDE.md), więc sprawdzany jest zapisany wybór (etykieta „…, selected”), nie tekst po polsku.
+appId: com.apps4brew.knitting
+name: "P-190 · Język Polski zapamiętany po restarcie; ‘Same as phone’ przywraca automat"
+tags:
+  - P-190
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T19:30:00"
+- tapOn: { id: "nav-projekty" }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-ustawienia" }
+- assertVisible: { id: "ustawienia-jezyk" }
+- tapOn: { id: "ustawienia-jezyk" }
+- assertVisible: { id: "jezyk-auto", text: "Same as phone, selected" }
+- scrollUntilVisible: { element: { id: "jezyk-pl" } }
+- tapOn: { id: "jezyk-pl" }
+- assertVisible: { id: "jezyk-pl", text: "Polski, selected" }
+- takeScreenshot: 39-polski
+- runFlow: { file: subflows/restart.yaml, env: { TERAZ: "2026-11-10T19:40:00" } }
+- tapOn: { id: "nav-projekty", optional: true }
+- assertVisible: { id: "projekty-lista" }
+- tapOn: { id: "nav-ustawienia" }
+- assertVisible: { id: "ustawienia-jezyk" }
+- tapOn: { id: "ustawienia-jezyk" }
+- scrollUntilVisible: { element: { id: "jezyk-pl" } }
+- assertVisible: { id: "jezyk-pl", text: "Polski, selected" }
+- scrollUntilVisible: { element: { id: "jezyk-auto" }, direction: UP }
+- tapOn: { id: "jezyk-auto" }
+- assertVisible: { id: "jezyk-auto", text: "Same as phone, selected" }

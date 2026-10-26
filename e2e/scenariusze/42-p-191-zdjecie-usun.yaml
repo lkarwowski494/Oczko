@@ -1,0 +1,28 @@
+# P-191 (P9a, BR-PRJ-003, F-16): zdjęcie w grupie „Photos” ekranu projektu; podgląd → „Delete photo” → alert z potwierdzeniem → zdjęcia nie ma
+# (bez kosza: BR-DAN-008 obejmuje projekty, części i liczniki). Zdjęcie testowe z buildu E2E (e2e-zdjecie-testowe, strategia §4).
+# Dodanie i trwałość po restarcie sprawdza 17 (BR-PRJ-003/S1). Funkcja bez UI na 2026-10-26 — pakiet pełny.
+appId: com.apps4brew.knitting
+name: "P-191 · Zdjęcie projektu: podgląd, Delete photo z potwierdzeniem, miniatury nie ma"
+tags:
+  - P-191
+---
+- runFlow:
+    file: subflows/start-czysty.yaml
+    env:
+      TERAZ: "2026-11-10T12:00:00"
+- tapOn: { id: "licznik-projekt" }
+- assertVisible: { id: "projekt-zdjecia" }
+- scrollUntilVisible: { element: { id: "zdjecia-dodaj" } }
+- tapOn: { id: "zdjecia-dodaj" }
+- assertVisible: { id: "e2e-zdjecie-testowe" }
+- tapOn: { id: "e2e-zdjecie-testowe" }
+- extendedWaitUntil: { visible: { id: "zdjecia-miniatura" }, timeout: 20000 }
+- tapOn: { id: "zdjecia-miniatura", index: 0 }
+- assertVisible: { id: "zdjecie-usun" }
+- takeScreenshot: 42-podglad
+- tapOn: { id: "zdjecie-usun" }
+- assertVisible: "Delete this photo\\?"
+- tapOn: "Delete photo"
+- extendedWaitUntil: { visible: { id: "projekt-zdjecia" }, timeout: 20000 }
+- assertNotVisible: { id: "zdjecia-miniatura" }
+- assertVisible: { id: "zdjecia-dodaj" }

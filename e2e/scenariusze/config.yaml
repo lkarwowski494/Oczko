@@ -34,3 +34,14 @@ flows:
   - 30-nfr-dos-002-duzy-tekst.yaml
   - 31-nfr-wyd-001-reakcja-licznika.yaml
   - 32-nfr-sys-001-nowy-ios.yaml
+  - 33-br-prj-001-s1-nowy-projekt-z-czesciami.yaml
+  - 34-br-lic-011-s1-nastepna-czesc-blizniak.yaml
+  - 35-br-dni-005-s1-termin-cel-dnia.yaml
+  - 36-br-dan-008-s1-usun-przywroc-z-kosza.yaml
+  - 37-p-191-stoper-start-pauza-stop.yaml
+  - 38-br-prj-013-s1-korekta-sesji.yaml
+  - 39-p-190-jezyk-trwaly.yaml
+  - 40-br-zap-001-s1-wloczka-w-jardach.yaml
+  - 41-br-kal-003-s1-probka-w-calach.yaml
+  - 42-p-191-zdjecie-usun.yaml
+  - 43-br-prj-015-s2-udostepnienie-karty.yaml

@@ -19,8 +19,8 @@
     "13-kp-10-zakup-tylko-po-dzialaniu.yaml": 145,
     "14-br-lic-004-s4-gest-od-krawedzi.yaml": 80,
     "15-br-lic-015-s2-przypomnienie-zegarek.yaml": 152,
-    "16-br-zap-004-s2-zapas-bez-zasiegu.yaml": 136,
-    "17-br-prj-003-s1-zdjecie-etykiety.yaml": 130,
+    "16-br-zap-004-s2-zapas-bez-zasiegu.yaml": 139,
+    "17-br-prj-003-s1-zdjecie-etykiety.yaml": 128,
     "18-br-prj-011-s1-start-po-zamknieciu.yaml": 137,
     "19-br-prj-011-s2-powrot-z-innej-aplikacji.yaml": 89,
     "20-br-prj-016-s2-powrot-po-przerwie.yaml": 124,
@@ -35,6 +35,17 @@
     "29-nfr-dos-001-voiceover.yaml": 110,
     "30-nfr-dos-002-duzy-tekst.yaml": 98,
     "31-nfr-wyd-001-reakcja-licznika.yaml": 212,
-    "32-nfr-sys-001-nowy-ios.yaml": 98
+    "32-nfr-sys-001-nowy-ios.yaml": 98,
+    "33-br-prj-001-s1-nowy-projekt-z-czesciami.yaml": 160,
+    "34-br-lic-011-s1-nastepna-czesc-blizniak.yaml": 160,
+    "35-br-dni-005-s1-termin-cel-dnia.yaml": 167,
+    "36-br-dan-008-s1-usun-przywroc-z-kosza.yaml": 154,
+    "37-p-191-stoper-start-pauza-stop.yaml": 100,
+    "38-br-prj-013-s1-korekta-sesji.yaml": 89,
+    "39-p-190-jezyk-trwaly.yaml": 104,
+    "40-br-zap-001-s1-wloczka-w-jardach.yaml": 123,
+    "41-br-kal-003-s1-probka-w-calach.yaml": 104,
+    "42-p-191-zdjecie-usun.yaml": 85,
+    "43-br-prj-015-s2-udostepnienie-karty.yaml": 119
   }
 }

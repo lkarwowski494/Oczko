@@ -1,0 +1,37 @@
+# Podprzepływ (F07-18): z licznika → ekran projektu → „+” → „Add part” → nazwa „Back” i cel CEL → Save → licznik części „Back”.
+# Pole tekstowe pierwsze w arkuszu (Enter chowa klawiaturę), pole liczbowe celu potem; zapis przyciskiem arkusza (e2e/README.md zasada 6).
+# Parametr (env runFlow): CEL — cel rzędów (np. "40"); wpis jednym inputText, a retry z asercją wartości pola łapie zgubione znaki klawiatury symulatora.
+appId: com.apps4brew.knitting
+name: "podprzepływ: część Back z celem"
+---
+- tapOn: { id: "licznik-projekt" }
+- assertVisible: { id: "projekt-dodaj" }
+- tapOn: { id: "projekt-dodaj" }
+- assertVisible: { id: "projekt-dodaj-czesc" }
+- tapOn: { id: "projekt-dodaj-czesc" }
+- assertVisible: { id: "formularz-nazwa-czesci" }
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn: { id: "formularz-nazwa-czesci" }
+      - waitForAnimationToEnd
+      - eraseText: 20
+      - inputText: "B"
+      - inputText: "a"
+      - inputText: "c"
+      - inputText: "k"
+      - assertVisible: { id: "formularz-nazwa-czesci", text: "Back" }
+- pressKey: Enter
+- assertVisible: { id: "formularz-cel-czesci" }
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn: { id: "formularz-cel-czesci" }
+      - waitForAnimationToEnd
+      - eraseText: 6
+      - inputText: ${CEL}
+      - assertVisible: { id: "formularz-cel-czesci", text: "${CEL}" }
+- tapOn: { id: "formularz-zapisz" }
+- assertVisible: { id: "projekt-dodaj" }
+- tapOn: "Back.*"
+- assertVisible: { id: "licznik-plus" }
