@@ -32,6 +32,12 @@ test('kosz: podpisy z rodzicem i terminem; licznik bez nazwy dostaje nazwę rodz
     { rodzaj: 'projekt', id: 'p2', nazwa: 'Scarf', podpis: 'Project · until Nov 23' },
   ] });
 });
+test('kosz: wzór (partia 6, P-229) — nazwa wzoru i podpis z projektem i terminem (tekst roboczy 08 do zatwierdzenia przez 04)', () => {
+  const s = stanKosza([
+    { rodzaj: 'wzor', id: 'w1', nazwa: 'Harbor chart', rodzajLicznika: null, projekt: 'Harbor', projektNienazwany: false, projektUtworzonoMs: 0, czesc: null, usunietoMs: 0, doDnia: '2026-11-21' },
+  ], j, { terazMs: 0, strefa: 'UTC' });
+  expect(s.pozycje).toEqual([{ rodzaj: 'wzor', id: 'w1', nazwa: 'Harbor chart', podpis: 'Pattern in Harbor · until Nov 21' }]);
+});
 test('kosz: projekt roboczy (sam i jako rodzic części) → etykieta „Counter from …”, nie data zapasowa (05 fix-6, dane.md „Projekt roboczy”)', () => {
   const u = Date.UTC(2026, 9, 20, 9, 5);
   const s = stanKosza([

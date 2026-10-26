@@ -49,6 +49,7 @@ export function stanKosza(elementy: readonly ElementKosza[], j: Jezyk, o: { tera
       const nazwa = e.rodzaj === 'licznik' ? nazwaLicznika(e.nazwa, e.rodzajLicznika ?? 'rzedy', t) : e.rodzaj === 'projekt' ? projekt : e.nazwa;
       const podpis = e.rodzaj === 'projekt' ? t('kosz.projekt', { data })
         : e.rodzaj === 'czesc' ? t('kosz.czesc', { projekt, data })
+        : e.rodzaj === 'wzor' ? t('kosz.wzor', { projekt, data }) // partia 6, P-229
         : t('kosz.licznik', { projekt, czesc: e.czesc ?? '', data });
       return { rodzaj: e.rodzaj, id: e.id, nazwa, podpis };
     }),

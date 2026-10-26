@@ -9,7 +9,11 @@ export type Powod =
   | 'wersja_nowsza'
   | 'uszkodzony'
   | 'za_duze'
-  | 'konflikt';
+  | 'konflikt'
+  | 'brak_sieci' // konwersja strony WWW bez połączenia (fix-7, moduly.md „Fundament partii 6 i 7”)
+  | 'odmowa' // strona odpowiada 401/403 (BR-WZR-007 S3)
+  | 'pusty' // PDF bez tekstu i obrazu (BR-WZR-007 S3)
+  | 'anulowano'; // skaner albo wybór pliku przerwany przez użytkowniczkę
 export type Wynik<T> = { ok: true; wartosc: T } | { ok: false; powod: Powod };
 
 /** Błąd danych wejściowych funkcji domeny rzucającej wyjątek (sygnatury 05/07 bez `Wynik`; wzorzec `BladDanych` z docs/monetyzacja/limit.mjs, Z07-07, R-178).

@@ -1,0 +1,53 @@
+# Rola 08 (programista), build, partia 6: wzory, rysik, iPad, rozszerzenie „Udostępnij do Oczka”
+Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-thompson-paz6d8` · zlecenie koordynatora P-241 (decyzje P-087).
+Prompt roli: **nie złożony** — `add_repo` dla repo `prompts` odrzucony przez kontrolę uprawnień sesji; praca według `CLAUDE.md` i procedury partii 1–5 (testy przed kodem, verify przed pushem, STOP-y), zgłoszone koordynatorowi w raporcie E0.
+Zakres: „Kontrakt partii 6” i „Fundament partii 6 i 7” w `docs/architektura/moduly.md`; projekt 04: `docs/design/fix7-2026-10-26.md`, design-spec „Wzór, rysik i iPad”, „Udostępnij do Oczka” i iCloud (część R), makiety `wzor.html`, `udostepnij-icloud.html`; ograniczenia patentowe P-218 (1)–(6) przy każdej funkcji wzoru; dopiski koordynatora: P-229 (łatka kluczy w pierwszym commicie ekranów), P-234 (`entitlements` App Group w celu rozszerzenia), P-237 (`oczkoE2eSzerokoscOkna`, `wzor-znacznik`), P-238/P-240 (E2E tylko przez `tryb-e2e.ts`; `jakosc:slady-wydania` kod 0 przed raportem), P-241 (okno pushy).
+
+## Stan · 2026-10-26 ok. 20:00 UTC
+E0 zrobione, raport wysłany koordynatorowi. W toku: K1–K2 (klucze, powody, stałe, dane wzoru).
+
+## E0.1 Środowisko
+| Sprawdzenie | Wynik |
+|---|---|
+| System, Node, git | Linux 6.18, Node 22.22.0; tożsamość git „Łukasz Karwowski <336954459+lkarwowski494@users.noreply.github.com>” |
+| GitHub | push na gałąź roboczą; `oczko-warsztat` dołączony (49299cb); `prompts` niedostępny (odmowa uprawnień) |
+| Xcode / Swift / symulator | brak — Swift, prebuild, build i E2E tylko w CI „Jakość · iOS” (`macos-26`) i w oknie maszyn (P-187) |
+| Repo | publiczne: bez sekretów, danych osobowych i nazw innych firm/aplikacji (P-121 (5)) |
+
+## E0.2 Stan wyjściowy (HEAD eef6c9e, `npm ci`, `env -u NODE_PATH npm run verify`)
+Kod 0, 187 zestawów, **2330/2330**.
+
+## E0.3 Co jest w kodzie (sprawdzone)
+- Schemat v1 po L1: `wzor` (wiele wierszy na projekt, `zrodlo` ∈ pdf/obraz/www/word, `usunieto_ms`), `rysunek` (PK wzor_id, strona). Brak kolumny obrotu strony.
+- `src/przypadki-uzycia/wzor.ts`: `importujWzor` (tylko PDF, kontrola nagłówka i `%%EOF`), `ustawZnacznik`, `dodajNotatkeWzoru`; `src/ekrany/Wzor.tsx` = tylko `LinkFilmu`. Ekranu wzoru, modułu `oczko-wzor`, celu `targets/share` i adapterów skrzynki/migawki/orientacji nie ma.
+- Porty v2 w `src/domena/porty.ts` (SkrzynkaImportu, MigawkaProjektow, KonwersjaWzoru, SkanerStron, Orientacja) — zamrożone.
+- CI: zadanie iPada w `jakosc-ios.yml` (macierz `urzadzenie: [iphone, ipad]`, pakiet `ipad`, informacyjnie) i podpis `.appex` plikiem celu w `testflight.yml:157` (`uprawnienia-celow.mjs`) — zrobione przez 07 i 10, zgodne z kontraktem; partia 6 ich nie zmienia.
+- `tests/akceptacja/` pusty: testy oczekujące z kontraktu piszę sam (testy przed kodem) w `tests/dane/` i `tests/ekrany/`.
+
+## E0.4 Plan (każdy krok: test czerwony z właściwego powodu → kod → zielony)
+| Krok | Zachowanie → test | Pliki | Push |
+|---|---|---|---|
+| K1 | łatka kluczy 04 fix-7 (150 en), powody `brak_sieci`, `odmowa`, `pusty`, `anulowano`, stałe `WZOR_MAKS_MB`, `RYSUNEK_ZAPIS_MS`, `SKRZYNKA_PORZUCONE_H`, `MIGAWKA_WERSJA` | `src/i18n/`, `bledy.ts`, `konfiguracja.ts` | Linux |
+| K2 | `dodajWzor` (pdf, word z oryginałem, obrazy → 1 wzór, adres; konwersja i `sprawdzPdf` poza transakcją), `listaWzorow`, `wzorDoOtwarcia`/`zapamietajWzor`, `usunWzor`/`przywrocWzor` (kosz), `zapiszRysunek`, warunek kosza w znaczniku i notatce; kosz i sprzątanie znają `wzor` → `tests/dane/wzor-dodaj.test.ts`, `wzor-usun.test.ts`, `tests/ekrany/kompozycja-projektu.test.ts` | `src/przypadki-uzycia/wzor.ts`, `kosz.ts`, `src/dane/repozytoria/kosz.ts`, `src/kompozycja/projekt.ts`, `app/kosz.tsx` | Linux |
+| K3 | skrzynka importu: `przetworzSkrzynke` (manifest, porzucone po `SKRZYNKA_PORZUCONE_H`, projekt niedostępny → do wyboru, błąd zostawia zlecenie), krok startu po `sprzatnijKosz`; migawka projektów (koperta, zapis atomowy, po COMMIT operacji listy, „Usuń wszystkie dane” → pusta) — adapter plikowy na App Group z katalogiem z modułu natywnego | `src/przypadki-uzycia/skrzynka.ts`, `src/platforma/{skrzynka,migawka}.ts`, `start.ts`, `kontener.ts`, `zaleznosci.ts` | Linux (adapter bez modułu natywnego → no-op) |
+| K4 | `tryb-e2e.ts`: `oczkoE2eSkrzynka=pdf` (zlecenie z manifestem przed pierwszym ekranem), `oczkoE2eSzerokoscOkna=<pt>` (kontener tej szerokości); tylko przy `EXPO_PUBLIC_E2E=1`; `jakosc:slady-wydania` kod 0 | `src/platforma/tryb-e2e.ts`, `src/kompozycja/e2e/` | Linux |
+| K5 | czyste funkcje: układ według szerokości okna (compact → telefon, regular → kolumna 640 pt, wzór poziomo obok licznika — W4b) i polityka rysika (`pencilOnly` po pierwszym rysiku, P-218 Q2a) → testy jednostkowe | `src/domena/uklad.ts`, `src/domena/rysik.ts` | Linux |
+| K6 | ekrany: przeglądarka wzoru (pasek licznika W1a, poziomo W3, iPad W4b, narzędzia W5a, przełączanie W9b, menu, usunięcie do kosza, znacznik `wzor-znacznik`), grupa wzorów na projekcie (W8), dodanie (W7a, stany W11), ikona „Pattern” na liczniku (W2a), arkusz skrzynki (R2), kolumna 640 pt na iPadzie → testy RNTL | `src/ekrany/Wzor*.tsx`, `app/wzor*`, `Licznik.tsx`, `Projekt.tsx`, `ListaProjektow.tsx` | po oknie maszyn (wymaga modułu natywnego w buildzie) |
+| K7 | natywne: moduł `modules/oczko-wzor` (WidokWzoru: PDFView + PencilKit na stronach, konwersja WKWebView/druk, skaner VisionKit, `sprawdzPdf`, migawka i skrzynka App Group), cel `targets/share` (reguła aktywacji bez TRUEPREDICATE, kopia strumieniowa, manifest na końcu, `entitlements` App Group — P-234), `expo-screen-orientation` 57.0.3 (wiersz ADR-0016) | `modules/oczko-wzor/**`, `targets/share/**`, `package.json`, `app.json` | tylko w oknie maszyn (P-187, P-241) |
+| K8 | eksperymenty W1–W3 przygotowane (XCTest, korpus `.docx`, PDF 100 MB/300 stron) i opisane do uruchomienia przez koordynatora | `modules/oczko-wzor/ios/Tests/`, ten plik | z K7 |
+
+## E0.5 Sprzeczności i luki (zgłoszone; praca idzie dalej)
+- **S1 (P2, 05):** `ProjektMigawki` nie ma ostatniej pracy ani liczby wzorów, a arkusz 04 (R1a, `udostepnij.wiersz`, `udostepnij.kolejny`) je pokazuje. Rekomendacja: dopisać pola do typu (zmiana portu = 05).
+- **S2 (P2, 04):** `wzor.usun_opis` („can’t be undone”, bez kosza) sprzeczny z koszem wzoru (P-229, P-233 (6)). Robię kosz; teksty robocze `usun.wzor_opis`, `kosz.wzor` „do zatwierdzenia przez 04” (precedens P-209).
+- **S3 (P2, 05):** obrót strony (04: „zapamiętuje dla strony”) nie ma miejsca w schemacie v1 — do decyzji (kolumna JSON we `wzor`, ustawienie urządzenia albo obrót tylko na czas oglądania).
+- **S4 (P2, 04/05):** link do filmu — `[DO USTALENIA 08 z 04]` w kontrakcie (bez nowej tabeli) — do decyzji przed ekranem grupy wzorów.
+
+## Odstępstwa nazwane
+- `ostatnie_miejsce` dla wzoru: `{ ekran: 'licznik', id, wzor }` zamiast `{ ekran: 'wzor', id }` z kontraktu — wpis `ekran: 'wzor'` zgubiłby ostatni licznik startu (F-49, `biezacyLicznik` czyta tylko `ekran: 'licznik'`); wzór i tak otwiera się z licznika (pasek licznika pod wzorem).
+- `sprawdzPdf` nie należy do portu `KonwersjaWzoru` (kontrakt: funkcja modułu `oczko-wzor`) — w przypadkach użycia typ `KonwersjaPlatformy = KonwersjaWzoru & { sprawdzPdf }`, port bez zmian.
+
+## Czas (zasada 9)
+Agent: K1–K5 ok. 6–8 h, K6 ok. 8–10 h, K7–K8 ok. 8–12 h (bez kompilacji tutaj — poprawki w oknie maszyn). Czekanie: okno maszyn (K7, W1–W3, E2E iPada), odpowiedzi na S1–S4. Właściciel: identyfikatory App Group i iCloud w portalu (P-233), iPad przy TestFlight (P-226).
+
+## Dziennik sesji
+- 2026-10-26 ~19:40–20:00 UTC: E0 — stan wyjściowy 2330/2330, plan K1–K8, S1–S4; raport do koordynatora (bez czekania).

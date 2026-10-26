@@ -29,6 +29,10 @@ export const MIN_IOS = '18.0'; // P-070, ADR-0006
 export const MIN_WATCHOS = '11.0'; // P-070, ADR-0006
 export const PROG_NIEUDANYCH_STARTOW = 2; // P-080 (interpretacja do weta), ADR-0019
 export const KOPIE_RATUNKOWE_DNI = 30; // P-080, ADR-0020
+export const WZOR_MAKS_MB = 200; // MB; [OCENA] roli 05 (Z07-17): największy plik wzoru (rozszerzenie i import); do korekty po pomiarze
+export const RYSUNEK_ZAPIS_MS = 1000; // ms; ADR-0012 (uzupełnienie, Z07-17): najdłuższe opóźnienie zapisu rysunku
+export const SKRZYNKA_PORZUCONE_H = 1; // h; [OCENA] roli 05 (fix-7): katalog zlecenia bez manifestu usuwany po tym czasie
+export const MIGAWKA_WERSJA = 1; // wersja koperty migawki projektów w App Group (P-220 N2)
 export const PLIKI_OCHRONA_MIN = 10; // min; [OCENA] roli 05 (Z07-15): plik młodszy nie jest sprzątany przy starcie (zapis pliku przed wierszem odwołania)
 /** ID produktów Pro: [DO USTALENIA] przy konfiguracji App Store Connect (P-038, P-089); tymczasowe jak w docs/monetyzacja/dostep.mjs. */
 export const PRODUKTY_PRO: readonly string[] = Object.freeze(['oczko.pro.lifetime', 'oczko.pro.monthly', 'oczko.pro.yearly']);

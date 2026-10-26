@@ -11,6 +11,7 @@ import { stanKosza } from '../src/kompozycja/projekt';
 import { oglos } from '../src/kompozycja/system';
 import { przywrocCzesc, przywrocLicznik, przywrocProjekt } from '../src/przypadki-uzycia/projekt';
 import { widokKosza } from '../src/przypadki-uzycia/widok-kosza';
+import { przywrocWzor } from '../src/przypadki-uzycia/wzor';
 import { przywrocNarzedzie, przywrocWloczke } from '../src/przypadki-uzycia/zapas';
 
 export default function EkranKosza(): React.ReactElement {
@@ -29,6 +30,7 @@ export default function EkranKosza(): React.ReactElement {
     const r = p.rodzaj === 'projekt' ? await przywrocProjekt(z, { projektId: p.id })
       : p.rodzaj === 'czesc' ? await przywrocCzesc(z, { czescId: p.id })
       : p.rodzaj === 'wloczka' ? await przywrocWloczke(z, { wloczkaId: p.id }) // P-209
+      : p.rodzaj === 'wzor' ? await przywrocWzor(z, { wzorId: p.id }) // partia 6, P-229
       : p.rodzaj === 'narzedzie' ? await przywrocNarzedzie(z, { narzedzieId: p.id })
       : await przywrocLicznik(z, { licznikId: p.id });
     if (!r.ok) return;

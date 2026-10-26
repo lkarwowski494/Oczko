@@ -11,7 +11,7 @@ import { wKolejce } from './kolejka';
 import { wTransakcji } from './zapis';
 import type { ZaleznosciPlikow } from './zaleznosci';
 
-export type WynikSprzatania = { projekty: number; czesci: number; liczniki: number; wloczki: number; narzedzia: number; pliki: number };
+export type WynikSprzatania = { projekty: number; czesci: number; liczniki: number; wzory: number; wloczki: number; narzedzia: number; pliki: number };
 
 const ODWOLANIA = `SELECT pdf_sha256 AS h FROM wzor UNION SELECT oryginal_sha256 FROM wzor UNION SELECT plik_sha256 FROM rysunek UNION SELECT plik_sha256 FROM zdjecie`;
 /** Pliki odwoływane przez wiersze projektu (wzory, rysunki, zdjęcia) — kandydaci do usunięcia po trwałym usunięciu projektu. */
@@ -32,6 +32,8 @@ export async function sprzatnijKoszWKolejce(z: ZaleznosciPlikow): Promise<Wynik<
     const czesci = (await usunieci(tx, 'SELECT c.id, c.usunieto_ms FROM czesc c JOIN projekt p ON p.id = c.projekt_id WHERE c.usunieto_ms IS NOT NULL AND p.usunieto_ms IS NULL')).filter(doKosza);
     const liczniki = (await usunieci(tx,
       'SELECT l.id, l.usunieto_ms FROM licznik l JOIN czesc c ON c.id = l.czesc_id JOIN projekt p ON p.id = c.projekt_id WHERE l.usunieto_ms IS NOT NULL AND c.usunieto_ms IS NULL AND p.usunieto_ms IS NULL')).filter(doKosza);
+    // Partia 6 (P-229): wzór w koszu (projekt poza koszem) trwale z kaskadą rysunków; jego pliki to kandydaci do usunięcia.
+    const wzory = (await usunieci(tx, 'SELECT w.id, w.usunieto_ms FROM wzor w JOIN projekt p ON p.id = w.projekt_id WHERE w.usunieto_ms IS NOT NULL AND p.usunieto_ms IS NULL')).filter(doKosza);
     const kandydaci = new Set<string>();
     for (const p of projekty) {
       for (const r of await wiersze(tx.all(PLIKI_PROJEKTU, [p.id]), 'sprzatnijKosz')) if (r.h !== null) kandydaci.add(tekst(r, 'h'));
@@ -39,6 +41,11 @@ export async function sprzatnijKoszWKolejce(z: ZaleznosciPlikow): Promise<Wynik<
     }
     for (const c of czesci) await tx.run('DELETE FROM czesc WHERE id = ?', [c.id]);
     for (const l of liczniki) await tx.run('DELETE FROM licznik WHERE id = ?', [l.id]);
+    for (const w of wzory) {
+      const pliki = await wiersze(tx.all('SELECT pdf_sha256 AS h FROM wzor WHERE id = ?1 UNION SELECT oryginal_sha256 FROM wzor WHERE id = ?1 UNION SELECT plik_sha256 FROM rysunek WHERE wzor_id = ?1', [w.id]), 'sprzatnijKosz');
+      for (const r of pliki) if (r.h !== null) kandydaci.add(tekst(r, 'h'));
+      await tx.run('DELETE FROM wzor WHERE id = ?', [w.id]);
+    }
     // P-209: narzędzie trwale; włóczka tylko bez przypisań (inaczej kaskada skasowałaby zużycie w projektach) — przypisana zostaje ukryta na stałe.
     const narzedzia = (await usunieci(tx, 'SELECT id, usunieto_ms FROM narzedzie WHERE usunieto_ms IS NOT NULL')).filter(doKosza);
     for (const n of narzedzia) await tx.run('DELETE FROM narzedzie WHERE id = ?', [n.id]);
@@ -56,7 +63,7 @@ export async function sprzatnijKoszWKolejce(z: ZaleznosciPlikow): Promise<Wynik<
       await tx.run('DELETE FROM plik WHERE sha256 = ?', [h]);
       doUsuniecia.push(h);
     }
-    return { ok: true, wartosc: { projekty: projekty.length, czesci: czesci.length, liczniki: liczniki.length, wloczki, narzedzia: narzedzia.length, pliki: doUsuniecia.length } };
+    return { ok: true, wartosc: { projekty: projekty.length, czesci: czesci.length, liczniki: liczniki.length, wzory: wzory.length, wloczki, narzedzia: narzedzia.length, pliki: doUsuniecia.length } };
   });
   if (w.ok) for (const h of doUsuniecia) await z.magazyn.usun(h); // po COMMIT (ADR-0001)
   return w;

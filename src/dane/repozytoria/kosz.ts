@@ -1,5 +1,6 @@
 // Pozycje „Recently deleted” (F-33, BR-DAN-008, P-026): projekty w koszu oraz części i liczniki w koszu, których rodzic nie jest w koszu
 // (przywrócenie rodzica przywraca je razem z nim — C1, design-spec „Ekran Recently deleted”). Termin = dzień usunięcia (RD-16) + KOSZ_DNI.
+// Partia 6 (P-229): wzór w koszu, gdy jego projekt nie jest w koszu (wzór projektu w koszu idzie z projektem).
 // P-209: włóczka i narzędzie w koszu tylko w terminie (teraz − usunieto_ms < KOSZ_DNI dób) — włóczka ukryta na stałe nie wraca.
 import { dzienLokalny } from '../../domena/postep';
 import type { PortBazy } from '../../domena/porty';
@@ -10,7 +11,7 @@ import { liczba, tekst, tekstLubNull, wiersze } from './wiersze';
 const plusDni = (dzien: string, n: number): string => { const [r, m, d] = dzien.split('-').map(Number); return new Date(Date.UTC(r, m - 1, d + n)).toISOString().slice(0, 10); };
 
 export type ElementKosza = {
-  rodzaj: 'projekt' | 'czesc' | 'licznik' | 'wloczka' | 'narzedzie'; id: string; nazwa: string; rodzajLicznika: 'rzedy' | 'oczka' | null;
+  rodzaj: 'projekt' | 'czesc' | 'licznik' | 'wzor' | 'wloczka' | 'narzedzie'; id: string; nazwa: string; rodzajLicznika: 'rzedy' | 'oczka' | null;
   /** Projekt (sam albo rodzic części/licznika): nazwa zapasowa projektu roboczego to data — etykietę liczy kompozycja (dane.md „Projekt roboczy”). */
   projekt: string; projektNienazwany: boolean; projektUtworzonoMs: number; czesc: string | null; usunietoMs: number; doDnia: string;
   /** Tylko dla narzędzia: rodzaj, rozmiar i opis (nazwę formatuje kompozycja, RD-11/RD-19). */
@@ -27,6 +28,9 @@ const SQL = `
   SELECT 'licznik', l.id, l.nazwa, l.rodzaj, p.nazwa, p.nienazwany, p.utworzono_ms, c.nazwa, l.usunieto_ms
     FROM licznik l JOIN czesc c ON c.id = l.czesc_id JOIN projekt p ON p.id = c.projekt_id
    WHERE l.usunieto_ms IS NOT NULL AND c.usunieto_ms IS NULL AND p.usunieto_ms IS NULL
+  UNION ALL
+  SELECT 'wzor', w.id, w.nazwa, NULL, p.nazwa, p.nienazwany, p.utworzono_ms, NULL, w.usunieto_ms
+    FROM wzor w JOIN projekt p ON p.id = w.projekt_id WHERE w.usunieto_ms IS NOT NULL AND p.usunieto_ms IS NULL
   UNION ALL
   SELECT 'wloczka', w.id, w.nazwa, NULL, '', 0, 0, NULL, w.usunieto_ms FROM wloczka w WHERE w.usunieto_ms IS NOT NULL AND w.usunieto_ms > ?1
   UNION ALL
@@ -52,7 +56,7 @@ export async function elementyKosza(baza: PortBazy, strefa: string, terazMs: num
         czesc: null, usunietoMs, doDnia: plusDni(dzien.wartosc, KOSZ_DNI), narzedzie: { rodzaj: r2, rozmiarMm: rozmiarMm !== null && Number.isFinite(rozmiarMm) ? rozmiarMm : null, opis: tekst(r, 'nazwa') } };
     }
     return {
-      rodzaj: rodzaj === 'projekt' ? 'projekt' : rodzaj === 'czesc' ? 'czesc' : rodzaj === 'wloczka' ? 'wloczka' : 'licznik', id: tekst(r, 'id'), nazwa: tekst(r, 'nazwa'),
+      rodzaj: rodzaj === 'projekt' ? 'projekt' : rodzaj === 'czesc' ? 'czesc' : rodzaj === 'wloczka' ? 'wloczka' : rodzaj === 'wzor' ? 'wzor' : 'licznik', id: tekst(r, 'id'), nazwa: tekst(r, 'nazwa'),
       rodzajLicznika: rl === null ? null : rl === 'oczka' ? 'oczka' : 'rzedy', projekt: tekst(r, 'projekt'), projektNienazwany: liczba(r, 'nienazwany') === 1,
       projektUtworzonoMs: liczba(r, 'utworzono_ms'), czesc: tekstLubNull(r, 'czesc'), usunietoMs,
       doDnia: plusDni(dzien.wartosc, KOSZ_DNI),

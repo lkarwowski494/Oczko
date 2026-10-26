@@ -5,7 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import type { Tlumacz } from './wspolne';
 
-export type PozycjaKosza = { rodzaj: 'projekt' | 'czesc' | 'licznik' | 'wloczka' | 'narzedzie'; id: string; nazwa: string; podpis: string };
+export type PozycjaKosza = { rodzaj: 'projekt' | 'czesc' | 'licznik' | 'wzor' | 'wloczka' | 'narzedzie'; id: string; nazwa: string; podpis: string };
 export type StanKosza = { dni: number; pozycje: PozycjaKosza[] }; // dni = KOSZ_DNI, pozycje od najkrótszego terminu
 export type PropsKosza = { stan: StanKosza; t: Tlumacz; naPrzywroc(p: { rodzaj: PozycjaKosza['rodzaj']; id: string }): void };
 
