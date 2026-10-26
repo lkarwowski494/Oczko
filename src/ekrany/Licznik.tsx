@@ -70,6 +70,8 @@ export type PropsLicznika = {
   naProjekt?(): void;                  // nazwa projektu nad tytułem części otwiera ekran projektu (design-spec „Ekran projektu”, partia 5)
   /** Stoper sesji (P-191 P1a): pierwszy z prawej grupy paska, przed Historią; działa przy limicie i blokadzie (P2a). Składa kompozycja. */
   stoper?: React.ReactNode;
+  /** Linia „zapomniany stoper” (P-191 P5a) pod kreskami sesji; składa kompozycja. */
+  sprawdzStopera?: React.ReactNode;
 };
 
 /** F-48: rozpoznawalne są tylko dwa wzorce — rząd i rząd „ze znaczeniem” (instrukcja, koniec powtórzenia, cel dnia lub części). */
@@ -202,6 +204,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
             <Kreski n={s.sesja.rzedy} kolor={k.kreska} />
           </View>
         )}
+        {p.sprawdzStopera}
         {s.przypomnienie && (
           <View style={st.zakreslacz} accessibilityRole="text">
             <Text style={[st.instrukcja, { color: k.tekstNaZakreslaczu }]}>{t('licznik.przypomnienie', { n: nrRobocza, tekst: s.przypomnienie.tekst })}</Text>

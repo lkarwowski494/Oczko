@@ -6,6 +6,7 @@ import { czasSesjiMs, przejdzSesje, type Sesja, type ZdarzenieSesji } from '../d
 import type { PortBazy } from '../domena/porty';
 import { SESJA_MAKS_H } from '../konfiguracja';
 import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
+import { wKolejce } from './kolejka';
 import { blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
@@ -99,5 +100,17 @@ export function przelaczSesje(z: Zaleznosci, w: { projektId: string }): Promise<
     const sesjaId = z.id.nowy();
     await tx.run("INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien) VALUES (?, ?, 'trwa', ?, ?, ?)", [sesjaId, w.projektId, teraz, chwila.strefa, chwila.dzien]);
     return { ok: true, wartosc: { sesjaId } };
+  });
+}
+
+/** P-191 P5a: sesja projektu zamknięta automatycznie (`do_korekty`), po której końcu nie było +1 na licznikach projektu; brak → null. */
+export function sesjaDoSprawdzenia(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<{ sesjaId: string; godziny: number } | null>> {
+  return wKolejce(z.baza, async () => {
+    const [r] = await wiersze(z.baza.all(
+      `SELECT s.id FROM sesja s WHERE s.projekt_id = ? AND s.do_korekty = 1 AND s.koniec_ms IS NOT NULL
+         AND NOT EXISTS (SELECT 1 FROM zdarzenie e JOIN licznik l ON l.id = e.licznik_id JOIN czesc c ON c.id = l.czesc_id
+                          WHERE c.projekt_id = s.projekt_id AND e.rodzaj = 'plus' AND e.czas_ms > s.koniec_ms)
+       ORDER BY s.koniec_ms DESC, s.id LIMIT 1`, [w.projektId]), 'sesjaDoSprawdzenia');
+    return { ok: true, wartosc: r ? { sesjaId: tekst(r, 'id'), godziny: SESJA_MAKS_H } : null };
   });
 }

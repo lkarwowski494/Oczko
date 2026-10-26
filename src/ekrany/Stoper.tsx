@@ -93,3 +93,22 @@ function style(k: Kolory) {
     pogrubiony: { color: k.grafit, fontWeight: '700' },
   });
 }
+
+/**
+ * P-191 P5a (design-spec „Zapomniany stoper”): raz na liczniku projektu po automatycznym zamknięciu sesji — znak „i” + tekst (informacja,
+ * nie kolor błędu) i odnośnik do arkusza korekty. Kiedy pokazać, liczą dane (`sesjaDoSprawdzenia`) i kompozycja.
+ */
+export function LiniaSprawdzenia({ t, godziny, naSprawdz }: { t: Tlumacz; godziny: number; naSprawdz(): void }): React.ReactElement {
+  const k = useKolory();
+  return (
+    <View style={{ gap: odstep.xs }}>
+      <View accessible role="status" style={{ flexDirection: 'row', gap: odstep.xs }}>
+        <Text style={{ ...typografia.podpis, color: k.olowek }} importantForAccessibility="no" accessibilityElementsHidden>ⓘ</Text>
+        <Text style={{ ...typografia.podpis, color: k.olowek, flex: 1 }}>{t('stoper.sprawdz', { count: godziny })}</Text>
+      </View>
+      <Pressable accessibilityRole="link" accessibilityLabel={t('stoper.sprawdz_link')} onPress={naSprawdz} testID="stoper-sprawdz" style={{ minHeight: cel.minimum, justifyContent: 'center' }}>
+        <Text style={{ ...typografia.tresc, color: k.grafit, fontWeight: '700', textDecorationLine: 'underline' }}>{t('stoper.sprawdz_link')}</Text>
+      </Pressable>
+    </View>
+  );
+}

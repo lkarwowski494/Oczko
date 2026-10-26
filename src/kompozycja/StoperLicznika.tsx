@@ -1,10 +1,10 @@
 // Kontener stopera na liczniku (F-21; P-191 P1a–P3a; P-199 Q3c): czyta otwartą sesję, woła przypadki użycia sesji, ogłasza wynik dopiero
 // po zapisie (R-148) i po każdym przejściu woła `poZmianie` (stan ekranu blokady i zegarka, przeładowanie kresek licznika).
 import React, { useCallback, useEffect, useState } from 'react';
-import { Stoper, czasStopera, type StanStopera } from '../ekrany/Stoper';
+import { LiniaSprawdzenia, Stoper, czasStopera, type StanStopera } from '../ekrany/Stoper';
 import type { Oglos } from '../ekrany/wspolne';
 import { formatujGodzine } from '../i18n/format';
-import { otwartaSesja, przelaczSesje, startSesji, wstrzymajSesje, wznowSesje, zakonczSesje, type SesjaNaEkranie } from '../przypadki-uzycia/sesja';
+import { otwartaSesja, przelaczSesje, sesjaDoSprawdzenia, startSesji, wstrzymajSesje, wznowSesje, zakonczSesje, type SesjaNaEkranie } from '../przypadki-uzycia/sesja';
 import type { Zaleznosci } from '../przypadki-uzycia/zaleznosci';
 import { czasPracy } from './ukonczenie';
 import { etykietaRobocza, type Jezyk } from './licznik';
@@ -59,4 +59,21 @@ export function StoperLicznika({ z, j, projektId, oglos, poZmianie }: { z: Zalez
       naInnyAnuluj={() => ustawInny(null)}
     />
   );
+}
+
+/** Sesje, dla których otwarto korektę z linii (P-191 P5a: „linia znika po otwarciu korekty”) — do końca procesu, bez zapisu w bazie. */
+const otwarteKorekty = new Set<string>();
+/**
+ * Linia „zapomniany stoper” na liczniku (P-191 P5a): dane mówią, czy jest sesja do sprawdzenia bez +1 po jej końcu (`sesjaDoSprawdzenia`);
+ * po +1 licznik przerysowuje się (klucz wersji), więc linia liczy się od nowa i znika.
+ */
+export function SprawdzStopera({ z, j, projektId, naKorekta }: { z: Zaleznosci; j: Jezyk; projektId: string; naKorekta(sesjaId: string): void }): React.ReactElement | null {
+  const [s, ustaw] = useState<{ sesjaId: string; godziny: number } | null>(null);
+  useEffect(() => {
+    let zywy = true;
+    void sesjaDoSprawdzenia(z, { projektId }).then((w) => { if (zywy) ustaw(w.ok && w.wartosc && !otwarteKorekty.has(w.wartosc.sesjaId) ? w.wartosc : null); });
+    return () => { zywy = false; };
+  }, [z, projektId]);
+  if (!s) return null;
+  return <LiniaSprawdzenia t={j.t} godziny={s.godziny} naSprawdz={() => { otwarteKorekty.add(s.sesjaId); ustaw(null); naKorekta(s.sesjaId); }} />;
 }

@@ -1,5 +1,5 @@
 // Trasa „/”: ekran licznika (pierwszy ekran, NFR-PIE-001; powrót do miejsca F-49). Gdy zapamiętane miejsce jest w koszu, lista projektów (moduly.md:238).
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Aplikacja } from '../src/ekrany/Aplikacja';
@@ -10,7 +10,7 @@ import { cyklAplikacji, oglos, systemAplikacji } from '../src/kompozycja/system'
 import { nastepnaCzesc } from '../src/przypadki-uzycia/czesc';
 import { pokazacOknoUczciweZasady } from '../src/przypadki-uzycia/informacje-pro';
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
-import { StoperLicznika } from '../src/kompozycja/StoperLicznika';
+import { SprawdzStopera, StoperLicznika } from '../src/kompozycja/StoperLicznika';
 import { powodAwaryjny, zapiszKamien } from '../src/kompozycja/start-aplikacji';
 
 export default function EkranLicznika(): React.ReactElement {
@@ -20,6 +20,11 @@ export default function EkranLicznika(): React.ReactElement {
   const [gotowe, ustawGotowe] = useState(false);
   const [awaria, ustawAwarie] = useState<'wersja_nowsza' | 'uszkodzony' | null>(null);
   const [wersja, ustawWersje] = useState(licznik.wersja());
+  const [plusy, ustawPlusy] = useState(0); // P-191 P5a: linia „zapomniany stoper” liczona od nowa po każdym udanym +1
+  const uslugi = useMemo(() => ({
+    ...licznik.uslugi,
+    dodajRzad: async () => { const w = await licznik.uslugi.dodajRzad(); if (w.ok) ustawPlusy((n) => n + 1); return w; },
+  }), [licznik]);
   const [projektId, ustawProjekt] = useState<string | null>(null); // stoper sesji w pasku (P-191 P1a) — projekt bieżącego licznika
   useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik]);
   useEffect(() => {
@@ -55,7 +60,7 @@ export default function EkranLicznika(): React.ReactElement {
       <Aplikacja
         key={wersja}
         porty={kontener.porty}
-        uslugi={licznik.uslugi}
+        uslugi={uslugi}
         cykl={cyklAplikacji}
         system={systemAplikacji}
         oglos={oglos}
@@ -66,6 +71,10 @@ export default function EkranLicznika(): React.ReactElement {
         stoper={projektId ? (
           <StoperLicznika z={kontener.z} j={kontener.j} projektId={projektId} oglos={oglos}
             poZmianie={async () => { await licznik.poZmianie(); ustawWersje(licznik.wersja()); }} />
+        ) : null}
+        sprawdzStopera={projektId ? (
+          <SprawdzStopera key={plusy} z={kontener.z} j={kontener.j} projektId={projektId}
+            naKorekta={(sesja) => router.push({ pathname: '/sesja-korekta', params: { sesja, projekt: projektId } })} />
         ) : null}
       />
     </Bezpieczny>
