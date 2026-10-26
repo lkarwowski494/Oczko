@@ -22,8 +22,9 @@ export type PropsUstawien = {
   dane?: { naEksport(): void; naImport(): void; naUsunWszystko(): void };
   /** Panele buildu E2E (e2e/README.md, bez t()); w buildzie wydania null. */
   panelE2e?: React.ReactNode;
+  naWstecz?(): void;
 };
-export function Ustawienia({ stan: s, t, system, adresy, naOferty, naWibracje, naZglosProblem, naStanDanych, dane, panelE2e }: PropsUstawien): React.ReactElement {
+export function Ustawienia({ stan: s, t, system, adresy, naOferty, naWibracje, naZglosProblem, naStanDanych, dane, panelE2e, naWstecz }: PropsUstawien): React.ReactElement {
   const k = useKolory();
   const st = StyleSheet.create({
     grupa: { borderRadius: promien.grupa, backgroundColor: k.papierGrupa, padding: odstep.s, gap: odstep.xs },
@@ -32,11 +33,11 @@ export function Ustawienia({ stan: s, t, system, adresy, naOferty, naWibracje, n
   });
   return (
     <ScrollView style={{ flex: 1, backgroundColor: k.papier }} contentContainerStyle={{ padding: odstep.l, gap: odstep.l }} testID="ustawienia">
+      {naWstecz && <View style={{ flexDirection: 'row' }}><Przycisk tekst={`‹ ${t('wspolne.wstecz')}`} etykieta={t('wspolne.wstecz')} onPress={naWstecz} rodzaj="tekstowy" testID="nav-wstecz" /></View>}
       <Text style={{ ...typografia.tytul, color: k.grafit }} accessibilityRole="header">{t('ustawienia.tytul')}</Text>
       <View style={st.grupa}>
-        {s.pro
-          ? <><Text style={st.podpis}>{t('oferty.masz_pro')}</Text><Przycisk tekst={t('oferty.zarzadzaj')} onPress={() => system.zarzadzajSubskrypcja()} rodzaj="tekstowy" /></>
-          : <Przycisk tekst={t('ustawienia.oczko_pro')} onPress={naOferty} rodzaj="tekstowy" testID="ustawienia-oczko-pro" />}
+        <Przycisk tekst={t('ustawienia.oczko_pro')} onPress={naOferty} rodzaj="tekstowy" testID="ustawienia-oczko-pro" />
+        {s.pro?.rodzaj === 'subskrypcja' && <Przycisk tekst={t('oferty.zarzadzaj')} onPress={() => system.zarzadzajSubskrypcja()} rodzaj="tekstowy" />}
         {s.dni && <Text style={st.podpis} testID="ustawienia-dni-darmowe">{t('projekty.dni', { zostalo: s.dni.zostalo, limit: s.dni.limit, miesiac: s.dni.miesiac })}</Text>}
       </View>
       <View style={st.grupa}>

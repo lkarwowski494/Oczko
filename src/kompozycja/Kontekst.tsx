@@ -2,8 +2,9 @@
 import React, { createContext, useContext } from 'react';
 import type { Kontener } from './kontener';
 import type { KompozycjaLicznika } from './licznik';
+import type { preferencje } from './preferencje';
 
-export type Aplikacja = { kontener: Kontener; licznik: KompozycjaLicznika };
+export type Aplikacja = { kontener: Kontener; licznik: KompozycjaLicznika; preferencje: ReturnType<typeof preferencje> };
 const K = createContext<Aplikacja | null>(null);
 
 export function DostawcaAplikacji({ wartosc, children }: { wartosc: Aplikacja; children: React.ReactNode }): React.ReactElement {

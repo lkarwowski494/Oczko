@@ -7,16 +7,25 @@ import type { Wynik } from '../src/domena/bledy';
 import { DostawcaAplikacji, type Aplikacja } from '../src/kompozycja/Kontekst';
 import { utworzKontener } from '../src/kompozycja/kontener';
 import { kompozycjaLicznika } from '../src/kompozycja/licznik';
+import { preferencje } from '../src/kompozycja/preferencje';
 import { useKolory } from '../src/ekrany/motyw';
 
 export default function Korzen(): React.ReactElement {
   const k = useKolory();
   const [a, ustaw] = useState<Wynik<Aplikacja> | null>(null);
   useEffect(() => {
+    let koniecNasluchu: (() => void) | null = null;
     void utworzKontener().then(
-      (w) => ustaw(w.ok ? { ok: true, wartosc: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j) } } : w),
+      async (w) => {
+        if (!w.ok) { ustaw(w); return; }
+        const p = preferencje();
+        koniecNasluchu = w.wartosc.dostep.nasluchuj(); // KP-07: nasłuch transakcji od startu
+        await w.wartosc.dostep.odswiez(); // limit dni liczony z bieżącym dostępem już przy pierwszym ekranie
+        ustaw({ ok: true, wartosc: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje }), preferencje: p } });
+      },
       () => ustaw({ ok: false, powod: 'zapis' }),
     );
+    return () => koniecNasluchu?.();
   }, []);
   // Błąd otwarcia danych: ekran awaryjny ADR-0019 (krok 3C, `tryb-awaryjny`); do tego czasu samo tło — bez zastępczej bazy w pamięci.
   if (!a || !a.ok) return <View style={{ flex: 1, backgroundColor: k.papier }} testID={a ? 'tryb-awaryjny' : undefined} />;
@@ -28,6 +37,8 @@ export default function Korzen(): React.ReactElement {
         <Stack.Screen name="menu" options={{ presentation: 'modal' }} />
         <Stack.Screen name="formularz/[rodzaj]" options={{ presentation: 'modal' }} />
         <Stack.Screen name="ukonczenie" options={{ presentation: 'modal', gestureEnabled: false }} />
+        <Stack.Screen name="oferty" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="uczciwe-zasady" options={{ presentation: 'modal' }} />
       </Stack>
     </DostawcaAplikacji>
   );

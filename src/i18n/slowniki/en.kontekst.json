@@ -104,7 +104,8 @@
     "cofnij": "Słownik interakcji design-spec: ostatnia zmiana w historii i baner strażnika.",
     "zamknij": "Tekst z prototyp.html roli 04.",
     "anuluj": "Słownik interakcji design-spec „Save / Cancel”.",
-    "zapisz": "Słownik interakcji design-spec „Save / Cancel”."
+    "zapisz": "Słownik interakcji design-spec „Save / Cancel”.",
+    "wstecz": "Systemowy „Back” ekranów wtórnych (e2e/README.md `nav-wstecz`, słownik iOS)."
   },
   "projekty": {
     "szukaj": "Pole wyszukiwania na liście projektów (ekrany.html projekty).",

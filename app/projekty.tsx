@@ -34,6 +34,7 @@ export default function EkranProjektow(): React.ReactElement {
         void licznik.otworz(p.licznik.id).then(wroc);
       }}
       naNowy={() => undefined /* formularz nowego projektu: krok 3B (formularze) */}
+      naUstawienia={() => router.push('/ustawienia')}
     />
   );
 }

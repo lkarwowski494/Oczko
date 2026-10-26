@@ -117,7 +117,8 @@
     "cofnij": "Undo",
     "zamknij": "Close",
     "anuluj": "Cancel",
-    "zapisz": "Save"
+    "zapisz": "Save",
+    "wstecz": "Back"
   },
   "projekty": {
     "szukaj": "Search",

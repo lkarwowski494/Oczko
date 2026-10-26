@@ -8,6 +8,7 @@ import { sciezkiDanych } from '../dane/baza/sciezki';
 import { migruj } from '../dane/migracje/migruj';
 import { utworzMagazyn } from '../dane/pliki/magazyn';
 import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
+import { dostepPro, type DostepPro } from './dostep';
 import { utworzI18n } from '../i18n/i18n';
 import { ZASOBY } from '../i18n/slowniki';
 import { dziennikUrzadzenia } from '../platforma/dziennik-plus';
@@ -26,6 +27,8 @@ export type Kontener = {
   z: ZaleznosciKompozycji;
   j: Jezyk & { naZmiane(f: (j: string) => void): () => void };
   porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka };
+  dostep: DostepPro;
+  katalogDanych: string;
 };
 
 /**
@@ -57,9 +60,17 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
   const i18n = await utworzI18n({ magazyn: { odczytaj: async (k) => preferencje.get(k) ?? null, zapisz: async (k, v) => { preferencje.set(k, v); } }, systemowe: tagiSystemowe, zasoby: ZASOBY });
   const jezyk = () => i18n.jezyk();
   const id = await urzadzenie(katalogDanych);
+  const zegar = zegarAplikacji();
+  // Zakupy sztucznego sklepu buildu E2E w pliku (e2e/README.md); w buildzie wydania sztuczny sklep nie istnieje (sprawdz-ipa).
+  const plikSklepu = polacz(katalogDanych, 'sklep-e2e.json');
+  const zakupyE2e = istniejePlik(plikSklepu) ? await czytajTekst(plikSklepu) : null;
+  const sklep = sklepAplikacji({ czytaj: () => zakupyE2e, zapisz: (t) => zapiszTekst(plikSklepu, t) }, () => zegar.teraz().ms);
+  // Pamięć uprawnień Pro (KP-06): plik obok bazy, poza bazą i archiwum.
+  const plikPro = polacz(katalogDanych, 'pamiec-pro.json');
+  const dostep = dostepPro(sklep, { czytaj: async () => (istniejePlik(plikPro) ? czytajTekst(plikPro) : null), zapisz: async (t) => zapiszTekst(plikPro, t) }, () => zegar.teraz().ms);
   const z: ZaleznosciKompozycji = {
-    baza, zegar: zegarAplikacji(), id: identyfikatory, urzadzenie: id,
-    pro: () => false, // dostęp Pro (ADR-0010, pamięć KP-06) z ekranem ofert w kroku 3C; do tego czasu darmowa (limit liczony jak bez Pro)
+    baza, zegar, id: identyfikatory, urzadzenie: id,
+    pro: () => dostep.stan().pro, // ADR-0010: decyzja ze sklepu, przy błędzie pamięć KP-06 z oknem offline
     magazyn: utworzMagazyn(s.pliki), katalogi: { kopie: s.kopie, tymczasowy },
     dziennik: dziennikUrzadzenia(baza),
     migruj: (p) => migruj(p, { katalogKopii: s.kopie }),
@@ -72,7 +83,8 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     wartosc: {
       z,
       j: { t, jezyk, zegar24h, naZmiane: (f) => i18n.naZmiane(f) },
-      porty: { sklep: sklepAplikacji(), ekranAktywny: ekranAktywny(), haptyka: haptyka() },
+      porty: { sklep, ekranAktywny: ekranAktywny(), haptyka: haptyka() },
+      dostep, katalogDanych,
     },
   };
 }
