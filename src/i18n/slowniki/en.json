@@ -16,5 +16,10 @@
     "uklad_miar": "Units",
     "jakosc_tlumaczenia": "Translation quality",
     "zglos_tlumaczenie": "Report a translation problem"
+  },
+  "aktywnosc": {
+    "dodaj": "+1 row",
+    "odejmij": "−1 row",
+    "limit": "No free knitting days left this month."
   }
 }

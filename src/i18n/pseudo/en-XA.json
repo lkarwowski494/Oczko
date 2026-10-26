@@ -10,5 +10,8 @@
   "ustawienia.jezyk_automatyczny": "⟦Àûtömàtîç (šýštém)~~~~~~~~~~~~⟧",
   "ustawienia.uklad_miar": "⟦Ûñîtš~~~~~⟧",
   "ustawienia.jakosc_tlumaczenia": "⟦Tŕàñšlàtîöñ qûàlîtý~~~~~~~~~~~~~~~⟧",
-  "ustawienia.zglos_tlumaczenie": "⟦Ŕépöŕt à tŕàñšlàtîöñ pŕöblém~~~~~~~~~~~~~~~~⟧"
+  "ustawienia.zglos_tlumaczenie": "⟦Ŕépöŕt à tŕàñšlàtîöñ pŕöblém~~~~~~~~~~~~~~~~⟧",
+  "aktywnosc.dodaj": "⟦+1 ŕöw~~~⟧",
+  "aktywnosc.odejmij": "⟦−1 ŕöw~~~⟧",
+  "aktywnosc.limit": "⟦Ñö fŕéé kñîttîñg dàýš léft thîš möñth.~~~~~~~~~~~~~⟧"
 }

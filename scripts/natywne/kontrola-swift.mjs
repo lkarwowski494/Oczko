@@ -8,8 +8,9 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const PAKIET = 'modules/oczko-reguly/Sources';
-/** Kopia w celu natywnym → źródło w pakiecie (dopisywane w 3C razem z celem). */
-export const KOPIE = {};
+/** Kopia w celu natywnym → źródło (scripts/natywne/kopie.json; zapis kopii: scripts/natywne/kopiuj-zrodla.mjs). */
+const MAPA = join(import.meta.dirname, 'kopie.json');
+export const KOPIE = Object.fromEntries(Object.entries(JSON.parse(readFileSync(MAPA, 'utf8')).zrodla).flatMap(([z, cele]) => cele.map((c) => [c, z])));
 const REGULY = ['mozeZaczacDzien', 'startDnia', 'proZegarka', 'dzienLokalny'];
 
 export function kontrolaSwift(korzen, kopie = KOPIE) {

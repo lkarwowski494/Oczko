@@ -13,5 +13,10 @@
     "uklad_miar": "Etykieta wiersza w Ustawieniach: metryczne czy imperialne (P-075, 4a). Propozycja roli 09, zatwierdza 04. Ok. 10 znaków.",
     "jakosc_tlumaczenia": "Etykieta wiersza informującego, że przekład jest maszynowy (P-075, 2a). Propozycja roli 09, zatwierdza 04. Ok. 20 znaków.",
     "zglos_tlumaczenie": "Odnośnik pod wierszem jakości przekładu: otwiera zgłoszenie błędu (F-57) z kodem języka. Propozycja roli 09, zatwierdza 04. Ok. 30 znaków."
+  },
+  "aktywnosc": {
+    "dodaj": "Etykieta VoiceOver przycisku +1 na Live Activity (ekran blokady, Dynamic Island); zawiera widoczny znak „+1” (WCAG 2.5.3, jak przycisk licznika w design-spec). Propozycja 08 do akceptacji 04. Ok. 10 znaków.",
+    "odejmij": "Etykieta VoiceOver przycisku −1 na Live Activity; zawiera widoczny znak „−1”. Propozycja 08 do akceptacji 04. Ok. 10 znaków.",
+    "limit": "Krótki komunikat na Live Activity zamiast przycisków, gdy dzień ponad darmowy limit (P-065 (1a), skrót „limit.zawczasu”); mało miejsca: jedno zdanie, bez „unlock”, „upgrade”. Propozycja 08 do akceptacji 04. Ok. 40 znaków."
   }
 }

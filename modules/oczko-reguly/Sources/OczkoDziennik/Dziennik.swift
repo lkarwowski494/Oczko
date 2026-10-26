@@ -121,6 +121,9 @@ public final class DziennikPlus {
     }
   }
 
+  /// Surowa treść pliku przez kolejkę pisarza (most dla JS: parsowanie i diagnostyka w TS, src/dane/dziennik.ts).
+  public func tekst() throws -> String { try kolejka.sync { try tekstPliku() } }
+
   public func odczytaj() throws -> OdczytDziennika {
     try kolejka.sync { parsujDziennik(try tekstPliku()) }
   }
