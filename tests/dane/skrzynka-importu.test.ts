@@ -16,12 +16,13 @@ import { GODZ, T0, czasWTle, ile, jeden, katalogTymczasowy, przygotuj, wykonaj }
 const PDF = Buffer.from('%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\n%%EOF\n');
 
 /** Zlecenie jak zapisuje je rozszerzenie: plik, potem manifest `zlecenie.json` (ścieżka pliku względna). */
-function zlecenie(grupa: string, id: string, o: Partial<ZlecenieImportu> & { plik?: Buffer | null; nazwaPliku?: string } = {}): void {
+function zlecenie(grupa: string, id: string, o: Partial<ZlecenieImportu> & { plik?: Buffer | null; nazwaPliku?: string; dodatkowe?: string[] } = {}): void {
   const k = join(grupa, 'skrzynka', id);
   mkdirSync(k, { recursive: true });
   const nazwaPliku = o.nazwaPliku ?? 'Harbor.pdf';
   if (o.plik !== null) writeFileSync(join(k, nazwaPliku), o.plik ?? PDF);
-  const m = { id, rodzaj: o.rodzaj ?? 'plik', nazwa: o.nazwa ?? 'Harbor.pdf', sciezka: o.rodzaj === 'adres' ? null : nazwaPliku, adres: o.adres ?? null,
+  for (const d of o.dodatkowe ?? []) writeFileSync(join(k, d), Buffer.from(d));
+  const m = { id, rodzaj: o.rodzaj ?? 'plik', nazwa: o.nazwa ?? 'Harbor.pdf', sciezki: o.rodzaj === 'adres' ? [] : [nazwaPliku, ...(o.dodatkowe ?? [])], adres: o.adres ?? null,
     typ: o.typ ?? 'application/pdf', projektId: o.projektId === undefined ? 'p1' : o.projektId, utworzonoMs: o.utworzonoMs ?? T0 };
   writeFileSync(join(k, 'zlecenie.json'), JSON.stringify(m));
 }
@@ -41,7 +42,7 @@ describe('adapter skrzynki w App Group (manifest na końcu, porzucone)', () => {
   test('zlecenie z manifestem → pobierz z bezwzględną ścieżką pliku', async () => {
     const { grupa, skrzynka } = await srodowisko();
     zlecenie(grupa, 'z1');
-    expect(await skrzynka.pobierz()).toEqual([{ id: 'z1', rodzaj: 'plik', nazwa: 'Harbor.pdf', sciezka: join(grupa, 'skrzynka', 'z1', 'Harbor.pdf'), adres: null, typ: 'application/pdf', projektId: 'p1', utworzonoMs: T0 }]);
+    expect(await skrzynka.pobierz()).toEqual([{ id: 'z1', rodzaj: 'plik', nazwa: 'Harbor.pdf', sciezki: [join(grupa, 'skrzynka', 'z1', 'Harbor.pdf')], adres: null, typ: 'application/pdf', projektId: 'p1', utworzonoMs: T0 }]);
   });
 
   test('katalog bez manifestu (rozszerzenie jeszcze kopiuje) nie jest zleceniem i zostaje przed SKRZYNKA_PORZUCONE_H; potem usunięty', async () => {
@@ -142,4 +143,24 @@ test('build E2E (oczkoE2eSkrzynka=pdf, scenariusz 52): zlecenie testowe jak z ro
   expect(z).toEqual([expect.objectContaining({ id: 'e2e-skrzynka-pdf', rodzaj: 'plik', projektId: null, utworzonoMs: T0 })]);
   const pdf = pdfTestowy();
   expect([pdf.startsWith('%PDF-'), pdf.trimEnd().endsWith('%%EOF'), (pdf.match(/\/Type \/Page /g) ?? []).length]).toEqual([true, true, 2]);
+});
+
+test('P-248 D1a: kilka zdjęć z jednego udostępnienia = jedno zlecenie ze ścieżkami = jeden wzór `obraz`', async () => {
+  const { s, grupa, z } = await srodowisko();
+  const naPdf = jest.fn(async (_z: unknown) => { const p = join(s.katalog, 'zdjecia.pdf'); writeFileSync(p, PDF); return { ok: true as const, wartosc: { sciezka: p, strony: 3 } }; });
+  zlecenie(grupa, 'z1', { nazwaPliku: 'IMG_1.jpeg', nazwa: 'IMG_1.jpeg', typ: 'public.jpeg', plik: Buffer.from('jpg1'), dodatkowe: ['IMG_2.jpeg', 'IMG_3.jpeg'] });
+  const w = await przetworzSkrzynke({ ...z, konwersja: { ...z.konwersja, naPdf, sprawdzPdf: async () => ({ ok: true as const, wartosc: { strony: 3 } }) } });
+  expect(w).toMatchObject({ ok: true, wartosc: { zaimportowano: 1, bledy: [] } });
+  expect(naPdf).toHaveBeenCalledWith({ rodzaj: 'obrazy', sciezki: ['IMG_1.jpeg', 'IMG_2.jpeg', 'IMG_3.jpeg'].map((n) => join(grupa, 'skrzynka', 'z1', n)) }, expect.anything());
+  expect(await ile(s.baza, 'wzor')).toBe(1);
+});
+
+test('manifest ze ścieżką spoza katalogu zlecenia albo bez pliku → nie jest zleceniem', async () => {
+  const { grupa, skrzynka } = await srodowisko();
+  zlecenie(grupa, 'z1', { nazwaPliku: 'a.pdf' });
+  const k = join(grupa, 'skrzynka', 'z1');
+  writeFileSync(join(k, 'zlecenie.json'), JSON.stringify({ id: 'z1', rodzaj: 'plik', nazwa: 'a', sciezki: ['../../x.pdf'], adres: null, typ: 'application/pdf', projektId: null, utworzonoMs: T0 }));
+  expect(await skrzynka.pobierz()).toEqual([]);
+  writeFileSync(join(k, 'zlecenie.json'), JSON.stringify({ id: 'z1', rodzaj: 'plik', nazwa: 'a', sciezki: ['a.pdf', 'brak.pdf'], adres: null, typ: 'application/pdf', projektId: null, utworzonoMs: T0 }));
+  expect(await skrzynka.pobierz()).toEqual([]);
 });

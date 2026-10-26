@@ -8,10 +8,10 @@ export const PLIK_MIGAWKI = 'projekty-migawka.json';
 
 export function migawkaWKatalogu(grupa: string | null, teraz: () => number): MigawkaProjektow {
   return {
-    async zapisz(projekty) {
+    async zapisz(projekty, jezyk) {
       if (!grupa) return;
       const cel = polacz(grupa, PLIK_MIGAWKI), tmp = `${cel}.tmp`;
-      const tekst = JSON.stringify({ format: 'oczko-migawka', wersja: MIGAWKA_WERSJA, utworzono: teraz(), projekty });
+      const tekst = JSON.stringify({ format: 'oczko-migawka', wersja: MIGAWKA_WERSJA, utworzono: teraz(), jezyk, projekty }); // jezyk: arkusz mówi językiem aplikacji (P-248 D2a)
       usunPlik(tmp);
       zapiszTekst(tmp, tekst);
       if (await czytajTekst(tmp) !== tekst) { usunPlik(tmp); throw new Error('migawka: odczyt kontrolny niezgodny'); }

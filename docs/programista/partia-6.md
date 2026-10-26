@@ -3,8 +3,12 @@ Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-tho
 Prompt roli: **nie złożony** — `add_repo` dla repo `prompts` odrzucony przez kontrolę uprawnień sesji; praca według `CLAUDE.md` i procedury partii 1–5 (testy przed kodem, verify przed pushem, STOP-y), zgłoszone koordynatorowi w raporcie E0.
 Zakres: „Kontrakt partii 6” i „Fundament partii 6 i 7” w `docs/architektura/moduly.md`; projekt 04: `docs/design/fix7-2026-10-26.md`, design-spec „Wzór, rysik i iPad”, „Udostępnij do Oczka” i iCloud (część R), makiety `wzor.html`, `udostepnij-icloud.html`; ograniczenia patentowe P-218 (1)–(6) przy każdej funkcji wzoru; dopiski koordynatora: P-229 (łatka kluczy w pierwszym commicie ekranów), P-234 (`entitlements` App Group w celu rozszerzenia), P-237 (`oczkoE2eSzerokoscOkna`, `wzor-znacznik`), P-238/P-240 (E2E tylko przez `tryb-e2e.ts`; `jakosc:slady-wydania` kod 0 przed raportem), P-241 (okno pushy).
 
-## Stan · 2026-10-26 ok. 20:10 UTC
-E0 zrobione (raport do koordynatora → P-243: S1a, S2a). K1–K2 wypchnięte (f5ac639, verify 2361/2361). K3–K5 w tym commicie (verify 2402/2402, `jakosc:slady-wydania` kod 0 dla wydania i E2E). Następne: K6 (ekrany) i K7 (natywne) — lokalnie do okna maszyn; kopia na `claude/kopia-partia-6` (P-244).
+## Stan · 2026-10-26 ok. 21:00 UTC
+Na gałęzi roboczej (TS, testy, dokumenty; verify przed każdym pushem): K1–K5, K6a (komponenty ekranów), P-246 (obroty, film), widokWzoru, kompozycja wzoru, podział wzor.ts, P-248 D1a/D2a (ten commit). **Lokalnie** (gałąź `partia6-lokalna`, kopia na `claude/kopia-partia-6`, P-244): K7 natywne (moduł `oczko-wzor`, cel `targets/share` — pod-agent, `docs/programista/partia-6-natywne.md`), adapter `src/platforma/wzor.ts`, trasy `/wzor`, grupa wzorów na projekcie, skrzynka na liście, ikona i menu, kolumna 640 pt i kontener szerokości E2E w `Bezpieczny`, `expo-screen-orientation` 57.0.3 + ADR-0016, krok `swift test` dla `modules/oczko-wzor/Pakiet`, pytanie o kierunek (3a). Pierwszy push lokalnej gałęzi na roboczą: po sygnale koordynatora w oknie maszyn (P-241).
+
+**Okno maszyn — kolejność:** (1) rebase `partia6-lokalna` na roboczą, verify; (2) push (build iOS z nowym modułem i celem); (3) poprawki kompilacji Swift; (4) W1–W3 według `partia-6-natywne.md`; (5) E2E iPhone (21, 22, 26, 27, 45, 52) i iPad (44, 46, 47) informacyjnie; (6) `npm run jakosc:slady-wydania` kod 0 → raport E2.
+
+**Otwarte:** Swift celu share i `Pakiet` na D1a (`sciezki`) i D2a (`jezyk` w migawce) — w lokalnej gałęzi; liczba stron wzoru nie jest w schemacie (opis wiersza bez „· N pages”) — do 05/04; e2e-wzor-www i e2e-wzor-word (scenariusze 24, 25) bez paneli; notatka wzoru bez znacznika (design-spec) — przepływ jeszcze nie podpięty; wiersz zegarka w Stanie danych na iPadzie (plik partii 7).
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -53,5 +57,6 @@ Kod 0, 187 zestawów, **2330/2330**.
 Agent: K1–K5 ok. 6–8 h, K6 ok. 8–10 h, K7–K8 ok. 8–12 h (bez kompilacji tutaj — poprawki w oknie maszyn). Czekanie: okno maszyn (K7, W1–W3, E2E iPada), odpowiedzi na S1–S4. Właściciel: identyfikatory App Group i iCloud w portalu (P-233), iPad przy TestFlight (P-226).
 
 ## Dziennik sesji
+- 2026-10-26 ~20:15–21:00 UTC: K6a (b27607b), P-246 (168204b), błąd procesu: push b27607b po rebase bez verify → 50da380 (P-248); K7 od pod-agenta (worktree, scalony do `partia6-lokalna`); widokWzoru, kompozycja wzoru, wiring tras lokalnie; orientacja; P-248 D1a/D2a.
 - 2026-10-26 ~20:00–20:10 UTC: K1–K2 (f5ac639), P-243 (S1a, S2a), P-244 (gałąź kopii); K3 skrzynka i migawka (adaptery App Group przez expo-file-system `Paths.appleSharedContainers`), K4 argumenty E2E, K5 `ukladOkna` i `politykaPlotna`.
 - 2026-10-26 ~19:40–20:00 UTC: E0 — stan wyjściowy 2330/2330, plan K1–K8, S1–S4; raport do koordynatora (bez czekania).

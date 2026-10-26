@@ -1,6 +1,6 @@
 // Skrzynka importu „Udostępnij do Oczka” w kontenerze App Group (ADR-0011 fix-7; moduly.md „Kontrakt partii 6”, cel targets/share).
 // Rozszerzenie kopiuje plik do `<grupa>/skrzynka/<id>/` i na końcu zapisuje manifest `zlecenie.json` (plik tymczasowy → rename); `sciezka`
-// w manifeście jest względna (nazwa pliku w katalogu zlecenia). Katalog bez poprawnego manifestu to zlecenie niepełne: usuwane dopiero, gdy
+// w manifeście: `sciezki` względne (nazwy plików w katalogu zlecenia; kilka zdjęć jednego udostępnienia = jedno zlecenie, P-248 D1a). Katalog bez poprawnego manifestu to zlecenie niepełne: usuwane dopiero, gdy
 // nie zmieniał się od SKRZYNKA_PORZUCONE_H (rozszerzenie mogło jeszcze kopiować).
 import type { SkrzynkaImportu, ZlecenieImportu } from '../domena/porty';
 import { SKRZYNKA_PORZUCONE_H } from '../konfiguracja';
@@ -16,11 +16,13 @@ function zlecenieZManifestu(tekst: string, katalog: string, id: string): Zleceni
   const r = m as Record<string, unknown>;
   const napis = (k: string) => (typeof r[k] === 'string' ? (r[k] as string) : null);
   const rodzaj = r.rodzaj === 'plik' || r.rodzaj === 'adres' || r.rodzaj === 'film' ? r.rodzaj : null;
-  const sciezka = napis('sciezka'), nazwa = napis('nazwa'), typ = napis('typ');
+  const nazwa = napis('nazwa'), typ = napis('typ');
+  const sciezki = Array.isArray(r.sciezki) && r.sciezki.every((x) => typeof x === 'string') ? (r.sciezki as string[]) : null;
   if (r.id !== id || !rodzaj || !nazwa || typ === null || typeof r.utworzonoMs !== 'number') return null;
-  if (rodzaj === 'plik' && (!sciezka || sciezka.includes('/') || !istniejePlik(polacz(katalog, sciezka)))) return null; // tylko plik w katalogu zlecenia
+  if (!sciezki) return null;
+  if (rodzaj === 'plik' && (sciezki.length === 0 || sciezki.some((x) => !x || x.includes('/') || !istniejePlik(polacz(katalog, x))))) return null; // tylko pliki w katalogu zlecenia
   if (rodzaj !== 'plik' && !napis('adres')) return null;
-  return { id, rodzaj, nazwa, sciezka: rodzaj === 'plik' && sciezka ? polacz(katalog, sciezka) : null, adres: napis('adres'), typ, projektId: napis('projektId'), utworzonoMs: r.utworzonoMs };
+  return { id, rodzaj, nazwa, sciezki: rodzaj === 'plik' ? sciezki.map((x) => polacz(katalog, x)) : [], adres: napis('adres'), typ, projektId: napis('projektId'), utworzonoMs: r.utworzonoMs };
 }
 
 /** `grupa` = katalog kontenera App Group (null: grupa niedostępna — np. build bez uprawnień; skrzynka pusta). */

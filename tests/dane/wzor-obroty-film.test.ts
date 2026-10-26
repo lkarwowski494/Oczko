@@ -67,7 +67,7 @@ describe('film projektu (S4a)', () => {
     const grupa = katalogTymczasowy('oczko-grupa-');
     const k = join(grupa, 'skrzynka', 'f1');
     mkdirSync(k, { recursive: true });
-    writeFileSync(join(k, 'zlecenie.json'), JSON.stringify({ id: 'f1', rodzaj: 'film', nazwa: 'Cable cast-on', sciezka: null, adres: 'https://video.example/abc', typ: 'public.url', projektId: 'p1', utworzonoMs: T0 }));
+    writeFileSync(join(k, 'zlecenie.json'), JSON.stringify({ id: 'f1', rodzaj: 'film', nazwa: 'Cable cast-on', sciezki: [], adres: 'https://video.example/abc', typ: 'public.url', projektId: 'p1', utworzonoMs: T0 }));
     const konwersja = { naPdf: jest.fn(), sprawdzPdf: jest.fn() };
     const w = await przetworzSkrzynke({ ...s.z, konwersja, czasWTle, skrzynka: skrzynkaWKatalogu(grupa, () => T0) });
     expect(w).toMatchObject({ ok: true, wartosc: { zaimportowano: 1, bledy: [] } });

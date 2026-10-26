@@ -31,7 +31,7 @@ export interface EkranAktywny { wlacz(tag: string): void; wylacz(tag: string): v
 export interface CzasWTle { chron<T>(nazwa: string, fn: (s: SygnalCzasu) => Promise<T>): Promise<T> } // beginBackgroundTask (rejestr Apple 17); wygaśnięcie → sygnał (ADR-0002 (7))
 export type SygnalCzasu = { wygaslo(): boolean };  // sprawdzany między instrukcjami długiej transakcji; true → wyjątek → ROLLBACK
 export interface SkrzynkaImportu { pobierz(): Promise<ZlecenieImportu[]>; usun(id: string): Promise<void> } // ADR-0011 (fix-7): App Group, rozszerzenie tylko kopiuje
-export interface MigawkaProjektow { zapisz(projekty: readonly ProjektMigawki[]): Promise<void> } // P-220 R1a/N2: plik w App Group dla rozszerzenia; zapis atomowy, koperta z wersją
+export interface MigawkaProjektow { zapisz(projekty: readonly ProjektMigawki[], jezyk: string): Promise<void> } // P-220 R1a/N2: plik w App Group dla rozszerzenia; zapis atomowy, koperta z wersją i językiem aplikacji (P-248 D2a)
 export interface KonwersjaWzoru { naPdf(z: ZrodloWzoru, sygnal?: SygnalCzasu): Promise<Wynik<{ sciezka: string; strony: number }>> } // ADR-0011 (fix-7, P-221 Q2a): WWW, Word, obrazy, skan → PDF; plik tymczasowy
 export interface SkanerStron { skanuj(): Promise<Wynik<{ sciezki: string[] }>> } // P-220 W7a: skaner dokumentów systemu (VisionKit); jeden skan = jeden wzór (P-218 (1))
 export interface Orientacja { tylkoPion(): void; dowolna(): void } // P-221 Q3a: na iPhonie pion poza ekranem wzoru; na iPadzie no-op
@@ -46,7 +46,7 @@ export type StanSynchronizacji = 'wylaczona' | 'aktywna' | 'blad' | 'brak_konta'
 export type Produkt = { id: string; cenaWyswietlana: string; okres: 'miesiac' | 'rok' | 'dozywotni' };
 export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean; karencjaDo?: number | null }; // = Uprawnienie z docs/monetyzacja/dostep.mjs; karencjaDo: ADR-0010, KP-06
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
-export type ZlecenieImportu = { id: string; rodzaj: 'plik' | 'adres' | 'film'; nazwa: string; sciezka: string | null; adres: string | null; typ: string; projektId: string | null; utworzonoMs: number }; // ADR-0011 fix-7: manifest zlecenia w skrzynce; `film` = „Video link” z rozszerzenia → film projektu (P-246 S4a, do przeglądu 05)
+export type ZlecenieImportu = { id: string; rodzaj: 'plik' | 'adres' | 'film'; nazwa: string; sciezki: string[]; adres: string | null; typ: string; projektId: string | null; utworzonoMs: number }; // ADR-0011 fix-7: manifest zlecenia w skrzynce; `sciezki` = pliki jednego udostępnienia (kilka zdjęć = jeden wzór, P-248 D1a; adres/film: []); `film` = „Video link” z rozszerzenia → film projektu (P-246 S4a, do przeglądu 05)
 export type ProjektMigawki = { id: string; nazwa: string; nienazwany: boolean; utworzonoMs: number; ostatniaPracaMs: number | null; wzory: number }; // tylko projekty w toku poza koszem (P-220 N2); ostatniaPracaMs i wzory (poza koszem): P-243 S1a, do przeglądu 05
 export type ZrodloWzoru = { rodzaj: 'adres'; adres: string } | { rodzaj: 'word'; sciezka: string } | { rodzaj: 'obrazy'; sciezki: string[] }; // PDF bez konwersji (importujWzor)
 export type StatusKonta = 'dostepne' | 'brak_konta' | 'ograniczone' | 'tymczasowo_niedostepne' | 'nieznany'; // CKAccountStatus (P-220 N3); iCloud wyłączony dla aplikacji: [DO USTALENIA] okno maszyn

@@ -17,11 +17,13 @@ const TYP_WORD = /wordprocessingml|msword|\.docx?$/i;
 export function zrodloZlecenia(z: ZlecenieImportu): ZrodloDodania | null {
   if (z.rodzaj === 'film') return null; // film nie jest wzorem
   if (z.rodzaj === 'adres') return z.adres ? { rodzaj: 'adres', adres: z.adres } : null;
-  if (!z.sciezka) return null;
-  const plik = { id: z.id, nazwa: z.nazwa, sciezka: z.sciezka, typ: z.typ };
+  const [pierwsza] = z.sciezki;
+  if (!pierwsza) return null;
+  if (/^image\/|public\.(image|jpeg|png|heic)/i.test(z.typ)) return { rodzaj: 'obrazy', sciezki: z.sciezki }; // kilka zdjęć = jeden wzór (P-248 D1a)
+  if (z.sciezki.length !== 1) return null;
+  const plik = { id: z.id, nazwa: z.nazwa, sciezka: pierwsza, typ: z.typ };
   if (/pdf/i.test(z.typ) || /\.pdf$/i.test(z.nazwa)) return { rodzaj: 'pdf', plik };
   if (TYP_WORD.test(z.typ) || TYP_WORD.test(z.nazwa)) return { rodzaj: 'word', plik };
-  if (/^image\/|public\.(image|jpeg|png|heic)/i.test(z.typ)) return { rodzaj: 'obrazy', sciezki: [z.sciezka] };
   return null;
 }
 const nazwaWzoru = (z: ZlecenieImportu): string => z.nazwa.replace(/\.(pdf|docx?|jpe?g|png|heic)$/i, '').trim() || z.nazwa;

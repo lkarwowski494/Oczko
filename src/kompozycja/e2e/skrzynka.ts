@@ -31,7 +31,7 @@ export function wlozZlecenieTestowe(grupa: string, terazMs: number): void {
   if (istniejeKatalog(k)) return;
   utworzKatalog(k);
   zapiszTekst(polacz(k, 'Harbor test pattern.pdf'), pdfTestowy());
-  const m = { id, rodzaj: 'plik', nazwa: 'Harbor test pattern.pdf', sciezka: 'Harbor test pattern.pdf', adres: null, typ: 'com.adobe.pdf', projektId: null, utworzonoMs: terazMs };
+  const m = { id, rodzaj: 'plik', nazwa: 'Harbor test pattern.pdf', sciezki: ['Harbor test pattern.pdf'], adres: null, typ: 'com.adobe.pdf', projektId: null, utworzonoMs: terazMs };
   zapiszTekst(polacz(k, 'zlecenie.json.tmp'), JSON.stringify(m));
   przenies(polacz(k, 'zlecenie.json.tmp'), polacz(k, 'zlecenie.json'));
 }

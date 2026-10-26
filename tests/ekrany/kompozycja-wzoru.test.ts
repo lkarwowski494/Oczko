@@ -14,7 +14,7 @@ async function srodowisko(o: { e2e?: boolean } = {}) {
   await wykonaj(s.baza, [projekt('p1', 'Harbor Sweater')]);
   const grupa = katalogTymczasowy('oczko-grupa-');
   const konwersja = { naPdf: jest.fn(), sprawdzPdf: jest.fn(async () => ({ ok: true as const, wartosc: { strony: 2 } })) };
-  const z = { ...s.z, konwersja, czasWTle, skrzynka: skrzynkaWKatalogu(grupa, () => s.zegar.teraz().ms), migawka: migawkaWKatalogu(grupa, () => s.zegar.teraz().ms) };
+  const z = { ...s.z, konwersja, czasWTle, skrzynka: skrzynkaWKatalogu(grupa, () => s.zegar.teraz().ms), migawka: migawkaWKatalogu(grupa, () => s.zegar.teraz().ms), jezyk: () => 'en' };
   const k = kompozycjaWzoru(z, { grupa, zlecenieE2e: o.e2e ? wlozZlecenieTestowe : null });
   return { s, grupa, k, z };
 }

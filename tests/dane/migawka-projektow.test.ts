@@ -19,9 +19,9 @@ describe('adapter migawki (zapis atomowy, koperta)', () => {
     const k = katalogTymczasowy('oczko-grupa-');
     const m = migawkaWKatalogu(k, () => T0);
     const a: ProjektMigawki = { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0, wzory: 1 };
-    await m.zapisz([a]);
-    expect(czytaj(k)).toEqual({ format: 'oczko-migawka', wersja: MIGAWKA_WERSJA, utworzono: T0, projekty: [a] });
-    await m.zapisz([]);
+    await m.zapisz([a], 'pl');
+    expect(czytaj(k)).toEqual({ format: 'oczko-migawka', wersja: MIGAWKA_WERSJA, utworzono: T0, jezyk: 'pl', projekty: [a] }); // jezyk: P-248 D2a
+    await m.zapisz([], 'pl');
     expect(czytaj(k).projekty).toEqual([]);
     expect(readdirSync(k)).toEqual(['projekty-migawka.json']);
   });
@@ -29,10 +29,10 @@ describe('adapter migawki (zapis atomowy, koperta)', () => {
   test('stary plik tymczasowy po przerwanym zapisie nie przeszkadza; brak katalogu grupy → zapis nic nie robi', async () => {
     const k = katalogTymczasowy('oczko-grupa-');
     writeFileSync(join(k, 'projekty-migawka.json.tmp'), 'ucięty');
-    await migawkaWKatalogu(k, () => T0).zapisz([]);
+    await migawkaWKatalogu(k, () => T0).zapisz([], 'en');
     expect(czytaj(k).projekty).toEqual([]);
     expect(readdirSync(k)).toEqual(['projekty-migawka.json']);
-    await expect(migawkaWKatalogu(null, () => T0).zapisz([])).resolves.toBeUndefined();
+    await expect(migawkaWKatalogu(null, () => T0).zapisz([], 'en')).resolves.toBeUndefined();
   });
 });
 
@@ -47,12 +47,13 @@ describe('odswiezMigawke', () => {
       ["UPDATE wzor SET usunieto_ms = ? WHERE id = 'w3'", [T0]],
     ]);
     const k = katalogTymczasowy('oczko-grupa-');
-    return { s, k, z: { ...s.z, migawka: migawkaWKatalogu(k, () => s.zegar.teraz().ms) } };
+    return { s, k, z: { ...s.z, migawka: migawkaWKatalogu(k, () => s.zegar.teraz().ms), jezyk: () => 'de' } };
   }
 
   test('projekty w toku poza koszem, kolejność jak lista projektów (ostatnia praca), liczba wzorów poza koszem', async () => {
     const { k, z } = await srodowisko();
     expect(await odswiezMigawke(z)).toEqual({ ok: true, wartosc: undefined });
+    expect(czytaj(k).jezyk).toBe('de'); // język aplikacji (P-190), nie systemu (P-248 D2a)
     expect(czytaj(k).projekty).toEqual([
       { id: 'p2', nazwa: 'Scarf', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0 + 2 * DOBA, wzory: 0 },
       { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0 + DOBA, wzory: 2 },

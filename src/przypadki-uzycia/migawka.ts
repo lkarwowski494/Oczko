@@ -8,7 +8,7 @@ import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiers
 import { OK, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
-export type ZaleznosciMigawki = Zaleznosci & { migawka: MigawkaProjektow };
+export type ZaleznosciMigawki = Zaleznosci & { migawka: MigawkaProjektow; jezyk(): string }; // jezyk: język aplikacji (P-190, P-248 D2a)
 
 /** Kolejność jak lista projektów w toku (`listaProjektow`: ostatnia praca malejąco). */
 export async function odswiezMigawke(z: ZaleznosciMigawki): Promise<Wynik<void>> {
@@ -21,7 +21,7 @@ export async function odswiezMigawke(z: ZaleznosciMigawki): Promise<Wynik<void>>
   });
   if (!w.ok) return w;
   try {
-    await z.migawka.zapisz(w.wartosc);
+    await z.migawka.zapisz(w.wartosc, z.jezyk());
   } catch {
     await zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: 'migawka_zapis' });
   }

@@ -8,7 +8,7 @@ import { utworzProjekt } from '../przypadki-uzycia/projekt';
 import { odrzucZlecenie, przetworzSkrzynke, przypiszZlecenie, type ZaleznosciSkrzynki } from '../przypadki-uzycia/skrzynka';
 
 export type StanSkrzynki = { doWyboru: ZlecenieImportu[]; czekaSiec: ZlecenieImportu[]; bledy: { zlecenie: ZlecenieImportu; powod: Powod }[] };
-export type ZaleznosciKompozycjiWzoru = ZaleznosciSkrzynki & { migawka: MigawkaProjektow };
+export type ZaleznosciKompozycjiWzoru = ZaleznosciSkrzynki & { migawka: MigawkaProjektow; jezyk(): string };
 
 export function kompozycjaWzoru(z: ZaleznosciKompozycjiWzoru, o: { grupa: string | null; zlecenieE2e: ((grupa: string, terazMs: number) => void) | null }) {
   let stan: StanSkrzynki = { doWyboru: [], czekaSiec: [], bledy: [] };
