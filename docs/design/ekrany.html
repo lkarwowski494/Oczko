@@ -215,7 +215,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="pasek-narzedzi"><span>◷<br>History</span><span>⚒<br>Tools</span><span>⚙<br>Settings</span></div>
 </main>
 
-<!-- 6. Chwila ukończenia (U-9: ukończenie → zużycie włóczki → karta; BR-PRJ-015; prośba o ocenę po zamknięciu karty, BR-DAN-012) -->
+<!-- 6. Chwila ukończenia (U-9: ukończenie → zużycie włóczki w motkach, BR-ZAP-002, P-126 (2a) → karta; BR-PRJ-015; prośba o ocenę po zamknięciu karty, BR-DAN-012) -->
 <main data-ekran="ukonczenie">
   <div class="status"><span>20:05</span><span>▂▄▆ ▭</span></div>
   <div class="nav"><a href="#">‹ Projects</a><div class="ikony"><span class="ikona" role="button" aria-label="Share">⇪</span></div></div>
@@ -226,8 +226,9 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
     <div class="kreski" aria-hidden="true"><svg class="tally" data-n="25" viewBox="0 0 350 64"></svg></div>
     <p class="podpis">The last 25 marks, from the final evening.</p>
   </div>
-  <div class="grupa" style="margin-top:20px">
-    <div class="el"><div class="tx">Fjord Wool, Slate<small>How much is left? (skeins or grams)</small></div><span role="button" aria-label="Enter yarn left over for Fjord Wool, Slate" style="color:var(--olowek)">Enter ›</span></div>
+  <div class="naglowek-grupy">Yarn used</div>
+  <div class="grupa">
+    <div class="el"><div class="tx">Grey wool<small>5 skeins in your stash</small></div><span class="krok" role="button" aria-label="One skein less">−</span><span class="pole" role="spinbutton" aria-label="Skeins of Grey wool used" aria-valuenow="3">3</span><span class="krok" role="button" aria-label="One skein more">+</span></div>
   </div>
   <div class="spacer"></div>
   <div style="padding: 0 16px 32px"><button class="przycisk-pelny">Done</button></div>
@@ -292,6 +293,20 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
     <div class="tresc-arkusza"><div class="szukaj" style="margin:12px 0 0;color:var(--grafit);border:1.5px solid var(--m-obrys)" role="textbox" aria-label="Project name">Socks for Ola|</div>
     <p class="podpis">The 12 rows and their history stay with this project.</p></div>
   </div>
+</main>
+
+<!-- 6b. Zużycie ponad zapas (BR-ZAP-002, P-126 (2a)): przyjęte, zapas schodzi do 0, jedna linia informacji; „Done” działa -->
+<main data-ekran="ukonczenie-ponad-zapas">
+  <div class="status"><span>20:05</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Projects</a><div class="ikony"><span class="ikona" role="button" aria-label="Share">⇪</span></div></div>
+  <div class="tytul"><h1>Harbor Sweater</h1><p class="pod"><span class="kropka"></span>Finished · Oct 1 – Nov 21</p></div>
+  <div class="naglowek-grupy">Yarn used</div>
+  <div class="grupa">
+    <div class="el"><div class="tx">Grey wool<small>2 skeins in your stash</small></div><span class="krok" role="button" aria-label="One skein less">−</span><span class="pole" role="spinbutton" aria-label="Skeins of Grey wool used" aria-valuenow="3">3</span><span class="krok" role="button" aria-label="One skein more">+</span></div>
+  </div>
+  <p class="uwaga" role="status"><span class="znak" aria-hidden="true">i</span><span>That’s more than the 2 skeins in your stash. Your stash will show 0. <a href="#">Edit stash</a></span></p>
+  <div class="spacer"></div>
+  <div style="padding: 0 16px 32px"><button class="przycisk-pelny">Done</button></div>
 </main>
 
 <section class="uwagi">

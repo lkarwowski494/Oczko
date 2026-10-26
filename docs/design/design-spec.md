@@ -54,7 +54,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Licznik | pierwsze uruchomienie (`licznik-start`); typowy z instrukcją (`licznik-w-toku`); zablokowany (prototyp); seria stuknięć z banerem (prototyp, z2); na limicie (`limit`); błąd zapisu: „Couldn’t save that row. It’s still on screen; try again.” (do E4); offline: bez zmian (wszystko lokalne, NFR-OFF-001) |
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
-| Ukończenie | karta z pytaniem o włóczkę (`ukonczenie`, prototyp z5); bez włóczki w zapasie: pytanie pominięte |
+| Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); bez włóczki w projekcie: pytanie pominięte |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
@@ -127,6 +127,21 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | `projekt.nazwa_tytul` | Name project |
 | `projekt.nazwa_pole` | Project name |
 | `projekt.nazwa_zostaje` | The {{count}} rows and their history stay with this project. (`_one` / `_other`) |
+
+## Zużycie włóczki przy ukończeniu (BR-ZAP-002, U-9, P-126 (2a))
+- **Pytanie:** po „Mark as finished” karta ukończenia ma grupę „Yarn used”: każda włóczka przypisana do projektu jako wiersz z nazwą, podpisem „{n} skeins in your stash” i krokowcem − [pole] + (krok 0,5 motka; pole przyjmuje wpis liczby wg P-097 (5a)). Zapis do `projekt_wloczka.zuzyto_motki` (schemat), nie „ile zostało”. Brak włóczki w projekcie: grupy nie ma.
+- **Zużycie ponad zapas (2a):** wartość większa niż zapas jest przyjmowana; pod grupą jedna linia informacji (ikona „i” + tekst, nie kolor błędu, bo nic nie jest źle): „That’s more than the 2 skeins in your stash. Your stash will show 0.” z odnośnikiem „Edit stash” (otwiera tę włóczkę w zapasie; karta zostaje). „Done” działa zawsze; zapas po zapisie = max(0, zapas − zużycie) — domena (zapas nie schodzi poniżej 0). Zapas już 0: linia „Your stash already shows 0 for this yarn.”
+- **VoiceOver:** pole jako `adjustable` z etykietą „Skeins of {yarn} used” (akcje zwiększ/zmniejsz = krokowiec); linia informacji ogłaszana raz, gdy się pojawi (`role=status`).
+
+| Klucz | en |
+|---|---|
+| `ukonczenie.wloczka_naglowek` | Yarn used |
+| `ukonczenie.w_zapasie_one` / `_other` | {{count}} skein in your stash / {{count}} skeins in your stash |
+| `ukonczenie.zuzycie_etykieta` | Skeins of {{nazwa}} used |
+| `ukonczenie.zuzycie_mniej` / `ukonczenie.zuzycie_wiecej` | One skein less / One skein more (etykiety krokowca; krok 0,5: „Half a skein less/more” `[DO USTALENIA]` z 09) |
+| `ukonczenie.zuzycie_ponad_zapas_one` / `ukonczenie.zuzycie_ponad_zapas_other` | That’s more than the {{count}} skein in your stash. Your stash will show 0. / That’s more than the {{count}} skeins in your stash. Your stash will show 0. |
+| `ukonczenie.zapas_juz_zero` | Your stash already shows 0 for this yarn. |
+| `ukonczenie.edytuj_zapas` | Edit stash |
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
