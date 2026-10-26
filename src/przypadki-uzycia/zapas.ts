@@ -1,9 +1,11 @@
-// Zapis zużycia włóczki z karty ukończenia (F-37, BR-ZAP-002, U-9, P-126 (2a)): pozycja kolejki przypadków użycia wokół potwierdzZuzycie
+// Zapas i narzędzia (F-37, BR-ZAP-001/003/004; P-191 P8a; 08 partia 5 grupa D) oraz zapis zużycia włóczki z karty ukończenia (F-37, BR-ZAP-002, U-9, P-126 (2a)): pozycja kolejki przypadków użycia wokół potwierdzZuzycie
 // (jedna transakcja, różnica względem poprzedniego potwierdzenia, zapas nie poniżej 0). Nieudany zapis: wpis w `blad`, wynik do ekranu.
 import type { Wynik } from '../domena/bledy';
 import { potwierdzZuzycie } from '../dane/repozytoria/zapas';
 import { zapiszBlad } from '../dane/repozytoria/bledy';
+import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { wKolejce } from './kolejka';
+import { blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
 export function zapiszZuzycie(z: Pick<Zaleznosci, 'baza' | 'zegar'>, w: { projektId: string; zuzycie: { wloczkaId: string; motki: number }[] }): Promise<Wynik<void>> {
@@ -13,4 +15,90 @@ export function zapiszZuzycie(z: Pick<Zaleznosci, 'baza' | 'zegar'>, w: { projek
     if (!r.ok && r.powod !== 'bledne_dane') await zapiszBlad(z.baza, { czasMs: terazMs, kod: 'zapis_zuzycie', szczegoly: { powod: r.powod } }).catch(() => undefined);
     return r;
   });
+}
+
+export type FormularzWloczki = {
+  nazwa: string; producent: string; sklad: string; kolor: string; kategoria: number | null; motki: number;
+  dlugoscMotkaM: number | null; wagaMotkaG: number | null; pielegnacja: string; notatka: string;
+};
+export type WloczkaPelna = FormularzWloczki & { id: string; zdjecieSha: string | null };
+export type WierszZapasu = { id: string; nazwa: string; kategoria: number | null; motki: number; dlugoscMotkaM: number | null; wagaMotkaG: number | null; zdjecieSha: string | null };
+export type RodzajNarzedzia = 'druty' | 'szydelko' | 'inne';
+export type Narzedzie = { id: string; rodzaj: RodzajNarzedzia; rozmiarMm: number | null; opis: string };
+
+const nieujemna = (v: number): boolean => Number.isFinite(v) && v >= 0;
+const dodatniaLubNull = (v: number | null): boolean => v === null || (Number.isFinite(v) && v > 0);
+const RODZAJE: readonly RodzajNarzedzia[] = ['druty', 'szydelko', 'inne'];
+
+/** Włóczka z arkusza (P-191 P8a): UPSERT kolumn formularza; `usunieto_ms`, zdjęcia etykiety i przypisania do projektów zostają (zasada 10). */
+export function zapiszWloczke(z: Zaleznosci, w: FormularzWloczki & { id?: string }): Promise<Wynik<{ id: string }>> {
+  const nazwa = w.nazwa.trim();
+  const kategoriaOk = w.kategoria === null || (Number.isInteger(w.kategoria) && w.kategoria >= 0 && w.kategoria <= 7);
+  if (!nazwa || !nieujemna(w.motki) || !dodatniaLubNull(w.dlugoscMotkaM) || !dodatniaLubNull(w.wagaMotkaG) || !kategoriaOk) return Promise.resolve(blad('bledne_dane'));
+  const id = w.id ?? z.id.nowy();
+  return operacjaZapisu(z, 'zapiszWloczke', async (tx, teraz) => {
+    await tx.run(
+      `INSERT INTO wloczka (id, nazwa, producent, sklad, kolor, waga_motka_g, dlugosc_motka_m, motki, kategoria, pielegnacja, notatka, zmieniono_ms)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT (id) DO UPDATE SET nazwa = excluded.nazwa, producent = excluded.producent, sklad = excluded.sklad, kolor = excluded.kolor,
+         waga_motka_g = excluded.waga_motka_g, dlugosc_motka_m = excluded.dlugosc_motka_m, motki = excluded.motki, kategoria = excluded.kategoria,
+         pielegnacja = excluded.pielegnacja, notatka = excluded.notatka, zmieniono_ms = excluded.zmieniono_ms`,
+      [id, nazwa, w.producent.trim(), w.sklad.trim(), w.kolor.trim(), w.wagaMotkaG, w.dlugoscMotkaM, w.motki, w.kategoria, w.pielegnacja.trim(), w.notatka.trim(), teraz],
+    );
+    return { ok: true, wartosc: { id } };
+  });
+}
+
+const ZDJECIE_ETYKIETY = '(SELECT plik_sha256 FROM zdjecie WHERE zdjecie.wloczka_id = wloczka.id ORDER BY utworzono_ms, id LIMIT 1) AS zdjecie';
+
+/** Jedna włóczka do arkusza edycji; usunięta albo brak → `bledne_dane`. */
+export async function wloczka(z: Pick<Zaleznosci, 'baza'>, id: string): Promise<Wynik<WloczkaPelna>> {
+  const [r] = await wiersze(z.baza.all(
+    `SELECT id, nazwa, producent, sklad, kolor, kategoria, motki, dlugosc_motka_m, waga_motka_g, pielegnacja, notatka, ${ZDJECIE_ETYKIETY}
+     FROM wloczka WHERE id = ? AND usunieto_ms IS NULL`, [id]), 'wloczka');
+  if (!r) return blad('bledne_dane');
+  return { ok: true, wartosc: {
+    id: tekst(r, 'id'), nazwa: tekst(r, 'nazwa'), producent: tekst(r, 'producent'), sklad: tekst(r, 'sklad'), kolor: tekst(r, 'kolor'),
+    kategoria: liczbaLubNull(r, 'kategoria'), motki: liczba(r, 'motki'), dlugoscMotkaM: liczbaLubNull(r, 'dlugosc_motka_m'),
+    wagaMotkaG: liczbaLubNull(r, 'waga_motka_g'), pielegnacja: tekst(r, 'pielegnacja'), notatka: tekst(r, 'notatka'), zdjecieSha: tekstLubNull(r, 'zdjecie'),
+  } };
+}
+
+/** Lista zapasu (BR-ZAP-001, BR-ZAP-004): bez usuniętych, po nazwie bez wielkości liter; miniatura = pierwsze zdjęcie etykiety. */
+export async function zapasZDetalami(z: Pick<Zaleznosci, 'baza'>): Promise<Wynik<WierszZapasu[]>> {
+  const r = await wiersze(z.baza.all(
+    `SELECT id, nazwa, kategoria, motki, dlugosc_motka_m, waga_motka_g, ${ZDJECIE_ETYKIETY}
+     FROM wloczka WHERE usunieto_ms IS NULL ORDER BY nazwa COLLATE NOCASE, id`), 'zapasZDetalami');
+  return { ok: true, wartosc: r.map((x) => ({
+    id: tekst(x, 'id'), nazwa: tekst(x, 'nazwa'), kategoria: liczbaLubNull(x, 'kategoria'), motki: liczba(x, 'motki'),
+    dlugoscMotkaM: liczbaLubNull(x, 'dlugosc_motka_m'), wagaMotkaG: liczbaLubNull(x, 'waga_motka_g'), zdjecieSha: tekstLubNull(x, 'zdjecie'),
+  })) };
+}
+
+/** Druty, szydełka i inne (BR-ZAP-003): UPSERT rodzaju, rozmiaru (mm > 0 albo brak) i opisu; `usunieto_ms` zostaje. */
+export function zapiszNarzedzie(z: Zaleznosci, w: { id?: string; rodzaj: RodzajNarzedzia; rozmiarMm: number | null; opis: string }): Promise<Wynik<{ id: string }>> {
+  if (!RODZAJE.includes(w.rodzaj) || !dodatniaLubNull(w.rozmiarMm)) return Promise.resolve(blad('bledne_dane'));
+  const id = w.id ?? z.id.nowy();
+  return operacjaZapisu(z, 'zapiszNarzedzie', async (tx, teraz) => {
+    await tx.run(
+      `INSERT INTO narzedzie (id, rodzaj, rozmiar_mm, opis, zmieniono_ms) VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT (id) DO UPDATE SET rodzaj = excluded.rodzaj, rozmiar_mm = excluded.rozmiar_mm, opis = excluded.opis, zmieniono_ms = excluded.zmieniono_ms`,
+      [id, w.rodzaj, w.rozmiarMm, w.opis.trim(), teraz],
+    );
+    return { ok: true, wartosc: { id } };
+  });
+}
+
+/** Lista narzędzi: druty, szydełka, inne; w grupie od najmniejszego rozmiaru (brak rozmiaru na końcu). */
+export async function narzedzia(z: Pick<Zaleznosci, 'baza'>): Promise<Wynik<Narzedzie[]>> {
+  const r = await wiersze(z.baza.all(
+    `SELECT id, rodzaj, rozmiar_mm, opis FROM narzedzie WHERE usunieto_ms IS NULL
+     ORDER BY CASE rodzaj WHEN 'druty' THEN 0 WHEN 'szydelko' THEN 1 ELSE 2 END, rozmiar_mm IS NULL, rozmiar_mm, opis, id`), 'narzedzia');
+  const lista: Narzedzie[] = [];
+  for (const x of r) {
+    const rodzaj = RODZAJE.find((n) => n === tekst(x, 'rodzaj'));
+    if (!rodzaj) return blad('bledne_dane');
+    lista.push({ id: tekst(x, 'id'), rodzaj, rozmiarMm: liczbaLubNull(x, 'rozmiar_mm'), opis: tekst(x, 'opis') });
+  }
+  return { ok: true, wartosc: lista };
 }
