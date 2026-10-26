@@ -17,7 +17,7 @@ async function kolumny(tx: PortBazy, tabela: string): Promise<string[]> {
 }
 async function sprawdzTabele(tx: PortBazy): Promise<void> {
   const glowne = (await wiersze(tx.all("SELECT name FROM main.sqlite_schema WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"), 'tabele')).map((r) => tekst(r, 'name'));
-  const znane: readonly string[] = [...TABELE, 'blad'];
+  const znane: readonly string[] = [...TABELE, 'blad', 'synchronizacja', 'zmiana_icloud']; // stan urządzenia: nie przenoszony (fix-7, ADR-0005)
   const nowe = glowne.filter((t) => !znane.includes(t));
   if (nowe.length) throw new Error(`przeniesienie: tabele bez reguły przeniesienia: ${nowe.join(', ')}`); // nowa tabela = decyzja, nie pominięcie
 }

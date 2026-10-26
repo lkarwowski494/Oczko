@@ -9,13 +9,29 @@ export function parametrySql(params: readonly unknown[] = []): WartoscSql[] {
   });
 }
 
-/** Dzieli skrypt SQL na instrukcje po `;` poza napisami, identyfikatorami w cudzysłowie i komentarzami (bez wyzwalaczy: schemat v1 ich nie ma). */
+const WYZWALACZ = /^\s*CREATE\s+(TEMP\s+|TEMPORARY\s+)?TRIGGER\b/i;
+/**
+ * Dzieli skrypt SQL na instrukcje po `;` poza napisami, identyfikatorami w cudzysłowie i komentarzami. `CREATE TRIGGER … BEGIN … END;` to jedna
+ * instrukcja: w wyzwalaczu `;` dzieli dopiero po BEGIN na głębokości 0 (BEGIN i CASE otwierają, END zamyka; skrzynka zmian iCloud, P-221 Q5a).
+ */
 export function instrukcjeSql(skrypt: string): string[] {
   const wynik: string[] = [];
   let biezaca = '';
+  let slowo = '';
+  let glebokosc = 0;
+  let poBegin = false;
+  const zamknijSlowo = () => {
+    if (slowo && WYZWALACZ.test(biezaca)) {
+      const s = slowo.toUpperCase();
+      if (s === 'BEGIN' || s === 'CASE') { glebokosc += 1; if (s === 'BEGIN') poBegin = true; } else if (s === 'END') glebokosc -= 1;
+    }
+    slowo = '';
+  };
   let i = 0;
   while (i < skrypt.length) {
     const c = skrypt[i];
+    if (/\w/.test(c)) { slowo += c; biezaca += c; i += 1; continue; }
+    zamknijSlowo();
     const nast = skrypt[i + 1];
     if (c === '-' && nast === '-') {
       const koniec = skrypt.indexOf('\n', i);
@@ -46,15 +62,18 @@ export function instrukcjeSql(skrypt: string): string[] {
       continue;
     }
     if (c === ';') {
+      if (WYZWALACZ.test(biezaca) && (!poBegin || glebokosc > 0)) { biezaca += c; i += 1; continue; } // średnik w ciele wyzwalacza
       if (biezaca.trim()) wynik.push(biezaca.trim());
       biezaca = '';
+      glebokosc = 0;
+      poBegin = false;
       i += 1;
       continue;
     }
     biezaca += c;
     i += 1;
   }
+  zamknijSlowo();
   if (biezaca.trim()) wynik.push(biezaca.trim());
-  for (const s of wynik) if (/^\s*CREATE\s+(TEMP\s+|TEMPORARY\s+)?TRIGGER\b/i.test(s)) throw new Error('instrukcjeSql: wyzwalacze nieobsługiwane');
   return wynik;
 }

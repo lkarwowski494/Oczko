@@ -1,6 +1,6 @@
 // Runner migracji a wyzwalacze (05 fix-7 NZ-P217-05, łatka L1; P-221 Q5a): `CREATE TRIGGER … BEGIN … END;` to jedna instrukcja,
 // także gdy ciało ma kilka instrukcji, CASE … END albo średnik w napisie; reszta skryptu dzielona po `;` jak dotąd.
-import { instrukcjeSql } from '../../../src/dane/baza/parametry';
+import { instrukcjeSql } from '../../src/dane/baza/parametry';
 
 test('L1: wyzwalacz z kilkoma instrukcjami, CASE … END i średnikiem w napisie = jedna instrukcja', () => {
   const skrypt = [

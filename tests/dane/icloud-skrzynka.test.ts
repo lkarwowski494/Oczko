@@ -3,13 +3,13 @@
 // tylko przy włączonej synchronizacji i nie przy zapisie z iCloud (flaga `wejscie`); usunięcie, także kaskadą, = wiersz z `usuniete = 1`.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { utworzPortNode, type PortNode } from '../../../src/dane/baza/adapter-node';
-import { migruj } from '../../../src/dane/migracje/migruj';
-import { usunWszystkieDane } from '../../../src/przypadki-uzycia/projekt';
-import { katalogTymczasowy, przygotuj } from '../../dane/pomocnicze/srodowisko';
+import { utworzPortNode, type PortNode } from '../../src/dane/baza/adapter-node';
+import { migruj } from '../../src/dane/migracje/migruj';
+import { usunWszystkieDane } from '../../src/przypadki-uzycia/projekt';
+import { katalogTymczasowy, przygotuj } from './pomocnicze/srodowisko';
 
 type Kontrakt = { tabele: { tabela: string; klucz: string[]; tylko_klucze?: string[] }[]; lokalne: string[] };
-const KONTRAKT: Kontrakt = JSON.parse(readFileSync(join(__dirname, '../../../docs/architektura/icloud-tabele.json'), 'utf8'));
+const KONTRAKT: Kontrakt = JSON.parse(readFileSync(join(__dirname, '../../docs/architektura/icloud-tabele.json'), 'utf8'));
 const T = 1_793_000_000_000;
 
 async function baza(): Promise<PortNode> {

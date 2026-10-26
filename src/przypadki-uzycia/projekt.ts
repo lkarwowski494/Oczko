@@ -155,14 +155,17 @@ export function dodajCzescPara(z: Zaleznosci, w: { czescId: string; nazwa: strin
 }
 
 /** Kolejność usuwania przy „Usuń wszystkie dane”: dzieci przed rodzicami (RESTRICT do `plik` działa od razu, także przy odroczonych kluczach). */
-const KOLEJNOSC_USUWANIA = ['zdjecie', 'rysunek', 'wzor', 'projekt_wloczka', 'obliczenie', 'sesja', 'przypomnienie', 'notatka_rzedu', 'zdarzenie', 'licznik', 'czesc', 'projekt', 'wloczka', 'narzedzie', 'plik', 'dzien_limitu', 'poczekalnia', 'ustawienie', 'blad'];
+const KOLEJNOSC_USUWANIA = ['zdjecie', 'rysunek', 'wzor', 'projekt_wloczka', 'obliczenie', 'sesja', 'przypomnienie', 'notatka_rzedu', 'zdarzenie', 'licznik', 'czesc', 'projekt', 'wloczka', 'narzedzie', 'plik', 'dzien_limitu', 'poczekalnia', 'ustawienie', 'blad', 'zmiana_icloud'];
+/** Stan iCloud urządzenia: wiersz zostaje, synchronizacja wyłączona przed usuwaniem, żeby wyzwalacze nie wysłały usunięć do iCloud (ADR-0005, fix-7). */
+const STAN_SYNCHRONIZACJI = 'synchronizacja';
 /** „Usuń wszystkie dane” (F-34, P-110 Q3a): wszystkie tabele lokalnie (także dni limitu, dane.md) i pliki z magazynu po COMMIT; synchronizacja wyłączona. */
 export async function usunWszystkieDane(z: ZaleznosciPlikow): Promise<Wynik<void>> {
   const pliki: string[] = [];
   const w = await operacjaZapisu(z, 'usunWszystkieDane', async (tx) => {
     const tabele = (await wiersze(tx.all("SELECT name FROM sqlite_schema WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"), 'usunWszystkieDane')).map((r) => tekst(r, 'name'));
-    const nieznane = tabele.filter((t) => !KOLEJNOSC_USUWANIA.includes(t));
+    const nieznane = tabele.filter((t) => !KOLEJNOSC_USUWANIA.includes(t) && t !== STAN_SYNCHRONIZACJI);
     if (nieznane.length) throw new Error(`usunWszystkieDane: tabele bez miejsca w kolejności: ${nieznane.join(', ')}`); // nowa tabela = decyzja, nie pominięcie
+    if (tabele.includes(STAN_SYNCHRONIZACJI)) await tx.run('UPDATE synchronizacja SET wlaczona = 0, wejscie = 0, stan_silnika = NULL WHERE id = 1'); // przed DELETE
     for (const r of await wiersze(tx.all('SELECT sha256 FROM plik'), 'usunWszystkieDane')) pliki.push(tekst(r, 'sha256'));
     for (const t of KOLEJNOSC_USUWANIA) if (tabele.includes(t)) await tx.run(`DELETE FROM ${t}`);
     return OK;
