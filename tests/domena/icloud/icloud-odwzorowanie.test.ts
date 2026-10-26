@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import fc from 'fast-check';
 import { TABELE_ICLOUD, tabelaIcloud } from '../../../src/domena/icloud/kontrakt';
-import { kluczWiersza, nazwaRekordu, rekordZWiersza, rozbierzNazwe, wierszZRekordu, wartosciKlucza } from '../../../src/domena/icloud/odwzorowanie';
+import { kluczWiersza, kluczeZJson, nazwaRekordu, potwierdzeniaZJson, rekordZWiersza, rekordyZJson, rozbierzNazwe, wierszZRekordu, wartosciKlucza } from '../../../src/domena/icloud/odwzorowanie';
 
 type Wpis = { tabela: string; typ: string; klucz: string[]; scalanie: string; pomin?: string[]; zasob?: boolean; tylko_klucze?: string[] };
 const KONTRAKT: { tabele: Wpis[] } = JSON.parse(readFileSync(join(__dirname, '../../../docs/architektura/icloud-tabele.json'), 'utf8'));
@@ -72,5 +72,17 @@ describe('rekordZWiersza / wierszZRekordu', () => {
         expect(wierszZRekordu(r)).toEqual({ ok: true, wartosc: { tabela: t, wiersz: bez } });
       }), { numRuns: 30 });
     }
+  });
+});
+
+describe('rekordy z granicy (JSON z modułu Swift, poczekalnia) parsowane z unknown', () => {
+  test('rekordyZJson: tylko dobrze zbudowane rekordy; reszta odrzucona i policzona', () => {
+    const dobry = { encja: 'projekt', klucz: 'p1', pola: { id: 'p1', n: 1, x: null }, plik: null };
+    expect(rekordyZJson([dobry, { encja: 'projekt' }, 'x', null, { ...dobry, pola: { a: {} } }, { ...dobry, plik: 5 }])).toEqual({ rekordy: [dobry], odrzucone: 5 });
+    expect(rekordyZJson('nie-tablica')).toEqual({ rekordy: [], odrzucone: 1 });
+  });
+  test('kluczeZJson i potwierdzeniaZJson: encja, klucz (i nr całkowity)', () => {
+    expect(kluczeZJson([{ encja: 'projekt', klucz: 'p1' }, { encja: 1 }])).toEqual([{ encja: 'projekt', klucz: 'p1' }]);
+    expect(potwierdzeniaZJson([{ encja: 'projekt', klucz: 'p1', nr: 3 }, { encja: 'projekt', klucz: 'p2', nr: 1.5 }, { encja: 'x' }])).toEqual([{ encja: 'projekt', klucz: 'p1', nr: 3 }]);
   });
 });

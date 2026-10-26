@@ -2,7 +2,7 @@
 // skrzynka `zmiana_icloud` (wypełniają wyzwalacze L1), odbiór partii z `wejscie = 1` (zapis z iCloud nie wraca do skrzynki), poczekalnia.
 // Wszystkie funkcje działają w transakcji wołającego (kolejka ADR-0002); zasoby plików kopiuje przypadek użycia przed transakcją.
 import { TABELE_ICLOUD, tabelaIcloud, type TabelaIcloud } from '../../domena/icloud/kontrakt';
-import { nazwaRekordu, rekordZWiersza, wartosciKlucza, wierszZRekordu, type Wiersz as WierszIcloud } from '../../domena/icloud/odwzorowanie';
+import { nazwaRekordu, rekordZJson, rekordZWiersza, wartosciKlucza, wierszZRekordu, type Wiersz as WierszIcloud } from '../../domena/icloud/odwzorowanie';
 import type { PartiaIcloud, PortBazy, PotwierdzenieIcloud, RekordIcloud, ZmianaDoWyslania } from '../../domena/porty';
 import { zapiszBladW } from './bledy';
 import { zapiszDzienLimitu } from './liczniki';
@@ -125,7 +125,7 @@ async function zastosujRekord(tx: PortBazy, r: RekordIcloud, terazMs: number, li
 }
 
 const kolejnosc = new Map(TABELE_ICLOUD.map((t, i) => [t.tabela, i]));
-const wgKontraktu = (a: RekordIcloud, b: RekordIcloud): number => (kolejnosc.get(a.encja) ?? 99) - (kolejnosc.get(b.encja) ?? 99);
+const wgKontraktu = (a: { encja: string }, b: { encja: string }): number => (kolejnosc.get(a.encja) ?? 99) - (kolejnosc.get(b.encja) ?? 99);
 
 /**
  * Partia z iCloud w transakcji wołającego: `wejscie = 1`, rekordy w kolejności tabel z kontraktu, usunięcia (kaskada), ponowienie poczekalni
@@ -141,7 +141,7 @@ export async function zastosujPartie(tx: PortBazy, p: PartiaIcloud, terazMs: num
     licz(w);
     if (w === 'zastosowany' || w === 'blad') await tx.run('DELETE FROM poczekalnia WHERE id = ?', [nazwaRekordu(r.encja, r.klucz)]);
   }
-  for (const u of [...p.usuniete].sort((a, b) => wgKontraktu(b as RekordIcloud, a as RekordIcloud))) { // dzieci przed rodzicami
+  for (const u of [...p.usuniete].sort((a, b) => wgKontraktu(b, a))) { // dzieci przed rodzicami
     const t = tabelaIcloud(u.encja);
     const k = t ? wartosciKlucza(t, u.klucz) : null;
     await tx.run('DELETE FROM poczekalnia WHERE id = ?', [nazwaRekordu(u.encja, u.klucz)]);
@@ -154,7 +154,8 @@ export async function zastosujPartie(tx: PortBazy, p: PartiaIcloud, terazMs: num
   for (let postep = true; postep;) { // poczekalnia: rekord, którego rodzic doszedł w tej albo wcześniejszej partii
     postep = false;
     for (const c of await wiersze(tx.all("SELECT id, dane FROM poczekalnia WHERE zrodlo = 'synchronizacja' ORDER BY przyszlo_ms, id"), 'poczekalnia')) {
-      const r = JSON.parse(tekst(c, 'dane')) as RekordIcloud;
+      const r = rekordZJson(JSON.parse(tekst(c, 'dane')));
+      if (!r) { await tx.run('DELETE FROM poczekalnia WHERE id = ?', [tekst(c, 'id')]); wynik.bledy += 1; continue; } // uszkodzony wpis: nie do odtworzenia
       const [przed] = await wiersze(tx.all('SELECT proby FROM poczekalnia WHERE id = ?', [tekst(c, 'id')]), 'poczekalnia');
       const w = await zastosujRekord(tx, r, terazMs, liczniki, pliki);
       if (w === 'zastosowany' || w === 'blad') { await tx.run('DELETE FROM poczekalnia WHERE id = ?', [tekst(c, 'id')]); licz(w); postep = true; }

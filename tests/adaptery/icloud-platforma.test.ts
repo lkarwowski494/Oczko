@@ -75,6 +75,25 @@ describe('most do modułu Swift', () => {
   });
 });
 
+describe('most do modułu Swift: dane z granicy', () => {
+  test('partia z błędnymi elementami: do JS idą tylko poprawne rekordy i klucze; zły JSON → potwierdzenie z błędem', async () => {
+    const s: Record<string, (e: unknown) => void> = {};
+    const zakonczone: [string, boolean][] = [];
+    const n = {
+      statusKonta: async () => 'available', uruchom: async () => undefined, wyslij: async () => undefined, wylacz: async () => undefined, usunStrefe: async () => undefined,
+      zakonczonoPartie: (id: string, ok: boolean) => { zakonczone.push([id, ok]); },
+      addListener: ((nazwa: string, fn: (e: unknown) => void) => { s[nazwa] = fn; return { remove: () => undefined }; }) as OczkoIcloudNatywny['addListener'],
+    } satisfies OczkoIcloudNatywny;
+    const odebrane: PartiaIcloud[] = [];
+    silnikNatywny(n).odbieraj(async (p) => { odebrane.push(p); });
+    s.partia({ id: 'p1', rekordy: JSON.stringify([{ encja: 'projekt', klucz: 'a', pola: { id: 'a' }, plik: null }, { encja: 7 }]), usuniete: JSON.stringify([{ encja: 'projekt', klucz: 'b' }, 3]), stanSilnika: null });
+    s.partia({ id: 'p2', rekordy: '{zly', usuniete: '[]', stanSilnika: null });
+    await new Promise((r) => setTimeout(r, 0));
+    expect(odebrane).toEqual([{ rekordy: [{ encja: 'projekt', klucz: 'a', pola: { id: 'a' }, plik: null }], usuniete: [{ encja: 'projekt', klucz: 'b' }], stanSilnika: null }]);
+    expect([...zakonczone].sort()).toEqual([['p1', true], ['p2', false]]); // potwierdzenia po id — kolejność dowolna
+  });
+});
+
 describe('atrapa E2E (oczkoE2eIcloud) na prawdziwej bazie', () => {
   async function srodowisko(tryb: string, plik = { t: null as string | null }) {
     const s = await przygotuj();

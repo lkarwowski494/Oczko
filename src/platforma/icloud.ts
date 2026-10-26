@@ -5,6 +5,7 @@
 import { requireOptionalNativeModule } from 'expo-modules-core';
 import type { PartiaIcloud, PortBazy, PotwierdzenieIcloud, StanSynchronizacji, StatusKonta, Synchronizacja, Zegar, ZdarzenieKonta, ZmianaDoWyslania } from '../domena/porty';
 import { ICLOUD_W_1_0 } from '../konfiguracja';
+import { kluczeZJson, potwierdzeniaZJson, rekordyZJson } from '../domena/icloud/odwzorowanie';
 
 export type ModulAtrapyIcloud = typeof import('./icloud-atrapa');
 // eslint-disable-next-line @typescript-eslint/no-require-imports -- ładowanie warunkowe (P-238, P-242), jak paneleE2e w tryb-e2e.ts
@@ -44,6 +45,12 @@ export function naBase64(b: Uint8Array | null): string | null {
   return globalThis.btoa(s);
 }
 
+/** JSON z modułu Swift jako `unknown` (błąd składni → wyjątek: partia nieprzyjęta, stan silnika się nie przesuwa). */
+function czytajJson(t: string): unknown {
+  const v: unknown = JSON.parse(t);
+  return v;
+}
+
 /** Adapter modułu Swift; `natywny` wstrzykiwany w testach. Kod błędu wysyłki przechodzi jako `kod` (sterownik: przyczyna stanu `blad`). */
 export function silnikNatywny(natywny: OczkoIcloudNatywny): SilnikIcloud {
   let stan: StanSynchronizacji = 'wylaczona';
@@ -59,21 +66,22 @@ export function silnikNatywny(natywny: OczkoIcloudNatywny): SilnikIcloud {
     async uruchom(st) { stan = 'aktywna'; await natywny.uruchom(naBase64(st)); },
     async wyslij(zmiany: readonly ZmianaDoWyslania[]) {
       try { await natywny.wyslij(JSON.stringify(zmiany)); } catch (e) {
-        const kod = typeof e === 'object' && e !== null && 'code' in e ? (e as { code: unknown }).code : null;
+        const kod: unknown = typeof e === 'object' && e !== null ? Reflect.get(e, 'code') : null;
         stan = 'blad';
         throw { kod: kod === 'brak_miejsca' || kod === 'siec' ? kod : 'inny' };
       }
     },
     odbieraj(fn: (p: PartiaIcloud) => Promise<void>) {
       return pod<{ id: string; rekordy: string; usuniete: string; stanSilnika: string | null }>('partia', (e) => {
-        void fn({ rekordy: JSON.parse(e.rekordy), usuniete: JSON.parse(e.usuniete), stanSilnika: zBase64(e.stanSilnika) })
-          .then(() => natywny.zakonczonoPartie(e.id, true), () => natywny.zakonczonoPartie(e.id, false)); // Swift czeka na wynik przed potwierdzeniem silnikowi
+        // JSON z granicy: z `unknown`, zły element odrzucony (rekord spoza kontraktu nie wchodzi do bazy); zły JSON → partia nieprzyjęta
+        const p = (async () => fn({ rekordy: rekordyZJson(czytajJson(e.rekordy)).rekordy, usuniete: kluczeZJson(czytajJson(e.usuniete)), stanSilnika: zBase64(e.stanSilnika) }))();
+        void p.then(() => natywny.zakonczonoPartie(e.id, true), () => natywny.zakonczonoPartie(e.id, false)); // Swift czeka na wynik przed potwierdzeniem silnikowi
       });
     },
     wyslane(fn: (p: PotwierdzenieIcloud) => Promise<void>) {
       return pod<{ id: string; wyslane: string; stanSilnika: string | null }>('wyslane', (e) => {
-        void fn({ wyslane: JSON.parse(e.wyslane), stanSilnika: zBase64(e.stanSilnika) })
-          .then(() => natywny.zakonczonoPartie(e.id, true), () => natywny.zakonczonoPartie(e.id, false));
+        const p = (async () => fn({ wyslane: potwierdzeniaZJson(czytajJson(e.wyslane)), stanSilnika: zBase64(e.stanSilnika) }))();
+        void p.then(() => natywny.zakonczonoPartie(e.id, true), () => natywny.zakonczonoPartie(e.id, false));
       });
     },
     zdarzeniaKonta(fn) { return pod<{ zdarzenie: string }>('konto', (e) => { const z = KONTO.find((x) => x === e.zdarzenie); if (z) fn(z); }); },

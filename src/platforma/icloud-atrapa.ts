@@ -24,7 +24,8 @@ export async function partiaKonfliktu(baza: PortBazy, zegar: Zegar): Promise<Par
     'SELECT id, wartosc, glowa FROM licznik WHERE usunieto_ms IS NULL AND glowa IS NOT NULL ORDER BY zmieniono_ms, id LIMIT 1');
   if (!l || !l.glowa) return null;
   const [g] = await baza.all<{ rodzice: string }>('SELECT rodzice FROM zdarzenie WHERE id = ?', [l.glowa]);
-  const rodzic = g ? (JSON.parse(g.rodzice) as string[]).slice(0, 1) : [];
+  const r: unknown = g ? JSON.parse(g.rodzice) : [];
+  const rodzic = Array.isArray(r) ? r.filter((x: unknown): x is string => typeof x === 'string').slice(0, 1) : [];
   const t = zegar.teraz();
   const wartosc = l.wartosc + 5;
   const rekord: RekordIcloud = {

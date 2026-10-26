@@ -18,8 +18,9 @@ export function wartosciKlucza(t: TabelaIcloud, klucz: string): Wynik<(string | 
   if (t.klucz.length === 1) return { ok: true, wartosc: [klucz] };
   let v: unknown;
   try { v = JSON.parse(klucz); } catch { return { ok: false, powod: 'bledne_dane' }; }
-  if (!Array.isArray(v) || v.length !== t.klucz.length || !v.every((x) => typeof x === 'string' || (typeof x === 'number' && Number.isFinite(x)))) return { ok: false, powod: 'bledne_dane' };
-  return { ok: true, wartosc: v as (string | number)[] };
+  if (!Array.isArray(v) || v.length !== t.klucz.length) return { ok: false, powod: 'bledne_dane' };
+  const wartosci = v.filter((x: unknown): x is string | number => typeof x === 'string' || (typeof x === 'number' && Number.isFinite(x)));
+  return wartosci.length === t.klucz.length ? { ok: true, wartosc: wartosci } : { ok: false, powod: 'bledne_dane' };
 }
 
 /** recordName CloudKit = "<encja>:<klucz>"; encja nie ma dwukropka, więc rozbiór po pierwszym. */
@@ -49,4 +50,30 @@ export function wierszZRekordu(r: RekordIcloud): Wynik<{ tabela: TabelaIcloud; w
   if (t.klucz.some((k) => wiersz[k] === undefined || wiersz[k] === null) || kluczWiersza(t, wiersz) !== r.klucz) return { ok: false, powod: 'bledne_dane' };
   if (t.tylkoKlucze && !t.tylkoKlucze.includes(String(wiersz[t.klucz[0]]))) return { ok: false, powod: 'bledne_dane' };
   return { ok: true, wartosc: { tabela: t, wiersz } };
+}
+
+// Granica: JSON z modułu Swift i z poczekalni (moduly.md „Kontrakt partii 7”) — z `unknown`, bez rzutowań; zły element odrzucony, nie zgadywany.
+const obiekt = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
+const wartoscPola = (v: unknown): v is WartoscPola => v === null || typeof v === 'string' || (typeof v === 'number' && Number.isFinite(v));
+
+export function rekordZJson(v: unknown): RekordIcloud | null {
+  if (!obiekt(v) || typeof v.encja !== 'string' || typeof v.klucz !== 'string' || !obiekt(v.pola)) return null;
+  if (!(v.plik === null || v.plik === undefined || typeof v.plik === 'string')) return null;
+  const pola: Wiersz = {};
+  for (const [k, x] of Object.entries(v.pola)) { if (!wartoscPola(x)) return null; pola[k] = x; }
+  return { encja: v.encja, klucz: v.klucz, pola, plik: typeof v.plik === 'string' ? v.plik : null };
+}
+export function rekordyZJson(v: unknown): { rekordy: RekordIcloud[]; odrzucone: number } {
+  if (!Array.isArray(v)) return { rekordy: [], odrzucone: 1 };
+  const rekordy: RekordIcloud[] = [];
+  for (const x of v) { const r = rekordZJson(x); if (r) rekordy.push(r); }
+  return { rekordy, odrzucone: v.length - rekordy.length };
+}
+export function kluczeZJson(v: unknown): { encja: string; klucz: string }[] {
+  if (!Array.isArray(v)) return [];
+  return v.flatMap((x: unknown) => (obiekt(x) && typeof x.encja === 'string' && typeof x.klucz === 'string' ? [{ encja: x.encja, klucz: x.klucz }] : []));
+}
+export function potwierdzeniaZJson(v: unknown): { encja: string; klucz: string; nr: number }[] {
+  if (!Array.isArray(v)) return [];
+  return v.flatMap((x: unknown) => (obiekt(x) && typeof x.encja === 'string' && typeof x.klucz === 'string' && typeof x.nr === 'number' && Number.isInteger(x.nr) ? [{ encja: x.encja, klucz: x.klucz, nr: x.nr }] : []));
 }

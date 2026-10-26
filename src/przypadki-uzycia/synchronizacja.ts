@@ -35,7 +35,7 @@ export type Sterownik = {
 };
 
 const przyczynaZ = (e: unknown): PrzyczynaBledu => {
-  const kod = typeof e === 'object' && e !== null && 'kod' in e ? (e as { kod: unknown }).kod : null;
+  const kod: unknown = typeof e === 'object' && e !== null ? Reflect.get(e, 'kod') : null;
   return kod === 'brak_miejsca' ? 'brak_miejsca' : kod === 'siec' ? 'siec' : 'inny';
 };
 

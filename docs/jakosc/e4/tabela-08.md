@@ -155,7 +155,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/archiwum-skrot.test.ts` | zielony (główny zestaw) | 2 | P-130, R-067 | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/dane/pliki/magazyn` | Z07-22 |
 | 9 ? | `tests/adaptery/czas-w-tle.test.ts` | zielony (główny zestaw) | 2 | — | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/platforma/czas-w-tle`<br>`src/przypadki-uzycia/archiwum` | Z07-22 |
 | 9 ? | `tests/adaptery/haptyka-wzorce.test.ts` | zielony (główny zestaw) | 2 | P-135 | `src/platforma/haptyka` | — |
-| 9 ? | `tests/adaptery/icloud-platforma.test.ts` | zielony (główny zestaw) | 10 | P-230, P-242 | `src/domena/porty`<br>`src/platforma/icloud`<br>`src/platforma/icloud-atrapa`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
+| 9 ? | `tests/adaptery/icloud-platforma.test.ts` | zielony (główny zestaw) | 11 | P-230, P-242 | `src/domena/porty`<br>`src/platforma/icloud`<br>`src/platforma/icloud-atrapa`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
 | 9 ? | `tests/adaptery/identyfikatory.test.ts` | zielony (główny zestaw) | 2 | — | `src/platforma/identyfikatory` | — |
 | 9 ? | `tests/adaptery/jpeg-metadane.test.ts` | zielony (główny zestaw) | 2 | P-219 | `src/dane/pliki/jpeg`<br>`src/kompozycja/e2e-zdjecie` | — |
 | 9 ? | `tests/adaptery/live-activity.test.ts` | zielony (główny zestaw) | 7 | P-115, P-139 | `src/domena/porty`<br>`src/platforma/dziennik-plus`<br>`src/platforma/live-activity`<br>`src/platforma/zegarek` | Z07-22 |
@@ -166,7 +166,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/teksty-natywne.test.ts` | zielony (główny zestaw) | 5 | P-115, P-139, P-143 | `src/i18n/jezyki`<br>`src/i18n/plural`<br>`src/i18n/slowniki/en.json` | — |
 | 9 ? | `tests/adaptery/tryb-e2e-partia6.test.ts` | zielony (główny zestaw) | 3 | P-225, P-230, P-237, P-238 | `src/platforma/tryb-e2e` | — |
 | 9 ? | `tests/adaptery/zdjecia.test.ts` | zielony (główny zestaw) | 3 | P-191 | `src/platforma/zdjecia` | — |
-| 9 ? | `tests/domena/icloud/icloud-odwzorowanie.test.ts` | zielony (główny zestaw) | 8 | P-221 | `src/domena/icloud/kontrakt`<br>`src/domena/icloud/odwzorowanie` | — |
+| 9 ? | `tests/domena/icloud/icloud-odwzorowanie.test.ts` | zielony (główny zestaw) | 10 | P-221 | `src/domena/icloud/kontrakt`<br>`src/domena/icloud/odwzorowanie` | — |
 | 9 ? | `tests/domena/posiedzenie/posiedzenie.test.ts` | zielony (główny zestaw) | 6 | P-126 | `src/domena/posiedzenie`<br>`src/konfiguracja` | — |
 | 9 ? | `tests/domena/prosba-o-ocene.test.ts` | zielony (główny zestaw) | 1 | P-150, P-156 | `src/domena/ocena`<br>`src/domena/zaslepka` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, P-135, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
