@@ -110,12 +110,22 @@ export function chwilaOPorze(w: { dzien: string; wzorMs: number; strefa: string 
   const n = numerDnia(w.dzien);
   const wzor = Number.isFinite(w.wzorMs) ? scienny(w.wzorMs, w.strefa) : null;
   if (n === null || wzor === null) return BLAD;
-  const lokalnie = n * 86_400_000 + (((wzor % 86_400_000) + 86_400_000) % 86_400_000); // dzień + pora jako „ms UTC” czasu ściennego
-  const przesuniecie = (ms: number) => (scienny(ms, w.strefa) ?? ms) - ms;
+  return { ok: true, wartosc: chwilaScienna(n * 86_400_000 + (((wzor % 86_400_000) + 86_400_000) % 86_400_000), w.strefa) };
+}
+/** Czas ścienny jako „ms UTC” → chwila w strefie; luka → pora przesunięta o długość luki, pora podwójna → wcześniejsza chwila. */
+function chwilaScienna(lokalnie: number, strefa: string): number {
+  const przesuniecie = (ms: number) => (scienny(ms, strefa) ?? ms) - ms;
   const przed = lokalnie - przesuniecie(lokalnie - 43_200_000), po = lokalnie - przesuniecie(lokalnie + 43_200_000);
-  const trafione = [przed, po].filter((c) => scienny(c, w.strefa) === lokalnie);
+  const trafione = [przed, po].filter((c) => scienny(c, strefa) === lokalnie);
   // Luka: żadna chwila nie ma tej pory — przesunięcie sprzed zmiany daje porę przesuniętą o długość luki.
-  return { ok: true, wartosc: trafione.length ? Math.min(...trafione) : przed };
+  return trafione.length ? Math.min(...trafione) : przed;
+}
+/** Chwila czasu lokalnego „RRRR-MM-DDTgg:mm[:ss]” bez strefy w strefie IANA (argument startu `oczkoE2eTeraz`, e2e/README.md); reguły luki jak chwilaOPorze. */
+export function chwilaLokalna(w: { lokalnie: string; strefa: string }): Wynik<number> {
+  const m = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(w.lokalnie);
+  const n = m ? numerDnia(m[1]) : null;
+  if (!m || n === null || Number(m[2]) > 23 || Number(m[3]) > 59 || Number(m[4] ?? 0) > 59 || scienny(0, w.strefa) === null) return BLAD;
+  return { ok: true, wartosc: chwilaScienna(n * 86_400_000 + ((Number(m[2]) * 60 + Number(m[3])) * 60 + Number(m[4] ?? 0)) * 1000, w.strefa) };
 }
 
 /** RD-20 (P-110 Q7, jak Trening `thisMonday`): poniedziałek tygodnia dnia RRRR-MM-DD, dla każdego regionu. Sygnatura 08 (P-114 Q2a). */
