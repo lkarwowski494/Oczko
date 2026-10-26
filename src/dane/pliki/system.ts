@@ -79,3 +79,8 @@ export function otworzDoZapisu(sciezka: string): Pisarz {
     zamknij() { h.close(); },
   };
 }
+/** Katalog `Library` kontenera aplikacji (ADR-0001: dane w `Library/Application Support`) — rodzic katalogu `Documents`. */
+export function katalogBiblioteki(): string {
+  const d = decodeURIComponent(Paths.document.uri.replace(/^file:\/\//, '').replace(/\/+$/, ''));
+  return `${d.slice(0, d.lastIndexOf('/'))}/Library`;
+}
