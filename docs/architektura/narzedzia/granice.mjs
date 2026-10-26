@@ -66,7 +66,8 @@ const pod = (p, kat) => p.startsWith(join(root, kat) + sep);
 const graf = new Map();
 for (const p of pliki) {
   const tekst = readFileSync(p, 'utf8'), rel = relative(root, p), kb = Buffer.byteLength(tekst) / 1024;
-  if (kb > limitKB) zgl(`ROZMIAR ${rel}: ${kb.toFixed(1)} KB > ${limitKB} KB`);
+  // ARCH-04: pliki generowane (pierwsza linia „// Wygenerowane:”, np. kopia migracji SQL w sql.ts) nie podlegają limitowi rozmiaru (fix-7 05).
+  if (kb > limitKB && !tekst.startsWith('// Wygenerowane:')) zgl(`ROZMIAR ${rel}: ${kb.toFixed(1)} KB > ${limitKB} KB`);
   const krawedzie = [];
   for (const { spec, tylkoTyp } of importy(p, tekst)) {
     if (spec === null) { if (p.startsWith(dom) || p === konfiguracja) zgl(`DOMENA ${rel}: import z wyrażenia (nie da się sprawdzić granicy)`); continue; }
