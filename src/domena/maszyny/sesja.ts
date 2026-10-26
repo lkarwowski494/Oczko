@@ -25,7 +25,7 @@ export function przejdzSesje(s: Sesja, z: ZdarzenieSesji, terazMs: number, maksH
     case 'koryguj':
       if (s.stan !== 'zakonczona') return NIEDOZWOLONE;
       if (!Number.isFinite(z.startMs) || !Number.isFinite(z.koniecMs) || z.koniecMs < z.startMs) return { ok: false, powod: 'bledne_dane' }; // BR-PRJ-013/S3
-      return { ok: true, wartosc: { ...s, startMs: z.startMs, koniecMs: z.koniecMs, skorygowano: true } };
+      return { ok: true, wartosc: { ...s, startMs: z.startMs, koniecMs: z.koniecMs, przerwyMs: 0, skorygowano: true } }; // P-195 Q2a, P-199 Q4a: czas = koniec − start
     case 'start_aplikacji': {
       const maksMs = maksH * 3_600_000;
       // Zapomniany stoper (P-072 (7a)): sesja trwająca co najmniej SESJA_MAKS_H kończy się na start + SESJA_MAKS_H, do sprawdzenia.

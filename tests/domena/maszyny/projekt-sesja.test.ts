@@ -74,8 +74,9 @@ describe('BR-PRJ-013 sesja stopera: przejścia z tabeli moduly.md', () => {
     ['trwa + wstrzymaj → wstrzymana, wstrzymano_ms = teraz', trwa, { rodzaj: 'wstrzymaj' }, START + 30 * MIN, wstrzymana],
     ['wstrzymana + wznow → trwa, przerwy += teraz − wstrzymano_ms', wstrzymana, { rodzaj: 'wznow' }, START + 45 * MIN, { ...trwa, przerwyMs: 15 * MIN }],
     ['trwa + zakoncz → zakonczona, koniec_ms = teraz', trwa, { rodzaj: 'zakoncz' }, START + GODZ, { ...trwa, stan: 'zakonczona', koniecMs: START + GODZ }],
-    ['zakonczona + koryguj → zakonczona, skorygowano, nowe start/koniec', zakonczona, { rodzaj: 'koryguj', startMs: START + GODZ, koniecMs: START + 2 * GODZ }, TERAZ, { ...zakonczona, startMs: START + GODZ, koniecMs: START + 2 * GODZ, skorygowano: true }],
-    ['zakonczona + koryguj z koniec = start (granica koniec ≥ start) → zapisane', zakonczona, { rodzaj: 'koryguj', startMs: START + GODZ, koniecMs: START + GODZ }, TERAZ, { ...zakonczona, startMs: START + GODZ, koniecMs: START + GODZ, skorygowano: true }],
+    // Zmiana 08 (partia 5): P-195 Q2a, P-199 Q4a — korekta zeruje przerwy (czas = koniec − start); wcześniej przerwyMs przechodziły bez zmian.
+    ['zakonczona + koryguj → zakonczona, skorygowano, nowe start/koniec, przerwy 0', zakonczona, { rodzaj: 'koryguj', startMs: START + GODZ, koniecMs: START + 2 * GODZ }, TERAZ, { ...zakonczona, startMs: START + GODZ, koniecMs: START + 2 * GODZ, przerwyMs: 0, skorygowano: true }],
+    ['zakonczona + koryguj z koniec = start (granica koniec ≥ start) → zapisane', zakonczona, { rodzaj: 'koryguj', startMs: START + GODZ, koniecMs: START + GODZ }, TERAZ, { ...zakonczona, startMs: START + GODZ, koniecMs: START + GODZ, przerwyMs: 0, skorygowano: true }],
   ];
   test.each(dozwolone)('BR-PRJ-013 %s', (_n, s, z, teraz, oczek) => {
     expect(przejdzSesje(s, z, teraz, SESJA_MAKS_H)).toEqual({ ok: true, wartosc: oczek });
@@ -89,6 +90,9 @@ describe('BR-PRJ-013 sesja stopera: przejścia z tabeli moduly.md', () => {
 
   test('BR-PRJ-013/S3 koniec przed początkiem (koniec = start − 1 ms) → zmiana nie zapisana, błędne dane', () => {
     expect(przejdzSesje(zakonczona, { rodzaj: 'koryguj', startMs: START + GODZ, koniecMs: START + GODZ - 1 }, TERAZ, SESJA_MAKS_H)).toEqual({ ok: false, powod: 'bledne_dane' });
+    // P-195 Q2a: po korekcie czas = koniec − start, także gdy sesja miała przerwy (arkusz mówi to przed zapisem).
+    const k = przejdzSesje(zakonczona, { rodzaj: 'koryguj', startMs: START, koniecMs: START + 90 * MIN }, TERAZ, SESJA_MAKS_H);
+    expect(k.ok && czasSesjiMs(k.wartosc)).toBe(90 * MIN);
   });
 
   const niedozwolone: [string, Sesja, ZdarzenieSesji][] = [
