@@ -5,7 +5,7 @@
 import AppIntents
 import Foundation
 #if canImport(OczkoDziennikPlus)
-import OczkoDziennikPlus
+internal import OczkoDziennikPlus // jak ExpoModulesProvider.swift w aplikacji (inny poziom = „ambiguous implicit access level”, przebieg 40261573589)
 #endif
 
 struct OczkoStuknij: LiveActivityIntent {
