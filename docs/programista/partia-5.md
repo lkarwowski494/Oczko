@@ -2,12 +2,14 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków — zgodny; nie w repo)
 Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla wariantów zakresu, bez wzorów, iCloud, sesji i narzędzi), P-180 (PLIK_BAZY, krok CI członkostwa `_shared/Stuknij.swift`, zdjęcie `continue-on-error` pakietu podstawowego E2E, pas przypomnienia po stronie Swift). Wejście: inwentaryzacja koordynatora `oczko-warsztat/koordynacja/2026-10-26-inwentaryzacja-mvp.md` (6575a46), `docs/scope-contract.md` (F-04, F-08, F-09, F-14, F-15, F-17, F-18, F-20, F-33, F-46, F-52, F-54, F-60, F-61), BRD (BR-PRJ-001/002/004/005/007/014/016, BR-LIC-006/011/012/018, BR-DNI-004/005/006, BR-DAN-008), `docs/architektura/moduly.md` „Projekt”, design-spec.
 
-## Stan: E1 (2026-10-26) — (1) i warstwa danych A1–A4, C1 zrobione; następne: ekrany A5–A6, C2–C3 (P-185)
-E0 przyjęty: P-182 (Q1a+b, Q2a → poprawione P-184, Q3a, Q4a; uśpione bez progu). 04 fix-5 E2 przyjęty (P-183, P-185): klucze `docs/design/fix5-2026-10-26/klucze.json` nakładam w pierwszym commicie ekranów.
-- (1) 1.1 `PLIK_BAZY` (a429c2f); 1.2–1.3 krok CI członkostwa `Stuknij.swift` + `continue-on-error` tylko dla [e2e-pelny] (22643f9); 1.4 pas przypomnienia Swift + naprawa `rzadWRobocie` w trybie „w trakcie” (ed9f60d; `swift test` lokalnie 45/45, widoki SwiftUI czekają na build CI).
-- A2 zapisy (c73b8fe) i `projekt.narzedzie` w `0001.sql`/`schemat.sql` bez migracji (P-184, 1ba505a; aneks w `dane.md`); A1 `widokProjektu` (d1b98c1); `dzienProjektu` (1c4d8e0, struktura); A3/A4/C1 lista, kosz, „Next part”, cel pary (0b32827).
-- `verify` kod 0, **1831/1831**. „Jakość · iOS”: przebiegi 40331271484 (anulowany przez kolejny push, nie wystartował — brak runnera) i 40333370146 (w kolejce).
-- STOP E1 (Q2 szydełko): migracja 0002 sprzeczna z `dane.md:85` → P-184 (kolumna w 0001.sql). Łatka migracji odłożona poza repo.
+## Stan: E1 zakończone (2026-10-26) — czeka na „Jakość · iOS” 40338452515 (a51f4b1), potem STOP E2
+E0 przyjęty: P-182 (Q1a+b, Q2a → P-184, Q3a, Q4a; uśpione bez progu). 04 fix-5 E2: P-183, P-185 (łatka kluczy nałożona w c387b3d). Wybór daty: P-186.
+- (1) 1.1 `PLIK_BAZY` (a429c2f); 1.2–1.3 krok CI członkostwa `Stuknij.swift` + `continue-on-error` tylko dla [e2e-pelny] (22643f9); 1.4 pas przypomnienia Swift + naprawa `rzadWRobocie` w trybie „w trakcie” (ed9f60d; `swift test` lokalnie 45/45).
+- Dane: A2 (c73b8fe), `projekt.narzedzie` w 0001.sql bez migracji (P-184, 1ba505a), A1 `widokProjektu` (d1b98c1), `dzienProjektu` (1c4d8e0, struktura), A3/A4/C1 (0b32827).
+- Ekrany: C3 + A4 (c387b3d: klucze 04, lista, kosz), A5 + A3 + C2 (b148d6b: ekran projektu, arkusze, „Next part”, usuwanie), termin + A6 (a51f4b1: datetimepicker 9.1.0, testID, scenariusz 20).
+- `env -u NODE_PATH npm run verify` kod 0, **1866/1866** (a51f4b1).
+- CI: 40331271484 i 40333370146 bez runnera, zastąpione kolejnym pushem; 40335206513 (30a636e) anulowany po 15 min bez przydzielonego runnera (`runner_id` 0) — maszyna, P-091: jedno ponowienie = przebieg 40338452515 na a51f4b1 (w kolejce).
+- STOP E1 w trakcie: Q2 szydełko → P-184; Q5 wybór daty → P-186.
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -82,6 +84,7 @@ Podział: jedna sesja wystarczy (partia 4 miała ok. 40 h w jednej sesji); punkt
 ## Dziennik sesji
 - 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1801/1801, plan (1)–(4), Q1–Q4; STOP do koordynatora. Odpowiedź: P-182.
 - 2026-10-26: E1 (1) zaległości P-180; A2 (STOP E1 Q2 → P-184); A1; A3/A4/C1. Swift 6.2 zainstalowany lokalnie w /opt/swift (poza repo) — `swift test` przed CI.
+- 2026-10-26: ekrany C3/A4, A5/A3/C2, termin (pytanie Q5 → P-186) i A6; push a51f4b1; czekam na CI iOS.
 ### Do raportu E2 (zbierane w trakcie)
 - Sygnatury nowych przypadków użycia do przeglądu 05 (P-182 Q3a): `dodajCzescProjektu`, `ustawZnaczenie`, `ustawDrut` (z `narzedzie`), `ustawTermin`, `widokProjektu`, `widokKosza`, `nastepnaCzesc`; repozytoria `elementyKosza`, `dzienProjektu`, `rzedyCzesci`, `celCzesci`.
 - Cel części pary liczony dynamicznie z rzędów pierwszej (BR-PRJ-014 S1, S3) w `widokProjektu`, `widokLicznika`, `nastepnaCzesc`; `dodajCzescPara` nadal kopiuje `cel_rzedow` pierwszej (własny cel wygrywa) — do przeglądu 05.
@@ -89,3 +92,11 @@ Podział: jedna sesja wystarczy (partia 4 miała ok. 40 h w jednej sesji); punkt
 - Licznik całości: flaga `licznik.sekcja` (N2 → 05; propozycja 04: każdy licznik rzędów części to sekcja, całość widać przy ≥ 2).
 - Swift: Smart Stack (`supplementalActivityFamilies`) nie istnieje w celu widżetu — pas krótki (`aktywnosc.przypomnienie_krotkie`) poza partią; etykieta VoiceOver „Add row. ” + `przypomnienie_a11y` wymaga klucza (sklejanie napisów) — zgłoszenie do 04; dziś pas ma własną etykietę, przycisk +1 bez zmian.
 - Błąd naprawiony: `rzadWRobocie` w widżecie i zegarku w trybie „rząd w trakcie” (o 1 za mało wobec aplikacji).
+- N1 (nazwa kopii „Make another”, decyzja 08): **ta sama nazwa co oryginał** (`zrobPonownie` bez zmian; BR-PRJ-007 „nowy projekt z tymi samymi częściami”; lista odróżnia je linią „last worked …”; dopisek do nazwy wymagałby nowego klucza 04).
+- Odstępstwa: przesunięcie wiersza („swipe to delete”) na liście i na ekranie projektu niezbudowane — w RN bez biblioteki gestów; alternatywa z makiety (••• → Delete project…, tryb Edit z ⊖) jest (SP-15); dodanie biblioteki = decyzja 05/koordynatora. Menu „+” i ••• projektu jako lista w ekranie (testID z „Dla 08”), nie systemowy arkusz akcji.
+- Stan nieaktywny przycisku: tokeny nie mają „disabled” → `linia` (tło) + `olowek` (tekst); zgłoszenie do 04.
+- Licznik oczek na ekranie projektu: opis = sama liczba (klucz „{n} stitches” poza partią, design-spec).
+- Linia listy „{część} · row {n} of {cel}”: klucza nie ma — zostaje `licznik.teraz` (jak w partii 4).
+- Podgląd terminu przy „cel osiągnięty” pokazuje 0 rzędów (klucze mają tylko cel albo „bez celów”) — do 04.
+- Nowy projekt otwiera licznik pierwszej części (U-5: liczenie od razu); „Add part” z ekranu projektu wraca na ekran projektu; „New part” z „What’s next?” otwiera licznik nowej części; druga część pary dostaje tę samą nazwę co pierwsza.
+- Zrzuty: projekt bez `react-native-web` (Expo web niedostępne), symulator tylko w CI — lista zrzutów dla właściciela w raporcie E2 (stany z `wzorce-zrzuty/projekt-kosz-*`).
