@@ -48,11 +48,19 @@ jobs:
           cd modules/oczko-reguly
           swift test 2>&1 | tee ../../swift-test.log
           { echo "### swift test"; grep -E 'wykonano [0-9]+ z [0-9]+|Executed [0-9]+ tests' ../../swift-test.log | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: swift test — logika wzoru (modules/oczko-wzor/Pakiet; 08 partia 6)
+        run: |
+          set -o pipefail
+          cd modules/oczko-wzor/Pakiet
+          swift test 2>&1 | tee ../../../swift-test-wzor.log
+          { echo "### swift test (wzór)"; grep -E 'Executed [0-9]+ tests' ../../../swift-test-wzor.log | tail -1 | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: swift-test-log
-          path: swift-test.log
+          path: |
+            swift-test.log
+            swift-test-wzor.log
           retention-days: 3
   build:
     runs-on: macos-26 # SDK 56+: Xcode 26.4+ (macos-15 ma najwyżej 26.3; Trening)
