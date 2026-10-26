@@ -2,8 +2,8 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków; nie w repo)
 Zakres: P-128 (start partii 3), P-123 pkt 12, P-124 (dziennik A + S + R, SQL Q3a), P-126 (1b) (`nienazwany`), P-127 (`pro: true` w Swift, nowy katalog → `tabela-08.mjs`), P-121 (1) (`powtorzenieLicznika`), P-111 (3) (stan v2), P-103 (`karencjaDo`), P-122 (b) (pakiety). Specyfikacja: `oczko-warsztat/05-architekt/2026-10-26-fix3/E2-dowody.md` §3 „Dla 08”, ADR-0002 (7), 0007, 0008 (8A/8S/8R/3′/6′), 0009, 0010, 0016, 0020 (5′); `docs/architektura/moduly.md` (porty, stan v2, czas, konfiguracja), `dane.md:75–85`; `tests/wspolne/xctest-specyfikacja.md`, `tests/wspolne/wzorce.json`; `docs/jakosc/e4-przekazanie.md` („Dla roli 08”, DS-02).
 
-## Stan: E1 3A i 3B zakończone → punkt kontrolny STOP po 3B (P-129 Q1a); 3A przyjęte jako P-130
-3A (44b73e5…11b21b8): dziennik 8R/8S i `blad` (3′), SQL fix-3, ZIP `za_duze`, `CzasWTle` z sygnałem + `przywrocKopie`, `powtorzenieLicznika`, `expo-crypto`. 3B (e9d8e0a, 36a3da4): pakiet Swift `modules/oczko-reguly` (reguły, dekoder stanu v2, rdzeń dziennika) z `swift test` jako bramką CI, kontrola Swift i stałe z konfiguracji; D1 stan v1 → v2. `npm run verify` kod 0, **1512/1512**; CI na 36a3da4: Linux, swift-test, build iOS zielone. Dowody: `oczko-warsztat/08-programista/2026-10-26-partia3/punkt-kontrolny-3A.md`, `punkt-kontrolny-3B.md`. Następny krok: 3C (moduły Expo i cele: widget z intencją, dziennik, czas w tle z SHA-256 natywnie (P-130), zegarek).
+## Stan: E2 — partia 3 zakończona → STOP E2 (P-128–P-131)
+3A (44b73e5…11b21b8) i 3B (e9d8e0a, 36a3da4) przyjęte (P-130, P-131). 3C (70699b2…1108964): decyzja intencji ±1 w pakiecie Swift, moduł `oczko-dziennik-plus` z Live Activity, intencją, SHA-256 natywnie (P-130) i łączem zegarka, cel widget i watch, moduł `oczko-czas-w-tle`, adaptery TS; minimum iOS 18.0. 3D: Sklep na expo-iap (bbd8827), magazyn plików i skrót wstrzykiwany do archiwum, Zegar, Haptyka, EkranAktywny (80e4658), odświeżenie LA i zegarka po COMMIT (b4f18d0). 3E: pomiar w Node, reszta „do urządzenia”. `npm run verify` kod 0, **1553/1553**; CI na 43a02b7: Linux, swift-test, build iOS z kontrolą celów natywnych zielone. Dowody: `oczko-warsztat/08-programista/2026-10-26-partia3/E2-dowody.md`, `pomiary-3E.md`. Następny krok (po akceptacji): partia 4 — ekrany.
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -90,3 +90,4 @@ Poza partią 3 (lista do przekazania): ekrany (partia 4), `przelicz`/`rozmiarUS`
 - 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1449/1449, akceptacja 98 (5 asercji), plan 3A–3E, Q1–Q8; STOP do koordynatora. Odpowiedź: P-129.
 - 2026-10-26: E1 3A (A1–A8); punkt kontrolny STOP. Odpowiedź: P-130 (SHA-256 natywnie w 3C).
 - 2026-10-26: E1 3B (B1–B4) + D1; punkt kontrolny STOP.
+- 2026-10-26: E1 3C (C1–C5), 3D (D2–D4), 3E; E2 — verify 1553/1553; STOP E2.
