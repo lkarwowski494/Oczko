@@ -24,7 +24,7 @@ Opcja A.
 | `expo-keep-awake` 57.0.2 | F-10 | `isIdleTimerDisabled` w Swift |
 | `expo-image-picker` 57.0.20 | F-16, F-24 (aparat, zdjęcia) | `expo-camera` (własny ekran aparatu — niepotrzebny) |
 | `expo-document-picker` 57.0.3 | F-24 (Pliki), F-32 (import archiwum) | — |
-| `expo-sharing` 57.0.24 | F-32 eksport, F-53 karta, F-57 zgłoszenie | — |
+| `expo-sharing` 57.0.23 (08 partia 4, 2026-10-26: 57.0.24 z 2026-10-21 miała < 14 dni, P-036; 57.0.23 z 2026-10-12 = `bundledNativeModules` SDK 57) | F-32 eksport, F-53 karta, F-57 zgłoszenie | — |
 | `expo-store-review` 57.0.3 | BR-DAN-012 (prośba o ocenę) | własny `SKStoreReview` w Swift |
 | `expo-localization` 57.0.2 | 35 lokalizacji (NFR-JEZ-001; mechanizm bez biblioteki: ADR-0017, wzór z Treningu) | — |
 | `expo-router` 57.0.24 z wymaganymi `react-native-screens` 4.26, `react-native-safe-area-context` 5.7, `expo-linking` 57.0.11, `expo-constants` 57.0.20 (wiersz roli 08, P-114 Q1a) | nawigacja ekranów (warstwa 4); do niej korzeń `app/_layout.tsx` bez treści | `index.ts` z `registerRootComponent` i decyzja przy ekranach (odrzucone: jak Trening i zielony build iOS) |
