@@ -98,9 +98,12 @@ jobs:
           APP=$(ls -d build/Build/Products/Release-iphonesimulator/*.app | head -1)
           # Widżet osadzony i z kodem Live Activity; intencja i moduł w aplikacji (nazwy typów Swift w metadanych binarek)
           test -d "$APP/PlugIns/OczkoWidget.appex"
-          strings -a "$APP/PlugIns/OczkoWidget.appex/OczkoWidget" | grep -q OczkoAktywnosc || { echo "::error::widżet bez OczkoAktywnosc"; exit 1; }
-          strings -a "$APP/$(basename "$APP" .app)" | grep -q OczkoStuknij || { echo "::error::aplikacja bez intencji OczkoStuknij"; exit 1; }
-          strings -a "$APP/$(basename "$APP" .app)" | grep -q IntencjaEkranuBlokady || { echo "::error::aplikacja bez modułu OczkoDziennikPlus"; exit 1; }
+          # Do pliku, nie potokiem: grep -q kończy wcześnie, strings dostaje SIGPIPE i przy pipefail krok pada (przebieg 40262653714)
+          strings -a "$APP/PlugIns/OczkoWidget.appex/OczkoWidget" > "$RUNNER_TEMP/widget.txt"
+          strings -a "$APP/$(basename "$APP" .app)" > "$RUNNER_TEMP/aplikacja.txt"
+          grep -q OczkoAktywnosc "$RUNNER_TEMP/widget.txt" || { echo "::error::widżet bez OczkoAktywnosc"; exit 1; }
+          grep -q OczkoStuknij "$RUNNER_TEMP/aplikacja.txt" || { echo "::error::aplikacja bez intencji OczkoStuknij"; exit 1; }
+          grep -q IntencjaEkranuBlokady "$RUNNER_TEMP/aplikacja.txt" || { echo "::error::aplikacja bez modułu OczkoDziennikPlus"; exit 1; }
           echo "Cele natywne: widżet, intencja i moduł w binarkach" >> "$GITHUB_STEP_SUMMARY"
       - name: Zapis aplikacji (do ponownego użycia przez części)
         run: |
