@@ -36,7 +36,7 @@ type PortBazyTx = Pick<PortNode, 'run' | 'all'>;
 describe('F1 schemat v1: skrzynka zmian iCloud (P-221 Q5a)', () => {
   test('tabele stanu synchronizacji: jeden wiersz, domyślnie wyłączona, bez stanu silnika; skrzynka pusta', async () => {
     const b = await baza();
-    expect(await b.all('SELECT id, wlaczona, wejscie, stan_silnika FROM synchronizacja')).toEqual([{ id: 1, wlaczona: 0, wejscie: 0, stan_silnika: null }]);
+    expect(await b.all('SELECT id, wlaczona, wejscie, stan_silnika, nr_zmiany FROM synchronizacja')).toEqual([{ id: 1, wlaczona: 0, wejscie: 0, stan_silnika: null, nr_zmiany: 0 }]);
     expect(await skrzynka(b)).toEqual([]);
     b.zamknij();
   });
@@ -113,6 +113,22 @@ describe('F1 schemat v1: skrzynka zmian iCloud (P-221 Q5a)', () => {
     expect(s).toContainEqual({ encja: 'rysunek', klucz: '["w1",0]', usuniete: 0 });
     expect(s).toContainEqual({ encja: 'plik', klucz: sha, usuniete: 0 });
     expect(s.filter((z) => z.encja === 'ustawienie')).toEqual([{ encja: 'ustawienie', klucz: 'okno_uczciwe_zasady_widziane', usuniete: 0 }]);
+    b.zamknij();
+  });
+});
+
+describe('F1 schemat v1: numer zmiany (potwierdzenie wysyłki nie kasuje nowszej zmiany)', () => {
+  test('każda zmiana dostaje kolejny nr; potwierdzenie starego nr (DELETE … AND nr <= ?) zostawia wpis zmieniony po wysłaniu', async () => {
+    const b = await baza();
+    await wlacz(b);
+    await b.run('INSERT INTO projekt (id, nazwa, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?)', ['p1', 'A', T, T, T]);
+    const [wyslany] = await b.all<{ nr: number }>("SELECT nr FROM zmiana_icloud WHERE encja = 'projekt' AND klucz = 'p1'");
+    await b.run('UPDATE projekt SET nazwa = ?, zmieniono_ms = ? WHERE id = ?', ['B', T + 1, 'p1']); // zmiana po wysłaniu, przed potwierdzeniem
+    const [nowy] = await b.all<{ nr: number }>("SELECT nr FROM zmiana_icloud WHERE encja = 'projekt' AND klucz = 'p1'");
+    expect(nowy.nr).toBeGreaterThan(wyslany.nr);
+    await b.run("DELETE FROM zmiana_icloud WHERE encja = 'projekt' AND klucz = 'p1' AND nr <= ?", [wyslany.nr]); // potwierdzenie starej wersji
+    expect(await skrzynka(b)).toEqual([{ encja: 'projekt', klucz: 'p1', usuniete: 0 }]);
+    expect(await b.all('SELECT nr_zmiany FROM synchronizacja')).toEqual([{ nr_zmiany: nowy.nr }]);
     b.zamknij();
   });
 });
