@@ -44,7 +44,7 @@ Wejście dla roli 07 (werdykt gotowości). Niespełnienie któregokolwiek blokuj
 - BR-ZAK-002, NFR-PRY-001, BR-ZAK-004: obietnica prywatności i polityka sklepu (OG-04).
 - NFR-ZEG-001: rozbieżność zegarka (jeśli zegarek jest w wydaniu).
 - BR-KAL-001–BR-KAL-008, BR-SLO-001: reguły krytyczne i treść krytyczna bez przeglądu roli 06 (RD-01–RD-04, RD-07, RD-08, RD-10; RYZ-03).
-- BR-WZR-001–BR-WZR-006: funkcja wzoru bez porównania z zastrzeżeniami patentów (P-024, OG-07).
+- BR-WZR-001–BR-WZR-005, BR-WZR-007, BR-WZR-008 i rozszerzenie „Udostępnij do Oczka” (ADR-0011): funkcja wzoru bez porównania z zastrzeżeniami patentów albo poza ograniczeniami projektowymi 1–6 (P-024, OG-07, P-218). BR-WZR-006 (F-30) jest poza zakresem (NIE).
 - OG-05: opis w sklepie wymienia tylko funkcje obecne w wydaniu.
 
 ## E0: Rama i ograniczenia
