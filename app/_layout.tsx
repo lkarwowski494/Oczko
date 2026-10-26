@@ -15,6 +15,7 @@ import { kompozycjaLicznika } from '../src/kompozycja/licznik';
 import { preferencje } from '../src/kompozycja/preferencje';
 import { useKolory } from '../src/ekrany/motyw';
 import { zainstalujObslugeBledow } from '../src/kompozycja/bledy-js';
+import { paneleE2e } from '../src/platforma/tryb-e2e';
 import { wKolejce } from '../src/przypadki-uzycia/kolejka';
 import { zapiszBlad } from '../src/dane/repozytoria/bledy';
 
@@ -61,7 +62,7 @@ export default function Korzen(): React.ReactElement {
   }, [proba]);
   if (faza.rodzaj === 'awaryjny') return <EkranAwaryjnyZJezykiem powod={faza.powod} naNormalnie={() => { ustaw({ rodzaj: 'czeka' }); ustawProbe((n) => n + 1); }} />;
   // Build E2E: znacznik po zapisie „start w toku” (scenariusz 09 czeka na niego, zanim zabije proces; E2E 40306542928).
-  if (faza.rodzaj === 'awaria-e2e') return <View testID="e2e-awaria-startu" style={{ flex: 1, backgroundColor: k.papier }} />;
+  if (faza.rodzaj === 'awaria-e2e') return paneleE2e ? <paneleE2e.ZnacznikAwarii kolor={k.papier} /> : <View style={{ flex: 1, backgroundColor: k.papier }} />;
   if (faza.rodzaj !== 'gotowe') return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   const a = faza.a;
   return (

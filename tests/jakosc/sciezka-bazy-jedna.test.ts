@@ -29,7 +29,8 @@ test('ścieżki danych liczone tylko przez sciezkiDanych: kontener (start normal
 test('literał oczko.db tylko w sciezki.ts (stała PLIK_BAZY); archiwum, surowa kopia i panel SHA E2E biorą stałą', () => {
   expect(gdzie(TS, /[/'"`]oczko\.db['"`-]/)).toEqual(['src/dane/baza/sciezki.ts']);
   expect(readFileSync(join(KORZEN, 'src/dane/baza/sciezki.ts'), 'utf8')).toMatch(/export const PLIK_BAZY = 'oczko\.db';/);
-  expect(gdzie(TS, /\bPLIK_BAZY\b/)).toEqual(['app/ustawienia.tsx', 'src/dane/archiwum.ts', 'src/dane/baza/sciezki.ts', 'src/dane/kopia-ratunkowa.ts'].sort());
+  // P-238: panel SHA buildu E2E przeniesiony z app/ustawienia.tsx do modułu ładowanego warunkowo (src/kompozycja/e2e/panele.tsx).
+  expect(gdzie(TS, /\bPLIK_BAZY\b/)).toEqual(['src/dane/archiwum.ts', 'src/dane/baza/sciezki.ts', 'src/dane/kopia-ratunkowa.ts', 'src/kompozycja/e2e/panele.tsx'].sort());
 });
 test('Swift nie otwiera bazy (bez SQLite3 i bez ścieżki oczko.db)', () => {
   expect(gdzie(SWIFT, /import SQLite3|sqlite3_open|oczko\.db/)).toEqual([]);

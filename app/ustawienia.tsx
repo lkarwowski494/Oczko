@@ -2,7 +2,7 @@
 // Eksport → arkusz udostępniania; import → wybór pliku, liczności przed decyzją, „scal” albo „zastąp” (P-091 (6a)); wynik w treści ekranu.
 // Panele `e2e-*` tylko w buildzie E2E (bez t(), e2e/README.md).
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Import } from '../src/ekrany/Dane';
 import { Ustawienia } from '../src/ekrany/Ustawienia';
@@ -11,19 +11,15 @@ import type { DniNaLiscie } from '../src/ekrany/ListaProjektow';
 import type { Licznosci, Manifest, TrybImportu } from '../src/domena/porty';
 import { ADRESY } from '../src/kompozycja/adresy';
 import { licznosciTekst, wynikScalenia } from '../src/kompozycja/dane';
-import { plikiE2e } from '../src/kompozycja/e2e-pliki';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { stanListy } from '../src/kompozycja/projekty';
 import { systemAplikacji } from '../src/kompozycja/system';
-import { E2E } from '../src/platforma/tryb-e2e';
+import { E2E, paneleE2e } from '../src/platforma/tryb-e2e';
 import { udostepnijPlik, wybierzArchiwum } from '../src/platforma/system-plikow-uzytkownika';
 import { eksportuj, importuj } from '../src/przypadki-uzycia/archiwum';
 import { usunWszystkieDane } from '../src/przypadki-uzycia/projekt';
 import { widokProjektow } from '../src/przypadki-uzycia/widok-projektow';
-import { stanPlikuBazy } from '../src/dane/pliki/magazyn';
-import { PLIK_BAZY } from '../src/dane/baza/sciezki';
-import { polacz } from '../src/dane/pliki/system';
 
 type Dane =
   | { rodzaj: 'eksport'; licznosci: string }
@@ -42,9 +38,6 @@ export default function EkranUstawien(): React.ReactElement {
   const [dostep, ustawDostep] = useState(kontener.dostep.stan());
   const [dane, ustawDane] = useState<Dane>(null);
   const [ostatniEksport, ustawOstatni] = useState<string | null>(null);
-  const pliki = plikiE2e(kontener.katalogDanych);
-  const [zapisane, ustawZapisane] = useState(() => (E2E ? pliki.ile() : 0));
-  const [sha, ustawSha] = useState<{ sha: string; walBajty: number } | null>(null);
   const wybor = useRef<((t: TrybImportu | 'anuluj') => void) | null>(null);
   const { import: plikImportu } = useLocalSearchParams<{ import?: string }>(); // plik `.oczko` otwarty z Plików (ADR-0004, +native-intent)
 
@@ -54,8 +47,6 @@ export default function EkranUstawien(): React.ReactElement {
       const ch = z.zegar.teraz();
       if (w.ok) ustawDni(stanListy(w.wartosc, { zapytanie: '', j: kontener.j, terazMs: ch.ms, strefa: ch.strefa }).dni);
     });
-    // ADR-0019, P-203 (kontrakt 07): SHA-256 pary `.db` + `-wal` i rozmiar `-wal` BEZ checkpointu (scenariusz 09 sprawdza niepusty WAL).
-    if (E2E) void stanPlikuBazy(polacz(kontener.katalogDanych, PLIK_BAZY)).then(ustawSha);
     return koniec;
   }, [kontener, z]));
 
@@ -95,20 +86,10 @@ export default function EkranUstawien(): React.ReactElement {
         wynik={dane.rodzaj === 'wynik' ? dane.tekst : undefined}
         naScal={() => wybor.current?.('scal')} naZastap={() => wybor.current?.('zastap')} naAnuluj={zamknijDane} />;
 
-  const panelE2e = E2E ? (
-    <View style={{ gap: 8 }}>
-      <Pressable accessibilityRole="button" testID="e2e-pliki-zachowaj-eksport"
-        onPress={() => { if (ostatniEksport) ustawZapisane(pliki.zachowaj(ostatniEksport)); }}>
-        <Text>Test files: keep last export</Text>
-      </Pressable>
-      {sha ? <Text testID="e2e-sha-bazy" selectable>{sha.sha}</Text> : null /* dopiero po policzeniu (copyTextFrom w scenariuszu 09) */}
-      {sha ? <Text testID="e2e-wal-bajty" selectable>{String(sha.walBajty)}</Text> : null}
-      <Text testID="e2e-pliki-stan">{`Saved: ${zapisane} file${zapisane === 1 ? '' : 's'}`}</Text>
-      <Pressable accessibilityRole="button" testID="e2e-pliki-importuj-ostatni" onPress={() => { const p = pliki.ostatni(); if (p) void importZ(p); }}>
-        <Text>Test files: import last kept</Text>
-      </Pressable>
-    </View>
-  ) : null;
+  // Build E2E (P-238): panel z modułu ładowanego warunkowo; SHA pary `.db` + `-wal` liczy panel przy każdym wejściu (P-203).
+  const panelE2e = paneleE2e
+    ? <paneleE2e.PanelUstawien katalogDanych={kontener.katalogDanych} ostatniEksport={ostatniEksport} naImportuj={(p) => void importZ(p)} />
+    : null;
 
   return (
     <Bezpieczny>

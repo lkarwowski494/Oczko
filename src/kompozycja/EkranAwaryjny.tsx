@@ -1,14 +1,14 @@
 // Ekran trybu awaryjnego w kompozycji (ADR-0019): „Zapisz kopię danych” (archiwum bez migracji, liczności, arkusz udostępniania poza E2E),
-// „Spróbuj normalnie”, „Zgłoś problem” (diagnostyka ADR-0018, P-194 Q4a: podgląd i arkusz udostępniania bez zapisu do bazy). Panel `e2e-sha-bazy` (bez t()) tylko w buildzie E2E.
+// „Spróbuj normalnie”, „Zgłoś problem” (diagnostyka ADR-0018, P-194 Q4a: podgląd i arkusz udostępniania bez zapisu do bazy). Panel SHA (bez t()) tylko w buildzie E2E — moduł z `paneleE2e` (P-238).
 import React, { useEffect, useMemo, useState } from 'react';
-import { Platform, Text } from 'react-native';
+import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import { TrybAwaryjny, type PowodTrybuAwaryjnego } from '../ekrany/TrybAwaryjny';
 import { ZglosProblem, type PoleDiagnostyki } from '../ekrany/ZglosProblem';
 import { systemAplikacji } from './system';
 import { diagnostykaAwaryjna } from './zgloszenie-awaryjne';
 import type { Tlumacz } from '../ekrany/wspolne';
-import { E2E } from '../platforma/tryb-e2e';
+import { E2E, paneleE2e } from '../platforma/tryb-e2e';
 import { udostepnijPlik } from '../platforma/system-plikow-uzytkownika';
 import { usunPlik } from '../dane/pliki/system';
 import { licznosciTekst } from './dane';
@@ -42,7 +42,7 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
           system: `iOS ${String(Platform.Version)}`, model: Constants.platform?.ios?.model ?? Constants.deviceName ?? '?',
         },
       }).then(ustawZgloszenie)}
-      panelE2e={E2E && sha ? <><Text testID="e2e-sha-bazy" selectable>{sha.sha}</Text><Text testID="e2e-wal-bajty" selectable>{String(sha.walBajty)}</Text></> : null}
+      panelE2e={paneleE2e ? <paneleE2e.PanelAwaryjny sha={sha && sha.sha ? sha : null} /> : null /* build E2E (P-238) */}
     />
   );
 }

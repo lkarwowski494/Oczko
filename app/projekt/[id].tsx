@@ -2,15 +2,14 @@
 // Potwierdzenia „Make another” i „Delete …” to alerty systemowe (design-spec „Usuwanie”, słownik „Delete {object}”); termin w treści = dzień
 // usunięcia + KOSZ_DNI. Po zapisie: ekran blokady i licznik (`poZmianie` / `poUsunieciu`, C2), ogłoszenie VoiceOver, model od nowa.
 import React, { useCallback, useState } from 'react';
-import { Alert, Linking, Pressable, Text, View } from 'react-native';
+import { Alert, Linking, View } from 'react-native';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Projekt } from '../../src/ekrany/Projekt';
 import { GrupaZdjec, type Miniatura } from '../../src/ekrany/Zdjecia';
-import { zdjecieTestowe } from '../../src/kompozycja/e2e-zdjecie';
 import { zaleznosciObrazu } from '../../src/kompozycja/obrazy-aplikacji';
 import { zdjecieBezMetadanych } from '../../src/kompozycja/zdjecie-bez-metadanych';
 import { usunPlik } from '../../src/dane/pliki/system';
-import { E2E } from '../../src/platforma/tryb-e2e';
+import { paneleE2e } from '../../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../../src/platforma/zdjecia';
 import { dodajZdjecie, zdjecia } from '../../src/przypadki-uzycia/zdjecia';
 import { useKolory } from '../../src/ekrany/motyw';
@@ -76,11 +75,7 @@ export default function EkranProjektu(): React.ReactElement {
   const grupaZdjec = (
     <GrupaZdjec t={t} miniatury={miniatury} naWybierz={(zr) => void wybierzZdjecie(zr)}
       naOtworz={(i) => router.push({ pathname: '/zdjecie', params: { projekt: w.id, i: String(i) } })}
-      panelE2e={E2E ? (
-        <Pressable accessibilityRole="button" testID="e2e-zdjecie-testowe" onPress={() => void dodajPlik(zdjecieTestowe(z.katalogi.tymczasowy))}>
-          <Text>Test photo (EXIF GPS)</Text>
-        </Pressable>
-      ) : undefined} />
+      panelE2e={paneleE2e ? <paneleE2e.PanelZdjecia katalogTymczasowy={z.katalogi.tymczasowy} naPlik={(p) => void dodajPlik(p)} /> : undefined} />
   );
   const licznikW = (lid: string) => stan.czesci.flatMap((c) => c.liczniki ?? []).find((l) => l.id === lid);
   return (

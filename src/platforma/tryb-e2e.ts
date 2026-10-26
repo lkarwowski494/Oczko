@@ -7,6 +7,13 @@ import type { Zegar } from '../domena/porty';
 import { zegarSystemu } from './zegar';
 
 export const E2E = process.env.EXPO_PUBLIC_E2E === '1';
+/**
+ * Panele buildu E2E (P-238): `require` w gałęzi warunku na zmiennej w tym samym module — Expo wstawia wartość EXPO_PUBLIC_*, Metro składa stałą
+ * i bez EXPO_PUBLIC_E2E=1 moduł paneli (napisy „Test …”, testID `e2e-…`) nie trafia do bundla. Warunek z importowanej stałej `E2E` tego nie robi.
+ */
+export type PaneleE2e = typeof import('../kompozycja/e2e/panele');
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- ładowanie warunkowe (P-238), jak expo-iap w sklep.ts
+export const paneleE2e: PaneleE2e | null = process.env.EXPO_PUBLIC_E2E === '1' ? (require('../kompozycja/e2e/panele') as PaneleE2e) : null;
 export const ZEGAREK_SZTUCZNY = E2E && process.env.EXPO_PUBLIC_WATCH_FAKE === '1';
 
 function argument(klucz: string): string | null {

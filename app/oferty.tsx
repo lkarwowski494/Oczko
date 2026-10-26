@@ -1,13 +1,12 @@
 // Trasa „/oferty”: ekran ofert (F-35; KP-13: tylko z komunikatu limitu, z Ustawień i z okna „Uczciwe zasady”). Ceny ze sklepu (KP-09).
 // Po zakupie albo przywróceniu: ponowna decyzja dostępu i przeładowanie licznika (limit znika przy Pro). Panel `e2e-sklep-wygas` tylko w buildzie E2E.
 import React, { useEffect, useState } from 'react';
-import { Pressable, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Oferty, type ProduktyOfert } from '../src/ekrany/Oferty';
 import { ADRESY, FAMILY_SHARING } from '../src/kompozycja/adresy';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { systemAplikacji } from '../src/kompozycja/system';
-import { E2E } from '../src/platforma/tryb-e2e';
+import { paneleE2e } from '../src/platforma/tryb-e2e';
 
 export default function EkranOfert(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
@@ -33,12 +32,7 @@ export default function EkranOfert(): React.ReactElement {
         naOtworzAdres={(u) => systemAplikacji.otworzAdres(u)}
         naZamknij={() => router.back()}
       />
-      {E2E && wygas && (
-        // Panel buildu E2E bez t() (e2e/README.md, jak „Test store” Treningu).
-        <Pressable accessibilityRole="button" onPress={() => { wygas(); void poZmianie(); }} testID="e2e-sklep-wygas" style={{ padding: 12 }}>
-          <Text>Test store: expire access</Text>
-        </Pressable>
-      )}
+      {paneleE2e && wygas && <paneleE2e.PanelSklepu naWygas={() => { wygas(); void poZmianie(); }} /> /* build E2E (P-238) */}
     </>
   );
 }
