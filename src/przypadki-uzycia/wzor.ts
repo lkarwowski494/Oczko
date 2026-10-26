@@ -123,6 +123,7 @@ export async function dodajWzor(z: ZaleznosciWzoru, w: { projektId: string; nazw
   try {
     const spr = await z.konwersja.sprawdzPdf(pdf.wartosc.sciezka);
     if (!spr.ok) return spr;
+    const strony = Number.isInteger(spr.wartosc.strony) && spr.wartosc.strony > 0 ? spr.wartosc.strony : null;
     const zapisPdf = await z.magazyn.zapisz(pdf.wartosc.sciezka, 'pdf');
     if (!zapisPdf.ok) return zapisPdf;
     const zapisOryg = zr.rodzaj === 'word' ? await z.magazyn.zapisz(zr.plik.sciezka, 'docx') : null;
@@ -136,8 +137,8 @@ export async function dodajWzor(z: ZaleznosciWzoru, w: { projektId: string; nazw
       await wstaw(zapisPdf.wartosc, 'pdf');
       if (zapisOryg) await wstaw(zapisOryg.wartosc, 'docx');
       const wzorId = z.id.nowy();
-      await tx.run('INSERT INTO wzor (id, projekt_id, nazwa, zrodlo, pdf_sha256, oryginal_sha256, adres, zmieniono_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [wzorId, w.projektId, nazwa, ZRODLO_W_BAZIE[zr.rodzaj], zapisPdf.wartosc.sha256, zapisOryg?.wartosc.sha256 ?? null, adres, teraz]);
+      await tx.run('INSERT INTO wzor (id, projekt_id, nazwa, zrodlo, pdf_sha256, oryginal_sha256, adres, strony, zmieniono_ms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [wzorId, w.projektId, nazwa, ZRODLO_W_BAZIE[zr.rodzaj], zapisPdf.wartosc.sha256, zapisOryg?.wartosc.sha256 ?? null, adres, strony, teraz]); // strony: P-252
       return { ok: true, wartosc: { wzorId } };
     });
   } finally {
@@ -145,16 +146,16 @@ export async function dodajWzor(z: ZaleznosciWzoru, w: { projektId: string; nazw
   }
 }
 
-export type WzorNaLiscie = { wzorId: string; nazwa: string; zrodlo: string; maZnacznik: boolean };
+export type WzorNaLiscie = { wzorId: string; nazwa: string; zrodlo: string; maZnacznik: boolean; strony: number | null };
 /** Wzory projektu poza koszem (P-220 W9b): po nazwie bez wielkości liter, potem id. */
 export function listaWzorow(z: ZaleznosciPlikow, w: { projektId: string }): Promise<Wynik<WzorNaLiscie[]>> {
   return operacjaZapisu(z, 'listaWzorow', async (tx) => ({ ok: true, wartosc: await wzoryProjektu(tx, w.projektId) }));
 }
 async function wzoryProjektu(tx: PortBazy, projektId: string): Promise<WzorNaLiscie[]> {
   const r = await wiersze(tx.all(
-    "SELECT id, nazwa, zrodlo, json_extract(znacznik, '$.licznik_id') IS NOT NULL AS ma FROM wzor WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY nazwa COLLATE NOCASE, id",
+    "SELECT id, nazwa, zrodlo, strony, json_extract(znacznik, '$.licznik_id') IS NOT NULL AS ma FROM wzor WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY nazwa COLLATE NOCASE, id",
     [projektId]), 'listaWzorow');
-  return r.map((x) => ({ wzorId: tekst(x, 'id'), nazwa: tekst(x, 'nazwa'), zrodlo: tekst(x, 'zrodlo'), maZnacznik: liczba(x, 'ma') === 1 }));
+  return r.map((x) => ({ wzorId: tekst(x, 'id'), nazwa: tekst(x, 'nazwa'), zrodlo: tekst(x, 'zrodlo'), maZnacznik: liczba(x, 'ma') === 1, strony: liczbaLubNull(x, 'strony') }));
 }
 
 /**

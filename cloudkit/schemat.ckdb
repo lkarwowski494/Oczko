@@ -192,6 +192,7 @@ DEFINE SCHEMA
         zmieniono_ms    INT64,
         usunieto_ms     INT64,
         obroty          STRING,
+        strony          INT64,
         GRANT WRITE TO "_creator",
         GRANT CREATE TO "_icloud",
         GRANT READ TO "_world"

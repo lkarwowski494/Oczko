@@ -56,8 +56,8 @@ test('PDF z Plików → jeden wzór `pdf` z nazwą, wiersz `plik` i plik w magaz
   expect(w.ok).toBe(true);
   expect(k.wywolania).toEqual([]);
   expect(k.sprawdzone).toEqual([p.sciezka]);
-  expect(await jeden(s.baza, 'SELECT projekt_id, nazwa, zrodlo, pdf_sha256, oryginal_sha256, adres, usunieto_ms FROM wzor'))
-    .toEqual({ projekt_id: 'p1', nazwa: 'Harbor', zrodlo: 'pdf', pdf_sha256: sha256(PDF), oryginal_sha256: null, adres: null, usunieto_ms: null });
+  expect(await jeden(s.baza, 'SELECT projekt_id, nazwa, zrodlo, pdf_sha256, oryginal_sha256, adres, usunieto_ms, strony FROM wzor'))
+    .toEqual({ projekt_id: 'p1', nazwa: 'Harbor', zrodlo: 'pdf', pdf_sha256: sha256(PDF), oryginal_sha256: null, adres: null, usunieto_ms: null, strony: 2 }); // strony: P-252
   expect(await jeden(s.baza, 'SELECT rozszerzenie, bajty FROM plik')).toEqual({ rozszerzenie: 'pdf', bajty: PDF.length });
   expect(readdirSync(s.magazyn.katalog)).toEqual([`${sha256(PDF)}.pdf`]);
 });

@@ -90,8 +90,12 @@ export default function EkranProjektu(): React.ReactElement {
     router.push({ pathname: '/wzor', params });
   };
   const RODZ = { pdf: 'wzor.rodzaj_pdf', obraz: 'wzor.rodzaj_zdjecie', www: 'wzor.rodzaj_strona', word: 'wzor.rodzaj_word' } as const;
+  const opisWzoru = (x: WzorNaLiscie) => { // „PDF · 6 pages” (W8); liczba stron z importu, P-252 — bez niej sam rodzaj
+    const rodzaj = t(RODZ[x.zrodlo as keyof typeof RODZ] ?? 'wzor.rodzaj_pdf');
+    return x.strony ? t('wzor.wiersz_opis', { rodzaj, strony: t('wzor.strony', { count: x.strony }) }) : rodzaj;
+  };
   const grupaWzorow = (
-    <GrupaWzorow t={t} wzory={wzory.map((x) => ({ wzorId: x.wzorId, nazwa: x.nazwa, opis: t(RODZ[x.zrodlo as keyof typeof RODZ] ?? 'wzor.rodzaj_pdf') }))}
+    <GrupaWzorow t={t} wzory={wzory.map((x) => ({ wzorId: x.wzorId, nazwa: x.nazwa, opis: opisWzoru(x) }))}
       oczekujace={kontener.wzor.k.stan().czekaSiec.filter((x) => x.projektId === w.id).map((x) => ({ id: x.id, nazwa: x.nazwa, stan: 'siec' as const }))}
       skaner={kontener.wzor.platforma.skanerDostepny()} naOtworz={(wid) => void doWzoru({ id: wid })} naDodaj={(zr) => void doWzoru({ dodaj: zr })}
       naUsunOczekujacy={(zid) => void kontener.wzor.k.potwierdzBlad(zid).then(wczytaj)} />

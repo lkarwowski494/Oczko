@@ -139,6 +139,7 @@ CREATE TABLE wzor (                                   -- F-24, F-25, F-26, F-55 
   zmieniono_ms INTEGER NOT NULL,
   usunieto_ms INTEGER,                                              -- usunięty z projektu do kosza (P-220 N4, P-229): przywracany, trwale usunięty przy sprzątaniu po KOSZ_DNI (nagrobek dla iCloud, P-221 Q6a)
   obroty TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(obroty)),     -- obrót strony w widoku {"<strona>": 90|180|270} (P-246 S3a); plik wzoru bez zmian (P-218 (2)); synchronizowany z wzorem
+  strony INTEGER CHECK (strony IS NULL OR strony > 0),               -- liczba stron zapisana przy imporcie (P-252); NULL = nieznana
   CHECK (pdf_sha256 IS NOT NULL OR (zrodlo = 'word' AND oryginal_sha256 IS NOT NULL))
 ) STRICT;
 CREATE INDEX wzor_projekt ON wzor(projekt_id);

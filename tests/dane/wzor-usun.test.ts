@@ -32,8 +32,8 @@ describe('listaWzorow i ostatnio oglądany wzór (P-220 W2a, W9b; F-49)', () => 
   test('wzory projektu po nazwie (bez wielkości liter), z rodzajem i znacznikiem; usunięte pominięte', async () => {
     const { s } = await zDwomaWzorami();
     expect(await listaWzorow(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: [
-      { wzorId: 'w2', nazwa: 'ażurowy brzeg', zrodlo: 'pdf', maZnacznik: false },
-      { wzorId: 'w1', nazwa: 'Wzór', zrodlo: 'pdf', maZnacznik: true },
+      { wzorId: 'w2', nazwa: 'ażurowy brzeg', zrodlo: 'pdf', maZnacznik: false, strony: null }, // strony: P-252, NULL = nieznana
+      { wzorId: 'w1', nazwa: 'Wzór', zrodlo: 'pdf', maZnacznik: true, strony: null },
     ] });
     await usunWzor(s.z, { wzorId: 'w2' });
     expect(await listaWzorow(s.z, { projektId: 'p1' })).toMatchObject({ ok: true, wartosc: [{ wzorId: 'w1' }] });
