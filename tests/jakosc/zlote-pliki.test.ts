@@ -132,11 +132,12 @@ describe('dziennik +1 (dziennik-plus-*.jsonl, ADR-0008, Z07-11)', () => {
     const nowe = czytajDziennik(fs.readFileSync(path.join(KAT, 'dziennik-plus-nieznane-pole.jsonl'), 'utf8'), typy.ZdarzenieWejsciowe).przyjete[1];
     expect(Object.keys(nowe).filter(k => !(k in (typy.ZdarzenieWejsciowe as { pola: object }).pola)).sort()).toEqual(['wersja', 'znaczenie']);
   });
-  test('dziennik-plus-poprawny: łańcuch rodziców (każde zdarzenie wskazuje poprzednie własne id — propozycja Z07-11 (1), M-10) i przejście przez północ', () => {
+  test('dziennik-plus-poprawny: łańcuch rodziców (każde zdarzenie wskazuje poprzednie własne id — propozycja Z07-11 (1), M-10) i przejście przez północ; pro false i true', () => {
     const w = czytajDziennik(fs.readFileSync(path.join(KAT, 'dziennik-plus-poprawny.jsonl'), 'utf8'), typy.ZdarzenieWejsciowe).przyjete;
     for (let i = 1; i < w.length; i++) expect(w[i].rodzice).toEqual([w[i - 1].id]);
     expect(new Set(w.map(z => z.dzien))).toEqual(new Set(['2026-11-10', '2026-11-11']));
     expect(w.map(z => z.rodzaj)).toEqual(['plus', 'plus', 'plus', 'minus']);
+    expect(w.map(z => z.pro)).toEqual([false, false, true, false]); // obie wartości: kodowanie true w Swift (X-DZ-02) też sprawdzone (F07-12, P-125)
   });
   test('pułapki odczytu: uszkodzona linia w środku pomijana bez utraty reszty; ucięta tylko ostatnia; pusty plik = 0 linii', () => {
     const [a, b] = fs.readFileSync(path.join(KAT, 'dziennik-plus-poprawny.jsonl'), 'utf8').split('\n');

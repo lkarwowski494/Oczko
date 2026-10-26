@@ -12,7 +12,7 @@ Stan: rola 07, E3, 2026-10-25; **zatwierdzone przez rolę 05** w sesji fix 2026-
 ## Pliki
 | Plik | Typ | Co sprawdza | Oczekiwanie (wzorce.json) |
 |---|---|---|---|
-| `dziennik-plus-poprawny.jsonl` | `ZdarzenieWejsciowe` na linię | 3 × `plus` i `minus` z ekranu blokady, łańcuch rodziców (każde kolejne wskazuje poprzednie własne id — propozycja Z07-11 (1), M-10), przejście przez północ Europe/Warsaw (`dzien` = data zdarzenia) | 4 przyjęte, 0 odrzuconych, skrócenie do ostatniego id |
+| `dziennik-plus-poprawny.jsonl` | `ZdarzenieWejsciowe` na linię | 3 × `plus` i `minus` z ekranu blokady, łańcuch rodziców (każde kolejne wskazuje poprzednie własne id — propozycja Z07-11 (1), M-10), przejście przez północ Europe/Warsaw (`dzien` = data zdarzenia), obie wartości `pro` (linia 3: `true` — stuknięcie z Pro, P-111 (2); F07-12, P-125) | 4 przyjęte, 0 odrzuconych, skrócenie do ostatniego id |
 | `dziennik-plus-ucieta-linia.jsonl` | jw. | przerwany zapis: ostatnia linia ucięta, bez `\n` (ADR-0008 „Potwierdzenie”, R-023) | 2 przyjęte, linia 3 odrzucona i zgłoszona, skrócenie do ostatniej przyjętej |
 | `dziennik-plus-nieznane-pole.jsonl` | jw. | linia z wersji N+1 z polami `wersja`, `znaczenie` (Z07-11 (4), R-024) | przyjęta, nieznane pola pominięte (zatwierdzone przez 05: ADR-0008 (4)) |
 | `stan-ekranu-blokady-typowy.json` | `StanEkranuBlokady` | liczenie w toku, stoper sesji | zgodny ściśle z typem, < 4096 B |
