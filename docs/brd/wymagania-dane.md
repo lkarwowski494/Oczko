@@ -177,15 +177,21 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`. Zasady
 ### BR-DAN-011: Widoczny stan synchronizacji i zegarka
 - Przepływ: PR-15, PR-08
 - Dowód potrzeby: J-07; „On my ipad I have an error telling me that sync hasn’t updated to the cloud, but no help as to why or how to fix it.” (YarnBuddy, id8662495109); zegarek bez synchronizacji z telefonem (YarnBuddy, id8151431159) · ER-19
+- Wyjątek nazwany (P-193, P-195 Q1; ER-52, 2026-10-26): stan kolejki zegarka pokazuje zegarek, nie telefon — liczbę niewysłanych zmian zna pewnie tylko zegarek, bo kolejka jest po jego stronie (ADR-0009); telefon pokazywałby liczbę nieaktualną dokładnie wtedy, gdy zegarek nie odpowiada. Telefon pokazuje ostatni kontakt z zegarkiem.
 - Kryteria akceptacji:
   - Scenariusz: Synchronizacja wstrzymana
     - Zakładając, że synchronizacja iCloud jest włączona, a telefon nie ma sieci od 2 godzin
     - Gdy użytkownik otwiera stan danych
     - Wtedy widzi, kiedy była ostatnia udana synchronizacja, że czeka na sieć i że dane na telefonie są zapisane
-  - Scenariusz: Zegarek nie odpowiada
-    - Zakładając, że zegarek ma zmiany niewysłane do telefonu
+  - Scenariusz: Zegarek bez telefonu (ER-52)
+    - Zakładając, że zegarek ma 3 zmiany niewysłane do telefonu i nie ma z nim połączenia
+    - Gdy użytkownik patrzy na licznik na zegarku
+    - Wtedy pod liczbą widzi linię, że telefonu nie ma w pobliżu, a 3 zmiany są zapisane na zegarku
+    - Oraz linia znika, gdy telefon potwierdzi odbiór zmian (ADR-0009)
+  - Scenariusz: Ostatni kontakt z zegarkiem na telefonie (ER-52)
+    - Zakładając, że telefon ostatnio odebrał partię zmian z zegarka 2 godziny temu
     - Gdy użytkownik otwiera stan danych na telefonie
-    - Wtedy widzi, że zegarek ma zmiany czekające na połączenie, i co zrobić, żeby je przesłać
+    - Wtedy widzi czas ostatniego kontaktu z zegarkiem, bez liczby zmian czekających na zegarku
 
 ### BR-DAN-012: Prośba o ocenę i odnośnik „Oceń”
 - Przepływ: PR-15, PR-07
