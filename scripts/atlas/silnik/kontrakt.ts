@@ -182,6 +182,8 @@ export function walidujKarte(k: unknown, opcje: OpcjeWalidacji): BladKontraktu[]
   if (technika) karta.jezyki_gotowe.forEach((j, i) => { if (!(j in karta.terminy)) zgl('jezyk', `$.jezyki_gotowe[${i}]`, `język „${j}” bez wpisu w terminy`); });
   if (karta.rysunek && !karta.kroki) zgl('rysunek', '$', 'rysunek wymaga kroków (kroki bez rysunku — same podpisy — są dozwolone)');
   const rys = karta.rysunek;
+  // koordynator (pytania 06 do wersji 1): wartość z twierdzeniem wymagana tylko dla kart z rysunkiem operacji — rysunek operacji uczy skutku
+  if (rys?.operacja && !karta.twierdzenia.some((t) => Object.keys(t.wartosc).length > 0)) zgl('twierdzenie', '$.twierdzenia', `rysunek operacji „${rys.operacja.typ}” wymaga co najmniej jednego twierdzenia z wartością (tylko z rejestru 06)`);
   if (rys?.operacja?.typ === 'scal' && rys.operacja.na_wierzchu === 'srodkowe' && rys.operacja.zuzywa % 2 === 0) zgl('rysunek', '$.rysunek.operacja', 'na_wierzchu „srodkowe” wymaga nieparzystej liczby ujmowanych oczek');
   if (rys && rys.rodzina !== 'nabieranie' && (!rys.probka || !rys.tlo)) zgl('rysunek', '$.rysunek', `rodzina „${rys.rodzina}” wymaga pól probka i tlo`);
   karta.kroki?.forEach((krok, i) => {

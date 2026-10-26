@@ -39,6 +39,7 @@ describe('walidator karty', () => {
     ['glif cudzego pochodzenia', (k) => { (k as Record<string, unknown>).glif = { id: 'glif.a', origin: 'CYC', rs: 'a', ws: 'b' }; }, 'schemat'],
     ['kotwica strzałki poza zakresem', (k) => { k.kroki![0].strzalka = { ruch: 'nitka', od: 'glowa:9:1', do: 'drut_prawy' }; }, 'schemat'],
     ['id nie od rzemiosła', (k) => { k.rzemioslo = 'szydelko'; }, 'id'],
+    ['rysunek operacji bez twierdzenia z wartością', (k) => { k.twierdzenia = []; }, 'twierdzenie'],
     ['pozycje poza tabelą', (k) => { k.pozycje = ['druty.oczko.k']; }, 'pozycje'],
     ['technika bez terminu en-US', (k) => { k.terminy = { sv: [{ skrot: null, twierdzenie: 'TRM-SV-001' }] }; k.jezyki_gotowe = ['sv']; }, 'jezyk'],
     ['rysunek bez opis_alt', (k) => { delete k.klucze.opis_alt; }, 'klucz'],

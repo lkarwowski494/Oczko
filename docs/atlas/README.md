@@ -44,7 +44,7 @@ flowchart LR
 | ID | Ryzyko / pytanie | Stan |
 |---|---|---|
 | R-A1 | Przeplot w 2D | rozwiązany łatkami (E2); ujęcia 3 oczek i lewe — ograniczenie geometrii, blokowane walidatorem (E3 §5) |
-| R-A2 | Rozjazd pól z 06 | kontrakt 1.1 + walidator + narzędzie przejścia; 49 błędów do decyzji 06 |
+| R-A2 | Rozjazd pól z 06 | kontrakt 1.1 + walidator + narzędzie przejścia; 50 błędów do decyzji 06 |
 | R-A3 | Kolizje numerów ADR | 0022–0025 zajęte; `kontrola-adr` 25/0 |
 | R-A4 | Przeznaczenie hostingu | decyzja przy starcie strony (Q2) |
 | R-A5 | Język bez źródła | `jezyki_gotowe`, P-213, testy |
@@ -78,11 +78,11 @@ flowchart LR
 | Inwentarz prywatności dla 10 | E3 §3 (brak danych; manifest `react-native-svg` po instalacji) |
 | Lista kontroli automatycznych dla 07 | E3 §6 (K-A1–K-A8) |
 | Prototyp ryzyka (zlecenie) | 5 rysunków próbnych, testy geometrii i strażnik liter, PNG (`docs/atlas/prototyp/`); na danych 06: ściegi przechodzą, ograniczenia nazwane (E3 §5) |
-| Testy | `npx jest scripts/atlas` 95/95; pełny `verify` w commicie E4 |
+| Testy | `npx jest scripts/atlas` 96/96; pełny `verify` w commicie E4 |
 
 ## 9. Przekazanie
 
-- **06:** kontrakt 1.1 i walidator (`waliduj.mjs`), narzędzie przejścia `migruj-0-1.mjs` (wynik: 49 błędów do decyzji — `rozszerzenie_06`, `opis_alt` nabierania, `probka.rzedy` 1, M1 `skret`); Z-06-02 (`drut.grot`), Z-06-04 (jedna karta = jedna technika: M1R/M1L, 2/2 RC/LC); ID kart i twierdzeń w kartach próbnych zgodne z rejestrem 06.
+- **06:** kontrakt 1.1 i walidator (`waliduj.mjs`), narzędzie przejścia `migruj-0-1.mjs` (wynik: 50 błędów do decyzji, lista w `kontrakt-krokow.md` „Rozbieżności” — `rozszerzenie_06`, `opis_alt` nabierania, `probka.rzedy` 1, M1 `skret`); Z-06-02 (`drut.grot`), Z-06-04 (jedna karta = jedna technika: M1R/M1L, 2/2 RC/LC); ID kart i twierdzeń w kartach próbnych zgodne z rejestrem 06.
 - **07:** K-A1–K-A8 (E3 §6); K-A5 informacyjna do przejścia danych 06 na format 1; testy `scripts/atlas` już w `npm test`.
 - **08 (start 1.1):** kolejność: domena (`scripts/atlas/silnik` → `src/domena/atlas`, importy bez `.ts`, testy przenieść do `tests/`), adapter katalogu (porty), komponent `react-native-svg` z granicą błędu, ekrany wg 04; wiersz ADR-0016; manifest prywatności pakietu. Praca nad silnikiem: fazy `narzut`/`przeciagniecie`/`zdjecie`, drut lewy, ujęcia 3 oczek i lewe (p2tog, s2kp2 — dziś `przeplot`), rodziny szydełka i nabierania — każda z testami w tym samym zestawie niezmienników (jak „nowa rodzina dziedziczy niezmienniki” w Treningu).
 - **04:** Z-04-01 (kontrast wyróżnienia 1,30/1,38), Z-04-02 (wygląd pętli, kreski), Z-04-03 (strona); stany „atlas niedostępny”, „karta bez rysunku”, informacja o języku (Q3).

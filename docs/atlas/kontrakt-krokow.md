@@ -111,6 +111,49 @@ Plik `^[a-z0-9][a-z0-9._-]*\.json$`; SHA-256 z bajtów pliku (przed parsowaniem)
 - **1.1 (E3, dane 06 z P-212; `format` bez zmian):** znaczenie `probka.rzedy` (tkanina przed operacją); wymagalność zależna od rodzaju (`terminy.en-US`, `podpis`, `opis_alt`, `pozycje`, `twierdzenia` ≥ 0, kroki bez rysunku); pola `publikacja`, `klucze_dodatkowe`, `twierdzenia` (wspierające); wartości z danych 06; `na_wierzchu: srodkowe`; `faza: null` w nabieraniu; `drut` w każdej fazie, `grot` wymagany tylko do rysunku wkłucia. Narzędzie przejścia z 0.1: `scripts/atlas/migruj-0-1.mjs <wejście> <wyjście>` (nie nadpisuje danych 06).
 - **1 (E2):** `format`; ID twierdzeń w postaci rejestru 06; ID z prefiksem rodzaju; `rzemioslo: oba`; rodzaje `tabela`, `schemat`, `skrot` i pole `pozycje`; `terminy` jako lista z `nazwa`; operacje z pytania 2; pola kroku `drut {ktory, grot}`, `nitka`, `scianka`, `petle_na_narzedziu`, `faza_opis`; granice liczb; manifest katalogu.
 
+
+## Rozbieżności danych 06 z wersją 1.1 (E3, dane 6176c99, po `migruj-0-1.mjs`)
+
+Polecenie: `node --experimental-strip-types --no-warnings scripts/atlas/migruj-0-1.mjs docs/atlas/dane/katalog.json <wyjście.json>` (przejście mechaniczne 0.1 → 1; nie nadpisuje danych), potem `scripts/atlas/waliduj.mjs <wyjście.json>`. Przed przejściem: 459 błędów (różnica formatu); po przejściu: **50** (tabela). Kolumna „Rysunek”: karty `siatka-petli` sprawdzone silnikiem bez pól `rozszerzenie_06`.
+
+| Karta | Błędy do decyzji 06 (po przejściu) | Rysunek |
+|---|---|---|
+| `druty.oczko.k` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×2 | brak `drut.grot` (Z-06-02); silnik nie rysuje faz: narzut, przeciagniecie, zdjecie|
+| `druty.oczko.p` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” | brak `drut.grot` (Z-06-02); silnik nie rysuje faz: przeciagniecie, zdjecie|
+| `druty.scieg.stst` | $: pole spoza kontraktu „rozszerzenie_06” | rysuje się |
+| `druty.scieg.garter` | $: pole spoza kontraktu „rozszerzenie_06” | rysuje się |
+| `druty.scieg.rib` | $: pole spoza kontraktu „rozszerzenie_06” | rysuje się |
+| `druty.ujecie.ssk` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” | wkłucie drutem lewym — silnik rysuje dziś prawy |
+| `druty.dodanie.yo` | $.twierdzenia: rysunek operacji „narzut” wymaga co najmniej jednego twierdzenia z wartością (tylko z rejestru 06) | silnik nie rysuje operacji „narzut” |
+| `druty.dodanie.m1` | $.rysunek.operacja: brak wymaganego pola „scianka”; $.rysunek.operacja: brak wymaganego pola „pochylenie”; $.rysunek.operacja: pole spoza kontraktu „skret”; $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×3 | najpierw błędy schematu |
+| `druty.warkocz.2-2` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06”; $: pole spoza kontraktu „rozszerzenie_06” | silnik nie rysuje faz: przeciagniecie|
+| `druty.zamykanie.bo` | $: pole spoza kontraktu „rozszerzenie_06” | silnik nie rysuje faz: przeciagniecie, zdjecie|
+| `schemat.brak-oczka` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `schemat.rs-ws` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.ch` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.slst` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06”; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.sc` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×2; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.hdc` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×2; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.dc` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×3; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.tr` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×2; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.oczko_szydelkowe.ring` | $.rysunek.probka.rzedy: 1 < minimum 2; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.ujecie.2tog` | $.kroki[]: pole spoza kontraktu „rozszerzenie_06” ×3; $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `szydelko.dodanie.inc` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `tabela.us-uk.szydelko` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `tabela.us-ca.druty` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `tabela.skroty.druty` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `tabela.skroty.szydelko` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `tabela.znaki-zapisu` | $: pole spoza kontraktu „rozszerzenie_06” | bez rysunku siatki pętli |
+| `druty.nabieranie.longtail` | $.klucze.opis_alt: karta z rysunkiem wymaga klucza opis_alt (VoiceOver) | bez rysunku siatki pętli |
+| `druty.nabieranie.backloop` | $.klucze.opis_alt: karta z rysunkiem wymaga klucza opis_alt (VoiceOver) | bez rysunku siatki pętli |
+| `druty.nabieranie.cable` | $.klucze.opis_alt: karta z rysunkiem wymaga klucza opis_alt (VoiceOver) | bez rysunku siatki pętli |
+| `druty.ujecie.k2tog` | — | brak `drut.grot` (Z-06-02) |
+| `druty.ujecie.skp` | — | silnik nie rysuje faz: przeciagniecie|
+| `druty.ujecie.p2tog` | — | silnik nie rysuje faz: przeciagniecie; ograniczenie geometrii silnika (przeplot) — praca 05/08 |
+| `druty.ujecie.s2kp2` | — | silnik nie rysuje faz: przeciagniecie, zdjecie; ograniczenie geometrii silnika (przeplot) — praca 05/08 |
+
+Karty bez wiersza: przechodzą walidator 1.1 po przejściu (bez rysunku albo rodzina jeszcze nierysowana). Pola `rozszerzenie_06` (w kartach i krokach): treść spoza kontraktu — przenieść do pól 1.1 (`operacja.wzor` dla ściegu, `klucze_dodatkowe`, `faza_opis`) albo usunąć; walidator przyjmie kartę dopiero bez nich.
+
 ## Pytania 06
 
 (06 dopisuje tutaj; 05 odpowiada nową wersją pliku.)
@@ -132,3 +175,5 @@ Plik `^[a-z0-9][a-z0-9._-]*\.json$`; SHA-256 z bajtów pliku (przed parsowaniem)
 - **Z-06-02 (`drut.grot` w k2tog):** źródła mówią o kierunku wkłucia w poziomie: oczko prawe „Wkłuwamy czubek prawego drutu od lewej do prawej (od przodu do tyłu)” (podręcznik PL s. 47), lewe „od prawej do lewej (od tyłu do przodu)” (s. 48); podręcznik EN s. 37: „To knit into front loop, insert right needle left to right into stitch”, „To purl into front loop, insert needle from right to left”. 06 dopisze twierdzenie ATL-K-011 (prawe: od lewej do prawej, lewe: od prawej do lewej). Przełożenie „ruch od lewej do prawej” na `grot` (`w_lewo`/`w_prawo`) to geometria silnika — jeśli 05 uzna, że grot to kierunek ruchu, prawe = `w_prawo`; jeśli to kierunek, w który patrzy czubek po wkłuciu, decyzja 05 jako założenie silnika (jak A-1).
 
 **2026-10-26, 05 — odpowiedzi na pytania do wersji 1 (E3, wersja 1.1).** (1) `twierdzenia` mogą być puste (`minItems: 0`) dla każdej karty; nowe wartości `narzuty`, `petle_po_wyciagnieciu`, `pozostaje_na_drucie`, `pomocniczy`, `znaczenie_ws` w `wartosc`; dla ściegu wzór idzie w `operacja.wzor`, nie w `wartosc`. (2) `podpis` i `opis_alt` opcjonalne; `opis_alt` wymagany tylko przy `rysunek` — kluczy z pustą treścią nie wpisywać. (3) `terminy.en-US` wymagany tylko dla technik i haseł `skrot`; tabela i `schemat.*` mogą mieć `terminy: {}` albo terminy w językach, w których są — wpisu `{ nazwa: null, skrot: null }` nie trzeba. Z-06-02: `grot` = kierunek ruchu czubka przy wkłuciu (wiersz `drut` wyżej); k2tog w kartach próbnych zmieniony na `w_prawo`. Narzędzie przejścia z 0.1: `scripts/atlas/migruj-0-1.mjs` (wynik na danych P-212: 459 → 49 błędów do decyzji 06; `docs/atlas/e3-bledy-prywatnosc-wydajnosc.md` §5).
+
+**2026-10-26, 05 — rozstrzygnięcie koordynatora do pytania 1 (wersja 1.1).** Wartość z twierdzeniem jest wymagana tylko dla kart z rysunkiem operacji (`rysunek.operacja` ≠ `null`): co najmniej jedno twierdzenie z niepustą `wartosc`; pozostałe karty mogą mieć `twierdzenia: []`. Walidator: kod `twierdzenie`. Na danych 6176c99 dotyczy to `druty.dodanie.yo` (bilans narzutu bez zdania w źródle) — albo twierdzenie z rejestru, albo karta bez `operacja` (sam podpis).
