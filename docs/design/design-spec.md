@@ -55,6 +55,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o włóczkę (`ukonczenie`, prototyp z5); bez włóczki w zapasie: pytanie pominięte |
+| Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
@@ -109,6 +110,23 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | `ustawienia.zrodla_wiedzy` | About our information |
 | `zrodla.zdanie` | The tables and tips in Oczko are written in our own words, based on industry standards and knitting handbooks. |
 | `zrodla.linia_standardow` | dosłownie linia z BR-KAL-008, scenariusz „Ekran «Źródła wiedzy»” (S-24); w `docs/design/` tylko odsyłacz, bo każde nowe wystąpienie nazwy organizacji zatrzymuje `verify` (P-121 (5)). W przekładzie (09) zmienia się tylko słowo „Source:”, nazwa i adres zostają. |
+
+## Projekt roboczy: etykieta zamiast nazwy (BR-LIC-001, P-126 (1b), jak Trening)
+- **Dane:** pierwszy +1 bez projektu tworzy projekt **nienazwany** (flaga „nienazwany” w wierszu projektu: SQL dopisuje 05 fix-3 w `dane.md`, P-124/P-126; wdraża 08 w partii 3). Data `RRRR-MM-DD` w kolumnie nazwy nie jest pokazywana nigdzie w interfejsie; jeśli 05 nie przyjmie flagi, obowiązuje (1a): przy pierwszym +1 zapis tekstu `projekty.nazwa_robocza` w bieżącym języku.
+- **Wyświetlanie:** etykieta liczona przy każdym renderze z chwili startu projektu, w bieżącym języku i formacie regionu (ADR-0017): na liście „Counter from Oct 26, 18:40”, w wyszukiwaniu ta sama etykieta. Godzina odróżnia dwa liczniki z jednego dnia. Rok tylko, gdy inny niż bieżący.
+- **Ekran licznika projektu nienazwanego:** duży tytuł „Counter”, pod nim „Started Oct 26, 18:40 · Name it”; „Name it” otwiera arkusz nazwy. W menu ••• pierwsza pozycja „Name project”. Przed pierwszym +1 (brak projektu) ekran jak `licznik-start` — nic nie pyta o nazwę (NFR-PIE-001).
+- **Arkusz nazwy:** Cancel / „Name project” / Save (słownik); pole z klawiaturą od razu; Save przy pustym polu zostawia projekt nienazwany (nic nie znika); po zapisie flaga gaśnie, licznik i historia bez zmian (BR-LIC-001 S3). VoiceOver: pole z etykietą „Project name”, obrys `drugiPrzyciskObrys` (≥ 3:1 do arkusza w obu motywach).
+
+| Klucz | en |
+|---|---|
+| `projekty.nazwa_robocza` | Counter from {{data}} (`{{data}}` = data i godzina startu, krótki format regionu) |
+| `projekt.nazwij` | Name it |
+| `licznik.tytul_roboczy` | Counter |
+| `licznik.start_roboczy` | Started {{data}} |
+| `projekt.menu_nazwij` | Name project |
+| `projekt.nazwa_tytul` | Name project |
+| `projekt.nazwa_pole` | Project name |
+| `projekt.nazwa_zostaje` | The {{count}} rows and their history stay with this project. (`_one` / `_other`) |
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.

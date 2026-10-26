@@ -262,6 +262,38 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <p class="podpis">[zrodla.linia_standardow: the source line, verbatim from BR-KAL-008]</p></div>
 </main>
 
+<!-- 9. Projekt roboczy na liście (BR-LIC-001 „Nazwanie później”, P-126 (1b), jak Trening „Trening z {d}”): etykieta liczona z daty i godziny startu w bieżącym języku; nazwy nie ma, dopóki użytkownik jej nie nada -->
+<main data-ekran="projekty-robocze">
+  <div class="status"><span>21:30</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><span></span><div class="ikony"><span class="ikona" role="button" aria-label="New project">＋</span></div></div>
+  <div class="tytul"><h1>Projects</h1></div>
+  <div class="szukaj">⌕ Search</div>
+  <div class="naglowek-grupy">In progress, last worked first</div>
+  <div class="grupa">
+    <div class="el"><div class="tx">Counter from Oct 26, 21:05<small>row 3 · today · <u>Name it</u></small></div><span aria-hidden="true">›</span></div>
+    <div class="el"><div class="tx">Counter from Oct 26, 18:40<small>row 12 · today · <u>Name it</u></small></div><span aria-hidden="true">›</span></div>
+    <div class="el"><span class="kropka"></span><div class="tx">Harbor Sweater<small>Left sleeve · row 47 of 96 · yesterday</small></div><span aria-hidden="true">›</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="pasek-narzedzi"><span>◷<br>History</span><span>⚒<br>Tools</span><span>⚙<br>Settings</span></div>
+</main>
+
+<!-- 9b. Licznik projektu roboczego po pierwszym +1 i arkusz nazwy -->
+<main data-ekran="projekt-nazwij">
+  <div class="status"><span>18:52</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Projects</a><div class="ikony"><span class="ikona" role="button" aria-label="History">◷</span><span class="ikona" role="button" aria-label="Project options">•••</span></div></div>
+  <div class="tytul"><h1>Counter</h1><p class="pod">Started Oct 26, 18:40 · <u role="button">Name it</u></p></div>
+  <div class="kartka"><div class="liczba"><span class="n">12</span><span class="z">rows</span></div></div>
+  <div class="spacer"></div>
+  <div class="przyciemnienie"></div>
+  <div class="arkusz" role="dialog" aria-modal="true" aria-label="Name project">
+    <div class="uchwyt"></div>
+    <div class="naglowek-arkusza"><span class="ikona" role="button" style="width:auto">Cancel</span><b>Name project</b><span class="ikona" role="button" style="width:auto;font-weight:700">Save</span></div>
+    <div class="tresc-arkusza"><div class="szukaj" style="margin:12px 0 0;color:var(--grafit);border:1.5px solid var(--m-obrys)" role="textbox" aria-label="Project name">Socks for Ola|</div>
+    <p class="podpis">The 12 rows and their history stay with this project.</p></div>
+  </div>
+</main>
+
 <section class="uwagi">
   <h2>Notes for the reviewer</h2>
   <p>Body text: SF Pro on iOS; Source Sans 3 here as a stand-in. Lock, history, share: SF Symbols in the app. Prices come from the App Store product (KP-09); amounts here are the US base prices from P-057.</p>
