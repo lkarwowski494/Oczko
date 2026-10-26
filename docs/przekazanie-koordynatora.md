@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-26 20:35 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-248
+**Ostatnia aktualizacja:** 2026-10-26 20:45 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-249
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -20,11 +20,11 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 | Rola | Sesja | Zadanie | Stan |
 |---|---|---|---|
 | 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | wzory, rysik, iPad, rozszerzenie; E0 P-243 | K1–K5 wypchnięte (f5ac639, d817ce1); P-246 (obrót strony, film w v1); K6 ekrany w toku; K7 Swift u pod-agenta |
-| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | iCloud; E0 P-242 | etapy 1–4 wypchnięte (41364a6, 401dd04; P-245 — etapy 1–4 z wyjątkiem testów po kodzie, kontrola mutantami); dalej kompozycja i ekrany, Swift lokalnie |
+| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | iCloud; E0 P-242 | TS kompletne (do c784b47; P-245, P-247, P-249 ochrona danych przy „zastąp”); Swift `modules/oczko-icloud` tylko na `claude/kopia-partia-7` b4a8c9b, niekompilowany; przegląd scenariuszy 48–51, potem gotowość |
 | 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | scenariusze 44–52 gotowe (P-237) | czeka na nocny przebieg → E2 |
 | 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | JAK-15 zrobione | czeka; potem metadane i zrzuty |
 
-Zaplanowane zadania koordynatora (konto bieżące): dyżur co godzinę do 23:15 UTC; 23:15 UTC — nocny przebieg iOS na HEAD po północy.
+Zaplanowane zadania koordynatora (konto bieżące): dyżur co godzinę (następny trig_01RpL4uc4uNngUXjrgUuHt7H 21:44 UTC); 23:15 UTC — nocny przebieg iOS na HEAD po północy.
 
 ## Zasady nocy (P-241, P-244)
 - Do 22:15 UTC push na gałąź roboczą tylko zmian sprawdzanych bramką Linux. Od 22:15 UTC do sygnału koordynatora (koniec nocnego przebiegu) na gałąź roboczą nic; zapis pracy na gałęzie kopii.
@@ -47,3 +47,7 @@ Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, 
 - Wynik nocnego przebiegu iOS partii 5; postęp partii 6 (P-243, P-246, P-248) i 7 (P-242, P-245, P-247).
 - Propozycja reguły do biblioteki ról (trzeci push przed verify: 10, 06, 08 — P-248): np. `pre-push` w repo uruchamiający verify albo obowiązkowy krok „verify po każdym rebase z cudzymi zmianami” w zasadach wspólnych; dwie opcje z rekomendacją, decyzja właściciela.
 - Przypomnienie: identyfikatory App Group i iCloud w Apple Developer (P-233).
+
+## Plan okna maszyn tej nocy
+1. Po północy czasu polskiego: przebieg „Jakość · iOS” partii 5 na HEAD gałęzi roboczej (z `[e2e-pelny]`, obejmuje iPada). Zielony → STOP E2 partii 5.
+2. Po jego zakończeniu sygnał dla partii 7, potem 6: kod natywny z gałęzi kopii na roboczą (jeden push na partię, kolejno, po zielonym verify), build w tym samym oknie; błędy kompilacji Swift naprawia sesja partii. Eksperymenty W1–W3 partii 6 według `docs/programista/partia-6-natywne.md`.
