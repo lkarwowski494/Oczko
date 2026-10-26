@@ -260,7 +260,7 @@
     "zapisz_kopie": "Save a copy of my data",
     "sprobuj": "Try starting normally",
     "zglos": "Report a problem",
-    "zapisano": "Copy saved: {{licznosci}}"
+    "zapisano": "Copy saved"
   },
   "dane": {
     "import_tytul": "Import a backup",
@@ -277,11 +277,11 @@
     "l_licznik_other": "{{count}} counters",
     "l_zmiana_one": "{{count}} change",
     "l_zmiana_other": "{{count}} changes",
-    "eksport_gotowy": "Export ready: {{licznosci}}",
     "nowe_one": "{{count}} new project",
     "nowe_other": "{{count}} new projects",
     "zaimportowano": "Merged. {{nowe}}. Now: {{licznosci}}.",
-    "blad": "That didn’t work. Your data is unchanged."
+    "blad": "That didn’t work. Your data is unchanged.",
+    "eksport_gotowy_tytul": "Export ready"
   },
   "stan_danych": {
     "tytul": "Data and sync",

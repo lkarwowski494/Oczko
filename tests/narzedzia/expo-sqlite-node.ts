@@ -1,6 +1,7 @@
 // Zastępnik `expo-sqlite` w Jest (P-120 Q1a, jak Trening `tests/db-real-sqlite.test.ts`): ten sam podzbiór API, którego używa
 // src/dane/baza/adapter-expo.ts, na prawdziwym SQLite (node:sqlite). Kod testu, nie aplikacji; rozbieżność z urządzeniem łapie partia 3 (CI macOS).
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
+import { fileURLToPath } from 'node:url';
 
 type Parametry = SQLInputValue[];
 class BazaNode {
@@ -19,9 +20,17 @@ class BazaNode {
   closeSync(): void { this.db.close(); }
 }
 
+/**
+ * Ścieżka jak w module natywnym (expo-sqlite/ios/URL+FilePath.swift): URI `file://` → ścieżka pliku; adres bez schematu → `absoluteString`,
+ * czyli znaki spoza URL zakodowane procentowo (spacja → %20). Dzięki temu test widzi, gdy aplikacja poda katalog bez `file://`.
+ */
+function sciezkaNatywna(katalog: string, nazwa: string): string {
+  if (katalog.startsWith('file://')) return `${fileURLToPath(katalog).replace(/\/+$/, '')}/${nazwa}`;
+  return `${encodeURI(katalog)}/${nazwa}`;
+}
 export function openDatabaseSync(nazwa: string, _opcje?: unknown, katalog?: string): BazaNode {
   if (!katalog) throw new Error('zastępnik expo-sqlite: wymagany katalog (aplikacja zawsze podaje ścieżkę bazy)');
-  return new BazaNode(`${katalog}/${nazwa}`);
+  return new BazaNode(sciezkaNatywna(katalog, nazwa));
 }
 export async function openDatabaseAsync(nazwa: string, opcje?: unknown, katalog?: string): Promise<BazaNode> {
   return openDatabaseSync(nazwa, opcje, katalog);

@@ -36,6 +36,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-dostepu.test.ts` | zielony (główny zestaw) | 3 | BR-ZAK-001, BR-ZAK-003, BR-ZAK-007, KP-02, KP-05, KP-06, KP-08, P-038, P-057, P-089, R-109 | `src/domena/dostep`<br>`src/konfiguracja` | — |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-limitu.test.ts` | zielony (główny zestaw) | 4 | BR-ZAK-005, BR-ZAK-006, KP-12, KP-13, NFR-PIE-001, P-057, P-065, P-067, P-068, R-097, R-103, R-178 | `src/domena/limit`<br>`src/konfiguracja` | Z07-07 |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wlasnosci.test.ts` | zielony (główny zestaw) | 14 | KP-02, KP-06, KP-12, KP-13, KP-15, P-057, P-065, R-099, R-102, R-113 | `src/domena/dostep`<br>`src/domena/limit`<br>`src/konfiguracja` | Z07-07 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/adapter-expo-sciezka.test.ts` | zielony (główny zestaw) | 2 | — | `src/dane/baza/adapter-expo` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/archiwum-format.test.ts` | zielony (główny zestaw) | 6 | P-120 | `src/dane/archiwum/sha256`<br>`src/dane/archiwum/zip` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/archiwum.test.ts` | zielony (główny zestaw) | 15 | BR-DAN-002/S2, BR-DAN-005, BR-DAN-005/S1, BR-DAN-006, BR-DAN-006/S1, BR-DAN-006/S2, BR-DAN-006/S3, BR-DAN-006/S4, BR-DAN-006/S5, NFR-DAN-003, P-047, P-091, R-063, R-064, R-066, R-067, R-068, R-088 | `src/dane/archiwum`<br>`src/dane/kopia-ratunkowa`<br>`src/dane/migracje/migruj`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/archiwum`<br>`src/przypadki-uzycia/porty-propozycja` | ER-42, Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/czas-w-tle.test.ts` | zielony (główny zestaw) | 5 | P-128 | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/domena/porty`<br>`src/przypadki-uzycia/archiwum`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/przywracanie` | Z07-22 |
@@ -95,4 +96,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/straznik-startu.test.ts` | zielony (główny zestaw) | 8 | P-080 | `src/konfiguracja`<br>`src/niezawodnosc/start` | — |
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 
-Razem plików testów: 91; zależnych od poprawek: 67.
+Razem plików testów: 92; zależnych od poprawek: 67.

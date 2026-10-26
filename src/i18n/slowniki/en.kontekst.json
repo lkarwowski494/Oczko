@@ -241,7 +241,7 @@
     "zapisz_kopie": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019 „Zapisz kopię danych”.",
     "sprobuj": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. ADR-0019 „Spróbuj normalnie”.",
     "zglos": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
-    "zapisano": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04."
+    "zapisano": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Nagłówek nad licznościami kopii (ADR-0019)."
   },
   "dane": {
     "import_tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
@@ -255,10 +255,10 @@
     "l_projekt": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Liczności archiwum (e2e/README.md eksport-licznosci). Formy _one/_other.",
     "l_licznik": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Formy _one/_other.",
     "l_zmiana": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Formy _one/_other.",
-    "eksport_gotowy": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-DAN-006.",
     "nowe": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Wynik importu „scal”: ile nowych projektów. Formy _one/_other.",
     "zaimportowano": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Wynik importu „scal” (P-091 6a).",
-    "blad": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Błąd eksportu albo importu."
+    "blad": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Błąd eksportu albo importu.",
+    "eksport_gotowy_tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. Nagłówek nad licznościami eksportu (BR-DAN-006)."
   },
   "stan_danych": {
     "tytul": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",

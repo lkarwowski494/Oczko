@@ -15,10 +15,16 @@ function rozdziel(sciezka: string): { nazwa: string; katalog: string } {
   return { nazwa: sciezka.slice(i + 1), katalog: i > 0 ? sciezka.slice(0, i) : '/' };
 }
 
+/**
+ * Katalog dla expo-sqlite jako URI `file://`: natywny moduł robi z ścieżki `URL(string:)`, a adres bez schematu zamienia na `absoluteString`
+ * (node_modules/expo-sqlite/ios/URL+FilePath.swift) — „Application Support” stawało się katalogiem „Application%20Support” (E2E 40298771854).
+ */
+export const katalogJakoUri = (katalog: string): string => `file://${katalog.split('/').map(encodeURIComponent).join('/')}`;
+
 /** `tylkoOdczyt`: kopia sprawdzana przed przywróceniem (ADR-0020 (2)) — bez zmiany trybu dziennika, zapisy odrzucane (`query_only`). */
 export function otworzPortExpo(sciezka: string, opcje: { tylkoOdczyt?: boolean } = {}): PortExpo {
   const { nazwa, katalog } = rozdziel(sciezka);
-  const db = openDatabaseSync(nazwa, { useNewConnection: true }, katalog);
+  const db = openDatabaseSync(nazwa, { useNewConnection: true }, katalogJakoUri(katalog));
   db.execSync('PRAGMA foreign_keys = ON'); // poza transakcją: w transakcji pragma nie działa (sqlite.org/foreignkeys.html)
   if (opcje.tylkoOdczyt) db.execSync('PRAGMA query_only = ON');
   else db.execSync('PRAGMA journal_mode = WAL');

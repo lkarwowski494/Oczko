@@ -87,7 +87,7 @@ export default function EkranUstawien(): React.ReactElement {
   const zamknijDane = () => { wybor.current?.('anuluj'); ustawDane(null); };
 
   const wynikDanych = dane === null ? null
-    : dane.rodzaj === 'eksport' ? <View testID="eksport-wynik"><Tresc testID="eksport-licznosci">{t('dane.eksport_gotowy', { licznosci: dane.licznosci })}</Tresc></View>
+    : dane.rodzaj === 'eksport' ? <View testID="eksport-wynik"><Tresc>{t('dane.eksport_gotowy_tytul')}</Tresc><Tresc testID="eksport-licznosci">{dane.licznosci}</Tresc></View>
     : dane.rodzaj === 'blad' ? <Tresc>{t('dane.blad')}</Tresc>
     : <Import wbudowany t={t} stan={dane.rodzaj === 'wybor' ? { rodzaj: 'wybor', plik: dane.plik, licznosci: dane.licznosci } : { rodzaj: 'wybor', plik: '' }}
         wynik={dane.rodzaj === 'wynik' ? dane.tekst : undefined}
@@ -99,7 +99,7 @@ export default function EkranUstawien(): React.ReactElement {
         onPress={() => { if (ostatniEksport) ustawZapisane(pliki.zachowaj(ostatniEksport)); }}>
         <Text>Test files: keep last export</Text>
       </Pressable>
-      <Text testID="e2e-sha-bazy" selectable>{sha}</Text>
+      {sha ? <Text testID="e2e-sha-bazy" selectable>{sha}</Text> : null /* dopiero po policzeniu (copyTextFrom w scenariuszu 09) */}
       <Text testID="e2e-pliki-stan">{`Saved: ${zapisane} file${zapisane === 1 ? '' : 's'}`}</Text>
       <Pressable accessibilityRole="button" testID="e2e-pliki-importuj-ostatni" onPress={() => { const p = pliki.ostatni(); if (p) void importZ(p); }}>
         <Text>Test files: import last kept</Text>

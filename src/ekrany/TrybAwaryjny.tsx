@@ -25,7 +25,8 @@ export function TrybAwaryjny({ stan, t, naZapiszKopie, naSprobujNormalnie, naZgl
       </>
     }>
       <Tresc>{t('awaryjny.opis')}</Tresc>
-      {stan.licznosciKopii && <Tresc podpis testID="awaryjny-licznosci">{t('awaryjny.zapisano', { licznosci: stan.licznosciKopii })}</Tresc>}
+      {stan.licznosciKopii && <Tresc podpis>{t('awaryjny.zapisano')}</Tresc>}
+      {stan.licznosciKopii && <Tresc podpis testID="awaryjny-licznosci">{stan.licznosciKopii}</Tresc>}
       {panelE2e}
     </Arkusz>
   );

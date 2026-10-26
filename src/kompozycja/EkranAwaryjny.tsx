@@ -25,7 +25,7 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
       })}
       naSprobujNormalnie={() => void sprobujNormalnieTeraz().then(naNormalnie)}
       naZglosProblem={() => undefined}
-      panelE2e={E2E ? <Text testID="e2e-sha-bazy" selectable>{sha}</Text> : null}
+      panelE2e={E2E && sha ? <Text testID="e2e-sha-bazy" selectable>{sha}</Text> : null}
     />
   );
 }
