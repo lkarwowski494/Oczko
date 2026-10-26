@@ -110,3 +110,12 @@ export async function kolejnoscProjektow(baza: PortBazy, dzis: string): Promise<
     || b.praca - a.praca);
   return lista.map(({ id, nazwa, cel }) => ({ id, nazwa, cel }));
 }
+
+/** Miesiąc z kalendarza (P-191 P6a, BR-DNI-003 S3): rzędy (RD-15), czas zakończonych sesji z dniem w miesiącu (null bez sesji),
+ *  ukończone po `ukonczono_dzien`, liczba dni z robótką (wymagania-dni.md, P-195 Q3b). */
+export async function podsumowanieMiesiaca(baza: PortBazy, miesiac: string): Promise<{ rzedy: number; czasMs: number | null; ukonczone: number; dni: number }> {
+  const od = `${miesiac}-01`, doWyl = `${miesiac}-32`;
+  const [s] = await wiersze(baza.all(`SELECT count(*) AS k, sum(${CZAS_SESJI}) AS ms FROM sesja s WHERE s.dzien >= ? AND s.dzien < ? AND s.stan = 'zakonczona'`, [od, doWyl]), 'podsumowanieMiesiaca');
+  const [u] = await wiersze(baza.all("SELECT count(*) AS n FROM projekt WHERE stan = 'ukonczony' AND usunieto_ms IS NULL AND ukonczono_dzien >= ? AND ukonczono_dzien < ?", [od, doWyl]), 'podsumowanieMiesiaca');
+  return { rzedy: await rzedyOkresu(baza, od, doWyl), czasMs: s && liczba(s, 'k') > 0 ? liczba(s, 'ms') : null, ukonczone: u ? liczba(u, 'n') : 0, dni: (await dniZRobotka(baza, miesiac)).length };
+}

@@ -16,10 +16,13 @@ export type PropsListyProjektow = {
   naOtworz(id: string): void;
   naNowy(): void;
   naUstawienia?(): void;
+  /** Wejścia do „History” (P-191 P6a) i „Tools” (P7a; nav-narzedzia, kontrakt 07) — odstępstwo nazwane 08: design-spec nie podaje miejsca. */
+  naHistoria?(): void;
+  naNarzedzia?(): void;
   naKosz?(): void;
 };
 
-export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstawienia, naKosz }: PropsListyProjektow): React.ReactElement {
+export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstawienia, naKosz, naHistoria, naNarzedzia }: PropsListyProjektow): React.ReactElement {
   const k = useKolory();
   const st = style(k);
   const pusto = s.wToku.length === 0 && s.ukonczone.length === 0;
@@ -46,6 +49,16 @@ export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstaw
         {naUstawienia && (
           <Pressable accessibilityRole="button" accessibilityLabel={t('ustawienia.tytul')} onPress={naUstawienia} style={st.ikona} testID="nav-ustawienia">
             <Text style={st.ikonaTekst} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">⚙︎</Text>
+          </Pressable>
+        )}
+        {naHistoria && (
+          <Pressable accessibilityRole="button" accessibilityLabel={t('dni.tytul')} onPress={naHistoria} style={st.ikona} testID="nav-historia">
+            <Text style={st.ikonaTekst} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">◷</Text>
+          </Pressable>
+        )}
+        {naNarzedzia && (
+          <Pressable accessibilityRole="button" accessibilityLabel={t('narzedzia.tytul')} onPress={naNarzedzia} style={st.ikona} testID="nav-narzedzia">
+            <Text style={st.ikonaTekst} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">✂︎</Text>
           </Pressable>
         )}
         <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.nowy')} onPress={naNowy} style={st.ikona} testID="projekty-nowy">
