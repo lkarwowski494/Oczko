@@ -55,6 +55,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o włóczkę (`ukonczenie`, prototyp z5); bez włóczki w zapasie: pytanie pominięte |
+| Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
 ## VoiceOver: komunikaty i zachowanie (dla 08; z przejścia poznawczego E3)
 | Chwila | Ogłoszenie (`announceForAccessibility`) | Zachowanie |
@@ -78,6 +79,23 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 - Wariant 1 (w makiecie): nazwy planów „Monthly · $0.99 / month”, „Yearly · $6.99 / year”, „Lifetime · $14.99 once”; nagłówek „Oczko Pro”, „Knit on as many days as you like. Everything else stays the same.”; pod planami: „Without Pro: 5 knitting days every month, and all your projects and data, always.”
 - Odrzucony wariant 2: podpisy właściciela przy planach (P-065).
 - Ujawnienia (1)–(7) z `docs/monetyzacja.md` „Sesja 3, E3”: nazwa, okres, cena ze sklepu (KP-09); odnawianie i anulowanie w ustawieniach Apple ID; „Restore purchases”; Privacy Policy, Terms of Use; co daje Pro i co zostaje; zamknięcie i „Not now”; Family Sharing tylko, gdy włączone.
+
+## Okno „Uczciwe zasady” (KP-16, P-103 (5a), P-109, P-126 (4); wzór Treningu)
+- **Kiedy:** `oknoUczciweZasady()` = prawda (dzień bez Pro z ≥ 1 +1 minął, pewny stan darmowy, flaga „widziane” = fałsz). Pokazuje się raz, jako arkusz systemowy, nad pierwszym **dozwolonym** ekranem po otwarciu aplikacji: lista projektów, kalendarz i historia, Ustawienia, zapas, narzędzia. **Nigdy** nad licznikiem, nie nad wzorem (liczenie z oczami na wzorze, SP-17), ofertami, kartą ukończenia ani innym otwartym arkuszem; wtedy czeka do następnego dozwolonego ekranu.
+- **Układ:** uchwyt, w nagłówku „Zamknij” (✕, prawy górny róg, słownik studia), nagłówek, trzy zdania, przycisk główny zamyka, przycisk tekstowy zamyka i otwiera ofertę (KP-13: wejście z Ustawień). Każde zamknięcie (✕, przycisk, gest w dół, tło) ustawia flagę „widziane” — jak Trening `markFairRulesSeen`. Bez cen, procentów i wykrzykników (P-054, Głos).
+- **VoiceOver:** `accessibilityViewIsModal`, fokus na nagłówku; ✕ z etykietą „Close”.
+- **Karta planów po imporcie: poza 1.0** (P-113 Q2a, P-117 Q1a) — w 1.0 nie ma tego ekranu ani miejsca na niego; wraca z F-29.
+
+| Klucz | en (źródło, ADR-0017) |
+|---|---|
+| `uczciwe.tytul` | Your first knitting day is done |
+| `uczciwe.wszystko` | Everything in Oczko works from the first day, with no account and no ads. |
+| `uczciwe.darmowe_one` / `_other` | Knit {{count}} day every month for free, for as long as you like. Your projects and data always stay yours. / Knit {{count}} days every month for free, … |
+| `uczciwe.pro` | Want more days? Oczko Pro removes the limit, as a subscription or a one-time purchase. |
+| `uczciwe.dalej` | Keep knitting |
+| `uczciwe.plany` | See Oczko Pro |
+| `wspolne.zamknij` | Close |
+`{{count}}` = `LIMIT_DNI_W_MIESIACU` z konfiguracji (dziś 5), nie wpisane na stałe.
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
