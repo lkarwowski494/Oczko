@@ -2,7 +2,11 @@
 Plik stanu sesji · start 2026-10-25 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków; nie w repo)
 Zakres: P-116, P-119 (start partii 2 równolegle z 07 fix), P-111 (2) (`pro` w linii dziennika, NZ-05-04), P-118 (kontrakty fix-2: W1, W2, W3, W4, W7, I1, Q1a). Specyfikacja: `docs/jakosc/e4/tabela-08.md` (kolejność „2 dane”, 11 plików, 94 wywołania testów), `docs/jakosc/e4-przekazanie.md` („Dla roli 08”, DS-02), `docs/architektura/` (`dane.md`, `schemat.sql`, `moduly.md`), ADR-0001, 0002, 0004, 0005, 0008, 0011, 0015, 0016, 0019, 0020; `oczko-warsztat/05-architekt/2026-10-25-fix2/E2-dowody.md` („Zmiany kontraktu dla 08”).
 
-## Stan: E0 → STOP (czeka na koordynatora wg P-087)
+## Stan: E2 → STOP (czeka na koordynatora wg P-087); E0 przyjęte jako P-120, kontrola danych testowych P-122
+Wynik E1–E2 (commity fdab00a…516d46b, D0–D9): warstwa 2 kompletna — 11 plików testów 07 w `tests/dane` (czerwień na asercji przed kodem, logi w dowodach), 5 nowych testów 08 (`dziennik-pro`, `kosz-dwa-starty` W2, `znacznik-kierunek` W7, `migracje-kopia`, `archiwum-format`), `pro` w linii dziennika (P-111 (2)), kontrakty fix-2 (W1, W2, W3, W7, I1, Q1a), `scal` z `zla_wartosc` i M-18–M-20 w `scal-wektory.json`. `npm run verify` kod 0, **1445/1445**; `test:akceptacja` 89 (warstwy 3–4), 0 błędów raportu; CI Linux zielone (516d46b), iOS w toku. Dowody, zmiany testów 07 i zgłoszenia: `oczko-warsztat/08-programista/2026-10-25-partia2/E2-dowody.md`.
+Zgłoszenia w skrócie — 05: 12 pozycji (pole `pro` w bloku portów, wiersz ZIP w ADR-0016, notatki wzoru, strefa w podsumowaniu tygodnia, BEGIN IMMEDIATE a ADR-0002, przywrócenie przez ATTACH zamiast backupDatabaseAsync, import jedną transakcją, dzień limitu przy scaleniu dziennika, `ostatniPlus`, +1 przy konflikcie, `application_id`, ucięta linia dziennika a dopisanie w Swift); 07: przegląd 12 zmian testów i 5 testów 08, `tabela-08.mjs` bez `tests/dane`; 04: nazwa projektu roboczego, zużycie ponad zapas, domyślny kierunek znacznika; partia 3/10: `expo-crypto`, `expo-router`, adaptery na urządzeniu, czas CRC/SHA na Hermes, pełna kontrola PDF.
+Wyjątki nazwane: `projekt.ts` napisany w D2 przed czerwienią swoich testów (czerwień D5 na zaślepce sprzed partii); usunięty `informacje-pro.test.ts` (P-120 Q4a).
+
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -54,4 +58,6 @@ Zasada adapterów partii 2 (P-118 Q1a, punkt 7 „Dla 08”): wyjątki SQLite i 
 - Właściciel: nic (P-087).
 
 ## Dziennik
-- 2026-10-25: E0 — stan wyjściowy, plan D0–D9, Q1–Q6; STOP do koordynatora.
+- 2026-10-25: E0 — stan wyjściowy, plan D0–D9, Q1–Q6; STOP do koordynatora. Odpowiedź: P-120 (Q1a–Q6a).
+- 2026-10-25: E1 D0–D1; zgłoszenie kontroli `dane-testowe` (P-122 (a)) i wieku wersji `expo`/`expo-crypto` (P-122 (b)).
+- 2026-10-26: E1 D2–D9; E2 — verify 1445/1445, akceptacja 89 bez błędów; STOP E2.
