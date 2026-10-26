@@ -34,6 +34,41 @@
     "skrot": "st",
     "twierdzenie": "TRM-SV-008"
    }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "ponto alto",
+    "skrot": "pa.",
+    "twierdzenie": "TRM-PT-003"
+   }
+  ],
+  "ru": [
+   {
+    "nazwa": "столбик с накидом",
+    "skrot": "ССН",
+    "twierdzenie": "TRM-RU-037"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "стовпчик з накидом",
+    "skrot": "СН",
+    "twierdzenie": "TRM-UA-026"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "長編目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-033"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "한길긴뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-019"
+   }
   ]
  },
  "twierdzenia": [],

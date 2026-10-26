@@ -22,6 +22,34 @@
     "skrot": null,
     "twierdzenie": "TRM-PL-012"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "2 петли вместе с наклоном влево",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-009"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "右上2目一度",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-008"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "mate simples",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-020"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "menguado simple",
+    "skrot": "ms",
+    "twierdzenie": "TRM-ESLA-007"
+   }
   ]
  },
  "twierdzenia": [

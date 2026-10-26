@@ -32,6 +32,48 @@
     "skrot": "rätst",
     "twierdzenie": "TRM-SV-003"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "платочная вязка",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-005"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "хусткова в’язка",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-005"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "ガーター編み",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-005"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "가터뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-004"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "起伏針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-004"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "ponto jarreteira",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-016"
+   }
   ]
  },
  "twierdzenia": [],

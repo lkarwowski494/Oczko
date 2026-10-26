@@ -27,6 +27,48 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-020"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "изнаночная сторона",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-023"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "виворітний бік",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-014"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "裏を見て編む段",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-022"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "反面",
+    "skrot": "WS",
+    "twierdzenie": "TRM-ZHT-021"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "avesso do trabalho",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-026"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "revés de la prenda",
+    "skrot": "rp",
+    "twierdzenie": "TRM-ESLA-010"
+   }
   ]
  },
  "twierdzenia": [],

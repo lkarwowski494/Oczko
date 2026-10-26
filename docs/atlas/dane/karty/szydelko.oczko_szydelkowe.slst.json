@@ -39,6 +39,41 @@
     "skrot": "sm",
     "twierdzenie": "TRM-SV-010"
    }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "ponto baixíssimo",
+    "skrot": "pbx.",
+    "twierdzenie": "TRM-PT-006"
+   }
+  ],
+  "ru": [
+   {
+    "nazwa": "соединительный столбик",
+    "skrot": "СС",
+    "twierdzenie": "TRM-RU-034"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "з’єднувальний стовпчик",
+    "skrot": "ЗСт",
+    "twierdzenie": "TRM-UA-023"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "引抜き編目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-030"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "引拔針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-031"
+   }
   ]
  },
  "twierdzenia": [],

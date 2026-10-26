@@ -27,6 +27,41 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-019"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "лицевая сторона",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-022"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "лицьовий бік",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-013"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "表を見て編む段",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-021"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "正面",
+    "skrot": "RS",
+    "twierdzenie": "TRM-ZHT-020"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "direito do trabalho",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-025"
+   }
   ]
  },
  "twierdzenia": [],

@@ -13,6 +13,34 @@
     "skrot": "tbl",
     "twierdzenie": "TRM-EN-024"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "за заднюю стенку",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-031"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "за задню стінку",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-018"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "ねじり目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-025"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "扭下針",
+    "skrot": "ktbl",
+    "twierdzenie": "TRM-ZHT-027"
+   }
   ]
  },
  "twierdzenia": [],

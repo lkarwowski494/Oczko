@@ -15,6 +15,27 @@
     "skrot": null,
     "twierdzenie": "TRM-GB-008"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "кольцо амигуруми",
+    "skrot": "КА",
+    "twierdzenie": "TRM-RU-041"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "輪の作り目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-039"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "輪狀起針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-033"
+   }
   ]
  },
  "twierdzenia": [],

@@ -33,6 +33,48 @@
     "skrot": "omsl",
     "twierdzenie": "TRM-SV-005"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "накид",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-011"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "накид",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-009"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "かけ目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-012"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "걸기코",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-009"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "掛針",
+    "skrot": "yo",
+    "twierdzenie": "TRM-ZHT-010"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "laçada",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-022"
+   }
   ]
  },
  "twierdzenia": [],

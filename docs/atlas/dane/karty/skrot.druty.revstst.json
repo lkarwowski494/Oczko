@@ -20,6 +20,27 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-025"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "изнаночная гладь",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-004"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "виворітна гладь",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-004"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "裏メリヤス編み",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-004"
+   }
   ]
  },
  "twierdzenia": [],

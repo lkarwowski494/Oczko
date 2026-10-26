@@ -13,6 +13,20 @@
     "skrot": "rnd",
     "twierdzenie": "TRM-EN-020"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "круговой ряд",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-025"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "圈",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-022"
+   }
   ]
  },
  "twierdzenia": [],

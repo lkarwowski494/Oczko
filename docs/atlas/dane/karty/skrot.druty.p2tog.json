@@ -27,6 +27,41 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-013"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "Изн2вместе",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-010"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "в’язання двох петель разом виворітною петлею",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-008"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "裏目の左上2目一度",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-010"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "上針左上併針",
+    "skrot": "p2tog",
+    "twierdzenie": "TRM-ZHT-008"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "2 pontos juntos em tricô",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-019"
+   }
   ]
  },
  "twierdzenia": [],

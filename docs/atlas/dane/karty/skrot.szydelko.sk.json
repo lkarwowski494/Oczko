@@ -34,6 +34,20 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-023"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "пропустить",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-043"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "目をとばす",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-037"
+   }
   ]
  },
  "twierdzenia": [],

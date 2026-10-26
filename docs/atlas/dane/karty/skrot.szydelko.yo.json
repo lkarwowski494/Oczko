@@ -20,6 +20,41 @@
     "skrot": "yoh",
     "twierdzenie": "TRM-GB-012"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "накид",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-042"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "накид",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-028"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "糸をかけ",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-038"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "掛線",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-034"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "laçada",
+    "skrot": "laç.",
+    "twierdzenie": "TRM-PT-012"
+   }
   ]
  },
  "twierdzenia": [],

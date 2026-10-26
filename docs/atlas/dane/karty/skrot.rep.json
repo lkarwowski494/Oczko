@@ -13,6 +13,27 @@
     "skrot": "rep",
     "twierdzenie": "TRM-EN-019"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "раппорт",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-024"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "рапорт",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-015"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "repetir",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-027"
+   }
   ]
  },
  "twierdzenia": [],

@@ -33,6 +33,55 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-011"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "резинка",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-006"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "резинка",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-006"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "ゴム編み",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-006"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "고무뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-005"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "鬆緊針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-005"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "ponto barra",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-017"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "punto elástico o resorte",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-004"
+   }
   ]
  },
  "twierdzenia": [],

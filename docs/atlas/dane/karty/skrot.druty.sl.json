@@ -32,6 +32,48 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-021"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "снять петлю непровязанной",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-026"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "зняти, не вив’язуючи",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-017"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "すべり目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-024"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "걸러뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-010"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "滑針",
+    "skrot": "sl",
+    "twierdzenie": "TRM-ZHT-024"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "pasar a la ag der un p sin hacer",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-011"
+   }
   ]
  },
  "twierdzenia": [],

@@ -13,6 +13,20 @@
     "skrot": "pwise",
     "twierdzenie": "TRM-EN-023"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "как изнаночную",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-028"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "以織上針方向",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-025"
+   }
   ]
  },
  "twierdzenia": [],

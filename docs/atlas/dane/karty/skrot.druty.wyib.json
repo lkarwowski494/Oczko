@@ -20,6 +20,34 @@
     "skrot": "n. t.",
     "twierdzenie": "TRM-PL-024"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "нить за работой",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-029"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "нитка за роботою",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-019"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "糸を向こうに置いて",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-026"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "持線在後",
+    "skrot": "wyib",
+    "twierdzenie": "TRM-ZHT-028"
+   }
   ]
  },
  "twierdzenia": [],

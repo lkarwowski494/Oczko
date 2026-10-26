@@ -22,6 +22,20 @@
     "skrot": "2 o. sp. pion.",
     "twierdzenie": "TRM-PL-013"
    }
+  ],
+  "ja": [
+   {
+    "nazwa": "中上3目一度",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-011"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "中上三併針",
+    "skrot": "CDD",
+    "twierdzenie": "TRM-ZHT-009"
+   }
   ]
  },
  "twierdzenia": [

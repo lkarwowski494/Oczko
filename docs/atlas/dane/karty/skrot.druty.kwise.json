@@ -13,6 +13,20 @@
     "skrot": "kwise",
     "twierdzenie": "TRM-EN-022"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "как лицевую",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-027"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "織下針的方向",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-026"
+   }
   ]
  },
  "twierdzenia": [],

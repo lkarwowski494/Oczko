@@ -27,6 +27,55 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-012"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "убавление петель с наклоном вправо",
+    "skrot": "уб. пр.",
+    "twierdzenie": "TRM-RU-007"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "в’язання двох петель разом лицьовою петлею за передні стінки",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-007"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "左上2目一度",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-007"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "왼코 겹쳐뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-006"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "左上2併針",
+    "skrot": "k2tog",
+    "twierdzenie": "TRM-ZHT-006"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "2 pontos juntos em meia",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-018"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "dos puntos juntos de derecho",
+    "skrot": "2jd",
+    "twierdzenie": "TRM-ESLA-006"
+   }
   ]
  },
  "twierdzenia": [],

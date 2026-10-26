@@ -20,6 +20,20 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-014"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "протянуть через снятую петлю",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-032"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "かぶせる",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-028"
+   }
   ]
  },
  "twierdzenia": [],

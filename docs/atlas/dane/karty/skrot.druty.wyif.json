@@ -20,6 +20,27 @@
     "skrot": "n. p.",
     "twierdzenie": "TRM-PL-023"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "нить перед работой",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-030"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "нитка перед роботою",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-020"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "糸を手前に置いて",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-027"
+   }
   ]
  },
  "twierdzenia": [],

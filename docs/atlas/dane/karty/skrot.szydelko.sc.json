@@ -34,6 +34,48 @@
     "skrot": "fm",
     "twierdzenie": "TRM-SV-006"
    }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "ponto baixo",
+    "skrot": "pb.",
+    "twierdzenie": "TRM-PT-001"
+   }
+  ],
+  "ru": [
+   {
+    "nazwa": "столбик без накида",
+    "skrot": "СБН",
+    "twierdzenie": "TRM-RU-035"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "стовпчик без накиду",
+    "skrot": "СБН",
+    "twierdzenie": "TRM-UA-024"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "細編目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-031"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "짧은뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-017"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "短針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-032"
+   }
   ]
  },
  "twierdzenia": [],

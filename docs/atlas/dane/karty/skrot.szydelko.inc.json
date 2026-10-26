@@ -34,6 +34,34 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-022"
    }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "aumento",
+    "skrot": "aum.",
+    "twierdzenie": "TRM-PT-007"
+   }
+  ],
+  "ru": [
+   {
+    "nazwa": "прибавка",
+    "skrot": "ПР",
+    "twierdzenie": "TRM-RU-040"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "додавання",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-029"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "細編み2目編み入れる",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-035"
+   }
   ]
  },
  "twierdzenia": [],

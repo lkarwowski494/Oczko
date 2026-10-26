@@ -20,6 +20,20 @@
     "skrot": "dc2tog",
     "twierdzenie": "TRM-GB-009"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "убавка",
+    "skrot": "УБ",
+    "twierdzenie": "TRM-RU-039"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "ponto baixo fechado junto",
+    "skrot": "pbfj.",
+    "twierdzenie": "TRM-PT-010"
+   }
   ]
  },
  "twierdzenia": [],

@@ -34,6 +34,48 @@
     "skrot": "avm",
     "twierdzenie": "TRM-SV-018"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "закрытие петель",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-014"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "закріплення петель останнього ряду",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-010"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "伏せ止め",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-013"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "收針",
+    "skrot": "BO",
+    "twierdzenie": "TRM-ZHT-013"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "arrematar",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-024"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "remate",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-008"
+   }
   ]
  },
  "twierdzenia": [

@@ -34,6 +34,41 @@
     "skrot": "hst",
     "twierdzenie": "TRM-SV-007"
    }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "meio ponto alto",
+    "skrot": "mpa.",
+    "twierdzenie": "TRM-PT-002"
+   }
+  ],
+  "ru": [
+   {
+    "nazwa": "полустолбик с накидом",
+    "skrot": "ПССН",
+    "twierdzenie": "TRM-RU-036"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "півстовпчик з накидом",
+    "skrot": "ПС",
+    "twierdzenie": "TRM-UA-025"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "中長編目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-032"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "긴뜨기",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-018"
+   }
   ]
  },
  "twierdzenia": [],

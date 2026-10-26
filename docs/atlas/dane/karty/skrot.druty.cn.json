@@ -27,6 +27,34 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-016"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "вспомогательная спица",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-018"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "допоміжні спиці",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-021"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "なわ編み針",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-017"
+   }
+  ],
+  "ko": [
+   {
+    "nazwa": "꽈배기바늘",
+    "skrot": null,
+    "twierdzenie": "TRM-KO-013"
+   }
   ]
  },
  "twierdzenia": [],

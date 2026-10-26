@@ -22,6 +22,20 @@
     "skrot": "2 o. przekr. p.",
     "twierdzenie": "TRM-PL-011"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "убавление петель с наклоном влево",
+    "skrot": "уб. лв.",
+    "twierdzenie": "TRM-RU-008"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "右上2併針",
+    "skrot": "ssk",
+    "twierdzenie": "TRM-ZHT-007"
+   }
   ]
  },
  "twierdzenia": [

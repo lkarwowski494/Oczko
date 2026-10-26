@@ -40,6 +40,48 @@
     "skrot": "lm",
     "twierdzenie": "TRM-SV-009"
    }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "correntinha",
+    "skrot": "corr.",
+    "twierdzenie": "TRM-PT-005"
+   }
+  ],
+  "ru": [
+   {
+    "nazwa": "воздушная петля",
+    "skrot": "ВП",
+    "twierdzenie": "TRM-RU-033"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "повітряна петля",
+    "skrot": "ПП",
+    "twierdzenie": "TRM-UA-022"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "鎖編目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-029"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "鎖針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-030"
+   }
+  ],
+  "tr": [
+   {
+    "nazwa": "zincir",
+    "skrot": null,
+    "twierdzenie": "TRM-TR-006"
+   }
   ]
  },
  "twierdzenia": [],

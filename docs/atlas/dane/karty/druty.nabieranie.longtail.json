@@ -23,6 +23,34 @@
     "skrot": null,
     "twierdzenie": "TRM-PL-025"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "набор петель начального ряда из двух нитей",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-016"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "подвійний",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-012"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "指でかける作り目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-015"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "長尾起針",
+    "skrot": null,
+    "twierdzenie": "TRM-ZHT-015"
+   }
   ]
  },
  "twierdzenia": [],

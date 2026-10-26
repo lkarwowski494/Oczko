@@ -27,6 +27,48 @@
     "skrot": null,
     "twierdzenie": "TRM-SV-017"
    }
+  ],
+  "ru": [
+   {
+    "nazwa": "набор петель",
+    "skrot": null,
+    "twierdzenie": "TRM-RU-015"
+   }
+  ],
+  "uk": [
+   {
+    "nazwa": "набір петель",
+    "skrot": null,
+    "twierdzenie": "TRM-UA-011"
+   }
+  ],
+  "ja": [
+   {
+    "nazwa": "作り目",
+    "skrot": null,
+    "twierdzenie": "TRM-JA-014"
+   }
+  ],
+  "zh-Hant": [
+   {
+    "nazwa": "起針",
+    "skrot": "CO",
+    "twierdzenie": "TRM-ZHT-014"
+   }
+  ],
+  "pt-BR": [
+   {
+    "nazwa": "montar pontos",
+    "skrot": null,
+    "twierdzenie": "TRM-PT-023"
+   }
+  ],
+  "es-419": [
+   {
+    "nazwa": "montar",
+    "skrot": null,
+    "twierdzenie": "TRM-ESLA-009"
+   }
   ]
  },
  "twierdzenia": [],
