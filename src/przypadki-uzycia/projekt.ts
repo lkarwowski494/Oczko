@@ -159,3 +159,31 @@ export async function usunWszystkieDane(z: ZaleznosciPlikow): Promise<Wynik<void
   if (z.synchronizacja) await z.synchronizacja.wylacz(); // „Usuń też z iCloud” to osobna opcja (P-110 Q3a)
   return OK;
 }
+
+/** Nowa część z licznikiem rzędów na końcu kolejności (BR-PRJ-001, U-5); cel w rzędach albo brak. Sygnatura 08 (P-182 Q3a, przegląd 05). */
+export function dodajCzescProjektu(z: Zaleznosci, w: { projektId: string; nazwa: string; cel: number | null }): Promise<Wynik<{ czescId: string; licznikId: string }>> {
+  if (!niepusta(w.nazwa) || (w.cel !== null && !(Number.isInteger(w.cel) && w.cel >= 1))) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'dodajCzescProjektu', async (tx, teraz) => {
+    const [p] = await wiersze(tx.all('SELECT usunieto_ms FROM projekt WHERE id = ?', [w.projektId]), 'dodajCzescProjektu');
+    if (!p) return blad('bledne_dane');
+    if (liczbaLubNull(p, 'usunieto_ms') !== null) return blad('niedozwolone_przejscie');
+    return { ok: true, wartosc: await dodajCzesc(tx, z, { projektId: w.projektId, nazwa: w.nazwa, cel: w.cel, paraZ: null, terazMs: teraz }) };
+  });
+}
+/** Jedna kolumna projektu (UPDATE, ADR-0002); `ostatnia_praca_ms` bez zmian — praca to rzędy, nie ustawienia (BR-PRJ-016). */
+function zmienProjekt(z: Zaleznosci, operacja: string, projektId: string, kolumna: 'drut_mm' | 'termin_dzien', wartosc: number | string | null): Promise<Wynik<void>> {
+  return operacjaZapisu(z, operacja, async (tx, teraz) => {
+    const r = await tx.run(`UPDATE projekt SET ${kolumna} = ?, zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL`, [wartosc, teraz, projektId]); // kolumna z zamkniętej listy
+    return r.zmiany === 1 ? OK : blad('bledne_dane');
+  });
+}
+/** Drut w milimetrach (BR-PRJ-004, F-17); `null` = brak danych (nie zgadywany rozmiar). Numer US liczy domena przy wyświetleniu (RD-11). */
+export function ustawDrut(z: Zaleznosci, w: { projektId: string; drutMm: number | null }): Promise<Wynik<void>> {
+  if (w.drutMm !== null && !(Number.isFinite(w.drutMm) && w.drutMm > 0)) return Promise.resolve(blad('bledne_dane'));
+  return zmienProjekt(z, 'ustawDrut', w.projektId, 'drut_mm', w.drutMm);
+}
+/** Termin „Gotowe do” (BR-DNI-005, F-61, U-6): dzień RRRR-MM-DD albo `null` (bez terminu nic się nie pokazuje). */
+export function ustawTermin(z: Zaleznosci, w: { projektId: string; terminDzien: string | null }): Promise<Wynik<void>> {
+  if (w.terminDzien !== null && !jestDniem(w.terminDzien)) return Promise.resolve(blad('bledne_dane'));
+  return zmienProjekt(z, 'ustawTermin', w.projektId, 'termin_dzien', w.terminDzien);
+}

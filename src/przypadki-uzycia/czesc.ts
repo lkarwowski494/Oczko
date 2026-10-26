@@ -43,3 +43,11 @@ export function ustawPowtorzenie(z: Zaleznosci, w: { licznikId: string; dlugosc:
     return r.zmiany === 1 ? OK : blad('bledne_dane');
   });
 }
+/** Znaczenie liczby (BR-LIC-012, F-09): „skończone rzędy” albo „rząd w trakcie”; wartość i historia bez zmian (zmienia się tylko wyświetlanie). */
+export function ustawZnaczenie(z: Zaleznosci, w: { licznikId: string; znaczenie: 'skonczone' | 'w_trakcie' }): Promise<Wynik<void>> {
+  if (w.znaczenie !== 'skonczone' && w.znaczenie !== 'w_trakcie') return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'ustawZnaczenie', async (tx, teraz) => {
+    const r = await tx.run('UPDATE licznik SET znaczenie = ?, zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL', [w.znaczenie, teraz, w.licznikId]);
+    return r.zmiany === 1 ? OK : blad('bledne_dane');
+  });
+}
