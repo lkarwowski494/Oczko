@@ -1,5 +1,5 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-26 (P-220: wzór, rysik, iPad; grupa W); fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
@@ -11,6 +11,7 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P5-BD 2026-10-
 | Projekt, części, kosz (fix NZ-08-P5-Q1) | `fix5-2026-10-26/projekt-kosz.html` (22 stany), wzorce `wzorce-zrzuty/projekt-kosz-*` (264), klucze `fix5-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix5.mjs`; kontrola `narzedzia/kontrola-nz08p5q1.mjs` |
 | Stoper, sesje, Historia (fix NZ-08-P5-BD, grupa B) | `fix6-2026-10-26/sesje-historia.html` (17 stanów), wzorce `wzorce-zrzuty/sesje-historia-*` (204), klucze `fix6-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix6.mjs`; kontrola `narzedzia/kontrola-nz08p5bd.mjs` |
 | Narzędzia, zapas, zdjęcia, obraz karty (fix NZ-08-P5-BD, grupa D) | `fix6-2026-10-26/narzedzia-zdjecia.html` (17 stanów), wzorce `wzorce-zrzuty/narzedzia-zdjecia-*` (204) |
+| Wzór, rysik, iPad (fix NZ-P217-04, grupa W) | `fix7-2026-10-26/wzor.html` (27 stanów), wzorce `wzorce-zrzuty/wzor-*` (268, `narzedzia/zrzuty-fix7.mjs`), klucze `fix7-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix7.mjs`; kontrola `narzedzia/kontrola-nzp21704.mjs` |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -64,6 +65,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Import | przerwany przez czas w tle, dane sprzed importu, „Try again” (`import-przerwany`) |
 | Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); zmiana daty ukończenia (`ukonczenie-data`); bez włóczki w projekcie: pytanie pominięte |
 | Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); notatka bez znacznika (`wzor-notatka-bez-znacznika`); Word w podglądzie zastępczym: bez znacznika |
+| Wzór: przeglądarka, import, iPad | pionowo z paskiem licznika (`wzor-pionowo`), poziomo (`wzor-poziomo`), przełączanie, menu, usunięcie, zakreślacz, Word (`wzor-*`); projekt bez wzoru i z wzorami (`projekt-wzor-pusty`, `projekt-wzory`); dodanie, link, film (`wzor-dodaj`, `wzor-link`, `wzor-film`); w toku, czeka na sieć, błędy pliku, typu, rozmiaru, strony, aparatu, film bez sieci; iPad pion, poziom, rysik, wąskie okno, licznik, lista (`ipad-*`) |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Język | lista z „Same as phone” (`jezyk`); język telefonu spoza 35: angielski bez podpowiedzi (P-115); uszkodzony zapis: „Same as phone” |
@@ -623,6 +625,136 @@ Makiety: `fix6-2026-10-26/narzedzia-zdjecia.html` (17 stanów), wzorce `wzorce-z
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
 
+**Uzupełnienie po P-218 (01 fix-6, 2026-10-26; wiąże 04, 05, 08):** (1) jeden wzór = jedno źródło, bez łączenia wzorów i składania fragmentów; (2) bez edycji treści — wolno zmienić format, wyprostować i obrócić stronę, adnotacje tylko jako osobna warstwa; (3) jeden wzór naraz z jednym znacznikiem, przełączanie wzorów projektu dozwolone, na iPadzie obok wzoru licznik, nie drugi wzór; (4) film tylko jako odnośnik poza wzorem; (5) treść zależna od postępu tylko od użytkownika i licznika; (6) każda nowa funkcja wzoru wraca do tej tabeli, 07 sprawdza ekrany przed wydaniem.
+
+| Ekran fix-7 (P-220) | Kilka instrukcji naraz | Edycja i złożenie w zestaw | Uwaga |
+|---|---|---|---|
+| Dodanie wzoru (plik, skan, zdjęcia, strona) | nie — każde dodanie = nowy wzór, bez dokładania stron (Q6a) | nie — zamiana na PDF, prostowanie, obrót (2) | — |
+| Grupa „Patterns”, przełączanie (W9b) | nie — jeden wzór widoczny naraz (3) | nie | lista to wybór, nie zestaw |
+| Pasek licznika i kolumna licznika (W1a, W3, W4b) | nie | nie | obok wzoru licznik, nie drugi wzór (3) |
+| Zakreślacz, pióro, gumka (W5a) | nie | nie — osobna warstwa (2) | — |
+| Link do filmu | nie — odnośnik poza wzorem (4) | nie | — |
+
+## Wzór, rysik i iPad (F-24–F-28, F-55, F-56; BR-WZR-001–005, 007, 008; ADR-0011, ADR-0012; P-218, P-220)
+Makiety: `fix7-2026-10-26/wzor.html` (27 stanów: 20 telefonu w pionie, telefon poziomo, 6 iPada), wzorce `wzorce-zrzuty/wzor-<stan>-*` (telefon: 320/390/430 × jasny/ciemny × domyślny/AX5; poziomo i iPad: wymiar natywny `844x390`, `820x1180`, `1180x820`, `375x1180` × jasny/ciemny × domyślny/AX5; `narzedzia/zrzuty-fix7.mjs`), kontrola `narzedzia/kontrola-nzp21704.mjs`. Znacznik rzędu i notatka bez znacznika — sekcje wyżej, bez zmian. Ograniczenia patentowe P-218 (1)–(6) obowiązują każdy ekran tej sekcji (tabela w „Ekrany wzoru a patenty”).
+
+**Gdzie jest wzór.**
+- **Ekran projektu (W8):** grupa „Pattern” (`projekt.wzor`; przy ≥ 2 wzorach „Patterns”, `projekt.wzory`) nad „Details”. Wiersz wzoru: miniatura pierwszej strony, nazwa, `wzor.wiersz_opis` („PDF · 6 pages”); stuknięcie = przeglądarka tego wzoru. Wiersz „Video” (`wzor.film_wiersz`, pod nim nazwa albo adres), przycisk ↗ otwiera link w przeglądarce systemowej (P-218 (4): film poza wzorem). Na końcu zawsze „Add pattern” (`wzor.dodaj`); bez wzoru dodatkowo podpis `wzor.dodaj_opis` i wiersz „Add video link”. Usunięcie linku do filmu: menu kontekstowe wiersza `wzor.film_usun`. `projekt.miejsce_wzoru` (tekst roboczy 08) wychodzi z „Details”.
+- **Licznik (W2a):** ikona dokumentu (SF Symbol `doc.text`) w pasku nawigacji przed Historią, **tylko gdy projekt ma ≥ 1 wzór** (wzór dodał użytkownik — P-046 spełnione); otwiera ostatnio oglądany wzór projektu. W menu ••• licznika wiersz `menu.wzor`, a bez wzoru `menu.dodaj_wzor` (menu źródeł). Przy AX5 pasek łamie się w dwa wiersze (ikony pod „‹ Projects”), jak w stoperze.
+
+**Dodanie wzoru (W7a).** „Add pattern” → menu systemowe: `wzor.z_pliku` (Pliki: PDF, `.docx`), `wzor.skanuj` (systemowy skaner dokumentów: kilka stron jednego wzoru w jednym przebiegu, prostowanie i obrót — P-218 (2); zależność 05: moduł natywny), `wzor.ze_zdjec` (kilka zdjęć z biblioteki = jeden wzór), `wzor.link_strony` (arkusz: pole `wzor.link_pole`, przycisk `wzor.wklej`, „Save page” `wzor.zapisz_strone`, podpis `wzor.link_opis`; zły adres: `wzor.link_blad` pod polem). „Add video link” → arkusz `wzor.film_tytul` z polami `wzor.film_pole`, `wzor.film_nazwa` i podpisem `wzor.film_opis`. Każde dodanie tworzy **nowy wzór**; stron do istniejącego się nie dokłada (P-218 Q6a). Nazwa domyślna: nazwa pliku bez rozszerzenia, tytuł strony, `wzor.nazwa_skan` albo `wzor.nazwa_zdjecia`.
+
+**Stany importu (W11).**
+| Stan | Wygląd |
+|---|---|
+| W toku (zamiana na PDF na urządzeniu) | wiersz z `wzor.import_w_toku` i paskiem postępu (`role=status`); licznik działa |
+| Strona bez sieci | wiersz z `wzor.czeka_siec` i ✕ (`wzor.usun_oczekujacy_a11y`); zapis sam po powrocie sieci, bez błędu |
+| Plik uszkodzony (BR-WZR-001 S2) | alert `wzor.blad_plik` + `wzor.blad_plik_opis`, przycisk `wspolne.ok`; nic nie zostaje dodane |
+| Typ nieobsługiwany | alert `wzor.blad_typ` + `wzor.blad_typ_opis` |
+| Za duży (`WZOR_MAKS_MB`, ADR-0011) | alert `wzor.blad_rozmiar` + `wzor.blad_rozmiar_opis` (`{{mb}}` z parametru, nie z tekstu) |
+| Strona z logowaniem albo pusta (BR-WZR-007 S3) | alert `wzor.blad_strona` + `wzor.blad_strona_opis` |
+| Brak dostępu do aparatu (skaner) | alert `zdjecia.brak_aparatu_tytul` + `wzor.brak_aparatu_opis`, przyciski `zdjecia.otworz_ustawienia`, `wspolne.anuluj` |
+| Word w podglądzie zastępczym | linia informacji `wzor.word_podglad` nad dokumentem; bez „Mark row”, zakreślacza i rysowania |
+| Film bez sieci (BR-WZR-007 S4) | alert `wzor.film_bez_sieci_tytul` + `narzedzia.film_bez_sieci` |
+
+**Przeglądarka wzoru, telefon w pionie (W1a).** Pasek nawigacji: ‹ (`wzor.wstecz_a11y`), tytuł = nazwa wzoru (przy ≥ 2 wzorach z ▾ i menu `wzor.przelacz_naglowek` z listą wzorów projektu i ✓ przy bieżącym — `wzor.przelacz_a11y`; W9b), „Mark row” (▭), zakreślacz, ••• (`wzor.menu_a11y`: `wzor.dodaj_notatke`, `wzor.obroc`, `wzor.zmien_nazwe`, `wzor.usun` czerwone). Strona na tle `grupa`, strony jedna pod drugą, plakietka `wzor.strona_z` na dole widoku. **Pasek licznika** na dole: liczba (Libre Franklin 40 pt), „Now knitting row n” (`licznik.teraz`), −1 (56 × 56 pt), +1 (≥ 72 pt wysokości, ≥ 132 pt szerokości; przy 320 pt i AX5 przechodzi pod liczbę na całą szerokość). +1 przesuwa znacznik (ruch tylko bez „Ogranicz ruch”). Ekran nie gaśnie, jak licznik. Kolejność VoiceOver: tytuł → narzędzia → strona → liczba → −1 → +1; Magic Tap = +1.
+- **Usunięcie wzoru:** alert `wzor.usun_tytul` / `wzor.usun_opis` / `wzor.usun_potwierdz` (destrukcyjny) / `wspolne.anuluj`; bez kosza (N4 → 05). Notatki rzędów należą do licznika i zostają.
+- **Obrót strony:** obraca widok strony o 90° i zapamiętuje to dla strony; znacznik i rysunki liczą się w układzie strony przed obrotem (ADR-0011), więc zostają na miejscu.
+
+**Telefon poziomo (W3).** Bez ustawienia: po lewej wzór (pasek nawigacji jak w pionie), po stronie końcowej kolumna licznika (34 % szerokości, 220–360 pt): liczba 64 pt, „Now knitting row n”, +1 na całą resztę wysokości, −1 pod nim (56 pt). RTL: kolumna po lewej.
+
+**Rysowanie (W5a, W6a; BR-WZR-004, BR-WZR-008; ADR-0012).**
+- **iPhone i iPad bez rysika:** zakreślacz (`wzor.zakreslacz`, testID `wzor-zakreslacz`, wartość VoiceOver `wzor.zakreslenia_*`) włącza tryb rysowania; pasek nawigacji zamienia się w pasek narzędzi: Highlighter (wybrany), `wzor.gumka`, ↶ (`wzor.cofnij_rysunek`), `wspolne.gotowe`. W trybie jeden palec zakreśla, dwa przewijają (podpowiedź `wzor.zakreslacz_podpowiedz` raz). Poza trybem palec tylko przewija (BR-WZR-008 S3).
+- **iPad (szerokość regular):** pasek narzędzi stały pod paskiem nawigacji: Highlighter, Pen (`wzor.pioro`), Eraser, ↶. Po pierwszym dotknięciu rysikiem polityka `pencilOnly`: rysik rysuje wybranym narzędziem od razu, palec zawsze przewija (P-218 Q2a); podpowiedź `wzor.rysik_podpowiedz` raz. Przed tym iPad działa jak iPhone.
+- **Kolory:** zakreślacz = `kolor.zakreslacz` (`#F6E04A`) z mnożeniem na białej stronie, w obu motywach (strona to dokument); pióro = `kolor.wzor.znacznik` (`#26282C`), stała grubość. Bez wyboru kolorów i bez systemowej palety narzędzi (P-220 W5a, zasada 18). Rysunki to osobna warstwa, plik wzoru bez zmian (P-218 (2)).
+
+**iPad (W4b, G1; NFR-UKL-001 z P-218 Q3a).**
+- **Wzór:** w pionie wzór na pełną szerokość (strona maks. 640 pt na środku) i pasek licznika na dole (marginesy 32 pt, +1 maks. 360 pt); w poziomie zawsze obok siebie: wzór + kolumna licznika 340 pt (liczba, „Now knitting row n”, cel, +1, −1). Obok wzoru stoi licznik, nigdy drugi wzór (P-218 (3)).
+- **Pozostałe ekrany bez osobnych makiet:** szerokość regular → treść w kolumnie maks. 640 pt na środku (listy grupowane, formularze, licznik; makiety kontrolne `ipad-licznik`, `ipad-projekty`), strefa +1 na szerokość kolumny i ≥ 168 pt; arkusze jako arkusze formularza (form sheet); marginesy systemowe (readable content guide).
+- **Wąskie okno** (Split View, Slide Over, Stage Manager; szerokość compact): układ telefonu w pionie (`ipad-waskie`). Przejście między układami przy zmianie szerokości bez utraty stanu (strona, znacznik, tryb rysowania). Zero obciętych i nakładających się elementów na PR-01–PR-06 w obu orientacjach (NFR-UKL-001; sprawdza 07).
+
+| Klucz | en |
+|---|---|
+| `licznik.wzor_a11y` | Pattern |
+| `menu.wzor` | Pattern |
+| `menu.dodaj_wzor` | Add pattern… |
+| `projekt.wzor` | Pattern |
+| `projekt.wzory` | Patterns |
+| `wzor.tytul` | Pattern |
+| `wzor.dodaj` | Add pattern |
+| `wzor.dodaj_opis` | PDF, Word, a photo of a page or a web page |
+| `wzor.z_pliku` | Choose file (PDF or Word) |
+| `wzor.skanuj` | Scan pages |
+| `wzor.ze_zdjec` | Choose photos |
+| `wzor.link_strony` | Web page link… |
+| `wzor.link_tytul` | Web page |
+| `wzor.link_pole` | Link to the pattern page |
+| `wzor.wklej` | Paste |
+| `wzor.zapisz_strone` | Save page |
+| `wzor.link_opis` | Oczko saves the page as it looks now, so it opens without the internet. |
+| `wzor.link_blad` | That doesn’t look like a web link. Check it and try again. |
+| `wzor.dodaj_film` | Add video link |
+| `wzor.film_tytul` | Video link |
+| `wzor.film_pole` | Link |
+| `wzor.film_nazwa` | Name (optional) |
+| `wzor.film_opis` | Oczko keeps only the link. The video opens in your browser and needs the internet. |
+| `wzor.film_wiersz` | Video |
+| `wzor.film_otworz_a11y` | Open video link in browser |
+| `wzor.film_usun` | Remove link |
+| `wzor.film_bez_sieci_tytul` | No internet connection |
+| `wzor.rodzaj_pdf` | PDF |
+| `wzor.rodzaj_zdjecie` | Photo |
+| `wzor.rodzaj_strona` | Web page |
+| `wzor.rodzaj_word` | Word document |
+| `wzor.strony_one` / `wzor.strony_other` | {{count}} page / {{count}} pages |
+| `wzor.wiersz_opis` | {{rodzaj}} · {{strony}} |
+| `wzor.nazwa_skan` | Scan {{data}} |
+| `wzor.nazwa_zdjecia` | Photos {{data}} |
+| `wzor.strona_z` | Page {{n}} of {{razem}} |
+| `wzor.strona_a11y` | Pattern page {{n}} of {{razem}} |
+| `wzor.wstecz_a11y` | Back to {{czesc}} |
+| `wzor.przelacz_a11y` | Pattern: {{nazwa}}. Switch pattern |
+| `wzor.przelacz_naglowek` | Patterns in {{projekt}} |
+| `wzor.menu_a11y` | Pattern options |
+| `wzor.obroc` | Rotate page |
+| `wzor.zmien_nazwe` | Rename |
+| `wzor.nazwa_tytul` | Pattern name |
+| `wzor.usun` | Delete pattern… |
+| `wzor.usun_tytul` | Delete “{{nazwa}}”? |
+| `wzor.usun_opis` | The pattern and its highlights and drawings are deleted. Row notes and counters stay. This can’t be undone. |
+| `wzor.usun_potwierdz` | Delete pattern |
+| `wzor.zakreslacz` | Highlighter |
+| `wzor.zakreslenia_one` / `wzor.zakreslenia_other` | {{count}} highlight / {{count}} highlights |
+| `wzor.gumka` | Eraser |
+| `wzor.pioro` | Pen |
+| `wzor.cofnij_rysunek` | Undo last stroke |
+| `wzor.zakreslacz_podpowiedz` | Drag a finger to highlight. Two fingers scroll. |
+| `wzor.rysik_podpowiedz` | The pencil writes. Your finger scrolls. |
+| `wzor.import_w_toku` | Adding the pattern… |
+| `wzor.czeka_siec` | Waiting for the internet to save the web page. |
+| `wzor.usun_oczekujacy_a11y` | Remove {{nazwa}} from the list |
+| `wzor.blad_plik` | Oczko can’t open this file |
+| `wzor.blad_plik_opis` | “{{plik}}” may be damaged. Nothing was added. Download or save it again, then add it. |
+| `wzor.blad_typ` | Oczko can’t add this type of file |
+| `wzor.blad_typ_opis` | Patterns can be PDFs, Word documents, photos or web pages. Nothing was added. |
+| `wzor.blad_rozmiar` | This file is too large |
+| `wzor.blad_rozmiar_opis` | A pattern can be up to {{mb}} MB. Nothing was added. |
+| `wzor.blad_strona` | Oczko can’t save this page |
+| `wzor.blad_strona_opis` | The page asks you to sign in, or it has no text or pictures. Nothing was added. Open it in your browser, save it as a PDF and add the PDF. |
+| `wzor.brak_aparatu_opis` | To scan pattern pages, allow camera access in Settings. You can still choose photos or a file. |
+| `wzor.word_podglad` | Word documents open as they are. To mark rows and highlight, save it as a PDF and add the PDF. |
+| `wspolne.ok` | OK |
+
+Istniejące klucze użyte bez zmian: `licznik.teraz`, `licznik.plus`, `licznik.plus_a11y`, `licznik.minus`, `licznik.minus_a11y`, `wspolne.gotowe`, `wspolne.anuluj`, `zdjecia.brak_aparatu_tytul`, `zdjecia.otworz_ustawienia`, `narzedzia.film_bez_sieci`. Źródło en i kontekst dla tłumaczy: `fix7-2026-10-26/klucze.json`.
+
+## Dla 08 (fix NZ-P217-04, grupa W: wzór, rysik, iPad; P-220)
+- **Klucze:** łatka `fix7-2026-10-26/klucze.json` + `node docs/design/narzedzia/nakladaj-klucze-fix7.mjs` (idempotentna, kod 1 przy konflikcie; regeneruje pseudolokalizację). Grupa W: 96 kluczy en (w tym 25 kluczy znacznika i notatki z sekcji wyżej, które nie trafiły do słownika — N1), 94 wpisy kontekstu; `targets/` bez zmian. Sprawdzone: nałożona → `env -u NODE_PATH npm run verify` kod 0 → cofnięta.
+- **Stany** (wzorce `wzorce-zrzuty/wzor-<stan>-*`): `licznik-z-wzorem`, `projekt-wzor-pusty`, `projekt-wzory`, `wzor-dodaj`, `wzor-link`, `wzor-film`, `wzor-import-w-toku`, `wzor-czeka-siec`, `wzor-blad-plik`, `wzor-blad-typ`, `wzor-blad-rozmiar`, `wzor-blad-strona`, `wzor-brak-dostepu`, `wzor-pionowo`, `wzor-przelacz`, `wzor-menu`, `wzor-usun`, `wzor-zakreslacz`, `wzor-word`, `wzor-film-bez-sieci`, `wzor-poziomo`, `ipad-wzor-pion`, `ipad-wzor-poziom`, `ipad-rysik`, `ipad-waskie`, `ipad-licznik`, `ipad-projekty`.
+- **Tokeny:** bez nowych kolorów (zakreślacz `kolor.zakreslacz`, pióro i znacznik `kolor.wzor.*`, strona `kolor.wzor.strona`); kontrast bez nowych par. Wymiary: pasek licznika −1 56 pt, +1 ≥ 72 × 132 pt; kolumna poziomo 34 % (220–360 pt), iPad 340 pt; kolumna treści iPada maks. 640 pt.
+- **testID:** istniejące `wzor-dodaj`, `wzor-widok`, `wzor-zrodlo`, `wzor-strona`, `wzor-zakreslacz`, `wzor-zakreslenia` bez zmian; w pasku licznika pod wzorem te same id co na liczniku (jeden komponent). Nowe id grupy W to propozycja dla 07 w `fix7-2026-10-26.md` („Dla 07”); trafiają tutaj po dopisaniu wierszy w `e2e/README.md` (kontrakt F07-17).
+- **Zależności 05:** skaner dokumentów (moduł natywny), wiele wierszy wzoru na projekt i usunięcie bez kosza (N4), obrót strony jako dana wzoru (strona → kąt), „ostatnio oglądany wzór” projektu.
+- **Kolejność VoiceOver i Magic Tap** jak na liczniku; pasek licznika pod wzorem to ten sam komponent co strefa +1 w mniejszym rozmiarze.
+
 ## Ikona: wpisy konfiguracji (dla 08)
 ```json
 { "icon": "./assets/icon.png",
@@ -633,7 +765,7 @@ Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF,
 Zegarek: `ikona/watch.png` (1088 × 1088). Ikona warstwowa `.icon` (Liquid Glass) wymaga Icon Composer na macOS: warstwy `ikona/tlo.svg` i `ikona/pierwszy-plan*.svg` to paczka dla kroku właściciela; PNG działają bez `.icon`.
 
 ## Poza tym etapem (dla audytu roli 04 po roli 08 albo osobnej sesji)
-Makiety nienarysowane w build (zegarek i ekran blokady: fix NZ-08-P3-04, `aktywnosc.html`): wzór poziomo i licznik poziomo (znacznik na wzorze pionowo: fix NZ-08-P2-04) (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
+Makiety nienarysowane w build (zegarek i ekran blokady: fix NZ-08-P3-04, `aktywnosc.html`; wzór pionowo i poziomo, rysowanie, iPad: fix NZ-P217-04, `fix7-2026-10-26/wzor.html`): reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
 
 ## Propozycja wpisu do pamięci portfolio (repo `prompts`, dopisuje właściciel)
 | Aplikacja | Metafora / element firmowy | Paleta (rdzeń) | Kroje | Uwagi właściciela |
