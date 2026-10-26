@@ -36,7 +36,8 @@
     "blizniak": "Notatka i przypomnienie z tego samego rzędu części-pary (BR-PRJ-014/S2; tekst 08 do akceptacji 04, Z07-05).",
     "znaczniki_sesji": "Podpis nad kreskami sesji (design-spec „Kreski sesji przez północ”).",
     "ostatni_darmowy": "Cicha linia pod liczbą w ostatnim darmowym dniu (design-spec „Limit dni”, P-065 (2a)).",
-    "cel_dnia": "Cel dzienny tylko przy terminie (BR-DNI-005/S5; tekst 08 do akceptacji 04)."
+    "cel_dnia": "Cel dzienny tylko przy terminie (BR-DNI-005/S5; tekst 08 do akceptacji 04).",
+    "calosc": "Ekran licznika sekcji, cicha linia pod liczbą: suma sekcji kawałka (BR-LIC-018/S1); {{czesc}} = nazwa części (kawałka), {{count}} = suma. Ok. 30 znaków."
   },
   "limit": {
     "zawczasu": "Komunikat zamiast przycisków +1 i −1 po wyczerpaniu darmowych dni (BR-ZAK-006, design-spec „Limit dni”). {{miesiac}} = nazwa miesiąca w języku aplikacji, {{data}} = data wznowienia w formacie języka, {{count}} = liczba rzędów zachowanych w projekcie. Ton: spokojnie, bez straszenia; nie wolno użyć „unlock”, „upgrade”. Ok. 110 znaków.",
@@ -105,7 +106,9 @@
     "zamknij": "Tekst z prototyp.html roli 04.",
     "anuluj": "Słownik interakcji design-spec „Save / Cancel”.",
     "zapisz": "Słownik interakcji design-spec „Save / Cancel”.",
-    "wstecz": "Systemowy „Back” ekranów wtórnych (e2e/README.md `nav-wstecz`, słownik iOS)."
+    "wstecz": "Systemowy „Back” ekranów wtórnych (e2e/README.md `nav-wstecz`, słownik iOS).",
+    "dodaj": "Przycisk zatwierdzenia w prawym górnym rogu arkusza tworzącego nowy obiekt (słownik studia: Zapisz/Dodaj).",
+    "gotowe": "Przycisk końca trybu Edit w pasku nawigacji (systemowe „Done”)."
   },
   "projekty": {
     "szukaj": "Pole wyszukiwania na liście projektów (ekrany.html projekty).",
@@ -116,7 +119,14 @@
     "ukonczone": "Nagłówek sekcji projektów ukończonych.",
     "dni": "Licznik darmowych dni na liście (design-spec „Limit dni”, P-065 (2a)); bez linii przy Pro.",
     "tytul": "Duży tytuł listy projektów.",
-    "nazwa_robocza": "Etykieta projektu roboczego bez nazwy na liście projektów, w wyszukiwaniu i nad tytułem licznika (design-spec „Projekt roboczy”, P-126 (1b)). {{data}} = data i godzina startu w krótkim formacie regionu, rok tylko gdy inny niż bieżący. Tekst roli 04."
+    "nazwa_robocza": "Etykieta projektu roboczego bez nazwy na liście projektów, w wyszukiwaniu i nad tytułem licznika (design-spec „Projekt roboczy”, P-126 (1b)). {{data}} = data i godzina startu w krótkim formacie regionu, rok tylko gdy inny niż bieżący. Tekst roli 04.",
+    "ostatnia_praca_dzis": "Lista projektów, trzecia linia wiersza projektu w toku (BR-PRJ-016, bez progu dni, P-047): ostatnia zmiana licznika była dziś (data lokalna RD-16). Mała litera, bo stoi jako dopisek w wierszu. Ok. 20 znaków.",
+    "ostatnia_praca_wczoraj": "Jak ostatnia_praca_dzis, ostatnia praca wczoraj (data kalendarzowa, nie 24 h).",
+    "ostatnia_praca_dni": "Jak ostatnia_praca_dzis; {{count}} = liczba dni kalendarzowych od ostatniej zmiany licznika, ≥ 2 (0 i 1 mają osobne klucze). Bez progu: ta sama etykieta przy 2 i przy 400 dniach. Ok. 30 znaków.",
+    "dzis": "Lista projektów, wiersz projektu z terminem (BR-DNI-006): wykonanie dnia z celu dnia; {{zrobione}} = rzędy zrobione dziś, {{count}} = cel na dziś (RD-15). Ok. 25 znaków.",
+    "po_terminie": "Lista projektów, wiersz projektu, którego termin minął (RD-15 gałąź 2); {{count}} = rzędy celu, które zostały, liczone na bieżąco. Ok. 40 znaków.",
+    "kosz": "Ostatni wiersz listy projektów, tylko gdy coś jest w koszu (P-183 2a); otwiera ekran „Recently deleted”. Ta sama nazwa co tytuł ekranu i co w potwierdzeniach usunięcia (kosz.tytul, usun.*). Ok. 20 znaków.",
+    "kosz_a11y": "Etykieta VoiceOver wiersza kosza na liście; {{count}} = liczba elementów w koszu (projekty, części, liczniki)."
   },
   "historia": {
     "pusto": "Tekst z prototyp.html roli 04.",
@@ -137,7 +147,8 @@
     "powtorzenie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Pozycja menu powtórzenia (F-05).",
     "zeruj": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07 z testu historia-menu (BR-LIC-017/S6).",
     "zeruj_pytanie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Potwierdzenie zerowania z czasownikiem (design-spec.md:47).",
-    "zeruj_potwierdz": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04."
+    "zeruj_potwierdz": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
+    "znaczenie": "Pozycja menu ••• licznika: zmiana znaczenia dużej liczby (BR-LIC-012, F-09). Ok. 25 znaków."
   },
   "formularz": {
     "wpisz_tytul": "Tekst z prototyp.html roli 04.",
@@ -168,7 +179,36 @@
     "nazwa_czesc": "Tekst z prototyp.html roli 04.",
     "nazwa_opis": "Tekst z prototyp.html roli 04.",
     "cel_tytul": "Tekst z prototyp.html roli 04.",
-    "cel_pole": "Tekst z prototyp.html roli 04."
+    "cel_pole": "Tekst z prototyp.html roli 04.",
+    "nowy_tytul": "Tytuł arkusza nowego projektu (ta sama nazwa co przycisk projekty.nowy).",
+    "nowy_czesci": "Etykieta grupy pól części w formularzu nowego projektu; części są nieobowiązkowe.",
+    "nowy_czesci_opis": "Podpis w formularzu nowego projektu: części można dodać później; bez części projekt ma jeden licznik.",
+    "czesc_tytul": "Tytuł arkusza dodania części.",
+    "cel_opcjonalny": "Etykieta pola celu rzędów w arkuszu dodania części; pole nieobowiązkowe (BR-LIC-011).",
+    "licznik_tytul": "Tytuł arkusza dodania licznika (BR-LIC-006).",
+    "licznik_nazwa": "Etykieta pola nazwy licznika (np. „Cable stitches”).",
+    "licznik_czesc": "Etykieta wyboru części, do której trafia licznik; domyślnie część, w której ostatnio pracowano.",
+    "licznik_rodzaj": "Etykieta przełącznika: co liczy licznik (rzędy albo oczka).",
+    "rodzaj_rzedy": "Opcja przełącznika: licznik rzędów. Słowo dziergających. Ok. 8 znaków.",
+    "rodzaj_oczka": "Opcja przełącznika: licznik oczek (stitches). Ok. 8 znaków.",
+    "licznik_sekcje": "Podpis w arkuszu licznika: liczniki rzędów jednej części sumują się w licznik całości kawałka (BR-LIC-018).",
+    "notatka_pole": "Etykieta VoiceOver wielowierszowego pola notatki; {{projekt}} = nazwa projektu. Notatka bez limitu (BR-PRJ-002).",
+    "notatka_opis": "Podpis pod polem notatki: notatka jest widoczna przy liczniku (BR-PRJ-002).",
+    "znaczenie_tytul": "Tytuł arkusza znaczenia liczby; dalej dwie opcje.",
+    "znaczenie_skonczone": "Opcja (domyślna): duża liczba to rzędy skończone.",
+    "znaczenie_skonczone_opis": "Przykład pod opcją; {{n}} = obecna liczba rzędów skończonych.",
+    "znaczenie_w_trakcie": "Opcja: duża liczba to numer rzędu, który się teraz robi (skończone + 1).",
+    "znaczenie_w_trakcie_opis": "Przykład pod opcją; {{nastepny}} = rzędy skończone + 1.",
+    "znaczenie_info": "Podpis arkusza znaczenia: zmienia się tylko wyświetlanie, dane i historia bez zmian.",
+    "narzedzie_mm": "Etykieta pola rozmiaru w milimetrach (klawiatura dziesiętna).",
+    "narzedzie_podglad": "Podgląd pod polem rozmiaru; {{rozmiar}} = tekst z projekt.rozmiar_us albo projekt.rozmiar_mm.",
+    "narzedzie_blad": "Błąd pola rozmiaru (0, ujemny albo nie liczba): co zrobić. Przykłady liczb z separatorem dziesiętnym regionu.",
+    "narzedzie_tytul": "Tytuł arkusza drutu albo szydełka (to samo co projekt.narzedzie_wiersz).",
+    "wyczysc": "Przycisk tekstowy w arkuszu: usuwa ustawioną wartość (rozmiar narzędzia).",
+    "termin_tytul": "Tytuł arkusza terminu (ta sama nazwa co projekt.termin).",
+    "termin_podglad": "Podgląd pod wyborem daty; {{count}} = cel na dziś z RD-15 dla wybranej daty.",
+    "termin_bez_celow": "Podgląd pod wyborem daty, gdy żadna część nie ma celu rzędów (cel dnia niemożliwy).",
+    "termin_brak": "Przycisk tekstowy w arkuszu terminu: usuwa termin."
   },
   "ukonczenie": {
     "udostepnij": "Tekst z ekrany.html roli 04.",
@@ -192,7 +232,40 @@
     "postep_bez_celow": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-DNI-004/S3, RD-14-W6.",
     "miejsce_wzoru": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
     "ostatnia_zmiana": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
-    "czesc_rzedy": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Podpis wiersza części pod nazwą. Formy _one/_other."
+    "czesc_rzedy": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Podpis wiersza części pod nazwą. Formy _one/_other.",
+    "postep_opis": "Ekran projektu, linia pod „{{procent}}% done” (BR-DNI-004: postęp oznaczony jako przybliżenie z rzędów, RD-14). Ok. 55 znaków.",
+    "termin_dzis": "Ekran projektu, linia terminu (BR-DNI-005); {{data}} = termin, krótka data regionu (np. Nov 4), {{zrobione}} = wykonanie dnia, {{count}} = cel na dziś (stały w ciągu dnia). Ok. 45 znaków.",
+    "termin_po": "Ekran projektu, termin minął (RD-15 gałąź 2, „termin minął, zostało N rzędów”); {{data}} = termin, {{count}} = rzędy, które zostały, na bieżąco. Ok. 55 znaków.",
+    "termin_osiagniety": "Ekran projektu, termin ustawiony i wszystkie rzędy celów zrobione (RD-15 gałąź 1, przed „termin minął”); {{data}} = termin.",
+    "termin_bez_celow": "Ekran projektu, termin ustawiony, ale żadna część nie ma celu rzędów (RD-15 C = 0): bez celu dnia; {{data}} = termin.",
+    "czesci": "Nagłówek grupy części na ekranie projektu (systemowa lista grupowana, zwykła wielka litera).",
+    "calosc": "Ekran projektu, podpis części, która ma kilka liczników rzędów (sekcje): suma sekcji, licznik całości (BR-LIC-018); {{count}} = suma rzędów sekcji nieusuniętych. „Whole piece” = cały kawałek dzianiny, nie cały projekt.",
+    "para": "Ekran projektu, podpis części założonej jako druga z pary (BR-PRJ-014); {{nazwa}} = nazwa pierwszej części (np. Left sleeve).",
+    "liczniki": "Tryb Edit ekranu projektu, podpis części; {{count}} = liczba liczników w części.",
+    "notatka_pusta": "Ekran projektu, wiersz notatki, gdy notatka jest pusta; otwiera arkusz notatki. Zaproszenie do działania.",
+    "notatka_a11y": "Etykieta VoiceOver wiersza notatki; {{tresc}} = początek notatki (ucięty przez system).",
+    "szczegoly": "Nagłówek grupy „szczegóły” na ekranie projektu (drut lub szydełko, termin, miejsce we wzorze).",
+    "narzedzie_wiersz": "Ekran projektu, wiersz narzędzia, gdy rozmiar nie jest ustawiony; także tytuł arkusza. Druty do dziergania albo szydełko (BR-PRJ-004).",
+    "druty": "Druty do dziergania (knitting needles): etykieta wiersza, gdy ustawiono druty, i opcja przełącznika w arkuszu. Ok. 10 znaków.",
+    "szydelko": "Szydełko (crochet hook): etykieta wiersza, gdy ustawiono szydełko, i opcja przełącznika. Ok. 10 znaków.",
+    "rozmiar_us": "Rozmiar narzędzia; {{mm}} = rozmiar w mm z separatorem dziesiętnym regionu, {{us}} = oznaczenie US z tabeli (druty: liczba, np. 6; szydełko: litera i liczba, np. K-10 ½) — RD-11, RD-19. Gdy brak oznaczenia US: rozmiar_mm.",
+    "rozmiar_mm": "Rozmiar narzędzia bez odpowiednika US (RD-11-W3, RD-19-W4); {{mm}} jak w rozmiar_us.",
+    "dodaj_wartosc": "Wartość wiersza szczegółów, gdy nic nie ustawiono (narzędzie); stuknięcie otwiera arkusz.",
+    "termin": "Etykieta wiersza terminu na ekranie projektu i tytuł arkusza (F-61 „Gotowe do”): data, do której projekt ma być skończony.",
+    "termin_brak": "Wartość wiersza terminu, gdy termin nie jest ustawiony.",
+    "dodaj_a11y": "Etykieta VoiceOver przycisku „+” w pasku ekranu projektu; otwiera menu z dodaniem części albo licznika.",
+    "menu_a11y": "Etykieta VoiceOver przycisku ••• na ekranie projektu.",
+    "dodaj_czesc": "Pozycja menu „+” i odnośnik w formularzu nowego projektu: dodanie części (kawałka) projektu. Ok. 15 znaków.",
+    "dodaj_licznik": "Pozycja menu „+”: dodanie licznika (rzędów albo oczek) w części. Ok. 15 znaków.",
+    "edytuj": "Pozycja menu •••: tryb edycji listy części i liczników (usuwanie przyciskiem, alternatywa dla przesunięcia).",
+    "zrob_taka_sama": "Pozycja menu •••: nowy projekt z tymi samymi częściami i przypomnieniami, liczniki od 0 (BR-PRJ-007, F-20). Ok. 25 znaków.",
+    "usun": "Pozycja menu ••• (czerwona), otwiera potwierdzenie usunięcia projektu. Wielokropek: będzie pytanie.",
+    "wznow": "Pozycja menu ••• projektu ukończonego: przywraca projekt do „w toku” (F-19).",
+    "wznowiono": "Ogłoszenie VoiceOver po wznowieniu; {{nazwa}} = nazwa projektu; „In progress” = nazwa grupy listy projektów (projekty.w_toku).",
+    "kopia_tytul": "Tytuł potwierdzenia „Zrób taką samą”; {{nazwa}} = nazwa projektu.",
+    "kopia_opis": "Treść potwierdzenia „Zrób taką samą” (BR-PRJ-007: te same części i przypomnienia, liczniki 0, oryginał bez zmian).",
+    "kopia_potwierdz": "Przycisk potwierdzenia „Zrób taką samą”.",
+    "edycja_info": "Podpis pod listą części w trybie Edit; 30 = okres kosza (P-026) — tłumacz zostawia liczbę."
   },
   "dni": {
     "dzien": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Formy _one/_other.",
@@ -291,5 +364,36 @@
     "oblicz": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04.",
     "film_bez_sieci": "Tekst roboczy 08 (Z07-05: ekran bez makiety 04) — do zatwierdzenia przez 04. BR-WZR-007/S4.",
     "kalk_cel": "Tekst roboczy 08 (Z07-05) — do zatwierdzenia przez 04. Jednostka tylko przy polu próbki (R-131), cel w tej samej jednostce."
+  },
+  "czesc": {
+    "co_dalej_tytul": "Nagłówek arkusza po „Next part”, gdy po osiągnięciu celu nie ma następnej części (P-182 Q4a).",
+    "co_dalej_opis": "Treść arkusza; {{czesc}} = część, która osiągnęła cel, {{projekt}} = nazwa projektu.",
+    "druga_taka_sama": "Opcja arkusza: druga część jako para (bliźniak, BR-PRJ-014), np. drugi rękaw; {{czesc}} = nazwa pierwszej części.",
+    "druga_opis": "Podpis opcji pary; {{count}} = cel z pierwszej części (jej rzędy).",
+    "druga_bez_celu": "Podpis opcji pary, gdy pierwsza część ma 0 rzędów (BR-PRJ-014/S3).",
+    "nowa": "Opcja arkusza: nowa, zwykła część.",
+    "nowa_opis": "Podpis opcji nowej części."
+  },
+  "usun": {
+    "tytul": "Tytuł potwierdzenia usunięcia projektu, części albo licznika; {{nazwa}} = nazwa w cudzysłowie drukarskim języka.",
+    "projekt_opis": "Treść potwierdzenia usunięcia projektu (BR-DAN-008/S2: termin przy usuwaniu); {{data}} = dzień usunięcia + 30 dni, krótka data regionu. „Recently deleted” i „Projects” jak projekty.kosz i projekty.tytul.",
+    "projekt": "Przycisk destrukcyjny w potwierdzeniu (słownik: Delete {object}).",
+    "czesc_opis": "Treść potwierdzenia usunięcia części; {{count}} = liczba liczników części, {{data}} jak w usun.projekt_opis.",
+    "czesc": "Przycisk destrukcyjny w potwierdzeniu usunięcia części.",
+    "licznik_opis": "Treść potwierdzenia usunięcia licznika; {{data}} jak w usun.projekt_opis.",
+    "licznik": "Przycisk destrukcyjny w potwierdzeniu usunięcia licznika.",
+    "a11y": "Etykieta VoiceOver czerwonego przycisku usunięcia w trybie Edit i akcji przesunięcia; {{nazwa}} = część albo licznik.",
+    "ogloszenie": "Ogłoszenie VoiceOver po usunięciu; {{nazwa}} = usunięty element."
+  },
+  "kosz": {
+    "tytul": "Tytuł ekranu kosza (duży tytuł); ta sama nazwa wszędzie (projekty.kosz, usun.*).",
+    "opis": "Zdanie pod tytułem kosza; {{count}} = KOSZ_DNI z konfiguracji (dziś 30).",
+    "projekt": "Podpis wiersza projektu w koszu; {{data}} = ostatni dzień przywrócenia, krótka data regionu.",
+    "czesc": "Podpis wiersza części w koszu; {{projekt}} = projekt, do którego wróci, {{data}} jak wyżej.",
+    "licznik": "Podpis wiersza licznika w koszu; {{projekt}}, {{czesc}} = gdzie wróci, {{data}} jak wyżej.",
+    "przywroc": "Przycisk w wierszu kosza (BR-DAN-008). Ok. 10 znaków.",
+    "przywroc_a11y": "Etykieta VoiceOver przycisku przywrócenia; {{nazwa}} = element.",
+    "przywrocono": "Ogłoszenie VoiceOver po przywróceniu; {{nazwa}} = element.",
+    "pusto": "Pusty ekran kosza; {{count}} = KOSZ_DNI (dziś 30)."
   }
 }

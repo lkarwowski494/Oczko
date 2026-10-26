@@ -1,0 +1,36 @@
+// Trasa „/kosz”: „Recently deleted” (F-33, BR-DAN-008; P-183 2a — wejście z ostatniego wiersza listy projektów). Przywrócenie projektu, części
+// albo licznika (`przywroc*`), potem lista od nowa i ogłoszenie `kosz.przywrocono`; pusty kosz zostaje na ekranie (wiersz listy znika po wyjściu).
+import React, { useCallback, useState } from 'react';
+import { View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import { Kosz, type PozycjaKosza, type StanKosza } from '../src/ekrany/Kosz';
+import { useKolory } from '../src/ekrany/motyw';
+import { useAplikacja } from '../src/kompozycja/Kontekst';
+import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
+import { stanKosza } from '../src/kompozycja/projekt';
+import { oglos } from '../src/kompozycja/system';
+import { przywrocCzesc, przywrocLicznik, przywrocProjekt } from '../src/przypadki-uzycia/projekt';
+import { widokKosza } from '../src/przypadki-uzycia/widok-kosza';
+
+export default function EkranKosza(): React.ReactElement {
+  const { kontener, licznik } = useAplikacja();
+  const k = useKolory();
+  const [stan, ustaw] = useState<StanKosza | null>(null);
+  const wczytaj = useCallback(async () => {
+    const w = await widokKosza(kontener.z);
+    if (w.ok) ustaw(stanKosza(w.wartosc, kontener.j));
+  }, [kontener]);
+  useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
+  if (!stan) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
+  const z = kontener.z;
+  async function przywroc(p: { rodzaj: PozycjaKosza['rodzaj']; id: string }): Promise<void> {
+    const nazwa = stan?.pozycje.find((x) => x.id === p.id && x.rodzaj === p.rodzaj)?.nazwa ?? '';
+    const r = p.rodzaj === 'projekt' ? await przywrocProjekt(z, { projektId: p.id })
+      : p.rodzaj === 'czesc' ? await przywrocCzesc(z, { czescId: p.id }) : await przywrocLicznik(z, { licznikId: p.id });
+    if (!r.ok) return;
+    await licznik.poZmianie();
+    oglos(kontener.j.t('kosz.przywrocono', { nazwa }));
+    await wczytaj();
+  }
+  return <Bezpieczny><Kosz stan={stan} t={kontener.j.t} naPrzywroc={(p) => void przywroc(p)} /></Bezpieczny>;
+}

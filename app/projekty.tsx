@@ -37,6 +37,7 @@ export default function EkranProjektow(): React.ReactElement {
         }}
         naNowy={() => undefined /* formularz nowego projektu: krok 3B (formularze) */}
         naUstawienia={() => router.push('/ustawienia')}
+        naKosz={() => router.push('/kosz')}
       />
     </Bezpieczny>
   );

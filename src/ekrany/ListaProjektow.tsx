@@ -5,10 +5,10 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import type { Tlumacz } from './wspolne';
 
-export type WierszProjektu = { id: string; nazwa: string; opis: string; kolorWloczki: string | null }; // opis sformatowany: „Left sleeve · row 47 of 96 · today”
+export type WierszProjektu = { id: string; nazwa: string; opis: string; kolorWloczki: string | null; termin?: string | null; ostatniaPraca?: string | null }; // teksty sformatowane w kompozycji
 /** Licznik darmowych dni (P-065 (2a), design-spec.md:18); `null` przy Pro (design-spec.md:19). */
 export type DniNaLiscie = { zostalo: number; limit: number; miesiac: string } | null;
-export type StanListyProjektow = { wToku: WierszProjektu[]; ukonczone: WierszProjektu[]; zapytanie: string; dni: DniNaLiscie };
+export type StanListyProjektow = { wToku: WierszProjektu[]; ukonczone: WierszProjektu[]; zapytanie: string; dni: DniNaLiscie; kosz?: number };
 export type PropsListyProjektow = {
   stan: StanListyProjektow; // wToku i ukonczone już przefiltrowane przez zapytanie (wyszukiwanie: przypadek użycia)
   t: Tlumacz;
@@ -16,9 +16,10 @@ export type PropsListyProjektow = {
   naOtworz(id: string): void;
   naNowy(): void;
   naUstawienia?(): void;
+  naKosz?(): void;
 };
 
-export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstawienia }: PropsListyProjektow): React.ReactElement {
+export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstawienia, naKosz }: PropsListyProjektow): React.ReactElement {
   const k = useKolory();
   const st = style(k);
   const pusto = s.wToku.length === 0 && s.ukonczone.length === 0;
@@ -30,7 +31,10 @@ export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstaw
           {w.kolorWloczki && <View style={[st.kropka, { backgroundColor: w.kolorWloczki }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />}
           <View style={st.wierszTekst}>
             <Text style={st.nazwa}>{w.nazwa}</Text>
-            <Text style={st.opis}>{w.opis}</Text>
+            {w.opis !== '' && <Text style={st.opis}>{w.opis}</Text>}
+            {w.termin && <Text style={st.opis}>{w.termin}</Text>}
+            {/* „last worked …” w każdym wierszu w toku, bez progu (BR-PRJ-016, P-182, P-183 1a) */}
+            {w.ostatniaPraca && <Text style={st.opis} testID="projekty-ostatnia-praca">{w.ostatniaPraca}</Text>}
           </View>
         </Pressable>
       ))}
@@ -54,6 +58,15 @@ export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstaw
       {pusto && <Text style={st.info}>{s.zapytanie ? t('projekty.brak_wynikow', { zapytanie: s.zapytanie }) : t('projekty.pusto')}</Text>}
       {sekcja(t('projekty.w_toku'), s.wToku)}
       {sekcja(t('projekty.ukonczone'), s.ukonczone, 'projekty-ukonczone')}
+      {/* Wejście do „Recently deleted”: ostatni wiersz, tylko przy niepustym koszu (P-183 2a) */}
+      {naKosz && (s.kosz ?? 0) > 0 && (
+        <View style={st.grupa}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.kosz_a11y', { count: s.kosz ?? 0 })} onPress={naKosz} style={st.wiersz} testID="projekty-kosz">
+            <Text style={[st.nazwa, st.wierszTekst]}>{t('projekty.kosz')}</Text>
+            <Text style={st.opis}>{s.kosz}</Text>
+          </Pressable>
+        </View>
+      )}
       {s.dni && <Text style={st.info} testID="projekty-dni-darmowe">{t('projekty.dni', { zostalo: s.dni.zostalo, limit: s.dni.limit, miesiac: s.dni.miesiac })}</Text>}
     </ScrollView>
   );
