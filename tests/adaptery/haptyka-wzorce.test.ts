@@ -3,9 +3,9 @@
 // (partia 4, razem z adapterem src/platforma/haptyka.ts); sygnatura: „Kontrakt partii 4” w moduly.md. Wyrocznia: tokeny 04 (styl na wzorzec).
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { haptyka } from '../../../src/platforma/haptyka';
+import { haptyka } from '../../src/platforma/haptyka';
 
-const tokeny = JSON.parse(readFileSync(join(__dirname, '../../../docs/design/tokeny.json'), 'utf8')).haptyka as Record<string, string>;
+const tokeny = JSON.parse(readFileSync(join(__dirname, '../../docs/design/tokeny.json'), 'utf8')).haptyka as Record<string, string>;
 const wzorce = Object.keys(tokeny).filter((k) => !k.startsWith('_'));
 /** Oczekiwane wywołania modułu (impact: styl UIImpactFeedbackGenerator, notification: typ UINotificationFeedbackGenerator) z tekstu tokenu. */
 const OCZEKIWANE: Record<string, string[]> = {

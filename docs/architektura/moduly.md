@@ -69,7 +69,8 @@ export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: st
 export interface Synchronizacja { wlacz(): Promise<Wynik<void>>; wylacz(): Promise<void>; stan(): StanSynchronizacji; zglosZmiane(encja: string, id: string): void }
 export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // P-135 Q3a, ADR-0010: anulowanie i oczekiwanie nie są błędem (MON-04); adapter: statusZBledu
 export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<StatusZakupu>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
-export interface Haptyka { rzad(): void; przypomnienie(): void }               // dwa wzorce F-48; brak dźwięku (BR-LIC-005)
+export type WzorzecHaptyki = 'plus' | 'piataKreska' | 'rzadZInstrukcja' | 'minus' | 'blokadaStukniecie' | 'bladZapisu'; // klucze tokenów 04 „haptyka” (P-135 Q4a)
+export interface Haptyka { zagraj(w: WzorzecHaptyki): void } // F-48: rozpoznawalne tylko plus i rzadZInstrukcja, reszta systemowa; brak dźwięku (BR-LIC-005)
 export interface EkranAktywny { wlacz(tag: string): void; wylacz(tag: string): void } // F-10, każdy tag wyłączany (rejestr Expo 7)
 export interface CzasWTle { chron<T>(nazwa: string, fn: (s: SygnalCzasu) => Promise<T>): Promise<T> } // beginBackgroundTask (rejestr Apple 17); wygaśnięcie → sygnał (ADR-0002 (7))
 export type SygnalCzasu = { wygaslo(): boolean };  // sprawdzany między instrukcjami długiej transakcji; true → wyjątek → ROLLBACK
@@ -163,12 +164,6 @@ export type StanZegarkaV1 = StanEkranuBlokadyV1 & { pro: boolean; proWaznoscDo: 
 ## Kontrakt partii 4 (fix-4 2026-10-26, NZ-08-P3-05, P-135)
 Zmiany sygnatur portów i typów, które wdraża 08 na początku partii 4 (przed ekranami) **razem z adapterami i wywołaniami**. Do tego czasu `src/domena/porty.ts` i blok „Porty domeny” zostają bez zmian (zmiana typu bez adaptera nie przechodzi `typecheck`), a ten blok jest kontraktem docelowym. **Wyjątek nazwany (P-135):** `sprawdz-porty.mjs` porównuje tylko blok „Porty domeny”; rozjazd z tym blokiem jest zamierzony do commitu 08, który przenosi te deklaracje do „Porty domeny” i `porty.ts` i usuwa je stąd. Kontrola dokumentu: `docs/architektura/narzedzia/kontrola-fix4.mjs`.
 ```ts
-
-// (b) haptyka — P-135 Q4a: wzorce = klucze docs/design/tokeny.json → „haptyka” (bez `_zasada`); nowy wzorzec 04 zmienia listę, nie port
-export type WzorzecHaptyki = 'plus' | 'piataKreska' | 'rzadZInstrukcja' | 'minus' | 'blokadaStukniecie' | 'bladZapisu';
-export interface Haptyka { zagraj(w: WzorzecHaptyki): void } // F-48: rozpoznawalne tylko plus i rzadZInstrukcja, reszta systemowa; brak dźwięku (BR-LIC-005)
-// adapter: styl z tekstu tokenu (impactAsync light/medium/soft/rigid, notificationAsync error; rzadZInstrukcja = dwa .medium co 90 ms);
-// błąd modułu pomijany (haptyka nie zmienia wyniku operacji); rzad()/przypomnienie() znikają (= zagraj('plus') / zagraj('rzadZInstrukcja')).
 
 
 // Pora ukończenia (P-137, 04 fix-2: ekran wybiera tylko datę, od startu projektu do dziś) — src/przypadki-uzycia/projekt.ts

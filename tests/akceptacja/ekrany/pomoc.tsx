@@ -11,7 +11,10 @@ export async function tEn(): Promise<Tlumacz> {
   const i = await utworzI18n({ magazyn: { odczytaj: async () => null, zapisz: async () => {} }, systemowe: () => ['en-US'], zasoby: ZASOBY });
   return i.t;
 }
-export const atrapaHaptyki = () => ({ rzad: jest.fn(), przypomnienie: jest.fn() }) satisfies Haptyka;
+// 08 partia 4 (P-135 Q4a): port Haptyka.zagraj(WzorzecHaptyki) zamiast rzad()/przypomnienie(); `zagrane` liczy wywołania wzorca
+// (rzad → 'plus', przypomnienie → 'rzadZInstrukcja') — te same asercje co przed zmianą portu.
+export const atrapaHaptyki = () => ({ zagraj: jest.fn() }) satisfies Haptyka;
+export const zagrane = (h: ReturnType<typeof atrapaHaptyki>, w: Parameters<Haptyka['zagraj']>[0]): number => h.zagraj.mock.calls.filter(([x]) => x === w).length;
 export const atrapaSystemu = () =>
   ({ otworzAdres: jest.fn(), prosbaOOcene: jest.fn(), zarzadzajSubskrypcja: jest.fn(), udostepnij: jest.fn() }) satisfies System;
 export function atrapaCyklu() {

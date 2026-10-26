@@ -9,16 +9,17 @@ test('Zegar: ms i strefa z systemu, dzień lokalny w strefie (RD-16-W1: 2023-06-
   expect(() => zegarSystemu(() => ms, () => 'Nie/Istnieje').teraz()).toThrow('Zegar');
 });
 
-test('Haptyka: rząd = jedno .light; przypomnienie = dwa .medium z odstępem 90 ms; błąd modułu bez wyjątku', async () => {
+// 08 partia 4 (P-135 Q4a): zagraj(WzorzecHaptyki) zamiast rzad()/przypomnienie(); pełna wyrocznia tokenów: tests/adaptery/haptyka-wzorce.test.ts.
+test('Haptyka: plus = jedno .light; rzadZInstrukcja = dwa .medium z odstępem 90 ms; błąd modułu bez wyjątku', async () => {
   const uderzenia: string[] = [];
   const czekania: number[] = [];
-  const h = haptyka({ impactAsync: async (s) => { uderzenia.push(s); } }, async (ms) => { czekania.push(ms); });
-  h.rzad();
-  h.przypomnienie();
+  const h = haptyka({ impactAsync: async (s) => { uderzenia.push(s); }, notificationAsync: async () => undefined }, async (ms) => { czekania.push(ms); });
+  h.zagraj('plus');
+  h.zagraj('rzadZInstrukcja');
   await new Promise((r) => setTimeout(r, 0));
   await new Promise((r) => setTimeout(r, 0));
   expect([uderzenia, czekania]).toEqual([['light', 'medium', 'medium'], [ODSTEP_PRZYPOMNIENIA_MS]]);
-  expect(() => haptyka({ impactAsync: async () => { throw new Error('x'); } }).rzad()).not.toThrow();
+  expect(() => haptyka({ impactAsync: async () => { throw new Error('x'); }, notificationAsync: async () => { throw new Error('x'); } }).zagraj('bladZapisu')).not.toThrow();
 });
 
 test('EkranAktywny: włącz i wyłącz z tym samym tagiem (activateKeepAwakeAsync / deactivateKeepAwake)', () => {

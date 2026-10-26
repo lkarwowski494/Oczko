@@ -5,7 +5,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../../src/ekrany/Licznik';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaHaptyki, odroczona, plusOk, przycisk, stanLicznika, tEn, wywolaniaLicznika } from './pomoc';
+import { atrapaHaptyki, odroczona, zagrane, plusOk, przycisk, stanLicznika, tEn, wywolaniaLicznika } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
@@ -41,10 +41,10 @@ describe('Licznik', () => {
     const { oglos, haptyka } = pokaz(stanLicznika({ skonczone: 46, dziergany: 47 }), () => d.obietnica);
     fireEvent.press(screen.getByRole('button', { name: PLUS }));
     expect(oglos).not.toHaveBeenCalled();
-    expect(haptyka.rzad).not.toHaveBeenCalled();
+    expect(zagrane(haptyka, 'plus')).toBe(0);
     d.rozwiaz(plusOk(47));
     await waitFor(() => expect(oglos).toHaveBeenCalledWith('47 done. Now row 48.'));
-    expect(haptyka.rzad).toHaveBeenCalledTimes(1);
+    expect(zagrane(haptyka, 'plus')).toBe(1);
   });
 
   test('R-004 / NFR-DAN-002: błąd zapisu nigdy cicho — komunikat, bez ogłoszenia i haptyki (design-spec.md:54)', async () => {
@@ -53,7 +53,7 @@ describe('Licznik', () => {
     // design-spec.md:54 „Couldn’t save that row. It’s still on screen; try again.”
     expect(await screen.findByText('Couldn’t save that row. It’s still on screen; try again.')).toBeTruthy();
     expect(oglos).not.toHaveBeenCalledWith(expect.stringMatching(/done\. Now row/));
-    expect(haptyka.rzad).not.toHaveBeenCalled();
+    expect(zagrane(haptyka, 'plus')).toBe(0);
     expect(screen.getByRole('button', { name: PLUS })).toBeTruthy(); // ponowienie: ten sam przycisk
   });
 
@@ -63,7 +63,7 @@ describe('Licznik', () => {
     // design-spec.md:30 „Now knitting row 48” → przy 15 skończonych: rząd 16
     await waitFor(() => expect(screen.getByText('Now knitting row 16')).toBeTruthy());
     expect(oglos).not.toHaveBeenCalledWith(expect.stringMatching(/^16 done/));
-    expect(haptyka.rzad).not.toHaveBeenCalled();
+    expect(zagrane(haptyka, 'plus')).toBe(0);
   });
 
   test('BR-LIC-004/S2: Unlock na pasku blokady, potem +1 znów dodaje (design-spec.md:34, prototyp.html:104)', async () => {
@@ -145,21 +145,21 @@ describe('Licznik', () => {
     const wyniki: WynikPlus[] = [plusOk(12, { zdarzenia: ['przypomnienie'] }), plusOk(13, { zdarzenia: ['rzad'] })];
     const { haptyka } = pokaz(stanLicznika({ skonczone: 11, dziergany: 12 }), async () => wyniki.shift()!);
     fireEvent.press(screen.getByRole('button', { name: PLUS }));
-    await waitFor(() => expect(haptyka.przypomnienie).toHaveBeenCalledTimes(1));
-    expect(haptyka.rzad).not.toHaveBeenCalled();
+    await waitFor(() => expect(zagrane(haptyka, 'rzadZInstrukcja')).toBe(1));
+    expect(zagrane(haptyka, 'plus')).toBe(0);
     fireEvent.press(screen.getByRole('button', { name: PLUS }));
-    await waitFor(() => expect(haptyka.rzad).toHaveBeenCalledTimes(1));
-    expect(haptyka.przypomnienie).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(zagrane(haptyka, 'plus')).toBe(1));
+    expect(zagrane(haptyka, 'rzadZInstrukcja')).toBe(1);
   });
 
   test('BR-LIC-020/S2: koniec powtórzenia i cel dnia wibrują wzorem przypomnienia, nie rzędu (brzmienie ER-36)', async () => {
     const wyniki: WynikPlus[] = [plusOk(8, { zdarzenia: ['koniec-powtorzenia'] }), plusOk(13, { zdarzenia: ['cel-dnia'] })];
     const { haptyka } = pokaz(stanLicznika({ skonczone: 7, dziergany: 8 }), async () => wyniki.shift()!);
     fireEvent.press(screen.getByRole('button', { name: PLUS }));
-    await waitFor(() => expect(haptyka.przypomnienie).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(zagrane(haptyka, 'rzadZInstrukcja')).toBe(1));
     fireEvent.press(screen.getByRole('button', { name: PLUS }));
-    await waitFor(() => expect(haptyka.przypomnienie).toHaveBeenCalledTimes(2));
-    expect(haptyka.rzad).not.toHaveBeenCalled();
+    await waitFor(() => expect(zagrane(haptyka, 'rzadZInstrukcja')).toBe(2));
+    expect(zagrane(haptyka, 'plus')).toBe(0);
   });
 
   test('BR-LIC-020/S3: wibracje wyłączone — zero wywołań haptyki', async () => {
@@ -169,8 +169,8 @@ describe('Licznik', () => {
     fireEvent.press(screen.getByRole('button', { name: PLUS }));
     await waitFor(() => expect(w.naPlus).toHaveBeenCalledTimes(2));
     await new Promise((r) => setTimeout(r, 0));
-    expect(haptyka.rzad).not.toHaveBeenCalled();
-    expect(haptyka.przypomnienie).not.toHaveBeenCalled();
+    expect(zagrane(haptyka, 'plus')).toBe(0);
+    expect(zagrane(haptyka, 'rzadZInstrukcja')).toBe(0);
   });
 
   test('BR-PRJ-002/S1: notatka widoczna przy liczniku bez otwierania innego ekranu', () => {
