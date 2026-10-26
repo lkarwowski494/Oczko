@@ -28,3 +28,8 @@ Opcja A.
 ## Opcje: zalety i wady
 ### A — zalety: system robi trudną część · wady: Swift, test tylko w symulatorze.
 ### B — zalety: czysty JS · wady: brak odrzucania dłoni (rdzeń P-042), własna obsługa nacisku i wygładzania.
+
+## Uzupełnienie 2026-10-26 (fix-7 05: NZ-P217-05, P-221 Q1a, P-218 Q2a, P-220 W5a, W6a; decyzja A bez zmian)
+- **Technika nakładki:** `PKCanvasView` nad każdą stroną przez `PDFView.pageOverlayViewProvider` (`PDFPageOverlayViewProvider`, iOS/iPadOS 16+, odczyt 2026-10-26), w jednym widoku natywnym `WidokWzoru` modułu `oczko-wzor`; płótno ma rozmiar strony, a zoom i przewijanie robi `PDFView`. Odrzucone: pakiet PDF w React Native z osobnym płótnem (synchronizacja zoomu przez most, dwie zależności natywne; P-221 Q1b).
+- **iPad bez rysika (P-218 Q2a):** zakreślacz palcem jak na iPhonie; polityka `pencilOnly` od pierwszego dotknięcia rysikiem na otwartym wzorze. Pasek narzędzi własny (P-220 W5a; iPhone: Highlighter, Eraser, Undo, Done; iPad: Highlighter, Pen, Eraser, Undo), kolor zakreślacza z tokenów 04 (W6a).
+- Potwierdzenie: XCTest W3 (`pencilOnly`: przeciągnięcie palcem nie zmienia `drawing.strokes.count`), test `zapiszRysunek` (moduly.md, „Kontrakt partii 6”).

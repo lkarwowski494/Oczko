@@ -55,3 +55,7 @@ Nawigacja (np. `expo-router`) i `react-native-svg`: decyzja roli 08 przy ekranac
 
 ## Uzupełnienie 2026-10-26 (atlas 1.1, rola 05; nie dotyczy 1.0)
 Szkic wiersza do tabeli „Decyzja” przy wdrożeniu atlasu (P-179, ADR-0024, P-201 Q1a); wpisuje go rola 08 razem z instalacją: `react-native-svg` 15.15.4 (dokładnie; `bundledNativeModules.json` SDK 57; wydana 2026-03-18, ≥ 14 dni wg P-036; MIT) | atlas A2–A3 (`docs/atlas/e0-rozpoznanie.md` §3) | `expo-image` z plikiem SVG, PNG (ADR-0024). Do tego czasu pakietu nie ma w `package.json` (kontrola `ZALEZNOSC-BEZ-ADR` sprawdza kierunek zależność → wiersz).
+
+## Uzupełnienie 2026-10-26 (fix-7 05, NZ-P217-05; P-221 Q1a, Q3a)
+- Wiersz „Moduły Swift w `modules/`” obejmuje w 1.0 dwa nowe moduły: `oczko-wzor` (PDFKit, PencilKit, WebKit, VisionKit — biblioteki systemowe, bez pakietów; ADR-0011, ADR-0012) i `oczko-icloud` (CloudKit; ADR-0005). Pakiet PDF dla React Native odrzucony (P-221 Q1b).
+- Szkic wiersza dla partii 6 (wpisuje go 08 razem z instalacją, po sprawdzeniu wieku ≥ 14 dni, licencji i `PrivacyInfo.xcprivacy` po `npm ci`): `expo-screen-orientation` 57.0.3 (dokładnie; zgodna z `bundledNativeModules.json` SDK 57 `~57.0.3`; wydana 2026-10-12 według rejestru npm, odczyt 2026-10-26; MIT) | F-25 (pion na iPhonie poza ekranem wzoru, ADR-0026) | wszystkie ekrany w obu orientacjach (ADR-0026 B).
