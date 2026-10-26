@@ -6,6 +6,7 @@
 - Etap: **STOP E0** (2026-10-26) — raport `docs/atlas/e0-rozpoznanie.md`; czeka na Q1–Q3
 - Zajęte numery ADR: 0022–0025 (sprawdzić `ls docs/adr` przed pushem)
 - Kopie źródeł: `oczko-warsztat/05-architekt/2026-10-26-atlas/zrodla/`
+- Kontrakt kroków dla 06: `docs/atlas/kontrakt-krokow.md` (wersja 0, robocza; wiąże po E2)
 - Następny krok: po odpowiedzi koordynatora E1 — ADR 0022–0025 (proponowane) i prototyp ryzyka w `scripts/atlas/` + `docs/atlas/prototyp/`
 - Plik `docs/atlas/stan.md` należy do roli 06 (treść); ten plik to stan roli 05.
 - Kwarantanna (CLAUDE.md): rola 05 może czytać kod jako materiał, nie jako dowód; `app/`, `src/` bez zmian
