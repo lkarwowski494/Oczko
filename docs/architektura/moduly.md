@@ -163,10 +163,17 @@ export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: st
 export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // przeniesiony z src/platforma/sklep.ts; adapter: statusZBledu
 export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<StatusZakupu>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
 // sklepIap traci kupZeStatusem (jedna implementacja odpowiedzialności, ARCH-02); sklepSztuczny.kup zwraca 'sukces'.
+
+// (b) haptyka — P-135 Q4a: wzorce = klucze docs/design/tokeny.json → „haptyka” (bez `_zasada`); nowy wzorzec 04 zmienia listę, nie port
+export type WzorzecHaptyki = 'plus' | 'piataKreska' | 'rzadZInstrukcja' | 'minus' | 'blokadaStukniecie' | 'bladZapisu';
+export interface Haptyka { zagraj(w: WzorzecHaptyki): void } // F-48: rozpoznawalne tylko plus i rzadZInstrukcja, reszta systemowa; brak dźwięku (BR-LIC-005)
+// adapter: styl z tekstu tokenu (impactAsync light/medium/soft/rigid, notificationAsync error; rzadZInstrukcja = dwa .medium co 90 ms);
+// błąd modułu pomijany (haptyka nie zmienia wyniku operacji); rzad()/przypomnienie() znikają (= zagraj('plus') / zagraj('rzadZInstrukcja')).
 ```
 - **Moduł natywny** (`modules/oczko-dziennik-plus/ios/Zegarek.swift`, `index.ts`): `zegarekWyslij(stanJson: string, potwierdzone: string[])`; `didReceiveUserInfo` przy błędzie `dopisz` nie woła `poZapisie` i niczego nie potwierdza (e1, zegarek ponowi).
 - **Zegarek** (`targets/watch/Aplikacja.swift`, `SkrzynkaZegarka` w pakiecie): kolejka w pliku, kolejność stuknięcia, usuwanie i ponowienie według ADR-0009 (2026-10-26) pkt 1–5; testy X-ZG (`xctest-specyfikacja.md` §4).
 - **Sklep (a):** test oczekujący `tests/akceptacja/dane/sklep-status.test.ts`; `tests/adaptery/sklep.test.ts` (asercje `kup` → `{ ok }` i `kupZeStatusem`) przechodzą na status.
+- **Haptyka (b):** test oczekujący `tests/akceptacja/dane/haptyka-wzorce.test.ts` (wyrocznia: tokeny 04; zmiana tokenów w 04 czerwieni test, nie przechodzi po cichu).
 - **Testy do zmiany mechanicznej przez 08** (asercje bez zmiany sensu): `toEqual({ ok: true, wartosc: { scalono, pominieto } })` w `tests/dane/dziennik*.test.ts` dostaje `potwierdzone`; test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` przenieść do `tests/dane/` w commicie, który go zazielenia.
 
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)

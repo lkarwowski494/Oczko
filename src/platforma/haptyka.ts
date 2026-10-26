@@ -1,6 +1,6 @@
 // Adapter portu Haptyka (F-48, tokeny docs/design/tokeny.json „haptyka”): rząd = UIImpactFeedbackGenerator .light („plus”), przypomnienie =
 // dwa uderzenia .medium co 90 ms („rzadZInstrukcja”). Pozostałe wzorce tokenów (piąta kreska, −1, blokada, błąd zapisu) nie mają metod portu
-// [zgłoszenie do 05]. Haptyka nie zmienia wyniku operacji: błąd modułu pomijany.
+// [kontrakt partii 4: zagraj(WzorzecHaptyki), moduly.md, P-135 Q4a]. Haptyka nie zmienia wyniku operacji: błąd modułu pomijany.
 import type { Haptyka } from '../domena/porty';
 
 export interface ModulHaptyki { impactAsync(styl: 'light' | 'medium'): Promise<void> }
