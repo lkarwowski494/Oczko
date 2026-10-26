@@ -6,15 +6,18 @@ Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla w
 Potwierdzenie stanu (bez nowego E0): prompt 97ec212 złożony ponownie, 47510 znaków; `npm ci` + `env -u NODE_PATH npm run verify` na 71f8ae3 kod 0, **1875/1875** (jak 1f6ed79). E0/E1 A i C przyjęte (P-182–P-189); P-190 (język), P-191 (04 fix-6 E0), P-192 przeczytane.
 
 **Zrobione w tej sesji** (każdy commit: test czerwony z właściwego powodu → kod → zielony):
-- E: 0a1c4ed (P-190 `ustawienie.jezyk`, stan urządzenia, aneks dane.md; NAZWY_JEZYKOW z CLDR 47), d013fd7 (Ustawienia › Język, „Translation quality”, „Źródła wiedzy”, język w zgłoszeniu, trasa /stan-danych z „Close”; zegarek: null → Q-E1).
-- D: acbd108 (F-37 krokowiec zużycia na karcie, liniaZapasu, parsujLiczbe P-097 (5a), zapiszZuzycie), 16b5db3 (F-16 dane zdjęć), 43f4693 (adapter wyboru zdjęcia + plugin expo-image-picker — **natywne**).
-- verify kod 0, **2019/2019** (43f4693).
+- E: 0a1c4ed (P-190 `ustawienie.jezyk`, NAZWY_JEZYKOW z CLDR 47), d013fd7 (Ustawienia › Język, „Translation quality”, „Źródła wiedzy”, język w zgłoszeniu, /stan-danych).
+- D: acbd108 (F-37 krokowiec zużycia na karcie, parsujLiczbe P-097 (5a)), 9eb02db (F-16 dane zdjęć), 76d9118 (adapter wyboru zdjęcia + plugin expo-image-picker — **natywne**).
+- B: 7cb914a (kreski od startu stopera i do następnego +1, design-spec:242–244).
+- Decyzje z P-193–P-199: 1d767db (łatki 12, P-194 Q1a–Q3a; testy oczekujące przeniesione), 81ae30f (korekta zeruje przerwy, P-195 Q2a/P-199 Q4a), a2e6149 (P-195 Q3b, Q4a, Q5), 57f0849 (F-58 `zegarek_ostatnia_partia_ms`, P-199 Q5a), 06c9ff8 (N12-12 kontrola kopii przed archiwum).
+- `env -u NODE_PATH npm run verify` kod 0, jest **2108/2108** (06c9ff8 po rebase, 2026-10-26 16:05 UTC).
 
 **Następny krok:**
-1. Czekam na koordynatora: Q-E1 (źródło liczby zmian na zegarku, F-58; rekomendacja b) i commit łatki kluczy 04 fix-6 grupy B (w repo: ec5d735, 855230e — nie nakładam bez przekazania).
-2. D bez projektu 04: F-38 (kontrakt `przelicz`/`rozmiarUS` → `Wynik`, moduly.md:131) dopiero z makietą D1; F-53 obraz karty wymaga zależności natywnej do zrzutu widoku → pytanie Q-D1 do koordynatora.
-3. UI B (stoper, sesje, Historia) i D (Narzędzia, zapas, Photos, karta) po łatce 04 fix-6.
-4. Przed nocą: jeden push z natywnymi (plugin image-picker już jest; datetimepicker, Swift pasa, krok członkostwa z partii A); CI iOS w oknie maszyn → STOP E2.
+1. Odpowiedzi koordynatora: Q-D1 (F-53 zrzut karty: react-native-view-shot 5.1.0; EXIF zdjęć: expo-image-manipulator ~57.0.21) — wysłane; fałszywy alarm bramki (fe309c7) — już naprawiony przez 10.
+2. Po przyjęciu STOP E2 05 fix-6: łatki 08 z `oczko-warsztat` 46f8b19 (P-199 Q1a usunięcie `licznik.sekcja`, Q2a cel pary, `zrobPonownie` z `para_z`); kosz z etykietą projektu roboczego (05 fix-6 1a, P2); N12-07, N12-08 (zdania dane.md).
+3. Po przekazaniu łatki 04 fix-6 (STOP E2 9379051): UI B (stoper w pasku P1a–P3a, sesje i korekta w „Time” P4a–P5a, Historia P6a), D (Narzędzia/„Swatch” P7a + kontrakt `przelicz` → Wynik, zapas P8a, Photos P9a, karta P10a), linia „ostatni kontakt z zegarkiem” w Stanie danych, R1–R8; e2e 33–43 (07) na testID 04.
+4. Przed TestFlight (P-194 Q4a): globalna obsługa błędów JS i „Zgłoś problem” w trybie awaryjnym.
+5. Przed 23:30 PL push natywnych (zegarek: linia kolejki Q6a w Swift, Smart Stack R3a wg P-158, pas przypomnienia już jest); CI iOS w oknie maszyn → STOP E2.
 
 ### Sesja 1: STOP (kontekst) po B1 dane i F-51 (1f6ed79)
 Zrobione wtedy w B: przypadki użycia stopera (72e4ade), F-51 (610f011); verify 1875/1875.
@@ -104,7 +107,7 @@ Podział: jedna sesja wystarczy (partia 4 miała ok. 40 h w jednej sesji); punkt
 - 2026-10-26: E1 (1) zaległości P-180; A2 (STOP E1 Q2 → P-184); A1; A3/A4/C1. Swift 6.2 zainstalowany lokalnie w /opt/swift (poza repo) — `swift test` przed CI.
 - 2026-10-26: ekrany C3/A4, A5/A3/C2, termin (pytanie Q5 → P-186) i A6; push a51f4b1; czekam na CI iOS.
 - 2026-10-26: CI iOS bez runnera (P-187: okno 15–24 bez macOS); STOP E1 A+C → P-188. Lista luk B/D/E → P-189 (04 fix-6, karta Pro po imporcie poza 1.0). B: dane stopera, F-51. STOP z powodu długości kontekstu.
-- 2026-10-26 (sesja 2): potwierdzenie stanu 1875/1875; E (język P-190, ustawienia, źródła, stan danych); D (F-37 karta, F-16 dane i adapter). Q-E1 wysłane koordynatorowi.
+- 2026-10-26 (sesja 2): potwierdzenie stanu 1875/1875; E (język P-190, ustawienia, źródła, stan danych); D (F-37 karta, F-16 dane i adapter). Q-E1 → P-193. Łatki 12 (P-194), P-195, P-199 Q4a/Q5a, N12-12.
 ### Do raportu E2 (zbierane w trakcie)
 - Sesja 2 — zgłoszenia: (04) klucz `ukonczenie.zapas_juz_zero` przemianowany na `ukonczenie.zapas_juz_pusty` (`_zero` = kategoria liczby mnogiej, typ Klucz obcina); brak klucza komunikatu „zły zapis liczby” (P-097 (5a)) — pole odrzuca wpis po cichu; wiersz „Translation quality” bez zdania „przekład maszynowy” (BR-DAN-010 S1 mówi o informacji — jest tylko etykieta i odnośnik); „Edit stash” ukryty, dopóki nie ma ekranu zapasu (D2). (06/07) `docs/tresci/nazwy-zrodel.json`: dopuszczone klucze `zrodla` (design-spec nadaje kluczom ekranu prefiks `zrodla.*`). (05) aneks dane.md `jezyk`; sygnatury: `magazynJezyka`, `i18n.preferencja`, `zapiszZuzycie`, `dodajZdjecie`/`usunZdjecie`/`zdjecia`, `wybieraczZdjec`, `parsujLiczbe`, `liniaZapasu`/`krokMotkow`, KROK_MOTKA; `KartaUkonczenia.wloczka` z `motki`/`zuzyto`. (09) NAZWY_JEZYKOW z CLDR (aneks 08). Ryzyko: zdjęcie udostępnione z podglądu (P9a Share) niesie EXIF/GPS z aparatu — kopia w magazynie to oryginał (bez przekodowania); P10a usuwa EXIF tylko z obrazu karty → pytanie do 05/koordynatora razem z Q-D1.
 - Zmiany istniejących testów (sesja 2): `tests/ekrany/ukonczenie.test.tsx` (przycisk „Enter yarn left over…” → krokowiec, P-126 (2a)); `tests/dane/czesc-menu.test.ts:48` (model włóczki z `motki`, `zuzyto`).
