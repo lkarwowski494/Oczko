@@ -38,8 +38,8 @@ describe('site/: strona produktu, polityka prywatności i wsparcie (PL, EN)', ()
 describe('adres strony: jedna stała (docs/wydanie/adres-strony.json)', () => {
   const adres = JSON.parse(czytaj('docs/wydanie/adres-strony.json')) as { baza: string; polityka: string; wsparcie: string };
 
-  test('baza to katalog na apps4brew.com, strony istnieją w site/', () => {
-    expect(adres.baza).toMatch(/^https:\/\/apps4brew\.com\/[A-Za-z0-9-]+\/$/);
+  test('baza to katalog oczko/ na apps4brew.com albo GitHub Pages repo (do publikacji w apps4brew-www), strony istnieją w site/', () => {
+    expect(adres.baza).toMatch(/^https:\/\/(apps4brew\.com|lkarwowski494\.github\.io)\/oczko\/$/);
     for (const plik of [adres.polityka, adres.wsparcie]) expect(existsSync(join(root, 'site', plik))).toBe(true);
   });
 

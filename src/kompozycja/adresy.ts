@@ -2,7 +2,7 @@
 // `https://apps4brew.com/trening/privacy.html`) — [DO USTALENIA rola 10/11: strona Oczka pod tym adresem]. Terms of Use = standardowa EULA Apple.
 // Recenzja: strona App Store z action=write-review — [DO USTALENIA: identyfikator aplikacji w App Store Connect (OP-24)].
 export const ADRESY = {
-  polityka: 'https://apps4brew.com/oczko/privacy.html',
+  polityka: 'https://lkarwowski494.github.io/oczko/privacy.html', // do publikacji pod apps4brew.com/oczko/ (rola 10, docs/wydanie/adres-strony.json)
   warunki: 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
   recenzja: 'https://apps.apple.com/app/id0000000000?action=write-review',
 } as const;
