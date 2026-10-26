@@ -43,6 +43,12 @@ A + D. Zegarek trzyma mały plik stanu i kolejkę wysłanych zdarzeń; telefon s
 
 **Potwierdzenie (testy):** wektory `tests/wspolne/wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-09) i X-ZG-01–X-ZG-09 w `tests/wspolne/xctest-specyfikacja.md` (`swift test` pakietu); strona telefonu: test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` (czerwony na asercji do wdrożenia). Liczby: `ZEGAREK_PONOWIENIE_MS`, `ZEGAREK_POTWIERDZENIA_MAKS` (tabela „Konfiguracja” w `moduly.md`, stałe Swift z generatora). Ryzyko szczątkowe: `transferUserInfo` nie działa w symulatorze (4a) — transport na parze urządzeń (lista TT).
 
+## Uzupełnienie 2026-10-26 (fix-6 05: NZ-P5-PRZEGLAD, F-58, P-193, P-195 Q1, P-199 Q5a, Q6a; decyzja A + D bez zmian)
+- **Kontrakt WC bez zmian** (P-193 potwierdzone): liczbę niewysłanych zmian zna tylko zegarek (kolejka w pliku, pkt 1–5 uzupełnienia fix-4); telefon nie dostaje liczby.
+- **Zegarek — linia „iPhone not nearby. N changes are saved on this watch.”** (design-spec, BR-DAN-011 S2 po P-195 Q1; P-199 Q6a): widoczna, gdy **najstarsza linia kolejki czeka ≥ `ZEGAREK_PONOWIENIE_MS`** (15 min, `src/konfiguracja.ts`; ten sam próg co ponowienie, pkt 5), N = liczba linii w kolejce; znika, gdy kolejka jest pusta po potwierdzeniu (pkt 4). Bez progu linia zapalałaby się po każdym stuknięciu do potwierdzenia. Odrzucone: warunek z zasięgu `WCSession` (zachowanie API niesprawdzone w dokumentacji w dniu pracy, linia migocze przy wahaniu zasięgu).
+- **Telefon — „ostatni kontakt z zegarkiem”** (BR-DAN-011 S3): klucz `ustawienie` `zegarek_ostatnia_partia_ms` (dane.md: stan urządzenia, bez iCloud, pomijany przy imporcie), zapisywany w transakcji scalenia partii od zegarka (także partii samych powtórzeń); Stan danych pokazuje czas odbioru, nie stuknięcia.
+- **Potwierdzenie:** Swift — test reguły linii na kolejce z wiekiem najstarszej linii 14:59 i 15:00 min (`OczkoReguly`, wektory w JSON jak X-ZG); TS — scalenie partii zegarka zapisuje klucz w tej samej transakcji, a wycofana transakcja go nie zmienia.
+
 ## Opcje: zalety i wady
 ### A — zalety: kolejka bez utraty, idempotencja · wady: brak w symulatorze.
 ### B — zalety: brak WatchConnectivity · wady: zegarek bez sieci i bez telefonu nie synchronizuje; CloudKit na zegarku opóźniony.
