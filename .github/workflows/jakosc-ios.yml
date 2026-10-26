@@ -19,6 +19,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'scripts/ci/**'
+      - 'scripts/natywne/czlonkostwo-celu.mjs'
       - '.github/scripts/jakosc/**'
       - '.github/workflows/jakosc-ios.yml'
       - 'docs/monetyzacja/wektory-*.json' # wektory czytane przez swift test (ADR-0007)
@@ -69,6 +70,12 @@ jobs:
       - run: npm ci
       - name: expo prebuild
         run: npx expo prebuild --platform ios --no-install --clean
+      - name: Intencja w celu aplikacji (_shared/Stuknij.swift; P-180)
+        # @bacons/apple-targets dodaje targets/widget/_shared/* do celu aplikacji zbiorem wyjątków grupy synchronizowanej; bez tego
+        # +1 z Live Activity nie ma intencji w procesie aplikacji. Test kontroli: tests/jakosc/czlonkostwo-celu.test.ts.
+        run: |
+          set -o pipefail # domyślny bash -e bez pipefail: kod skryptu zginąłby w potoku do tee
+          node scripts/natywne/czlonkostwo-celu.mjs --pbxproj ios/*.xcodeproj/project.pbxproj --plik _shared/Stuknij.swift | tee -a "$GITHUB_STEP_SUMMARY"
       - name: pods
         run: cd ios && pod install 2>&1 | tee pod-install.log
       - name: Cele natywne podłączone (ADR-0006, ADR-0007; 08 partia 3)
@@ -125,7 +132,8 @@ jobs:
     name: e2e (część ${{ matrix.czesc }})
     needs: build
     runs-on: macos-26
-    continue-on-error: true # informacja do pierwszego zielonego przebiegu (zasada 8); potem bramka dla pakietu podstawowego
+    # Pakiet podstawowy jest bramką od pierwszego zielonego przebiegu 40313538454 (P-180); pełny ([e2e-pelny]) zostaje informacyjny.
+    continue-on-error: ${{ contains(github.event.head_commit.message, '[e2e-pelny]') }}
     strategy:
       fail-fast: false
       matrix:
