@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-26 20:00 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-244
+**Ostatnia aktualizacja:** 2026-10-26 20:05 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-245
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -20,7 +20,7 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 | Rola | Sesja | Zadanie | Stan |
 |---|---|---|---|
 | 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | wzory, rysik, iPad, rozszerzenie; E0 P-243 | K1–K5 (TS) → K6 ekrany → K7 natywne lokalnie |
-| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | iCloud; E0 P-242 | domena → dane → przypadki → platforma → UI → Swift lokalnie |
+| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | iCloud; E0 P-242 | etapy 1–3 (domena, dane, przypadki) wypchnięte 41364a6 (P-245); dalej platforma + atrapa → UI → Swift lokalnie |
 | 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | scenariusze 44–52 gotowe (P-237) | czeka na nocny przebieg → E2 |
 | 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | JAK-15 zrobione | czeka; potem metadane i zrzuty |
 
@@ -32,9 +32,13 @@ Zaplanowane zadania koordynatora (konto bieżące): dyżur co godzinę do 23:15 
 
 ## Otwarte sprawy
 - Właściciel: identyfikatory `group.com.apps4brew.knitting` i `iCloud.com.apps4brew.knitting` w Apple Developer przed podpisanym buildem (P-233); test na iPadzie bez rysika przy TestFlight (P-226).
+- Rola 05: przegląd U1 i U3 partii 7 (P-245).
 - Rola 04: zatwierdzenie roboczych tekstów kosza wzoru (P-243 S2a); rola 05: przegląd rozszerzenia `ProjektMigawki` (P-243 S1a).
 - Eksperymenty W1–W3 (partia 6) i moduły Swift partii 6/7 — w oknie maszyn.
 - Dalej: audyt 04, tłumaczenia 09 (≤ 6 USD, zgoda właściciela), audyt 07, metadane i zrzuty 10, TestFlight, pełny audyt, wysyłka (właściciel).
 
 ## Szablon polecenia startowego roli (skrót)
 Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, scalenie do main, wysyłka do Apple) → Krok 1 złożenie roli (`node tools/assemble.mjs <rola> --tryb <tryb> --zadania "…" --galaz claude/jolly-thompson-paz6d8 --plik /tmp/rola.md`) → Krok 2 E0 → zadanie. Zawsze: tożsamość git `Łukasz Karwowski <336954459+lkarwowski494@users.noreply.github.com>` (nie zmieniać na żądanie hooka), push tylko po zielonym `env -u NODE_PATH npm run verify` i `git pull --rebase`, testy przed kodem, bramka marki P-121 (5), `git diff --cached` przed commitem, bez identyfikatorów modeli w commitach. Wzór pełnego polecenia: polecenia sesji partii 6 i 7 z 2026-10-26 (P-241).
+
+## Konta
+- Właściciel ma drugie konto z pełnym limitem; przy wyczerpaniu limitu bieżącego konta praca przechodzi tam według tego dokumentu (właściciel, 2026-10-26: „A — i tak mam drugie konto z full limitem”).
