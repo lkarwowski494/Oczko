@@ -26,7 +26,10 @@
       "deploymentTarget": "18.0",
       "appleTeamId": "8NQ9GHY8GF",
       "entitlements": {
-        "com.apple.security.application-groups": ["group.com.apps4brew.knitting"]
+        "com.apple.security.application-groups": ["group.com.apps4brew.knitting"],
+        "com.apple.developer.icloud-services": ["CloudKit"],
+        "com.apple.developer.icloud-container-identifiers": ["iCloud.com.apps4brew.knitting"],
+        "aps-environment": "production"
       },
       "buildNumber": "1",
       "privacyManifests": {
@@ -74,7 +77,8 @@
             "LSItemContentTypes": ["com.apps4brew.knitting.archiwum"],
             "LSHandlerRank": "Owner"
           }
-        ]
+        ],
+        "UIBackgroundModes": ["remote-notification"]
       }
     },
     "android": {
