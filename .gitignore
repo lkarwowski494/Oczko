@@ -28,3 +28,6 @@ upload.json
 build.json
 build.err
 e2e-out/
+
+# Swift (modules/oczko-reguly: swift build / swift test)
+.build/

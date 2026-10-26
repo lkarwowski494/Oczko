@@ -21,12 +21,39 @@ on:
       - 'scripts/ci/**'
       - '.github/scripts/jakosc/**'
       - '.github/workflows/jakosc-ios.yml'
+      - 'docs/monetyzacja/wektory-*.json' # wektory czytane przez swift test (ADR-0007)
+      - 'tests/wspolne/**'
+      - 'tests/wektory/brd.json'
 permissions:
   contents: read
 concurrency:
   group: jakosc-ios-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  swift-test:
+    # Pakiet reguł i rdzeń dziennika +1 (modules/oczko-reguly; ADR-0007 uzupełnienie, ADR-0008 (8), P-129 Q2a, jak Trening `cd targets && swift test`):
+    # bez symulatora, na tych samych plikach JSON co Jest. Pierwszy przebieg informacyjny (zasada roli 07 nr 8), potem bramka (08 partia 3, 3B).
+    runs-on: macos-26
+    timeout-minutes: 20
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Xcode 26.x (najnowszy z obrazu, P-091 5a)
+        run: bash .github/scripts/jakosc/select-xcode.sh 26 && swift --version | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: swift test (wykonano N z N w logu)
+        run: |
+          set -o pipefail
+          cd modules/oczko-reguly
+          swift test 2>&1 | tee ../../swift-test.log
+          { echo "### swift test"; grep -E 'wykonano [0-9]+ z [0-9]+|Executed [0-9]+ tests' ../../swift-test.log | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: swift-test-log
+          path: swift-test.log
+          retention-days: 3
   build:
     runs-on: macos-26 # SDK 56+: Xcode 26.4+ (macos-15 ma najwyżej 26.3; Trening)
     timeout-minutes: 90 # Trening: build ~40 min (pods 2 + xcodebuild 36); zmierzyć w pierwszym przebiegu
