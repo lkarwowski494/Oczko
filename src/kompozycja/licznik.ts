@@ -10,6 +10,7 @@ import type { Tlumacz, WynikEkranu } from '../ekrany/wspolne';
 import { odswiezEkranBlokady, type ZaleznosciEkranuBlokady } from '../przypadki-uzycia/ekran-blokady';
 import { cofnijSerie, dodajRzad, odejmijRzad, utworzSzybkiLicznik, ustawBlokade } from '../przypadki-uzycia/licznik';
 import { naPierwszyPlan, przyTle, uruchomDane, type WynikStartuDanych } from '../przypadki-uzycia/start';
+import { widokProjektu } from '../przypadki-uzycia/widok-projektu';
 import { biezacyLicznik, widokLicznika, zapamietajLicznik, type WidokLicznika } from '../przypadki-uzycia/widok-licznika';
 import type { ZaleznosciDziennika, ZaleznosciStartu } from '../przypadki-uzycia/zaleznosci';
 
@@ -45,6 +46,7 @@ export function stanEkranu(w: WidokLicznika | null, o: { j: Jezyk; dzis: string;
     czesc: w.projekt.nienazwany ? null : w.czesc.nazwa, // nazwa części roboczej to data startu: nie pokazywana (design-spec „Projekt roboczy”)
     skonczone: w.wartosc, dziergany: w.wartosc + 1, znaczenie: w.znaczenie, cel: w.czesc.cel,
     celDnia: w.celDnia === null ? null : { rzedy: w.celDnia },
+    calosc: w.calosc === null ? null : { czesc: w.czesc.nazwa, rzedy: w.calosc }, // BR-LIC-018/S1
     przypomnienie: w.przypomnienie,
     powtorzenie: w.powtorzenie && { nazwa: w.nazwa || w.czesc.nazwa, ...w.powtorzenie },
     notatka: w.projekt.notatka || null,
@@ -77,6 +79,10 @@ export type KompozycjaLicznika = {
   uslugi: UslugiAplikacji;
   dzialania: DzialaniaLicznika;
   otworz(licznikId: string): Promise<void>;
+  /** Id licznika na ekranie licznika (`null` przed pierwszym +1 albo po usunięciu bez zastępstwa). */
+  biezacy(): string | null;
+  /** Po usunięciu w projekcie (C2): bieżący licznik w koszu → pierwszy dostępny licznik projektu albo żaden; inaczej jak `poZmianie`. */
+  poUsunieciu(projektId: string): Promise<void>;
   /** Rośnie przy każdym `otworz` i `poZmianie` — ekran licznika przeładowuje stan po powrocie z listy albo arkusza. */
   wersja(): number;
   /** Bieżący model licznika dla arkuszy (menu, formularze, historia); `null` przed pierwszym +1. */
@@ -133,6 +139,16 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
       return { ok: true, wartosc: { cel: 'licznik' } };
     },
     wersja: () => wersja,
+    biezacy: () => licznikId,
+    async poUsunieciu(projektId) {
+      if (licznikId && !(await widokLicznika(z, { licznikId })).ok) {
+        const p = await widokProjektu(z, { projektId });
+        const nastepny = p.ok ? p.wartosc.czesci.flatMap((c) => c.liczniki)[0]?.id : undefined;
+        if (nastepny) await k.otworz(nastepny);
+        else k.zresetuj();
+      }
+      await k.poZmianie();
+    },
     zresetuj() { licznikId = null; baner = null; aktywnosc = false; wersja += 1; void z.liveActivity.zakoncz(); },
     widok: async () => (await stan()).w,
     async poZmianie() {

@@ -25,14 +25,19 @@ async function dodajCzesc(tx: PortBazy, z: Zaleznosci, w: { projektId: string; n
   return { czescId, licznikId };
 }
 
-/** Projekt z częściami; każda część dostaje licznik rzędów (BR-PRJ-001). Bez części: jedna część o nazwie projektu. */
+/**
+ * Projekt z częściami; każda część dostaje licznik rzędów (BR-PRJ-001). Bez części: jedna część o nazwie projektu. Pusta nazwa (arkusz
+ * „New project”, design-spec) = projekt roboczy jak po pierwszym +1: `nienazwany`, nazwa zapasowa = dzień startu (P-126 (1b), dane.md).
+ */
 export function utworzProjekt(z: Zaleznosci, w: { nazwa: string; czesci: string[] }): Promise<Wynik<NowyProjekt>> {
-  if (!niepusta(w.nazwa) || !w.czesci.every(niepusta)) return Promise.resolve(blad('bledne_dane'));
-  return operacjaZapisu(z, 'utworzProjekt', async (tx, teraz) => {
+  if (typeof w.nazwa !== 'string' || !w.czesci.every(niepusta)) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'utworzProjekt', async (tx, teraz, chwila) => {
     const projektId = z.id.nowy();
-    await tx.run('INSERT INTO projekt (id, nazwa, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?)', [projektId, w.nazwa.trim(), teraz, teraz, teraz]);
+    const roboczy = !niepusta(w.nazwa);
+    const nazwaProjektu = roboczy ? chwila.dzien : w.nazwa.trim();
+    await tx.run('INSERT INTO projekt (id, nazwa, nienazwany, utworzono_ms, zmieniono_ms, ostatnia_praca_ms) VALUES (?, ?, ?, ?, ?, ?)', [projektId, nazwaProjektu, roboczy ? 1 : 0, teraz, teraz, teraz]);
     const czesci: NowyProjekt['czesci'] = [];
-    for (const nazwa of w.czesci.length ? w.czesci : [w.nazwa]) czesci.push({ nazwa: nazwa.trim(), ...(await dodajCzesc(tx, z, { projektId, nazwa, cel: null, paraZ: null, terazMs: teraz })) });
+    for (const nazwa of w.czesci.length ? w.czesci : [nazwaProjektu]) czesci.push({ nazwa: nazwa.trim(), ...(await dodajCzesc(tx, z, { projektId, nazwa, cel: null, paraZ: null, terazMs: teraz })) });
     return { ok: true, wartosc: { projektId, czesci } };
   });
 }

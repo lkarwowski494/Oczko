@@ -8,7 +8,7 @@ import type { PortBazy } from '../domena/porty';
 import type { ZrodloZdarzenia } from '../domena/stany';
 import { PRZERWA_NOWEGO_DNIA_MS, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../konfiguracja';
 import { celProjektu } from '../dane/repozytoria/kalendarz';
-import { celCzesci, dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
+import { caloscCzesci, celCzesci, dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
 import { odczytajUstawienie, zapiszUstawienie } from '../dane/repozytoria/ustawienia';
 import { liczba, liczbaLubNull, listaTekstow, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { dodajDni } from './daty';
@@ -40,6 +40,8 @@ export type WidokLicznika = {
   seria: { ile: number; sekundy: number; odZdarzeniaId: string } | null;
   blizniak: { rzad: number; notatka: string | null; przypomnienie: string | null } | null;
   celDnia: number | null;
+  /** Całość części dla licznika sekcji (BR-LIC-018/S1, `caloscCzesci`); null bez sekcji. */
+  calosc: number | null;
 };
 
 const OKNO_SESJI = 200; // ostatnie zdarzenia czytane dla kresek i strażnika (posiedzenie dłuższe niż 200 rzędów pokazuje 200)
@@ -125,6 +127,7 @@ export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<
         seria: seria(dodania, glowa),
         blizniak: await blizniak(tx, tekstLubNull(r, 'para_z'), wartosc + 1),
         celDnia: cel && cel.rodzaj === 'cel' ? cel.rzedy : null,
+        calosc: await caloscCzesci(tx, tekst(r, 'czesc_id')),
       },
     };
   });

@@ -40,6 +40,7 @@ export type StanEkranuLicznika = {
   baner: BanerLicznika;
   blizniak: { rzad: number; notatka: string | null; przypomnienie: string | null } | null; // BR-PRJ-014/S2
   wibracje: boolean;                   // ustawienie (BR-LIC-020/S3)
+  calosc?: { czesc: string; rzedy: number } | null; // licznik sekcji: „{część} in total: N rows” (BR-LIC-018/S1, partia 5)
 };
 
 /** Co zaszło w rzędzie po +1 (haptyka F-48: dwa wzorce; ogłoszenie przy wejściu w rząd z instrukcją). */
@@ -66,6 +67,7 @@ export type PropsLicznika = {
   naMenu(): void;                      // menu ••• projektu
   naNastepnaCzesc(): void;             // BR-LIC-011/S1 (U-11)
   naProjekty?(): void;                 // „Projects” w pasku nawigacji (powrót do listy, F-50)
+  naProjekt?(): void;                  // nazwa projektu nad tytułem części otwiera ekran projektu (design-spec „Ekran projektu”, partia 5)
 };
 
 /** F-48: rozpoznawalne są tylko dwa wzorce — rząd i rząd „ze znaczeniem” (instrukcja, koniec powtórzenia, cel dnia lub części). */
@@ -160,7 +162,11 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         </View>
       )}
       <ScrollView contentContainerStyle={st.srodek}>
-        {s.projekt !== null && <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>}
+        {s.projekt !== null && (p.naProjekt ? (
+          <Pressable accessibilityRole="button" accessibilityLabel={s.projekt} onPress={p.naProjekt} style={st.wpisProjektu}>
+            <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>
+          </Pressable>
+        ) : <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>)}
         <Text style={st.tytul} accessibilityRole="header">{s.czesc ?? t('licznik.tytul_roboczy')}</Text>
         {!start && <Text style={st.instrukcja} testID="licznik-teraz-rzad">{t('licznik.teraz', { n: nrRobocza })}</Text>}
         {baner?.rodzaj === 'seria' && (
@@ -179,6 +185,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         </View>
         {start && <Text style={st.tresc}>{t('licznik.podpowiedz_start')}</Text>}
         {s.cel !== null && <LinijkaCelu s={s} t={t} st={st} naNastepnaCzesc={p.naNastepnaCzesc} />}
+        {s.calosc && <Text style={st.podpis}>{t('licznik.calosc', { czesc: s.calosc.czesc, count: s.calosc.rzedy })}</Text>}
         {s.celDnia && <Text style={st.podpis}>{t('licznik.cel_dnia', { count: s.celDnia.rzedy })}</Text>}
         {s.limit.rodzaj === 'ostatni-darmowy' && <Text style={st.podpis}>{t('licznik.ostatni_darmowy', { miesiac: s.miesiac.nazwa })}</Text>}
         {zawczasu && (
@@ -292,6 +299,7 @@ function style(k: Kolory) {
     tytul: { ...typografia.tytul, color: k.grafit },
     instrukcja: { ...typografia.instrukcja, color: k.grafit },
     tresc: { ...typografia.tresc, color: k.grafit },
+    wpisProjektu: { minHeight: rozmiary.minimum, justifyContent: 'center' },
     podpis: { ...typografia.podpis, color: k.olowek },
     pogrubiony: { fontWeight: '700' },
     link: { textDecorationLine: 'underline' },

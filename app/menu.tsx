@@ -24,7 +24,7 @@ export default function EkranMenu(): React.ReactElement {
       stan={{ projekt: licznik.nazwaProjektu(w), zablokowany: w.zablokowany, wartosc: w.wartosc }}
       t={kontener.j.t}
       naNazwa={() => formularz('nazwa')} naCel={() => formularz('cel')} naPrzypomnienie={() => formularz('przypomnienie')}
-      naPowtorzenie={() => formularz('powtorzenie')} naWpisz={() => formularz('wpisz')}
+      naPowtorzenie={() => formularz('powtorzenie')} naWpisz={() => formularz('wpisz')} naZnaczenie={() => formularz('znaczenie')}
       naZablokuj={() => void ustawBlokade(z, { licznikId: w.licznikId, zablokowany: true }).then(poZapisie)}
       naOdblokuj={() => void ustawBlokade(z, { licznikId: w.licznikId, zablokowany: false }).then(poZapisie)}
       naZeruj={() => void wyzeruj(z, { licznikId: w.licznikId }).then(poZapisie)}

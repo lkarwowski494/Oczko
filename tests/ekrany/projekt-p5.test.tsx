@@ -1,0 +1,98 @@
+// Ekran projektu, partia 5 (A5; design-spec „Ekran projektu”, makiety fix5 `projekt`, `projekt-dodaj`, `projekt-menu`, `projekt-edycja`,
+// `projekt-ukonczony`, `projekt-bez-celow`; P-183 3a). Teksty z łatki 04 fix-5; dane sformatowane w kompozycji.
+import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import { Projekt, type PropsProjektu } from '../../src/ekrany/Projekt';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { przycisk, tEn } from './pomoc';
+
+let t: Tlumacz;
+beforeAll(async () => { t = await tEn(); });
+const stan = (z: Partial<PropsProjektu['stan']> = {}): PropsProjektu['stan'] => ({
+  nazwa: 'Harbor Sweater', notatka: 'Switch to 4 mm for the cuff', miejsceWzoru: null, ostatniaZmiana: 'Oct 22', postep: { rodzaj: 'procent', wartosc: 51 },
+  termin: 'Done by Oct 31 · today 3 of 10 rows', ukonczony: false,
+  czesci: [
+    { id: 'c1', nazwa: 'Back', rzedy: 60, cel: 96, paraZ: null, liczniki: [{ id: 'l1', nazwa: 'Rows', opis: '60 rows' }], calosc: null },
+    { id: 'c2', nazwa: 'Blanket', rzedy: 20, cel: null, paraZ: null, calosc: 20, liczniki: [{ id: 'l2', nazwa: 'Square 1', opis: '12 rows' }, { id: 'l3', nazwa: 'Square 2', opis: '8 rows' }] },
+    { id: 'c3', nazwa: 'Right sleeve', rzedy: 0, cel: null, paraZ: 'c1', paraNazwa: 'Back', liczniki: [{ id: 'l4', nazwa: 'Rows', opis: '0 rows' }], calosc: null },
+  ],
+  szczegoly: { narzedzie: 'Needles', rozmiar: '4 mm (US 6)', termin: 'Oct 31' }, ...z,
+});
+function pokaz(s = stan(), edycja = false) {
+  const w = {
+    naOtworzCzesc: jest.fn(), naOtworzLicznik: jest.fn(), naDodajCzesc: jest.fn(), naDodajLicznik: jest.fn(), naNotatka: jest.fn(), naNarzedzie: jest.fn(), naTermin: jest.fn(),
+    naEdytuj: jest.fn(), naKoniecEdycji: jest.fn(), naZrobTakaSama: jest.fn(), naUsunProjekt: jest.fn(), naWznow: jest.fn(), naUsunCzesc: jest.fn(), naUsunLicznik: jest.fn(), naWstecz: jest.fn(),
+  };
+  render(<Projekt stan={s} t={t} edycja={edycja} {...w} />);
+  return w;
+}
+
+describe('Projekt (partia 5)', () => {
+  test('RD-14: postęp z opisem przybliżenia; linia terminu; grupy Parts, Note, Details; ostatnia zmiana (BR-PRJ-005)', () => {
+    pokaz();
+    expect(screen.getByText('51% done')).toBeTruthy();
+    expect(screen.getByText('Approximate, counted from rows of parts with a goal.')).toBeTruthy();
+    expect(screen.getByText('Done by Oct 31 · today 3 of 10 rows')).toBeTruthy();
+    for (const n of ['Parts', 'Note', 'Details']) expect(screen.getByText(n)).toBeTruthy();
+    expect(screen.getByText('4 mm (US 6)')).toBeTruthy();
+    expect(screen.getByText('Last change Oct 22')).toBeTruthy();
+  });
+
+  test('BR-LIC-018: część z kilkoma licznikami → „Whole piece: 20 rows” i wcięte liczniki; para „Pair of Back” z celem z pary', () => {
+    const w = pokaz();
+    expect(screen.getByText('Whole piece: 20 rows')).toBeTruthy();
+    fireEvent.press(screen.getByText('Square 2'));
+    expect(w.naOtworzLicznik).toHaveBeenCalledWith('l3');
+    expect(screen.getByText('Pair of Back')).toBeTruthy();
+    expect(screen.getByText('The goal comes from Back once it has rows.')).toBeTruthy();
+  });
+
+  test('BR-PRJ-002: notatka otwiera arkusz (etykieta „Note: … . Edit”); bez notatki „Add a note”', () => {
+    const w = pokaz();
+    fireEvent.press(przycisk('Note: Switch to 4 mm for the cuff. Edit', 'button'));
+    expect(w.naNotatka).toHaveBeenCalledTimes(1);
+    pokaz(stan({ notatka: null }));
+    expect(screen.getByText('Add a note')).toBeTruthy();
+  });
+
+  test('„+” → Add part / Add counter; ••• → Edit, Make another, Delete project… (P-183 3a)', () => {
+    const w = pokaz();
+    fireEvent.press(przycisk('Add part or counter', 'button'));
+    fireEvent.press(screen.getByText('Add counter'));
+    expect(w.naDodajLicznik).toHaveBeenCalledTimes(1);
+    fireEvent.press(przycisk('Project options', 'button'));
+    expect(screen.queryByText('Resume knitting')).toBeNull();
+    fireEvent.press(screen.getByTestId('projekt-usun'));
+    expect(w.naUsunProjekt).toHaveBeenCalledTimes(1);
+    fireEvent.press(przycisk('Project options', 'button'));
+    fireEvent.press(screen.getByTestId('projekt-zrob-taka-sama'));
+    expect(w.naZrobTakaSama).toHaveBeenCalledTimes(1);
+  });
+
+  test('ukończony: bez „+”, w ••• pierwsze „Resume knitting”', () => {
+    const w = pokaz(stan({ ukonczony: true }));
+    expect(screen.queryByTestId('projekt-dodaj')).toBeNull();
+    fireEvent.press(przycisk('Project options', 'button'));
+    fireEvent.press(screen.getByTestId('projekt-wznow'));
+    expect(w.naWznow).toHaveBeenCalledTimes(1);
+  });
+
+  test('tryb Edit: ⊖ przy części i liczniku z etykietą „Delete …”, informacja o koszu, „Done” kończy', () => {
+    const w = pokaz(stan(), true);
+    expect(screen.getByText('Deleted parts and counters stay in Recently deleted for 30 days.')).toBeTruthy();
+    fireEvent.press(przycisk('Delete Blanket', 'button'));
+    expect(w.naUsunCzesc).toHaveBeenCalledWith('c2');
+    fireEvent.press(przycisk('Delete Square 1', 'button'));
+    expect(w.naUsunLicznik).toHaveBeenCalledWith('l2');
+    fireEvent.press(przycisk('Done', 'button'));
+    expect(w.naKoniecEdycji).toHaveBeenCalledTimes(1);
+  });
+
+  test('BR-DNI-005: bez terminu brak linii terminu, w Details „None”; narzędzie nieustawione → „Needles or hook” + „Add”', () => {
+    pokaz(stan({ termin: null, szczegoly: { narzedzie: null, rozmiar: null, termin: null } }));
+    expect(screen.queryByText(/Done by .* ·/)).toBeNull();
+    expect(screen.getByText('None')).toBeTruthy();
+    expect(screen.getByText('Needles or hook')).toBeTruthy();
+    expect(screen.getByText('Add')).toBeTruthy();
+  });
+});

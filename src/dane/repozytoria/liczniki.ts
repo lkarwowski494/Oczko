@@ -128,3 +128,12 @@ export async function celCzesci(baza: PortBazy, w: { cel: number | null; paraZ: 
   const n = await rzedyCzesci(baza, w.paraZ);
   return n > 0 ? n : null;
 }
+/**
+ * Licznik całości części na ekranie licznika (BR-LIC-018/S1): suma liczników rzędów części, gdy ma ≥ 2 liczniki rzędów albo sekcję; inaczej null.
+ * „≥ 2” = propozycja 04 do N2 (P-183), do decyzji 05 przy przeglądzie sygnatur; licznik oczek nie wchodzi.
+ */
+export async function caloscCzesci(baza: PortBazy, czescId: string): Promise<number | null> {
+  const [r] = await wiersze(baza.all(
+    "SELECT count(*) AS n, coalesce(max(sekcja), 0) AS s, coalesce(sum(wartosc), 0) AS suma FROM licznik WHERE czesc_id = ? AND rodzaj = 'rzedy' AND usunieto_ms IS NULL", [czescId]), 'caloscCzesci');
+  return r && (liczba(r, 'n') >= 2 || liczba(r, 's') === 1) ? liczba(r, 'suma') : null;
+}

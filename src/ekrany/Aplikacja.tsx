@@ -107,6 +107,7 @@ export function Aplikacja(p: PropsAplikacji): React.ReactElement {
       naMenu={d.naMenu ?? nic}
       naNastepnaCzesc={d.naNastepnaCzesc ?? nic}
       naProjekty={d.naProjekty}
+      naProjekt={d.naProjekt}
     />
   );
 }

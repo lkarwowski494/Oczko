@@ -92,3 +92,18 @@ describe('ustawDrut (BR-PRJ-004) i ustawTermin (BR-DNI-005)', () => {
     expect(await ustawTermin(s.z, { projektId: 'brak', terminDzien: null })).toEqual({ ok: false, powod: 'bledne_dane' });
   });
 });
+
+import { utworzProjekt } from '../../src/przypadki-uzycia/projekt';
+describe('utworzProjekt z arkusza „New project” (F-14, P-126 (1b))', () => {
+  test('pusta nazwa → projekt roboczy (nienazwany, nazwa zapasowa = dzień startu), jedna część z licznikiem; części z nazwami zapisane', async () => {
+    const s = await przygotuj();
+    const r = await utworzProjekt(s.z, { nazwa: '  ', czesci: [] });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(await jeden(s.baza, 'SELECT nazwa, nienazwany FROM projekt WHERE id = ?', [r.wartosc.projektId])).toEqual({ nazwa: '2026-10-22', nienazwany: 1 });
+    expect(r.wartosc.czesci).toHaveLength(1);
+    const n = await utworzProjekt(s.z, { nazwa: 'Harbor', czesci: ['Back', 'Front'] });
+    expect(n.ok && n.wartosc.czesci.map((c) => c.nazwa)).toEqual(['Back', 'Front']);
+    expect(await utworzProjekt(s.z, { nazwa: 'X', czesci: ['  '] })).toEqual({ ok: false, powod: 'bledne_dane' });
+  });
+});

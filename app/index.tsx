@@ -7,6 +7,7 @@ import { useKolory } from '../src/ekrany/motyw';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { cyklAplikacji, oglos, systemAplikacji } from '../src/kompozycja/system';
+import { nastepnaCzesc } from '../src/przypadki-uzycia/czesc';
 import { pokazacOknoUczciweZasady } from '../src/przypadki-uzycia/informacje-pro';
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
 import { powodAwaryjny, zapiszKamien } from '../src/kompozycja/start-aplikacji';
@@ -34,6 +35,15 @@ export default function EkranLicznika(): React.ReactElement {
     return () => { zywy = false; };
   }, [licznik, router, kontener]);
   useFocusEffect(useCallback(() => { ustawWersje(licznik.wersja()); }, [licznik]));
+  // „Next part” (BR-LIC-011/S1, P-182 Q4a): następna część → jej licznik (ekran od nowa); ostatnia → arkusz „What’s next?”.
+  async function naNastepnaCzesc(): Promise<void> {
+    const id = licznik.biezacy();
+    if (!id) return;
+    const r = await nastepnaCzesc(kontener.z, { licznikId: id });
+    if (!r.ok) return;
+    if (r.wartosc.rodzaj === 'licznik') { await licznik.otworz(r.wartosc.licznikId); ustawWersje(licznik.wersja()); return; }
+    router.push({ pathname: '/formularz/[rodzaj]', params: { rodzaj: 'co-dalej', czesc: r.wartosc.czescId } });
+  }
   if (awaria) return <Bezpieczny><EkranAwaryjny powod={awaria} t={kontener.j.t} naNormalnie={() => router.replace('/')} /></Bezpieczny>;
   if (!gotowe) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   return (
@@ -46,7 +56,9 @@ export default function EkranLicznika(): React.ReactElement {
         system={systemAplikacji}
         oglos={oglos}
         t={kontener.j.t}
-        dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty') }}
+        dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty'),
+          naProjekt: () => void licznik.widok().then((w) => { if (w) router.push({ pathname: '/projekt/[id]', params: { id: w.projektId } }); }),
+          naNastepnaCzesc: () => void naNastepnaCzesc() }}
       />
     </Bezpieczny>
   );

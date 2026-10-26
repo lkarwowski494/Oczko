@@ -37,3 +37,33 @@ test('stanListy: linie terminu i ostatniej pracy tylko w toku; liczba kosza', ()
   const s = stanListy({ wToku: [p], ukonczone: [{ ...p, id: 'p2' }], dni: null, kosz: 2 }, { zapytanie: '', j, terazMs: 0, strefa: 'UTC' });
   expect([s.wToku[0].termin, s.wToku[0].ostatniaPraca, s.ukonczone[0].ostatniaPraca ?? null, s.kosz]).toEqual(['Today: 3 of 10 rows', 'last worked 41 days ago', null, 2]);
 });
+
+import type { WidokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
+import { stanProjektu } from '../../src/kompozycja/projekt';
+const W: WidokProjektu = {
+  id: 'p1', nazwa: 'Harbor', nienazwany: false, stan: 'w_toku', utworzonoMs: Date.UTC(2026, 9, 1), zmienionoMs: Date.UTC(2026, 9, 20, 10), ostatniaPracaMs: Date.UTC(2026, 9, 22, 10),
+  notatka: '', narzedzie: 'druty', drutMm: 4, drutUS: '6', terminDzien: '2026-10-31', celDnia: { rodzaj: 'cel', rzedy: 10 }, zrobioneDzis: 3,
+  postep: { rodzaj: 'procent', wartosc: 51 },
+  czesci: [
+    { id: 'c1', nazwa: 'Back', rzedy: 60, cel: 96, celZPary: false, paraZ: null, calosc: null, liczniki: [{ id: 'l1', nazwa: '', rodzaj: 'rzedy', sekcja: false, wartosc: 60, znaczenie: 'skonczone' }] },
+    { id: 'c2', nazwa: 'Blanket', rzedy: 20, cel: null, celZPary: false, paraZ: null, calosc: null, liczniki: [
+      { id: 'l2', nazwa: 'Square 1', rodzaj: 'rzedy', sekcja: false, wartosc: 12, znaczenie: 'skonczone' }, { id: 'l3', nazwa: '', rodzaj: 'rzedy', sekcja: false, wartosc: 8, znaczenie: 'skonczone' }] },
+  ],
+};
+test('stanProjektu: termin, szczegóły z US, pusta notatka = null, liczniki z nazwą rodzaju, całość przy ≥ 2 licznikach rzędów (propozycja 04 N2)', () => {
+  const s = stanProjektu(W, { j, terazMs: Date.UTC(2026, 9, 22, 12), strefa: 'UTC' });
+  expect(s.termin).toBe('Done by Oct 31 · today 3 of 10 rows');
+  expect(s.szczegoly).toEqual({ narzedzie: 'Needles', rozmiar: '4 mm (US 6)', termin: 'Oct 31' });
+  expect(s.notatka).toBeNull();
+  expect(s.ostatniaZmiana).toBe('Oct 22');
+  expect(s.czesci[0].liczniki).toEqual([{ id: 'l1', nazwa: 'Rows', opis: '60 rows' }]);
+  expect([s.czesci[0].calosc, s.czesci[1].calosc, s.czesci[1].liczniki?.[1]?.nazwa]).toEqual([null, 20, 'Rows']);
+});
+test('stanProjektu: gałęzie terminu RD-15 i brak terminu', () => {
+  const linia = (z: Partial<WidokProjektu>) => stanProjektu({ ...W, ...z }, { j, terazMs: 0, strefa: 'UTC' }).termin;
+  expect(linia({ celDnia: { rodzaj: 'po_terminie', zostalo: 5 } })).toBe('The due date Oct 31 has passed · 5 rows to go');
+  expect(linia({ celDnia: { rodzaj: 'osiagniety' } })).toBe('Done by Oct 31 · goal reached');
+  expect(linia({ celDnia: null })).toBe('Done by Oct 31 · set a goal for a part to get a daily goal');
+  expect(linia({ terminDzien: null, celDnia: null })).toBeNull();
+  expect(stanProjektu({ ...W, drutMm: 6.5, drutUS: null, narzedzie: 'szydelko' }, { j, terazMs: 0, strefa: 'UTC' }).szczegoly).toEqual({ narzedzie: 'Hook', rozmiar: '6.5 mm', termin: 'Oct 31' });
+});

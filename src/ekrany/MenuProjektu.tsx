@@ -14,6 +14,7 @@ export type PropsMenuProjektu = {
   /** Zerowanie (F-45): wołane dopiero po potwierdzeniu w tym arkuszu (BR-LIC-017/S6, R-007). */
   naZeruj(): void;
   naUkoncz(): void;
+  naZnaczenie?(): void; // F-09 (partia 5, design-spec: `menu.znaczenie` w ••• licznika)
   naZamknij(): void;
 };
 export function MenuProjektu(p: PropsMenuProjektu): React.ReactElement {
@@ -27,6 +28,7 @@ export function MenuProjektu(p: PropsMenuProjektu): React.ReactElement {
         <Przycisk tekst={t('menu.przypomnienie')} onPress={p.naPrzypomnienie} testID="menu-przypomnienie" />
         <Przycisk tekst={t('menu.powtorzenie')} onPress={p.naPowtorzenie} />
         <Przycisk tekst={t('menu.wpisz')} onPress={p.naWpisz} testID="menu-wpisz-wartosc" />
+        {p.naZnaczenie && <Przycisk tekst={t('menu.znaczenie')} onPress={p.naZnaczenie} testID="menu-znaczenie" />}
         {s.zablokowany
           ? <Przycisk tekst={t('menu.odblokuj')} onPress={p.naOdblokuj} />
           : <Przycisk tekst={t('menu.zablokuj')} onPress={p.naZablokuj} />}
