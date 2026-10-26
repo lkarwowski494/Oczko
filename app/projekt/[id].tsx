@@ -7,6 +7,9 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Projekt } from '../../src/ekrany/Projekt';
 import { GrupaZdjec, type Miniatura } from '../../src/ekrany/Zdjecia';
 import { zdjecieTestowe } from '../../src/kompozycja/e2e-zdjecie';
+import { zaleznosciObrazu } from '../../src/kompozycja/obrazy-aplikacji';
+import { zdjecieBezMetadanych } from '../../src/kompozycja/zdjecie-bez-metadanych';
+import { usunPlik } from '../../src/dane/pliki/system';
 import { E2E } from '../../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../../src/platforma/zdjecia';
 import { dodajZdjecie, zdjecia } from '../../src/przypadki-uzycia/zdjecia';
@@ -53,13 +56,17 @@ export default function EkranProjektu(): React.ReactElement {
     Alert.alert(tytul, opis, [{ text: t('wspolne.anuluj'), style: 'cancel' }, { text: przycisk, style: destrukcyjny ? 'destructive' : 'default', onPress: () => void f() }]);
   const poUsunieciu = async (nazwa: string) => { await licznik.poUsunieciu(w.id); oglos(t('usun.ogloszenie', { nazwa })); await wczytaj(); };
   const czesc = (cid: string) => w.czesci.find((c) => c.id === cid);
-  const dodajPlik = async (sciezka: string, rozszerzenie: string) => {
-    const r = await dodajZdjecie(z, { cel: { projektId: w.id }, plik: { sciezka, rozszerzenie } });
+  // P-219 (2A): każde zdjęcie przekodowane bez metadanych i GPS, zanim trafi do magazynu.
+  const dodajPlik = async (sciezka: string) => {
+    const czysty = await zdjecieBezMetadanych(sciezka, zaleznosciObrazu(z.katalogi.tymczasowy, z.id.nowy)).catch(() => null);
+    if (!czysty) { Alert.alert(t('licznik.blad_zapisu')); return; }
+    const r = await dodajZdjecie(z, { cel: { projektId: w.id }, plik: czysty });
+    usunPlik(czysty.sciezka);
     if (r.ok) await wczytaj(); else Alert.alert(t('licznik.blad_zapisu'));
   };
   const wybierzZdjecie = async (zrodlo: 'aparat' | 'biblioteka') => {
     const r = await wybieraczZdjec().wybierz(zrodlo);
-    if (r.rodzaj === 'zdjecie') await dodajPlik(r.sciezka, r.rozszerzenie);
+    if (r.rodzaj === 'zdjecie') await dodajPlik(r.sciezka);
     else if (r.rodzaj === 'brak_zgody') {
       Alert.alert(t('zdjecia.brak_aparatu_tytul'), t('zdjecia.brak_aparatu_opis'), [
         { text: t('wspolne.anuluj'), style: 'cancel' }, { text: t('zdjecia.otworz_ustawienia'), onPress: () => void Linking.openSettings() },
@@ -70,7 +77,7 @@ export default function EkranProjektu(): React.ReactElement {
     <GrupaZdjec t={t} miniatury={miniatury} naWybierz={(zr) => void wybierzZdjecie(zr)}
       naOtworz={(i) => router.push({ pathname: '/zdjecie', params: { projekt: w.id, i: String(i) } })}
       panelE2e={E2E ? (
-        <Pressable accessibilityRole="button" testID="e2e-zdjecie-testowe" onPress={() => void dodajPlik(zdjecieTestowe(z.katalogi.tymczasowy), 'jpg')}>
+        <Pressable accessibilityRole="button" testID="e2e-zdjecie-testowe" onPress={() => void dodajPlik(zdjecieTestowe(z.katalogi.tymczasowy))}>
           <Text>Test photo (EXIF GPS)</Text>
         </Pressable>
       ) : undefined} />

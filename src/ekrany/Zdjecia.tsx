@@ -1,6 +1,6 @@
 // Zdjęcia projektu (F-16, BR-PRJ-003; P-191 P9a; design-spec „Zdjęcia”; makiety fix6 `projekt-zdjecia`, `zdjecie-zrodlo`, `zdjecie-podglad`,
 // `zdjecie-usun`). Wybór źródła jako lista w ekranie (jak menu „+” i ••• projektu, R8 P-191 — odstępstwo od arkusza systemowego do audytu 04).
-// „Share” podglądu nieaktywne do decyzji właściciela (Q-D1, P-215 (3)): udostępnienie oryginału niosłoby EXIF/GPS.
+// „Share” podglądu (P-219 2A): plik przekodowany bez metadanych i GPS (kompozycja), arkusz systemowy.
 import React, { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { cel, odstep, promien, systemCzarny, typografia, useKolory, type Kolory } from './motyw';
@@ -54,7 +54,7 @@ function Pozycja(p: { tekst: string; onPress(): void }): React.ReactElement {
 
 /** Podgląd na czarnym tle (P-191 P9a): przesunięcie w bok między zdjęciami; alternatywa — miniatury na ekranie projektu. */
 export function PodgladZdjec(p: {
-  t: Tlumacz; zdjecia: Miniatura[]; poczatek: number; naZamknij(): void; naUsun(id: string): void;
+  t: Tlumacz; zdjecia: Miniatura[]; poczatek: number; naZamknij(): void; naUsun(id: string): void; naUdostepnij(id: string): void;
   potwierdz(tytul: string, opis: string, przycisk: string, f: () => void): void;
 }): React.ReactElement {
   const { t } = p;
@@ -77,8 +77,9 @@ export function PodgladZdjec(p: {
         ))}
       </ScrollView>
       <View style={st.pasek}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t('ukonczenie.udostepnij')} disabled accessibilityState={{ disabled: true }} style={st.przycisk}>
-          <Text style={st.nieaktywny}>{t('ukonczenie.udostepnij')}</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel={t('ukonczenie.udostepnij')} onPress={() => { if (biezace) p.naUdostepnij(biezace.id); }}
+          style={st.przycisk} testID="zdjecie-udostepnij">
+          <Text style={st.jasny}>{t('ukonczenie.udostepnij')}</Text>
         </Pressable>
         <Text style={st.jasny}>{t('zdjecia.a11y', { n: i + 1, count: p.zdjecia.length })}</Text>
         <Pressable accessibilityRole="button" accessibilityLabel={t('zdjecia.usun')} testID="zdjecie-usun" style={st.przycisk}
@@ -106,6 +107,5 @@ function style(k: Kolory) {
     pasek: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: odstep.l, minHeight: cel.minimum },
     przycisk: { minHeight: cel.minimum, minWidth: cel.minimum, justifyContent: 'center' },
     jasny: { ...typografia.tresc, color: systemCzarny.grafit },
-    nieaktywny: { ...typografia.tresc, color: systemCzarny.olowek },
   });
 }

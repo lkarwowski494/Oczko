@@ -5,6 +5,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FormularzWloczki } from '../src/ekrany/Zapas';
 import { GrupaZdjec, type Miniatura } from '../src/ekrany/Zdjecia';
 import { wybieraczZdjec } from '../src/platforma/zdjecia';
+import { zaleznosciObrazu } from '../src/kompozycja/obrazy-aplikacji';
+import { zdjecieBezMetadanych } from '../src/kompozycja/zdjecie-bez-metadanych';
+import { usunPlik } from '../src/dane/pliki/system';
 import { dodajZdjecie, zdjecia } from '../src/przypadki-uzycia/zdjecia';
 import { useKolory } from '../src/ekrany/motyw';
 import { potwierdzUsuniecie } from '../src/kompozycja/zapas-kosz';
@@ -38,7 +41,13 @@ export default function EkranWloczki(): React.ReactElement {
   const wybierz = async (zrodlo: 'aparat' | 'biblioteka') => {
     if (!id) return;
     const r = await wybieraczZdjec().wybierz(zrodlo);
-    if (r.rodzaj === 'zdjecie') { if ((await dodajZdjecie(z, { cel: { wloczkaId: id }, plik: { sciezka: r.sciezka, rozszerzenie: r.rozszerzenie } })).ok) await wczytajZdjecia(); }
+    if (r.rodzaj === 'zdjecie') { // P-219 (2A): bez metadanych i GPS przed zapisem
+      const czysty = await zdjecieBezMetadanych(r.sciezka, zaleznosciObrazu(z.katalogi.tymczasowy, z.id.nowy)).catch(() => null);
+      if (!czysty) { Alert.alert(j.t('licznik.blad_zapisu')); return; }
+      const w = await dodajZdjecie(z, { cel: { wloczkaId: id }, plik: czysty });
+      usunPlik(czysty.sciezka);
+      if (w.ok) await wczytajZdjecia(); else Alert.alert(j.t('licznik.blad_zapisu'));
+    }
     else if (r.rodzaj === 'brak_zgody') {
       Alert.alert(j.t('zdjecia.brak_aparatu_tytul'), j.t('zdjecia.brak_aparatu_opis'), [
         { text: j.t('wspolne.anuluj'), style: 'cancel' }, { text: j.t('zdjecia.otworz_ustawienia'), onPress: () => void Linking.openSettings() },

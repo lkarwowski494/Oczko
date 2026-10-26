@@ -1,5 +1,5 @@
 // Zdjęcia projektu (P-191 P9a, BR-PRJ-003; makiety fix6 `projekt-zdjecia`, `zdjecie-zrodlo`, `zdjecie-podglad`, `zdjecie-usun`; scenariusze 17, 42).
-// „Share” podglądu nieaktywne do decyzji właściciela (Q-D1, P-215 (3)).
+// „Share” podglądu: od P-219 (2A) aktywne — plik bez metadanych przygotowuje kompozycja (zmiana testu z powodem: wcześniej nieaktywne, Q-D1).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
@@ -38,12 +38,13 @@ describe('grupa „Photos”', () => {
 });
 
 describe('podgląd', () => {
-  test('Close, Share nieaktywne, „Photo 2 of 2”, Delete photo z potwierdzeniem (tytuł, opis, przycisk destrukcyjny)', () => {
-    const naUsun = jest.fn(), naZamknij = jest.fn();
+  test('Close, Share bieżącego zdjęcia, „Photo 2 of 2”, Delete photo z potwierdzeniem (tytuł, opis, przycisk destrukcyjny)', () => {
+    const naUsun = jest.fn(), naZamknij = jest.fn(), naUdostepnij = jest.fn();
     const potwierdz = jest.fn((_tytul: string, _opis: string, _przycisk: string, f: () => void) => f());
-    render(<PodgladZdjec t={t} zdjecia={DWA} poczatek={1} naZamknij={naZamknij} naUsun={naUsun} potwierdz={potwierdz} />);
+    render(<PodgladZdjec t={t} zdjecia={DWA} poczatek={1} naZamknij={naZamknij} naUsun={naUsun} naUdostepnij={naUdostepnij} potwierdz={potwierdz} />);
     expect(screen.getByText('Photo 2 of 2')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Share' }).props.accessibilityState).toMatchObject({ disabled: true });
+    fireEvent.press(screen.getByRole('button', { name: 'Share' }));
+    expect(naUdostepnij).toHaveBeenCalledWith('b');
     fireEvent.press(screen.getByTestId('zdjecie-usun'));
     expect(potwierdz).toHaveBeenCalledWith('Delete this photo?', t('zdjecia.usun_opis'), 'Delete photo', expect.any(Function));
     expect(naUsun).toHaveBeenCalledWith('b');
