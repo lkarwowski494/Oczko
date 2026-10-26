@@ -113,6 +113,20 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając, że termin minął, a zostało 20 rzędów
     - Gdy użytkownik otwiera projekt
     - Wtedy nie widzi celu dziennego, tylko „termin minął, zostało 20 rzędów” (RD-15-W4)
+  - Scenariusz: Po terminie, nic nie zostało (NZ-RD15)
+    - Zakładając, że termin minął 3 dni temu, a wszystkie 320 rzędów celu są zrobione
+    - Gdy użytkownik otwiera projekt
+    - Wtedy widzi „cel osiągnięty”, a nie „termin minął” (RD-15-W12; P-134 Q1a)
+  - Scenariusz: Dokończenie po terminie (NZ-RD15)
+    - Zakładając, że termin minął wczoraj, a na początek dnia zostało 20 rzędów
+    - Gdy użytkownik dodaje dziś 10 rzędów
+    - Wtedy widzi „termin minął, zostało 10 rzędów” (RD-15-W13)
+    - Gdy dodaje kolejne 10 rzędów
+    - Wtedy od razu widzi „cel osiągnięty” (RD-15-W14)
+  - Scenariusz: Prucie po terminie (NZ-RD15)
+    - Zakładając, że termin minął, a zostało 20 rzędów
+    - Gdy użytkownik odejmuje 5 rzędów
+    - Wtedy widzi „termin minął, zostało 25 rzędów” (RD-15-W15)
   - Scenariusz: Bez terminu nic na ekranie licznika
     - Zakładając, że projekt nie ma terminu
     - Gdy użytkownik liczy rzędy
@@ -130,6 +144,10 @@ Miejsce tych funkcji na ekranach ustala rola 04: na ekranie licznika nic z tego 
     - Zakładając, że termin „Szala” minął, a zostało 10 rzędów
     - Gdy użytkownik otwiera listę
     - Wtedy „Szal” stoi na górze z informacją „termin minął, zostało 10 rzędów” (RD-15-W4)
+  - Scenariusz: Po terminie, ale wszystko zrobione (NZ-RD15)
+    - Zakładając, że termin „Szala” minął, a wszystkie rzędy celu są zrobione, „Czapka” ma cel na dziś 20 rzędów, a „Sweter” nie ma terminu
+    - Gdy użytkownik otwiera listę
+    - Wtedy „Szal” nie stoi w grupie po terminie: ma „cel osiągnięty” (cel na dziś 0, RD-15-W12) i stoi za „Czapką”, przed „Swetrem” (P-048 (4), P-134 Q1a)
   - Scenariusz: Bez terminów
     - Zakładając, że żaden projekt nie ma terminu
     - Gdy użytkownik otwiera listę

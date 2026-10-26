@@ -266,10 +266,10 @@ Zmiana wartości z a na b (ER-40):
 | RD-14-W7 | 29 | 100 | 29 | 0 | typowy | rachunek: ⌊100 × 29 / 100⌋ = 29; pułapka zmiennoprzecinkowa: 100 × 0,29 = 28,999… daje 28 (ER-38) |
 
 ### RD-15: Cel dzienny do terminu i wykonanie dnia
-- Wzór: `d = (termin − dziś) + 1` [dni, daty lokalne RD-16]; `R = C − Z_przed`; cel dnia `g = ⌈R / d⌉` dla d ≥ 1 i R > 0; `g = 0` dla R ≤ 0 („cel osiągnięty”); dla d < 1 brak celu i komunikat „termin minął, zostało R rzędów”. C = Σ c_i, Z_przed = Σ min(r_i, c_i) na koniec wczoraj (jak RD-14). d liczy się na datach kalendarzowych (dzień RD-16), nie z różnicy chwil: doba przy zmianie czasu ma 23 albo 25 h (ER-38). Cel dnia liczy się przy pierwszym pokazaniu w danym dniu; zmiany z wcześniejszych dni scalone później (zegarek, ekran blokady) liczą się do swojego dnia i nie zmieniają celu dnia bieżącego; przy aplikacji otwartej przez północ cel nowego dnia liczy się przy powrocie z tła i przy następnej zmianie licznika (P-047, P-097 (4a), jak Trening `docs/27-subskrypcja-spec.md:125`; ER-44) Wykonanie dnia = suma zmian +1 i −1 liczników rzędów z dniem zmiany = dziś (RD-16), bez zmian cofniętych z historii (BR-LIC-003) i bez wpisań wartości (BR-LIC-017); prucie zmniejsza wykonanie
-- Jednostki: C, Z_przed, R, g [rz.]; d [dni]
-- Granica: d = 1 (termin dziś, włącznie); d < 1 po terminie; C > 0 (ostre)
-- Podstawa: decyzja P-047 (cel stały w ciągu dnia), rachunek; potrzeba J-11 (P-043, ZAL-027: cel dzienny to hipoteza)
+- Wzór: `d = (termin − dziś) + 1` [dni, daty lokalne RD-16]; `R = C − Z_przed`, `R_teraz = C − Z_teraz`. Gałęzie w tej kolejności (P-134 Q1a, NZ-RD15): (1) przy d ≥ 1 i R ≤ 0 albo przy d < 1 i R_teraz ≤ 0: `g = 0`, „cel osiągnięty” — brak rzędów do zrobienia ma pierwszeństwo przed terminem; (2) d < 1 i R_teraz > 0: brak celu i komunikat „termin minął, zostało R_teraz rzędów”, liczone na bieżąco (po terminie nie ma celu dnia, więc zasada stałego celu P-047 tu nie działa: dokończenie albo prucie po terminie od razu zmienia „zostało”, a dokończenie daje „cel osiągnięty”); (3) d ≥ 1 i R > 0: cel dnia `g = ⌈R / d⌉`. C = Σ c_i, Z_przed = Σ min(r_i, c_i) na koniec wczoraj (jak RD-14), Z_teraz = Σ min(r_i, c_i) teraz. d liczy się na datach kalendarzowych (dzień RD-16), nie z różnicy chwil: doba przy zmianie czasu ma 23 albo 25 h (ER-38). Cel dnia liczy się przy pierwszym pokazaniu w danym dniu; zmiany z wcześniejszych dni scalone później (zegarek, ekran blokady) liczą się do swojego dnia i nie zmieniają celu dnia bieżącego; przy aplikacji otwartej przez północ cel nowego dnia liczy się przy powrocie z tła i przy następnej zmianie licznika (P-047, P-097 (4a), jak Trening `docs/27-subskrypcja-spec.md:125`; ER-44) Wykonanie dnia = suma zmian +1 i −1 liczników rzędów z dniem zmiany = dziś (RD-16), bez zmian cofniętych z historii (BR-LIC-003) i bez wpisań wartości (BR-LIC-017); prucie zmniejsza wykonanie
+- Jednostki: C, Z_przed, Z_teraz, R, R_teraz, g, zostało [rz.]; d [dni]; stan [-]
+- Granica: d = 1 (termin dziś, włącznie); d < 1 po terminie; R = 0 i R_teraz = 0 (cel osiągnięty, włącznie, przy każdym d); C > 0 (ostre)
+- Podstawa: decyzja P-047 (cel stały w ciągu dnia), P-134 Q1a (pierwszeństwo „cel osiągnięty”, „zostało” po terminie na bieżąco), rachunek; potrzeba J-11 (P-043, ZAL-027: cel dzienny to hipoteza)
 - Krytyczna: nie
 - Uproszczenie: równy podział rzędów na dni, bez dni wolnych i bez różnicy pracy między rzędami (RD-14).
 
@@ -282,6 +282,17 @@ Zmiana wartości z a na b (ER-40):
 | RD-15-W5 | 320 | 300 | 2 | 10 | 0 | powyżej | rachunek: ⌈20 / 2⌉ |
 | RD-15-W6 | 320 | 320 | 5 | 0 | 0 | granica | rachunek: R = 0, cel osiągnięty |
 | RD-15-W7 | 0 | 0 | 5 | błąd danych | — | błąd | rachunek: brak celów części |
+
+Po terminie i bez rzędów do zrobienia (P-134 Q1a, NZ-RD15; `—` = brak celu dnia):
+
+| ID | C [rz.] | Z_przed [rz.] | Z_teraz [rz.] | d [dni] | Oczekiwane: stan [-] | Oczekiwane: g [rz.] | Oczekiwane: zostało [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|---|---|
+| RD-15-W11 | 320 | 320 | 320 | 0 | cel osiągnięty | 0 | 0 | 0 | granica | rachunek: d < 1 i R_teraz = 0 → gałąź (1) przed (2) |
+| RD-15-W12 | 320 | 320 | 320 | -3 | cel osiągnięty | 0 | 0 | 0 | poniżej | rachunek: 3 dni po terminie, nic nie zostało |
+| RD-15-W13 | 320 | 300 | 310 | 0 | termin minął | — | 10 | 0 | typowy | rachunek: 320 − 310, na bieżąco (nie 320 − 300 = 20) |
+| RD-15-W14 | 320 | 300 | 320 | 0 | cel osiągnięty | 0 | 0 | 0 | granica | rachunek: 20 rzędów dokończonych dziś po terminie → od razu cel osiągnięty |
+| RD-15-W15 | 320 | 300 | 295 | -1 | termin minął | — | 25 | 0 | typowy | rachunek: prucie 5 rzędów po terminie, 320 − 295 |
+| RD-15-W16 | 320 | 320 | 320 | 1 | cel osiągnięty | 0 | 0 | 0 | powyżej | rachunek: termin dziś (d = 1), R = 0 → gałąź (1) |
 
 Liczba dni d z dat (ER-38):
 
