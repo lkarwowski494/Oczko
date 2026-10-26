@@ -32,10 +32,9 @@ concurrency:
 jobs:
   swift-test:
     # Pakiet reguł i rdzeń dziennika +1 (modules/oczko-reguly; ADR-0007 uzupełnienie, ADR-0008 (8), P-129 Q2a, jak Trening `cd targets && swift test`):
-    # bez symulatora, na tych samych plikach JSON co Jest. Pierwszy przebieg informacyjny (zasada roli 07 nr 8), potem bramka (08 partia 3, 3B).
+    # bez symulatora, na tych samych plikach JSON co Jest. Bramka od pierwszego zielonego przebiegu 40257126189 (zasada roli 07 nr 8; 08 partia 3, 3B).
     runs-on: macos-26
     timeout-minutes: 20
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v5
         with:

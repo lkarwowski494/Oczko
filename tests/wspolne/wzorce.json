@@ -1,7 +1,7 @@
 {
   "_opis": "Manifest złotych plików kontraktu TS ↔ Swift (Z07-11, Z07-12; strategia §4). Te same pliki czyta Jest (tests/jakosc/zlote-pliki.test.ts) i XCTest (specyfikacja: xctest-specyfikacja.md). Każdy plik z katalogu jest tu wpisany dokładnie raz i odwrotnie — obie strony raportują „wykonano N z N”. Zmiana pliku albo oczekiwań = zmiana kontraktu roli 05 (tests/wspolne/README.md).",
-  "wersja_kontraktu": 1,
-  "zrodlo_typow": "docs/architektura/moduly.md (export type StanEkranuBlokady, StanZegarka, ZdarzenieWejsciowe)",
+  "wersja_kontraktu": 2,
+  "zrodlo_typow": "docs/architektura/moduly.md (export type StanEkranuBlokady, StanZegarka — wersja 2 z generatora tests/wspolne/generator-stanow.ts; StanEkranuBlokadyV1, StanZegarkaV1 — pliki *-v1.json; ZdarzenieWejsciowe)",
   "limit_bajtow_stanu": 4096,
   "dziennik": [
     {
@@ -53,10 +53,17 @@
   "stany": [
     { "plik": "stan-ekranu-blokady-typowy.json", "typ": "StanEkranuBlokady", "co": "liczenie w toku, dzień dozwolony, stoper sesji od 19:52" },
     { "plik": "stan-ekranu-blokady-limit.json", "typ": "StanEkranuBlokady", "co": "nowy dzień ponad limit (dzienDozwolony = false → intencja nie dopisuje +1, Live Activity pokazuje limit, P-065 (1a)); licznik bez zdarzeń (glowa null), bez sesji" },
-    { "plik": "stan-ekranu-blokady-najwiekszy.json", "typ": "StanEkranuBlokady", "co": "duży stan: nazwa 320 znaków CJK (3 B UTF-8), wartość 150 000; rozmiar < 4096 B (rejestr Apple 1b, R-028); maksymalna długość nazwy [DO USTALENIA] 05" },
+    { "plik": "stan-ekranu-blokady-najwiekszy.json", "typ": "StanEkranuBlokady", "co": "duży stan: nazwa 320 znaków CJK ucięta do 60 (STAN_NAZWA_MAKS_ZNAKOW) (3 B UTF-8), wartość 150 000; rozmiar < 4096 B (rejestr Apple 1b, R-028); maksymalna długość nazwy [DO USTALENIA] 05" },
     { "plik": "stan-zegarka-typowy.json", "typ": "StanZegarka", "co": "wersja darmowa, 3 dni z robótką w miesiącu" },
     { "plik": "stan-zegarka-pro-dozywotni.json", "typ": "StanZegarka", "co": "Pro dożywotni: proWaznoscDo = null znaczy „bez końca”, NIE „wygasło” (R-031)" },
     { "plik": "stan-zegarka-pro-subskrypcja.json", "typ": "StanZegarka", "co": "Pro z subskrypcji ważnej do 2026-12-31T23:59:59Z; dzień zaczęty bez Pro i dzień z Pro" },
-    { "plik": "stan-zegarka-najwiekszy.json", "typ": "StanZegarka", "co": "duży stan: nazwa 320 znaków CJK, 30 dni w miesiącu; rozmiar < 4096 B" }
+    { "plik": "stan-zegarka-najwiekszy.json", "typ": "StanZegarka", "co": "duży stan: nazwa 320 znaków CJK ucięta do 60 (STAN_NAZWA_MAKS_ZNAKOW), 30 dni w miesiącu; rozmiar < 4096 B" },
+    { "plik": "stan-ekranu-blokady-typowy-v1.json", "typ": "StanEkranuBlokadyV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): liczenie w toku, dzień dozwolony, stoper sesji od 19:52" },
+    { "plik": "stan-ekranu-blokady-limit-v1.json", "typ": "StanEkranuBlokadyV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): nowy dzień ponad limit (dzienDozwolony = false → intencja nie dopisuje +1, Live Activity pokazuje limit, P-065 (1a)); licznik bez zdarzeń (glowa null), bez sesji" },
+    { "plik": "stan-ekranu-blokady-najwiekszy-v1.json", "typ": "StanEkranuBlokadyV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): duży stan: nazwa 320 znaków CJK (3 B UTF-8), wartość 150 000; rozmiar < 4096 B (rejestr Apple 1b, R-028); maksymalna długość nazwy [DO USTALENIA] 05" },
+    { "plik": "stan-zegarka-typowy-v1.json", "typ": "StanZegarkaV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): wersja darmowa, 3 dni z robótką w miesiącu" },
+    { "plik": "stan-zegarka-pro-dozywotni-v1.json", "typ": "StanZegarkaV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): Pro dożywotni: proWaznoscDo = null znaczy „bez końca”, NIE „wygasło” (R-031)" },
+    { "plik": "stan-zegarka-pro-subskrypcja-v1.json", "typ": "StanZegarkaV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): Pro z subskrypcji ważnej do 2026-12-31T23:59:59Z; dzień zaczęty bez Pro i dzień z Pro" },
+    { "plik": "stan-zegarka-najwiekszy-v1.json", "typ": "StanZegarkaV1", "co": "wersja 1 (zgodność przy żywej Live Activity i zegarku w innej wersji, R-024, R-034): duży stan: nazwa 320 znaków CJK, 30 dni w miesiącu; rozmiar < 4096 B" }
   ]
 }

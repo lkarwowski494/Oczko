@@ -2,6 +2,12 @@
 
 Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-0007) — to specyfikacja, nie test. Miejsce wykonania: zadanie `xctest` w `jakosc-ios.yml` (macOS, po `expo prebuild`, strategia §5; pierwszy przebieg informacyjny, potem bramka). Reguły logiki wspólne dla `widget` i `watch` w jednym pakiecie Swift testowanym `swift test` bez symulatora (Z07-12, wzór Treningu `ios-unsigned.yml`); testy wymagające procesu aplikacji (intencja, `DziennikPlus`) jako XCTest celu po prebuild.
 
+## Stan wykonania (08 partia 3, 2026-10-26; P-129 Q2a — zmiana miejsca X-DZ zatwierdzona przez koordynatora w miejsce 05)
+- **Miejsce:** reguły (X-RG), dekoder stanu (X-ST) i rdzeń pliku dziennika (X-DZ-01–06, 11–13) w jednym pakiecie Swift `modules/oczko-reguly` (Foundation + POSIX) testowanym `swift test` bez symulatora — zadanie `swift-test` w `jakosc-ios.yml` (bramka od pierwszego zielonego przebiegu 40257126189). Cele natywne dostają kopie źródeł pakietu z kontrolą identyczności (`scripts/natywne/kontrola-swift.mjs`, jak Trening `scripts/verify-native.mjs`).
+- **Poza pakietem (wymagają procesu aplikacji):** X-DZ-07 (plik niedostępny przed odblokowaniem), X-DZ-08 (intencja przy `dzienDozwolony: false`), X-DZ-09 (łańcuch rodziców intencji), X-DZ-10 (migawka nazw `LiveActivityIntent`) — w celu `widget` (3C); przebieg na symulatorze → E2E partii 4 i lista TT.
+- **Stan v2:** złote pliki `stan-*.json` są wersją 2 z generatora `tests/wspolne/generator-stanow.ts` (test zgodności `tests/domena/stan-ekranu.test.ts`); pliki wersji 1 zostają jako `*-v1.json` (typy `StanEkranuBlokadyV1`, `StanZegarkaV1`).
+- **Siła testów:** mutanty reguł, dziennika i dekodera w kopii pakietu: 13/13 zabitych (oczko-warsztat `08-programista/2026-10-26-partia3/logi/B-mutanty-swift.txt`).
+
 ## Zasady wspólne
 - Pliki czytane z `tests/wspolne/` i `docs/…/wektory-*.json` **w repo** (zasób testu kopiowany w kroku budowania z repo, nie kopia w `targets/` — kontrola repo: brak kopii `wektory-*.json` i złotych plików poza tymi katalogami, R-032).
 - Każdy test wypisuje „wykonano N z N” i **pada**, gdy N = 0, gdy wykonanych < N albo gdy plik nie ma wpisu w manifeście. Żadnego `try?` na odczycie pliku ani dekodowaniu w pętli wektorów.

@@ -73,11 +73,14 @@ const dzienW = (ms: number, strefa: string) => new Intl.DateTimeFormat('en-CA', 
 const plikiKatalogu = () => fs.readdirSync(KAT).filter(f => /\.(jsonl|json)$/.test(f) && f !== 'wzorce.json').sort();
 
 describe('typy z moduly.md (źródło kontraktu)', () => {
-  test('parser czyta trzy typy kontraktu i ich pola (StanZegarka = StanEkranuBlokady & {…})', () => {
-    for (const n of ['StanEkranuBlokady', 'StanZegarka', 'ZdarzenieWejsciowe']) expect(typy[n]?.k).toBe('obj');
+  // Wersja 2 od przełączenia v1 → v2 (08 partia 3, P-111 (3), P-129 Q7a): StanZegarka = StanEkranuBlokady; v1 tylko w typach *V1 (pliki *-v1.json).
+  test('parser czyta typy kontraktu i ich pola (wersja 2: StanZegarka = StanEkranuBlokady; wersja 1: StanZegarkaV1 = StanEkranuBlokadyV1 & {…})', () => {
+    for (const n of ['StanEkranuBlokady', 'StanZegarka', 'StanEkranuBlokadyV1', 'StanZegarkaV1', 'ZdarzenieWejsciowe']) expect(typy[n]?.k).toBe('obj');
     const pola = (n: string) => Object.keys((typy[n] as { pola: object }).pola).sort();
-    expect(pola('StanEkranuBlokady')).toEqual(['dzien', 'dzienDozwolony', 'glowa', 'licznikId', 'nazwa', 'sesjaStartMs', 'wartosc']);
-    expect(pola('StanZegarka')).toEqual([...pola('StanEkranuBlokady'), 'dniWMiesiacu', 'pro', 'proWaznoscDo'].sort());
+    expect(pola('StanEkranuBlokady')).toEqual(['dniWMiesiacu', 'dzien', 'dzienDozwolony', 'glowa', 'licznikId', 'nazwa', 'ostatniPlusMs', 'pro', 'proWaznoscDo', 'przypomnienia', 'sesjaStartMs', 'wartosc', 'wersja', 'znaczenie']);
+    expect(pola('StanZegarka')).toEqual(pola('StanEkranuBlokady'));
+    expect(pola('StanEkranuBlokadyV1')).toEqual(['dzien', 'dzienDozwolony', 'glowa', 'licznikId', 'nazwa', 'sesjaStartMs', 'wartosc']);
+    expect(pola('StanZegarkaV1')).toEqual([...pola('StanEkranuBlokadyV1'), 'dniWMiesiacu', 'pro', 'proWaznoscDo'].sort());
     expect(pola('ZdarzenieWejsciowe')).toEqual(['czasMs', 'dzien', 'id', 'licznikId', 'pro', 'rodzaj', 'rodzice', 'strefa', 'urzadzenie', 'zrodlo']);
   });
   test('pułapki walidatora: brak pola, pole obce, zły typ, zły literał, null w polu bez null', () => {
@@ -153,7 +156,7 @@ describe('stany Live Activity i zegarka (stan-*.json, Z07-12)', () => {
     expect(bledy(o, typy[nazwaTypu])).toEqual([]);
     expect([UUID4.test(o.licznikId), o.glowa === null || UUID4.test(o.glowa), DZIEN.test(o.dzien)]).toEqual([true, true, true]);
     expect(Number.isInteger(o.wartosc) && o.wartosc >= 0).toBe(true);
-    if (nazwaTypu === 'StanZegarka') { for (const d of o.dniWMiesiacu) expect(DZIEN.test(d.dzien)).toBe(true); expect(o.dniWMiesiacu.length).toBeLessThanOrEqual(31); }
+    if (nazwaTypu === 'StanZegarka' || nazwaTypu === 'StanZegarkaV1') { for (const d of o.dniWMiesiacu) expect(DZIEN.test(d.dzien)).toBe(true); expect(o.dniWMiesiacu.length).toBeLessThanOrEqual(31); }
   });
   test.each(manifest.stany.map(s => [s.plik] as const))('%s: rozmiar ładunku < 4 KB (JSON bez wcięć, UTF-8; rejestr Apple 1b, R-028)', plik => {
     const o = JSON.parse(fs.readFileSync(path.join(KAT, plik), 'utf8'));

@@ -2,6 +2,9 @@
 
 Stan: rola 07, E3, 2026-10-25; **zatwierdzone przez rolę 05** w sesji fix 2026-10-25 (Z07-11, Z07-12; ADR-0008 „Uzupełnienie”): format dziennika i reguły odczytu bez zmian; zgodność wersji przez nazwę pliku `dziennik-plus-v2.jsonl` zamiast pola wersji w linii (ADR-0008 (4)). Źródło typów: `docs/architektura/moduly.md` (`ZdarzenieWejsciowe`, `StanEkranuBlokady`, `StanZegarka`), format dziennika: ADR-0008, stan zegarka: ADR-0009, cele natywne: ADR-0007.
 
+## Wersja 2 stanu (08 partia 3, 2026-10-26; P-111 (3), P-129 Q7a)
+`wersja_kontraktu: 2`: typy `StanEkranuBlokady` i `StanZegarka` (jeden ładunek) mają pola wersji 2 (`wersja`, `znaczenie`, `ostatniPlusMs`, `pro`, `proWaznoscDo`, `dniWMiesiacu`, `przypomnienia`); pliki `stan-*.json` tworzy generator `generator-stanow.ts` z kodu TS (`stanEkranuBlokady`; aktualizacja: `UPDATE_STANY=1 npx jest tests/domena/stan-ekranu.test.ts`), a test pilnuje zgodności. Pliki wersji 1: `stan-*-v1.json`. Strona Swift: `modules/oczko-reguly` (`swift test`).
+
 ## Kontrakt
 - **Te same pliki czyta Jest i XCTest.** Jest: `tests/jakosc/zlote-pliki.test.ts` (główny zestaw, `npm test`). XCTest: cele Swift po `expo prebuild` (`modules/oczko-dziennik-plus`, `targets/widget`, `targets/watch`) według `xctest-specyfikacja.md`. Kodu Swift jeszcze nie ma (brak celów natywnych) — strona Swift to zadanie roli 08 w zadaniu `xctest` workflowu `jakosc-ios.yml` (strategia §5).
 - **Zmiana pliku = zmiana kontraktu roli 05.** Pliku nie poprawia się, żeby test przeszedł. Nowe pole w typie: najpierw `moduly.md` (05), potem pliki i `wzorce.json`, potem kod TS i Swift w jednym commicie. Test Jest czyta typy wprost z `moduly.md`, więc zmiana typu bez zmiany plików czerwieni główny zestaw.
