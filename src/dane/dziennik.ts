@@ -1,5 +1,7 @@
 // Dziennik +1 z ekranu blokady (ADR-0008): odczyt pliku .jsonl po stronie TS (złote pliki wspólne z XCTest, Z07-11).
 // sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22). Reguły odczytu: tests/wspolne/README.md (1–5), ADR-0008 (3), (4).
+// ADR-0008 (8) (fix-3 05, P-124; wdraża 08 w partii 3): odczyt odzyskuje zdarzenie ze sklejonej linii (8R), `skroc` usuwa ucięty ogon za `doId` (8S);
+// wektory `sklejenie`, `skrocenie` w tests/wspolne/wzorce.json, test oczekujący tests/akceptacja/dane/dziennik-sklejenie.test.ts.
 // `pro` w linii: stan uprawnienia urządzenia w chwili stuknięcia (P-111 (2), ADR-0008 (6)); linia bez `pro` nie spełnia typu.
 import type { DziennikPlus, PortBazy, ZdarzenieWejsciowe } from '../domena/porty';
 import { zapiszBlad } from './repozytoria/bledy';

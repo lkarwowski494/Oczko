@@ -26,9 +26,9 @@ Stan: rola 07, E3, 2026-10-25; **zatwierdzone przez rolę 05** w sesji fix 2026-
 ## Reguły odczytu dziennika (wzorzec w teście Jest, `czytajDziennik`)
 1. Linia = jeden obiekt JSON zakończony `\n` (UTF-8, bez BOM). Pusty plik = 0 linii, nic do scalenia.
 2. Linia, której nie da się odczytać albo która nie spełnia typu (brak pola, zły typ, `rodzaj`/`zrodlo` spoza literałów), jest pomijana i zgłaszana w diagnostyce (`blad`); pozostałe linie są przyjmowane (propozycja Z07-11 (3): zatruta linia nie cofa całej partii).
-3. Ucięta może być tylko ostatnia linia (przerwany zapis); wtedy nie ma po niej `\n`.
+3. Ucięta może być tylko ostatnia linia (przerwany zapis); wtedy nie ma po niej `\n`. Pisarz zaczyna kolejną linię od `\n`, gdy plik niepusty nie kończy się `\n` (ADR-0008 (8A)); linia sklejona z uciętą daje zdarzenie z reszty od najmniejszego `{` na pozycji k > 0 (8R). Wektory: `wzorce.json` → `dopisanie`, `sklejenie`, `skrocenie` (P-124).
 4. Pola spoza typu są pomijane (zgodność wersji N+1 → N).
-5. `skroc(doId)` po `COMMIT` scalenia, do ostatniego **przyjętego** id (R-022); niepusty plik z 0 przyjętych linii = błąd bez skracania (R-024).
+5. `skroc(doId)` po `COMMIT` scalenia, do ostatniego **przyjętego** id (R-022), razem z uciętym ogonem bez `\n` za nim (ADR-0008 (8S)); niepusty plik z 0 przyjętych linii = błąd bez skracania (R-024) — kolejny zapis i tak nie skleja się z ogonem (8A).
 
 ## [DO USTALENIA] (do sesji fix roli 05)
 - Z07-12: typy stanów nie mają pól `dni`, `ostatniPlus`, `znaczenie`, planu przypomnień ani `wersja` ładunku — po dopisaniu w `moduly.md` pliki stanów trzeba uzupełnić (test Jest zaczerwieni się sam, bo czyta typy z `moduly.md`).

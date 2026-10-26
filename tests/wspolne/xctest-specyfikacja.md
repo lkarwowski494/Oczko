@@ -23,13 +23,15 @@ Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-000
 | X-DZ-02 | Koder: zdarzenia z `dziennik-plus-poprawny.jsonl` zdekodowane i zakodowane ponownie dają **te same bajty linii** (kolejność pól jak w pliku, `czasMs` w ms jako liczba całkowita, `zrodlo: "ekran_blokady"`, bez `\/`: `JSONEncoder.outputFormatting` z `.withoutEscapingSlashes`, `.sortedKeys` NIE — kolejność z typu). Jeśli Foundation na iOS 18 nie gwarantuje kolejności kluczy [DO USTALENIA 05/08 przy pierwszym przebiegu], porównanie po zdekodowaniu obu stron do słownika, a kolejność pól przestaje być częścią kontraktu (TS czyta pola po nazwie) | plik |
 | X-DZ-03 | Zapis z intencji: linia dopisana przez `DziennikPlus` dla zdarzenia z pliku = linia z pliku (TS czyta to, co Swift pisze) | plik |
 | X-DZ-04 | 1000 równoległych dopisań z dwóch wątków → 1000 poprawnych linii, 1000 różnych id | ADR-0008 „Potwierdzenie” |
-| X-DZ-05 | Przerwany zapis (ucięta ostatnia linia jak w pliku) → poprzednie linie zachowane, kolejne dopisanie zaczyna od nowej linii (nie skleja się z uciętą) | `dziennik-plus-ucieta-linia.jsonl` |
+| X-DZ-05 | Zapis linii (ADR-0008 (8A)): dla każdego wektora `dopisanie` plik z bajtami `przed` + dopisanie `linia` przez `DziennikPlus` = dokładnie bajty `po` (pusty plik i plik z `\n` na końcu: bez `\n` na początku; ucięty ogon: `\n` na początku); poprzednie linie zachowane | `wzorce.json` → `dopisanie` |
 | X-DZ-06 | `skroc(doId)`: zostają linie po `doId`; linia dopisana między `odczytaj()` a `skroc()` nie ginie | R-022 |
 | X-DZ-07 | Plik niedostępny (ochrona danych przed pierwszym odblokowaniem, atrapa) → intencja zwraca błąd, stan Live Activity „Unlock to count” | R-025, ADR-0008 |
 | X-DZ-08 | Intencja przy `dzienDozwolony: false` (`stan-ekranu-blokady-limit.json`) nie dopisuje linii | P-065 (1a) |
 | X-DZ-09 | Kolejne stuknięcia intencji łańcuchują rodziców jak `dziennik-plus-poprawny.jsonl` (rodzic = poprzednie własne id, pierwszy = `glowa` ze stanu) | Z07-11 (1), M-10 |
 | X-DZ-10 | Migawka nazwy i parametrów `LiveActivityIntent` (zmiana = zmiana kontraktu, Live Activity żyje do 8 h przez aktualizację aplikacji) | Z07-11 (4) |
 | X-DZ-11 | Linia z nieznanymi polami (`dziennik-plus-nieznane-pole.jsonl`) dekodowana bez błędu, pola pominięte | R-024 |
+| X-DZ-12 | Odczyt i skrócenie (ADR-0008 (8R), (8S)): wektory `sklejenie` (przyjęte id, zgłoszone linie, odzyskane id) i `skrocenie` (bajty pliku po `skroc(do_id)`; `do_id` także w linii sklejonej) dają wynik z manifestu | `wzorce.json` → `sklejenie`, `skrocenie` |
+| X-DZ-13 | Krótki zapis albo błąd `write`/`fsync` (atrapa uchwytu): plik obcięty do rozmiaru sprzed zapisu, intencja zwraca błąd, stan Live Activity bez zmian (`wartosc`, `glowa`) | ADR-0008 (8A) |
 
 ## 2. Stan Live Activity i zegarka (Z07-12; R-026–R-028, R-031)
 | ID | Test | Wyrocznia |

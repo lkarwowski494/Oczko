@@ -33,6 +33,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-dostepu.test.ts` | zielony (główny zestaw) | 3 | BR-ZAK-001, BR-ZAK-003, BR-ZAK-007, KP-02, KP-05, KP-06, KP-08, P-038, P-057, P-089, R-109 | `src/domena/dostep`<br>`src/konfiguracja` | — |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-limitu.test.ts` | zielony (główny zestaw) | 4 | BR-ZAK-005, BR-ZAK-006, KP-12, KP-13, NFR-PIE-001, P-057, P-065, P-067, P-068, R-097, R-103, R-178 | `src/domena/limit`<br>`src/konfiguracja` | Z07-07 |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wlasnosci.test.ts` | zielony (główny zestaw) | 14 | KP-02, KP-06, KP-12, KP-13, KP-15, P-057, P-065, R-099, R-102, R-113 | `src/domena/dostep`<br>`src/domena/limit`<br>`src/konfiguracja` | Z07-07 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/akceptacja/dane/dziennik-sklejenie.test.ts` | oczekuje | 1 | P-123, P-124, R-022, R-023 | `src/dane/dziennik`<br>`src/domena/porty` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/aplikacja.test.tsx` | oczekuje | 6 | BR-DAN-012/S2, BR-LIC-001, BR-LIC-001/S1, KP-07, KP-08, KP-13, NFR-DAN-002, NFR-PIE-001, R-020, R-091 | `src/domena/porty`<br>`src/ekrany/Aplikacja`<br>`src/ekrany/wspolne` | Z07-11, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/formularze.test.tsx` | oczekuje | 5 | BR-LIC-007/S3, BR-LIC-010/S1, BR-LIC-010/S2, BR-LIC-017/S7, BR-PRJ-013/S3, RD-12, RD-13 | `src/ekrany/Formularze`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/historia-menu.test.tsx` | oczekuje | 5 | BR-LIC-003, BR-LIC-003/S1, BR-LIC-004, BR-LIC-017/S6, BR-PRJ-006, R-007 | `src/ekrany/Historia`<br>`src/ekrany/MenuProjektu`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
@@ -48,4 +49,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/ustawienia.test.tsx` | oczekuje | 7 | BR-DAN-010, BR-DAN-012/S3, BR-LIC-020/S3, BR-ZAK-004, BR-ZAK-004/S1, BR-ZAK-006/S5, BR-ZAK-006/S7, KP-13 | `src/ekrany/Ustawienia`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/akceptacja/ekrany/zglos-stan-danych.test.tsx` | oczekuje | 4 | BR-DAN-010, BR-DAN-010/S1, BR-DAN-010/S2, BR-DAN-011, BR-DAN-011/S1, BR-DAN-011/S2, R-162, R-163 | `src/ekrany/StanDanych`<br>`src/ekrany/ZglosProblem`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 
-Razem plików testów: 44; zależnych od poprawek: 36.
+Razem plików testów: 45; zależnych od poprawek: 37.
