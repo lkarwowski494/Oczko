@@ -47,6 +47,23 @@
   "#B3261E",
   "#FCFCFA"
  ],
+ "jasny: błąd / arkusz": [
+  "#B3261E",
+  "#FCFCFA"
+ ],
+ "jasny: ołówek / arkusz": [
+  "#5E626A",
+  "#FCFCFA"
+ ],
+ "jasny: wybrany przełącznik: obrys / arkusz (element, 3:1)": [
+  "#26282C",
+  "#FCFCFA",
+  3
+ ],
+ "jasny: wybrany przełącznik: tekst / tło": [
+  "#FCFCFA",
+  "#26282C"
+ ],
  "ciemny: tekst / papier": [
   "#ECECE8",
   "#1B1C1F"
@@ -94,6 +111,23 @@
  "ciemny: błąd / papier": [
   "#F2B8B5",
   "#1B1C1F"
+ ],
+ "ciemny: błąd / arkusz": [
+  "#F2B8B5",
+  "#2A2C31"
+ ],
+ "ciemny: ołówek / arkusz": [
+  "#A9ACB2",
+  "#2A2C31"
+ ],
+ "ciemny: wybrany przełącznik: obrys / arkusz (element, 3:1)": [
+  "#8C9098",
+  "#2A2C31",
+  3
+ ],
+ "ciemny: wybrany przełącznik: tekst / tło": [
+  "#ECECE8",
+  "#2E3136"
  ],
  "jasny+kontrast: tekst / papier": [
   "#26282C",
@@ -143,6 +177,23 @@
   "#B3261E",
   "#FCFCFA"
  ],
+ "jasny+kontrast: błąd / arkusz": [
+  "#B3261E",
+  "#FCFCFA"
+ ],
+ "jasny+kontrast: ołówek / arkusz": [
+  "#44474D",
+  "#FCFCFA"
+ ],
+ "jasny+kontrast: wybrany przełącznik: obrys / arkusz (element, 3:1)": [
+  "#26282C",
+  "#FCFCFA",
+  3
+ ],
+ "jasny+kontrast: wybrany przełącznik: tekst / tło": [
+  "#FCFCFA",
+  "#26282C"
+ ],
  "ciemny+kontrast: tekst / papier": [
   "#ECECE8",
   "#1B1C1F"
@@ -190,5 +241,31 @@
  "ciemny+kontrast: błąd / papier": [
   "#F2B8B5",
   "#1B1C1F"
+ ],
+ "ciemny+kontrast: błąd / arkusz": [
+  "#F2B8B5",
+  "#2A2C31"
+ ],
+ "ciemny+kontrast: ołówek / arkusz": [
+  "#CDD0D4",
+  "#2A2C31"
+ ],
+ "ciemny+kontrast: wybrany przełącznik: obrys / arkusz (element, 3:1)": [
+  "#CDD0D4",
+  "#2A2C31",
+  3
+ ],
+ "ciemny+kontrast: wybrany przełącznik: tekst / tło": [
+  "#ECECE8",
+  "#2E3136"
+ ],
+ "wzór: znacznik / strona (element, 3:1)": [
+  "#26282C",
+  "#FFFFFF",
+  3
+ ],
+ "wzór: etykieta znacznika tekst / tło": [
+  "#FCFCFA",
+  "#26282C"
  ]
 }

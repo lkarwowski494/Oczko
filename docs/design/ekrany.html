@@ -85,6 +85,30 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .linki span { min-height: 44px; display: flex; align-items: center; text-decoration: underline; }
 .uwagi { width: 390px; background: #fff; color: #222; padding: 20px; font: 15px/1.4 "Source Sans 3"; }
 .uwagi h2 { font: 700 20px "Libre Franklin"; margin: 0 0 8px; }
+/* fix NZ-08-P2-04 (P-126): linia informacji, krokowiec, znacznik wzoru, przełącznik, nagłówek arkusza z Zamknij */
+.uwaga { margin: 8px 32px 0; display: flex; gap: 8px; align-items: flex-start; color: var(--grafit); font-size: calc(15px * var(--dt-tresc)); line-height: 1.35; }
+.uwaga a { color: var(--grafit); }
+.uwaga .znak { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; font: 700 12px var(--tytul); margin-top: 1px; }
+.pole { min-width: 56px; min-height: 44px; display: grid; place-items: center; border: 1.5px solid var(--linia); border-radius: 10px; font: 700 calc(20px * var(--dt-tytul)) var(--tytul); }
+.krok { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border: 1.5px solid var(--linia); border-radius: 10px; font: 700 20px var(--tytul); }
+.wzor-strona { margin: 8px 16px 0; height: 470px; background: #FFFFFF; border: 1px solid var(--linia); position: relative; overflow: hidden; }
+.tekst-wzoru { position: absolute; inset: 16px; background: repeating-linear-gradient(to bottom, #C9CBD0 0 3px, transparent 3px 22px); }
+.znacznik { position: absolute; left: 0; right: 0; height: 22px; border-top: 2.5px solid #26282C; border-bottom: 2.5px solid #26282C; background: #26282C14; }
+.znacznik.krawedz { border-top-style: dashed; }
+.znacznik .tab { position: absolute; right: 8px; top: -2px; transform: translateY(-100%); background: #26282C; color: #FCFCFA; font: 700 13px/1 var(--tytul); padding: 5px 8px; border-radius: 6px 6px 0 0; }
+.znacznik.krawedz .tab { transform: none; top: 22px; border-radius: 0 0 6px 6px; }
+.znacznik .uchwyt-dol { position: absolute; left: 50%; bottom: -9px; width: 36px; height: 14px; margin-left: -18px; border-radius: 7px; background: #26282C; }
+.pasek-znacznika { margin-top: auto; background: var(--arkusz); border-top: 1px solid var(--linia); padding: 12px 16px 28px; display: flex; flex-direction: column; gap: 8px; font-size: calc(17px * var(--dt-tresc)); line-height: 1.3; }
+.pasek-znacznika b { font: 700 calc(17px * var(--dt-tytul)) / 1.25 var(--tytul); }
+.wybor { display: flex; gap: 12px; flex-wrap: wrap; }
+.wybor button { flex: 1 1 140px; min-height: 64px; border: 2px solid var(--p-obrys); border-radius: 14px; background: transparent; color: var(--grafit); font: 700 calc(17px * var(--dt-tytul)) var(--tytul); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px; }
+.wybor small { font: 400 calc(13px * var(--dt-tresc)) var(--tresc); color: var(--olowek); }
+.rzad { display: flex; align-items: center; gap: 12px; min-height: 44px; flex-wrap: wrap; }
+.rzad > span:first-child { flex: 1; color: var(--olowek); }
+.rzad a { color: var(--grafit); min-height: 44px; display: flex; align-items: center; }
+.naglowek-arkusza { display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
+.naglowek-arkusza .ikona { width: 44px; height: 44px; display: grid; place-items: center; }
+.grupa .el .wybrany { font-weight: 700; }
 </style>
 </head>
 <body>
