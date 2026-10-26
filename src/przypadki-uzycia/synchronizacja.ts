@@ -26,7 +26,7 @@ export type Sterownik = {
   wylacz(): Promise<void>;
   polacz(): Promise<WidokSynchronizacji>;
   nieSynchronizuj(): Promise<void>;
-  wyslijZaleglosci(): Promise<void>;
+  wyslijZaleglosci(o?: { zawsze?: boolean }): Promise<void>;
   usunZIcloud(): Promise<Wynik<void>>;
   odbierzPartie(p: PartiaIcloud): Promise<WynikPartii>;
   widok(): WidokSynchronizacji;
@@ -50,11 +50,12 @@ export function sterownikSynchronizacji(z: ZaleznosciSynchronizacji, poPartii: (
   const odpiecia: (() => void)[] = [];
   const teraz = () => z.zegar.teraz().ms;
 
-  async function wyslijZaleglosci(): Promise<void> {
+  /** `zawsze`: wysyłka także przy pustej skrzynce (po włączeniu: silnik zapisuje strefę, a to też zapis — brak miejsca widać od razu). */
+  async function wyslijZaleglosci(o: { zawsze?: boolean } = {}): Promise<void> {
     const s = await stanBazy(z.baza);
-    if (!s.wlaczona || widok.stan === 'konto_zmienione' || widok.stan === 'brak_konta' || s.zalegle === 0) return; // konto_zmienione: wysyłka zatrzymana
+    if (!s.wlaczona || widok.stan === 'konto_zmienione' || widok.stan === 'brak_konta' || (s.zalegle === 0 && !o.zawsze)) return; // konto_zmienione: wysyłka zatrzymana
     const zmiany = await zaleglosci(z.baza, PARTIA_SYNCHRONIZACJI, (sha) => z.magazyn.sciezka(sha));
-    if (!zmiany.length) return;
+    if (!zmiany.length && !o.zawsze) return;
     try {
       await z.synchronizacja.wyslij(zmiany);
       if (widok.stan === 'blad') ustaw({ stan: 'aktywna', przyczyna: null }); // ustąpienie przyczyny
@@ -68,7 +69,7 @@ export function sterownikSynchronizacji(z: ZaleznosciSynchronizacji, poPartii: (
     await wKolejce(z.baza, () => z.baza.transakcja((tx) => wlaczWBazie(tx, teraz(), zerujSilnik)));
     ustaw({ stan: 'aktywna', przyczyna: null, status });
     await z.synchronizacja.uruchom((await stanBazy(z.baza)).stanSilnika);
-    await wyslijZaleglosci();
+    await wyslijZaleglosci({ zawsze: true });
     return widok;
   }
   async function wylaczWszystko(): Promise<void> {

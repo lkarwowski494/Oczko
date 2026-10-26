@@ -118,6 +118,15 @@ describe('atrapa E2E (oczkoE2eIcloud) na prawdziwej bazie', () => {
     await utworzSzybkiLicznik(bm.s.z);
     expect(await bm.st.wlacz()).toMatchObject({ stan: 'blad', przyczyna: 'brak_miejsca' });
   });
+  test('50 na świeżej instalacji (pusta skrzynka): włączenie i tak wysyła (utworzenie strefy to zapis) → brak miejsca widoczny', async () => {
+    const bm = await srodowisko('brak-miejsca');
+    await bm.st.start();
+    expect(await bm.st.wlacz()).toMatchObject({ stan: 'blad', przyczyna: 'brak_miejsca' });
+    const ok = await srodowisko('wlaczony');
+    await ok.st.start();
+    expect((await ok.st.wlacz()).stan).toBe('aktywna');
+    expect(ok.a.e2e?.stan().wyslane).toBe(0);
+  });
   test('51: usunięcie strefy zapisane w pliku buildu E2E', async () => {
     const { st, a, plik } = await srodowisko('wlaczony');
     await st.start();
