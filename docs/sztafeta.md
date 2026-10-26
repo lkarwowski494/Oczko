@@ -38,7 +38,7 @@
 
 ## Następny krok
 ### Przekazanie roli 04, fix-2 NZ-08-P3-04 (2026-10-26, STOP E2)
-- Zakończono E0–E2 (P-133); commity eac11d5…9343dc9, jeden na pozycję. `verify` kod 0; kontrola `docs/design/narzedzia/kontrola-nz08p304.mjs` 0/5 → 5/5; kontrast 70/70.
+- Zakończono E0–E2 (P-133); commity a9d65c6…5940d08, jeden na pozycję. `verify` kod 0; kontrola `docs/design/narzedzia/kontrola-nz08p304.mjs` 0/5 → 5/5; kontrast 70/70.
 - Dla 08 (partia 4): `docs/design/design-spec.md` „Dla 08 (fix NZ-08-P3-04, partia 4)” — teksty `aktywnosc` z kluczami, bez −1 na Live Activity, 3 nowe stany ekranów; makiety `docs/design/aktywnosc.html`.
 - Dla 05 fix-4: N1, N2 (P-133), N3 (zmiana języka → odświeżenie stanu, ADR-0008 (7)), pora dnia w `ukonczonoMs`.
 ### Przekazanie roli 08, build, partia 3 (2026-10-26, STOP E2)
