@@ -32,8 +32,10 @@ export type PropsUkonczenia = {
   /** „Done”: zużycie tylko włóczek, przy których coś wpisano (brak wpisu zostaje brakiem). */
   naGotowe(zuzycie: ZuzycieWloczki[]): void;
   naEdytujZapas?(wloczkaId: string): void;
+  /** Obraz karty do udostępnienia (P-191 P10a, P-219 2A): rysowany poza ekranem, niewidoczny dla VoiceOver; zrzut robi kompozycja. */
+  obrazKarty?: React.ReactNode;
 };
-export function Ukonczenie({ stan: s, t, oglos, liczby, naUdostepnij, naGotowe, naEdytujZapas }: PropsUkonczenia): React.ReactElement {
+export function Ukonczenie({ stan: s, t, oglos, liczby, naUdostepnij, naGotowe, naEdytujZapas, obrazKarty }: PropsUkonczenia): React.ReactElement {
   const k = useKolory();
   const [zuzycie, ustawZuzycie] = useState<Record<string, number>>({}); // tylko wiersze zmienione na karcie
   const wartosc = (w: StanUkonczenia['wloczka'][number]): number | null => zuzycie[w.id] ?? w.zuzyto;
@@ -43,8 +45,11 @@ export function Ukonczenie({ stan: s, t, oglos, liczby, naUdostepnij, naGotowe, 
     <Arkusz tytul={s.nazwa} testID="ukonczenie-karta" przyciski={<Przycisk tekst={t('ukonczenie.gotowe')} rodzaj="glowny" testID="ukonczenie-gotowe"
       onPress={() => naGotowe(Object.entries(zuzycie).map(([wloczkaId, motki]) => ({ wloczkaId, motki })))} />}>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <Przycisk tekst="⇪" etykieta={t('ukonczenie.udostepnij')} onPress={naUdostepnij} rodzaj="tekstowy" />
+        <Przycisk tekst="⇪" etykieta={t('ukonczenie.udostepnij')} onPress={naUdostepnij} rodzaj="tekstowy" testID="karta-udostepnij" />
       </View>
+      {obrazKarty ? (
+        <View style={st.pozaEkranem} pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">{obrazKarty}</View>
+      ) : null}
       <Tresc podpis>{t('ukonczenie.okres', { okres: s.okres })}</Tresc>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: odstep.s }}>
         <Text style={{ ...typografia.liczba, color: k.grafit }}>{String(s.rzedy)}</Text>
@@ -64,7 +69,10 @@ export function Ukonczenie({ stan: s, t, oglos, liczby, naUdostepnij, naGotowe, 
     </Arkusz>
   );
 }
-const st = StyleSheet.create({ zdjecie: { width: '100%', aspectRatio: 4 / 3, borderRadius: promien.grupa } });
+const st = StyleSheet.create({
+  zdjecie: { width: '100%', aspectRatio: 4 / 3, borderRadius: promien.grupa },
+  pozaEkranem: { position: 'absolute', left: -10000, top: 0 }, // zrzut widoku wymaga, żeby był narysowany
+});
 
 /** Wiersz włóczki: nazwa, zapas, krokowiec − [pole] + (VoiceOver: jedno pole adjustable) i linia informacji przy zużyciu ponad zapas. */
 function WierszZuzycia(p: {

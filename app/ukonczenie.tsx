@@ -1,6 +1,6 @@
 // Trasa „/ukonczenie?projekt=…”: karta ukończenia (U-9, BR-PRJ-015). „Done” → prośba o ocenę przez bramkę (P-160), potem lista projektów.
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ukonczenie, type StanUkonczenia } from '../src/ekrany/Ukonczenie';
 import { useKolory } from '../src/ekrany/motyw';
@@ -11,6 +11,10 @@ import { prosbaPoUkonczeniu } from '../src/przypadki-uzycia/ocena';
 import { kartaUkonczenia } from '../src/przypadki-uzycia/widok-ukonczenia';
 import { zapiszZuzycie } from '../src/przypadki-uzycia/zapas';
 import { formatujLiczbe, parsujLiczbe } from '../src/i18n/format';
+import { ObrazKarty } from '../src/ekrany/ObrazKarty';
+import { zrzutKarty } from '../src/platforma/zrzut';
+import { udostepnijPlik } from '../src/platforma/system-plikow-uzytkownika';
+import { usunPlik } from '../src/dane/pliki/system';
 
 export default function EkranUkonczenia(): React.ReactElement {
   const { kontener } = useAplikacja();
@@ -19,6 +23,7 @@ export default function EkranUkonczenia(): React.ReactElement {
   const k = useKolory();
   const [stan, ustaw] = useState<StanUkonczenia | null>(null);
   const [blad, ustawBlad] = useState(false);
+  const obraz = useRef<View>(null); // obraz karty 1080 × 1350 (P-191 P10a, P-219 2A)
   const jezyk = kontener.j.jezyk();
   useEffect(() => {
     void kartaUkonczenia(kontener.z, { projektId: projekt }).then((w) => {
@@ -30,7 +35,14 @@ export default function EkranUkonczenia(): React.ReactElement {
   return (
     <Ukonczenie stan={{ ...stan, bladZapisu: blad }} t={kontener.j.t} oglos={oglos} system={systemAplikacji}
       liczby={{ formatuj: (n) => formatujLiczbe(n, jezyk, { maks: 2 }), parsuj: (x) => parsujLiczbe(x, jezyk) }}
-      naUdostepnij={() => undefined /* obraz karty do udostępnienia (F-53, D4): po 04 fix-6 */}
+      naUdostepnij={() => void (async () => {
+        const plik = await zrzutKarty(obraz).catch(() => null);
+        if (!plik) { Alert.alert(kontener.j.t('licznik.blad_zapisu')); return; }
+        await udostepnijPlik(plik, 'image/png'); // aplikacja nic nie wysyła sama — arkusz systemowy (ZP-03)
+        usunPlik(plik);
+      })()}
+      obrazKarty={<ObrazKarty ref={obraz} t={kontener.j.t}
+        stan={{ nazwa: stan.nazwa, okres: stan.okres, rzedy: stan.rzedy, dni: stan.dni, czas: stan.czas, czesci: stan.czesci, wloczka: stan.wloczka.map((w) => w.nazwa), zdjecie: stan.zdjecie }} />}
       naGotowe={(zuzycie) => void (async () => {
         // F-37: zapis zużycia przed zamknięciem; nieudany — komunikat, karta zostaje (dane bez zmian, transakcja wycofana).
         if (zuzycie.length > 0 && !(await zapiszZuzycie(kontener.z, { projektId: projekt, zuzycie })).ok) { ustawBlad(true); return; }

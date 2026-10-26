@@ -112,6 +112,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/narzedzia-probka.test.tsx` | zielony (główny zestaw) | 4 | BR-KAL-001, BR-KAL-001/S1, BR-KAL-003, BR-KAL-003/S1, P-075, P-191, R-131, RD-01 | `src/ekrany/Narzedzia`<br>`src/ekrany/wspolne`<br>`src/kompozycja/probka` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/narzedzia-wzor.test.tsx` | zielony (główny zestaw) | 3 | BR-KAL-003, BR-WZR-007/S4, BR-ZAP-001/S2, P-046, P-075, P-191, R-131 | `src/ekrany/Narzedzia`<br>`src/ekrany/Wzor`<br>`src/ekrany/wspolne`<br>`src/kompozycja/probka` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/niezawodnosc-kamien.test.tsx` | zielony (główny zestaw) | 2 | P-080, P-191 | `src/kompozycja/Kontekst` | — |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/obraz-karty.test.tsx` | zielony (główny zestaw) | 4 | BR-PRJ-015, P-191, P-219 | `src/ekrany/ObrazKarty`<br>`src/ekrany/Ukonczenie`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/oferty.test.tsx` | zielony (główny zestaw) | 10 | KP-03, KP-04, KP-08, KP-09, KP-14, P-054, P-065, P-089, R-118, R-124 | `src/domena/porty`<br>`src/ekrany/Oferty`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/p202-stan-danych-korekta.test.tsx` | zielony (główny zestaw) | 1 | BR-DAN-011/S3, BR-PRJ-013/S4, P-193, P-195, P-202 | `src/ekrany/StanDanych`<br>`src/ekrany/wspolne` | ER-52, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/probka.test.ts` | zielony (główny zestaw) | 14 | BR-KAL-001, BR-KAL-003, RD-01, RD-04, RD-10 | `src/ekrany/wspolne`<br>`src/kompozycja/probka` | ER-43, Z07-22 |
@@ -149,4 +150,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 145; zależnych od poprawek: 99.
+Razem plików testów: 146; zależnych od poprawek: 100.
