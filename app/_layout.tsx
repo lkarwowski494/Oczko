@@ -14,6 +14,13 @@ import { utworzKontener } from '../src/kompozycja/kontener';
 import { kompozycjaLicznika } from '../src/kompozycja/licznik';
 import { preferencje } from '../src/kompozycja/preferencje';
 import { useKolory } from '../src/ekrany/motyw';
+import { zainstalujObslugeBledow } from '../src/kompozycja/bledy-js';
+import { wKolejce } from '../src/przypadki-uzycia/kolejka';
+import { zapiszBlad } from '../src/dane/repozytoria/bledy';
+
+// Globalna obsługa błędów JS (ADR-0018, P-194 Q4a): od startu procesu; zapis do `blad` dopiero po otwarciu bazy w starcie normalnym,
+// w trybie awaryjnym bez zapisu (ADR-0019) — błąd zawsze idzie do poprzedniego handlera.
+const obslugaBledow = typeof ErrorUtils === 'undefined' ? null : zainstalujObslugeBledow(ErrorUtils);
 
 type Faza = { rodzaj: 'czeka' } | { rodzaj: 'awaria-e2e' } | { rodzaj: 'awaryjny'; powod: PowodTrybuAwaryjnego } | { rodzaj: 'gotowe'; a: Aplikacja };
 
@@ -32,13 +39,15 @@ export default function Korzen(): React.ReactElement {
       koniecNasluchu = w.wartosc.dostep.nasluchuj(); // KP-07: nasłuch transakcji od startu
       await w.wartosc.dostep.odswiez(); // limit dni liczony z bieżącym dostępem już przy pierwszym ekranie
       if (!zywy) return;
+      const z = w.wartosc.z;
+      obslugaBledow?.ustawZapis(async (b) => { await wKolejce(z.baza, () => zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: b.kod, szczegoly: { ramki: b.szczegoly.ramki, fatal: b.szczegoly.fatal ? 1 : 0 } })); });
       ustaw({ rodzaj: 'gotowe', a: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje }), preferencje: p } });
     }
     async function start(): Promise<void> {
       if (proba > 0) { await normalny(); return; }
       const tryb = await rozpocznijStart();
       if (!zywy) return;
-      if (tryb.tryb === 'awaryjny') ustaw({ rodzaj: 'awaryjny', powod: tryb.powod });
+      if (tryb.tryb === 'awaryjny') { obslugaBledow?.ustawZapis(null); ustaw({ rodzaj: 'awaryjny', powod: tryb.powod }); }
       else if (tryb.tryb === 'awaria-e2e') ustaw({ rodzaj: 'awaria-e2e' });
       else await normalny();
     }
