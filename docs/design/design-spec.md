@@ -59,6 +59,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); Word w podglądzie zastępczym: bez znacznika |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
+| Język | lista z „Same as phone” (`jezyk`); język telefonu spoza 35: angielski bez podpowiedzi (P-115); uszkodzony zapis: „Same as phone” |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
 ## VoiceOver: komunikaty i zachowanie (dla 08; z przejścia poznawczego E3)
@@ -182,6 +183,22 @@ Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): 
 | Klucz | en |
 |---|---|
 | `licznik.znaczniki_sesji_one` / `licznik.znaczniki_sesji_other` | Marks this session: {{count}} row since {{godzina}} / Marks this session: {{count}} rows since {{godzina}} |
+
+## Ustawienia › Język (BR-ZAK-004, P-075 (3b), ADR-0017, P-115, P-126 (7a); wzór Treningu)
+- **Wiersz w Ustawieniach:** „Language” z wartością „Same as phone” albo nazwą wybranego języka → ekran listy (35 języków to za dużo na przełącznik, jak w Treningu).
+- **Lista:** pierwsza pozycja „Same as phone” (stan po instalacji), potem 35 lokalizacji z `src/i18n/jezyki.ts`, każda nazwą we własnym języku i piśmie (np. „Deutsch”, „日本語”, „繁體中文”), znacznik ✓ przy wybranej; wybór działa od razu, bez ponownego uruchomienia, i wraca do Ustawień. Nazwy krojem systemowym (Libre Franklin nie ma greki i CJK, P-064). VoiceOver: wiersze jako `radio`, etykieta wybranej „{name}, selected”; każda nazwa czytana głosem swojego języka (`accessibilityLanguage` = tag, jak Trening A11-09).
+- **Język zastępczy (P-115):** gdy języka telefonu nie ma wśród 35, „Same as phone” daje angielski; **ekran tego nie podpowiada** (7a, jak Trening). Zaznaczone zostaje „Same as phone”.
+- **Wiersz „Change in iOS Settings”** pod listą (jak Trening): nazwa pod ikoną i opis zgody na aparat (`NSCameraUsageDescription`) idą za językiem aplikacji ustawionym w iOS; wiersz otwiera Ustawienia iOS (`Linking.openSettings`).
+- Uszkodzony zapis ustawienia: lista pokazuje „Same as phone” jako wybrane (ADR-0017, BR-ZAK-004 S5).
+
+| Klucz | en |
+|---|---|
+| `ustawienia.jezyk` | Language |
+| `ustawienia.jezyk_automatyczny` | Same as phone |
+| `jezyk.wybrany_a11y` | {{nazwa}}, selected |
+| `jezyk.ustawienia_ios` | Change in iOS Settings |
+| `jezyk.ustawienia_ios_opis` | The app name under the icon and the camera permission text follow the language set for Oczko in iOS Settings. |
+Nazwy języków nie są kluczami `t()`: stała mapa tag → nazwa własna w `jezyki.ts` (09).
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
