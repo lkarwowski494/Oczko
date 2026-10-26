@@ -1,3 +1,8 @@
+# Stan roli 07-jakosc — fix-2 NZ-08-P2-07 (2026-10-26)
+Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P2-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2-2026-10-26.md`.
+- E0 plan: **STOP** — przegląd 12 zmian i 5 testów 08 (zgodne; 2 luki), F07-10…F07-13, pytania Q1–Q3 do koordynatora (P-087). Wejście a33d1fb: verify 1445/1445.
+- Następny krok: odpowiedź koordynatora, potem E1 (jeden commit na ID).
+
 # Stan roli 07-jakosc — fix NZ-08-P1-07 (2026-10-25)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P1-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2026-10-25.md`.
 - E0 plan: przyjęty (P-117: Q1a–Q6a). E1: F07-01…F07-09 naprawione-do-weryfikacji, commity dcb3d2e…91f7e64 (jeden na ID; F07-06 w dwóch: skrypt, potem bramka po zielonym CI).
