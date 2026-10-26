@@ -45,6 +45,7 @@ Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, 
 - Właściciel ma drugie konto z pełnym limitem; przy wyczerpaniu limitu bieżącego konta praca przechodzi tam według tego dokumentu (właściciel, 2026-10-26: „A — i tak mam drugie konto z full limitem”).
 
 ## Do porannego raportu dla właściciela
+- Właściciel (2026-10-26 ~21:05 UTC): „Pracuj ale nie raportuj nic do 5 rano czasu Warszawskiego” — raport dopiero o 04:00 UTC (05:00 CET), do tego czasu bez wiadomości do właściciela.
 - Wynik nocnego przebiegu iOS partii 5; postęp partii 6 (P-243, P-246, P-248) i 7 (P-242, P-245, P-247).
 - Propozycja reguły do biblioteki ról (trzeci push przed verify: 10, 06, 08 — P-248): np. `pre-push` w repo uruchamiający verify albo obowiązkowy krok „verify po każdym rebase z cudzymi zmianami” w zasadach wspólnych; dwie opcje z rekomendacją, decyzja właściciela.
 - Przypomnienie: identyfikatory App Group i iCloud w Apple Developer (P-233).
