@@ -231,6 +231,10 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `icloud-problem` | Data and sync | linia problemu (brak konta, miejsca, niepełna historia) | nagłówek linii | |
 | `icloud-konflikty` | Data and sync | wiersz „N counters have two versions” | — | |
 | `licznik-konflikt` | licznik | linia konfliktu z „Choose” (NFR-DAN-003) | „Two versions of this counter…” | |
+| `licznik-konflikt-wybierz` | licznik | „Choose” w linii konfliktu (08 partia 7) | „Choose” | |
+| `icloud-konflikt` | arkusz „Two versions of {licznik}” | kontener arkusza | — | |
+| `icloud-konflikt-wybor-0` | arkusz konfliktu | pierwszy wybór wersji (kolejność nie jest kontraktem — scenariusz łączy id `…-0` i `…-1` alternatywą z etykietą; P-250) | etykieta VoiceOver `dane.konflikt_a11y`: „Keep {n} rows from {urządzenie}, {godzina}” | |
+| `icloud-konflikt-wybor-1` | arkusz konfliktu | drugi wybór wersji (jak wyżej) | jak wyżej | |
 | `usun-z-icloud` | arkusz „Delete all data” | przełącznik „Also delete from iCloud” | „Also delete from iCloud” | |
 | `wprowadzenie` | — | ekran wprowadzenia (NIE może istnieć przed pierwszym +1) | — | |
 | `e2e-nigdy` | — | element, którego nie ma (podprzepływ `odstep.yaml`) | — | |
