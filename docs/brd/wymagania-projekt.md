@@ -75,7 +75,12 @@ Stan: STOP E3 · Aktualizacja: 2026-10-21 · Przepływy w `wymagania.md`.
   - Scenariusz: Druga skarpeta
     - Zakładając, że projekt „Skarpeta” ma części, liczniki z wartościami i instrukcje przypomnień
     - Gdy użytkownik wybiera „zrób ponownie”
-    - Wtedy powstaje nowy projekt z tymi samymi częściami i przypomnieniami, liczniki mają 0, a oryginał się nie zmienia
+    - Wtedy powstaje nowy projekt z tymi samymi częściami, celami i przypomnieniami, liczniki mają 0, a oryginał się nie zmienia
+    - Oraz nowy projekt ma to samo narzędzie i rozmiar drutu co oryginał (BR-PRJ-004), a nie ma jego stanu: wartości liczników, historii, sesji stopera, dat, zdjęć, notatki, stanu ukończenia ani terminu (P-195 Q4a, ER-53)
+  - Scenariusz: Projekt na szydełku (ER-53)
+    - Zakładając, że projekt „Czapka” jest robiony szydełkiem 6,5 mm
+    - Gdy użytkownik wybiera „zrób ponownie”
+    - Wtedy nowy projekt jest projektem na szydełku i pokazuje „6,5 mm (US K-10 ½)” (RD-19-W3), a nie druty
 
 ### BR-PRJ-008: Stoper sesji działa przy zablokowanym ekranie
 - Przepływ: PR-14
