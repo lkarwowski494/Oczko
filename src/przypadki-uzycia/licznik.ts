@@ -45,7 +45,7 @@ function zmien(z: Zaleznosci, licznikId: string, operacja: string, okresl: (s: S
           dzien = start.zapis;
         }
         const id = z.id.nowy();
-        await dopiszZdarzenie(tx, { id, licznikId, ...zm.wartosc, zrodlo: 'aplikacja', urzadzenie: z.urzadzenie, czasMs: teraz.ms, strefa: teraz.strefa, dzien: teraz.dzien });
+        await dopiszZdarzenie(tx, { id, licznikId, ...zm.wartosc, zrodlo: 'aplikacja', urzadzenie: z.urzadzenie, urzadzenieRodzaj: z.rodzajUrzadzenia, czasMs: teraz.ms, strefa: teraz.strefa, dzien: teraz.dzien });
         await ustawStan(tx, licznikId, { wartosc: zm.wartosc.wartoscPo, glowa: id });
         if (dzien) await zapiszDzienLimitu(tx, { dzien: dzien.data, pro: dzien.pro, zaczetoMs: teraz.ms, zdarzenieId: id });
         await zapiszOstatniaPrace(tx, s.projektId, teraz.ms);

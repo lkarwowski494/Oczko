@@ -6,6 +6,7 @@
   "licznik.znaczenie": ["skonczone", "w_trakcie"],
   "zdarzenie.rodzaj": ["plus", "minus", "wpisanie", "zerowanie", "cofniecie", "rozstrzygniecie"],
   "zdarzenie.zrodlo": ["aplikacja", "ekran_blokady", "zegarek", "synchronizacja", "import"],
+  "zdarzenie.urzadzenie_rodzaj": ["iphone", "ipad"],
   "sesja.stan": ["trwa", "wstrzymana", "zakonczona"],
   "wzor.zrodlo": ["pdf", "obraz", "www", "word"],
   "narzedzie.rodzaj": ["druty", "szydelko", "inne"],

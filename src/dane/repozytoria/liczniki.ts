@@ -6,7 +6,7 @@ import type { PortBazy } from '../../domena/porty';
 import { BladDanych } from '../../domena/bledy';
 import { celZPary } from '../../domena/cel-pary';
 import { licznikCalosci } from '../../domena/licznik-calosci';
-import { STANY, type RodzajZdarzenia, type ZrodloZdarzenia } from '../../domena/stany';
+import { STANY, type RodzajUrzadzenia, type RodzajZdarzenia, type ZrodloZdarzenia } from '../../domena/stany';
 import { liczba, liczbaLubNull, listaTekstow, tekst, tekstLubNull, wiersze } from './wiersze';
 
 export type StanLicznika = {
@@ -16,6 +16,7 @@ export type StanLicznika = {
 export type NoweZdarzenie = {
   id: string; licznikId: string; rodzaj: RodzajZdarzenia; wartosc: number | null; wartoscPo: number; rodzice: string[]; cofa: string[];
   zrodlo: ZrodloZdarzenia; urzadzenie: string; czasMs: number; strefa: string; dzien: string;
+  urzadzenieRodzaj?: RodzajUrzadzenia | null; // P-247 U6a: „iPhone” / „iPad” w wyborze wersji; brak = NULL
 };
 
 export async function stanLicznika(tx: PortBazy, licznikId: string): Promise<StanLicznika | null> {
@@ -34,9 +35,9 @@ export async function stanLicznika(tx: PortBazy, licznikId: string): Promise<Sta
 
 export async function dopiszZdarzenie(tx: PortBazy, z: NoweZdarzenie): Promise<void> {
   await tx.run(
-    `INSERT INTO zdarzenie (id, licznik_id, rodzaj, wartosc, wartosc_po, rodzice, cofa, zrodlo, urzadzenie, czas_ms, strefa, dzien)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [z.id, z.licznikId, z.rodzaj, z.wartosc, z.wartoscPo, JSON.stringify(z.rodzice), JSON.stringify(z.cofa), z.zrodlo, z.urzadzenie, z.czasMs, z.strefa, z.dzien],
+    `INSERT INTO zdarzenie (id, licznik_id, rodzaj, wartosc, wartosc_po, rodzice, cofa, zrodlo, urzadzenie, urzadzenie_rodzaj, czas_ms, strefa, dzien)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [z.id, z.licznikId, z.rodzaj, z.wartosc, z.wartoscPo, JSON.stringify(z.rodzice), JSON.stringify(z.cofa), z.zrodlo, z.urzadzenie, z.urzadzenieRodzaj ?? null, z.czasMs, z.strefa, z.dzien],
   );
 }
 /** Pamięć podręczna wyniku `scal` w tej samej transakcji co zdarzenie (schemat.sql, `licznik.wartosc`). */

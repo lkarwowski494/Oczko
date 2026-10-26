@@ -97,6 +97,8 @@ export type KompozycjaLicznika = {
   /** Licznik w konflikcie iCloud (partia 7, P-220 I1a): wybory arkusza (`dane.konflikt_wybor`, `dane.konflikt_a11y`) i wybór wersji. */
   konflikt: { kandydaci(): Promise<WyborKonfliktu[]>; wybierz(glowa: string): Promise<WynikEkranu<void>> };
 };
+/** Nazwy własne urządzeń Apple (bez tłumaczenia, jak w tekstach 04: „this iPhone”). */
+const NAZWA_URZADZENIA = { iphone: 'iPhone', ipad: 'iPad' } as const;
 export type WyborKonfliktu = { glowa: string; wartosc: number; tekst: string; etykieta: string };
 /** Opcje: `icloud` = sterownik synchronizacji (partia 7), uruchamiany po danych startu i poza kolejką `uruchomDane`. */
 export type OpcjeKompozycji = { wibracje(): boolean; icloud?: { start(): Promise<void> } };
@@ -125,7 +127,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
     if (!k) return null;
     const tutaj = k.find((x) => x.tutaj);
     const inna = k.find((x) => !x.tutaj) ?? k.find((x) => x !== tutaj);
-    return inna ? { lokalna: tutaj?.wartosc ?? 0, zdalna: inna.wartosc, urzadzenie: inna.urzadzenie } : null;
+    return inna ? { lokalna: tutaj?.wartosc ?? 0, zdalna: inna.wartosc, urzadzenie: inna.rodzaj ? NAZWA_URZADZENIA[inna.rodzaj] : inna.urzadzenie } : null;
   }
   async function poZapisie(w: WidokLicznika | null): Promise<void> {
     if (!w) return;
@@ -180,11 +182,14 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
         if (!licznikId) return [];
         const ch = z.zegar.teraz();
         const godz = (ms: number) => formatujGodzine(new Date(ms), j.jezyk(), { uses24h: j.zegar24h(), strefa: ch.strefa });
-        return ((await kandydaciKonfliktu(z, licznikId)) ?? []).map((x) => ({
-          glowa: x.glowa, wartosc: x.wartosc,
-          tekst: j.t('dane.konflikt_wybor', { wartosc: x.wartosc, urzadzenie: x.urzadzenie, godzina: godz(x.czasMs) }),
-          etykieta: j.t('dane.konflikt_a11y', { wartosc: x.wartosc, urzadzenie: x.urzadzenie, godzina: godz(x.czasMs) }),
-        }));
+        return ((await kandydaciKonfliktu(z, licznikId)) ?? []).map((x) => {
+          const u = x.rodzaj ? NAZWA_URZADZENIA[x.rodzaj] : x.urzadzenie; // P-247 U6a: rodzaj zamiast UUID; bez rodzaju (zegarek, atrapa) pole
+          return {
+            glowa: x.glowa, wartosc: x.wartosc,
+            tekst: j.t('dane.konflikt_wybor', { wartosc: x.wartosc, urzadzenie: u, godzina: godz(x.czasMs) }),
+            etykieta: j.t('dane.konflikt_a11y', { wartosc: x.wartosc, urzadzenie: u, godzina: godz(x.czasMs) }),
+          };
+        });
       },
       async wybierz(glowa) {
         if (!licznikId) return { ok: false, powod: 'bledne_dane' };

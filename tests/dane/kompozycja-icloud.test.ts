@@ -33,7 +33,7 @@ describe('kompozycja licznika z iCloud', () => {
     const s = await przygotuj();
     const plik = { czytaj: () => null, zapisz: () => undefined };
     const t = await j();
-    const k1 = kompozycjaLicznika({ ...s.z, migruj: (b) => migruj(b), liveActivity, zegarek }, t);
+    const k1 = kompozycjaLicznika({ ...s.z, rodzajUrzadzenia: 'iphone', migruj: (b) => migruj(b), liveActivity, zegarek }, t);
     await k1.przygotuj();
     await k1.uslugi.dodajRzad();
     const st1 = sterownikSynchronizacji({ ...s.z, synchronizacja: atrapaIcloud({ tryb: 'wlaczony', baza: s.baza, zegar: s.zegar, plik }), magazyn: s.magazyn });
@@ -41,13 +41,13 @@ describe('kompozycja licznika z iCloud', () => {
     await st1.wlacz();
     s.zegar.przesun(10 * MIN);
     const st2 = sterownikSynchronizacji({ ...s.z, synchronizacja: atrapaIcloud({ tryb: 'konflikt', baza: s.baza, zegar: s.zegar, plik }), magazyn: s.magazyn });
-    const k2 = kompozycjaLicznika({ ...s.z, migruj: (b) => migruj(b), liveActivity, zegarek }, t, { wibracje: () => true, icloud: st2 });
+    const k2 = kompozycjaLicznika({ ...s.z, rodzajUrzadzenia: 'iphone', migruj: (b) => migruj(b), liveActivity, zegarek }, t, { wibracje: () => true, icloud: st2 });
     await k2.przygotuj();
     const start = await k2.uslugi.start();
     expect(start.licznik.skonczone).toBe(1);
     expect(start.licznik.konflikt).toEqual({ lokalna: 1, zdalna: 6, urzadzenie: 'iPad (test)' });
     const wybory = await k2.konflikt.kandydaci();
-    expect(wybory.map((w) => w.tekst)).toEqual(['6 rows · iPad (test) · 12:09', expect.stringMatching(/^1 rows? · .+ · 12:00$/)]);
+    expect(wybory.map((w) => w.tekst)).toEqual(['6 rows · iPad (test) · 12:09', '1 rows · iPhone · 12:00']); // P-247 U6a: rodzaj zamiast UUID; atrapa bez rodzaju → nazwa z pola
     expect(wybory[0].etykieta).toBe('Keep 6 rows from iPad (test), 12:09');
     expect((await k2.konflikt.wybierz(wybory[0].glowa)).ok).toBe(true);
     const po = await k2.dzialania.odswiez!();

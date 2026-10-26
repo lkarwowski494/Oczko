@@ -1,5 +1,6 @@
 // Kontener zależności aplikacji na urządzeniu (08 partia 4, 3A): ścieżki danych (ADR-0001), baza (ADR-0019: bez zastępstwa w pamięci),
 // porty platformy, i18n (ADR-0017). Jedyne miejsce, które składa adaptery; ekrany dostają gotowe usługi (moduly.md: ekrany → przypadki użycia).
+import { Platform } from 'react-native';
 import type { Wynik } from '../domena/bledy';
 import type { Haptyka, EkranAktywny, Sklep } from '../domena/porty';
 import { otworzPortExpo } from '../dane/baza/adapter-expo';
@@ -80,7 +81,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
   const plikPro = polacz(katalogDanych, 'pamiec-pro.json');
   const dostep = dostepPro(sklep, { czytaj: async () => (istniejePlik(plikPro) ? czytajTekst(plikPro) : null), zapisz: async (t) => zapiszTekst(plikPro, t) }, () => zegar.teraz().ms);
   const z0: ZaleznosciKompozycji = {
-    baza, zegar, id: identyfikatory, urzadzenie: id,
+    baza, zegar, id: identyfikatory, urzadzenie: id, rodzajUrzadzenia: Platform.OS === 'ios' && Platform.isPad ? 'ipad' : 'iphone', // P-247 U6a
     pro: () => dostep.stan().pro, // ADR-0010: decyzja ze sklepu, przy błędzie pamięć KP-06 z oknem offline
     magazyn: utworzMagazyn(s.pliki), katalogi: { kopie: s.kopie, tymczasowy },
     dziennik: dziennikUrzadzenia(baza),

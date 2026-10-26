@@ -6,6 +6,7 @@ export const STANY = {
   'licznik.znaczenie': ['skonczone', 'w_trakcie'],
   'zdarzenie.rodzaj': ['plus', 'minus', 'wpisanie', 'zerowanie', 'cofniecie', 'rozstrzygniecie'],
   'zdarzenie.zrodlo': ['aplikacja', 'ekran_blokady', 'zegarek', 'synchronizacja', 'import'],
+  'zdarzenie.urzadzenie_rodzaj': ['iphone', 'ipad'], // P-247 U6a
   'sesja.stan': ['trwa', 'wstrzymana', 'zakonczona'],
   'wzor.zrodlo': ['pdf', 'obraz', 'www', 'word'],
   'narzedzie.rodzaj': ['druty', 'szydelko', 'inne'],
@@ -13,6 +14,7 @@ export const STANY = {
 } as const;
 export type RodzajZdarzenia = (typeof STANY)['zdarzenie.rodzaj'][number];
 export type ZrodloZdarzenia = (typeof STANY)['zdarzenie.zrodlo'][number];
+export type RodzajUrzadzenia = (typeof STANY)['zdarzenie.urzadzenie_rodzaj'][number];
 export type StanProjektu = (typeof STANY)['projekt.stan'][number];
 export type NarzedzieProjektu = (typeof STANY)['projekt.narzedzie'][number];
 export type StanSesji = (typeof STANY)['sesja.stan'][number];

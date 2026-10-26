@@ -1,6 +1,7 @@
 // Zależności przypadków użycia jako obiekt portów (sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22)). Tylko typy.
 import type { CzasWTle, DziennikPlus, Identyfikatory, MagazynPlikow, PortBazy, Synchronizacja, Zegar } from '../domena/porty';
 import type { Katalogi, Migruj, PortArchiwum } from '../domena/porty';
+import type { RodzajUrzadzenia } from '../domena/stany';
 
 export type Zaleznosci = {
   baza: PortBazy;
@@ -9,6 +10,7 @@ export type Zaleznosci = {
   urzadzenie: string;             // zdarzenie.urzadzenie
   pro: () => boolean;             // bieżące uprawnienie (ADR-0010); wejście `pro` funkcji startDnia
   synchronizacja?: Synchronizacja;
+  rodzajUrzadzenia?: RodzajUrzadzenia; // P-247 U6a: Platform.isPad → `ipad`, inaczej `iphone`; zapis w zdarzeniu (wybór wersji iCloud)
 };
 export type ZaleznosciPlikow = Zaleznosci & { magazyn: MagazynPlikow; katalogi: Katalogi };
 export type ZaleznosciDziennika = Zaleznosci & { dziennik: DziennikPlus };

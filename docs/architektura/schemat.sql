@@ -77,6 +77,7 @@ CREATE TABLE zdarzenie (                              -- historia zmian (BR-LIC-
   cofa TEXT NOT NULL DEFAULT '[]' CHECK (json_valid(cofa) AND json_type(cofa) = 'array'), -- id cofniętych zdarzeń (F-02, F-47)
   zrodlo TEXT NOT NULL CHECK (zrodlo IN ('aplikacja', 'ekran_blokady', 'zegarek', 'synchronizacja', 'import')),
   urzadzenie TEXT NOT NULL,
+  urzadzenie_rodzaj TEXT CHECK (urzadzenie_rodzaj IN ('iphone', 'ipad')), -- P-247 U6a: rodzaj urządzenia (Platform.isPad) do wyboru wersji; NULL (CHECK przepuszcza) = nieznany: zegarek, starsze
   czas_ms INTEGER NOT NULL,                                        -- chwila UTC (RD-16)
   strefa TEXT NOT NULL CHECK (length(strefa) > 0),                 -- IANA w chwili zmiany (RD-16)
   dzien TEXT NOT NULL CHECK (dzien GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'), -- data lokalna, nie przeliczana później (RD-16)
