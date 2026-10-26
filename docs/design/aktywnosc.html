@@ -66,7 +66,7 @@ section[data-ekran^="wyspa"] { width: var(--w); background: var(--tapeta); paddi
 
 /* Zegarek: ekran czarny; własne kształty tylko dla +1 i −1 */
 section[data-ekran^="zegarek"] { width: var(--zw); height: var(--zh); background: #000; color: var(--c-grafit); border-radius: 36px; padding: 10px 10px 8px; display: flex; flex-direction: column; overflow: hidden; }
-section[data-ekran="zegarek-smart-stack"] { height: auto; min-height: var(--zh); justify-content: center; gap: 8px; }
+section[data-ekran^="zegarek-smart-stack"] { height: auto; min-height: var(--zh); justify-content: center; gap: 8px; }
 .z-gora { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; font-size: calc(13px * var(--dt)); color: var(--c-olowek); padding: 0 6px; }
 .z-gora .nazwa { font-size: inherit; display: block; min-width: 0; }
 .z-srodek { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; } /* na zegarku przewijany; przyciski zostają na dole */
@@ -105,7 +105,7 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <symbol id="stoper" viewBox="0 0 14 14"><g fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="8" r="5"/><path d="M7 8V5.5M5.5 1.5h3"/></g></symbol>
 </svg>
 
-<h2 class="grupa">Lock Screen (Live Activity) — one control: +1 (P-133 1.1a)</h2>
+<h2 class="grupa">Lock Screen (Live Activity) — one control: +1 (P-133 1.1a); none while the counter is locked (P-142 2a)</h2>
 
 <!-- 1. Typowy: stoper sesji działa (F-11, F-21, BR-PRJ-008) -->
 <section data-ekran="blokada-typowy">
@@ -173,6 +173,18 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   </div>
 </section>
 
+<!-- 5a. Licznik zablokowany (F-03, BR-LIC-004; stan v3 `zablokowany`; P-142 2a, t1): stan widoczny od razu, bez przycisku; stoper zostaje -->
+<section data-ekran="blokada-zablokowany">
+  <div class="zegar-blokady">9:41</div>
+  <div class="la" aria-label="Harbor Sweater, 47 rows done, counter locked">
+    <div class="gora"><span class="nazwa"><span class="kropka"></span>Harbor Sweater</span><span class="czas"><svg><use href="#stoper"/></svg>0:42:10</span></div>
+    <div class="srodek">
+      <span class="n">47</span>
+      <span class="opis"><b>Counter locked</b>Unlock it in Oczko.</span>
+    </div>
+  </div>
+</section>
+
 <!-- 6. Projekt roboczy: etykieta krótka z daty startu (P-126 1b), bez stopera -->
 <section data-ekran="blokada-robocza">
   <div class="zegar-blokady">9:41</div>
@@ -208,6 +220,17 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
     </div>
   </div>
   <div class="pod-atrapa">Expanded (touch and hold): same layout as the Lock Screen.</div>
+</section>
+
+<section data-ekran="wyspa-zablokowany">
+  <div class="wyspa rozwinieta">
+    <div class="gora"><span class="nazwa"><svg class="znak-kresek"><use href="#kreski"/></svg>Harbor Sweater</span><span class="czas"><svg><use href="#stoper"/></svg>0:42:10</span></div>
+    <div class="srodek">
+      <span class="n">47</span>
+      <span class="opis"><b>Counter locked</b>Unlock it in Oczko.</span>
+    </div>
+  </div>
+  <div class="pod-atrapa">Expanded, counter locked: no button. Compact and minimal stay as they are.</div>
 </section>
 
 <h2 class="grupa">Apple Watch (always dark) — +1 and −1</h2>
@@ -268,6 +291,15 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Now row 48">+1 row</span></div>
 </section>
 
+<!-- 10c. Zegarek: licznik zablokowany (P-142 2a, t1): bez +1 i −1; stuknięcie w ekran = haptyka „failure” + ogłoszenie -->
+<section data-ekran="zegarek-zablokowany">
+  <div class="z-gora"><span class="nazwa">Harbor Sweater</span><span class="godz">9:41</span></div>
+  <div class="z-srodek">
+  <div class="z-liczba"><span class="n">47</span><small>rows<br>done</small></div>
+  <div class="z-tekst" role="status"><b>Counter locked</b>Unlock it in Oczko on your iPhone.</div>
+  </div>
+</section>
+
 <!-- 11. Zegarek: brak żadnego stanu od telefonu -->
 <section data-ekran="zegarek-bez-stanu">
   <div class="z-gora"><span class="nazwa">Oczko</span><span class="godz">9:41</span></div>
@@ -279,6 +311,14 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="stack" aria-label="Harbor Sweater, 47 rows done, now row 48, session 42 minutes">
     <div class="z-gora"><span class="nazwa"><svg class="znak-kresek" style="width:16px;height:13px;display:inline-block;vertical-align:-2px"><use href="#kreski"/></svg> Harbor Sweater</span><span class="godz">0:42</span></div>
     <div class="z-liczba"><span class="n">47</span><small>Now row 48</small></div>
+  </div>
+</section>
+
+<!-- 12a. Smart Stack: licznik zablokowany -->
+<section data-ekran="zegarek-smart-stack-zablokowany">
+  <div class="stack" aria-label="Harbor Sweater, 47 rows done, counter locked">
+    <div class="z-gora"><span class="nazwa"><svg class="znak-kresek" style="width:16px;height:13px;display:inline-block;vertical-align:-2px"><use href="#kreski"/></svg> Harbor Sweater</span><span class="godz">0:42</span></div>
+    <div class="z-liczba"><span class="n">47</span><small>Counter locked</small></div>
   </div>
 </section>
 
