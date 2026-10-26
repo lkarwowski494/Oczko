@@ -1,6 +1,6 @@
 # Wzrost — Oczko — 2026-10-26
 
-Rola 11-wzrost, tryb build (prompt `prompts` @97ec212). Stan: **STOP E1** (ludzie, kanały, pozycjonowanie, ASO); E0 przyjęte: P-145 (D1a–D5a), zmiany P-146, P-147. Szczegóły, nazwy miejsc i aplikacji, kopie źródeł: `oczko-warsztat/11-wzrost/2026-10-26-build/` (prywatne; P-107, P-121 (5)). Niczego nie publikujemy: szkice przygotowuje rola 11, publikuje właściciel ze swojego konta twórcy (jak Trening).
+Rola 11-wzrost, tryb build (prompt `prompts` @97ec212). Stan: **STOP E2** (powrót, opinie, pomiar, opcje nazwy); E0: P-145, E1: P-148; zmiany P-146, P-147. Szczegóły, nazwy miejsc i aplikacji, kopie źródeł: `oczko-warsztat/11-wzrost/2026-10-26-build/` (prywatne; P-107, P-121 (5)). Niczego nie publikujemy: szkice przygotowuje rola 11, publikuje właściciel ze swojego konta twórcy (jak Trening).
 
 ## Rama (E0)
 - **Aplikacja niewydana:** poprzednia wersja tylko w TestFlight; zgłoszenie 1.0 realnie w 1. poł. grudnia 2026 (`docs/plan-app-store.md`). Danych App Analytics nie ma.
@@ -87,7 +87,7 @@ Warunki: słowa o wzorze (pattern, pdf, wzór, 編み図, oppskrift, Strickmuste
 ## Linia bazowa najlepszych w niszy (E1)
 Trzy najczęściej oceniane aplikacje tej samej pracy i jedna szybko rosnąca (strona produktu, wersje, odpowiedzi, recenzje; odczyt 2026-10-26, szczegóły w warsztacie): obietnica w pierwszej linii to licznik z własnym wzorem; rytm wersji nie tłumaczy oceny (4 wersje w roku przy ocenie 4,83); najlepsze odpowiedzi na recenzje podają konkret naprawy; recenzje karzą okna zakupu przy starcie, utratę danych i zabieranie opłaconych funkcji. Blogi i newslettery autorów zamarłe (ostatnie wpisy 2022–2024) — kanału własnego nie proponuję.
 
-## Decyzje E1 (do odpowiedzi koordynatora wg P-087)
+## Decyzje E1 (przyjęte: P-148 — E1-1a, E1-2a, E1-3a jako propozycja dla 10, E1-4a; nazwa w sklepie do decyzji właściciela, opcje w E2)
 | ID | Pytanie | Opcje | Rekomendacja |
 |---|---|---|---|
 | E1-1 | kanały startu | (a) tylko sklep przez 8 tygodni (ASO, recenzje, prośba o ocenę, strona www); społeczności na punkcie kontrolnym albo z 1.1; (b) sklep + prośba o zgodę jednego forum EN albo DE | (a), jak Trening |
@@ -97,7 +97,91 @@ Trzy najczęściej oceniane aplikacje tej samej pracy i jedna szybko rosnąca (s
 
 ## Lista startowa
 [E3]
-## Powrót i opinie
-[E2]
-## Pomiar
-[E2]
+## Powrót i opinie (E2)
+### Rytm pracy i co daje powrót
+- **Rytm:** praca J-01 to każda sesja przy robótce (od kilku minut do godzin), J-05 to powrót po tygodniach albo latach (`docs/brd/odkrywanie.md`, J-01, J-05, „Kontekst użycia”). Typ aplikacji: narzędzie na sesję — liczy się szybki start w ostatnim miejscu.
+- **Co daje powrót (kontrakt 1.0):** otwarcie w ostatnim miejscu (F-49, F-18), notatka przy liczniku (F-15), historia zmian z cofnięciem (F-02), znacznik we wzorze (F-26, warunek OG-07), „ostatnia praca N dni temu” na liście (F-54), kalendarz dni i podsumowanie okresu (F-59), pełny eksport (F-32). Wniosek: powrót daje wartość bez żadnego mechanizmu nacisku; nowych funkcji powrotu nie proponuję (zasada wspólna 18).
+- **Linia bazowa:** recenzje liderów chwalą „pick up where you left off” i karzą utratę danych; o seriach i powiadomieniach 0 z 32 wzmianek w próbce (brak wzmianki, nie dowód).
+
+### Macierz powiadomień
+| Powiadomienie | O co prosił użytkownik | Wyzwalacz | Poziom przerwania | Zgoda i wyłączenie | Focus | Anulowanie |
+|---|---|---|---|---|---|---|
+| **brak w 1.0** | — | — | — | — | — | — |
+
+Wersja 1.0 nie ma powiadomień push ani lokalnych: przypomnienie „co N rzędów” (F-06, F-48) to wibracja i widok w trakcie liczenia, a BRD wprost wyklucza licznik serii i przypomnienia o niedzierganiu (`docs/brd/wymagania-dni.md:30`, P-043). Rekomendacja roli 11: **zostaje bez powiadomień**. Jeśli kiedyś wejdzie przypomnienie, to tylko o rzeczy zaplanowanej przez użytkownika (np. termin F-61), ze zgodą w kontekście i wyłączeniem w aplikacji (4.5.4, 5.1.2(i)), nigdy „dawno cię nie było”; ścieżka ZM → 03.
+
+### Etyka powrotu (sprawdzenie kontraktu 1.0)
+| Ryzyko z tabeli modułu | Stan w 1.0 | Wynik |
+|---|---|---|
+| seria dni zerowana przerwą | brak (BR-DNI, P-043) | zgodne |
+| „Dawno cię nie było” | F-54 pokazuje fakt „ostatnia praca N dni temu” bez wezwania | zgodne; tekst neutralny według głosu 04 |
+| fałszywy postęp | % tylko z celów części (F-60); część bez celu oznaczona | zgodne |
+| poziomy, odznaki | brak | zgodne |
+| koszt odejścia | pełny darmowy eksport zawsze, także przy limicie (KP-02) | zgodne |
+| nagroda za ocenę, ocena jako warunek | brak; prośba tylko systemowa (OG-15) | zgodne (sekcja 3, 3.2.2(x)) |
+| wina w tekstach | cel dzienny i „termin minął, zostało N rzędów” to fakty | zgodne; tekst przez 04 |
+| filtrowanie opinii | „Oceń” i „Zgłoś problem” to dwa niezależne wejścia | **zasada:** nigdy pytanie o zadowolenie przed prośbą ani rozwidlenie „podoba się → oceń / nie → zgłoś” (sekcja 3: „filtered”, 5.6.3) |
+
+### Prośba o ocenę — OP-33 (propozycja ZM do 03)
+Stan: BR-DAN-012 (MVP, F-64) — systemowa prośba po zamknięciu karty ukończenia; test akceptacyjny woła ją przy każdym zamknięciu (`tests/akceptacja/ekrany/ukonczenie.test.tsx:38`). Otwarte: dokładna chwila i własny limit (OP-33).
+
+Reguły z dnia pracy (odczyt 2026-10-26): „a maximum of three times within a 365-day period”, „don’t call it in response to a button tap or other user action”, w TestFlight „this method has no effect” (StoreKit, RequestReviewAction); „Avoid asking for a rating on first launch or during onboarding”, „Consider allowing at least a week or two between requests” (HIG, Ratings and reviews).
+
+Wzorzec Treningu (`trening/docs/26-prosba-o-ocene.md`): czysta funkcja, odstęp 14 dni, najwyżej 1 na wersję, pole „kiedy i w której wersji ostatnio prosiliśmy” w ustawieniach bez podbicia schematu; Trening nie ma linku „Oceń” w Ustawieniach, Oczko ma (P-059 (3a), bez zmian).
+
+**Propozycja (E2-1):** chwila bez zmian (zamknięcie karty ukończenia — naturalny koniec pracy; ukończenie projektu już jest dowodem zaangażowania, więc bez progu N); **własny limit jak Trening: odstęp ≥ 14 dni i najwyżej 1 na wersję aplikacji**; zapis `ostatniaProsba = { wersja, dzien }` w konfiguracji (05) w chwili wywołania (nie wiemy, czy system pokazał okno). Liczby w module konfiguracji (ARCH-05): `ODSTEP_PROSBY_DNI = 14`, `PROSB_NA_WERSJE = 1`.
+
+Czysta funkcja `czyProsicOOcene({ zdarzenie, wersja, ostatniaProsba, dzis, dostepna })` → `true | false`. Wektory:
+| ID | Stan | Oczekiwane |
+|---|---|---|
+| PO-01 | pierwsze uruchomienie, zdarzenie „start” | nie |
+| PO-02 | zamknięto kartę ukończenia, brak wcześniejszej prośby, `dostepna` | tak |
+| PO-03 | zamknięto kartę, ta sama wersja co przy ostatniej prośbie (odstęp 30 dni) | nie |
+| PO-04 | inna wersja, 13 dni od ostatniej prośby | nie |
+| PO-05 | inna wersja, dokładnie 14 dni | tak |
+| PO-06 | liczenie, cofnięcie, komunikat limitu, okno „Uczciwe zasady”, ekran zakupu | nie |
+| PO-07 | stuknięcie „Oceń” w Ustawieniach | nie (otwiera `action=write-review`) |
+| PO-08 | `isAvailableAsync()` = false (TestFlight) | nie |
+| PO-09 | `dzis` wcześniej niż `ostatniaProsba.dzien` (zegar cofnięty) | nie |
+| PO-10 | drugi projekt ukończony tego samego dnia po prośbie | nie |
+| PO-11 | brak albo uszkodzony zapis `ostatniaProsba` | jak brak prośby (PO-02), zapis po wywołaniu |
+
+Koszt [OCENA]: 05 pole konfiguracji 0,25 h, 08 funkcja i wywołanie 0,5 h, 07 test z wektorów 0,25 h. Bez nowego tekstu (okno systemowe). Czy zapis `ostatniaProsba` wymaga zgody z PKE art. 399 (wyjątek usługi „żądanej”), `[DO USTALENIA]` jak w module; Trening przechowuje takie pole w ustawieniach.
+
+### Opinie i recenzje
+- **Pętla opinii wersji 1** (moduł, kontrakt 03): systemowa prośba (F-64), „Oceń” w Ustawieniach (BR-DAN-012), „Zgłoś problem” bez konta (F-57) — wszystkie MVP; sprawdzenie w wydanej wersji: po premierze (07 audit przed wydaniem, rola 11 w reaudycie).
+- **Rytm odpowiedzi na recenzje** (w budżecie 1 h/tydz.): raz w tygodniu ok. 15–30 min; en i pl — każda recenzja z treścią; inne języki — tylko ≤ 3★; odpowiedź rzeczowa, z konkretem naprawy albo pytaniem o szczegóły, bez danych osobowych, spamu i marketingu (5.6.1); „When you respond to a customer review, the customer is notified and can update their review” (moduł). Każda odpowiedź to działanie zewnętrzne: w E3 szablony, zgoda właściciela na sposób pracy zapisana w dzienniku.
+- **Droga zgłoszenia:** recenzja albo e-mail ze „Zgłoś problem” → błąd: ER do 01 / zgłoszenie do 07 i 08 (szybka poprawka, ADR-0021); prośba o funkcję: ZM do 03 z bramką zasady 18.
+
+## Pomiar (E2)
+Źródła bez SDK: App Analytics (odczyt właściciela; metryki sklepu „Available once you have at least five first-time downloads”, odczyt 2026-10-26), oceny i recenzje, zgłoszenia. Bez linków kampanii: `pt` dostępny dopiero, gdy aplikacja ma dane analityczne (moduł) — po premierze. Test modelu V4 (konwersja 4,53%) prowadzi rola 02 (`docs/monetyzacja.md`), nie liczy się do H roli 11.
+
+Cel pobrań (rachunek, [OCENA]): tempo progu opłacalności ≈ 1944 zł/rok ÷ 26 477 zł/rok × ok. 22 500 instalacji/rok (wynik normalny V4 i jego instalacje, `docs/monetyzacja.md`) ≈ **1650 pobrań/rok, ok. 140 miesięcznie, ok. 250 w 8 tygodniach** (proporcja liniowa przy założeniach normalnych 02).
+
+| H | Pytanie (decyzja) | Metryka i źródło | Mierzalność: oczekiwane n, zastępnik | Próg | Min. próba | Data oceny | Werdykt |
+|---|---|---|---|---|---|---|---|
+| H-11 | czy ASO działa (sam sklep czy powrót do społeczności) | pobrania z App Store Search ÷ wszystkie pobrania, App Analytics | ok. 250 [OCENA]; wyświetlenia z wyszukiwania | ≥ 50% (E2-2) | 100 | 2027-01-09 | czeka na dane |
+| H-12 | czy strona produktu przekonuje (zrzuty, podtytuł) | pobrania ÷ odsłony strony z App Store Search | ok. 400 odsłon [OCENA]; pobrania z wyszukiwania w tygodniu | ≥ 30% (E2-2) | 100 | 2027-01-09 | czeka na dane |
+| H-13 | czy metadane w języku kraju działają (kolejność 09, ASO kolejnych języków) | pobrania z wyszukiwania ÷ wszystkie w JP, NO, DE, FR | ok. 45 [OCENA]; wyświetlenia z wyszukiwania w JP | ≥ 40% (E2-2) | 30 | 2027-01-09 | czeka na dane |
+
+Pliki: `docs/wzrost/hipotezy.json` (progi), `docs/wzrost/hipotezy.mjs` (z modułu roli, przedział Wilsona, z = 1,645); `node docs/wzrost/hipotezy.mjs docs/wzrost/hipotezy.json` — kod 0 (2026-10-26). Dane zmierzone tylko w `oczko-warsztat/11-wzrost/`. Próba z opt-in i źródła ruchu nie są losowe — przedział to uproszczenie. Nazwa źródła „App Store Search” z Treningu (`docs/45`), dziś nieodczytana (strona pomocy ładuje treść skryptem) — sprawdzi właściciel przy pierwszym odczycie.
+
+## Nazwa w sklepie — opcje dla właściciela (P-148)
+| Opcja | Przykład | Plus | Minus |
+|---|---|---|---|
+| **A. „Oczko:” + opis w języku lokalizacji** (jak Trening: „Trening: dziennik treningowy”, część po dwukropku zmieniana w lokalizacjach) | en „Oczko: Row Counter”, pl „Oczko: Licznik rzędów”, de „Oczko: Reihenzähler”, ja „Oczko: 編み物カウンター” | najsilniejsze słowo pracy w nazwie w każdym języku; spójne z Treningiem | 35 wariantów do przeglądu językowego; marka mniej jednolita na zrzutach i w wyszukiwaniu |
+| B. jedna nazwa międzynarodowa we wszystkich językach | „Oczko: Row Counter” wszędzie | jedna marka, mniej pracy 09/10 | w ja, de, fr, nb, pl fraza lokalna tylko w podtytule i słowach kluczowych; angielski opis obcy dla części rynków |
+| C. sama marka | „Oczko” + opisowy podtytuł | najczystsza marka | nazwa nie zawiera słowa pracy, a „Oczko” jest nieznane poza Polską; najsłabsze wyszukiwanie [OCENA] |
+
+**Rekomendacja: A** (jak Trening; nisza licznika ma słabą konkurencję w każdym badanym języku, więc słowo pracy w nazwie daje najwięcej). Waga pól w wyszukiwaniu nie jest opisana przez Apple — [OCENA]; pomiar: H-11, H-13. Nazwa rekordu w App Store Connect sprzed przebudowy: [DO USTALENIA] (odczyt właściciela).
+
+## Decyzje E2 (do odpowiedzi koordynatora wg P-087; nazwa — właściciel)
+| ID | Pytanie | Opcje | Rekomendacja |
+|---|---|---|---|
+| E2-1 | prośba o ocenę (OP-33) | (a) chwila bez zmian + odstęp 14 dni i 1 na wersję, czysta funkcja z wektorami PO-01–PO-11 (jak Trening); (b) tylko limit systemowy (3 w 365 dni), bez własnego | (a) |
+| E2-2 | progi H-11–H-13 | (a) jak Trening: 50% / 30% / 40%, ocena 2027-01-09; (b) bez progów, sam odczyt | (a) |
+| E2-3 | powiadomienia | (a) brak w 1.0 i bez nowych; (b) przypomnienie o terminie projektu (F-61) jako ZM | (a) |
+| E2-4 | nazwa w sklepie (**właściciel**) | A / B / C wyżej | A |
+
+## Lista startowa
+[E3]
