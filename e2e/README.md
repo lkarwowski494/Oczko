@@ -206,7 +206,8 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `wprowadzenie` | — | ekran wprowadzenia (NIE może istnieć przed pierwszym +1) | — | |
 | `e2e-nigdy` | — | element, którego nie ma (podprzepływ `odstep.yaml`) | — | |
 | `e2e-sklep-wygas` | oferty (build E2E) | „Test store: expire access” | bez `t()` | |
-| `e2e-sha-bazy` | Ustawienia i ekran awaryjny (build E2E) | SHA-256 pliku bazy (64 znaki hex) | bez `t()` | |
+| `e2e-sha-bazy` | Ustawienia i ekran awaryjny (build E2E) | SHA-256 pary pliku bazy i `-wal` (64 znaki hex), liczone **bez checkpointu**; ukryty w trakcie liczenia (F07-19, P-203 Q6a) | bez `t()` | |
+| `e2e-wal-bajty` | Ustawienia i ekran awaryjny (build E2E) | rozmiar pliku `-wal` w bajtach („0”, gdy brak) — dowód, że SHA liczono przy niepustym WAL (F07-19) | bez `t()` | |
 | `e2e-awaria-startu` | pusty ekran wymuszonej awarii startu (build E2E, `oczkoE2eAwariaStartu`) | tło papieru po zapisie „start w toku” (ADR-0019) | bez tekstu | |
 | `e2e-pliki-zachowaj-eksport` | Ustawienia (build E2E) | zachowanie ostatniego eksportu w katalogu testowym | bez `t()` | |
 | `e2e-pliki-stan` | Ustawienia (build E2E) | „Saved: N file” | bez `t()` | |
