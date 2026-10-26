@@ -118,6 +118,7 @@ Zatwierdzone w fix-2 05 2026-10-25 (NZ-08-P1-05, P-118 S1): sygnatury dopisane p
 | `postep.ts` | `dniDoTerminu(dzis: string, termin: string): Wynik<number>` | `Wynik` (`bledne_dane`) | RD-15-W8–W10 |
 | `postep.ts` | `poczatekTygodnia(dzien: string): Wynik<string>` | `Wynik` (`bledne_dane`) | RD-20 |
 | `licznik.ts` | `powtorzenieLicznika(skonczone: number, znaczenie: ZnaczenieLicznika, n: number): Wynik<{ powtorzenie: number; rzadW: number }>` = `powtorzenie(r, n)` z r = `skonczone` przy `'skonczone'` i `skonczone + 1` przy `'w_trakcie'` (RD-12 „r to liczba pokazana na liczniku”, BR-LIC-012, ER-40); fix-3 05 2026-10-26, P-121 (1): wybór r przechodzi z testu do domeny, wdraża 08 (ekrany wołają tylko tę funkcję) | `Wynik` (`bledne_dane`, jak `powtorzenie`) | RD-12-W7–W9 (test `tests/domena/licznik/tryb-licznika.test.ts` woła tę funkcję zamiast wybierać r sam; mutant „bez + 1 w trybie w trakcie” → W7, W8 czerwone) |
+| `ocena.ts` | `czyProsicOOcene(w: WejscieProsby): boolean` | wartość: złe wejście → `false` (nie prosimy przy wątpliwości) | `docs/architektura/wektory-prosby-o-ocene.json` (PO-01–PO-11, P-150); kontrakt: „Prośba o ocenę” |
 
 **Zasada błędów (P-118 Q1a, polityka: `e3-tlo-bledy-prywatnosc-wydajnosc.md` §2):** wejście, które może być złe w normalnym działaniu → wartość; wejście z kontraktu poprawne → `BladDanych`. Przypisanie funkcji domeny partii 1:
 | Funkcja | Skąd wejście | Styl |
@@ -193,6 +194,23 @@ function polozenieZnacznika(z: ZnacznikWzoru, wartoscLicznika: number): Wynik<{ 
 - **Blokada (N1):** test oczekujący `tests/akceptacja/dane/stan-blokada.test.ts`; Swift: X-ST-07, X-DZ-15, X-ZG-11 (`xctest-specyfikacja.md`); teksty stanu blokady na ekranie blokady i zegarku: 04.
 - **Pora ukończenia, RD-15, RD-21 (dopiski P-136, P-137):** `tests/dane/projekt-fix3.test.ts` (wywołanie z `ukonczonoMs`) przechodzi na nową sygnaturę; RD-15 z łatką 01 (`postep.test.ts`, P-136); RD-21: testy 07 na wektorach W1–W9; wołający `polozenieZnacznika` (`src/dane/repozytoria/wzory.ts:41`) obsługuje `Wynik`.
 - **Testy do zmiany mechanicznej przez 08** (asercje bez zmiany sensu): `toEqual({ ok: true, wartosc: { scalono, pominieto } })` w `tests/dane/dziennik*.test.ts` dostaje `potwierdzone`; test oczekujący `tests/akceptacja/dane/zegarek-potwierdzenia.test.ts` przenieść do `tests/dane/` w commicie, który go zazielenia.
+
+## Prośba o ocenę (fix-5 2026-10-26, NZ-08-P4-05; P-150 E2-1a, P-156)
+Chwila bez zmian (BR-DAN-012: zamknięcie karty ukończenia), do tego własny limit jak w Treningu (`lib/review.ts` `reviewDecision`, `lib/review-run.ts` `maybeRequestReview`): odstęp ≥ `ODSTEP_PROSBY_DNI` i najwyżej `PROSB_NA_WERSJE` prośba na wersję aplikacji. Okno jest systemowe: system sam ogranicza je do 3 w 365 dniach na urządzeniu, w TestFlight nic nie pokazuje i aplikacja nie wie, czy się pokazało (`docs/wzrost.md`, reguły z dnia pracy) — dlatego liczy się chwila wywołania, nie pokazania.
+```ts
+// src/domena/ocena.ts — typy są w pliku (fix-5); funkcję dopisuje 08
+function czyProsicOOcene(w: WejscieProsby): boolean;
+// WejscieProsby = { zdarzenie: ZdarzenieProsby; wersja: string; ostatniaProsba?: unknown; dzis: string; dostepna: boolean }
+// true ⇔ wszystkie: zdarzenie === 'zamknieto_karte_ukonczenia' (PO-01, PO-06, PO-07); dostepna (PO-08); wersja niepusta (PO-08b); dzis to data RRRR-MM-DD;
+//   oraz ostatniaProsba nie jest poprawnym { wersja: niepusty napis, dzien: istniejąca data RRRR-MM-DD } (brak, null, zły kształt → jak brak, PO-02, PO-11)
+//   albo: ostatniaProsba.wersja ≠ wersja (PROSB_NA_WERSJE = 1; PO-03, PO-10) i 0 ≤ dni(ostatniaProsba.dzien → dzis) i dni ≥ ODSTEP_PROSBY_DNI (PO-04, PO-05, PO-09).
+// dni = różnica dat kalendarzowych (dzień lokalny RD-16 z Zegar.teraz().dzien), bez godzin i bez strefy; zegar cofnięty (dzis < dzien) → false (PO-09).
+```
+- **Zapis** (P-156 Q1a): klucz `ustawienie` `ostatnia_prosba_o_ocene` = `{ wersja, dzien }` (dane.md), stan urządzenia — bez iCloud, pomijany przy imporcie i przeniesieniu (`KLUCZE_URZADZENIA`), bo limit Apple liczy się na urządzeniu („on this device”, RequestReviewAction). Odstępstwo od Treningu nazwane (P-156): Trening trzyma pole w `Settings`, które wraca z kopią — Oczko ma osobną kategorię stanu urządzenia; logika bramki jak w Treningu. Bez zmiany schematu i bez migracji (tabela `ustawienie` bez zmian).
+- **Przypadek użycia** (08, `src/przypadki-uzycia/`; wołany z ekranu `Ukonczenie` po „Done”): odczyt klucza (`odczytajUstawienie`, bez walidacji — waliduje bramka), `Zegar.teraz().dzien`, wersja aplikacji (`CFBundleShortVersionString` przez adapter platformy), `dostepna` = `StoreReview.isAvailableAsync()`; przy `true` → `StoreReview.requestReview()`, a **po udanym wywołaniu** zapis `{ wersja, dzien: dzis }` przez kolejkę (`zapiszUstawienie`, UPSERT). Wyjątek modułu (np. brak aktywnej sceny) albo `dostepna = false` → bez zapisu (prośby nie było; jak Trening `review-run.ts:37-41`). Nieudany zapis klucza → wpis w `blad`, bez komunikatu: to nie dane użytkowniczki, skutek to najwyżej jedna prośba więcej, którą i tak ogranicza system (ARCH-18 nie dotyczy).
+- **Port** `System.prosbaOOcene()` (`src/ekrany/wspolne.ts:25`) zostaje wywołaniem systemowym; decyzję podejmuje bramka, nie ekran. Dochodzi odczyt dostępności (`ocenaDostepna(): Promise<boolean>`) i wersji aplikacji — kształt portu ustala 08 (typy w `wspolne.ts` albo w portach przypadku użycia).
+- **Testy:** domena — `tests/akceptacja/domena/prosba-o-ocene.test.ts` (wektory; test oczekujący, P-156 Q2a); ekran — test 07 `tests/akceptacja/ekrany/ukonczenie.test.tsx:38` („jedna prośba przy każdym zamknięciu”) do zmiany: zamknięcie karty woła przypadek użycia, a wywołanie systemowe zależy od bramki (prośba przy `true`, brak przy `false`); dane — zapis klucza tylko po udanym wywołaniu, klucz pomijany przy imporcie.
+- Kontrola dokumentu: `docs/architektura/narzedzia/kontrola-fix5.mjs --id po` (wzorzec bramki liczy wektory niezależnie od kodu).
 
 ## Czas w przypadkach użycia (fix 2026-10-25, Z07-18)
 - **Jedno źródło czasu:** port `Zegar` (`teraz(): { ms, strefa, dzien }`); domena i przypadki użycia nie wołają `Date.now()` ani `new Date()` bez argumentu. Adapter produkcyjny: zegar systemu i strefa urządzenia. Build E2E (`EXPO_PUBLIC_E2E=1`): adapter z `src/platforma/tryb-e2e.ts` czyta argument startu `oczkoE2eTeraz` (e2e/README.md) i zwraca podaną chwilę plus czas, który upłynął od startu procesu (zegar biegnie, RD-17 liczy odstępy); w buildzie wydania argument jest ignorowany (kontrola `TRYB-E2E`, `sprawdz-workflowy.mjs`). Dzięki temu granica miesiąca, północ i nowy dzień limitu są scenariuszami E2E bez zmiany zegara symulatora.
@@ -294,6 +312,8 @@ Stany tej maszyny nie są w bazie (stan modułu natywnego), więc nie mają CHEC
 | `POCZEKALNIA_DNI` (dni) | 7 | P-110 (Q1a): po tym czasie „niepełna historia” w Stanie danych, rekord zostaje |
 | `ZEGAREK_PONOWIENIE_MS` (ms) | 900 000 (15 min) | [OCENA] roli 05 (fix-4, P-135 Q2a): ponowna wysyłka niepotwierdzonej linii z kolejki zegarka (ADR-0009, 2026-10-26 pkt 5); ta sama liczba w stałych Swift (`zegarekPonowienieMs`, generator) i w wektorach `zegarek_skrzynka` |
 | `ZEGAREK_POTWIERDZENIA_MAKS` (id) | 256 | [OCENA] roli 05 (fix-4, P-135 Q2a): ostatnie potwierdzone id zegarka w kontekście aplikacji (ok. 9 KB); nadmiar wraca ponowieniem i potwierdza się w następnej partii |
+| `ODSTEP_PROSBY_DNI` (dni) | 14 | P-150 E2-1a, jak Trening (`REVIEW.MIN_GAP_DAYS`); HIG „Ratings and reviews”: „Consider allowing at least a week or two between requests” (`docs/wzrost.md`) |
+| `PROSB_NA_WERSJE` (prośby na wersję) | 1 | P-150 E2-1a, jak Trening; wartość > 1 wymaga licznika w kluczu `ostatnia_prosba_o_ocene` (zmiana kontraktu) |
 | `PARTIA_SYNCHRONIZACJI` (wiersze na transakcję) | 200 | [OCENA] roli 05: krótkie transakcje przy scalaniu iCloud i importu (E3 §1); do korekty po pomiarze |
 | `MIN_IOS` / `MIN_WATCHOS` | 18.0 / 11.0 | P-070, ADR-0006 |
 | `PRODUKTY_PRO` (ID) | [DO USTALENIA] | P-038 (przy konfiguracji App Store Connect) |
