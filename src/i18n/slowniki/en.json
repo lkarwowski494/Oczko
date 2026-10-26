@@ -93,7 +93,12 @@
     "zablokowany_a11y": "{{nazwa}}, {{zrobione}}, counter locked",
     "nazwa_robocza": "Counter from {{data}}",
     "karta_a11y": "{{nazwa}}, {{zrobione}}, now row {{n}}",
-    "sesja_a11y": "session {{czas}}"
+    "sesja_a11y": "session {{czas}}",
+    "przypomnienie": "Row {{n}}: {{tekst}} · {{k}} of {{razy}}",
+    "przypomnienie_a11y": "Row {{n}}: {{tekst}}, {{k}} of {{razy}}",
+    "przypomnienie_wiecej_one": "+{{count}} more reminder in Oczko",
+    "przypomnienie_wiecej_other": "+{{count}} more reminders in Oczko",
+    "przypomnienie_krotkie": "Row {{n}}: {{tekst}}"
   },
   "wspolne": {
     "nie_teraz": "Not now"

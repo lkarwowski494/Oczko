@@ -81,7 +81,11 @@
     "zablokowany_a11y": "VoiceOver karty i Smart Stack przy blokadzie; {{zrobione}} = tekst aktywnosc.zrobione_*.",
     "nazwa_robocza": "Projekt roboczy w miejscu nazwy; {{data}} bez godziny (sekcja „Projekt roboczy”).",
     "karta_a11y": "VoiceOver karty; przy sesji dopisek aktywnosc.sesja_a11y.",
-    "sesja_a11y": "Dopisek VoiceOver karty przy trwającej sesji; {{czas}} = czas sesji."
+    "sesja_a11y": "Dopisek VoiceOver karty przy trwającej sesji; {{czas}} = czas sesji.",
+    "przypomnienie": "Pas przypomnienia na karcie ekranu blokady i na zegarku (04 fix-4 NZ-08-P4-04, P-162): rząd w robocie {{n}}, instrukcja {{tekst}}, które z ilu ({{k}} z {{razy}}). Reguła rzędu: RD-13 (P-161).",
+    "przypomnienie_a11y": "Etykieta VoiceOver pasa przypomnienia (P-162); te same parametry co aktywnosc.przypomnienie, przecinek zamiast kropki środkowej.",
+    "przypomnienie_krotkie": "Wariant krótki pasa dla Smart Stack i CarPlay (P-162): rząd i instrukcja, bez licznika powtórzeń.",
+    "przypomnienie_wiecej": "Cicha linia pod pasem, gdy w stanie jest więcej przypomnień niż mieści karta (P-162); {{count}} = ile jeszcze, reszta w aplikacji. Formy _one/_other."
   },
   "wspolne": {
     "nie_teraz": "Neutralna odmowa (słownik interakcji)."
