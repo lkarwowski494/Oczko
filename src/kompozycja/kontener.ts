@@ -7,6 +7,9 @@ import { otworzBaze } from '../dane/baza/polaczenie';
 import { sciezkiDanych } from '../dane/baza/sciezki';
 import { migruj } from '../dane/migracje/migruj';
 import { utworzMagazyn } from '../dane/pliki/magazyn';
+import { utworzArchiwum } from '../dane/archiwum';
+import { czasWTle } from '../platforma/czas-w-tle';
+import type { ZaleznosciArchiwum } from '../przypadki-uzycia/zaleznosci';
 import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
 import { dostepPro, type DostepPro } from './dostep';
 import { utworzI18n } from '../i18n/i18n';
@@ -22,9 +25,11 @@ import { zegarAplikacji } from '../platforma/tryb-e2e';
 import { zegarek } from '../platforma/zegarek';
 import type { Tlumacz } from '../ekrany/wspolne';
 import type { Jezyk, ZaleznosciKompozycji } from './licznik';
+import { ustawKatalogTymczasowy } from './system';
 
+export type ZaleznosciAplikacji = ZaleznosciKompozycji & ZaleznosciArchiwum;
 export type Kontener = {
-  z: ZaleznosciKompozycji;
+  z: ZaleznosciAplikacji;
   j: Jezyk & { naZmiane(f: (j: string) => void): () => void };
   porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka };
   dostep: DostepPro;
@@ -52,6 +57,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
   const katalogDanych = s.baza.slice(0, s.baza.lastIndexOf('/'));
   const tymczasowy = polacz(katalogDanych, 'tmp');
   for (const k of [katalogDanych, s.pliki, s.kopie, tymczasowy]) utworzKatalog(k);
+  ustawKatalogTymczasowy(tymczasowy);
   const b = await otworzBaze(s.baza, (p) => otworzPortExpo(p));
   if (!b.ok) return b;
   const baza = b.wartosc;
@@ -68,7 +74,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
   // Pamięć uprawnień Pro (KP-06): plik obok bazy, poza bazą i archiwum.
   const plikPro = polacz(katalogDanych, 'pamiec-pro.json');
   const dostep = dostepPro(sklep, { czytaj: async () => (istniejePlik(plikPro) ? czytajTekst(plikPro) : null), zapisz: async (t) => zapiszTekst(plikPro, t) }, () => zegar.teraz().ms);
-  const z: ZaleznosciKompozycji = {
+  const z0: ZaleznosciKompozycji = {
     baza, zegar, id: identyfikatory, urzadzenie: id,
     pro: () => dostep.stan().pro, // ADR-0010: decyzja ze sklepu, przy błędzie pamięć KP-06 z oknem offline
     magazyn: utworzMagazyn(s.pliki), katalogi: { kopie: s.kopie, tymczasowy },
@@ -76,6 +82,10 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     migruj: (p) => migruj(p, { katalogKopii: s.kopie }),
     liveActivity: liveActivity(id, undefined, jezyk),
     zegarek: zegarek(undefined, jezyk),
+  };
+  const z: ZaleznosciAplikacji = {
+    ...z0, czasWTle: czasWTle(),
+    archiwum: utworzArchiwum({ baza, magazyn: z0.magazyn, zegar, katalogi: z0.katalogi, migruj: z0.migruj, aplikacja: 'oczko' }),
   };
   const t: Tlumacz = (k, p) => i18n.t(k, p);
   return {

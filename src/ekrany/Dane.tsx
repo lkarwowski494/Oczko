@@ -1,7 +1,9 @@
 // Import archiwum i rozstrzygnięcie konfliktu (F-31–F-34, F-27; R-050, R-068). Ekrany nienarysowane (Z07-05), teksty robocze 08.
 // Sygnatury: propozycja 07 (E3), granice 05 (Z07-22). Konflikt: wybór użytkownika, nigdy po cichu (M-04, M-05).
 import React from 'react';
+import { Text, View } from 'react-native';
 import { Arkusz, Przycisk, Tresc } from './Arkusz';
+import { odstep, typografia, useKolory } from './motyw';
 import type { Tlumacz } from './wspolne';
 
 export type PropsImportu = {
@@ -10,17 +12,40 @@ export type PropsImportu = {
   naZastap(): void;
   naScal(): void;
   naAnuluj(): void;
+  /** Wewnątrz Ustawień (bez arkusza): wynik zostaje na ekranie razem z resztą listy. */
+  wbudowany?: boolean;
+  /** Wynik „scal” sformatowany przez kompozycję (`import-wynik`). */
+  wynik?: string;
 };
-export function Import({ stan, t, naZastap, naScal, naAnuluj }: PropsImportu): React.ReactElement {
+/** Arkusz albo blok w treści ekranu (ten sam układ: nagłówek, treść, przyciski). */
+function Ramka(p: { wbudowany?: boolean; tytul: string; testID: string; przyciski: React.ReactNode; children: React.ReactNode }): React.ReactElement {
+  const k = useKolory();
+  if (!p.wbudowany) return <Arkusz tytul={p.tytul} testID={p.testID} przyciski={p.przyciski}>{p.children}</Arkusz>;
+  return (
+    <View testID={p.testID} style={{ gap: odstep.s }}>
+      <Text style={{ ...typografia.instrukcja, color: k.grafit }} accessibilityRole="header">{p.tytul}</Text>
+      {p.children}
+      {p.przyciski}
+    </View>
+  );
+}
+export function Import({ stan, t, naZastap, naScal, naAnuluj, wbudowany, wynik }: PropsImportu): React.ReactElement {
+  if (wynik !== undefined) {
+    return (
+      <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} testID="import-wynik" przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" />}>
+        <Tresc>{wynik}</Tresc>
+      </Ramka>
+    );
+  }
   if (stan.rodzaj === 'zastapiono') {
     return (
-      <Arkusz tytul={t('dane.import_tytul')} testID="import-wynik" przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />}>
+      <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} testID="import-wynik" przyciski={<Przycisk tekst={t('wspolne.zamknij')} onPress={naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />}>
         <Tresc>{t('dane.zastapiono', { nazwa: stan.kopia.nazwa, miejsce: stan.kopia.miejsce })}</Tresc>
-      </Arkusz>
+      </Ramka>
     );
   }
   return (
-    <Arkusz tytul={t('dane.import_tytul')} testID="import-gotowy" przyciski={
+    <Ramka wbudowany={wbudowany} tytul={t('dane.import_tytul')} testID="import-gotowy" przyciski={
       <>
         <Przycisk tekst={t('dane.scal')} onPress={naScal} rodzaj="glowny" testID="import-scal" />
         <Przycisk tekst={t('dane.zastap')} onPress={naZastap} />
@@ -29,7 +54,7 @@ export function Import({ stan, t, naZastap, naScal, naAnuluj }: PropsImportu): R
     }>
       <Tresc>{t('dane.import_plik', { plik: stan.plik })}</Tresc>
       {stan.licznosci && <Tresc podpis testID="import-licznosci">{stan.licznosci}</Tresc>}
-    </Arkusz>
+    </Ramka>
   );
 }
 

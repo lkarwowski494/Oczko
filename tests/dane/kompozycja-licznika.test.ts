@@ -7,6 +7,7 @@ import { utworzI18n } from '../../src/i18n/i18n';
 import { ZASOBY } from '../../src/i18n/slowniki';
 import { kompozycjaLicznika, type Jezyk } from '../../src/kompozycja/licznik';
 import { czasPracy, stanUkonczenia } from '../../src/kompozycja/ukonczenie';
+import { licznosciTekst, wynikScalenia } from '../../src/kompozycja/dane';
 import { czesc, licznik, projekt } from './pomocnicze/dane-wejsciowe';
 import { T0, przygotuj, wykonaj } from './pomocnicze/srodowisko';
 
@@ -114,5 +115,15 @@ describe('stanUkonczenia (ekrany.html `ukonczenie`)', () => {
     expect([s.nazwa, s.okres, s.czas]).toEqual(['Counter from Oct 1, 18:40', 'Oct 1 – Oct 21', '18 h 10 min']);
     expect([czasPracy(45 * 60_000, j), czasPracy(2 * 3_600_000, j)]).toEqual(['45 min', '2 h']);
     expect(stanUkonczenia({ ...k, czasMs: null }, { j, terazMs: 0, strefa: 'UTC', zdjecie: String }).czas).toBeNull();
+  });
+});
+
+describe('licznosciTekst / wynikScalenia (e2e/README.md eksport-licznosci, import-wynik)', () => {
+  test('„1 project, 1 counter, 2 changes”; powtórny import „0 new projects”', async () => {
+    const i = await utworzI18n({ magazyn: { odczytaj: async () => null, zapisz: async () => {} }, systemowe: () => ['en-US'], zasoby: ZASOBY });
+    const l = { projekt: 1, licznik: 1, zdarzenie: 2, czesc: 1 };
+    expect(licznosciTekst(l, i.t)).toBe('1 project, 1 counter, 2 changes');
+    expect(wynikScalenia({ projekt: 0 }, l, i.t)).toMatch(/1 new project\b.*1 project/);
+    expect(wynikScalenia(l, l, i.t)).toMatch(/0 new/);
   });
 });

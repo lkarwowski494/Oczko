@@ -1,36 +1,59 @@
-// Korzeń nawigacji expo-router (P-114 Q1a, jak Trening; wiersz w ADR-0016): kontener zależności raz na proces, potem stos ekranów bez paska
-// systemowego (pasek rysuje ekran według design-spec). Do kontenera nic nie jest pokazywane poza tłem papieru — pierwszy ekran to licznik (NFR-PIE-001).
+// Korzeń nawigacji expo-router (P-114 Q1a, jak Trening; wiersz w ADR-0016): strażnik startu (ADR-0019) przed bazą, potem kontener zależności
+// raz na proces i stos ekranów bez paska systemowego (pasek rysuje ekran według design-spec). Do kontenera nic nie jest pokazywane poza tłem
+// papieru — pierwszy ekran to licznik (NFR-PIE-001); pętla nieudanych startów albo baza nie do otwarcia → ekran awaryjny.
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { AppState, View } from 'react-native';
 import { Stack } from 'expo-router';
-import type { Wynik } from '../src/domena/bledy';
+import type { PowodTrybuAwaryjnego } from '../src/ekrany/TrybAwaryjny';
+import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
+import { powodAwaryjny, rozpocznijStart } from '../src/kompozycja/start-aplikacji';
+import { tAwaryjny } from '../src/kompozycja/jezyk-awaryjny';
 import { DostawcaAplikacji, type Aplikacja } from '../src/kompozycja/Kontekst';
 import { utworzKontener } from '../src/kompozycja/kontener';
 import { kompozycjaLicznika } from '../src/kompozycja/licznik';
 import { preferencje } from '../src/kompozycja/preferencje';
 import { useKolory } from '../src/ekrany/motyw';
 
+type Faza = { rodzaj: 'czeka' } | { rodzaj: 'awaria-e2e' } | { rodzaj: 'awaryjny'; powod: PowodTrybuAwaryjnego } | { rodzaj: 'gotowe'; a: Aplikacja };
+
 export default function Korzen(): React.ReactElement {
   const k = useKolory();
-  const [a, ustaw] = useState<Wynik<Aplikacja> | null>(null);
+  const [faza, ustaw] = useState<Faza>({ rodzaj: 'czeka' });
+  const [proba, ustawProbe] = useState(0); // „Spróbuj normalnie”: start normalny w tym samym procesie
   useEffect(() => {
     let koniecNasluchu: (() => void) | null = null;
-    void utworzKontener().then(
-      async (w) => {
-        if (!w.ok) { ustaw(w); return; }
-        const p = preferencje();
-        koniecNasluchu = w.wartosc.dostep.nasluchuj(); // KP-07: nasłuch transakcji od startu
-        await w.wartosc.dostep.odswiez(); // limit dni liczony z bieżącym dostępem już przy pierwszym ekranie
-        ustaw({ ok: true, wartosc: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje }), preferencje: p } });
-      },
-      () => ustaw({ ok: false, powod: 'zapis' }),
-    );
-    return () => koniecNasluchu?.();
-  }, []);
-  // Błąd otwarcia danych: ekran awaryjny ADR-0019 (krok 3C, `tryb-awaryjny`); do tego czasu samo tło — bez zastępczej bazy w pamięci.
-  if (!a || !a.ok) return <View style={{ flex: 1, backgroundColor: k.papier }} testID={a ? 'tryb-awaryjny' : undefined} />;
+    let zywy = true;
+    async function normalny(): Promise<void> {
+      const w = await utworzKontener().catch(() => null);
+      if (!zywy) return;
+      if (!w || !w.ok) { ustaw({ rodzaj: 'awaryjny', powod: powodAwaryjny(w && !w.ok ? w.powod : 'zapis') }); return; } // bez zastępczej bazy (ADR-0019)
+      const p = preferencje();
+      koniecNasluchu = w.wartosc.dostep.nasluchuj(); // KP-07: nasłuch transakcji od startu
+      await w.wartosc.dostep.odswiez(); // limit dni liczony z bieżącym dostępem już przy pierwszym ekranie
+      if (!zywy) return;
+      ustaw({ rodzaj: 'gotowe', a: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje }), preferencje: p } });
+    }
+    async function start(): Promise<void> {
+      if (proba > 0) { await normalny(); return; }
+      const tryb = await rozpocznijStart();
+      if (!zywy) return;
+      if (tryb.tryb === 'awaryjny') ustaw({ rodzaj: 'awaryjny', powod: tryb.powod });
+      else if (tryb.tryb === 'awaria-e2e') ustaw({ rodzaj: 'awaria-e2e' });
+      else await normalny();
+    }
+    // ADR-0019: liczy się tylko start na pierwszym planie (intencja, CloudKit i zegarek budzą proces w tle).
+    if (AppState.currentState === 'active') void start();
+    else {
+      const sub = AppState.addEventListener('change', (st) => { if (st === 'active') { sub.remove(); void start(); } });
+      return () => { zywy = false; sub.remove(); koniecNasluchu?.(); };
+    }
+    return () => { zywy = false; koniecNasluchu?.(); };
+  }, [proba]);
+  if (faza.rodzaj === 'awaryjny') return <EkranAwaryjnyZJezykiem powod={faza.powod} naNormalnie={() => { ustaw({ rodzaj: 'czeka' }); ustawProbe((n) => n + 1); }} />;
+  if (faza.rodzaj !== 'gotowe') return <View style={{ flex: 1, backgroundColor: k.papier }} />;
+  const a = faza.a;
   return (
-    <DostawcaAplikacji wartosc={a.wartosc}>
+    <DostawcaAplikacji wartosc={a}>
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: k.papier } }}>
         {/* Arkusze systemowe (design-spec „Komponenty”): historia, menu •••, formularze, karta ukończenia. */}
         <Stack.Screen name="historia" options={{ presentation: 'modal' }} />
@@ -42,4 +65,13 @@ export default function Korzen(): React.ReactElement {
       </Stack>
     </DostawcaAplikacji>
   );
+}
+
+/** Ekran awaryjny ma własne t() (bez bazy i bez kontenera): słowniki z pakietu, język systemu. */
+function EkranAwaryjnyZJezykiem(p: { powod: PowodTrybuAwaryjnego; naNormalnie(): void }): React.ReactElement {
+  const k = useKolory();
+  const [t, ustawT] = useState<Awaited<ReturnType<typeof tAwaryjny>> | null>(null);
+  useEffect(() => { void tAwaryjny().then((x) => ustawT(() => x)); }, []);
+  if (!t) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
+  return <EkranAwaryjny powod={p.powod} t={t} naNormalnie={p.naNormalnie} />;
 }

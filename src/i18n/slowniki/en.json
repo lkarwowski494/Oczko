@@ -270,7 +270,18 @@
     "zastapiono": "Done. A copy of your data from before the import is saved as {{nazwa}} in {{miejsce}}.",
     "konflikt_tytul": "Two versions of {{licznik}}",
     "konflikt_wybor": "{{wartosc}} rows · {{urzadzenie}} · {{godzina}}",
-    "konflikt_a11y": "Keep {{wartosc}} rows from {{urzadzenie}}, {{godzina}}"
+    "konflikt_a11y": "Keep {{wartosc}} rows from {{urzadzenie}}, {{godzina}}",
+    "l_projekt_one": "{{count}} project",
+    "l_projekt_other": "{{count}} projects",
+    "l_licznik_one": "{{count}} counter",
+    "l_licznik_other": "{{count}} counters",
+    "l_zmiana_one": "{{count}} change",
+    "l_zmiana_other": "{{count}} changes",
+    "eksport_gotowy": "Export ready: {{licznosci}}",
+    "nowe_one": "{{count}} new project",
+    "nowe_other": "{{count}} new projects",
+    "zaimportowano": "Merged. {{nowe}}. Now: {{licznosci}}.",
+    "blad": "That didn’t work. Your data is unchanged."
   },
   "stan_danych": {
     "tytul": "Data and sync",

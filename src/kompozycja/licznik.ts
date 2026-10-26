@@ -83,6 +83,8 @@ export type KompozycjaLicznika = {
   widok(): Promise<WidokLicznika | null>;
   /** Po zapisie z arkusza: stan ekranu blokady i zegarka, potem przeładowanie ekranu licznika. */
   poZmianie(): Promise<void>;
+  /** Po „Usuń wszystkie dane” albo imporcie „zastąp”: zapomniany licznik, ekran od zera (NFR-PIE-001). */
+  zresetuj(): void;
   /** Etykieta projektu jak na ekranie (projekt roboczy przez t(), P-126 (1b)). */
   nazwaProjektu(w: WidokLicznika): string;
 };
@@ -131,6 +133,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
       return { ok: true, wartosc: { cel: 'licznik' } };
     },
     wersja: () => wersja,
+    zresetuj() { licznikId = null; baner = null; aktywnosc = false; wersja += 1; void z.liveActivity.zakoncz(); },
     widok: async () => (await stan()).w,
     async poZmianie() {
       baner = null;
