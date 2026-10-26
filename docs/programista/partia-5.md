@@ -5,7 +5,7 @@ Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla w
 ## Stan: STOP (kontekst sesji 2, P-187 pkt 4) 2026-10-26 ok. 16:45 UTC — B zrobione, D: dane + F-37; reszta D, natywne i zgłoszenia w nowej sesji
 Potwierdzenie stanu sesji 2: prompt 97ec212 = 47510 znaków; start 71f8ae3 verify 1875/1875; koniec a98e651 (po rebase), `env -u NODE_PATH npm run verify` kod 0, **2213/2213**.
 
-**Zrobione w sesji 2** (P-203 domknięte panelami e2e-sha-bazy/e2e-wal-bajty w ac?; każdy commit: test czerwony z właściwego powodu → kod → zielony; skróty po rebase):
+**Zrobione w sesji 2** (P-203 domknięte panelami e2e-sha-bazy/e2e-wal-bajty w bd0b1f0; każdy commit: test czerwony z właściwego powodu → kod → zielony; skróty po rebase):
 - E: 0a1c4ed (P-190 język), d013fd7 (Ustawienia › Język, „Translation quality”, „Źródła wiedzy”, /stan-danych).
 - D: acbd108 (F-37 krokowiec zużycia), 9eb02db (F-16 dane zdjęć), 76d9118 (adapter zdjęć + plugin image-picker, **natywne**).
 - B: 7cb914a (kreski od startu stopera), 91573da (B1 stoper w pasku, przelaczSesje, P-199 Q3c), 2bed45c (B2 „Time”, „Sessions”, korekta z wyborem daty), a98e651 (B3 „History” /dni, wejścia nav-historia i nav-narzedzia na liście).
