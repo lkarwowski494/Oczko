@@ -1,0 +1,252 @@
+// Dwie bazy A i B, sztuczny serwer przekazuje skrzynkę A do `odbieraj` B (moduly.md „Kontrakt partii 7”, testy oczekujące
+// „dane/icloud-dwa-urzadzenia”, „dane/icloud-konto”, „dane/icloud-pliki”; plan 07 partii 7; BR-DAN-002 S1–S3, NFR-DAN-003, ADR-0005).
+import { writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import fc from 'fast-check';
+import type { PartiaIcloud, PortBazy, RekordIcloud } from '../../src/domena/porty';
+import { TABELE_ICLOUD } from '../../src/domena/icloud/kontrakt';
+import { dodajRzad, utworzSzybkiLicznik } from '../../src/przypadki-uzycia/licznik';
+import { sterownikSynchronizacji, type Sterownik } from '../../src/przypadki-uzycia/synchronizacja';
+import { usunWszystkieDane } from '../../src/przypadki-uzycia/projekt';
+import { przygotuj, sha256, MIN, type Srodowisko } from './pomocnicze/srodowisko';
+import { serwerIcloud, type SerwerTestowy, type UrzadzenieTestowe } from './pomocnicze/serwer-icloud';
+
+type Urz = { s: Srodowisko; u: UrzadzenieTestowe; st: Sterownik };
+async function urzadzenie(serwer: SerwerTestowy, nazwa: string, prefiks: string): Promise<Urz> {
+  const s = await przygotuj({ urzadzenie: nazwa, prefiksId: prefiks });
+  const u = serwer.urzadzenie();
+  const st = sterownikSynchronizacji({ ...s.z, synchronizacja: u, magazyn: s.magazyn });
+  await st.start();
+  return { s, u, st };
+}
+const n = async (b: PortBazy, sql: string, p: unknown[] = []) => (await b.all<{ n: number }>(sql, p))[0].n;
+const skrzynka = (b: PortBazy) => n(b, 'SELECT count(*) AS n FROM zmiana_icloud');
+const licznik = (b: PortBazy, id: string) => b.all<{ wartosc: number; konflikt: number }>('SELECT wartosc, konflikt FROM licznik WHERE id = ?', [id]);
+/** Stan danych synchronizowanych (bez tabel lokalnych), do porównań „ten sam stan”. */
+async function zrzut(b: PortBazy): Promise<Record<string, unknown[]>> {
+  const out: Record<string, unknown[]> = {};
+  for (const t of TABELE_ICLOUD) out[t.tabela] = await b.all(`SELECT * FROM ${t.tabela} ORDER BY ${t.klucz.join(', ')}`);
+  return out;
+}
+async function szybki(z: Srodowisko['z']): Promise<string> {
+  const w = await utworzSzybkiLicznik(z);
+  if (!w.ok) throw new Error(w.powod);
+  return w.wartosc.licznikId;
+}
+
+describe('BR-DAN-002/S3: wyłączona = pusta skrzynka, nic nie wychodzi', () => {
+  test('domyślnie wyłączona: zapis i +1 bez wpisów w skrzynce i bez wysyłki', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wyslijZaleglosci();
+    expect(await skrzynka(a.s.baza)).toBe(0);
+    expect(a.u.wyslano).toEqual([]);
+    expect(a.st.widok().stan).toBe('wylaczona');
+  });
+  test('włączenie wpisuje wszystko i wysyła; potwierdzenie opróżnia skrzynkę; wyłączenie czyści skrzynkę, dane zostają', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    expect((await a.st.wlacz()).stan).toBe('aktywna');
+    expect(await skrzynka(a.s.baza)).toBe(0);
+    expect(serwer.rekordy.get(`licznik:${l}`)?.pola.wartosc).toBeUndefined(); // pomin: wartość liczy odbiorca
+    expect([...serwer.rekordy.keys()].filter((k) => k.startsWith('zdarzenie:'))).toHaveLength(1);
+    expect((await a.s.baza.all<{ stan_silnika: Uint8Array }>('SELECT stan_silnika FROM synchronizacja'))[0].stan_silnika).toEqual(new Uint8Array([7]));
+    a.u.bladWysylki = { kod: 'siec' };
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wyslijZaleglosci();
+    expect(await skrzynka(a.s.baza)).toBeGreaterThan(0); // zdarzenie i licznik (pamięć podręczna też uruchamia wyzwalacz UPDATE)
+    await a.st.wylacz();
+    expect(await skrzynka(a.s.baza)).toBe(0);
+    expect(await licznik(a.s.baza, l)).toEqual([{ wartosc: 2, konflikt: 0 }]);
+  });
+});
+
+describe('BR-DAN-002/S1 i S2: drugie urządzenie, konflikt', () => {
+  test('S1: +1 na A → B po odbiorze ma ten sam licznik i wartość; echo nie wraca do skrzynki B', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    const l = await szybki(a.s.z);
+    for (let i = 0; i < 3; i += 1) await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz();
+    await b.st.wlacz();
+    await b.u.dostarcz();
+    expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 3, konflikt: 0 }]);
+    expect(await skrzynka(b.s.baza)).toBe(0);
+    expect(await n(b.s.baza, 'SELECT count(*) AS n FROM poczekalnia')).toBe(0);
+    expect(await zrzut(b.s.baza)).toEqual(await zrzut(a.s.baza));
+  });
+  test('S2: rozbieżne +1 na A i B → konflikt na obu po wymianie, wartość bez zgadywania; kolejne +1 w konflikcie działa (N5)', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz(); await b.st.wlacz(); await b.u.dostarcz();
+    await dodajRzad(a.s.z, { licznikId: l }); // A: 2
+    for (let i = 0; i < 5; i += 1) await dodajRzad(b.s.z, { licznikId: l }); // B: 6
+    await a.st.wyslijZaleglosci(); await b.st.wyslijZaleglosci();
+    await a.u.dostarcz(); await b.u.dostarcz();
+    expect(await licznik(a.s.baza, l)).toEqual([{ wartosc: 2, konflikt: 1 }]);
+    expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 6, konflikt: 1 }]);
+    const plus = await dodajRzad(a.s.z, { licznikId: l });
+    expect(plus.ok).toBe(true);
+  });
+  test('usunięcie projektu na A → kaskada na B (nagrobki), bez wpisów w skrzynce B', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz(); await b.st.wlacz(); await b.u.dostarcz();
+    const [p] = await a.s.baza.all<{ id: string }>('SELECT id FROM projekt');
+    await a.s.baza.run('DELETE FROM projekt WHERE id = ?', [p.id]);
+    await a.st.wyslijZaleglosci();
+    await b.u.dostarcz({ rekordy: [] });
+    expect(await n(b.s.baza, 'SELECT count(*) AS n FROM licznik')).toBe(0);
+    expect(await n(b.s.baza, 'SELECT count(*) AS n FROM zdarzenie')).toBe(0);
+    expect(await skrzynka(b.s.baza)).toBe(0);
+  });
+  test('starsza wersja encji z iCloud nie nadpisuje nowszej lokalnej (zmieniono_ms; jak scalZKopia)', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    const l = await szybki(a.s.z);
+    await a.st.wlacz(); await b.st.wlacz(); await b.u.dostarcz();
+    await b.s.baza.run("UPDATE licznik SET nazwa = 'Nowsza', zmieniono_ms = zmieniono_ms + 10 WHERE id = ?", [l]);
+    await a.s.baza.run("UPDATE licznik SET nazwa = 'Starsza', zmieniono_ms = zmieniono_ms + 5 WHERE id = ?", [l]);
+    await a.st.wyslijZaleglosci();
+    await b.u.dostarcz();
+    expect(await b.s.baza.all('SELECT nazwa FROM licznik WHERE id = ?', [l])).toEqual([{ nazwa: 'Nowsza' }]);
+    await b.st.wyslijZaleglosci(); await a.u.dostarcz();
+    expect(await a.s.baza.all('SELECT nazwa FROM licznik WHERE id = ?', [l])).toEqual([{ nazwa: 'Nowsza' }]);
+  });
+  test('zmiana po wysłaniu, przed potwierdzeniem, nie ginie (numer zmiany)', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    await a.st.wlacz();
+    a.u.przedPotwierdzeniem = async () => { a.u.przedPotwierdzeniem = null; await a.s.baza.run("UPDATE licznik SET nazwa = 'Rękaw', zmieniono_ms = zmieniono_ms + 1 WHERE id = ?", [l]); };
+    await a.s.baza.run("UPDATE licznik SET nazwa = 'Przód', zmieniono_ms = zmieniono_ms + 1 WHERE id = ?", [l]);
+    await a.st.wyslijZaleglosci();
+    expect(serwer.rekordy.get(`licznik:${l}`)?.pola.nazwa).toBe('Rękaw'); // druga wysyłka po potwierdzeniu pierwszej
+    expect(await skrzynka(a.s.baza)).toBe(0);
+  });
+  test('brak miejsca: stan blad z przyczyną, zmiany zostają; po ustąpieniu przyczyny aktywna i pusta skrzynka', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    await szybki(a.s.z);
+    a.u.bladWysylki = { kod: 'brak_miejsca' };
+    expect(await a.st.wlacz()).toMatchObject({ stan: 'blad', przyczyna: 'brak_miejsca' });
+    expect(await skrzynka(a.s.baza)).toBeGreaterThan(0);
+    a.u.bladWysylki = null;
+    await a.st.wyslijZaleglosci();
+    expect(a.st.widok()).toMatchObject({ stan: 'aktywna', przyczyna: null });
+    expect(await skrzynka(a.s.baza)).toBe(0);
+  });
+});
+
+describe('ADR-0005 własność: dowolna kolejność, podział na partie i powtórzenia → ten sam stan', () => {
+  test('permutacje dostarczeń do B (dzieci przed rodzicami → poczekalnia, potem opróżniona)', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    for (let i = 0; i < 4; i += 1) await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz();
+    const wzor = await zrzut(a.s.baza);
+    const wszystkie = serwer.wszystko().rekordy;
+    await fc.assert(fc.asyncProperty(fc.shuffledSubarray([...wszystkie], { minLength: wszystkie.length, maxLength: wszystkie.length }), fc.integer({ min: 1, max: 4 }), fc.boolean(), async (kolejnosc, rozmiar, powtorz) => {
+      const b = await urzadzenie(serwer, 'ipad', 'b');
+      await b.st.wlacz();
+      const lista: RekordIcloud[] = powtorz ? [...kolejnosc, ...kolejnosc.slice(0, 2)] : kolejnosc;
+      for (let i = 0; i < lista.length; i += rozmiar) await b.u.dostarcz({ rekordy: lista.slice(i, i + rozmiar), usuniete: [] });
+      expect(await n(b.s.baza, 'SELECT count(*) AS n FROM poczekalnia')).toBe(0);
+      expect(await zrzut(b.s.baza)).toEqual(wzor);
+      expect(await skrzynka(b.s.baza)).toBe(0); // nic z odbioru nie wraca jako zmiana do wysłania
+    }), { numRuns: 12 });
+  });
+});
+
+describe('rekordy z sieci: błędne, kolizja, zasoby', () => {
+  test('błędny rekord i kolizja treści zdarzenia (M-14) → wpis w `blad`, reszta partii zapisana', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz();
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    await b.st.wlacz();
+    const p = serwer.wszystko();
+    const zd = p.rekordy.find((r) => r.encja === 'zdarzenie')!;
+    const zle: RekordIcloud[] = [{ encja: 'poczekalnia', klucz: 'x', pola: { id: 'x' }, plik: null }, { ...zd, pola: { ...zd.pola, rodzaj: 'minus' } }];
+    await b.u.dostarcz({ rekordy: [...p.rekordy, ...zle] });
+    expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 1, konflikt: 0 }]);
+    const kody = (await b.s.baza.all<{ kod: string }>('SELECT kod FROM blad ORDER BY id')).map((r) => r.kod);
+    expect(kody).toEqual(expect.arrayContaining(['icloud_bledny_rekord', 'icloud_kolizja_id']));
+  });
+  test('zasób pliku: zgodny SHA-256 trafia do magazynu; inny SHA-256 nie trafia, rekord czeka, wpis `blad`', async () => {
+    const serwer = serwerIcloud();
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    await b.st.wlacz();
+    const dobry = join(b.s.katalog, 'dobry.pdf'); writeFileSync(dobry, 'wzor-pdf');
+    const zly = join(b.s.katalog, 'zly.pdf'); writeFileSync(zly, 'podmieniony');
+    const rek = (sha: string, plik: string): RekordIcloud => ({ encja: 'plik', klucz: sha, pola: { sha256: sha, rozszerzenie: 'pdf', bajty: 8, utworzono_ms: 1 }, plik });
+    const shaDobry = sha256('wzor-pdf');
+    const shaObcy = 'f'.repeat(64);
+    await b.u.dostarcz({ rekordy: [rek(shaDobry, dobry), rek(shaObcy, zly)], usuniete: [] } as Partial<PartiaIcloud>);
+    expect((await b.s.baza.all<{ sha256: string }>('SELECT sha256 FROM plik')).map((r) => r.sha256)).toEqual([shaDobry]);
+    expect(b.s.magazyn.usuniete).toContain(sha256('podmieniony'));
+    expect(await n(b.s.baza, "SELECT count(*) AS n FROM blad WHERE kod = 'icloud_zly_zasob'")).toBe(1);
+    expect(await n(b.s.baza, 'SELECT count(*) AS n FROM poczekalnia')).toBe(1);
+  });
+});
+
+describe('konto (dane/icloud-konto): zmiana konta, polacz, nie_synchronizuj', () => {
+  test('zmiana konta zatrzymuje wysyłkę; polacz wpisuje wszystko od nowa i wysyła; nie_synchronizuj wyłącza, dane zostają', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    await a.st.wlacz();
+    a.u.konto('zmiana_konta');
+    expect(a.st.widok().stan).toBe('konto_zmienione');
+    await dodajRzad(a.s.z, { licznikId: l });
+    const ile = a.u.wyslano.length;
+    await a.st.wyslijZaleglosci();
+    expect(a.u.wyslano.length).toBe(ile);
+    expect(await a.st.polacz()).toMatchObject({ stan: 'aktywna' });
+    expect(a.u.wyslano.at(-1)!.length).toBeGreaterThanOrEqual(4); // projekt, część, licznik, zdarzenie
+    expect(await skrzynka(a.s.baza)).toBe(0);
+    a.u.konto('zmiana_konta');
+    await a.st.nieSynchronizuj();
+    expect(a.st.widok().stan).toBe('wylaczona');
+    expect(await licznik(a.s.baza, l)).toEqual([{ wartosc: 1, konflikt: 0 }]);
+  });
+  test('brak konta przy włączaniu: stan brak_konta, wlaczona = 0, nic nie wysłane; wylogowanie przy aktywnej → brak_konta', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    a.u.status = 'ograniczone';
+    expect(await a.st.wlacz()).toMatchObject({ stan: 'brak_konta', status: 'ograniczone' });
+    expect(await n(a.s.baza, 'SELECT wlaczona AS n FROM synchronizacja')).toBe(0);
+    a.u.status = 'dostepne';
+    await a.st.wlacz();
+    a.u.konto('wylogowano');
+    expect(a.st.widok().stan).toBe('brak_konta');
+  });
+  test('„Usuń wszystkie dane” + „Usuń też z iCloud”: skrzynka pusta, usunięcia nie idą jako zmiany, strefa usunięta', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    await szybki(a.s.z);
+    await a.st.wlacz();
+    const wyslan = a.u.wyslano.length;
+    expect((await usunWszystkieDane({ ...a.s.z, synchronizacja: a.u })).ok).toBe(true);
+    expect((await a.st.usunZIcloud()).ok).toBe(true);
+    expect(a.u.usunietoStrefe).toBe(1);
+    expect(a.u.wyslano.length).toBe(wyslan);
+    expect(await skrzynka(a.s.baza)).toBe(0);
+    expect(MIN).toBeGreaterThan(0);
+  });
+});
