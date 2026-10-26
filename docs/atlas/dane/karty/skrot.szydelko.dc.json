@@ -27,6 +27,13 @@
     "skrot": "sł",
     "twierdzenie": "TRM-PL-034"
    }
+  ],
+  "sv": [
+   {
+    "nazwa": "stolpe",
+    "skrot": "st",
+    "twierdzenie": "TRM-SV-008"
+   }
   ]
  },
  "twierdzenia": [],

@@ -134,13 +134,13 @@
   },
   {
    "plik": "szydelko.oczko_szydelkowe.dc.json",
-   "bajty": 2060,
-   "sha256": "1cdb74d292b9333e1a7013baae6cf3c702ad83df646b3ea6d8236ffd25459612"
+   "bajty": 2159,
+   "sha256": "b5c49d2496a2b9b02d85831ceb7e56683674d6ac4746f4101a4b6f3904d2bd99"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.tr.json",
-   "bajty": 1781,
-   "sha256": "b08f91497b44690470fde273c0c8c180e60c690e2e352deb543d5eb5999ebd03"
+   "bajty": 1887,
+   "sha256": "20fbad2573327cf2369b37e47064172d7dde4dc25dd89ae6c0537ff3e9fec880"
   },
   {
    "plik": "szydelko.oczko_szydelkowe.ring.json",
@@ -314,13 +314,13 @@
   },
   {
    "plik": "skrot.szydelko.dc.json",
-   "bajty": 535,
-   "sha256": "6f82d1b7a883854f9772707308c3dc554fb7d3ebe1d0ef7e8d608faa368b4fe8"
+   "bajty": 634,
+   "sha256": "f522fbd47b3a0632c5e1417a486d4a2818dc9ef77fe3d5b3f3f72d83dcfdb446"
   },
   {
    "plik": "skrot.szydelko.tr.json",
-   "bajty": 554,
-   "sha256": "6964cda8a4dc1f059dc302cf932a5717b7dc1b73537a6a87a34895ed8edb7e87"
+   "bajty": 660,
+   "sha256": "96831f9f874e766fdf1aadf6ff071bdd889e3c62e580a9f22c4e989cfb4cfa10"
   },
   {
    "plik": "skrot.szydelko.sc2tog.json",

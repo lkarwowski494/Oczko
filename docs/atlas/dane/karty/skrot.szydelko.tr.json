@@ -27,6 +27,13 @@
     "skrot": "sł2",
     "twierdzenie": "TRM-PL-035"
    }
+  ],
+  "sv": [
+   {
+    "nazwa": "dubbelstolpe",
+    "skrot": "dst",
+    "twierdzenie": "TRM-SV-024"
+   }
   ]
  },
  "twierdzenia": [],
