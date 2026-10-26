@@ -89,8 +89,8 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .uwaga { margin: 8px 32px 0; display: flex; gap: 8px; align-items: flex-start; color: var(--grafit); font-size: calc(15px * var(--dt-tresc)); line-height: 1.35; }
 .uwaga a { color: var(--grafit); }
 .uwaga .znak { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; font: 700 12px var(--tytul); margin-top: 1px; }
-.pole { min-width: 56px; min-height: 44px; display: grid; place-items: center; border: 1.5px solid var(--linia); border-radius: 10px; font: 700 calc(20px * var(--dt-tytul)) var(--tytul); }
-.krok { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border: 1.5px solid var(--linia); border-radius: 10px; font: 700 20px var(--tytul); }
+.pole { min-width: 56px; min-height: 44px; display: grid; place-items: center; border: 1.5px solid var(--m-obrys); border-radius: 10px; font: 700 calc(20px * var(--dt-tytul)) var(--tytul); }
+.krok { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border: 1.5px solid var(--m-obrys); border-radius: 10px; font: 700 20px var(--tytul); }
 .wzor-strona { margin: 8px 16px 0; height: 470px; background: #FFFFFF; border: 1px solid var(--linia); position: relative; overflow: hidden; }
 .tekst-wzoru { position: absolute; inset: 16px; background: repeating-linear-gradient(to bottom, #C9CBD0 0 3px, transparent 3px 22px); }
 .znacznik { position: absolute; left: 0; right: 0; height: 22px; border-top: 2.5px solid #26282C; border-bottom: 2.5px solid #26282C; background: #26282C14; }
@@ -109,6 +109,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .naglowek-arkusza { display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
 .naglowek-arkusza .ikona { width: 44px; height: 44px; display: grid; place-items: center; }
 .grupa .el .wybrany { font-weight: 700; }
+.krokowiec { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
 </style>
 </head>
 <body>
@@ -307,6 +308,42 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <p class="uwaga" role="status"><span class="znak" aria-hidden="true">i</span><span>That’s more than the 2 skeins in your stash. Your stash will show 0. <a href="#">Edit stash</a></span></p>
   <div class="spacer"></div>
   <div style="padding: 0 16px 32px"><button class="przycisk-pelny">Done</button></div>
+</main>
+
+<!-- 10. Znacznik wzoru: pierwsze ustawienie we wzorze — wybór kierunku bez wartości domyślnej (P-118 Q2a, P-126 (3a), ADR-0011: kierunek −1 = w górę, 1 = w dół) -->
+<main data-ekran="wzor-kierunek">
+  <div class="status"><span>21:14</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Left sleeve</a><div class="ikony"><span class="ikona" role="button" aria-label="Mark row">⌗</span></div></div>
+  <div class="wzor-strona"><div class="tekst-wzoru"></div><div class="znacznik" style="top:46%"><span class="tab">Row 48</span><span class="uchwyt-dol" aria-hidden="true"></span></div></div>
+  <div class="pasek-znacznika">
+    <b>Which way do rows go on this page?</b>
+    <div class="wybor"><button>↑ Up<small>like a chart</small></button><button>↓ Down<small>like written steps</small></button></div>
+    <div class="rzad"><span>Marker row</span><span class="krokowiec"><span class="krok" role="button" aria-label="Marker one row lower in number">−</span><b>48</b><span class="krok" role="button" aria-label="Marker one row higher in number">+</span></span></div>
+  </div>
+</main>
+
+<!-- 10b. Znacznik ustawiony (kierunek zapamiętany dla wzoru): pasek pokazuje kierunek i rząd; przy liczeniu pasek znika, zostaje sam znacznik -->
+<main data-ekran="wzor-znacznik">
+  <div class="status"><span>21:15</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Left sleeve</a><div class="ikony"><span class="ikona" role="button" aria-label="Mark row">⌗</span></div></div>
+  <div class="wzor-strona"><div class="tekst-wzoru"></div><div class="znacznik" style="top:46%"><span class="tab">Row 48 ↑</span><span class="uchwyt-dol" aria-hidden="true"></span></div></div>
+  <div class="pasek-znacznika">
+    <div class="rzad"><span>Marker row</span><span class="krokowiec"><span class="krok" role="button" aria-label="Marker one row lower in number">−</span><b>48</b><span class="krok" role="button" aria-label="Marker one row higher in number">+</span></span></div>
+    <div class="rzad"><span>Rows go up, like a chart</span><a href="#" role="button">Change</a></div>
+    <button class="przycisk-pelny">Done</button>
+  </div>
+</main>
+
+<!-- 10c. Koniec strony (pozaStrona): znacznik czeka na krawędzi, prośba o przestawienie; bez automatycznego przejścia (P-118 Q2c odrzucone) -->
+<main data-ekran="wzor-koniec-strony">
+  <div class="status"><span>21:40</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Left sleeve</a><div class="ikony"><span class="ikona" role="button" aria-label="Mark row">⌗</span></div></div>
+  <div class="wzor-strona"><div class="tekst-wzoru"></div><div class="znacznik krawedz" style="top:0"><span class="tab">Row 61 · page end</span></div></div>
+  <div class="pasek-znacznika" role="status">
+    <b>Row 61 is past the top of page 2</b>
+    <span>Move the marker to row 61 on the next page.</span>
+    <button class="przycisk-pelny">Place on page 3</button>
+  </div>
 </main>
 
 <section class="uwagi">

@@ -55,6 +55,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); bez włóczki w projekcie: pytanie pominięte |
+| Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); Word w podglądzie zastępczym: bez znacznika |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
@@ -129,7 +130,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | `projekt.nazwa_zostaje` | The {{count}} rows and their history stay with this project. (`_one` / `_other`) |
 
 ## Zużycie włóczki przy ukończeniu (BR-ZAP-002, U-9, P-126 (2a))
-- **Pytanie:** po „Mark as finished” karta ukończenia ma grupę „Yarn used”: każda włóczka przypisana do projektu jako wiersz z nazwą, podpisem „{n} skeins in your stash” i krokowcem − [pole] + (krok 0,5 motka; pole przyjmuje wpis liczby wg P-097 (5a)). Zapis do `projekt_wloczka.zuzyto_motki` (schemat), nie „ile zostało”. Brak włóczki w projekcie: grupy nie ma.
+- **Pytanie:** po „Mark as finished” karta ukończenia ma grupę „Yarn used”: każda włóczka przypisana do projektu jako wiersz z nazwą, podpisem „{n} skeins in your stash” i krokowcem − [pole] + (obrysy `drugiPrzyciskObrys`, ≥ 3:1; krok 0,5 motka; pole przyjmuje wpis liczby wg P-097 (5a)). Zapis do `projekt_wloczka.zuzyto_motki` (schemat), nie „ile zostało”. Brak włóczki w projekcie: grupy nie ma.
 - **Zużycie ponad zapas (2a):** wartość większa niż zapas jest przyjmowana; pod grupą jedna linia informacji (ikona „i” + tekst, nie kolor błędu, bo nic nie jest źle): „That’s more than the 2 skeins in your stash. Your stash will show 0.” z odnośnikiem „Edit stash” (otwiera tę włóczkę w zapasie; karta zostaje). „Done” działa zawsze; zapas po zapisie = max(0, zapas − zużycie) — domena (zapas nie schodzi poniżej 0). Zapas już 0: linia „Your stash already shows 0 for this yarn.”
 - **VoiceOver:** pole jako `adjustable` z etykietą „Skeins of {yarn} used” (akcje zwiększ/zmniejsz = krokowiec); linia informacji ogłaszana raz, gdy się pojawi (`role=status`).
 
@@ -142,6 +143,34 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | `ukonczenie.zuzycie_ponad_zapas_one` / `ukonczenie.zuzycie_ponad_zapas_other` | That’s more than the {{count}} skein in your stash. Your stash will show 0. / That’s more than the {{count}} skeins in your stash. Your stash will show 0. |
 | `ukonczenie.zapas_juz_zero` | Your stash already shows 0 for this yarn. |
 | `ukonczenie.edytuj_zapas` | Edit stash |
+
+## Znacznik rzędu na wzorze (BR-WZR-003, ADR-0011 uzupełnienie, P-118 Q2a, P-126 (3a))
+Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): pas o wysokości rzędu z dwiema grafitowymi krawędziami (`kolor.wzor.znacznik`, 14,76:1 do strony) i etykietą „Row 48 ↑” (biały tekst na grafitowej zakładce, 14,37:1). Stałe kolory w obu motywach, bo strona to dokument użytkownika. Nie zakreślacz: żółty zostaje dla rzędu z instrukcją na liczniku (jeden kolor, jedno znaczenie).
+- **Ustawienie (gest i przycisk):** przytrzymanie na stronie stawia pas w tym miejscu; przycisk „Mark row” w pasku nawigacji stawia go na środku widocznej strony (alternatywa gestu, SP-15). Pas przeciąga się w pionie; uchwyt dolnej krawędzi ustala wysokość rzędu (`wysokosc_rzedu`). Rząd znacznika: krokowiec w pasku, domyślnie rząd z „Now knitting row n” (= licznik + 1; potwierdzenie w BR-WZR-003: N3 → 01).
+- **Kierunek (3a): bez wartości domyślnej.** Przy pierwszym ustawieniu w danym wzorze pasek pyta „Which way do rows go on this page?” dwoma przyciskami „↑ Up, like a chart” (`kierunek = −1`) i „↓ Down, like written steps” (`1`); „Done” pojawia się po wyborze. Wybór zapisany w znaczniku i proponowany przy każdym następnym ustawieniu w tym wzorze; zmiana: „Change” w pasku. Strzałka w etykiecie pokazuje kierunek.
+- **Przy liczeniu:** pasek ustawień chowa się po „Done”; +1 przesuwa pas o rząd w wybranym kierunku (`polozenieZnacznika`), ruch tylko gdy nie ma „Ogranicz ruch” (inaczej skok).
+- **Koniec strony (`pozaStrona: true`):** pas stoi na krawędzi, krawędź od strony wyjścia przerywana, etykieta „Row 61 · page end”; pasek: „Row 61 is past the top of page 2” (albo „bottom”), „Move the marker to row 61 on the next page.”, przycisk „Place on page 3” przewija do następnej strony i stawia pas przy krawędzi, od której zaczyna się kierunek (dół dla ↑, góra dla ↓), w trybie przeciągania; użytkownik dosuwa go do rzędu. Ostatnia strona: „Row 61 is past the end of the pattern.” i przycisk „Move marker”. Żadnego automatycznego przejścia (P-118 Q2c).
+- **VoiceOver:** pas jako element `adjustable` z etykietą „Row marker, row 48, rows go up”; akcje zwiększ/zmniejsz przesuwają o rząd, akcja „Move to next page” przy końcu strony; zmiana stanu końca strony ogłaszana raz.
+- Word w podglądzie zastępczym (`QLPreviewController`, P-071): bez znacznika — przycisk „Mark row” ukryty.
+
+| Klucz | en |
+|---|---|
+| `wzor.zaznacz_rzad` | Mark row |
+| `wzor.kierunek_pytanie` | Which way do rows go on this page? |
+| `wzor.kierunek_gora` / `wzor.kierunek_gora_opis` | Up / like a chart |
+| `wzor.kierunek_dol` / `wzor.kierunek_dol_opis` | Down / like written steps |
+| `wzor.kierunek_stan_gora` / `wzor.kierunek_stan_dol` | Rows go up, like a chart / Rows go down, like written steps |
+| `wzor.kierunek_zmien` | Change |
+| `wzor.rzad_znacznika` | Marker row |
+| `wzor.etykieta` | Row {{n}} (strzałka ↑/↓ dokładana jako symbol, nie tekst) |
+| `wzor.etykieta_koniec` | Row {{n}} · page end |
+| `wzor.gotowe` | Done |
+| `wzor.koniec_strony_gora` / `wzor.koniec_strony_dol` | Row {{n}} is past the top of page {{strona}} / Row {{n}} is past the bottom of page {{strona}} |
+| `wzor.koniec_strony_opis` | Move the marker to row {{n}} on the next page. |
+| `wzor.poloz_na_stronie` | Place on page {{strona}} |
+| `wzor.koniec_wzoru` / `wzor.przestaw` | Row {{n}} is past the end of the pattern. / Move marker |
+| `wzor.znacznik_a11y_gora` / `wzor.znacznik_a11y_dol` | Row marker, row {{n}}, rows go up / Row marker, row {{n}}, rows go down |
+| `wzor.nastepna_strona_a11y` | Move to next page |
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
