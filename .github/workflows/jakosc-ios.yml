@@ -92,6 +92,7 @@ jobs:
           # Przełączniki testowe TYLKO w tym buildzie (strażnik: scripts/jakosc/sprawdz-workflowy.mjs, kontrole-repo.mjs; e2e/README.md)
           EXPO_PUBLIC_E2E: '1'
           EXPO_PUBLIC_STORE_FAKE: '1'
+          EXPO_PUBLIC_ICLOUD_FAKE: '1' # atrapa silnika iCloud (P-230, moduly.md „Atrapa silnika w E2E”); kontrola ATRAPA-ICLOUD
           EXPO_PUBLIC_WATCH_FAKE: '1'
         run: |
           set -o pipefail

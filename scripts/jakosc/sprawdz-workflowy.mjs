@@ -1,7 +1,7 @@
 // Strażnik workflowów (ADR-0014, kontrola 05-9; P-089; strategia §5). Reguły:
 //  SEKRET-BEZ-SRODOWISKA: każde `secrets.X` poza GITHUB_TOKEN tylko w zadaniu z `environment: testflight`;
 //  WYZWALACZ-Z-SEKRETAMI: workflow z takim zadaniem nie ma `pull_request`, `pull_request_target` ani `workflow_run`;
-//  SZTUCZNY-SKLEP-W-WYDANIU: przełączniki testowe (`EXPO_PUBLIC_STORE_FAKE`, `_WATCH_FAKE`, `_E2E`, `_WYMUS_AWARIE`, `_PSEUDO`) nie występują w workflowie z `environment: testflight`;
+//  SZTUCZNY-SKLEP-W-WYDANIU: przełączniki testowe (`EXPO_PUBLIC_STORE_FAKE`, `_WATCH_FAKE`, `_ICLOUD_FAKE`, `_E2E`, `_WYMUS_AWARIE`, `_PSEUDO`) nie występują w workflowie z `environment: testflight`;
 //  BRAK-WORKFLOWOW: katalog bez plików .yml to błąd (pusty zbiór to nie zaliczenie).
 // Reguły JAK-10 przeniesione z tests/public-repo.test.ts 0.1.0 (F07-09, P-117 Q6a):
 //  PULL-REQUEST-TARGET: wyzwalacz pull_request_target w żadnym workflowie (kod z PR z prawem zapisu i sekretami);
@@ -55,7 +55,7 @@ export function sprawdzWorkflowy(korzen) {
     }
     if (/secrets\.(?!GITHUB_TOKEN)/.test(JSON.stringify(wf?.env ?? {}))) { zSekretami = true; zgl('SEKRET-BEZ-SRODOWISKA', 'sekret w env na poziomie workflowu'); }
     if (zSekretami) for (const w of ['pull_request', 'pull_request_target', 'workflow_run']) if (wyzwalacze.includes(w)) zgl('WYZWALACZ-Z-SEKRETAMI', `wyzwalacz ${w} w workflowie z sekretami`);
-    const testowe = tekst.match(/EXPO_PUBLIC_(STORE_FAKE|WATCH_FAKE|E2E|WYMUS_AWARIE|PSEUDO)\b/g);
+    const testowe = tekst.match(/EXPO_PUBLIC_(STORE_FAKE|WATCH_FAKE|ICLOUD_FAKE|E2E|WYMUS_AWARIE|PSEUDO)\b/g);
     if (wydanie && testowe) zgl('SZTUCZNY-SKLEP-W-WYDANIU', `przełączniki testowe w workflowie wydania: ${[...new Set(testowe)].join(', ')}`);
   }
   return naruszenia;

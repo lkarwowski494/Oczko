@@ -26,6 +26,8 @@ const PULAPKI: [string, string, string][] = [
   ['SQLITE3-SWIFT', 'targets/widget/Intencja.swift', 'import Foundation\nimport SQLite3\n'],
   ['SZTUCZNY-SKLEP', 'src/ekrany/Oferty.tsx', "if (process.env.EXPO_PUBLIC_STORE_FAKE === '1') {}"],
   ['TRYB-E2E', 'src/ekrany/Licznik.tsx', "const e2e = process.env.EXPO_PUBLIC_E2E === '1';"],
+  ['ATRAPA-ICLOUD', 'src/przypadki-uzycia/synchronizacja.ts', "const atrapa = process.env.EXPO_PUBLIC_ICLOUD_FAKE === '1';"],
+  ['ATRAPA-ICLOUD', 'src/ekrany/StanDanych.tsx', "if (process.env.EXPO_PUBLIC_ICLOUD_FAKE) {}"],
   ['WYMUSZONA-AWARIA', 'src/ekrany/Start.tsx', "if (process.env.EXPO_PUBLIC_WYMUS_AWARIE) throw new Error('x');"],
   ['CENY-W-KODZIE', 'src/ekrany/Oferty.tsx', "const cena = '14,99 zł';"],
   ['CENY-W-KODZIE', 'src/komponenty/Plan.tsx', "const c = '$0.99';"],
@@ -42,6 +44,9 @@ describe('kontrole-repo.mjs (strategia §10, kontrola 05-8, P-089)', () => {
       'src/dane/repozytoria/licznik.ts': "export const q = 'INSERT INTO licznik (id) VALUES (?) ON CONFLICT (id) DO UPDATE SET wartosc = excluded.wartosc';",
       'src/dane/kopia-ratunkowa.ts': "await port.run('VACUUM INTO ?', [cel]);",
       'src/platforma/sklep.ts': "export const sztuczny = process.env.EXPO_PUBLIC_STORE_FAKE === '1';",
+      'src/platforma/icloud.ts': "export const atrapa = process.env.EXPO_PUBLIC_ICLOUD_FAKE === '1';", // F07-23 (P-230, moduly.md „Atrapa silnika w E2E”)
+      'src/platforma/icloud-atrapa.ts': "export const wlaczona = process.env.EXPO_PUBLIC_ICLOUD_FAKE === '1';",
+      'src/platforma/tryb-e2e.ts': "export const icloud = process.env.EXPO_PUBLIC_ICLOUD_FAKE === '1';",
       'src/dane/baza/adapter-node.ts': "new DatabaseSync(':memory:');",
       'src/ekrany/Oferty.tsx': 'export const Cena = ({ p }: { p: { cenaWyswietlana: string } }) => p.cenaWyswietlana;',
     }));
@@ -146,6 +151,10 @@ describe('sprawdz-workflowy.mjs (ADR-0014, kontrola 05-9)', () => {
   test('P-089 sztuczny sklep w workflowie wydania pada', () => {
     const w = uruchom(WORKFLOWY, wf('t.yml', "on: workflow_dispatch\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    env:\n      EXPO_PUBLIC_STORE_FAKE: '1'\n    steps:\n      - run: true\n"));
     expect(w.stdout).toContain('SZTUCZNY-SKLEP-W-WYDANIU');
+    // F07-23 (P-230): atrapa iCloud w workflowie wydania — ta sama reguła
+    const i = uruchom(WORKFLOWY, wf('t.yml', "on: workflow_dispatch\njobs:\n  b:\n    runs-on: macos-26\n    environment: testflight\n    env:\n      EXPO_PUBLIC_ICLOUD_FAKE: '1'\n    steps:\n      - run: true\n"));
+    expect(i.stdout).toContain('SZTUCZNY-SKLEP-W-WYDANIU');
+    expect(i.stdout).toContain('EXPO_PUBLIC_ICLOUD_FAKE');
   });
   // F07-09 (P-117 Q6a, JAK-10): reguły z tests/public-repo.test.ts 0.1.0.
   const DOBRY = "on: push\npermissions:\n  contents: read\njobs:\n  b:\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    steps:\n      - uses: actions/checkout@v5\n      - uses: org/akcja@0123456789abcdef0123456789abcdef01234567\n      - run: echo \"$T\"\n        env:\n          T: ${{ github.event.pull_request.title }}\n";
