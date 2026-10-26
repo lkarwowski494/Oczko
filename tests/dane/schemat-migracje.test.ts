@@ -1,6 +1,6 @@
 // Kontrole roli 05 nr 2 i 4 (strategia §10), ścieżki utraty danych ŚU-04, ŚU-05, ŚU-07 (dane.md, tabela „Ścieżki utraty danych”),
 // BR-DAN-003/S1–S2, NFR-DAN-001. Wyrocznie: docs/architektura/schemat.sql (v1, stan oczekiwany), stany.json, dane.md „Polityka migracji”.
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { utworzPortNode } from '../../src/dane/baza/adapter-node';
@@ -136,7 +136,9 @@ describe('ŚU-04 „Aktualizacja aplikacji ze zmianą schematu” i ŚU-05 „Mi
     const przed = await licznosci(s.baza);
     const v = WERSJA_SCHEMATU + 1;
     await migruj(s.baza, { dodatkowe: [{ wersja: v, sql: PRZEBUDOWA, przebudowa: true }], katalogKopii: s.z.katalogi.kopie });
-    const kopia = join(s.z.katalogi.kopie, `przed-migracja-${v}.db`);
+    const [nazwa] = readdirSync(s.z.katalogi.kopie).filter((n) => /^przed-migracja-\d+-\d{10,}\.db$/.test(n)); // rola 12 E2: czas w nazwie
+    const kopia = join(s.z.katalogi.kopie, nazwa);
+    expect(nazwa.startsWith(`przed-migracja-${v}-`)).toBe(true);
     expect(existsSync(kopia)).toBe(true);
     expect(czytajBaze(kopia, 'PRAGMA user_version')).toEqual([{ user_version: WERSJA_SCHEMATU }]);
     expect(czytajBaze<{ n: number }>(kopia, 'SELECT count(*) n FROM projekt_wloczka')[0].n).toBe(przed.projekt_wloczka);

@@ -25,7 +25,6 @@ export default function EkranLicznika(): React.ReactElement {
       if (!zywy) return;
       if (!w.ok) { ustawAwarie(powodAwaryjny(w.powod)); return; } // migracja albo baza: ekran awaryjny, nic po cichu (ADR-0019)
       ustawGotowe(true);
-      void zapiszKamien(); // ADR-0019: baza otwarta, migracje zakończone, pierwszy ekran zaraz wyrenderowany
       if (w.ok && w.wartosc.cel === 'lista') router.push('/projekty');
       // P-089 (3a): raz, przy otwarciu aplikacji po minionym dniu z robótką (scenariusz 07), w pewnym stanie darmowym.
       void pokazacOknoUczciweZasady(kontener.z, { poziom: kontener.dostep.stan().poziom, ekran: 'start' }).then((o) => {
@@ -34,6 +33,8 @@ export default function EkranLicznika(): React.ReactElement {
     });
     return () => { zywy = false; };
   }, [licznik, router, kontener]);
+  // ADR-0019: kamień milowy po zatwierdzeniu renderu licznika (efekt po narysowaniu); wyjątek w renderze pierwszego ekranu → bez kamienia (rola 12 E2).
+  useEffect(() => { if (gotowe) void zapiszKamien(); }, [gotowe]);
   useFocusEffect(useCallback(() => { ustawWersje(licznik.wersja()); }, [licznik]));
   // „Next part” (BR-LIC-011/S1, P-182 Q4a): następna część → jej licznik (ekran od nowa); ostatnia → arkusz „What’s next?”.
   async function naNastepnaCzesc(): Promise<void> {

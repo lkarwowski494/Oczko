@@ -13,7 +13,8 @@ import { MIGRACJE } from './sql';
 /** Identyfikator pliku bazy Oczka (PRAGMA application_id w 0001.sql, dane.md „Identyfikator pliku bazy”, P-124 Q5a). */
 export const APPLICATION_ID = 1331919467; // 0x4F637A6B
 
-export type OpcjeMigracji = { dodatkowe?: readonly Migracja[]; katalogKopii?: string };
+/** `teraz`: czas w nazwie kopii przed przebudową (ms), żeby ponowna próba po nieudanej migracji nie trafiała na istniejący plik (rola 12 E2). */
+export type OpcjeMigracji = { dodatkowe?: readonly Migracja[]; katalogKopii?: string; teraz?: () => number };
 
 async function wersjaBazy(port: PortBazy): Promise<number> {
   const [w] = await port.all<unknown>('PRAGMA user_version');
@@ -40,7 +41,7 @@ export async function migruj(port: PortBazy, opcje: OpcjeMigracji = {}): Promise
     try {
       if (m.przebudowa) {
         if (!opcje.katalogKopii) return { ok: false, powod: 'zapis' }; // przebudowa bez kopii przed nią nie rusza (dane.md)
-        const kopia = await kopiaBazy(port, `${opcje.katalogKopii}/przed-migracja-${m.wersja}.db`);
+        const kopia = await kopiaBazy(port, `${opcje.katalogKopii}/przed-migracja-${m.wersja}-${(opcje.teraz ?? Date.now)()}.db`);
         if (!kopia.ok) return kopia;
         await port.run('PRAGMA foreign_keys = OFF'); // przed BEGIN: w transakcji pragma nic nie robi (eksperyment B, E0)
       }

@@ -9,6 +9,8 @@ import { utworzArchiwum } from '../dane/archiwum';
 import { surowaKopia } from '../dane/kopia-ratunkowa';
 import { utworzMagazyn, sha256PlikuTs } from '../dane/pliki/magazyn';
 import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
+import Constants from 'expo-constants';
+import { sprzatnijKopie, zipSurowejKopii } from '../niezawodnosc/kopie';
 import { kamienMilowy, odczytajStan, poczatekStartu, sprobujNormalnie, type StanStartu } from '../niezawodnosc/start';
 import { awariaStartu, zegarAplikacji } from '../platforma/tryb-e2e';
 
@@ -37,6 +39,7 @@ export async function rozpocznijStart(): Promise<TrybStartu> {
 export async function zapiszKamien(): Promise<void> {
   const s = sciezki();
   zapisz(s.stanStartu, kamienMilowy(await czytajStan(s.stanStartu)));
+  sprzatnijKopie(s.kopie, zegarAplikacji().teraz().ms); // ADR-0020 (6): kopie po KOPIE_RATUNKOWE_DNI, tylko po kamieniu milowym; błąd nie blokuje startu
 }
 export async function sprobujNormalnieTeraz(): Promise<void> {
   const s = sciezki();
@@ -69,6 +72,14 @@ export function trybAwaryjny() {
       } finally {
         await baza?.zamknij().catch(() => undefined);
       }
+    },
+    /** ADR-0020 (3): baza się nie otwiera albo archiwum zawiodło → jeden ZIP surowej kopii (trzy pliki + manifest) do arkusza udostępniania. */
+    async zipSurowej(): Promise<string | null> {
+      const k = await kopia;
+      if (!k.ok) return null;
+      const cel = polacz(katalogi.tymczasowy, `oczko-ratunkowa-${zegar.teraz().ms}.zip`);
+      const w = await zipSurowejKopii(k.wartosc.katalog, k.wartosc.pliki, cel, { aplikacja: Constants.expoConfig?.version ?? '?', build: Constants.expoConfig?.ios?.buildNumber ?? '?', terazMs: zegar.teraz().ms });
+      return w.ok ? cel : null;
     },
   };
 }

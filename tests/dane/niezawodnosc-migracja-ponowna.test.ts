@@ -4,10 +4,10 @@
 // Wyrocznia: ADR-0021 (poprawka nowym buildem musi móc zmigrować bazę) i zasada wspólna 10 (kopia sprzed pierwszej próby nietknięta).
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { migruj } from '../../../src/dane/migracje/migruj';
-import { WERSJA_SCHEMATU } from '../../../src/konfiguracja';
-import { czytajBaze, wloczka } from '../../dane/pomocnicze/dane-wejsciowe';
-import { jeden, licznosci, przygotuj, sha256Pliku, wykonaj } from '../../dane/pomocnicze/srodowisko';
+import { migruj } from '../../src/dane/migracje/migruj';
+import { WERSJA_SCHEMATU } from '../../src/konfiguracja';
+import { czytajBaze, wloczka } from './pomocnicze/dane-wejsciowe';
+import { jeden, licznosci, przygotuj, sha256Pliku, wykonaj } from './pomocnicze/srodowisko';
 
 // Przebudowa tabeli wloczka (12 kroków sqlite.org/lang_altertable.html §7): wersja z błędem i wersja z poprawką.
 const NOWA = `CREATE TABLE wloczka_nowa (id TEXT PRIMARY KEY NOT NULL, nazwa TEXT NOT NULL CHECK (length(nazwa) > 0), producent TEXT NOT NULL DEFAULT '',

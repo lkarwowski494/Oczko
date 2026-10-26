@@ -80,7 +80,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     pro: () => dostep.stan().pro, // ADR-0010: decyzja ze sklepu, przy błędzie pamięć KP-06 z oknem offline
     magazyn: utworzMagazyn(s.pliki), katalogi: { kopie: s.kopie, tymczasowy },
     dziennik: dziennikUrzadzenia(baza),
-    migruj: (p) => migruj(p, { katalogKopii: s.kopie }),
+    migruj: (p) => migruj(p, { katalogKopii: s.kopie, teraz: () => zegar.teraz().ms }),
     liveActivity: liveActivity(id, undefined, jezyk),
     zegarek: zegarek(undefined, jezyk),
   };

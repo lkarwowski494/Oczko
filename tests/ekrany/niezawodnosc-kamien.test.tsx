@@ -4,25 +4,25 @@
 // od danych (np. po aktualizacji) powtarza się przy każdym starcie, a strażnik ma już zapisany kamień i nigdy nie włączy trybu awaryjnego.
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import type { Aplikacja as KontekstAplikacji } from '../../../src/kompozycja/Kontekst'; // plik do zmiany: app/index.tsx (kompozycja startu)
+import type { Aplikacja as KontekstAplikacji } from '../../src/kompozycja/Kontekst'; // plik do zmiany: app/index.tsx (kompozycja startu)
 
 const mockKamien = jest.fn(() => Promise.resolve());
-jest.mock('../../../src/kompozycja/start-aplikacji', () => ({ zapiszKamien: () => mockKamien(), powodAwaryjny: () => 'uszkodzony' }));
+jest.mock('../../src/kompozycja/start-aplikacji', () => ({ zapiszKamien: () => mockKamien(), powodAwaryjny: () => 'uszkodzony' }));
 const mockRouter = { push: jest.fn(), replace: jest.fn() }; // stały jak w expo-router
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: () => undefined }));
-jest.mock('../../../src/ekrany/Aplikacja', () => ({ Aplikacja: jest.fn() }));
-jest.mock('../../../src/kompozycja/system', () => ({ cyklAplikacji: {}, oglos: jest.fn(), systemAplikacji: {} }));
-jest.mock('../../../src/przypadki-uzycia/informacje-pro', () => ({ pokazacOknoUczciweZasady: () => Promise.resolve({ ok: true, wartosc: false }) }));
-jest.mock('../../../src/kompozycja/Bezpieczny', () => ({ Bezpieczny: ({ children }: { children: React.ReactNode }) => children }));
+jest.mock('../../src/ekrany/Aplikacja', () => ({ Aplikacja: jest.fn() }));
+jest.mock('../../src/kompozycja/system', () => ({ cyklAplikacji: {}, oglos: jest.fn(), systemAplikacji: {} }));
+jest.mock('../../src/przypadki-uzycia/informacje-pro', () => ({ pokazacOknoUczciweZasady: () => Promise.resolve({ ok: true, wartosc: false }) }));
+jest.mock('../../src/kompozycja/Bezpieczny', () => ({ Bezpieczny: ({ children }: { children: React.ReactNode }) => children }));
 const mockLicznik = { przygotuj: () => Promise.resolve({ ok: true, wartosc: { cel: 'mockLicznik' } }), wersja: () => 0, biezacy: () => null };
-jest.mock('../../../src/kompozycja/Kontekst', () => ({
+jest.mock('../../src/kompozycja/Kontekst', () => ({
   useAplikacja: () => ({ kontener: { z: {}, dostep: { stan: () => ({ poziom: 'darmowy' }) }, j: { t: (k: string) => k } }, licznik: mockLicznik, preferencje: {} }),
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { Aplikacja } = require('../../../src/ekrany/Aplikacja') as { Aplikacja: jest.Mock };
+const { Aplikacja } = require('../../src/ekrany/Aplikacja') as { Aplikacja: jest.Mock };
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const EkranLicznika = (require('../../../app/index') as { default: React.ComponentType }).default;
+const EkranLicznika = (require('../../app/index') as { default: React.ComponentType }).default;
 
 class Granica extends React.Component<{ children: React.ReactNode }, { blad: boolean }> {
   state = { blad: false };
