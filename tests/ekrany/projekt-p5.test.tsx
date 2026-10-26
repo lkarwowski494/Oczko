@@ -115,3 +115,20 @@ describe('data ukończenia (F-51, design-spec „Data ukończenia”)', () => {
     expect(screen.queryByText('Finished')).toBeNull();
   });
 });
+
+describe('czas projektu (P-191 P4a, makieta projekt-czas)', () => {
+  test('grupa „Time”: suma i „Sessions” z linią do sprawdzenia; stuknięcie otwiera sesje', () => {
+    const naSesje = jest.fn();
+    render(<Projekt stan={stan({ czas: { suma: '18 h 10 min', sesje: 12, doSprawdzenia: 1 } })} t={t} naOtworzCzesc={jest.fn()} naSesje={naSesje} />);
+    expect(screen.getByRole('header', { name: 'Time' })).toBeTruthy();
+    expect(screen.getByText('18 h 10 min')).toBeTruthy();
+    expect(screen.getByText('1 session to check')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('projekt-sesje'));
+    expect(naSesje).toHaveBeenCalledTimes(1);
+  });
+  test('bez sesji: sam wiersz „Time shows here when you use the stopwatch.”, bez „0 h” i bez „Sessions”', () => {
+    render(<Projekt stan={stan({ czas: { suma: null, sesje: 0, doSprawdzenia: 0 } })} t={t} naOtworzCzesc={jest.fn()} naSesje={jest.fn()} />);
+    expect(screen.getByText('Time shows here when you use the stopwatch.')).toBeTruthy();
+    expect(screen.queryByTestId('projekt-sesje')).toBeNull();
+  });
+});

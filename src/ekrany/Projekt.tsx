@@ -27,6 +27,8 @@ export type PropsProjektu = {
     szczegoly?: { narzedzie: string | null; rozmiar: string | null; termin: string | null }; // „Needles” / „4 mm (US 6)” / krótka data
     /** Daty ukończonego projektu (F-51, design-spec „Data ukończenia”): sformatowane z rokiem i dni RRRR-MM-DD dla zakresu wyboru. */
     daty?: { start: string; koniec: string; startDzien: string; koniecDzien: string; dzis: string } | null;
+    /** Czas projektu (P-191 P4a): suma sformatowana albo null bez sesji; liczba sesji i do sprawdzenia (`do_korekty`). */
+    czas?: { suma: string | null; sesje: number; doSprawdzenia: number };
   };
   t: Tlumacz;
   naOtworzCzesc(id: string): void;
@@ -38,6 +40,7 @@ export type PropsProjektu = {
   naUsunCzesc?(id: string): void; naUsunLicznik?(id: string): void;
   naWstecz?(): void;
   naDataUkonczenia?(dzien: string): void; // zapis od razu po wyborze (bez „Save”, design-spec)
+  naSesje?(): void;
 };
 
 export function Projekt(p: PropsProjektu): React.ReactElement {
@@ -142,6 +145,31 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
           );
         })}
       </View>
+
+      {s.czas && (
+        <View testID="projekt-czas">
+          <Text style={st.naglowek} accessibilityRole="header">{t('projekt.czas')}</Text>
+          <View style={st.grupa}>
+            {s.czas.suma === null ? (
+              <View style={st.wierszGrupy}><Text style={st.podpis}>{t('projekt.czas_brak')}</Text></View>
+            ) : (
+              <>
+                <View style={[st.wierszGrupy, { flexDirection: 'row', justifyContent: 'space-between' }]} accessible>
+                  <Text style={st.tekst}>{t('projekt.czas_wiersz')}</Text>
+                  <Text style={st.tekst}>{s.czas.suma}</Text>
+                </View>
+                <Pressable accessibilityRole="button" onPress={p.naSesje} disabled={!p.naSesje} style={st.wierszGrupy} testID="projekt-sesje">
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={st.tekst}>{t('projekt.sesje')}</Text>
+                    <Text style={st.tekst}>{String(s.czas.sesje)}<Text importantForAccessibility="no" accessibilityElementsHidden>{' ›'}</Text></Text>
+                  </View>
+                  {s.czas.doSprawdzenia > 0 && <Text style={st.podpis}>{t('projekt.sesje_sprawdz', { count: s.czas.doSprawdzenia })}</Text>}
+                </Pressable>
+              </>
+            )}
+          </View>
+        </View>
+      )}
 
       {(s.notatka || p.naNotatka) && (
         <>

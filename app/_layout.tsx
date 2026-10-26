@@ -67,6 +67,7 @@ export default function Korzen(): React.ReactElement {
         <Stack.Screen name="uczciwe-zasady" options={{ presentation: 'modal' }} />
         <Stack.Screen name="zglos" options={{ presentation: 'modal' }} />
         <Stack.Screen name="stan-danych" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="sesja-korekta" options={{ presentation: 'modal' }} />
       </Stack>
     </DostawcaAplikacji>
   );

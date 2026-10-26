@@ -16,6 +16,8 @@ import { dodajDni } from '../../src/przypadki-uzycia/daty';
 import { usunCzesc, usunLicznik, usunProjekt, wznowProjekt, zmienDateUkonczenia, zrobPonownie } from '../../src/przypadki-uzycia/projekt';
 import { widokProjektu, type WidokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
 
+import { sesjeProjektu, type SesjaNaEkranie } from '../../src/przypadki-uzycia/sesja';
+import { stanCzasu } from '../../src/kompozycja/sesje';
 export default function EkranProjektu(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -23,16 +25,19 @@ export default function EkranProjektu(): React.ReactElement {
   const k = useKolory();
   const [w, ustaw] = useState<WidokProjektu | null>(null);
   const [edycja, ustawEdycje] = useState(false);
+  const [sesje, ustawSesje] = useState<SesjaNaEkranie[]>([]); // grupa „Time” (P-191 P4a)
   const z = kontener.z, j = kontener.j, t = j.t;
   const wczytaj = useCallback(async () => {
     const r = await widokProjektu(z, { projektId: id });
     if (r.ok) ustaw(r.wartosc);
     else router.replace('/projekty'); // projekt w koszu albo nieistniejący
+    const s = await sesjeProjektu(z, { projektId: id });
+    if (s.ok) ustawSesje(s.wartosc);
   }, [z, id, router]);
   useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
   if (!w) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   const ch = z.zegar.teraz();
-  const stan = stanProjektu(w, { j, terazMs: ch.ms, strefa: ch.strefa });
+  const stan = { ...stanProjektu(w, { j, terazMs: ch.ms, strefa: ch.strefa }), czas: stanCzasu(sesje, j) };
   const doDnia = () => { const d = dzienLokalny(ch.ms, ch.strefa); return d.ok ? krotkaData(dodajDni(d.wartosc, KOSZ_DNI), j.jezyk()) : ''; };
   const otworzLicznik = (licznikId: string) => void licznik.otworz(licznikId).then(() => router.navigate('/'));
   const formularz = (rodzaj: string, extra: Record<string, string> = {}) => router.push({ pathname: '/formularz/[rodzaj]', params: { rodzaj, projekt: w.id, ...extra } });
@@ -45,6 +50,7 @@ export default function EkranProjektu(): React.ReactElement {
     <Bezpieczny>
       <Projekt
         stan={stan} t={t} edycja={edycja}
+        naSesje={() => router.push({ pathname: '/sesje', params: { projekt: w.id } })}
         naWstecz={() => (router.canGoBack() ? router.back() : router.replace('/projekty'))}
         naOtworzCzesc={(cid) => { const l = czesc(cid)?.liczniki[0]; if (l) otworzLicznik(l.id); }}
         naOtworzLicznik={otworzLicznik}

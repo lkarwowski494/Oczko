@@ -68,11 +68,15 @@ describe('Formularze', () => {
     expect(podglad.mock.calls.every(([p]) => !Number.isFinite(p.od))).toBe(true); // rząd początkowy nie zgadywany
   });
 
-  test('BR-PRJ-013/S3: koniec sesji 19:30 przed początkiem 20:00 — bez zapisu, komunikat (Z07-05)', () => {
+  // Zmiana 08 (partia 5, P-191 P4a): makieta 04 fix-6 `sesja-korekta` zastąpiła pola tekstowe Z07-05 systemowym wyborem daty i godziny;
+  // sens bez zmian — koniec przed początkiem nie zapisuje się i daje komunikat. Pozostałe przypadki: tests/ekrany/sesje.test.tsx.
+  test('BR-PRJ-013/S3: koniec sesji 19:30 przed początkiem 20:00 — bez zapisu, komunikat (makieta sesja-korekta-blad)', () => {
     const naZapisz = jest.fn(ok);
-    render(<KorektaSesji stan={{ start: '20:00', koniec: '22:10' }} t={t} naZapisz={naZapisz} naAnuluj={jest.fn()} />);
-    // Z07-05: korekta sesji bez makiety; etykiety robocze 07 („Start”, „End”)
-    fireEvent.changeText(screen.getByLabelText(/^End/), '19:30');
+    const d = (h: number, m: number) => new Date(2026, 9, 22, h, m).getTime();
+    render(<KorektaSesji stan={{ startMs: d(20, 0), koniecMs: d(22, 10), terazMs: d(23, 0), przerwyMs: 0, doSprawdzenia: null, czasInnychMs: 0 }} t={t}
+      formatuj={{ dataGodzina: (ms) => String(ms), czas: (ms) => `${ms / 60_000} min` }} naZapisz={naZapisz} naAnuluj={jest.fn()} />);
+    fireEvent.press(screen.getByTestId('formularz-sesja-koniec'));
+    fireEvent(screen.getByTestId('formularz-sesja-koniec-wybor'), 'onValueChange', { type: 'set', nativeEvent: {} }, new Date(2026, 9, 22, 19, 30));
     fireEvent.press(przycisk('Save', 'button'));
     expect(naZapisz).not.toHaveBeenCalled();
     expect(screen.getByRole('alert')).toBeTruthy();

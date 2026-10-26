@@ -3,14 +3,16 @@
 // Walidację reguł liczy domena (RD-12-W5, RD-13 przez `podglad`, BR-LIC-017/S7); ekran nie woła naZapisz z błędną wartością i pokazuje komunikat (rola alert).
 // Pola liczbowe przed polem tekstowym, zapis przyciskiem arkusza (e2e/README.md zasada 6: bez chowania klawiatury liczbowej).
 import React, { useState } from 'react';
+import { Pressable, View } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Arkusz, Komunikat, Pole, Przycisk, Tresc, liczbaZPola } from './Arkusz';
 import type { Tlumacz, WynikEkranu } from './wspolne';
 
-type Przyciski = { t: Tlumacz; naZapisz(): void; naAnuluj(): void; zapisz?: string; zapiszA11y?: string; testZapisz?: string };
+type Przyciski = { t: Tlumacz; naZapisz(): void; naAnuluj(): void; zapisz?: string; zapiszA11y?: string; testZapisz?: string; wylaczony?: boolean };
 function PrzyciskiFormularza(p: Przyciski): React.ReactElement {
   return (
     <>
-      <Przycisk tekst={p.zapisz ?? p.t('wspolne.zapisz')} etykieta={p.zapiszA11y} onPress={p.naZapisz} rodzaj="glowny" testID={p.testZapisz ?? 'formularz-zapisz'} />
+      <Przycisk tekst={p.zapisz ?? p.t('wspolne.zapisz')} etykieta={p.zapiszA11y} onPress={p.naZapisz} rodzaj="glowny" testID={p.testZapisz ?? 'formularz-zapisz'} wylaczony={p.wylaczony} />
       <Przycisk tekst={p.t('wspolne.anuluj')} onPress={p.naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />
     </>
   );
@@ -107,30 +109,52 @@ export function FormularzPrzypomnienia({ stan, t, podglad, naZapisz, naAnuluj }:
   );
 }
 export type PropsKorektySesji = {
-  stan: { start: string; koniec: string };   // godziny sformatowane HH:MM w strefie urządzenia
+  stan: { startMs: number; koniecMs: number; terazMs: number; przerwyMs: number; doSprawdzenia: number | null; czasInnychMs: number };
   t: Tlumacz;
-  naZapisz(z: { start: string; koniec: string }): Promise<WynikEkranu<void>>;
+  formatuj: { dataGodzina(ms: number): string; czas(ms: number): string };
+  naZapisz(z: { startMs: number; koniecMs: number }): Promise<WynikEkranu<void>>;
   naAnuluj(): void;
 };
-const minuty = (g: string): number | null => {
-  const m = /^(\d{1,2}):(\d{2})$/.exec(g.trim());
-  return m && Number(m[1]) < 24 && Number(m[2]) < 60 ? Number(m[1]) * 60 + Number(m[2]) : null;
-};
-export function KorektaSesji({ stan, t, naZapisz, naAnuluj }: PropsKorektySesji): React.ReactElement {
-  const [start, ustawStart] = useState(stan.start);
-  const [koniec, ustawKoniec] = useState(stan.koniec);
-  const [blad, ustawBlad] = useState(false);
-  const zapisz = () => {
-    const a = minuty(start), b = minuty(koniec);
-    if (a === null || b === null || b <= a) { ustawBlad(true); return; } // BR-PRJ-013/S3
-    ustawBlad(false);
-    void zapiszZ(() => naZapisz({ start: start.trim(), koniec: koniec.trim() }), () => ustawBlad(true));
-  };
+/**
+ * Korekta sesji (F-51, BR-PRJ-013; makieta 04 fix-6 `sesja-korekta`, P-191 P4a–P5a): wiersze Start / End z systemowym wyborem daty i godziny
+ * (koło; koniec nie później niż teraz), podgląd na żywo, linia „do sprawdzenia” i — przy przerwach — zdanie, że korekta liczy od startu
+ * do końca (P-195 Q2a). Koniec przed początkiem: komunikat, Save nieaktywny (BR-PRJ-013 S3).
+ */
+export function KorektaSesji({ stan: s, t, formatuj, naZapisz, naAnuluj }: PropsKorektySesji): React.ReactElement {
+  const [startMs, ustawStart] = useState(s.startMs);
+  const [koniecMs, ustawKoniec] = useState(s.koniecMs);
+  const [otwarte, ustawOtwarte] = useState<'start' | 'koniec' | null>(null);
+  const [bladZapisu, ustawBladZapisu] = useState(false);
+  const zly = koniecMs < startMs;
+  const wiersz = (pole: 'start' | 'koniec', ms: number, ustaw: (v: number) => void) => (
+    <View>
+      <Pressable accessibilityRole="button" accessibilityLabel={`${t(pole === 'start' ? 'formularz.sesja_start' : 'formularz.sesja_koniec')}, ${formatuj.dataGodzina(ms)}`}
+        onPress={() => ustawOtwarte(otwarte === pole ? null : pole)} testID={`formularz-sesja-${pole}`} style={{ minHeight: 44, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Tresc>{t(pole === 'start' ? 'formularz.sesja_start' : 'formularz.sesja_koniec')}</Tresc>
+        <Tresc podpis>{formatuj.dataGodzina(ms)}</Tresc>
+      </Pressable>
+      {otwarte === pole && (
+        <DateTimePicker value={new Date(ms)} mode="datetime" display="spinner" maximumDate={new Date(s.terazMs)} testID={`formularz-sesja-${pole}-wybor`}
+          onValueChange={(_e, d) => ustaw(d.getTime())} />
+      )}
+    </View>
+  );
   return (
-    <Arkusz tytul={t('formularz.sesja_tytul')} przyciski={<PrzyciskiFormularza t={t} naZapisz={zapisz} naAnuluj={naAnuluj} />}>
-      <Pole etykieta={t('formularz.sesja_start')} wartosc={start} naZmiane={ustawStart} />
-      <Pole etykieta={t('formularz.sesja_koniec')} wartosc={koniec} naZmiane={ustawKoniec} />
-      {blad && <Komunikat tekst={t('formularz.sesja_blad')} />}
+    <Arkusz tytul={t('formularz.sesja_tytul')} testID="sesja-korekta" przyciski={
+      <PrzyciskiFormularza t={t} wylaczony={zly} naAnuluj={naAnuluj}
+        naZapisz={() => { if (!zly) void zapiszZ(() => naZapisz({ startMs, koniecMs }), () => ustawBladZapisu(true)); }} />
+    }>
+      {s.doSprawdzenia !== null && <Tresc>{t('formularz.sesja_sprawdz', { count: s.doSprawdzenia })}</Tresc>}
+      {wiersz('start', startMs, ustawStart)}
+      {wiersz('koniec', koniecMs, ustawKoniec)}
+      {zly ? <Komunikat tekst={t('formularz.sesja_blad')} /> : (
+        <>
+          <Tresc podpis>{t('formularz.sesja_trwanie', { czas: formatuj.czas(koniecMs - startMs) })}</Tresc>
+          <Tresc podpis>{t('formularz.sesja_projekt', { czas: formatuj.czas(s.czasInnychMs + koniecMs - startMs) })}</Tresc>
+        </>
+      )}
+      {s.przerwyMs > 0 && <Tresc podpis>{t('formularz.sesja_przerwy', { czas: formatuj.czas(s.przerwyMs) })}</Tresc>}
+      {bladZapisu && <Komunikat tekst={t('dane.blad')} />}
     </Arkusz>
   );
 }
