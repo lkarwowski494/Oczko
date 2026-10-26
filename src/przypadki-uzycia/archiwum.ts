@@ -6,6 +6,7 @@ import type { Manifest, TrybImportu, WynikImportu } from '../domena/porty';
 import { scalDziennikWKolejce } from './dziennik';
 import { wKolejce } from './kolejka';
 import type { ZaleznosciArchiwum } from './zaleznosci';
+import { stanBazy } from '../dane/repozytoria/icloud';
 
 /** Najpierw scalenie dziennika +1 (R-063), sprawdzenie miejsca (ZAPAS_MIEJSCA_EKSPORTU), potem archiwum; eksport nie woła strażnika (KP-02). */
 export function eksportuj(z: ZaleznosciArchiwum, w: { katalogDocelowy: string }): Promise<Wynik<{ sciezka: string; manifest: Manifest }>> {
@@ -42,6 +43,8 @@ export function importuj(
     stan = dalej(stan, 'wybrano');
     return wKolejce(z.baza, async (): Promise<Wynik<WynikImportu>> => {
       let kopiaPrzed: string | null = null;
+      // ADR-0005: „zastąp” tylko przy wyłączonym iCloud — usunięcia przy aktywnych wyzwalaczach poszłyby do iCloud (partia 7, icloud.zastap_wylacz).
+      if (tryb === 'zastap' && (await stanBazy(z.baza)).wlaczona) return { ok: false, powod: 'niedozwolone_przejscie' };
       if (tryb === 'zastap') {
         const k = await z.archiwum.kopiaPrzed();
         if (!k.ok) { dalej(stan, 'blad'); return k; }

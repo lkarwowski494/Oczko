@@ -2,7 +2,7 @@
 // Eksport → arkusz udostępniania; import → wybór pliku, liczności przed decyzją, „scal” albo „zastąp” (P-091 (6a)); wynik w treści ekranu.
 // Panele `e2e-*` tylko w buildzie E2E (bez t(), e2e/README.md).
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Import } from '../src/ekrany/Dane';
 import { Ustawienia } from '../src/ekrany/Ustawienia';
@@ -81,13 +81,21 @@ export default function EkranUstawien(): React.ReactElement {
   }
   useEffect(() => { if (plikImportu) void importZ(plikImportu); }, [plikImportu]); // eslint-disable-line react-hooks/exhaustive-deps -- raz na otwarty plik
   const zamknijDane = () => { wybor.current?.('anuluj'); ustawDane(null); };
+  // „Replace” przy włączonym iCloud (ADR-0005, design-spec icloud.zastap_wylacz): najpierw wyłączenie; przypadek użycia i tak odmawia.
+  const naZastap = () => {
+    if (!icloudWlaczona) { wybor.current?.('zastap'); return; }
+    Alert.alert(t('icloud.zastap_wylacz'), t('icloud.zastap_wylacz_opis'), [
+      { text: t('wspolne.anuluj'), style: 'cancel' },
+      { text: t('icloud.do_ustawien'), onPress: () => { zamknijDane(); router.push('/stan-danych'); } },
+    ]);
+  };
 
   const wynikDanych = dane === null ? null
     : dane.rodzaj === 'eksport' ? <View testID="eksport-wynik"><Tresc>{t('dane.eksport_gotowy_tytul')}</Tresc><Tresc testID="eksport-licznosci">{dane.licznosci}</Tresc></View>
     : dane.rodzaj === 'blad' ? <Tresc>{t('dane.blad')}</Tresc>
     : <Import wbudowany t={t} stan={dane.rodzaj === 'wybor' ? { rodzaj: 'wybor', plik: dane.plik, licznosci: dane.licznosci } : { rodzaj: 'wybor', plik: '' }}
         wynik={dane.rodzaj === 'wynik' ? dane.tekst : undefined}
-        naScal={() => wybor.current?.('scal')} naZastap={() => wybor.current?.('zastap')} naAnuluj={zamknijDane} />;
+        naScal={() => wybor.current?.('scal')} naZastap={naZastap} naAnuluj={zamknijDane} />;
 
   // Build E2E (P-238): panel z modułu ładowanego warunkowo; SHA pary `.db` + `-wal` liczy panel przy każdym wejściu (P-203).
   const panelE2e = paneleE2e
