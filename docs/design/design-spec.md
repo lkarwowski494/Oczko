@@ -133,6 +133,13 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | `projekt.nazwa_tytul` | Name project |
 | `projekt.nazwa_pole` | Project name |
 | `projekt.nazwa_zostaje` | The {{count}} rows and their history stay with this project. (`_one` / `_other`) |
+| `aktywnosc.nazwa_robocza` | Counter from {{data}} — wariant krótki: `{{data}}` bez godziny (ekran blokady, Dynamic Island, zegarek, Smart Stack) |
+
+**Format `{{data}}` (fix NZ-08-P3-04, P-126 (1b), jak Trening „Trening z {d}”):**
+- Liczony przy każdym wyświetleniu z `utworzono_ms` projektu w **bieżącym języku** aplikacji i formacie regionu (ADR-0017): `Intl.DateTimeFormat(jezykAplikacji, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })`; **rok tylko**, gdy inny niż bieżący (`year: 'numeric'`); 12/24 h z regionu, nie z języka. Wariant krótki: te same opcje bez `hour` i `minute`.
+- Przykłady (en-US / pl / de): „Counter from Oct 26, 6:40 PM” / „Licznik z 26 paź, 18:40” / „Zähler vom 26. Okt., 18:40” — tłumaczenia robi 09; szyk i przyimek należą do tłumaczenia całego zdania, nie do sklejania (wpis kontekstu w `en.kontekst.json`: „{{data}} = date and time the counter was started; a label, not a name”).
+- Etykieta nie jest nazwą: nie trafia do kolumny `nazwa` jako tekst (tam data `RRRR-MM-DD` i `nienazwany = 1`, `dane.md`), wyszukiwanie szuka w etykiecie w bieżącym języku, eksport CSV/archiwum niesie dane, nie etykietę.
+- **Ekran blokady i zegarek:** aplikacja wylicza wariant krótki i wpisuje go do pola `nazwa` stanu (cele natywne nie liczą dat po swojemu); po zmianie języka aplikacji stan trzeba odświeżyć — zmiana języka nie jest dziś na liście wyzwalaczy ADR-0008 (7) → zgłoszenie dla 05 (N3 w `fix2-2026-10-26.md`).
 
 ## Zużycie włóczki przy ukończeniu (BR-ZAP-002, U-9, P-126 (2a))
 - **Pytanie:** po „Mark as finished” karta ukończenia ma grupę „Yarn used”: każda włóczka przypisana do projektu jako wiersz z nazwą, podpisem „{n} skeins in your stash” i krokowcem − [pole] + (obrysy `drugiPrzyciskObrys`, ≥ 3:1; krok 0,5 motka; pole przyjmuje wpis liczby wg P-097 (5a)). Zapis do `projekt_wloczka.zuzyto_motki` (schemat), nie „ile zostało”. Brak włóczki w projekcie: grupy nie ma.
