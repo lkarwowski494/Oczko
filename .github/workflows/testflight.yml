@@ -147,15 +147,25 @@ jobs:
           name: mapy-zrodel-b${{ env.BUILD_NUMBER }}
           retention-days: 90
           path: ${{ runner.temp }}/main.jsbundle.map
-      - name: Uprawnienia w archiwum (podpis ad hoc z plikami uprawnień celów, od środka na zewnątrz; jak Trening 14.10.2026)
-        # Archiwum bez podpisu nie zawiera uprawnień; eksport podpisuje dystrybucyjnie i zachowuje osadzone. Brak pliku uprawnień celu = podpis bez nich.
+      - name: Uprawnienia w archiwum (podpis ad hoc, każdy cel własnym plikiem uprawnień, od środka na zewnątrz; jak Trening 14.10.2026, P-233)
+        # Archiwum bez podpisu nie zawiera uprawnień; eksport podpisuje dystrybucyjnie i zachowuje osadzone. Plik celu = CODE_SIGN_ENTITLEMENTS
+        # jego konfiguracji Release w projekcie po prebuild (scripts/wydanie/uprawnienia-celow.mjs, ścieżki względem ios/): rozszerzenie
+        # „Udostępnij do Oczka” dostaje swój plik z App Group, nie plik widżetu. Cel bez wpisu: podpis ad hoc bez uprawnień; wpis bez pliku: błąd.
         run: |
-          set -e
+          set -eo pipefail
           APP="$RUNNER_TEMP/Oczko.xcarchive/Products/Applications/Oczko.app"
-          podpisz() { if [ -f "$2" ]; then codesign --force -s - --entitlements "$2" "$1"; echo "- $(basename "$1"): uprawnienia z $2" >> "$GITHUB_STEP_SUMMARY"; else codesign --force -s - "$1"; fi; }
-          for w in "$APP"/Watch/*.app; do [ -d "$w" ] && podpisz "$w" "$(ls ios/.targets/*/generated.entitlements targets/watch/generated.entitlements 2>/dev/null | grep -i -m1 -e zegarek -e watch || true)"; done
-          for x in "$APP"/PlugIns/*.appex; do [ -d "$x" ] && podpisz "$x" "$(ls ios/.targets/*/generated.entitlements targets/widget/generated.entitlements 2>/dev/null | grep -i -m1 -e widget || true)"; done
-          podpisz "$APP" ios/Oczko/Oczko.entitlements
+          node scripts/wydanie/uprawnienia-celow.mjs ios/Oczko.xcodeproj/project.pbxproj > "$RUNNER_TEMP/uprawnienia-celow.tsv"
+          podpisz() {
+            local nazwa plik; nazwa=$(basename "$1"); nazwa=${nazwa%.*}
+            plik=$(awk -F '\t' -v n="$nazwa" '$1 == n { print $2 }' "$RUNNER_TEMP/uprawnienia-celow.tsv")
+            if [ -z "$plik" ]; then codesign --force -s - "$1"; echo "- $nazwa: bez uprawnień" >> "$GITHUB_STEP_SUMMARY"; return; fi
+            [ -f "ios/$plik" ] || { echo "::error::$nazwa: brak pliku uprawnień ios/$plik (CODE_SIGN_ENTITLEMENTS celu)"; exit 1; }
+            codesign --force -s - --entitlements "ios/$plik" "$1"
+            echo "- $nazwa: uprawnienia z ios/$plik" >> "$GITHUB_STEP_SUMMARY"
+          }
+          for w in "$APP"/Watch/*.app; do [ -d "$w" ] && podpisz "$w"; done
+          for x in "$APP"/PlugIns/*.appex; do [ -d "$x" ] && podpisz "$x"; done
+          podpisz "$APP"
       - name: Klucz API na dysk (dopiero po archiwum i podpisie ad hoc, tuż przed eksportem; jak Trening M1-020)
         env:
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
