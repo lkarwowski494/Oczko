@@ -4,7 +4,7 @@
     "slug": "oczko",
     "version": "0.1.0",
     "scheme": "oczko",
-    "orientation": "portrait",
+    "orientation": "default",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "description": "Oczko: Row Counter — knit & crochet, no account.",
@@ -21,7 +21,7 @@
       }
     },
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.apps4brew.knitting",
       "deploymentTarget": "18.0",
       "appleTeamId": "8NQ9GHY8GF",
@@ -50,7 +50,6 @@
         ]
       },
       "infoPlist": {
-        "UIRequiresFullScreen": true,
         "UIFileSharingEnabled": true,
         "LSSupportsOpeningDocumentsInPlace": true,
         "ITSAppUsesNonExemptEncryption": false,
