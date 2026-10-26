@@ -179,7 +179,7 @@ Reguła (Trening: `store/app-store-names.json`, `lib/i18n.ts` `APP_NAME`, `docs/
 | en | en-US, en-GB, en-AU, en-CA | Oczko | Oczko: Row Counter | 18 | zapasowe: „Stitch” koliduje | badanie fraz E1 |
 | cs | cs | Očko | Očko: počítadlo řad | 19 | cs.wikipedia „Pletení” („očka”) — szczebel 5, [OTWARTE] 06 | przekład roboczy — badanie fraz: rola 10 |
 | sk | sk | Očko | Očko: počítadlo radov | 21 | blog o pletení („veľkosť očiek”) — szczebel 4–5, [OTWARTE] 06 | przekład roboczy — badanie fraz: rola 10 |
-| hr | hr | Očica | Očica: brojač redova | 20 | hr.wikipedia „Pletenje” („očica”) — szczebel 5, [OTWARTE] 06 | przekład roboczy — badanie fraz: rola 10 |
+| hr | hr | Oczko | Oczko: brojač redova | 20 | „očica” (hr.wikipedia „Pletenje”) — podobieństwo brzegowe, P-153: „Oczko” | przekład roboczy — badanie fraz: rola 10 |
 | sl | sl | Oczko | Oczko: števec vrst | 18 | termin „zanka” niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
 | sr | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin „петља” niepodobny (sr.wikipedia); zapasowe | przekład roboczy — badanie fraz: rola 10 |
 | bg | — (brak w ASC) | Oczko | — (strona w języku domyślnym storefrontu) | — | termin niepodobny; zapasowe | przekład roboczy — badanie fraz: rola 10 |
@@ -214,7 +214,7 @@ Reguła (Trening: `store/app-store-names.json`, `lib/i18n.ts` `APP_NAME`, `docs/
 
 Lokalizacje bez strony w App Store Connect (bg, et, lt, lv, sr) mają tylko nazwę pod ikoną. Części opisowe poza 7 lokalizacjami z badania fraz to przekład roboczy (rola 10 robi badanie fraz i przegląd tłumacza, P-145 D2a). Długości policzone skryptem (`oczko-warsztat/11-wzrost/2026-10-26-build/e2-nazwa/tabela-35.py`, kod 0). Do zrobienia przez 08/10: test zgodności słowa marki pod ikoną z nazwą w sklepie (jak Trening).
 
-## Decyzje E2 (przyjęte: P-150 — E2-1a, E2-2a, E2-3a; nazwa według P-149; E2-4 i E2-5 z aneksu czekają na odpowiedź)
+## Decyzje E2 (przyjęte: P-150 — E2-1a, E2-2a, E2-3a; nazwa: P-149, P-152; aneks: P-153 — E2-4a, E2-5a)
 | ID | Pytanie | Opcje | Rekomendacja |
 |---|---|---|---|
 | E2-1 | prośba o ocenę (OP-33) | (a) chwila bez zmian + odstęp 14 dni i 1 na wersję, czysta funkcja z wektorami PO-01–PO-11 (jak Trening); (b) tylko limit systemowy (3 w 365 dni), bez własnego | (a) |
