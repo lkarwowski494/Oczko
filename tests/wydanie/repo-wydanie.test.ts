@@ -105,3 +105,18 @@ test('app.json: ITSAppUsesNonExemptEncryption = false i manifest prywatności z 
     ])
   );
 });
+
+// Zgłoszenia 10 dla 08 (P-206, docs/wydanie/sklep.md §7 (3)); typ pliku `.oczko` według ADR-0004 „Typ pliku `.oczko`”.
+// `version` 1.0.0 „przed kandydatem” — nie teraz: wersja ≥ 1.0 wymaga wzorca tests/bazy/v1.db (migracje-wydanych.test.ts, R-074),
+// a schemat v1 jeszcze się zmienia (P-217, P-221); pytanie Q-S3-2 do koordynatora.
+test('app.json: opis bez starej nazwy i wersji 0.1.0; typ `.oczko` eksportowany i obsługiwany (ADR-0004)', () => {
+  const e = JSON.parse(czytaj('app.json')).expo;
+  expect(e.description).not.toMatch(/Purlo|0\.1\.0|Offline-First/);
+  const plist = e.ios.infoPlist;
+  const typ = `${e.ios.bundleIdentifier}.archiwum`;
+  expect(plist.UTExportedTypeDeclarations).toEqual([expect.objectContaining({
+    UTTypeIdentifier: typ, UTTypeConformsTo: ['public.zip-archive', 'public.data'],
+    UTTypeTagSpecification: { 'public.filename-extension': ['oczko'] },
+  })]);
+  expect(plist.CFBundleDocumentTypes).toEqual([expect.objectContaining({ LSItemContentTypes: [typ], LSHandlerRank: 'Owner' })]);
+});

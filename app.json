@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "description": "Oczko (Purlo) — asystent dziewiarstwa i szydełkowania. Liczniki rzędów, wzory PDF, baza włóczek i drutów. 100% Offline-First.",
+    "description": "Oczko: Row Counter — knit & crochet, no account.",
     "primaryColor": "#C85A32",
     "icon": "./assets/icon.png",
     "splash": {
@@ -57,7 +57,22 @@
         "CFBundleLocalizations": ["en"],
         "CFBundleAllowMixedLocalizations": true,
         "CFBundleDisplayName": "Oczko",
-        "NSSupportsLiveActivities": true
+        "NSSupportsLiveActivities": true,
+        "UTExportedTypeDeclarations": [
+          {
+            "UTTypeIdentifier": "com.apps4brew.knitting.archiwum",
+            "UTTypeDescription": "Oczko backup",
+            "UTTypeConformsTo": ["public.zip-archive", "public.data"],
+            "UTTypeTagSpecification": { "public.filename-extension": ["oczko"] }
+          }
+        ],
+        "CFBundleDocumentTypes": [
+          {
+            "CFBundleTypeName": "Oczko backup",
+            "LSItemContentTypes": ["com.apps4brew.knitting.archiwum"],
+            "LSHandlerRank": "Owner"
+          }
+        ]
       }
     },
     "android": {

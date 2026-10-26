@@ -95,6 +95,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/formularze.test.tsx` | zielony (główny zestaw) | 5 | BR-LIC-007/S3, BR-LIC-010/S1, BR-LIC-010/S2, BR-LIC-017/S7, BR-PRJ-013/S3, P-191, RD-12, RD-13 | `src/ekrany/Formularze`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/historia-dni.test.tsx` | zielony (główny zestaw) | 4 | BR-DNI-001, BR-DNI-003, P-191 | `src/ekrany/HistoriaDni`<br>`src/ekrany/wspolne`<br>`src/kompozycja/historia`<br>`src/przypadki-uzycia/historia` | ER-55, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/historia-menu.test.tsx` | zielony (główny zestaw) | 5 | BR-LIC-003, BR-LIC-003/S1, BR-LIC-004, BR-LIC-017/S6, BR-PRJ-006, R-007 | `src/ekrany/Historia`<br>`src/ekrany/MenuProjektu`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/import-pliku.test.ts` | zielony (główny zestaw) | 1 | — | `src/kompozycja/import-pliku` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/informacje-pro.test.tsx` | zielony (główny zestaw) | 2 | P-089, P-113, P-117, P-118, R-120, R-121 | `src/domena/porty`<br>`src/ekrany/InformacjePro`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/jezyk-zrodla.test.tsx` | zielony (główny zestaw) | 12 | BR-DAN-010, BR-KAL-008, BR-ZAK-004, P-075 | `src/ekrany/Jezyk`<br>`src/ekrany/Ustawienia`<br>`src/ekrany/ZrodlaWiedzy`<br>`src/ekrany/wspolne`<br>`src/i18n/jezyki` | ER-45, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/kompozycja-projektu.test.ts` | zielony (główny zestaw) | 11 | P-199, P-209, RD-15 | `src/kompozycja/licznik`<br>`src/kompozycja/projekt`<br>`src/kompozycja/projekty`<br>`src/przypadki-uzycia/widok-projektu` | — |
@@ -142,4 +143,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 138; zależnych od poprawek: 96.
+Razem plików testów: 139; zależnych od poprawek: 96.

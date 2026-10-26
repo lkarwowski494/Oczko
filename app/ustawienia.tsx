@@ -1,9 +1,9 @@
 // Trasa „/ustawienia” (BR-ZAK-004, BR-ZAK-006/S5, S7, KP-13, F-48, BR-DAN-006, BR-DAN-009). Dni darmowe z modelu listy projektów.
 // Eksport → arkusz udostępniania; import → wybór pliku, liczności przed decyzją, „scal” albo „zastąp” (P-091 (6a)); wynik w treści ekranu.
 // Panele `e2e-*` tylko w buildzie E2E (bez t(), e2e/README.md).
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Import } from '../src/ekrany/Dane';
 import { Ustawienia } from '../src/ekrany/Ustawienia';
 import { Tresc } from '../src/ekrany/Arkusz';
@@ -46,6 +46,7 @@ export default function EkranUstawien(): React.ReactElement {
   const [zapisane, ustawZapisane] = useState(() => (E2E ? pliki.ile() : 0));
   const [sha, ustawSha] = useState<{ sha: string; walBajty: number } | null>(null);
   const wybor = useRef<((t: TrybImportu | 'anuluj') => void) | null>(null);
+  const { import: plikImportu } = useLocalSearchParams<{ import?: string }>(); // plik `.oczko` otwarty z Plików (ADR-0004, +native-intent)
 
   useFocusEffect(useCallback(() => {
     const koniec = kontener.dostep.naZmiane(ustawDostep);
@@ -84,6 +85,7 @@ export default function EkranUstawien(): React.ReactElement {
     if (w.wartosc.tryb === 'zastap') licznik.zresetuj(); else await licznik.poZmianie();
     ustawDane({ rodzaj: 'wynik', tekst: wynikScalenia(przed, w.wartosc.licznosci, t) });
   }
+  useEffect(() => { if (plikImportu) void importZ(plikImportu); }, [plikImportu]); // eslint-disable-line react-hooks/exhaustive-deps -- raz na otwarty plik
   const zamknijDane = () => { wybor.current?.('anuluj'); ustawDane(null); };
 
   const wynikDanych = dane === null ? null
