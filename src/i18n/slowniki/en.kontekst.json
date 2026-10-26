@@ -265,7 +265,10 @@
     "kopia_tytul": "Tytuł potwierdzenia „Zrób taką samą”; {{nazwa}} = nazwa projektu.",
     "kopia_opis": "Treść potwierdzenia „Zrób taką samą” (BR-PRJ-007: te same części i przypomnienia, liczniki 0, oryginał bez zmian).",
     "kopia_potwierdz": "Przycisk potwierdzenia „Zrób taką samą”.",
-    "edycja_info": "Podpis pod listą części w trybie Edit; 30 = okres kosza (P-026) — tłumacz zostawia liczbę."
+    "edycja_info": "Podpis pod listą części w trybie Edit; 30 = okres kosza (P-026) — tłumacz zostawia liczbę.",
+    "data_startu": "Etykieta wiersza daty startu projektu w szczegółach ukończonego projektu (design-spec „Data ukończenia”). Ok. 12 znaków.",
+    "data_ukonczenia": "Etykieta wiersza daty ukończenia; stuknięcie rozwija systemowy wybór daty (design-spec „Data ukończenia”). Ok. 12 znaków.",
+    "data_ukonczenia_opis": "Podpis pod grupą dat ukończonego projektu: kalendarz i podsumowanie tygodnia liczą ukończenie w wybranym dniu. Ok. 90 znaków."
   },
   "dni": {
     "dzien": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Formy _one/_other.",

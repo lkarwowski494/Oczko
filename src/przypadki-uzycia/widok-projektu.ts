@@ -22,6 +22,7 @@ export type WidokProjektu = {
   id: string; nazwa: string; nienazwany: boolean; stan: 'w_toku' | 'ukonczony'; utworzonoMs: number; zmienionoMs: number; ostatniaPracaMs: number;
   notatka: string; narzedzie: NarzedzieProjektu; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null; zrobioneDzis: number;
   postep: { rodzaj: 'procent'; wartosc: number } | { rodzaj: 'brak-celow' }; czesci: CzescWidoku[];
+  ukonczonoDzien: string | null; // dzień lokalny ukończenia (F-51, `ukonczono_dzien`); w toku null
 };
 
 const rodzaj = (t: string): LicznikWidoku['rodzaj'] => (t === 'oczka' ? 'oczka' : 'rzedy'); // CHECK schematu: tylko te dwie wartości
@@ -31,7 +32,7 @@ const znaczenie = (t: string): LicznikWidoku['znaczenie'] => (t === 'w_trakcie' 
 export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<WidokProjektu>> {
   return operacjaZapisu(z, 'widokProjektu', async (tx, _teraz, chwila) => {
     const [p] = await wiersze(tx.all(
-      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, narzedzie, termin_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
+      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, narzedzie, termin_dzien, ukonczono_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
       [w.projektId]), 'widokProjektu');
     if (!p) return blad('bledne_dane');
     const czesci = await wiersze(tx.all('SELECT id, nazwa, cel_rzedow, para_z FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc, id', [w.projektId]), 'widokProjektu');
@@ -67,7 +68,7 @@ export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
         utworzonoMs: liczba(p, 'utworzono_ms'), zmienionoMs: liczba(p, 'zmieniono_ms'), ostatniaPracaMs: liczba(p, 'ostatnia_praca_ms'),
         notatka: tekst(p, 'notatka'), narzedzie, drutMm, drutUS: drutMm === null ? null : rozmiarUS(drutMm, narzedzie),
         terminDzien: termin, celDnia: dzien.cel, zrobioneDzis: dzien.zrobioneDzis,
-        postep: proc.ok ? { rodzaj: 'procent', wartosc: proc.wartosc } : { rodzaj: 'brak-celow' }, czesci: wynik,
+        postep: proc.ok ? { rodzaj: 'procent', wartosc: proc.wartosc } : { rodzaj: 'brak-celow' }, czesci: wynik, ukonczonoDzien: tekstLubNull(p, 'ukonczono_dzien'),
       },
     };
   });

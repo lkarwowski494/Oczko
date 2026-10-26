@@ -71,6 +71,7 @@ export function stanProjektu(w: WidokProjektu, o: { j: Jezyk; terazMs: number; s
   return {
     nazwa: w.nienazwany ? etykietaRobocza(w.utworzonoMs, o.terazMs, j, o.strefa) : w.nazwa,
     postep: w.postep, termin: linia(), ukonczony: w.stan === 'ukonczony',
+    daty: w.stan === 'ukonczony' && w.ukonczonoDzien ? daty(w.utworzonoMs, w.ukonczonoDzien, o) : null,
     notatka: w.notatka.trim() ? w.notatka : null, miejsceWzoru: null, // miejsce we wzorze: partia wzorów (F-26)
     ostatniaZmiana: zmiana.ok ? krotkaData(zmiana.wartosc, jezyk) : '',
     szczegoly: {
@@ -90,6 +91,13 @@ export function stanProjektu(w: WidokProjektu, o: { j: Jezyk; terazMs: number; s
       };
     }),
   };
+}
+/** Daty ukończonego projektu (F-51): z rokiem (daty historii, design-spec), dzień startu lokalnie (RD-16), zakres wyboru start…dziś. */
+function daty(utworzonoMs: number, koniecDzien: string, o: { j: Jezyk; terazMs: number; strefa: string }): NonNullable<PropsProjektu['stan']['daty']> {
+  const zRokiem = (dzien: string) => { const [r, m, d] = dzien.split('-').map(Number); return new Intl.DateTimeFormat(o.j.jezyk(), { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(r, m - 1, d))); };
+  const start = dzienLokalny(utworzonoMs, o.strefa), dzis = dzienLokalny(o.terazMs, o.strefa);
+  const startDzien = start.ok ? start.wartosc : koniecDzien, dzisDzien = dzis.ok ? dzis.wartosc : koniecDzien;
+  return { start: zRokiem(startDzien), koniec: zRokiem(koniecDzien), startDzien, koniecDzien, dzis: dzisDzien };
 }
 /** Podgląd rozmiaru w arkuszu narzędzia (RD-11 / RD-19 na żywo): „4 mm (US 6)” albo „3 mm” bez odpowiednika. */
 export function podgladRozmiaru(mm: number, n: 'druty' | 'szydelko', j: Jezyk): string {

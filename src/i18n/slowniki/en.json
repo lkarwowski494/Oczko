@@ -291,7 +291,10 @@
     "kopia_tytul": "Make another {{nazwa}}?",
     "kopia_opis": "Same parts, goals and reminders. All counters start at 0, and this project stays as it is.",
     "kopia_potwierdz": "Make another",
-    "edycja_info": "Deleted parts and counters stay in Recently deleted for 30 days."
+    "edycja_info": "Deleted parts and counters stay in Recently deleted for 30 days.",
+    "data_startu": "Started",
+    "data_ukonczenia": "Finished",
+    "data_ukonczenia_opis": "The calendar and the weekly summary count the project as finished on this day."
   },
   "dni": {
     "dzien_one": "{{etykieta}} · {{count}} row",

@@ -4,6 +4,7 @@
 // Sygnatura bazowa: propozycja 07 (E3, Z07-22); pola partii 5 opcjonalne, więc test 07 `projekt-dni.test.tsx` działa bez zmian.
 // Postęp, cele i daty liczy domena i kompozycja; ekran tylko pokazuje i woła.
 import React, { useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import type { Tlumacz } from './wspolne';
@@ -24,6 +25,8 @@ export type PropsProjektu = {
     termin?: string | null;          // linia terminu (RD-15) sformatowana; null = bez terminu (BR-DNI-005 „Bez terminu nic”)
     ukonczony?: boolean;
     szczegoly?: { narzedzie: string | null; rozmiar: string | null; termin: string | null }; // „Needles” / „4 mm (US 6)” / krótka data
+    /** Daty ukończonego projektu (F-51, design-spec „Data ukończenia”): sformatowane z rokiem i dni RRRR-MM-DD dla zakresu wyboru. */
+    daty?: { start: string; koniec: string; startDzien: string; koniecDzien: string; dzis: string } | null;
   };
   t: Tlumacz;
   naOtworzCzesc(id: string): void;
@@ -34,6 +37,7 @@ export type PropsProjektu = {
   naEdytuj?(): void; naKoniecEdycji?(): void; naZrobTakaSama?(): void; naUsunProjekt?(): void; naWznow?(): void;
   naUsunCzesc?(id: string): void; naUsunLicznik?(id: string): void;
   naWstecz?(): void;
+  naDataUkonczenia?(dzien: string): void; // zapis od razu po wyborze (bez „Save”, design-spec)
 };
 
 export function Projekt(p: PropsProjektu): React.ReactElement {
@@ -41,6 +45,7 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
   const k = useKolory();
   const st = style(k);
   const [menu, ustawMenu] = useState<null | 'dodaj' | 'opcje'>(null);
+  const [wyborDaty, ustawWyborDaty] = useState(false);
   const wgId = new Map(s.czesci.map((c) => [c.id, c]));
   const wybierz = (f?: () => void) => () => { ustawMenu(null); f?.(); };
   const pozycja = (tekst: string, f: (() => void) | undefined, testID: string, destrukcyjna = false) => (
@@ -163,11 +168,34 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
           </View>
         </>
       )}
+      {s.ukonczony && s.daty && (
+        <View>
+          <View style={st.grupa}>
+            <View style={st.wierszGrupy}>
+              <Text style={st.tekst}>{t('projekt.data_startu')}</Text>
+              <Text style={st.podpis}>{s.daty.start}</Text>
+            </View>
+            <Pressable accessibilityRole="button" accessibilityLabel={`${t('projekt.data_ukonczenia')}, ${s.daty.koniec}`} onPress={() => ustawWyborDaty(!wyborDaty)}
+              style={st.wierszGrupy} testID="projekt-data-ukonczenia">
+              <Text style={st.tekst}>{t('projekt.data_ukonczenia')}</Text>
+              <Text style={st.podpis}>{s.daty.koniec}</Text>
+            </Pressable>
+            {wyborDaty && (
+              <DateTimePicker value={dataZDnia(s.daty.koniecDzien)} mode="date" display="inline" minimumDate={dataZDnia(s.daty.startDzien)} maximumDate={dataZDnia(s.daty.dzis)}
+                testID="projekt-data-ukonczenia-wybor" onValueChange={(_e, d) => p.naDataUkonczenia?.(dzienZDaty(d))} />
+            )}
+          </View>
+          <Text style={st.podpis}>{t('projekt.data_ukonczenia_opis')}</Text>
+        </View>
+      )}
       {s.miejsceWzoru && <Text style={st.tekst}>{t('projekt.miejsce_wzoru', { miejsce: s.miejsceWzoru })}</Text>}
       <Text style={st.podpis}>{t('projekt.ostatnia_zmiana', { data: s.ostatniaZmiana })}</Text>
     </ScrollView>
   );
 }
+
+const dzienZDaty = (d: Date): string => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const dataZDnia = (dzien: string): Date => { const [r, m, d] = dzien.split('-').map(Number); return new Date(r, m - 1, d, 12); }; // południe: bez przeskoku doby przy DST
 
 function style(k: Kolory) {
   return StyleSheet.create({

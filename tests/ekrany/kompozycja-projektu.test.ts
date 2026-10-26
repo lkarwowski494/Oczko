@@ -43,7 +43,7 @@ import { stanProjektu } from '../../src/kompozycja/projekt';
 const W: WidokProjektu = {
   id: 'p1', nazwa: 'Harbor', nienazwany: false, stan: 'w_toku', utworzonoMs: Date.UTC(2026, 9, 1), zmienionoMs: Date.UTC(2026, 9, 20, 10), ostatniaPracaMs: Date.UTC(2026, 9, 22, 10),
   notatka: '', narzedzie: 'druty', drutMm: 4, drutUS: '6', terminDzien: '2026-10-31', celDnia: { rodzaj: 'cel', rzedy: 10 }, zrobioneDzis: 3,
-  postep: { rodzaj: 'procent', wartosc: 51 },
+  postep: { rodzaj: 'procent', wartosc: 51 }, ukonczonoDzien: null,
   czesci: [
     { id: 'c1', nazwa: 'Back', rzedy: 60, cel: 96, celZPary: false, paraZ: null, calosc: null, liczniki: [{ id: 'l1', nazwa: '', rodzaj: 'rzedy', sekcja: false, wartosc: 60, znaczenie: 'skonczone' }] },
     { id: 'c2', nazwa: 'Blanket', rzedy: 20, cel: null, celZPary: false, paraZ: null, calosc: null, liczniki: [
@@ -66,4 +66,9 @@ test('stanProjektu: gałęzie terminu RD-15 i brak terminu', () => {
   expect(linia({ celDnia: null })).toBe('Done by Oct 31 · set a goal for a part to get a daily goal');
   expect(linia({ terminDzien: null, celDnia: null })).toBeNull();
   expect(stanProjektu({ ...W, drutMm: 6.5, drutUS: null, narzedzie: 'szydelko' }, { j, terazMs: 0, strefa: 'UTC' }).szczegoly).toEqual({ narzedzie: 'Hook', rozmiar: '6.5 mm', termin: 'Oct 31' });
+});
+test('stanProjektu: daty ukończonego projektu z rokiem (daty historii), zakres wyboru od dnia startu do dziś; w toku brak', () => {
+  const s = stanProjektu({ ...W, stan: 'ukonczony', ukonczonoDzien: '2026-10-20' }, { j, terazMs: Date.UTC(2026, 9, 22, 12), strefa: 'UTC' });
+  expect(s.daty).toEqual({ start: 'Oct 1, 2026', koniec: 'Oct 20, 2026', startDzien: '2026-10-01', koniecDzien: '2026-10-20', dzis: '2026-10-22' });
+  expect(stanProjektu(W, { j, terazMs: 0, strefa: 'UTC' }).daty).toBeNull();
 });

@@ -95,3 +95,9 @@ describe('podgladTerminu (arkusz „Done by”, RD-15)', () => {
     expect(await podgladTerminu(s.z, { projektId: 'p1', terminDzien: '31.10' })).toEqual({ ok: false, powod: 'bledne_dane' });
   });
 });
+test('widokProjektu: ukonczonoDzien ukończonego projektu (F-51), w toku null', async () => {
+  const s = await przygotuj();
+  await wykonaj(s.baza, [projekt('p1', 'A', T0, { stan: 'ukonczony', ukonczono: T0 }), projekt('p2', 'B')]);
+  const a = await widokProjektu(s.z, { projektId: 'p1' }), b = await widokProjektu(s.z, { projektId: 'p2' });
+  expect([a.ok && a.wartosc.ukonczonoDzien, b.ok && b.wartosc.ukonczonoDzien]).toEqual(['2026-10-22', null]);
+});

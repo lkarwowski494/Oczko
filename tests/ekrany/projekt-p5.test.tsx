@@ -96,3 +96,22 @@ describe('Projekt (partia 5)', () => {
     expect(screen.getByText('Add')).toBeTruthy();
   });
 });
+
+describe('data ukończenia (F-51, design-spec „Data ukończenia”)', () => {
+  test('ukończony: grupa „Started” / „Finished” z podpisem; stuknięcie w „Finished” rozwija wybór daty od startu do dziś, wybór zapisuje od razu', () => {
+    const naDataUkonczenia = jest.fn();
+    render(<Projekt stan={stan({ ukonczony: true, daty: { start: 'Oct 1, 2026', koniec: 'Oct 20, 2026', startDzien: '2026-10-01', koniecDzien: '2026-10-20', dzis: '2026-10-22' } })}
+      t={t} naOtworzCzesc={jest.fn()} naDataUkonczenia={naDataUkonczenia} />);
+    expect(screen.getByText('The calendar and the weekly summary count the project as finished on this day.')).toBeTruthy();
+    expect(screen.queryByTestId('projekt-data-ukonczenia-wybor')).toBeNull();
+    fireEvent.press(przycisk('Finished, Oct 20, 2026', 'button'));
+    const wybor = screen.getByTestId('projekt-data-ukonczenia-wybor');
+    expect([new Date(wybor.props.minimumDate).getDate(), new Date(wybor.props.maximumDate).getDate()]).toEqual([1, 22]); // natywny komponent dostaje ms
+    fireEvent(wybor, 'onValueChange', { type: 'set', nativeEvent: {} }, new Date(2026, 9, 18, 12));
+    expect(naDataUkonczenia).toHaveBeenCalledWith('2026-10-18');
+  });
+  test('w toku: bez grupy dat', () => {
+    render(<Projekt stan={stan()} t={t} naOtworzCzesc={jest.fn()} />);
+    expect(screen.queryByText('Finished')).toBeNull();
+  });
+});

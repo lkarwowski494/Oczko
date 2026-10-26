@@ -13,7 +13,7 @@ import { Bezpieczny } from '../../src/kompozycja/Bezpieczny';
 import { krotkaData, stanProjektu } from '../../src/kompozycja/projekt';
 import { oglos } from '../../src/kompozycja/system';
 import { dodajDni } from '../../src/przypadki-uzycia/daty';
-import { usunCzesc, usunLicznik, usunProjekt, wznowProjekt, zrobPonownie } from '../../src/przypadki-uzycia/projekt';
+import { usunCzesc, usunLicznik, usunProjekt, wznowProjekt, zmienDateUkonczenia, zrobPonownie } from '../../src/przypadki-uzycia/projekt';
 import { widokProjektu, type WidokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
 
 export default function EkranProjektu(): React.ReactElement {
@@ -51,6 +51,7 @@ export default function EkranProjektu(): React.ReactElement {
         naDodajCzesc={() => formularz('czesc')} naDodajLicznik={() => formularz('licznik')}
         naNotatka={() => formularz('notatka')} naNarzedzie={() => formularz('narzedzie')} naTermin={() => formularz('termin')}
         naEdytuj={() => ustawEdycje(true)} naKoniecEdycji={() => ustawEdycje(false)}
+        naDataUkonczenia={(dzien) => void zmienDateUkonczenia(z, { projektId: w.id, ukonczonoDzien: dzien }).then(async (r) => { if (r.ok) await wczytaj(); })}
         naWznow={() => void wznowProjekt(z, { projektId: w.id }).then(async (r) => {
           if (!r.ok) return;
           await licznik.poZmianie();
