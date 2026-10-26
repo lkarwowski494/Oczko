@@ -6,7 +6,8 @@ import type { Licznosci } from '../domena/porty';
 import { sciezkiDanych } from '../dane/baza/sciezki';
 import { surowaKopia } from '../dane/kopia-ratunkowa';
 import { stanPlikuBazy } from '../dane/pliki/magazyn';
-import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
+import { czytajTekst, istniejePlik, katalogBiblioteki, kopiuj, nazwaPliku, polacz, usunKatalog, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
+import { otworzPortExpo } from '../dane/baza/adapter-expo';
 import Constants from 'expo-constants';
 import { sprzatnijKopie, zipSurowejKopii } from '../niezawodnosc/kopie';
 import { kopiaAwaryjna } from './kopia-awaryjna';
@@ -62,6 +63,30 @@ export function trybAwaryjny() {
     async zapiszKopie(): Promise<{ sciezka: string; licznosci: Licznosci } | null> {
       await kopia;
       return archiwum.zapisz();
+    },
+    /** P-194 Q4a: liczba nieudanych startów ze stanu strażnika (ADR-0019) do „Zgłoś problem”. */
+    nieudaneStarty: async (): Promise<number> => (await czytajStan(s.stanStartu)).nieudane,
+    /**
+     * P-194 Q4a: kody `blad` do „Zgłoś problem” bez otwierania oryginału — z kopii surowej przeniesionej do katalogu tymczasowego (zamknięcie
+     * połączenia z oryginałem przeniosłoby WAL do `.db`, P-211). Tylko odczyt; katalog usuwany po odczycie. Błąd → wyjątek (wołający: „not_opened”).
+     */
+    async bledyZKopii(): Promise<{ czasMs: number; kod: string }[]> {
+      const k = await kopia;
+      if (!k.ok) throw new Error('brak kopii surowej');
+      const kat = polacz(katalogi.tymczasowy, `zgloszenie-${zegar.teraz().ms}`);
+      utworzKatalog(kat);
+      try {
+        for (const n of k.wartosc.pliki) kopiuj(polacz(k.wartosc.katalog, n), polacz(kat, n));
+        const port = otworzPortExpo(polacz(kat, nazwaPliku(s.baza)), { tylkoOdczyt: true }); // nazwa z jednego źródła (sciezkiDanych)
+        try {
+          const w = await port.all<{ czas_ms: unknown; kod: unknown }>('SELECT czas_ms, kod FROM blad ORDER BY id DESC LIMIT 20');
+          return w.flatMap((r) => (typeof r.czas_ms === 'number' && typeof r.kod === 'string' ? [{ czasMs: r.czas_ms, kod: r.kod }] : []));
+        } finally {
+          await port.zamknij();
+        }
+      } finally {
+        usunKatalog(kat);
+      }
     },
     /** ADR-0020 (3): baza się nie otwiera albo archiwum zawiodło → jeden ZIP surowej kopii (trzy pliki + manifest) do arkusza udostępniania. */
     async zipSurowej(): Promise<string | null> {

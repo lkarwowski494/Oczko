@@ -1,8 +1,12 @@
 // Ekran trybu awaryjnego w kompozycji (ADR-0019): „Zapisz kopię danych” (archiwum bez migracji, liczności, arkusz udostępniania poza E2E),
-// „Spróbuj normalnie”, „Zgłoś problem” (diagnostyka ADR-0018 — następny krok). Panel `e2e-sha-bazy` (bez t()) tylko w buildzie E2E.
+// „Spróbuj normalnie”, „Zgłoś problem” (diagnostyka ADR-0018, P-194 Q4a: podgląd i arkusz udostępniania bez zapisu do bazy). Panel `e2e-sha-bazy` (bez t()) tylko w buildzie E2E.
 import React, { useEffect, useMemo, useState } from 'react';
-import { Text } from 'react-native';
+import { Platform, Text } from 'react-native';
+import Constants from 'expo-constants';
 import { TrybAwaryjny, type PowodTrybuAwaryjnego } from '../ekrany/TrybAwaryjny';
+import { ZglosProblem, type PoleDiagnostyki } from '../ekrany/ZglosProblem';
+import { systemAplikacji } from './system';
+import { diagnostykaAwaryjna } from './zgloszenie-awaryjne';
 import type { Tlumacz } from '../ekrany/wspolne';
 import { E2E } from '../platforma/tryb-e2e';
 import { udostepnijPlik } from '../platforma/system-plikow-uzytkownika';
@@ -14,7 +18,9 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
   const a = useMemo(() => trybAwaryjny(), []);
   const [licznosci, ustawLicznosci] = useState<string | null>(null);
   const [sha, ustawSha] = useState<{ sha: string; walBajty: number } | null>(null);
+  const [zgloszenie, ustawZgloszenie] = useState<PoleDiagnostyki[] | null>(null); // P-194 Q4a: podgląd przed udostępnieniem (F-57)
   useEffect(() => { if (E2E) void a.kopia.then(() => a.sha()).then(ustawSha); }, [a]);
+  if (zgloszenie) return <ZglosProblem stan={{ diagnostyka: zgloszenie }} t={t} system={systemAplikacji} naAnuluj={() => ustawZgloszenie(null)} />;
   return (
     <TrybAwaryjny
       stan={{ powod, licznosciKopii: licznosci }}
@@ -29,7 +35,13 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
         if (E2E) void a.sha().then(ustawSha); else void udostepnijPlik(k.sciezka);
       }); }}
       naSprobujNormalnie={() => void sprobujNormalnieTeraz().then(naNormalnie)}
-      naZglosProblem={() => undefined}
+      naZglosProblem={() => void diagnostykaAwaryjna({
+        powod, nieudaneStarty: a.nieudaneStarty, bledy: a.bledyZKopii,
+        srodowisko: {
+          wersja: `${Constants.expoConfig?.version ?? '?'} (${Constants.expoConfig?.ios?.buildNumber ?? '?'})`,
+          system: `iOS ${String(Platform.Version)}`, model: Constants.platform?.ios?.model ?? Constants.deviceName ?? '?',
+        },
+      }).then(ustawZgloszenie)}
       panelE2e={E2E && sha ? <><Text testID="e2e-sha-bazy" selectable>{sha.sha}</Text><Text testID="e2e-wal-bajty" selectable>{String(sha.walBajty)}</Text></> : null}
     />
   );
