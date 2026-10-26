@@ -18,7 +18,7 @@ try {
   const js = join(katalog, '_expo/static/js/ios');
   const plik = readdirSync(js).find((n) => /^entry-.*\.hbc$/.test(n));
   if (!plik) { console.error('BŁĄD: brak entry-*.hbc w eksporcie'); process.exit(2); }
-  const w = spawnSync('node', ['scripts/wydanie/slady-testowe.mjs', join(js, plik)], { encoding: 'utf8' });
+  const w = spawnSync('node', ['scripts/wydanie/slady-testowe.mjs', join(js, plik), ...(e2e ? ['--oczekiwane'] : [])], { encoding: 'utf8' }); // P-240: w E2E bez ::error::
   process.stdout.write(w.stdout); process.stderr.write(w.stderr);
   const ok = e2e ? w.status === 1 : w.status === 0;
   console.log(ok ? `OK: ${e2e ? 'build E2E ma panele' : 'build wydania bez śladów'}` : `BŁĄD: ${e2e ? 'build E2E bez paneli' : 'ślady w buildzie wydania'}`);

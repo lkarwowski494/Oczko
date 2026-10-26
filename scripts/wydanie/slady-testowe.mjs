@@ -7,7 +7,8 @@
 // (EXPO_PUBLIC_STORE_FAKE), atrapa iCloud (EXPO_PUBLIC_ICLOUD_FAKE, P-230; plik icloud-atrapa.ts w partii 7), rola 12 (EXPO_PUBLIC_WYMUS_AWARIE),
 // i18n pseudo (EXPO_PUBLIC_PSEUDO), panele E2E bez t(): app/oferty.tsx („Test store”), app/ustawienia.tsx („Test files”), app/projekt/[id].tsx
 // („Test photo”), testID e2e-* (app/, src/kompozycja). Nazwy EXPO_PUBLIC_* Expo wstawia do bundla jako wartości, więc w wydaniu ich nie ma.
-// Użycie: node scripts/wydanie/slady-testowe.mjs <main.jsbundle> | --wzorce   (kod 0 czysto, 1 ślady, 2 zły argument)
+// Użycie: node scripts/wydanie/slady-testowe.mjs <main.jsbundle> [--oczekiwane] | --wzorce   (kod 0 czysto, 1 ślady, 2 zły argument)
+// --oczekiwane (P-240): build E2E, ślady są wymagane — wypis jako informacja, bez adnotacji ::error:: w GitHub Actions; kod wyjścia bez zmian.
 import { readFileSync, existsSync } from 'node:fs';
 
 export const WZORCE = [
@@ -17,7 +18,8 @@ export const WZORCE = [
   'EXPO_PUBLIC_E2E', 'EXPO_PUBLIC_STORE_FAKE', 'EXPO_PUBLIC_WATCH_FAKE', 'EXPO_PUBLIC_ICLOUD_FAKE', 'EXPO_PUBLIC_WYMUS_AWARIE', 'EXPO_PUBLIC_PSEUDO',
 ];
 
-const [arg] = process.argv.slice(2);
+const [arg, ...flagi] = process.argv.slice(2);
+const oczekiwane = flagi.includes('--oczekiwane');
 if (arg === '--wzorce') { console.log(JSON.stringify(WZORCE)); process.exit(0); }
 if (!arg || !existsSync(arg)) { console.error(`BŁĄD ARGUMENTU: brak pliku ${arg ?? ''}`); process.exit(2); }
 const bajty = readFileSync(arg);
@@ -32,7 +34,7 @@ for (const w of WZORCE) {
   }
 }
 if (trafienia.length) {
-  for (const t of trafienia) console.log(`::error::ślad trybu testowego w buildzie wydania: ${t}`);
+  for (const t of trafienia) console.log(oczekiwane ? `oczekiwany ślad trybu testowego (build E2E): ${t}` : `::error::ślad trybu testowego w buildzie wydania: ${t}`);
   process.exit(1);
 }
 console.log(`${arg}: bez śladów trybu testowego (${WZORCE.length} wzorców)`);

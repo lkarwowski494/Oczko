@@ -52,3 +52,19 @@ test('lista wzorców nadąża za kodem: każdy testID „e2e-…”, napis panel
   }
   expect(brak).toEqual([]);
 });
+
+// P-240: w buildzie E2E (scripts/jakosc/slady-wydania.mjs --e2e) ślady są oczekiwane — bez adnotacji ::error:: w GitHub Actions,
+// kod wyjścia bez zmian (1 = ślady znalezione; wywołujący odwraca wynik). W buildzie wydania ::error:: zostaje.
+test('--oczekiwane (build E2E): ślady jako informacja, bez ::error::, kod nadal 1', () => {
+  const plik = plikZ(hermes('Test store: expire access'));
+  const w = spawnSync(process.execPath, [SKRYPT, plik, '--oczekiwane'], { encoding: 'utf8' });
+  expect(w.status).toBe(1);
+  expect(w.stdout + w.stderr).not.toContain('::error::');
+  expect(w.stdout).toMatch(/oczekiwany ślad trybu testowego \(build E2E\): Test store/);
+  expect(uruchom(plik).stdout).toContain('::error::'); // bez flagi: wydanie
+});
+
+test('slady-wydania.mjs przekazuje --oczekiwane tylko w trybie --e2e', () => {
+  const src = readFileSync(join(KORZEN, 'scripts/jakosc/slady-wydania.mjs'), 'utf8');
+  expect(src).toMatch(/\['scripts\/wydanie\/slady-testowe\.mjs', join\(js, plik\), \.\.\.\(e2e \? \['--oczekiwane'\] : \[\]\)\]/);
+});
