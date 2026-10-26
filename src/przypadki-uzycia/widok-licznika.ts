@@ -2,7 +2,7 @@
 // Formatowanie (miesiąc, godzina, etykieta projektu roboczego przez t(), P-126 (1b)) robi kompozycja ekranu. Odczyt w kolejce: widzi zapisy zlecone wcześniej.
 import type { Wynik } from '../domena/bledy';
 import { mozeZaczacDzien, wznowienieLimitu } from '../domena/limit';
-import { czyPrzypomnienie, planPrzypomnien } from '../domena/przypomnienia';
+import { planPrzypomnien, przypomnienieChwili, type PlanPrzypomnienia } from '../domena/przypomnienia';
 import { serieDoSprawdzenia } from '../domena/straznik-tempa';
 import type { PortBazy } from '../domena/porty';
 import type { ZrodloZdarzenia } from '../domena/stany';
@@ -26,8 +26,10 @@ export type WidokLicznika = {
   glowa: string | null;
   znaczenie: 'skonczone' | 'w_trakcie';
   zablokowany: boolean;
-  /** Rząd dziergany (wartość + 1) z instrukcją przypomnienia (RD-13); `nastepny` = kolejny rząd tego planu. */
+  /** Pas rzędu w robocie (RD-13, P-161: skończone + 1 w obu trybach) z `przypomnienieChwili`; `nastepny` = kolejny rząd tego planu. */
   przypomnienie: { tekst: string; ktory: number; razy: number; nastepny: number | null } | null;
+  /** Plany przypomnień licznika — do sygnału przy zmianie (`sygnalZmiany`, RD-13-W20–W25) w kompozycji. */
+  plany: (PlanPrzypomnienia & { tekst: string })[];
   powtorzenie: { numer: number; rzadW: number; dlugosc: number } | null;
   /** Kreski posiedzenia: dodania +1 bez przerwy ≥ PRZERWA_NOWEGO_DNIA_MS, liczone wstecz od ostatniego. */
   sesja: { rzedy: number; odMs: number } | null;
@@ -64,14 +66,17 @@ function seria(dodania: readonly Plus[], glowa: string | null): WidokLicznika['s
   const ostatnia = s.wartosc.find((x) => x.ids[x.ids.length - 1] === glowa);
   return ostatnia ? { ile: ostatnia.ids.length, sekundy: Math.max(1, Math.round((ostatnia.doMs - ostatnia.odMs) / 1000)), odZdarzeniaId: ostatnia.ids[0] } : null;
 }
-async function przypomnienie(tx: PortBazy, licznikId: string, rzad: number): Promise<WidokLicznika['przypomnienie']> {
-  for (const p of await wiersze(tx.all('SELECT od_rzedu, co_n, razy, tekst FROM przypomnienie WHERE licznik_id = ? ORDER BY od_rzedu, id', [licznikId]), 'widokLicznika')) {
-    const plan = { od: liczba(p, 'od_rzedu'), co: liczba(p, 'co_n'), razy: liczba(p, 'razy') };
-    const c = czyPrzypomnienie(rzad, plan);
-    if (!c.ok || !c.wartosc) continue;
-    const rzedy = planPrzypomnien(plan);
-    const ktory = (rzad - plan.od) / plan.co + 1;
-    return { tekst: tekst(p, 'tekst'), ktory, razy: plan.razy, nastepny: rzedy.ok ? rzedy.wartosc[ktory] ?? null : null };
+async function plany(tx: PortBazy, licznikId: string): Promise<WidokLicznika['plany']> {
+  return (await wiersze(tx.all('SELECT od_rzedu, co_n, razy, tekst FROM przypomnienie WHERE licznik_id = ? ORDER BY od_rzedu, id', [licznikId]), 'widokLicznika'))
+    .map((p) => ({ od: liczba(p, 'od_rzedu'), co: liczba(p, 'co_n'), razy: liczba(p, 'razy'), tekst: tekst(p, 'tekst') }));
+}
+/** Pierwszy plan z pasem na rzędzie w robocie (skończone + 1); stan bez sygnału (P-161 Q2a, Q3). */
+function pas(lista: WidokLicznika['plany'], skonczone: number, tryb: 'skonczone' | 'w_trakcie'): WidokLicznika['przypomnienie'] {
+  for (const p of lista) {
+    const c = przypomnienieChwili(skonczone, tryb, p);
+    if (!c.ok || c.wartosc.k === null) continue;
+    const rzedy = planPrzypomnien(p);
+    return { tekst: p.tekst, ktory: c.wartosc.k, razy: p.razy, nastepny: rzedy.ok ? rzedy.wartosc[c.wartosc.k] ?? null : null };
   }
   return null;
 }
@@ -81,7 +86,7 @@ async function blizniak(tx: PortBazy, paraZ: string | null, rzad: number): Promi
   if (!l) return null;
   const id = tekst(l, 'id');
   const [n] = await wiersze(tx.all('SELECT tekst FROM notatka_rzedu WHERE licznik_id = ? AND rzad = ? ORDER BY zmieniono_ms DESC LIMIT 1', [id, rzad]), 'widokLicznika');
-  const p = await przypomnienie(tx, id, rzad);
+  const p = pas(await plany(tx, id), rzad - 1, 'skonczone');
   return n || p ? { rzad, notatka: n ? tekst(n, 'tekst') : null, przypomnienie: p ? p.tekst : null } : null;
 }
 
@@ -98,6 +103,8 @@ export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<
     const dodania = await ostatnieDodania(tx, w.licznikId);
     const zaw = mozeZaczacDzien({ dni: await dniLimituMiesiaca(tx, dzis.slice(0, 7)), dzis, teraz, ostatniPlus: await ostatniPlus(tx, dodajDni(dzis, -2)), pro: z.pro() });
     const dl = liczbaLubNull(r, 'dlugosc_powtorzenia');
+    const znaczenie = tekst(r, 'znaczenie') === 'w_trakcie' ? 'w_trakcie' : 'skonczone';
+    const lista = await plany(tx, w.licznikId);
     const termin = tekstLubNull(r, 'termin_dzien');
     const cel = termin ? await celProjektu(tx, tekst(r, 'projekt_id'), termin, dzis) : null;
     return {
@@ -107,9 +114,10 @@ export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<
         projekt: { nazwa: tekst(r, 'projekt'), nienazwany: liczba(r, 'nienazwany') === 1, utworzonoMs: liczba(r, 'utworzono_ms'), notatka: tekst(r, 'notatka') },
         czesc: { nazwa: tekst(r, 'czesc'), cel: liczbaLubNull(r, 'cel_rzedow') },
         nazwa: tekst(r, 'nazwa'), wartosc, glowa,
-        znaczenie: tekst(r, 'znaczenie') === 'w_trakcie' ? 'w_trakcie' : 'skonczone',
+        znaczenie,
         zablokowany: liczba(r, 'zablokowany') === 1,
-        przypomnienie: await przypomnienie(tx, w.licznikId, wartosc + 1),
+        przypomnienie: pas(lista, wartosc, znaczenie),
+        plany: lista,
         powtorzenie: dl ? { numer: Math.floor(wartosc / dl) + 1, rzadW: (wartosc % dl) + 1, dlugosc: dl } : null, // RD-12-W5
         sesja: sesja(dodania, teraz),
         limit: zaw.limitZawczasu ? 'zawczasu' : zaw.ostatniDarmowy ? 'ostatni-darmowy' : 'brak',

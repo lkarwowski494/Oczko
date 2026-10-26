@@ -25,3 +25,28 @@ export function planPrzypomnien(plan: PlanPrzypomnienia): Wynik<number[]> {
   if (zlyPlan(plan)) return { ok: false, powod: 'bledne_dane' };
   return { ok: true, wartosc: Array.from({ length: Math.max(0, plan.razy) }, (_, k) => plan.od + k * plan.co) };
 }
+
+export type TrybLicznika = 'skonczone' | 'w_trakcie'; // licznik.znaczenie (F-09)
+export type ChwilaPrzypomnienia = { licznik: number; rzadPasa: number | null; k: number | null };
+/**
+ * RD-13 (P-161, W11–W19): pas dotyczy rzędu w robocie w = skończone + 1 w obu trybach; liczba na liczniku = skończone (tryb „skończone”)
+ * albo skończone + 1 (tryb „rząd w trakcie”); k = które powtórzenie planu (1…M). Stan, bez sygnału. Sygnatura 08 (P-163, przegląd 05).
+ */
+export function przypomnienieChwili(skonczone: number, tryb: TrybLicznika, plan: PlanPrzypomnienia): Wynik<ChwilaPrzypomnienia> {
+  if (zlyPlan(plan) || !Number.isInteger(skonczone) || skonczone < 0 || (tryb !== 'skonczone' && tryb !== 'w_trakcie')) return { ok: false, powod: 'bledne_dane' }; // RD-13-W19
+  const w = skonczone + 1;
+  const pas = wyzwala(w, plan);
+  return { ok: true, wartosc: { licznik: tryb === 'w_trakcie' ? w : skonczone, rzadPasa: pas ? w : null, k: pas ? (w - plan.od) / plan.co + 1 : null } };
+}
+/**
+ * RD-13 (P-161, W20–W25): sygnał (wibracja, VoiceOver) tylko przy wzroście skończonych — raz, dla największego wyzwalającego rzędu
+ * w (przed + 1, po + 1]; spadek → bez sygnału, pas ze stanu po zmianie (Q2a). Sygnatura 08 (P-163, przegląd 05).
+ */
+export function sygnalZmiany(przed: number, po: number, plan: PlanPrzypomnienia): Wynik<{ rzadSygnalu: number | null; rzadPasa: number | null }> {
+  if (!Number.isInteger(przed) || przed < 0) return { ok: false, powod: 'bledne_dane' };
+  const stan = przypomnienieChwili(po, 'skonczone', plan);
+  if (!stan.ok) return stan;
+  const s = przypomnienieWpisania(przed + 1, po + 1, plan); // spadek albo bez zmiany → null
+  if (!s.ok) return s;
+  return { ok: true, wartosc: { rzadSygnalu: s.wartosc, rzadPasa: stan.wartosc.rzadPasa } };
+}

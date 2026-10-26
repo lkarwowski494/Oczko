@@ -31,8 +31,11 @@ describe('RD-13 czyPrzypomnienie: wektory BRD', () => {
   });
   test(`RD-13 liczność: wykonano ${wektory.length} z ${wektory.length} wektorów (pusty zbiór = porażka)`, () => {
     expect(wektory.length).toBe(5); // W6–W10 (wpisanie a → b): tests/domena/licznik/przypomnienie-wpisania.test.ts
-    // F07-03: oba kształty razem = cała reguła; nowy wektor innego kształtu nie może zostać pominięty po cichu.
-    expect(wektoryReguly('RD-13').map((x) => x.id).sort()).toEqual([...wektory.map((x) => x.id), 'RD-13-W6', 'RD-13-W7', 'RD-13-W8', 'RD-13-W9', 'RD-13-W10'].sort());
+    // F07-03: wszystkie kształty razem = cała reguła; nowy wektor innego kształtu nie może zostać pominięty po cichu.
+    // P-161 (łatka 01 fix-4, P-163): 25 wektorów — W11–W19 (chwila) i W20–W25 (sygnał zmiany) w tests/domena/licznik/przypomnienie-chwili.test.ts.
+    const inne = Array.from({ length: 20 }, (_, i) => `RD-13-W${6 + i}`);
+    expect(wektoryReguly('RD-13').length).toBe(25);
+    expect(wektoryReguly('RD-13').map((x) => x.id).sort()).toEqual([...wektory.map((x) => x.id), ...inne].sort());
     licznik.wynik(wektory.length);
   });
 });

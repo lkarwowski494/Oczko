@@ -2,6 +2,7 @@
 // Bieżący licznik z `ostatnie_miejsce` (F-49); pierwszy +1 świeżej instalacji tworzy projekt roboczy (BR-LIC-001, NFR-PIE-001). Po każdym
 // zapisie: potwierdzenia zegarka, potem ekran blokady i zegarek (ADR-0008 (7), ADR-0009 pkt 3); Live Activity startuje po pierwszym +1 procesu.
 import type { Wynik } from '../domena/bledy';
+import { sygnalZmiany } from '../domena/przypomnienia';
 import { formatujGodzine } from '../i18n/format';
 import type { BanerLicznika, StanEkranuLicznika, WynikPlus, ZdarzeniePlus } from '../ekrany/Licznik';
 import type { DzialaniaLicznika, StanStartu, UslugiAplikacji } from '../ekrany/Aplikacja';
@@ -54,10 +55,18 @@ export function stanEkranu(w: WidokLicznika | null, o: { j: Jezyk; dzis: string;
   };
 }
 
-/** Zdarzenia F-48 po +1 (haptyka „rząd ze znaczeniem”): wejście w rząd z instrukcją, koniec powtórzenia, cel części. */
-function zdarzeniaPlus(w: WidokLicznika): ZdarzeniePlus[] {
+/** Sygnał wejścia w rząd z instrukcją przy zmianie skończonych (RD-13-W20–W25, P-161): tylko z `sygnalZmiany`, nigdy ze stanu pasa. */
+function wejscie(w: WidokLicznika, przed: number): { rzad: number; tekst: string; ktory: number; razy: number } | null {
+  for (const p of w.plany) {
+    const s = sygnalZmiany(przed, w.wartosc, p);
+    if (s.ok && s.wartosc.rzadSygnalu !== null) return { rzad: s.wartosc.rzadSygnalu, tekst: p.tekst, ktory: (s.wartosc.rzadSygnalu - p.od) / p.co + 1, razy: p.razy };
+  }
+  return null;
+}
+/** Zdarzenia F-48 po +1 (haptyka „rząd ze znaczeniem”): wejście w rząd z instrukcją (sygnał RD-13), koniec powtórzenia, cel części. */
+function zdarzeniaPlus(w: WidokLicznika, sygnal: boolean): ZdarzeniePlus[] {
   const z: ZdarzeniePlus[] = ['rzad'];
-  if (w.przypomnienie) z.push('przypomnienie');
+  if (sygnal) z.push('przypomnienie');
   if (w.powtorzenie && w.powtorzenie.rzadW === 1 && w.wartosc > 0) z.push('koniec-powtorzenia');
   if (w.czesc.cel !== null && w.wartosc === w.czesc.cel) z.push('cel-czesci');
   return z;
@@ -141,13 +150,8 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: { wibra
         const { w } = await stan();
         void poZapisie(w);
         if (!w) return { ok: false, powod: 'bledne_dane' };
-        return {
-          ok: true,
-          wartosc: {
-            skonczone: w.wartosc, dziergany: w.wartosc + 1, zdarzenia: zdarzeniaPlus(w),
-            wejscieWPrzypomnienie: w.przypomnienie && { rzad: w.wartosc + 1, tekst: w.przypomnienie.tekst, ktory: w.przypomnienie.ktory, razy: w.przypomnienie.razy },
-          },
-        };
+        const sygnal = wejscie(w, r.wartosc.wartosc - 1);
+        return { ok: true, wartosc: { skonczone: w.wartosc, dziergany: w.wartosc + 1, zdarzenia: zdarzeniaPlus(w, sygnal !== null), wejscieWPrzypomnienie: sygnal } };
       },
       async scalDziennik() {
         const r = await naPierwszyPlan(z);

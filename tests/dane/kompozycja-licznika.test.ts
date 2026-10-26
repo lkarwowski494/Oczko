@@ -72,6 +72,25 @@ describe('kompozycjaLicznika', () => {
     expect((await k.dzialania.odswiez!()).baner).toBeNull();
   });
 
+  test('RD-13 (P-161): +1 46 → 47 wchodzi w rząd 48 z instrukcją → sygnał raz; −1 48 → 47 → pas wraca bez sygnału (W21, W22)', async () => {
+    const { s, k } = await srodowisko();
+    await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód'), ...licznik('l1', 'c1', 46),
+      ['INSERT INTO przypomnienie (id, licznik_id, od_rzedu, co_n, razy, tekst, zmieniono_ms) VALUES (?, ?, 6, 6, 10, ?, ?)', ['pr1', 'l1', 'ujmowanie', T0]]]);
+    await k.przygotuj();
+    await k.otworz('l1');
+    s.zegar.ustaw(T0 + 3_600_000);
+    const a = await k.uslugi.dodajRzad();
+    expect(a.ok && [a.wartosc.wejscieWPrzypomnienie, a.wartosc.zdarzenia]).toEqual([{ rzad: 48, tekst: 'ujmowanie', ktory: 8, razy: 10 }, ['rzad', 'przypomnienie']]);
+    expect((await k.dzialania.odswiez!()).przypomnienie).toEqual({ tekst: 'ujmowanie', ktory: 8, razy: 10, nastepny: 54 });
+    s.zegar.przesun(5_000);
+    const b = await k.uslugi.dodajRzad();
+    expect(b.ok && [b.wartosc.wejscieWPrzypomnienie, b.wartosc.zdarzenia]).toEqual([null, ['rzad']]);
+    expect((await k.dzialania.odswiez!()).przypomnienie).toBeNull();
+    s.zegar.przesun(5_000);
+    expect((await k.dzialania.naMinus!()).ok).toBe(true);
+    expect((await k.dzialania.odswiez!()).przypomnienie).toMatchObject({ ktory: 8 }); // pas ze stanu, bez sygnału (naMinus nie gra wzorca przypomnienia)
+  });
+
   test('ADR-0009 pkt 3: potwierdzenia zegarka ze startu danych idą przed pierwszym stanem', async () => {
     const { s, k, zdarzenia } = await srodowisko();
     await wykonaj(s.baza, [projekt('p1', 'Sweter'), czesc('c1', 'p1', 'Przód'), ...licznik('l1', 'c1', 1)]);
