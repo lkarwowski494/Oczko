@@ -21,8 +21,7 @@ import { udostepnijPlik, wybierzArchiwum } from '../src/platforma/system-plikow-
 import { eksportuj, importuj } from '../src/przypadki-uzycia/archiwum';
 import { usunWszystkieDane } from '../src/przypadki-uzycia/projekt';
 import { widokProjektow } from '../src/przypadki-uzycia/widok-projektow';
-import { przyTle } from '../src/przypadki-uzycia/start';
-import { sha256PlikuTs } from '../src/dane/pliki/magazyn';
+import { stanPlikuBazy } from '../src/dane/pliki/magazyn';
 import { PLIK_BAZY } from '../src/dane/baza/sciezki';
 import { polacz } from '../src/dane/pliki/system';
 
@@ -45,7 +44,7 @@ export default function EkranUstawien(): React.ReactElement {
   const [ostatniEksport, ustawOstatni] = useState<string | null>(null);
   const pliki = plikiE2e(kontener.katalogDanych);
   const [zapisane, ustawZapisane] = useState(() => (E2E ? pliki.ile() : 0));
-  const [sha, ustawSha] = useState('');
+  const [sha, ustawSha] = useState<{ sha: string; walBajty: number } | null>(null);
   const wybor = useRef<((t: TrybImportu | 'anuluj') => void) | null>(null);
 
   useFocusEffect(useCallback(() => {
@@ -54,8 +53,8 @@ export default function EkranUstawien(): React.ReactElement {
       const ch = z.zegar.teraz();
       if (w.ok) ustawDni(stanListy(w.wartosc, { zapytanie: '', j: kontener.j, terazMs: ch.ms, strefa: ch.strefa }).dni);
     });
-    // ADR-0019 test E2E: SHA-256 pliku bazy po checkpoincie WAL (stan pliku taki, jak po przejściu w tło).
-    if (E2E) void przyTle(z).then(() => sha256PlikuTs(polacz(kontener.katalogDanych, PLIK_BAZY))).then(ustawSha);
+    // ADR-0019, P-203 (kontrakt 07): SHA-256 pary `.db` + `-wal` i rozmiar `-wal` BEZ checkpointu (scenariusz 09 sprawdza niepusty WAL).
+    if (E2E) void stanPlikuBazy(polacz(kontener.katalogDanych, PLIK_BAZY)).then(ustawSha);
     return koniec;
   }, [kontener, z]));
 
@@ -100,7 +99,8 @@ export default function EkranUstawien(): React.ReactElement {
         onPress={() => { if (ostatniEksport) ustawZapisane(pliki.zachowaj(ostatniEksport)); }}>
         <Text>Test files: keep last export</Text>
       </Pressable>
-      {sha ? <Text testID="e2e-sha-bazy" selectable>{sha}</Text> : null /* dopiero po policzeniu (copyTextFrom w scenariuszu 09) */}
+      {sha ? <Text testID="e2e-sha-bazy" selectable>{sha.sha}</Text> : null /* dopiero po policzeniu (copyTextFrom w scenariuszu 09) */}
+      {sha ? <Text testID="e2e-wal-bajty" selectable>{String(sha.walBajty)}</Text> : null}
       <Text testID="e2e-pliki-stan">{`Saved: ${zapisane} file${zapisane === 1 ? '' : 's'}`}</Text>
       <Pressable accessibilityRole="button" testID="e2e-pliki-importuj-ostatni" onPress={() => { const p = pliki.ostatni(); if (p) void importZ(p); }}>
         <Text>Test files: import last kept</Text>

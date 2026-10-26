@@ -31,6 +31,11 @@ describe('KorektaSesji', () => {
     expect(screen.getByText('Oczko stopped this timer after 8 hours. Set when you really stopped.')).toBeTruthy();
   });
 
+  test('BR-PRJ-013/S4 (07, p202): sesja bez pauz → bez informacji o przerwach', () => {
+    render(<KorektaSesji stan={{ startMs: d(20, 0), koniecMs: d(21, 0), terazMs: d(23, 0), przerwyMs: 0, doSprawdzenia: null, czasInnychMs: 0 }} t={t} formatuj={F} naZapisz={jest.fn(ok)} naAnuluj={jest.fn()} />);
+    expect(screen.queryByText(/of pauses/)).toBeNull();
+  });
+
   test('wybór końca: najpóźniej teraz (maximumDate)', () => {
     render(<KorektaSesji stan={{ startMs: d(20, 0), koniecMs: d(21, 0), terazMs: d(23, 0), przerwyMs: 0, doSprawdzenia: null, czasInnychMs: 0 }} t={t} formatuj={F} naZapisz={jest.fn(ok)} naAnuluj={jest.fn()} />);
     fireEvent.press(screen.getByTestId('formularz-sesja-koniec'));

@@ -13,13 +13,13 @@ import { sprobujNormalnieTeraz, trybAwaryjny } from './start-aplikacji';
 export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwaryjnego; t: Tlumacz; naNormalnie(): void }): React.ReactElement {
   const a = useMemo(() => trybAwaryjny(), []);
   const [licznosci, ustawLicznosci] = useState<string | null>(null);
-  const [sha, ustawSha] = useState('');
+  const [sha, ustawSha] = useState<{ sha: string; walBajty: number } | null>(null);
   useEffect(() => { if (E2E) void a.kopia.then(() => a.sha()).then(ustawSha); }, [a]);
   return (
     <TrybAwaryjny
       stan={{ powod, licznosciKopii: licznosci }}
       t={t}
-      naZapiszKopie={() => { if (E2E) ustawSha(''); /* P-203, F07-19: panel ukryty, dopóki SHA po kopii się nie policzy */ void a.zapiszKopie().then(async (k) => {
+      naZapiszKopie={() => { if (E2E) ustawSha(null); /* P-203, F07-19: panel ukryty, dopóki SHA po kopii się nie policzy */ void a.zapiszKopie().then(async (k) => {
         if (!k) { // ADR-0020 (3): baza się nie otwiera → ZIP surowej kopii; plik tymczasowy usuwany po udostępnieniu
           const zip = await a.zipSurowej();
           if (zip && !E2E) void udostepnijPlik(zip).finally(() => usunPlik(zip));
@@ -30,7 +30,7 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
       }); }}
       naSprobujNormalnie={() => void sprobujNormalnieTeraz().then(naNormalnie)}
       naZglosProblem={() => undefined}
-      panelE2e={E2E && sha ? <Text testID="e2e-sha-bazy" selectable>{sha}</Text> : null}
+      panelE2e={E2E && sha ? <><Text testID="e2e-sha-bazy" selectable>{sha.sha}</Text><Text testID="e2e-wal-bajty" selectable>{String(sha.walBajty)}</Text></> : null}
     />
   );
 }

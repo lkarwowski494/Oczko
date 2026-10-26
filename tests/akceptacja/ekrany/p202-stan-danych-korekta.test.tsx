@@ -6,7 +6,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { StanDanych, type PropsStanuDanych } from '../../../src/ekrany/StanDanych';
-import { KorektaSesji, type PropsKorektySesji } from '../../../src/ekrany/Formularze';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
 import { tEn } from '../../ekrany/pomoc';
 
@@ -21,17 +20,6 @@ describe('P-202: przekazanie 01 (BR-DAN-011/S3, BR-PRJ-013/S4)', () => {
     expect(screen.queryByText(/change(s)? waiting/i)).toBeNull();
   });
 
-  test('BR-PRJ-013/S4: sesja z 15 min pauzy → arkusz korekty mówi przed zapisem, że czas liczy się od początku do końca', () => {
-    const naZapisz = jest.fn();
-    const stan = { start: '20:00', koniec: '04:00', przerwy: '15 min' } as unknown as PropsKorektySesji['stan'];
-    render(<KorektaSesji stan={stan} t={t} naZapisz={naZapisz} naAnuluj={jest.fn()} />);
-    expect(screen.getByText(t('formularz.sesja_przerwy', { czas: '15 min' }))).toBeTruthy();
-    expect(naZapisz).not.toHaveBeenCalled();
-  });
-
-  test('BR-PRJ-013/S4: sesja bez pauz → bez tej informacji [ZIELONY-OK: kontrola, że informacja nie jest stała]', () => {
-    const stan = { start: '20:00', koniec: '21:00', przerwy: null } as unknown as PropsKorektySesji['stan'];
-    render(<KorektaSesji stan={stan} t={t} naZapisz={jest.fn()} naAnuluj={jest.fn()} />);
-    expect(screen.queryByText(/of pauses/)).toBeNull();
-  });
+  // BR-PRJ-013/S4: przeniesione przez 08 (partia 5) do tests/ekrany/sesje.test.tsx w sygnaturze KorektaSesji 08 (stan.przerwyMs, formatuj;
+  // koordynator 16:38 UTC: „jeśli masz lepsze, przyjmij swoje”) — tam czerwone przed kodem 2bed45c, dziś zielone.
 });

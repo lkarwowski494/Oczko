@@ -54,3 +54,20 @@ export function utworzMagazyn(katalog: string, o: { skrot?: (sciezka: string) =>
     async wolneMiejsce() { return wolne(); },
   };
 }
+
+/** Panele buildu E2E (P-203, kontrakt 07): SHA-256 połączonych `.db` + `-wal` (brak `-wal` = pusty) i rozmiar `-wal`, bez checkpointu. */
+export async function stanPlikuBazy(sciezka: string): Promise<{ sha: string; walBajty: number }> {
+  const s = sha256();
+  let walBajty = 0;
+  for (const plik of [sciezka, `${sciezka}-wal`]) {
+    if (!istniejePlik(plik)) continue;
+    const c = otworzDoCzytania(plik);
+    try {
+      if (plik !== sciezka) walBajty = c.rozmiar;
+      for (let od = 0; od < c.rozmiar; od += KAWALEK) s.dodaj(c.czytaj(od, Math.min(KAWALEK, c.rozmiar - od)));
+    } finally {
+      c.zamknij();
+    }
+  }
+  return { sha: s.wynik(), walBajty };
+}

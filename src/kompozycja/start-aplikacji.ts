@@ -5,7 +5,7 @@ import type { Powod } from '../domena/bledy';
 import type { Licznosci } from '../domena/porty';
 import { sciezkiDanych } from '../dane/baza/sciezki';
 import { surowaKopia } from '../dane/kopia-ratunkowa';
-import { sha256PlikuTs } from '../dane/pliki/magazyn';
+import { stanPlikuBazy } from '../dane/pliki/magazyn';
 import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
 import Constants from 'expo-constants';
 import { sprzatnijKopie, zipSurowejKopii } from '../niezawodnosc/kopie';
@@ -58,7 +58,7 @@ export function trybAwaryjny() {
   const archiwum = kopiaAwaryjna({ sciezkaBazy: s.baza, pliki: s.pliki, zegar, katalogi }); // P-203: połączenie bez zamknięcia (bez checkpointu)
   return {
     kopia,
-    sha: () => (istniejePlik(s.baza) ? sha256PlikuTs(s.baza) : Promise.resolve('')),
+    sha: () => stanPlikuBazy(s.baza), // P-203 (kontrakt 07): para .db + -wal bez checkpointu i rozmiar -wal
     async zapiszKopie(): Promise<{ sciezka: string; licznosci: Licznosci } | null> {
       await kopia;
       return archiwum.zapisz();
