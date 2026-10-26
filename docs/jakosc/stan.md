@@ -4,6 +4,7 @@ Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zada
 - Wejście 855230e: `env -u NODE_PATH npm run verify` kod 0, 1974/1974; `test:akceptacja` kod 0 (3 testy).
 - E0 przyjęty: **P-198** (koordynator wg P-087): Q1a–Q5a; push wszystkich commitów (także `e2e/**`, `jakosc-ios.yml`, `scripts/ci/**`) najpóźniej 22:30 UTC; listę testID grupy D wysłać koordynatorowi (dla 04). Q6, Q7 (P-197) — czekają.
 - Przekazanie 01 (P-202): F07-21 31324a9 (granica dnia ze stoperem), F07-22 cca1ca9 (testy oczekujące BR-DAN-011/S3, BR-PRJ-013/S4; S2 zegarka w §9 strategii).
+- Przekazanie 01 fix-6 (P-224): plan testów iPada i przeglądu OG-07 na partię 6 — `docs/jakosc/plan-partia-6-ipad.md`, pytania Q1–Q3 do koordynatora.
 - E1: F07-15 (bramka w pakiecie pełnym), F07-14 (strażnik nazw źródeł: tylko klucz `zrodla.linia_standardow`), F07-16 (pusty `test:akceptacja` tylko przy katalogu bez plików testów), F07-17 (kontrakt testID B i D z 04 fix-6; scenariusze 16, 17, 28), F07-18 (scenariusze 33–43 w pakiecie pełnym) — zrobione. F07-20 (linie inwentarza kryteriów, `--check` w `jakosc:kontrole`) — zrobione (P-203 Q7a). F07-19 (P-203 Q6a) nałożone po kodzie 08 bd0b1f0 („Zapisz kopię” tylko do odczytu, panel SHA ukryty w trakcie liczenia); bez niego scenariusz 09 zostaje na poranne okno. E2 po nocnym przebiegu iOS.
 
 # Stan roli 07-jakosc — fix-2 NZ-08-P2-07 (2026-10-26)
