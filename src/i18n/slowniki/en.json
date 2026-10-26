@@ -101,7 +101,11 @@
     "przypomnienie_krotkie": "Row {{n}}: {{tekst}}"
   },
   "wspolne": {
-    "nie_teraz": "Not now"
+    "nie_teraz": "Not now",
+    "cofnij": "Undo",
+    "zamknij": "Close",
+    "anuluj": "Cancel",
+    "zapisz": "Save"
   },
   "projekty": {
     "szukaj": "Search",
@@ -113,5 +117,93 @@
     "dni": "{{zostalo}} of {{limit}} free knitting days left in {{miesiac}}",
     "tytul": "Projects",
     "nazwa_robocza": "Counter from {{data}}"
+  },
+  "historia": {
+    "pusto": "No changes yet.",
+    "wpis": "{{czas}} · {{z}} → {{na}}",
+    "wpis_opis": "{{czas}} · {{z}} → {{na}} ({{opis}})",
+    "opis_zerowanie": "reset",
+    "opis_wpisanie": "entered",
+    "opis_cofniecie": "undone"
+  },
+  "menu": {
+    "nazwa": "Name project and part",
+    "cel": "Set a goal for this part",
+    "przypomnienie": "Add a reminder (“every N rows”)",
+    "wpisz": "Enter the row number",
+    "zablokuj": "Lock counter (ignore taps)",
+    "odblokuj": "Unlock counter",
+    "ukoncz": "Mark project as finished",
+    "powtorzenie": "Set a repeat length",
+    "zeruj": "Reset to 0…",
+    "zeruj_pytanie": "Reset {{projekt}} to 0? The history keeps every change.",
+    "zeruj_potwierdz": "Reset to 0"
+  },
+  "formularz": {
+    "wpisz_tytul": "Enter the row number",
+    "wpisz_opis": "For a piece you started on paper or in another app.",
+    "wpisz_pole": "Rows already finished",
+    "wpisz_podglad": "You’ll continue on row {{n}}.",
+    "wpisz_blad": "Enter a whole number, 0 or more.",
+    "przyp_tytul": "Reminder",
+    "przyp_opis": "As written in your pattern, e.g. “decrease every 6th row 8 times”.",
+    "przyp_tekst": "What to do",
+    "przyp_od": "Starting on row",
+    "przyp_co": "Every … rows",
+    "przyp_razy": "How many times",
+    "przyp_podglad": "You’ll be reminded on rows: {{rzedy}}",
+    "przyp_zapisz": "Save reminder",
+    "przyp_zapisz_a11y": "Save reminder. You’ll be reminded on rows: {{rzedy}}",
+    "przyp_blad_od": "Enter the row to start on.",
+    "przyp_blad": "Fill in every number: 1 or more.",
+    "powt_tytul": "Repeat",
+    "powt_pole": "Rows in one repeat",
+    "powt_blad": "A repeat needs at least 1 row.",
+    "sesja_tytul": "Session",
+    "sesja_start": "Start",
+    "sesja_koniec": "End",
+    "sesja_blad": "The end must be after the start.",
+    "nazwa_tytul": "Name",
+    "nazwa_projekt": "Project",
+    "nazwa_czesc": "Part",
+    "nazwa_opis": "A part is a piece you count separately: a sleeve, the back, a sock.",
+    "cel_tytul": "Goal for this part",
+    "cel_pole": "Rows in this part"
+  },
+  "ukonczenie": {
+    "udostepnij": "Share",
+    "gotowe": "Done",
+    "ogloszenie": "{{nazwa}} moved to Finished.",
+    "okres": "Finished · {{okres}}",
+    "jednostka": "rows",
+    "czesci_one": "{{count}} part",
+    "czesci_other": "{{count}} parts",
+    "dni_one": "{{count}} knitting day",
+    "dni_other": "{{count}} knitting days",
+    "wloczka": "Yarn used",
+    "wloczka_wpisz": "Enter yarn left over for {{nazwa}}",
+    "zdjecie": "Photo of {{nazwa}}",
+    "czas_h": "{{h}} h",
+    "czas_hmin": "{{h}} h {{min}} min",
+    "czas_min": "{{min}} min"
+  },
+  "projekt": {
+    "czesc_cel": "{{rzedy}} of {{cel}} rows",
+    "cel_z_pary": "The goal comes from {{nazwa}} once it has rows.",
+    "postep": "{{procent}}% done",
+    "postep_bez_celow": "Set a goal for a part to see progress.",
+    "miejsce_wzoru": "Pattern: {{miejsce}}",
+    "ostatnia_zmiana": "Last change {{data}}",
+    "czesc_rzedy_one": "{{count}} row",
+    "czesc_rzedy_other": "{{count}} rows"
+  },
+  "dni": {
+    "dzien_one": "{{etykieta}} · {{count}} row",
+    "dzien_other": "{{etykieta}} · {{count}} rows",
+    "rzedy_one": "{{count}} row",
+    "rzedy_other": "{{count}} rows",
+    "ukonczone": "Finished: {{lista}}",
+    "czas": "{{czas}} with the stopwatch",
+    "bez_stopera": "Time shows here when you use the stopwatch."
   }
 }

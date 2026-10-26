@@ -1,10 +1,10 @@
 // Historia licznika i menu projektu (F-02, F-03, F-45; BR-LIC-003, BR-LIC-004, BR-LIC-017/S6, R-007; prototyp.html:128–129, design-spec.md:34, :44).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Historia } from '../../../src/ekrany/Historia';
-import { MenuProjektu } from '../../../src/ekrany/MenuProjektu';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { przycisk, tEn } from '../../ekrany/pomoc';
+import { Historia } from '../../src/ekrany/Historia';
+import { MenuProjektu } from '../../src/ekrany/MenuProjektu';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

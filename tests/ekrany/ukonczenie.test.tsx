@@ -1,9 +1,9 @@
 // Chwila ukończenia (F-19, F-37, F-53; U-9; BR-PRJ-015, BR-DAN-012/S1; design-spec.md:57, :66; ekrany.html `ukonczenie`).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Ukonczenie, type StanUkonczenia } from '../../../src/ekrany/Ukonczenie';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaSystemu, przycisk, tEn } from '../../ekrany/pomoc';
+import { Ukonczenie, type StanUkonczenia } from '../../src/ekrany/Ukonczenie';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { atrapaSystemu, przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
@@ -35,12 +35,13 @@ describe('Ukonczenie', () => {
     expect(screen.queryByText(/\b0 h\b|\d+ h\b|\bmin\b/)).toBeNull();
   });
 
-  test('BR-DAN-012/S1: po zamknięciu karty „Done” jedna systemowa prośba o ocenę (ekrany.html:209)', () => {
+  // P-150 / P-160 (moduly.md „Prośba o ocenę”): „Done” woła przypadek użycia; wywołanie systemowe zależy od bramki czyProsicOOcene
+  // (tests/domena/prosba-o-ocene.test.ts, tests/dane/prosba-o-ocene-zapis.test.ts), więc ekran sam go nie wykonuje (zmiana 08, odsyłacz P-150).
+  test('BR-DAN-012/S1: po zamknięciu karty „Done” jedno wywołanie przypadku użycia, bez bezpośredniej prośby z ekranu (ekrany.html:209, P-150)', () => {
     const { system, w } = pokaz();
-    expect(system.prosbaOOcene).not.toHaveBeenCalled();
     fireEvent.press(przycisk('Done', 'button'));
     expect(w.naGotowe).toHaveBeenCalledTimes(1);
-    expect(system.prosbaOOcene).toHaveBeenCalledTimes(1);
+    expect(system.prosbaOOcene).not.toHaveBeenCalled();
   });
 
   test('BR-PRJ-015 / NFR-DOS-001: ogłoszenie „Harbor Sweater moved to Finished.” (design-spec.md:66)', () => {

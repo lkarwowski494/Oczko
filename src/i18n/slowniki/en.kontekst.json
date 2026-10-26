@@ -88,7 +88,11 @@
     "przypomnienie_wiecej": "Cicha linia pod pasem, gdy w stanie jest więcej przypomnień niż mieści karta (P-162); {{count}} = ile jeszcze, reszta w aplikacji. Formy _one/_other."
   },
   "wspolne": {
-    "nie_teraz": "Neutralna odmowa (słownik interakcji)."
+    "nie_teraz": "Neutralna odmowa (słownik interakcji).",
+    "cofnij": "Słownik interakcji design-spec: ostatnia zmiana w historii i baner strażnika.",
+    "zamknij": "Tekst z prototyp.html roli 04.",
+    "anuluj": "Słownik interakcji design-spec „Save / Cancel”.",
+    "zapisz": "Słownik interakcji design-spec „Save / Cancel”."
   },
   "projekty": {
     "szukaj": "Pole wyszukiwania na liście projektów (ekrany.html projekty).",
@@ -100,5 +104,88 @@
     "dni": "Licznik darmowych dni na liście (design-spec „Limit dni”, P-065 (2a)); bez linii przy Pro.",
     "tytul": "Duży tytuł listy projektów.",
     "nazwa_robocza": "Etykieta projektu roboczego bez nazwy na liście projektów, w wyszukiwaniu i nad tytułem licznika (design-spec „Projekt roboczy”, P-126 (1b)). {{data}} = data i godzina startu w krótkim formacie regionu, rok tylko gdy inny niż bieżący. Tekst roli 04."
+  },
+  "historia": {
+    "pusto": "Tekst z prototyp.html roli 04.",
+    "wpis": "Tekst z prototyp.html roli 04. Wiersz historii: godzina, wartość przed i po.",
+    "wpis_opis": "Tekst z prototyp.html roli 04. Wiersz z rodzajem zmiany w nawiasie.",
+    "opis_zerowanie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Rodzaj zmiany w wierszu historii: zerowanie.",
+    "opis_wpisanie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Rodzaj zmiany: wpisanie numeru rzędu.",
+    "opis_cofniecie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Rodzaj zmiany: cofnięcie."
+  },
+  "menu": {
+    "nazwa": "Tekst z prototyp.html roli 04.",
+    "cel": "Tekst z prototyp.html roli 04.",
+    "przypomnienie": "Tekst z prototyp.html roli 04.",
+    "wpisz": "Tekst z prototyp.html roli 04.",
+    "zablokuj": "Tekst z prototyp.html roli 04. design-spec „Blokada licznika”.",
+    "odblokuj": "Tekst z prototyp.html roli 04.",
+    "ukoncz": "Tekst z prototyp.html roli 04.",
+    "powtorzenie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Pozycja menu powtórzenia (F-05).",
+    "zeruj": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07 z testu historia-menu (BR-LIC-017/S6).",
+    "zeruj_pytanie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Potwierdzenie zerowania z czasownikiem (design-spec.md:47).",
+    "zeruj_potwierdz": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04."
+  },
+  "formularz": {
+    "wpisz_tytul": "Tekst z prototyp.html roli 04.",
+    "wpisz_opis": "Tekst z prototyp.html roli 04.",
+    "wpisz_pole": "Tekst z prototyp.html roli 04.",
+    "wpisz_podglad": "Tekst z prototyp.html roli 04.",
+    "wpisz_blad": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-LIC-017/S7.",
+    "przyp_tytul": "Tekst z prototyp.html roli 04.",
+    "przyp_opis": "Tekst z prototyp.html roli 04.",
+    "przyp_tekst": "Tekst z prototyp.html roli 04.",
+    "przyp_od": "Tekst z prototyp.html roli 04.",
+    "przyp_co": "Tekst z prototyp.html roli 04.",
+    "przyp_razy": "Tekst z prototyp.html roli 04.",
+    "przyp_podglad": "Tekst z prototyp.html roli 04.",
+    "przyp_zapisz": "Tekst z prototyp.html roli 04.",
+    "przyp_zapisz_a11y": "design-spec.md:67: podgląd planu dołączony do etykiety „Save reminder”.",
+    "przyp_blad_od": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-LIC-010/S2 (OP-06).",
+    "przyp_blad": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. RD-13: N ≥ 1, M ≥ 1.",
+    "powt_tytul": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. F-05.",
+    "powt_pole": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. RD-12.",
+    "powt_blad": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. RD-12-W5.",
+    "sesja_tytul": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. F-51.",
+    "sesja_start": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07.",
+    "sesja_koniec": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Nazwa robocza 07.",
+    "sesja_blad": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-PRJ-013/S3.",
+    "nazwa_tytul": "Tekst z prototyp.html roli 04.",
+    "nazwa_projekt": "Tekst z prototyp.html roli 04.",
+    "nazwa_czesc": "Tekst z prototyp.html roli 04.",
+    "nazwa_opis": "Tekst z prototyp.html roli 04.",
+    "cel_tytul": "Tekst z prototyp.html roli 04.",
+    "cel_pole": "Tekst z prototyp.html roli 04."
+  },
+  "ukonczenie": {
+    "udostepnij": "Tekst z ekrany.html roli 04.",
+    "gotowe": "Tekst z ekrany.html roli 04.",
+    "ogloszenie": "design-spec.md:76 ogłoszenie VoiceOver.",
+    "okres": "Tekst z ekrany.html roli 04.",
+    "jednostka": "Tekst z ekrany.html roli 04.",
+    "czesci": "Tekst z ekrany.html roli 04. Formy _one/_other.",
+    "dni": "Tekst z ekrany.html roli 04. Formy _one/_other.",
+    "wloczka": "Tekst z ekrany.html roli 04.",
+    "wloczka_wpisz": "Etykieta z ekrany.html (wersja E3, ekrany.html:206 w teście 07).",
+    "zdjecie": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Etykieta VoiceOver zdjęcia na karcie.",
+    "czas_h": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera.",
+    "czas_hmin": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera.",
+    "czas_min": "Tekst z ekrany.html roli 04 („18 h 10 min”). Czas pracy ze stopera."
+  },
+  "projekt": {
+    "czesc_cel": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Podpis wiersza części z celem.",
+    "cel_z_pary": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-PRJ-014/S3.",
+    "postep": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. RD-14.",
+    "postep_bez_celow": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-DNI-004/S3, RD-14-W6.",
+    "miejsce_wzoru": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
+    "ostatnia_zmiana": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
+    "czesc_rzedy": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Podpis wiersza części pod nazwą. Formy _one/_other."
+  },
+  "dni": {
+    "dzien": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Formy _one/_other.",
+    "rzedy": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. Formy _one/_other.",
+    "ukonczone": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
+    "czas": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04.",
+    "bez_stopera": "Tekst roboczy 08 (Z07-05: stan bez makiety 04) — do zatwierdzenia przez 04. BR-DNI-003/S2: zamiast 0 godzin."
   }
 }

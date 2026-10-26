@@ -2,10 +2,10 @@
 // Ekrany nienarysowane (design-spec.md:95; Z07-05): asercje na danych z propsów i negatywne; teksty robocze oznaczone.
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
-import { Projekt, type PropsProjektu } from '../../../src/ekrany/Projekt';
-import { Kalendarz, Podsumowanie } from '../../../src/ekrany/Dni';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { tEn } from '../../ekrany/pomoc';
+import { Projekt, type PropsProjektu } from '../../src/ekrany/Projekt';
+import { Kalendarz, Podsumowanie } from '../../src/ekrany/Dni';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

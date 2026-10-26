@@ -2,9 +2,9 @@
 // makiety → zapytanie po roli „alert” bez etykiety wzorcowej (Z07-05).
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { FormularzPowtorzenia, FormularzPrzypomnienia, FormularzWartosci, KorektaSesji, type PlanPrzypomnieniaEkranu } from '../../../src/ekrany/Formularze';
-import type { Tlumacz, WynikEkranu } from '../../../src/ekrany/wspolne';
-import { przycisk, tEn } from '../../ekrany/pomoc';
+import { FormularzPowtorzenia, FormularzPrzypomnienia, FormularzWartosci, KorektaSesji, type PlanPrzypomnieniaEkranu } from '../../src/ekrany/Formularze';
+import type { Tlumacz, WynikEkranu } from '../../src/ekrany/wspolne';
+import { przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
