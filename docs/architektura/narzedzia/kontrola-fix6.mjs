@@ -56,6 +56,7 @@ const KONTROLE = {
     ['dane.md: klucz `zegarek_ostatnia_partia_ms` — stan urządzenia, bez iCloud, pomijany przy imporcie (P-199 Q5a)', () => /^\| `zegarek_ostatnia_partia_ms` \|[^\n]*\| nie \(stan urządzenia\) \| przy imporcie pomijany \|[^\n]*P-199 Q5a/m.test(dane)],
     ['ADR-0009 (fix-6): linia na zegarku, gdy najstarsza linia kolejki czeka ≥ ZEGAREK_PONOWIENIE_MS; kontrakt WC bez zmian (P-193, P-199 Q6a)', () => ['ZEGAREK_PONOWIENIE_MS', 'P-193', 'P-199 Q6a', 'bez zmian'].every((s) => fix6('0009').includes(s))],
   ],
+  n4: [['dane.md: usuwanie włóczki i narzędzia przez kosz (dwa rodzaje), sprzątanie po 30 dniach bez przypisań, trwałe ukrycie przypisanej włóczki (P-209)', () => /P-209[^\n]*/.test(dane) && ['elementyKosza', 'projekt_wloczka', 'NOT EXISTS', 'doSprzatniecia', 'ukryt'].every((t) => (dane.match(/\*\*Usuwanie włóczki i narzędzia[^\n]*(?:\n(?!\n)[^\n]*)*/)?.[0] ?? '').includes(t))]],
 };
 
 const i = process.argv.indexOf('--id');
