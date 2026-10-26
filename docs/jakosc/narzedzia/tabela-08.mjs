@@ -1,17 +1,23 @@
 // Tabela przekazania roli 07 → 08 (E4): plik testów akceptacyjnych → kryteria (ID z nazw testów) → pliki src do wdrożenia (importy zaślepek)
 // → kolejność (moduly.md / e4-przekazanie roli 05: domena → dane → platforma → ekrany) → zależność od poprawek 01/02/05 (ER-/Z07- w pliku).
-// Katalogi: tests/akceptacja (oczekujące, czerwone do wdrożenia) i tests/domena (przeniesione przez 08 do głównego zestawu, zielone) — F07-04.
-// Użycie: node docs/jakosc/narzedzia/tabela-08.mjs [--wynik docs/jakosc/e4/tabela-08.md] [--check docs/jakosc/e4/tabela-08.md]
-//   (kod 1, gdy jakiś plik testów nie wskazuje pliku src albo gdy --check: plik różni się od regeneracji)
+// Katalogi: tests/akceptacja (oczekujące, czerwone do wdrożenia), tests/domena i tests/dane (przeniesione przez 08 do głównego zestawu, zielone) — F07-04, F07-10.
+// Pułapka (F07-10, P-125 Q1a): plik testów w tests/ importujący src/{domena,dane,przypadki-uzycia,ekrany} poza katalogami tabeli i WYLACZONE → błąd,
+// żeby przeniesienie do nowego katalogu nie usuwało wierszy po cichu (--check porównuje tylko z regeneracją).
+// Użycie: node docs/jakosc/narzedzia/tabela-08.mjs [--wynik docs/jakosc/e4/tabela-08.md] [--check docs/jakosc/e4/tabela-08.md] [--korzen <katalog>]
+//   (kod 1, gdy jakiś plik testów nie wskazuje pliku src, leży poza katalogami tabeli albo gdy --check: plik różni się od regeneracji)
 import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, relative, dirname, resolve } from 'node:path';
 
-const KORZEN = resolve(dirname(new URL(import.meta.url).pathname), '../../..');
-const KATALOGI = [['tests/akceptacja', 'oczekuje'], ['tests/domena', 'zielony (główny zestaw)']];
-const pliki = [];
-function skan(d) { if (!existsSync(d)) return; for (const n of readdirSync(d)) { const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (/\.test\.tsx?$/.test(n)) pliki.push(p); } }
-for (const [k] of KATALOGI) skan(join(KORZEN, k));
-const stan = (rel) => KATALOGI.find(([k]) => rel.startsWith(k + '/'))[1];
+const ik = process.argv.indexOf('--korzen');
+const KORZEN = ik > 0 ? resolve(process.argv[ik + 1]) : resolve(dirname(new URL(import.meta.url).pathname), '../../..');
+const KATALOGI = [['tests/akceptacja', 'oczekuje'], ['tests/domena', 'zielony (główny zestaw)'], ['tests/dane', 'zielony (główny zestaw)']];
+const WYLACZONE = ['tests/i18n']; // rola 09 (i18n E0–E1), poza przekazaniem 07 → 08
+const w = (rel, k) => rel.startsWith(k + '/');
+const wszystkie = [];
+function skan(d) { if (!existsSync(d)) return; for (const n of readdirSync(d)) { if (n === 'node_modules') continue; const p = join(d, n); if (statSync(p).isDirectory()) skan(p); else if (/\.test\.tsx?$/.test(n)) wszystkie.push(p); } }
+skan(join(KORZEN, 'tests'));
+const pliki = wszystkie.filter((p) => KATALOGI.some(([k]) => w(relative(KORZEN, p), k)));
+const stan = (rel) => KATALOGI.find(([k]) => w(rel, k))[1];
 
 const ID = /\b(BR-[A-Z]{3}-\d{3}(?:\/S\d+)?|NFR-[A-Z]{3}-\d{3}|KP-\d{2}|RD-\d{2}|P-\d{3}|R-\d{3}|PR-\d{2})\b/g;
 const POPRAWKI = /\b(ER-\d{2}|Z07-\d{2})\b/g;
@@ -26,6 +32,11 @@ const KOLEJNOSC = [
 ];
 const wiersze = [];
 let bledy = 0;
+for (const p of wszystkie.sort()) {
+  const rel = relative(KORZEN, p);
+  if (pliki.includes(p) || WYLACZONE.some((k) => w(rel, k))) continue;
+  if (/from\s+['"](?:\.\.\/)+src\/(?:domena|dane|przypadki-uzycia|ekrany)\//.test(readFileSync(p, 'utf8'))) { bledy++; console.log(`BŁĄD ${rel}: importuje src, a leży poza katalogami tabeli (${KATALOGI.map(([k]) => k).join(', ')}) — dopisz katalog w KATALOGI albo WYLACZONE`); }
+}
 for (const p of pliki.sort()) {
   const t = readFileSync(p, 'utf8');
   const rel = relative(KORZEN, p);
