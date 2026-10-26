@@ -8,7 +8,7 @@ export const JEZYKI = [
 export type Jezyk = (typeof JEZYKI)[number];
 export type PreferencjaJezyka = 'auto' | Jezyk;
 
-const jestJezykiem = (x: string): x is Jezyk => (JEZYKI as readonly string[]).includes(x);
+export const jestJezykiem = (x: string): x is Jezyk => (JEZYKI as readonly string[]).includes(x);
 
 // Regiony, w których hiszpański dziedziczy po es-419 (CLDR supplementalData.xml, parentLocales; ta sama lista co w Treningu, lib/i18n.ts).
 const AMERYKA_LACINSKA = new Set([
@@ -52,3 +52,15 @@ export function lancuchZastepczy(j: Jezyk): Jezyk[] {
   const bliski = ZASTEPCZY[j];
   return [...new Set<Jezyk>([j, ...(bliski ? [bliski] : []), ZRODLO])];
 }
+
+/**
+ * Nazwy własne na liście języków (design-spec „Ustawienia › Język”; nie klucze t()): CLDR 47 (Intl.DisplayNames w Node 22, ICU 77.1,
+ * odczyt 2026-10-26), pierwsza litera wielka. Stała, bo Hermes nie gwarantuje Intl.DisplayNames. Aneks 08 do przeglądu 09.
+ */
+export const NAZWY_JEZYKOW: Readonly<Record<Jezyk, string>> = {
+  bg: 'Български', cs: 'Čeština', da: 'Dansk', de: 'Deutsch', el: 'Ελληνικά', en: 'English', 'es-419': 'Español latinoamericano',
+  es: 'Español', et: 'Eesti', fi: 'Suomi', fr: 'Français', hr: 'Hrvatski', hu: 'Magyar', id: 'Indonesia', it: 'Italiano', ja: '日本語',
+  ko: '한국어', lt: 'Lietuvių', lv: 'Latviešu', ms: 'Melayu', nb: 'Norsk bokmål', nl: 'Nederlands', pl: 'Polski', 'pt-BR': 'Português (Brasil)',
+  pt: 'Português', ro: 'Română', ru: 'Русский', sk: 'Slovenčina', sl: 'Slovenščina', sr: 'Српски', sv: 'Svenska', tr: 'Türkçe',
+  uk: 'Українська', vi: 'Tiếng Việt', 'zh-Hant': '繁體中文',
+};

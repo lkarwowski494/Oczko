@@ -2,7 +2,7 @@
 import type { PortBazy } from '../../domena/porty';
 import { tekst, wiersze } from './wiersze';
 
-export type KluczUstawienia = 'okno_uczciwe_zasady_widziane' | 'ostatnie_miejsce' | 'ostatni_start_ms' | 'icloud_uzytkownik' | 'ostatnia_prosba_o_ocene';
+export type KluczUstawienia = 'okno_uczciwe_zasady_widziane' | 'ostatnie_miejsce' | 'ostatni_start_ms' | 'icloud_uzytkownik' | 'ostatnia_prosba_o_ocene' | 'jezyk';
 
 export async function odczytajUstawienie(tx: PortBazy, klucz: KluczUstawienia): Promise<unknown> {
   const [w] = await wiersze(tx.all('SELECT wartosc FROM ustawienie WHERE klucz = ?', [klucz]), 'ustawienie');

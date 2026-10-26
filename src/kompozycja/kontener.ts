@@ -14,6 +14,8 @@ import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, za
 import { dostepPro, type DostepPro } from './dostep';
 import { utworzI18n } from '../i18n/i18n';
 import { ZASOBY } from '../i18n/slowniki';
+import type { PreferencjaJezyka } from '../i18n/jezyki';
+import { magazynJezyka } from '../przypadki-uzycia/jezyk';
 import { dziennikUrzadzenia } from '../platforma/dziennik-plus';
 import { ekranAktywny } from '../platforma/ekran-aktywny';
 import { haptyka } from '../platforma/haptyka';
@@ -30,7 +32,7 @@ import { ustawKatalogTymczasowy } from './system';
 export type ZaleznosciAplikacji = ZaleznosciKompozycji & ZaleznosciArchiwum;
 export type Kontener = {
   z: ZaleznosciAplikacji;
-  j: Jezyk & { naZmiane(f: (j: string) => void): () => void };
+  j: Jezyk & { naZmiane(f: (j: string) => void): () => void; preferencja(): PreferencjaJezyka; ustawJezyk(p: PreferencjaJezyka): Promise<void> };
   porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka };
   dostep: DostepPro;
   katalogDanych: string;
@@ -61,12 +63,11 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
   const b = await otworzBaze(s.baza, (p) => otworzPortExpo(p));
   if (!b.ok) return b;
   const baza = b.wartosc;
-  // Język: preferencja 'auto' w pamięci procesu do ekranu Ustawień (3C) — klucz `jezyk` tabeli `ustawienie` czeka na wiersz w dane.md (zgłoszenie do 05).
-  const preferencje = new Map<string, string>();
-  const i18n = await utworzI18n({ magazyn: { odczytaj: async (k) => preferencje.get(k) ?? null, zapisz: async (k, v) => { preferencje.set(k, v); } }, systemowe: tagiSystemowe, zasoby: ZASOBY });
+  const zegar = zegarAplikacji();
+  // Język (F-36, P-190): preferencja w `ustawienie.jezyk` (stan urządzenia, dane.md), odczyt przed pierwszym ekranem.
+  const i18n = await utworzI18n({ magazyn: magazynJezyka({ baza, zegar }), systemowe: tagiSystemowe, zasoby: ZASOBY });
   const jezyk = () => i18n.jezyk();
   const id = await urzadzenie(katalogDanych);
-  const zegar = zegarAplikacji();
   // Zakupy sztucznego sklepu buildu E2E w pliku (e2e/README.md); w buildzie wydania sztuczny sklep nie istnieje (sprawdz-ipa).
   const plikSklepu = polacz(katalogDanych, 'sklep-e2e.json');
   const zakupyE2e = istniejePlik(plikSklepu) ? await czytajTekst(plikSklepu) : null;
@@ -92,7 +93,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     ok: true,
     wartosc: {
       z,
-      j: { t, jezyk, zegar24h, naZmiane: (f) => i18n.naZmiane(f) },
+      j: { t, jezyk, zegar24h, naZmiane: (f) => i18n.naZmiane(f), preferencja: () => i18n.preferencja(), ustawJezyk: (p) => i18n.ustawJezyk(p) },
       porty: { sklep, ekranAktywny: ekranAktywny(), haptyka: haptyka() },
       dostep, katalogDanych,
     },

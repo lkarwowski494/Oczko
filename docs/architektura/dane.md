@@ -63,6 +63,7 @@ Tabela `ustawienie` jest w bazie, więc każdy klucz trafia do kopii urządzenia
 | `ostatni_start_ms` | czas poprzedniego startu aplikacji | nie (stan urządzenia) | przy imporcie pomijany | sprzątanie kosza przy dwóch startach (P-110 Q5a, moduly.md) |
 | `icloud_uzytkownik` | identyfikator użytkownika iCloud z ostatniej synchronizacji | nie (stan urządzenia) | przy imporcie pomijany | ADR-0005 (zmiana konta) |
 | `ostatnia_prosba_o_ocene` | `{ wersja, dzien }` — wersja aplikacji i dzień lokalny ostatniej prośby o ocenę | nie (stan urządzenia) | przy imporcie pomijany | P-150 E2-1a, P-156 Q1a (limit Apple na urządzeniu); zapis po udanym `requestReview` (moduly.md „Prośba o ocenę”) |
+| `jezyk` | `"auto"` albo tag z `JEZYKI` (`src/i18n/jezyki.ts`), np. `"pl"` | nie (stan urządzenia) | przy imporcie pomijany | F-36, BR-ZAK-004, ADR-0017, P-190; uszkodzony zapis (nie napis albo nieznany tag) = `"auto"` (BR-ZAK-004 S5). Stan urządzenia jak język aplikacji w Ustawieniach iOS (każde urządzenie osobno). Aneks 08 partia 5 do przeglądu 05 (precedens P-184) |
 Nowy klucz wymaga wiersza w tej tabeli. Pamięć uprawnień Pro nie jest kluczem tej tabeli (KP-06: poza danymi synchronizowanymi).
 
 ## Polityka migracji

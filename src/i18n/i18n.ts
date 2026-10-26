@@ -1,6 +1,6 @@
 // Mechanizm i18n (ADR-0017), wzór z Treningu: własne t() bez biblioteki, słowniki JSON, liczba mnoga z plural.ts.
 // Klucze znaczeniowe, źródło en; wybór języka z ustawień aplikacji ('auto' = za systemem).
-import { ZRODLO, JEZYKI, lancuchZastepczy, wybierzJezyk, type PreferencjaJezyka } from './jezyki';
+import { ZRODLO, JEZYKI, jestJezykiem, lancuchZastepczy, wybierzJezyk, type PreferencjaJezyka } from './jezyki';
 import { kategoriaLiczby } from './plural';
 import type { Klucz } from './typy';
 
@@ -79,6 +79,8 @@ export async function utworzI18n(opcje: OpcjeI18n) {
   return {
     t,
     jezyk: () => biezacy,
+    /** Wybrana pozycja listy języków; uszkodzony albo nieznany zapis = 'auto' (BR-ZAK-004 S5). */
+    preferencja: (): PreferencjaJezyka => (preferencja && jestJezykiem(preferencja) ? preferencja : 'auto'),
     /** `'auto'` = za systemem; zapis w ustawieniach przed zmianą (P-075, 3b). */
     async ustawJezyk(p: PreferencjaJezyka) {
       await opcje.magazyn.zapisz('jezyk', p);
