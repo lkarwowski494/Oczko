@@ -232,13 +232,31 @@ Każda funkcja wzoru przechodzi porównanie z zastrzeżeniami patentów przed pr
     - Wtedy zdjęcie jest wzorem projektu, który można powiększać
 
 ### BR-WZR-003: Znacznik bieżącego rzędu we wzorze
-- Przepływ: PR-06
+- Przepływ: PR-06 · Reguła: RD-21
 - Dowód potrzeby: J-04; obejście z linijką w aplikacji Zdjęcia (編み物カウンター２, id14499518985); „For years I have struggled to remember where I am in a pattern” (My Row Counter GB, id8441435364) · zależy od: P-024
 - Kryteria akceptacji:
-  - Scenariusz: Znacznik idzie z licznikiem
-    - Zakładając, że znacznik stoi na rzędzie 12 schematu, a licznik ma 12
-    - Gdy użytkownik dodaje rząd
-    - Wtedy znacznik przesuwa się na rząd 13
+  - Scenariusz: Znacznik idzie z licznikiem (NZ-WZR003: znacznik wskazuje rząd w robocie, S-43)
+    - Zakładając tryb licznika „skończone rzędy”, 11 skończonych rzędów (licznik pokazuje 11) i znacznik na rzędzie 12 schematu, czyli na rzędzie w robocie
+    - Gdy użytkownik kończy rząd i dodaje go na liczniku
+    - Wtedy licznik pokazuje 12, a znacznik przesuwa się na rząd 13 (RD-21-W4)
+  - Scenariusz: Domyślny rząd przy ustawieniu (NZ-WZR003)
+    - Zakładając 11 skończonych rzędów
+    - Gdy użytkownik ustawia znacznik na wzorze
+    - Wtedy proponowany rząd znacznika to 12 — w trybie „skończone rzędy” przy liczniku 11, w trybie „rząd w trakcie” przy liczniku „rząd 12” (RD-21-W1, RD-21-W2)
+  - Scenariusz: Schemat od innego rzędu niż licznik (NZ-WZR003)
+    - Zakładając, że po 40 rzędach ściągacza użytkownik ustawił znacznik na rzędzie 1 schematu
+    - Gdy dodaje 5 rzędów
+    - Wtedy znacznik stoi na rzędzie 6 schematu (RD-21-W5)
+  - Scenariusz: Prucie przed początek schematu (NZ-WZR003, P-134 Q3a)
+    - Zakładając ten sam projekt, 40 skończonych rzędów i znacznik na rzędzie 1 schematu
+    - Gdy użytkownik odejmuje 2 rzędy
+    - Wtedy znacznik stoi na pierwszym rzędzie schematu z oznaczeniem, że praca jest przed schematem, a nie na rzędzie −1 (RD-21-W6)
+    - Gdy dodaje z powrotem 2 rzędy
+    - Wtedy znacznik stoi na rzędzie 1 schematu bez oznaczenia (RD-21-W8)
+  - Scenariusz: Notatka na znaczniku (NZ-WZR003, P-124 Q6a)
+    - Zakładając znacznik na rzędzie 6 schematu przy 45 skończonych rzędach (schemat od rzędu po ściągaczu)
+    - Gdy użytkownik dodaje notatkę na znaczniku
+    - Wtedy notatka jest przy rzędzie 46 licznika (rząd w robocie) i przy rzędzie 6 schematu (RD-21-W5)
   - Scenariusz: Powrót do wzoru
     - Zakładając, że użytkownik zamknął aplikację ze znacznikiem na rzędzie 13
     - Gdy otwiera wzór po tygodniu

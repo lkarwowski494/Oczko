@@ -2833,5 +2833,161 @@
     "rodzaj": "błąd",
     "pochodzenie": "rachunek: data spoza kalendarza",
     "miejsce": "docs/brd/reguly.md:408"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W1",
+    "wejscie": {
+      "s_ust [rz.]": 11,
+      "tryb [-]": "skończone rzędy"
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 11,
+      "rząd_bazowy [rz.]": 12
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-43: rząd w robocie = 11 + 1",
+    "miejsce": "docs/brd/reguly.md:421"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W2",
+    "wejscie": {
+      "s_ust [rz.]": 11,
+      "tryb [-]": "rząd w trakcie"
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 12,
+      "rząd_bazowy [rz.]": 12
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "S-43 i BR-LIC-012: licznik 11 + 1, znacznik ten sam",
+    "miejsce": "docs/brd/reguly.md:422"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W3",
+    "wejscie": {
+      "s_ust [rz.]": 0,
+      "tryb [-]": "skończone rzędy"
+    },
+    "oczekiwane": {
+      "liczba na liczniku [rz.]": 0,
+      "rząd_bazowy [rz.]": 1
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: nic nie zrobiono, w robocie rząd 1",
+    "miejsce": "docs/brd/reguly.md:423"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W4",
+    "wejscie": {
+      "rząd_bazowy [rz.]": 12,
+      "s_ust [rz.]": 11,
+      "s [rz.]": 12
+    },
+    "oczekiwane": {
+      "rząd_z [rz.]": 13,
+      "stan [-]": "na schemacie",
+      "rząd notatki [rz.]": 13
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: +1 przesuwa o rząd (BR-WZR-003/S1)",
+    "miejsce": "docs/brd/reguly.md:429"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W5",
+    "wejscie": {
+      "rząd_bazowy [rz.]": 1,
+      "s_ust [rz.]": 40,
+      "s [rz.]": 45
+    },
+    "oczekiwane": {
+      "rząd_z [rz.]": 6,
+      "stan [-]": "na schemacie",
+      "rząd notatki [rz.]": 46
+    },
+    "tolerancja": 0,
+    "rodzaj": "typowy",
+    "pochodzenie": "rachunek: schemat od rzędu po ściągaczu, 1 + 5; notatka 45 + 1",
+    "miejsce": "docs/brd/reguly.md:430"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W6",
+    "wejscie": {
+      "rząd_bazowy [rz.]": 1,
+      "s_ust [rz.]": 40,
+      "s [rz.]": 38
+    },
+    "oczekiwane": {
+      "rząd_z [rz.]": -1,
+      "stan [-]": "przed schematem",
+      "rząd notatki [rz.]": null
+    },
+    "tolerancja": 0,
+    "rodzaj": "poniżej",
+    "pochodzenie": "rachunek: prucie poniżej początku schematu, 1 + (38 − 40) (P-134 Q3a)",
+    "miejsce": "docs/brd/reguly.md:431"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W7",
+    "wejscie": {
+      "rząd_bazowy [rz.]": 12,
+      "s_ust [rz.]": 11,
+      "s [rz.]": -1
+    },
+    "oczekiwane": {
+      "rząd_z [rz.]": "błąd danych",
+      "stan [-]": null,
+      "rząd notatki [rz.]": null
+    },
+    "tolerancja": null,
+    "rodzaj": "błąd",
+    "pochodzenie": "rachunek: s < 0",
+    "miejsce": "docs/brd/reguly.md:432"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W8",
+    "wejscie": {
+      "rząd_bazowy [rz.]": 1,
+      "s_ust [rz.]": 40,
+      "s [rz.]": 40
+    },
+    "oczekiwane": {
+      "rząd_z [rz.]": 1,
+      "stan [-]": "na schemacie",
+      "rząd notatki [rz.]": 41
+    },
+    "tolerancja": 0,
+    "rodzaj": "granica",
+    "pochodzenie": "rachunek: powrót po pruciu, 1 + (40 − 40); rząd 1 należy do schematu",
+    "miejsce": "docs/brd/reguly.md:433"
+  },
+  {
+    "regula": "RD-21",
+    "id": "RD-21-W9",
+    "wejscie": {
+      "rząd_bazowy [rz.]": 1,
+      "s_ust [rz.]": 40,
+      "s [rz.]": 41
+    },
+    "oczekiwane": {
+      "rząd_z [rz.]": 2,
+      "stan [-]": "na schemacie",
+      "rząd notatki [rz.]": 42
+    },
+    "tolerancja": 0,
+    "rodzaj": "powyżej",
+    "pochodzenie": "rachunek: 1 + (41 − 40)",
+    "miejsce": "docs/brd/reguly.md:434"
   }
 ]

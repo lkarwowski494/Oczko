@@ -406,3 +406,30 @@ Liczba dni d z dat (ER-38):
 | RD-20-W7 | 2027-01-01 | pl-PL | 2026-12-28 | 0 | typowy | rachunek: piątek, tydzień zaczęty w poprzednim roku |
 | RD-20-W8 | 2028-03-01 | pl-PL | 2028-02-28 | 0 | typowy | rachunek: środa, tydzień zaczęty w lutym roku przestępnego (29.02 w środku) |
 | RD-20-W9 | 2026-02-30 | pl-PL | błąd danych | — | błąd | rachunek: data spoza kalendarza |
+
+### RD-21: Rząd wskazany znacznikiem wzoru
+- Wzór: `rząd_z = rząd_bazowy + (s − s_ust)`, gdzie s to skończone rzędy licznika, do którego wzór ma znacznik, a s_ust i rząd_bazowy zapisuje się przy ustawieniu znacznika. Znacznik wskazuje **rząd w robocie**, nie ostatni skończony (S-43; P-134 Q2a): domyślnie przy ustawieniu `rząd_bazowy = s_ust + 1`, niezależnie od trybu licznika (BR-LIC-012) — w trybie „rząd w trakcie” równa się liczbie na liczniku, w trybie „skończone rzędy” jest od niej o 1 większy. Użytkownik może ustawić inny rząd_bazowy (schemat numerowany od innego rzędu niż licznik, np. od pierwszego rzędu po ściągaczu); przesunięcie `rząd_bazowy − (s_ust + 1)` zostaje stałe przy +1, −1, wpisaniu wartości i cofnięciu z historii. Notatka dodana na znaczniku (P-124 Q6a) dotyczy rzędu licznika `s + 1` (`notatka_rzedu.rzad`, rząd w robocie w układzie licznika). Przy `rząd_z < 1` stan „przed schematem” (P-134 Q3a): znacznik stoi na pierwszym rzędzie schematu z oznaczeniem, że praca jest przed nim, i wraca sam, gdy `rząd_z ≥ 1`; notatki na znaczniku w tym stanie nie ma (brak miejsca na schemacie, jak wzór bez znacznika: ADR-0011)
+- Jednostki: s, s_ust, rząd_bazowy, rząd_z, liczba na liczniku, rząd notatki [rz.]; tryb, stan [-]
+- Granica: `rząd_z = 1` należy do schematu (włącznie); `rząd_z < 1` przed schematem; s ≥ 0 (s < 0 to błąd danych)
+- Podstawa: S-43 (szczebel 2: pasek nad rzędem w robocie, przesuwany po skończeniu rzędu), rachunek, P-134 Q2a, Q3a; potrzeba J-04 (BR-WZR-003); NZ-WZR003, P-126 N3
+- Krytyczna: nie
+
+Ustawienie znacznika (wartości domyślne):
+
+| ID | s_ust [rz.] | tryb [-] | Oczekiwane: liczba na liczniku [rz.] | Oczekiwane: rząd_bazowy [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|
+| RD-21-W1 | 11 | skończone rzędy | 11 | 12 | 0 | typowy | S-43: rząd w robocie = 11 + 1 |
+| RD-21-W2 | 11 | rząd w trakcie | 12 | 12 | 0 | typowy | S-43 i BR-LIC-012: licznik 11 + 1, znacznik ten sam |
+| RD-21-W3 | 0 | skończone rzędy | 0 | 1 | 0 | granica | rachunek: nic nie zrobiono, w robocie rząd 1 |
+
+Znacznik po zmianach licznika:
+
+| ID | rząd_bazowy [rz.] | s_ust [rz.] | s [rz.] | Oczekiwane: rząd_z [rz.] | Oczekiwane: stan [-] | Oczekiwane: rząd notatki [rz.] | Tolerancja | Rodzaj | Pochodzenie |
+|---|---|---|---|---|---|---|---|---|---|
+| RD-21-W4 | 12 | 11 | 12 | 13 | na schemacie | 13 | 0 | typowy | rachunek: +1 przesuwa o rząd (BR-WZR-003/S1) |
+| RD-21-W5 | 1 | 40 | 45 | 6 | na schemacie | 46 | 0 | typowy | rachunek: schemat od rzędu po ściągaczu, 1 + 5; notatka 45 + 1 |
+| RD-21-W6 | 1 | 40 | 38 | -1 | przed schematem | — | 0 | poniżej | rachunek: prucie poniżej początku schematu, 1 + (38 − 40) (P-134 Q3a) |
+| RD-21-W7 | 12 | 11 | -1 | błąd danych | — | — | — | błąd | rachunek: s < 0 |
+| RD-21-W8 | 1 | 40 | 40 | 1 | na schemacie | 41 | 0 | granica | rachunek: powrót po pruciu, 1 + (40 − 40); rząd 1 należy do schematu |
+| RD-21-W9 | 1 | 40 | 41 | 2 | na schemacie | 42 | 0 | powyżej | rachunek: 1 + (41 − 40) |
+
