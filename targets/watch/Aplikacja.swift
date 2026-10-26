@@ -161,8 +161,26 @@ final class PustyMagazyn: MagazynSkrzynki {
   func zastap(_ linie: [String]) throws {}
 }
 
-/// Rząd w robocie: przy „skończone” wartość + 1, przy „w trakcie” wartość (BR-LIC-012, jak „Now row” w aplikacji).
-func rzadWRobocie(_ s: StanEkranuBlokady) -> Int { s.znaczenie == .w_trakcie ? s.wartosc : s.wartosc + 1 }
+// `rzadWRobocie` (skończone + 1 w obu trybach, P-161) i `pasPrzypomnienia` (RD-13): pakiet reguł, kopia Wspolne/Przypomnienia.swift.
+
+/// Pas przypomnienia pod liczbą (P-158): zakreślacz, najwyżej 2 wiersze; kilka przypomnień → cicha linia pod pasem (P-158 (1.1a)).
+struct PasZegarka: View {
+  let pas: PasPrzypomnienia
+  let jezyk: String?
+  var body: some View {
+    let p: [String: String] = ["n": String(pas.rzad), "tekst": pas.tekst, "k": String(pas.k), "razy": String(pas.razy)]
+    VStack(spacing: 2) {
+      Text(Teksty.t("przypomnienie", jezyk, p))
+        .font(.footnote.weight(.semibold)).lineLimit(2).truncationMode(.tail).multilineTextAlignment(.center)
+        .foregroundStyle(Color("tekstNaZakreslaczu"))
+        .padding(.horizontal, 6).padding(.vertical, 2)
+        .background(RoundedRectangle(cornerRadius: 4).fill(Color("zakreslacz")))
+        .overlay(alignment: .leading) { Rectangle().fill(Color("zakreslaczKrawedz")).frame(width: 2) }
+        .accessibilityLabel(Teksty.t("przypomnienie_a11y", jezyk, p))
+      if pas.wiecej > 0 { Text(Teksty.tl("przypomnienie_wiecej", pas.wiecej, jezyk)).font(.footnote).foregroundStyle(Color("olowek")) }
+    }
+  }
+}
 
 /// Nazwa miesiąca i dzień wznowienia limitu (pierwszy dzień następnego miesiąca, R-105) w języku aplikacji.
 func tekstyLimitu(_ s: StanEkranuBlokady, _ jezyk: String?) -> (miesiac: String, data: String) {
@@ -205,6 +223,7 @@ struct EkranZegarka: View {
               .font(.headline).foregroundStyle(Color("grafit"))
             Text(Teksty.t("blad_zapisu_zegarek", j)).font(.footnote).foregroundStyle(Color("olowek")).multilineTextAlignment(.center)
           } else {
+            if let pas = pasPrzypomnienia(s) { PasZegarka(pas: pas, jezyk: j) }
             Text(Teksty.t("teraz", j, ["n": String(rzadWRobocie(s))])).font(.footnote).foregroundStyle(Color("olowek"))
             if !model.telefonBlisko && !model.skrzynka.oczekujace.isEmpty {
               Text(Teksty.tl("bez_telefonu", model.skrzynka.oczekujace.count, j)).font(.footnote).foregroundStyle(Color("olowek")).multilineTextAlignment(.center)

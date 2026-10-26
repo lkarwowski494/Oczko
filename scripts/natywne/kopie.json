@@ -50,6 +50,10 @@
     ],
     "modules/oczko-reguly/Sources/OczkoDziennik/Zegarek.swift": [
       "targets/watch/Wspolne/Zegarek.swift"
+    ],
+    "modules/oczko-reguly/Sources/OczkoReguly/Przypomnienia.swift": [
+      "targets/widget/Wspolne/Przypomnienia.swift",
+      "targets/watch/Wspolne/Przypomnienia.swift"
     ]
   }
 }

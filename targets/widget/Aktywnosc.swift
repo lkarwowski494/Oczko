@@ -17,7 +17,10 @@ struct OczkoAktywnosc: Widget {
         DynamicIslandExpandedRegion(.leading) { Text(kontekst.state.stan.nazwa).font(.headline).lineLimit(1) }
         DynamicIslandExpandedRegion(.trailing) { Liczba(stan: kontekst.state.stan).font(.title2.monospacedDigit()) }
         DynamicIslandExpandedRegion(.bottom) {
-          HStack { Opis(a: kontekst.state, zPodpisem: false); Spacer(); Przycisk(a: kontekst.state) }
+          VStack(alignment: .leading, spacing: 4) {
+            HStack { Opis(a: kontekst.state, zPodpisem: false); Spacer(); Przycisk(a: kontekst.state) }
+            if let pas = pasTypowy(kontekst.state) { Pas(pas: pas, jezyk: kontekst.state.jezyk, wyspa: true) }
+          }
         }
       } compactLeading: {
         Image(systemName: "number") // znak kresek z ikony: zasób dla celu widżetu — zgłoszenie (partia 4, raport)
@@ -30,8 +33,29 @@ struct OczkoAktywnosc: Widget {
   }
 }
 
-/// Rząd w robocie: przy „skończone” wartość + 1, przy „w trakcie” wartość (BR-LIC-012, jak „Now row” w aplikacji).
-func rzadWRobocie(_ s: StanEkranuBlokady) -> Int { s.znaczenie == .w_trakcie ? s.wartosc : s.wartosc + 1 }
+/// Pas przypomnienia pod liczbą (RD-13, P-158, P-161): zakreślacz = rząd z instrukcją; najwyżej 2 wiersze, dalej wielokropek.
+/// `rzadWRobocie` i `pasPrzypomnienia` z pakietu reguł (Wspolne/Przypomnienia.swift) — ta sama reguła co pas w aplikacji.
+struct Pas: View {
+  let pas: PasPrzypomnienia
+  let jezyk: String?
+  let wyspa: Bool // rozwinięta Dynamic Island: kolory systemCzarny.zakreslacz* (tło wyspy zawsze czarne)
+  var body: some View {
+    let p: [String: String] = ["n": String(pas.rzad), "tekst": pas.tekst, "k": String(pas.k), "razy": String(pas.razy)]
+    let k = wyspa ? "wyspa" : ""
+    Text(Teksty.t("przypomnienie", jezyk, p))
+      .font(.footnote.weight(.semibold)).lineLimit(2).truncationMode(.tail)
+      .foregroundStyle(Color(k + "tekstNaZakreslaczu"))
+      .padding(.horizontal, 6).padding(.vertical, 2)
+      .background(RoundedRectangle(cornerRadius: 4).fill(Color(k + "zakreslacz")))
+      .overlay(alignment: .leading) { Rectangle().fill(Color(k + "zakreslaczKrawedz")).frame(width: 2) }
+      .accessibilityLabel(Teksty.t("przypomnienie_a11y", jezyk, p))
+  }
+}
+
+/// Pas tylko w stanie typowym (pierwszeństwo: zablokowany → limit → `uwaga` → typowy, design-spec „Ekran blokady i zegarek”).
+func pasTypowy(_ a: StanAktywnosci) -> PasPrzypomnienia? {
+  a.stan.zablokowany || !a.stan.dzienDozwolony || a.uwaga != nil ? nil : pasPrzypomnienia(a.stan)
+}
 
 /// Duża liczba: skończone rzędy albo rząd w trakcie (BR-LIC-012), jak na ekranie licznika.
 struct Liczba: View {
@@ -74,7 +98,12 @@ struct Opis: View {
         Text(Teksty.t(u == .odblokuj ? "odblokuj" : "blad_zapisu", j)).font(.footnote).foregroundStyle(Color("olowek"))
       } else {
         Text(Teksty.t("teraz", j, ["n": n])).font(.subheadline).foregroundStyle(Color("grafit"))
-        if zPodpisem { Text(Teksty.t("podpis_plus", j, ["n": n])).font(.footnote).foregroundStyle(Color("olowek")) }
+        // Kilka przypomnień w rzędzie: cicha linia „+N more” w miejscu podpisu (P-158 (1.1a)); w wyspie pod „Now row”.
+        if let pas = pasPrzypomnienia(s), pas.wiecej > 0 {
+          Text(Teksty.tl("przypomnienie_wiecej", pas.wiecej, j)).font(.footnote).foregroundStyle(Color("olowek"))
+        } else if zPodpisem {
+          Text(Teksty.t("podpis_plus", j, ["n": n])).font(.footnote).foregroundStyle(Color("olowek"))
+        }
       }
     }
     .accessibilityElement(children: .combine)
@@ -114,6 +143,7 @@ struct EkranBlokady: View {
         Spacer(minLength: 0)
         Przycisk(a: a)
       }
+      if let pas = pasTypowy(a) { Pas(pas: pas, jezyk: a.jezyk, wyspa: false) }
     }
     .padding(14)
   }

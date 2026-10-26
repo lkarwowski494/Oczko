@@ -12,5 +12,8 @@ module.exports = {
   deploymentTarget: '11.0', // ADR-0006
   icon: '../../assets/icon.png',
   frameworks: ['SwiftUI', 'WatchConnectivity', 'StoreKit', 'WatchKit'],
-  colors: { $accent: kolor('grafit'), grafit: kolor('grafit'), olowek: kolor('olowek'), przyciskTlo: kolor('przyciskTlo') },
+  colors: {
+    $accent: kolor('grafit'), grafit: kolor('grafit'), olowek: kolor('olowek'), przyciskTlo: kolor('przyciskTlo'),
+    zakreslacz: kolor('zakreslacz'), tekstNaZakreslaczu: kolor('tekstNaZakreslaczu'), zakreslaczKrawedz: kolor('zakreslaczKrawedz'), // pas przypomnienia (RD-13, P-158)
+  },
 };

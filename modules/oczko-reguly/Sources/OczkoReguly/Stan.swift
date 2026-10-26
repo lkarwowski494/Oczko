@@ -15,6 +15,7 @@ public struct PrzypomnienieStanu: Codable, Hashable {
   public let co: Int
   public let razy: Int
   public let tekst: String
+  public init(od: Int, co: Int, razy: Int, tekst: String) { self.od = od; self.co = co; self.razy = razy; self.tekst = tekst }
 }
 public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState Live Activity (ActivityKit)
   public enum Znaczenie: String, Codable { case skonczone, w_trakcie }
