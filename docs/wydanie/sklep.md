@@ -22,7 +22,7 @@ Reguły Apple i GitHuba niżej przeczytano 2026-10-26 na surowym tekście stron 
    - **Environment secrets** → **Add secret**, trzy sekrety:
      - `ASC_KEY_ID` — Key ID;
      - `ASC_ISSUER_ID` — Issuer ID;
-     - `ASC_KEY_P8` — cała treść pliku `.p8`, razem z liniami `-----BEGIN PRIVATE KEY-----` i `-----END PRIVATE KEY-----`.
+     - `ASC_KEY_P8` — cała treść pliku `.p8`, razem z pierwszą i ostatnią linią (nagłówek BEGIN i stopka END klucza).
 4. **Zmienna (opcjonalnie).** Otwórz https://github.com/lkarwowski494/Oczko/settings/variables/actions i ustaw `PRZESUNIECIE`. Domyślnie jest 1000, co daje pierwszy build 1011, większy od 1004 z 0.1.0. Podnieś ją tylko wtedy, gdy workflow sam to zaleci.
 5. **Po pierwszym zielonym przebiegu dowodowym** usuń stare sekrety repozytorium z 0.1.0: https://github.com/lkarwowski494/Oczko/settings/secrets/actions (`ASC_KEY_P8_BASE64`, `APPLE_TEAM_ID` oraz `ASC_KEY_ID` i `ASC_ISSUER_ID` na poziomie repozytorium, jeśli są). Jeśli klucz 0.1.0 nie jest używany gdzie indziej, unieważnij go w App Store Connect (ta sama strona, **Revoke**).
 6. **Wyciek albo podejrzenie:** natychmiast **Revoke** (Apple: „If you suspect a private key is compromised, immediately revoke the key”), potem nowy klucz i punkt 3.
@@ -104,7 +104,7 @@ Reguły Apple i GitHuba niżej przeczytano 2026-10-26 na surowym tekście stron 
 2. `sprawdz-wydanie.mjs` z kodem 0:
    - `metadane`: OK dla nazw, opisy po przeglądzie zakresu;
    - `prywatnosc`: OK;
-   - `sekrety`: **1 BŁĄD rozstrzygnięty — fałszywy alarm**: `.gitleaks.toml:9` to wzorzec reguły wykrywającej klucze `.p8` (`regex = '''-----BEGIN PRIVATE KEY-----…'''`), nie klucz;
+   - `sekrety`: **1 BŁĄD rozstrzygnięty — fałszywy alarm**: `.gitleaks.toml:9` to wzorzec reguły gitleaks wykrywającej klucze `.p8` (wyrażenie regularne z nagłówkiem bloku klucza), nie klucz;
    - historii nie sprawdzono, bo klon jest płytki. Siatka asekuracyjna: GitHub sam skanuje sekrety w repo publicznym.
 3. UWAGI z `kontrola-ipa.sh` rozstrzygnięte tutaj (lista po pierwszym przebiegu dowodowym).
 4. Produkty z kroku 1 w stanie „Ready to Submit” i dołączone do wersji 1.0; Family Sharing i karencja zrobione (kroki 2–3).
