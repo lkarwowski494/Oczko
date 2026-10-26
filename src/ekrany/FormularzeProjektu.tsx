@@ -1,7 +1,8 @@
 // Arkusze projektu i części (08 partia 5; design-spec „Projekt, części i kosz” → „Arkusze”, makiety fix5 `nowy-projekt`, `dodaj-czesc`, `dodaj-licznik`,
 // `notatka`, `znaczenie`, `narzedzie`, `co-dalej`; P-183). Teksty z łatki 04 fix-5; walidacja reguł w domenie i przypadkach użycia, ekran pokazuje
-// komunikat i nie woła zapisu z błędną wartością (jak Formularze.tsx). Arkusz terminu: po decyzji o wyborze daty (pytanie 08 Q5).
-import React, { useState } from 'react';
+// komunikat i nie woła zapisu z błędną wartością (jak Formularze.tsx). Wybór daty terminu: P-186.
+import React, { useEffect, useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable, Text } from 'react-native';
 import { Arkusz, Komunikat, Pole, Przycisk, Tresc, Wybor, liczbaZPola, style as styleArkusza } from './Arkusz';
 import { useKolory } from './motyw';
@@ -165,6 +166,37 @@ export function CoDalej(p: { t: Tlumacz; czesc: string; projekt: string; celDrug
       <Tresc>{t('czesc.co_dalej_opis', { czesc: p.czesc, projekt: p.projekt })}</Tresc>
       {wybor(t('czesc.druga_taka_sama', { czesc: p.czesc }), p.celDrugiej === null ? t('czesc.druga_bez_celu') : t('czesc.druga_opis', { count: p.celDrugiej }), p.naDruga, 'co-dalej-druga')}
       {wybor(t('czesc.nowa'), t('czesc.nowa_opis'), p.naNowa, 'co-dalej-nowa')}
+    </Arkusz>
+  );
+}
+
+const dzienZDaty = (d: Date): string => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const dataZDnia = (dzien: string): Date => { const [r, m, d] = dzien.split('-').map(Number); return new Date(r, m - 1, d, 12); }; // południe: bez przeskoku doby przy DST
+/**
+ * Termin „Done by” (F-61, BR-DNI-005; design-spec arkusz terminu): systemowy wybór daty inline (P-186, `@react-native-community/datetimepicker`),
+ * od dziś; podgląd celu na dziś liczy domena (`podglad` → RD-15: liczba rzędów albo null bez celów części); „No date” zapisuje brak terminu.
+ */
+export function FormularzTerminu(p: {
+  t: Tlumacz; dzis: string; termin: string | null; jezyk: string; podglad(dzien: string): Promise<number | null>;
+  naZapisz: Zapis<string | null>; naAnuluj(): void;
+}): React.ReactElement {
+  const { t } = p;
+  const [dzien, ustawDzien] = useState(p.termin ?? p.dzis);
+  const [cel, ustawCel] = useState<number | null | undefined>(undefined);
+  const [blad, zapisz] = useZapis();
+  const { podglad } = p;
+  useEffect(() => {
+    let zywy = true;
+    void podglad(dzien).then((c) => { if (zywy) ustawCel(c); });
+    return () => { zywy = false; };
+  }, [dzien, podglad]);
+  return (
+    <Arkusz tytul={t('formularz.termin_tytul')} przyciski={<Przyciski t={t} naZapisz={() => zapisz(p.naZapisz, dzien)} naAnuluj={p.naAnuluj} />}>
+      <DateTimePicker value={dataZDnia(dzien)} mode="date" display="inline" locale={p.jezyk} minimumDate={dataZDnia(p.dzis)} testID="formularz-termin-data"
+        accessibilityLabel={t('formularz.termin_tytul')} onValueChange={(_e, d) => ustawDzien(dzienZDaty(d))} />
+      {cel !== undefined && <Tresc podpis>{cel === null ? t('formularz.termin_bez_celow') : t('formularz.termin_podglad', { count: cel })}</Tresc>}
+      <Przycisk tekst={t('formularz.termin_brak')} onPress={() => zapisz(p.naZapisz, null)} rodzaj="tekstowy" testID="formularz-termin-brak" />
+      {blad && <Komunikat tekst={t('licznik.blad_zapisu')} />}
     </Arkusz>
   );
 }

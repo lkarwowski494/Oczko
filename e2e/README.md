@@ -43,6 +43,8 @@ Argumenty startu (`launchApp: arguments:`; na iOS Maestro przekazuje je jako arg
 | `oczkoE2eAwariaStartu` | `przed-kamieniem` | wymuszona awaria procesu przed kamieniem milowym ADR-0019 (start liczony jako nieudany); po zapisie stanu startu pusty ekran z `testID` `e2e-awaria-startu` |
 
 ## testID (propozycja 07 dla 08; zmiana nazwy = zmiana scenariuszy)
+Wiersze `projekt-*`, `kosz-*`, `co-dalej-*`, `projekty-kosz`, `projekty-ostatnia-praca`, `licznik-nastepna-czesc`, `menu-znaczenie` i `formularz-*` arkuszy projektu dopisała rola 08 w partii 5 według propozycji 04 fix-5 („Dla 08”, P-183) — do przeglądu 07. Potwierdzenia usuwania to alerty systemowe (bez testID; scenariusz stuka w tekst przycisku).
+
 Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`; „—” = tekst ustala 04 (Z07-05), scenariusz używa tylko id. Kolumna ostatnia: klawiatura pola (`liczbowa`, `tekstowa`) albo puste.
 
 | id | ekran | element | tekst / etykieta | klawiatura |
@@ -95,8 +97,39 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `projekty-wiersz` | lista projektów | wiersz projektu (powtarzalny, `index`) | nazwa · część · rząd | |
 | `projekty-nowy` | lista projektów | nowy projekt | „New project” | |
 | `projekty-dni-darmowe` | lista projektów | licznik dni (tylko bez Pro) | „3 of 5 free knitting days left in November” | |
-| `projekty-uspione` | lista projektów | sekcja projektów dawno nieruszanych | — | |
+| `projekty-ostatnia-praca` | lista projektów | etykieta ostatniej pracy w wierszu projektu w toku (powtarzalna; bez progu, P-182, P-183 (1a) — zastępuje `projekty-uspione`) | „last worked 41 days ago” | |
+| `projekty-kosz` | lista projektów | wejście do „Recently deleted” (tylko gdy kosz niepusty, P-183 (2a)) | „Recently deleted” | |
 | `projekty-ukonczone` | lista projektów | sekcja ukończonych | „Finished” | |
+| `projekt-dodaj` | ekran projektu | „+”: Add part / Add counter | — | |
+| `projekt-dodaj-czesc` | ekran projektu (menu „+”) | Add part | „Add part” | |
+| `projekt-dodaj-licznik` | ekran projektu (menu „+”) | Add counter | „Add counter” | |
+| `projekt-menu` | ekran projektu | menu ••• | — | |
+| `projekt-edytuj` | ekran projektu (menu •••) | tryb Edit części i liczników | „Edit parts and counters” | |
+| `projekt-gotowe` | ekran projektu (tryb Edit) | koniec trybu Edit | „Done” | |
+| `projekt-usun-czesc` | ekran projektu (tryb Edit) | ⊖ przy części (powtarzalny) | — | |
+| `projekt-usun-licznik` | ekran projektu (tryb Edit) | ⊖ przy liczniku (powtarzalny) | — | |
+| `projekt-zrob-taka-sama` | ekran projektu (menu •••) | Make another like this | „Make another like this” | |
+| `projekt-usun` | ekran projektu (menu •••) | Delete project… | „Delete project…” | |
+| `projekt-wznow` | ekran projektu (menu •••, ukończony) | Resume knitting | „Resume knitting” | |
+| `projekt-linia-terminu` | ekran projektu | linia terminu (tylko z terminem) | „Done by Oct 31 · today 3 of 10 rows” | |
+| `projekt-notatka` | ekran projektu | notatka (otwiera arkusz) | tekst notatki albo „Add a note” | |
+| `projekt-narzedzie` | ekran projektu | druty albo szydełko (otwiera arkusz) | „4 mm (US 6)” | |
+| `projekt-termin` | ekran projektu | termin „Done by” (otwiera arkusz) | krótka data albo „None” | |
+| `licznik-nastepna-czesc` | licznik | „Next part” przy osiągniętym celu (BR-LIC-011/S1) | „Next part” | |
+| `co-dalej-druga` | arkusz „What’s next?” | druga część pary | „A second {część}” | |
+| `co-dalej-nowa` | arkusz „What’s next?” | nowa część | „New part” | |
+| `kosz-lista` | Recently deleted | lista pozycji kosza | — | |
+| `kosz-przywroc` | Recently deleted | „Restore” (powtarzalny) | „Restore” | |
+| `formularz-nazwa-czesci` | arkusz części / nowego projektu | nazwa części (08 partia 5) | „Part” | tekstowa |
+| `formularz-cel-czesci` | arkusz części | cel części (08 partia 5) | „Rows in this part (optional)” | liczbowa |
+| `formularz-dodaj-czesc` | arkusz nowego projektu | dodanie pola części | „Add part” | |
+| `formularz-nazwa-licznika` | arkusz licznika | nazwa licznika (08 partia 5) | „Name” | tekstowa |
+| `formularz-notatka` | arkusz notatki | pole notatki, wielowierszowe (08 partia 5) | „Note for {projekt}” | tekstowa |
+| `formularz-rozmiar-mm` | arkusz narzędzia | rozmiar w mm, dziesiętna (08 partia 5) | „Size in mm” | liczbowa |
+| `formularz-wyczysc` | arkusz narzędzia | Clear | „Clear” | |
+| `formularz-termin-data` | arkusz terminu | systemowy wybór daty (inline) | — | |
+| `formularz-termin-brak` | arkusz terminu | No date | „No date” | |
+| `menu-znaczenie` | menu ••• licznika | What the number shows (F-09) | „What the number shows” | |
 | `ustawienia-dni-darmowe` | Ustawienia | licznik dni (tylko bez Pro) | „4 of 5 free knitting days left in November” | |
 | `ustawienia-oczko-pro` | Ustawienia | wejście do ofert (KP-13) | „Oczko Pro” | |
 | `ustawienia-eksport` | Ustawienia | eksport wszystkich danych | — | |

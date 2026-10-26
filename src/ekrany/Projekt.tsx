@@ -59,7 +59,7 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
       {(p.naWstecz || p.naEdytuj || p.edycja) && (
         <View style={st.pasek}>
           {p.naWstecz && (
-            <Pressable accessibilityRole="button" onPress={p.naWstecz} style={st.ikona} testID="projekt-wstecz">
+            <Pressable accessibilityRole="button" onPress={p.naWstecz} style={st.ikona} testID="nav-wstecz">
               <Text style={st.tekst}>‹ {t('wspolne.wstecz')}</Text>
             </Pressable>
           )}

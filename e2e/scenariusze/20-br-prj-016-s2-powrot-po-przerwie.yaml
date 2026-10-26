@@ -1,7 +1,8 @@
-# BR-PRJ-016/S2 (docs/brd/wymagania-projekt.md:200): projekt dawno nieruszany — powrót jednym stuknięciem z listy (sekcja uśpionych, design-spec „Projekty”).
+# BR-PRJ-016/S1–S2 (docs/brd/wymagania-projekt.md:200): projekt dawno nieruszany — „last worked …” w wierszu (bez progu i bez sekcji uśpionych,
+# P-182, P-183 (1a); nazwany wyjątek od kontraktu 07 jak P-176, zmiana roli 08 w partii 5) i powrót jednym stuknięciem z listy.
 # Wyrocznia: BR-PRJ-011. Czas: zegar wstrzyknięty (41 dni później, jak „last worked 41 days ago” w prototypie).
 appId: com.apps4brew.knitting
-name: "BR-PRJ-016/S2 · Po 41 dniach: projekt w sekcji uśpionych, jedno stuknięcie wraca do rzędu"
+name: "BR-PRJ-016/S2 · Po 41 dniach: ‘last worked 41 days ago’, jedno stuknięcie wraca do rzędu"
 tags:
   - BR-PRJ-016-S2
   - stan-licznika
@@ -17,7 +18,7 @@ tags:
 - assertVisible: { id: "projekty-lista" }
 - runFlow: { file: subflows/restart.yaml, env: { TERAZ: "2026-11-11T19:30:00" } }
 - tapOn: { id: "nav-projekty", optional: true }
-- assertVisible: { id: "projekty-uspione" }
+- assertVisible: { id: "projekty-ostatnia-praca", text: "last worked 41 days ago" }
 - assertVisible: "Harbor.*last worked 41 days ago.*"
 - takeScreenshot: 20-uspione
 - tapOn: "Harbor.*"

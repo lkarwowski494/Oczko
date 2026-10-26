@@ -112,3 +112,20 @@ test('menu ••• licznika: „What the number shows” (F-09: zmiana w ustaw
   fireEvent.press(screen.getByTestId('menu-znaczenie'));
   expect(naZnaczenie).toHaveBeenCalledTimes(1);
 });
+
+import { FormularzTerminu } from '../../src/ekrany/FormularzeProjektu';
+test('termin „Done by” (F-61): systemowy wybór daty inline od dziś, podgląd celu na dziś, „No date” zapisuje brak', async () => {
+  const naZapisz = ok();
+  const podglad = jest.fn(async (d: string) => (d === '2026-10-31' ? 10 : null));
+  render(<FormularzTerminu t={t} dzis="2026-10-22" termin={null} jezyk="en-US" podglad={podglad} naZapisz={naZapisz} naAnuluj={jest.fn()} />);
+  const wybor = screen.getByTestId('formularz-termin-data');
+  expect(wybor.props.display ?? 'inline').toBe('inline');
+  fireEvent(wybor, 'onValueChange', { type: 'set', nativeEvent: {} }, new Date(2026, 9, 31, 12));
+  expect(await screen.findByText('Today’s goal: 10 rows. It stays the same all day.')).toBeTruthy();
+  fireEvent.press(screen.getByTestId('formularz-zapisz'));
+  await waitFor(() => expect(naZapisz).toHaveBeenCalledWith('2026-10-31'));
+  fireEvent(wybor, 'onValueChange', { type: 'set', nativeEvent: {} }, new Date(2026, 10, 2, 12));
+  expect(await screen.findByText('Set a goal for a part to get a daily goal.')).toBeTruthy();
+  fireEvent.press(przycisk('No date', 'button'));
+  await waitFor(() => expect(naZapisz).toHaveBeenLastCalledWith(null));
+});

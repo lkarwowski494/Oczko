@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@bacons/apple-targets": "5.0.0",
+    "@react-native-community/datetimepicker": "9.1.0",
     "expo": "~57.0.26",
     "expo-constants": "~57.0.20",
     "expo-crypto": "~57.0.4",

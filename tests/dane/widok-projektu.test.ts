@@ -83,3 +83,15 @@ describe('widokProjektu', () => {
     expect((await widok(s, 'p2')).stan).toBe('ukonczony');
   });
 });
+
+import { podgladTerminu } from '../../src/przypadki-uzycia/widok-projektu';
+describe('podgladTerminu (arkusz „Done by”, RD-15)', () => {
+  test('cel na dziś dla wybranej daty bez zapisu; bez celów części → null', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', 'A'), czesc('c1', 'p1', 'Tył', 1, { cel: 100 }), ...licznik('l1', 'c1', 0), projekt('p2', 'B'), czesc('d1', 'p2', 'X'), ...licznik('m1', 'd1', 0)]);
+    expect(await podgladTerminu(s.z, { projektId: 'p1', terminDzien: '2026-10-31' })).toEqual({ ok: true, wartosc: { rodzaj: 'cel', rzedy: 10 } });
+    expect(await podgladTerminu(s.z, { projektId: 'p2', terminDzien: '2026-10-31' })).toEqual({ ok: true, wartosc: null });
+    expect((await widokProjektu(s.z, { projektId: 'p1' })).ok && (await widokProjektu(s.z, { projektId: 'p1' }))).toMatchObject({ wartosc: { terminDzien: null } });
+    expect(await podgladTerminu(s.z, { projektId: 'p1', terminDzien: '31.10' })).toEqual({ ok: false, powod: 'bledne_dane' });
+  });
+});

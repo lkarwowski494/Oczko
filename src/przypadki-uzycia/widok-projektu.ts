@@ -8,6 +8,7 @@ import { postepProcent, type CelDnia } from '../domena/postep';
 import type { NarzedzieProjektu } from '../domena/stany';
 import { dzienProjektu } from '../dane/repozytoria/kalendarz';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
+import { jestDniem } from './daty';
 import { blad, operacjaZapisu } from './zapis';
 import type { Zaleznosci } from './zaleznosci';
 
@@ -70,4 +71,9 @@ export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
       },
     };
   });
+}
+/** Podgląd celu na dziś dla wybranej daty w arkuszu „Done by” (RD-15, design-spec) — odczyt bez zapisu; bez celów części → null. */
+export function podgladTerminu(z: Zaleznosci, w: { projektId: string; terminDzien: string }): Promise<Wynik<CelDnia | null>> {
+  if (!jestDniem(w.terminDzien)) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'podgladTerminu', async (tx, _teraz, chwila) => ({ ok: true, wartosc: (await dzienProjektu(tx, w.projektId, w.terminDzien, chwila.dzien)).cel }));
 }

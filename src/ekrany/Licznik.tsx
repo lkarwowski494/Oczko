@@ -259,7 +259,7 @@ function LinijkaCelu({ s, t, st, naNastepnaCzesc }: { s: StanEkranuLicznika; t: 
         {zostalo > 0 ? t('licznik.do_celu', { count: zostalo }) : zostalo === 0 ? t('licznik.cel_osiagniety') : t('licznik.ponad_cel', { count: -zostalo })}
       </Text>
       {zostalo <= 0 && (
-        <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.nastepna_czesc')} onPress={naNastepnaCzesc} style={st.drugiPrzycisk}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.nastepna_czesc')} onPress={naNastepnaCzesc} style={st.drugiPrzycisk} testID="licznik-nastepna-czesc">
           <Text style={[st.tresc, st.pogrubiony]}>{t('licznik.nastepna_czesc')}</Text>
         </Pressable>
       )}

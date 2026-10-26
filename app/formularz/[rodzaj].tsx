@@ -1,7 +1,7 @@
 // Trasa „/formularz/[rodzaj]”: formularze menu ••• w arkuszu (prototyp.html:130–138). Po udanym zapisie: ekran blokady, przeładowanie licznika, powrót.
 // Partia 5: arkusze projektu (`nowy-projekt`, `czesc`, `licznik`, `notatka`, `narzedzie` z parametrem `projekt`), `znaczenie` (licznik bieżący)
 // i „What’s next?” (`co-dalej`, parametr `czesc`) — FormularzeProjektu.tsx, design-spec „Arkusze” (04 fix-5).
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { FormularzCelu, FormularzNazwy, FormularzPowtorzenia, FormularzPrzypomnienia, FormularzWartosci } from '../../src/ekrany/Formularze';
@@ -9,12 +9,12 @@ import { useKolory } from '../../src/ekrany/motyw';
 import type { WynikEkranu } from '../../src/ekrany/wspolne';
 import { planPrzypomnien } from '../../src/domena/przypomnienia';
 import { useAplikacja } from '../../src/kompozycja/Kontekst';
-import { CoDalej, FormularzCzesci, FormularzLicznika, FormularzNarzedzia, FormularzNotatki, FormularzNowegoProjektu, FormularzZnaczenia } from '../../src/ekrany/FormularzeProjektu';
+import { CoDalej, FormularzTerminu, FormularzCzesci, FormularzLicznika, FormularzNarzedzia, FormularzNotatki, FormularzNowegoProjektu, FormularzZnaczenia } from '../../src/ekrany/FormularzeProjektu';
 import { podgladRozmiaru } from '../../src/kompozycja/projekt';
 import { dodajPrzypomnienie, nastepnaCzesc, nazwijCzesc, ustawCel, ustawPowtorzenie, ustawZnaczenie, type NastepnaCzesc } from '../../src/przypadki-uzycia/czesc';
 import { dodajLicznik, wpiszWartosc } from '../../src/przypadki-uzycia/licznik';
-import { dodajCzescPara, dodajCzescProjektu, nazwijProjekt, ustawDrut, utworzProjekt, zapiszNotatke } from '../../src/przypadki-uzycia/projekt';
-import { widokProjektu, type WidokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
+import { dodajCzescPara, dodajCzescProjektu, nazwijProjekt, ustawDrut, ustawTermin, utworzProjekt, zapiszNotatke } from '../../src/przypadki-uzycia/projekt';
+import { podgladTerminu, widokProjektu, type WidokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
 import type { WidokLicznika } from '../../src/przypadki-uzycia/widok-licznika';
 
 type Zapis = { ok: true; wartosc?: unknown } | { ok: false; powod: string };
@@ -35,6 +35,12 @@ export default function EkranFormularza(): React.ReactElement {
   const z = kontener.z, t = kontener.j.t;
   const anuluj = () => router.back();
   const pusty = <View style={{ flex: 1, backgroundColor: k.arkusz }} />;
+  // Podgląd celu w arkuszu terminu (RD-15): liczba rzędów na dziś; „osiągnięty” = 0; bez celów części = null.
+  const podgladCelu = useCallback(async (d: string): Promise<number | null> => {
+    const r = projektId ? await podgladTerminu(kontener.z, { projektId, terminDzien: d }) : null;
+    if (!r?.ok || r.wartosc === null) return null;
+    return r.wartosc.rodzaj === 'cel' ? r.wartosc.rzedy : r.wartosc.rodzaj === 'po_terminie' ? r.wartosc.zostalo : 0;
+  }, [kontener, projektId]);
   /** Po zapisie w projekcie: ekran blokady i licznik od nowa, powrót do ekranu projektu (albo licznik nowej części, gdy `otworz`). */
   async function wProjekcie(f: () => Promise<Zapis>, nowyLicznik?: (r: unknown) => string | undefined): Promise<WynikEkranu<void>> {
     const r = await f();
@@ -56,7 +62,7 @@ export default function EkranFormularza(): React.ReactElement {
         naDruga={() => void wProjekcie(() => dodajCzescPara(z, { czescId: koniec.czescId, nazwa: koniec.czesc }), idLicznika)}
         naNowa={() => router.replace({ pathname: '/formularz/[rodzaj]', params: { rodzaj: 'czesc', projekt: w?.projektId ?? '', otworz: '1' } })} />;
   }
-  if (projektId && ['czesc', 'licznik', 'notatka', 'narzedzie'].includes(rodzaj)) {
+  if (projektId && ['czesc', 'licznik', 'notatka', 'narzedzie', 'termin'].includes(rodzaj)) {
     if (!wp) return pusty;
     const nazwa = wp.nienazwany ? (w ? licznik.nazwaProjektu(w) : wp.nazwa) : wp.nazwa;
     switch (rodzaj) {
@@ -72,6 +78,10 @@ export default function EkranFormularza(): React.ReactElement {
         return <FormularzNarzedzia t={t} naAnuluj={anuluj} narzedzie={wp.narzedzie} mm={wp.drutMm}
           podglad={(mm, n) => podgladRozmiaru(mm, n, kontener.j)}
           naZapisz={(d) => wProjekcie(() => ustawDrut(z, { projektId: wp.id, drutMm: d.mm, narzedzie: d.narzedzie }))} />;
+      case 'termin':
+        return <FormularzTerminu t={t} naAnuluj={anuluj} dzis={z.zegar.teraz().dzien} termin={wp.terminDzien} jezyk={kontener.j.jezyk()}
+          podglad={podgladCelu}
+          naZapisz={(d) => wProjekcie(() => ustawTermin(z, { projektId: wp.id, terminDzien: d }))} />;
     }
   }
   if (!w) return pusty;
