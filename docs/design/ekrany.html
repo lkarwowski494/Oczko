@@ -396,6 +396,27 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   </div>
 </main>
 
+<!-- 14. Import przerwany: czas w tle wygasł, ROLLBACK, dane sprzed importu (ADR-0002 (7)) -->
+<main data-ekran="import-przerwany">
+  <div class="status"><span>18:20</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Settings</a></div>
+  <div class="tytul"><h1>Import</h1></div>
+  <div class="grupa"><div class="el"><div class="tx">oczko-2026-10-20.oczko<small>3 projects, 12 patterns</small></div></div></div>
+  <div class="przyciemnienie"></div>
+  <div class="arkusz" role="alertdialog" aria-labelledby="imp-t">
+    <div class="uchwyt"></div>
+    <div class="tresc-arkusza">
+      <h2 id="imp-t">Import didn’t finish</h2>
+      <p>Oczko was in the background too long, so nothing was changed. Your data is as it was before the import.</p>
+      <p>Keep Oczko open until the import finishes.</p>
+    </div>
+    <div class="przyciski">
+      <button class="przycisk-pelny">Try again</button>
+      <button class="przycisk-tekst">Cancel</button>
+    </div>
+  </div>
+</main>
+
 <section class="uwagi">
   <h2>Notes for the reviewer</h2>
   <p>Body text: SF Pro on iOS; Source Sans 3 here as a stand-in. Lock, history, share: SF Symbols in the app. Prices come from the App Store product (KP-09); amounts here are the US base prices from P-057.</p>

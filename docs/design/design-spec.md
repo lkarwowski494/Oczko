@@ -56,6 +56,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Licznik przez północ | posiedzenie trwa po północy, podpis z godziną startu (`licznik-przez-polnoc`) |
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
+| Import | przerwany przez czas w tle, dane sprzed importu, „Try again” (`import-przerwany`) |
 | Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); bez włóczki w projekcie: pytanie pominięte |
 | Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); notatka bez znacznika (`wzor-notatka-bez-znacznika`); Word w podglądzie zastępczym: bez znacznika |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
@@ -188,6 +189,22 @@ Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): 
 | `wzor.notatka_bez_znacznika` | A note sits next to a row. |
 | `wzor.notatka_zaznacz` | Mark the row on the pattern first, then write the note. |
 | `wzor.zaznacz_rzad` | Mark row (istniejący klucz) |
+| `wspolne.anuluj` | Cancel |
+
+## Import przerwany przez wygaśnięcie czasu w tle (ADR-0002 (7), ADR-0020 (5))
+- Import „scal”/„zastąp” i przywrócenie z kopii to jedna transakcja; gdy system odbiera czas w tle, adapter robi `ROLLBACK` i dane zostają **sprzed importu**. Ekran mówi to wprost, bez kodów i przeprosin.
+- **Zapobieganie:** w trakcie importu pasek postępu z linią „Importing… Keep Oczko open until it finishes.” (`import.w_toku`).
+- **Po wygaśnięciu (`import-przerwany`):** arkusz (`alertdialog`, fokus na nagłówku): „Import didn’t finish” / „Oczko was in the background too long, so nothing was changed. Your data is as it was before the import.” / „Keep Oczko open until the import finishes.” / [Try again] / [Cancel]. „Try again” zaczyna od już sprawdzonego pliku (bez ponownego wyboru; jeśli katalog tymczasowy zniknął — wybór pliku od nowa). „Cancel” wraca do ekranu importu; nic do sprzątania po stronie użytkownika.
+- Ten sam arkusz przy przywróceniu kopii ratunkowej z innym nagłówkiem: „Restore didn’t finish” (`import.przywracanie_przerwane_tytul`), reszta tekstu wspólna.
+
+| Klucz | en |
+|---|---|
+| `import.w_toku` | Importing… Keep Oczko open until it finishes. |
+| `import.przerwany_tytul` | Import didn’t finish |
+| `import.przywracanie_przerwane_tytul` | Restore didn’t finish |
+| `import.przerwany_opis` | Oczko was in the background too long, so nothing was changed. Your data is as it was before the import. |
+| `import.przerwany_rada` | Keep Oczko open until the import finishes. |
+| `import.ponow` | Try again |
 | `wspolne.anuluj` | Cancel |
 
 ## Kreski sesji przez północ (NZ-06, P-097 (4a), P-126 (6a), N2)
