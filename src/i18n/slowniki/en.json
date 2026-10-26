@@ -18,9 +18,32 @@
     "zglos_tlumaczenie": "Report a translation problem"
   },
   "aktywnosc": {
-    "dodaj": "+1 row",
-    "odejmij": "−1 row",
-    "limit": "No free knitting days left this month.",
-    "polacz": "Open Oczko on your iPhone"
+    "plus": "+1 row",
+    "plus_a11y": "Add row. Now row {{n}}",
+    "minus": "−1 row",
+    "minus_a11y": "Remove row",
+    "teraz": "Now row {{n}}",
+    "podpis_plus": "tap when row {{n}} is done",
+    "zrobione_one": "{{count}} row done",
+    "zrobione_other": "{{count}} rows done",
+    "wstrzymane": "Counting paused",
+    "zachowane": "Your rows are kept.",
+    "limit": "No free knitting days left in {{miesiac}}.",
+    "limit_wznowienie": "Counting resumes {{data}}.",
+    "nie_dodano": "Row {{n}} wasn’t added",
+    "odblokuj": "Unlock iPhone to count.",
+    "blad_zapisu": "Try again.",
+    "nie_usunieto": "Row {{n}} wasn’t removed",
+    "blad_zapisu_zegarek": "Try again or count on iPhone.",
+    "bez_telefonu_one": "iPhone not nearby. {{count}} change is saved on this watch.",
+    "bez_telefonu_other": "iPhone not nearby. {{count}} changes are saved on this watch.",
+    "otworz_iphone": "Open Oczko on your iPhone to start counting.",
+    "zablokowany": "Counter locked",
+    "zablokowany_jak": "Unlock it in Oczko.",
+    "zablokowany_jak_zegarek": "Unlock it in Oczko on your iPhone.",
+    "zablokowany_a11y": "{{nazwa}}, {{zrobione}}, counter locked",
+    "nazwa_robocza": "Counter from {{data}}",
+    "karta_a11y": "{{nazwa}}, {{zrobione}}, now row {{n}}",
+    "sesja_a11y": "session {{czas}}"
   }
 }

@@ -65,7 +65,8 @@ describe('P-135 Q2a adapter Zegarek: potwierdzone w tym samym kontekście co sta
     expect(typeof z.potwierdz).toBe('function');
     (z.potwierdz as (ids: readonly string[]) => void)(['z1', 'z2']);
     await z.wyslijStan(stan);
-    expect(wyslane).toEqual([[JSON.stringify(stan), ['z1', 'z2']]]);
+    // 08 partia 4 (P-139): trzeci argument = język aplikacji (null bez źródła języka); asercja stanu i listy bez zmian.
+    expect(wyslane).toEqual([[JSON.stringify(stan), ['z1', 'z2'], null]]);
   });
 
   test(`P-135: lista trzyma ostatnie ZEGAREK_POTWIERDZENIA_MAKS (${ZEGAREK_POTWIERDZENIA_MAKS}) id bez powtórzeń; nowsze wypierają starsze`, async () => {

@@ -18,9 +18,12 @@ final class ZegarekHub: NSObject, WCSessionDelegate {
     if s.activationState != .activated { s.activate() }
   }
 
-  func wyslijStan(_ json: String, potwierdzone: [String]) throws {
+  /// `jezyk`: język aplikacji dla tekstów zegarka (P-139; brak klucza = angielski).
+  func wyslijStan(_ json: String, potwierdzone: [String], jezyk: String?) throws {
     guard let s = sesja, s.activationState == .activated, s.isPaired, s.isWatchAppInstalled else { return } // bez zegarka: nic do wysłania
-    try s.updateApplicationContext(["stan": json, "potwierdzone": potwierdzone])
+    var kontekst: [String: Any] = ["stan": json, "potwierdzone": potwierdzone]
+    if let jezyk { kontekst["jezyk"] = jezyk }
+    try s.updateApplicationContext(kontekst)
   }
 
   func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {

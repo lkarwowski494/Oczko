@@ -71,3 +71,29 @@ describe('Zegarek na module Swift', () => {
     expect(usunieto).toBe(true);
   });
 });
+
+describe('P-139: język aplikacji do Live Activity i zegarka (teksty natywne w języku aplikacji, nie systemu)', () => {
+  test('start i aktualizuj przekazują bieżący język aplikacji (odczyt przy każdym wywołaniu); bez źródła języka → null (Swift: angielski, P-115)', async () => {
+    const wywolania: unknown[][] = [];
+    let jezyk = 'pl';
+    const n = {
+      liveDostepne: () => true,
+      liveStart: async (...a: unknown[]) => { wywolania.push(['start', ...a]); return 'a1'; },
+      liveAktualizuj: async (...a: unknown[]) => { wywolania.push(['aktualizuj', ...a]); },
+      liveZakoncz: async () => undefined,
+    };
+    const la = liveActivity('iphone-test', n, () => jezyk);
+    await la.start(stan);
+    jezyk = 'pt-BR';
+    await la.aktualizuj(stan);
+    await liveActivity('iphone-test', n).aktualizuj(stan);
+    expect(wywolania).toEqual([['start', JSON.stringify(stan), 'iphone-test', 'pl'], ['aktualizuj', JSON.stringify(stan), 'pt-BR'], ['aktualizuj', JSON.stringify(stan), null]]);
+  });
+  test('zegarek: wyslijStan przekazuje język obok stanu i potwierdzonych (klucz `jezyk` kontekstu)', async () => {
+    const wyslane: unknown[][] = [];
+    const z = zegarek({ zegarekWyslij: async (...a: unknown[]) => { wyslane.push(a); }, addListener: () => ({ remove() {} }) }, () => 'de');
+    z.potwierdz(['z1']);
+    await z.wyslijStan(stan);
+    expect(wyslane).toEqual([[JSON.stringify(stan), ['z1'], 'de']]);
+  });
+});

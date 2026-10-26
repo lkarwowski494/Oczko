@@ -34,7 +34,8 @@
       "targets/watch/Wspolne/Zdarzenie.swift"
     ],
     "modules/oczko-reguly/Sources/OczkoDziennik/Dziennik.swift": [
-      "modules/oczko-dziennik-plus/ios/Wspolne/Dziennik.swift"
+      "modules/oczko-dziennik-plus/ios/Wspolne/Dziennik.swift",
+      "targets/watch/Wspolne/Dziennik.swift"
     ],
     "modules/oczko-reguly/Sources/OczkoDziennik/Intencja.swift": [
       "modules/oczko-dziennik-plus/ios/Wspolne/Intencja.swift",

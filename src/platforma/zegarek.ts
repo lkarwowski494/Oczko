@@ -8,11 +8,12 @@ import { natywny as modul, type OczkoDziennikPlusNatywny } from '../../modules/o
 
 type Natywny = Pick<OczkoDziennikPlusNatywny, 'zegarekWyslij' | 'addListener'>;
 
-export function zegarek(natywny: Natywny = modul()): Zegarek {
+/** `jezyk`: bieżący język aplikacji do klucza `jezyk` kontekstu (P-139); bez źródła → null (zegarek: angielski, P-115). */
+export function zegarek(natywny: Natywny = modul(), jezyk?: () => string): Zegarek {
   let potwierdzone: string[] = [];
   return {
     // Błąd wysyłki nie przerywa zapisu w aplikacji (zegarek dostanie kolejny stan); brak zegarka obsługuje moduł.
-    wyslijStan: (s: StanZegarka) => natywny.zegarekWyslij(JSON.stringify(s), [...potwierdzone]).catch(() => undefined),
+    wyslijStan: (s: StanZegarka) => natywny.zegarekWyslij(JSON.stringify(s), [...potwierdzone], jezyk ? jezyk() : null).catch(() => undefined),
     potwierdz(ids: readonly string[]) {
       // Bez powtórzeń; ponowne id przechodzi na koniec, najstarsze wypadają (utrata listy przy restarcie naprawia ponowienie zegarka, M-02).
       const nowe = new Set(ids);
