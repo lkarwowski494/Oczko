@@ -5,6 +5,7 @@ module.exports = {
   moduleNameMapper: {
     '^expo-file-system$': '<rootDir>/tests/narzedzia/expo-file-system-node.ts',
     '^expo-sqlite$': '<rootDir>/tests/narzedzia/expo-sqlite-node.ts',
+    '^expo-crypto$': '<rootDir>/tests/narzedzia/expo-crypto-node.ts',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.app-after-env.js'],
   testMatch: [
