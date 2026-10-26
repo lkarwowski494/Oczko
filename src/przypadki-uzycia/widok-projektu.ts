@@ -5,6 +5,7 @@ import type { Wynik } from '../domena/bledy';
 import { licznikCalosci } from '../domena/licznik-calosci';
 import { rozmiarUS } from '../domena/obliczenia/druty';
 import { postepProcent, type CelDnia } from '../domena/postep';
+import type { NarzedzieProjektu } from '../domena/stany';
 import { celProjektu } from '../dane/repozytoria/kalendarz';
 import { liczba, liczbaLubNull, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { blad, operacjaZapisu } from './zapis';
@@ -18,7 +19,7 @@ export type LicznikWidoku = { id: string; nazwa: string; rodzaj: 'rzedy' | 'oczk
 export type CzescWidoku = { id: string; nazwa: string; rzedy: number; cel: number | null; celZPary: boolean; paraZ: string | null; calosc: number | null; liczniki: LicznikWidoku[] };
 export type WidokProjektu = {
   id: string; nazwa: string; nienazwany: boolean; stan: 'w_toku' | 'ukonczony'; utworzonoMs: number; zmienionoMs: number; ostatniaPracaMs: number;
-  notatka: string; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null;
+  notatka: string; narzedzie: NarzedzieProjektu; drutMm: number | null; drutUS: string | null; terminDzien: string | null; celDnia: CelDnia | null;
   postep: { rodzaj: 'procent'; wartosc: number } | { rodzaj: 'brak-celow' }; czesci: CzescWidoku[];
 };
 
@@ -29,7 +30,7 @@ const znaczenie = (t: string): LicznikWidoku['znaczenie'] => (t === 'w_trakcie' 
 export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<Wynik<WidokProjektu>> {
   return operacjaZapisu(z, 'widokProjektu', async (tx, _teraz, chwila) => {
     const [p] = await wiersze(tx.all(
-      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, termin_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
+      'SELECT id, nazwa, nienazwany, stan, notatka, drut_mm, narzedzie, termin_dzien, utworzono_ms, zmieniono_ms, ostatnia_praca_ms FROM projekt WHERE id = ? AND usunieto_ms IS NULL',
       [w.projektId]), 'widokProjektu');
     if (!p) return blad('bledne_dane');
     const czesci = await wiersze(tx.all('SELECT id, nazwa, cel_rzedow, para_z FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY kolejnosc, id', [w.projektId]), 'widokProjektu');
@@ -55,13 +56,14 @@ export function widokProjektu(z: Zaleznosci, w: { projektId: string }): Promise<
     });
     const proc = postepProcent(wynik.map((c) => ({ rzedy: c.rzedy, cel: c.cel })));
     const drutMm = liczbaLubNull(p, 'drut_mm');
+    const narzedzie: NarzedzieProjektu = tekst(p, 'narzedzie') === 'szydelko' ? 'szydelko' : 'druty'; // CHECK schematu: tylko te dwie
     const termin = tekstLubNull(p, 'termin_dzien');
     return {
       ok: true,
       wartosc: {
         id: w.projektId, nazwa: tekst(p, 'nazwa'), nienazwany: liczba(p, 'nienazwany') === 1, stan: tekst(p, 'stan') === 'ukonczony' ? 'ukonczony' : 'w_toku',
         utworzonoMs: liczba(p, 'utworzono_ms'), zmienionoMs: liczba(p, 'zmieniono_ms'), ostatniaPracaMs: liczba(p, 'ostatnia_praca_ms'),
-        notatka: tekst(p, 'notatka'), drutMm, drutUS: drutMm === null ? null : rozmiarUS(drutMm, 'druty'), // szydełko: decyzja STOP E1 Q2 (P-182)
+        notatka: tekst(p, 'notatka'), narzedzie, drutMm, drutUS: drutMm === null ? null : rozmiarUS(drutMm, narzedzie),
         terminDzien: termin, celDnia: termin ? await celProjektu(tx, w.projektId, termin, chwila.dzien) : null,
         postep: proc.ok ? { rodzaj: 'procent', wartosc: proc.wartosc } : { rodzaj: 'brak-celow' }, czesci: wynik,
       },

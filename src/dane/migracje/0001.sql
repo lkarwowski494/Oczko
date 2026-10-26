@@ -20,6 +20,7 @@ CREATE TABLE projekt (                                -- F-14, F-15, F-17, F-18,
   stan TEXT NOT NULL DEFAULT 'w_toku' CHECK (stan IN ('w_toku', 'ukonczony')),
   notatka TEXT NOT NULL DEFAULT '',
   drut_mm REAL CHECK (drut_mm IS NULL OR drut_mm > 0),
+  narzedzie TEXT NOT NULL DEFAULT 'druty' CHECK (narzedzie IN ('druty', 'szydelko')), -- rodzaj do numeru US: RD-11 druty, RD-19 szydełko (P-184)
   probka TEXT NOT NULL DEFAULT '{}' CHECK (json_valid(probka)),   -- {oczka, rzedy, na_cm} wpisane raz (U-10)
   termin_dzien TEXT CHECK (termin_dzien IS NULL OR termin_dzien GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   kopia_z TEXT REFERENCES projekt(id) ON DELETE SET NULL,          -- „Zrób taką samą” (F-20)

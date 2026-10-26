@@ -2,6 +2,7 @@
 // sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22).
 import type { Wynik } from '../domena/bledy';
 import { przejdzProjekt, type ZdarzenieProjektu } from '../domena/maszyny/projekt';
+import { STANY, type NarzedzieProjektu } from '../domena/stany';
 import { chwilaOPorze } from '../domena/postep';
 import type { PortBazy } from '../domena/porty';
 import { stanProjektu, ustawUsuniecie, usunietoMs, zapiszStanProjektu, type TabelaKosza } from '../dane/repozytoria/projekty-zapis';
@@ -171,16 +172,23 @@ export function dodajCzescProjektu(z: Zaleznosci, w: { projektId: string; nazwa:
   });
 }
 /** Jedna kolumna projektu (UPDATE, ADR-0002); `ostatnia_praca_ms` bez zmian — praca to rzędy, nie ustawienia (BR-PRJ-016). */
-function zmienProjekt(z: Zaleznosci, operacja: string, projektId: string, kolumna: 'drut_mm' | 'termin_dzien', wartosc: number | string | null): Promise<Wynik<void>> {
+function zmienProjekt(z: Zaleznosci, operacja: string, projektId: string, kolumna: 'termin_dzien', wartosc: string | null): Promise<Wynik<void>> {
   return operacjaZapisu(z, operacja, async (tx, teraz) => {
     const r = await tx.run(`UPDATE projekt SET ${kolumna} = ?, zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL`, [wartosc, teraz, projektId]); // kolumna z zamkniętej listy
     return r.zmiany === 1 ? OK : blad('bledne_dane');
   });
 }
-/** Drut w milimetrach (BR-PRJ-004, F-17); `null` = brak danych (nie zgadywany rozmiar). Numer US liczy domena przy wyświetleniu (RD-11). */
-export function ustawDrut(z: Zaleznosci, w: { projektId: string; drutMm: number | null }): Promise<Wynik<void>> {
+/**
+ * Drut albo szydełko w milimetrach (BR-PRJ-004, F-17; P-184); `null` = brak danych (nie zgadywany rozmiar). Numer US liczy domena przy
+ * wyświetleniu (RD-11 druty, RD-19 szydełko). Obie kolumny jedną instrukcją.
+ */
+export function ustawDrut(z: Zaleznosci, w: { projektId: string; drutMm: number | null; narzedzie: NarzedzieProjektu }): Promise<Wynik<void>> {
   if (w.drutMm !== null && !(Number.isFinite(w.drutMm) && w.drutMm > 0)) return Promise.resolve(blad('bledne_dane'));
-  return zmienProjekt(z, 'ustawDrut', w.projektId, 'drut_mm', w.drutMm);
+  if (!STANY['projekt.narzedzie'].some((n) => n === w.narzedzie)) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'ustawDrut', async (tx, teraz) => {
+    const r = await tx.run('UPDATE projekt SET drut_mm = ?, narzedzie = ?, zmieniono_ms = ? WHERE id = ? AND usunieto_ms IS NULL', [w.drutMm, w.narzedzie, teraz, w.projektId]);
+    return r.zmiany === 1 ? OK : blad('bledne_dane');
+  });
 }
 /** Termin „Gotowe do” (BR-DNI-005, F-61, U-6): dzień RRRR-MM-DD albo `null` (bez terminu nic się nie pokazuje). */
 export function ustawTermin(z: Zaleznosci, w: { projektId: string; terminDzien: string | null }): Promise<Wynik<void>> {

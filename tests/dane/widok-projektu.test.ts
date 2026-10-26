@@ -33,6 +33,13 @@ describe('widokProjektu', () => {
     expect([(await widok(s, 'p2')).drutMm, (await widok(s, 'p2')).drutUS]).toEqual([null, null]);
   });
 
+  test('RD-19-W3 (BR-PRJ-004/S3, P-184): szydełko 6,5 mm → US K-10 ½; domyślnie druty', async () => {
+    const s = await przygotuj();
+    await wykonaj(s.baza, [projekt('p1', 'Torba'), ["UPDATE projekt SET drut_mm = 6.5, narzedzie = 'szydelko' WHERE id = 'p1'", []], projekt('p2', 'B')]);
+    expect([(await widok(s)).narzedzie, (await widok(s)).drutUS]).toEqual(['szydelko', 'K-10 ½']);
+    expect((await widok(s, 'p2')).narzedzie).toBe('druty');
+  });
+
   test('RD-14: postęp z części z celem (⌊100 × 70 / 136⌋ = 51); bez celów → brak-celow (RD-14-W6)', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'A'), czesc('c1', 'p1', 'Tył', 1, { cel: 96 }), czesc('c2', 'p1', 'Pas', 2, { cel: 40 }), czesc('c3', 'p1', 'Bez celu', 3),

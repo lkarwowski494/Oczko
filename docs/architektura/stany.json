@@ -1,6 +1,7 @@
 {
   "_opis": "Jedyna definicja list stanów i rodzajów (ADR-0013). Kod (src/domena) importuje ją; test „stany ⊆ CHECK” porównuje z schemat.sql.",
   "projekt.stan": ["w_toku", "ukonczony"],
+  "projekt.narzedzie": ["druty", "szydelko"],
   "licznik.rodzaj": ["rzedy", "oczka"],
   "licznik.znaczenie": ["skonczone", "w_trakcie"],
   "zdarzenie.rodzaj": ["plus", "minus", "wpisanie", "zerowanie", "cofniecie", "rozstrzygniecie"],

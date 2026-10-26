@@ -64,12 +64,21 @@ describe('ustawZnaczenie (BR-LIC-012, F-09)', () => {
 describe('ustawDrut (BR-PRJ-004) i ustawTermin (BR-DNI-005)', () => {
   test('drut 4 mm, potem brak (null); 0, ujemny i NaN → bledne_dane; nazwa, notatka i ostatnia praca bez zmian', async () => {
     const s = await s0();
-    expect((await ustawDrut(s.z, { projektId: 'p1', drutMm: 4 })).ok).toBe(true);
+    expect((await ustawDrut(s.z, { projektId: 'p1', drutMm: 4, narzedzie: 'druty' })).ok).toBe(true);
     expect(await projektRow(s)).toMatchObject({ drut_mm: 4, nazwa: 'Sweter', notatka: 'Drut 4 mm na ściągacz', ostatnia_praca_ms: T0, zmieniono_ms: T0 + 10 * MIN });
-    for (const zly of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) expect(await ustawDrut(s.z, { projektId: 'p1', drutMm: zly })).toEqual({ ok: false, powod: 'bledne_dane' });
+    for (const zly of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) expect(await ustawDrut(s.z, { projektId: 'p1', drutMm: zly, narzedzie: 'druty' })).toEqual({ ok: false, powod: 'bledne_dane' });
     expect((await projektRow(s)).drut_mm).toBe(4);
-    expect((await ustawDrut(s.z, { projektId: 'p1', drutMm: null })).ok).toBe(true);
+    expect((await ustawDrut(s.z, { projektId: 'p1', drutMm: null, narzedzie: 'druty' })).ok).toBe(true);
     expect((await projektRow(s)).drut_mm).toBeNull();
+  });
+
+  test('BR-PRJ-004/S3 (P-184): szydełko 6,5 mm zapisuje narzędzie; nieznane narzędzie → bledne_dane bez zmiany', async () => {
+    const s = await s0();
+    expect((await ustawDrut(s.z, { projektId: 'p1', drutMm: 6.5, narzedzie: 'szydelko' })).ok).toBe(true);
+    expect(await jeden(s.baza, "SELECT drut_mm, narzedzie FROM projekt WHERE id = 'p1'")).toEqual({ drut_mm: 6.5, narzedzie: 'szydelko' });
+    const inne: unknown = 'igla';
+    expect(await ustawDrut(s.z, { projektId: 'p1', drutMm: 5, narzedzie: inne as 'druty' })).toEqual({ ok: false, powod: 'bledne_dane' });
+    expect(await jeden(s.baza, "SELECT drut_mm, narzedzie FROM projekt WHERE id = 'p1'")).toEqual({ drut_mm: 6.5, narzedzie: 'szydelko' });
   });
 
   test('termin dzień RRRR-MM-DD albo null; zły format → bledne_dane; ostatnia praca bez zmian', async () => {
