@@ -2,7 +2,7 @@
 // F-49 (powrót do miejsca, moduly.md:238), RD-13 (przypomnienie na rzędzie dzierganym), RD-17 (seria na końcu historii), P-065 (limit zawczasu),
 // kreski posiedzenia (design-spec „Element firmowy”: przerwa ≥ PRZERWA_NOWEGO_DNIA_MS zaczyna nowe), BR-PRJ-014 (bliźniak w tym samym rzędzie).
 import { utworzSzybkiLicznik, dodajRzad } from '../../src/przypadki-uzycia/licznik';
-import { biezacyLicznik, widokLicznika, zapamietajLicznik } from '../../src/przypadki-uzycia/widok-licznika';
+import { biezacyLicznik, historiaLicznika, widokLicznika, zapamietajLicznik } from '../../src/przypadki-uzycia/widok-licznika';
 import { widokProjektow } from '../../src/przypadki-uzycia/widok-projektow';
 import { PRZERWA_NOWEGO_DNIA_MS } from '../../src/konfiguracja';
 import { czesc, dzienLimitu, licznik, notatkaRzedu, projekt, przypomnienie, zdarzenie, ustawGlowe } from './pomocnicze/dane-wejsciowe';
@@ -129,5 +129,14 @@ describe('widokProjektow: lista z pierwszym licznikiem i dniami darmowymi (F-50,
     s.pro.wartosc = true;
     const p = await widokProjektow(s.z);
     expect(p.ok && p.wartosc.dni).toBeNull();
+  });
+});
+
+describe('historiaLicznika (F-02, BR-LIC-003)', () => {
+  test('od najnowszej: z → na z wartości rodzica; pierwsze zdarzenie z 0', async () => {
+    const s = await z(licznik('l1', 'c1', 2));
+    await wykonaj(s.baza, [zdarzenie('l1-m', 'l1', 'minus', 1, ['l1-z2'], T0 + 5 * MIN), ustawGlowe('l1', 1, 'l1-m')]);
+    const h = await historiaLicznika(s.z, { licznikId: 'l1' });
+    expect(h.ok && h.wartosc.map((x) => [x.id, x.z, x.na, x.rodzaj])).toEqual([['l1-m', 2, 1, 'minus'], ['l1-z2', 1, 2, 'plus'], ['l1-z1', 0, 1, 'plus']]);
   });
 });

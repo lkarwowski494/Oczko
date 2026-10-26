@@ -152,3 +152,17 @@ export function zapamietajLicznik(z: Zaleznosci, w: { licznikId: string }): Prom
     return OK;
   });
 }
+
+export type WpisHistoriiLicznika = { id: string; czasMs: number; z: number; na: number; rodzaj: 'plus' | 'minus' | 'wpisanie' | 'zerowanie' | 'cofniecie' | 'rozstrzygniecie' };
+/** Historia licznika (F-02, BR-LIC-003): od najnowszej zmiany; `z` = wartość po zdarzeniu-rodzicu (brak rodzica = 0, historia liniowa w aplikacji). */
+export function historiaLicznika(z: Zaleznosci, w: { licznikId: string; limit?: number }): Promise<Wynik<WpisHistoriiLicznika[]>> {
+  return operacjaZapisu(z, 'historiaLicznika', async (tx) => {
+    const r = await wiersze(tx.all(
+      `SELECT z.id, z.rodzaj, z.wartosc_po, z.czas_ms, (SELECT p.wartosc_po FROM zdarzenie p WHERE p.id = json_extract(z.rodzice, '$[0]')) AS przed
+         FROM zdarzenie z WHERE z.licznik_id = ? ORDER BY z.czas_ms DESC, z.rowid DESC LIMIT ?`, [w.licznikId, w.limit ?? 50]), 'historiaLicznika');
+    return {
+      ok: true,
+      wartosc: r.map((x) => ({ id: tekst(x, 'id'), czasMs: liczba(x, 'czas_ms'), z: liczbaLubNull(x, 'przed') ?? 0, na: liczba(x, 'wartosc_po'), rodzaj: tekst(x, 'rodzaj') as WpisHistoriiLicznika['rodzaj'] })),
+    };
+  });
+}
