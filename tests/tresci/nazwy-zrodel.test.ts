@@ -28,9 +28,15 @@ describe('nazwy źródeł wiedzy w tekstach interfejsu (P-085)', () => {
     expect(r.wyjscie).toMatch(/obliczenia\.uwaga/);
     expect(r.kod).toBe(1);
   });
-  it('nazwa źródła na ekranie „Źródła wiedzy”: dozwolona', () => {
-    const r = uruchom(slownik({ ustawienia: { zrodla_wiedzy: { przedze: 'Craft Yarn Council, Standards & Guidelines' } } }));
+  it('linia wymagana warunkami użycia (P-112 (2), klucz zrodla.linia_standardow): dozwolona', () => {
+    const r = uruchom(slownik({ zrodla: { linia_standardow: "Source: Craft Yarn Council's www.YarnStandards.com" } }));
     expect(r.kod).toBe(0);
+  });
+  it('F07-14 (P-108, P-112 (2)): inny klucz ekranu „Źródła wiedzy” z nazwą źródła — naruszenie (ekran ma tylko zdanie ogólne i linię warunków użycia)', () => {
+    for (const o of [{ zrodla: { zdanie: 'Based on TKGA handbooks.' } }, { zrodla: { ksiazki: { a: 'Handbook 44' } } }, { ustawienia: { zrodla_wiedzy: { przedze: 'Craft Yarn Council, Standards & Guidelines' } } }]) {
+      const r = uruchom(slownik(o));
+      expect({ o, kod: r.kod }).toEqual({ o, kod: 1 });
+    }
   });
   it('słowo zawierające skrót (np. „bicycle”) nie jest naruszeniem', () => {
     const r = uruchom(slownik({ a: { b: 'Knit a bicycle cover.' } }));
