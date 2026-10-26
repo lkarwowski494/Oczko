@@ -284,3 +284,6 @@ Plan na złe przyjęcie: krytyczną recenzję zostawiamy i odpowiadamy rzeczowo 
 - **09 Lokalizacja:** przegląd native speakera fraz ASO (ja 目数計算, あみぐるみ; nb omgang/pinne; de umlauty; fr patron/modèle) i wymowy „Oczko” w ja.
 - **10 Wydawca:** pozycjonowanie (sekcja „Pozycjonowanie” z warunkami), pola ASO 7 lokalizacji, tabela nazw 35 lokalizacji, kategoria (rekomendacja badania: Lifestyle), badanie fraz dla pozostałych 28 lokalizacji po zamrożeniu funkcji; warunek OG-07 dla słów o wzorze.
 - **Właściciel:** TMview przed wpisem nazwy (lista P-157, ok. 15 min); recenzje co tydzień (15–30 min); odczyt App Analytics 2027-01-09 (ok. 20 min); nominacja 1.1 ≥ 3 tygodnie przed jej datą. Po dacie oceny: `node tools/assemble.mjs 11-wzrost --tryb reaudit --baza <sha>`.
+
+## Nazwa w sklepie — stan końcowy po TMview (P-174, 2026-10-26)
+Tabela wyżej obowiązuje z poprawkami po sprawdzeniu znaków w TMview i rejestrze międzynarodowym: słowo marki „Oczko” (zamiast lokalnego) także w **sk** (P-166), **sl** i **sr** (P-167), **fr** (P-170), **da** i **nb** (P-172), **el** (P-173). Lokalne słowo zostaje w: pl, hr, uk, ru, et, hu, ro, de, pt-PT, sv, fi, ms, ja, zh-Hant.
