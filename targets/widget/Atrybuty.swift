@@ -4,6 +4,7 @@ import ActivityKit
 import Foundation
 
 public struct OczkoAtrybuty: ActivityAttributes {
+  // Kontrakt partii 4 (ADR-0008, uzupełnienie 2026-10-26; P-135 Q5a): ContentState = StanAktywnosci (pola stanu + `uwaga`: odblokuj | blad_zapisu | null).
   public typealias ContentState = StanEkranuBlokady
   /// Identyfikator urządzenia do pola `urzadzenie` linii dziennika (stały przez całą Live Activity).
   public let urzadzenie: String

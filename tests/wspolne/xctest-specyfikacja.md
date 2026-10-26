@@ -31,13 +31,14 @@ Stan: rola 07, E3, 2026-10-25. Kodu Swift nie ma (brak celów natywnych, ADR-000
 | X-DZ-04 | 1000 równoległych dopisań z dwóch wątków → 1000 poprawnych linii, 1000 różnych id | ADR-0008 „Potwierdzenie” |
 | X-DZ-05 | Zapis linii (ADR-0008 (8A)): dla każdego wektora `dopisanie` plik z bajtami `przed` + dopisanie `linia` przez `DziennikPlus` = dokładnie bajty `po` (pusty plik i plik z `\n` na końcu: bez `\n` na początku; ucięty ogon: `\n` na początku); poprzednie linie zachowane | `wzorce.json` → `dopisanie` |
 | X-DZ-06 | `skroc(doId)`: zostają linie po `doId`; linia dopisana między `odczytaj()` a `skroc()` nie ginie | R-022 |
-| X-DZ-07 | Plik niedostępny (ochrona danych przed pierwszym odblokowaniem, atrapa) → intencja zwraca błąd, stan Live Activity „Unlock to count” | R-025, ADR-0008 |
+| X-DZ-07 | Plik niedostępny (ochrona danych przed pierwszym odblokowaniem, atrapa magazynu z błędem i `isProtectedDataAvailable = false`) → intencja zwraca błąd, stan Live Activity z `uwaga: 'odblokuj'`, `wartosc` i `glowa` bez zmian; następna aktualizacja z JS i udane stuknięcie czyszczą `uwaga` (fix-4 05, P-135 Q5a) | R-025, ADR-0008 (2026-10-26) |
 | X-DZ-08 | Intencja przy `dzienDozwolony: false` (`stan-ekranu-blokady-limit.json`) nie dopisuje linii | P-065 (1a) |
 | X-DZ-09 | Kolejne stuknięcia intencji łańcuchują rodziców jak `dziennik-plus-poprawny.jsonl` (rodzic = poprzednie własne id, pierwszy = `glowa` ze stanu) | Z07-11 (1), M-10 |
-| X-DZ-10 | Migawka nazwy i parametrów `LiveActivityIntent` (zmiana = zmiana kontraktu, Live Activity żyje do 8 h przez aktualizację aplikacji) | Z07-11 (4) |
+| X-DZ-10 | Migawka nazwy i parametrów `LiveActivityIntent` oraz kluczy `StanAktywnosci` (z `uwaga`, fix-4) (zmiana = zmiana kontraktu, Live Activity żyje do 8 h przez aktualizację aplikacji) | Z07-11 (4) |
 | X-DZ-11 | Linia z nieznanymi polami (`dziennik-plus-nieznane-pole.jsonl`) dekodowana bez błędu, pola pominięte | R-024 |
 | X-DZ-12 | Odczyt i skrócenie (ADR-0008 (8R), (8S)): wektory `sklejenie` (przyjęte id, zgłoszone linie, odzyskane id) i `skrocenie` (bajty pliku po `skroc(do_id)`; `do_id` także w linii sklejonej) dają wynik z manifestu | `wzorce.json` → `sklejenie`, `skrocenie` |
 | X-DZ-13 | Krótki zapis albo błąd `write`/`fsync` (atrapa uchwytu): plik obcięty do rozmiaru sprzed zapisu, intencja zwraca błąd, stan Live Activity bez zmian (`wartosc`, `glowa`) | ADR-0008 (8A) |
+| X-DZ-14 | Błąd zapisu przy odblokowanym urządzeniu (atrapa, `isProtectedDataAvailable = true`) → intencja zwraca błąd, stan Live Activity z `uwaga: 'blad_zapisu'`; dekoder `StanAktywnosci` bez klucza `uwaga` (Live Activity sprzed aktualizacji) daje `null`, a ze znaną wartością — tę wartość (N2 z P-133, P-135 Q5a) | ADR-0008 (2026-10-26) |
 
 ## 2. Stan Live Activity i zegarka (Z07-12; R-026–R-028, R-031)
 | ID | Test | Wyrocznia |
