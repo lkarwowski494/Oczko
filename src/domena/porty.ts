@@ -21,7 +21,8 @@ export interface DziennikPlus {                                                 
 export interface LiveActivity { start(s: StanEkranuBlokady): Promise<Wynik<void>>; aktualizuj(s: StanEkranuBlokady): Promise<void>; zakoncz(): Promise<void> }
 export interface Zegarek { wyslijStan(s: StanZegarka): Promise<void>; potwierdz(ids: readonly string[]): void; odbieraj(fn: (z: ZdarzenieWejsciowe[]) => void): () => void } // ADR-0009 (2026-10-26) pkt 3
 export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: string[] }; // scalDziennik: id linii zegarka w `zdarzenie` po COMMIT albo odrzucone na stałe
-export interface Synchronizacja { wlacz(): Promise<Wynik<void>>; wylacz(): Promise<void>; stan(): StanSynchronizacji; zglosZmiane(encja: string, id: string): void }
+export interface Synchronizacja { wlacz(): Promise<Wynik<void>>; wylacz(): Promise<void>; stan(): StanSynchronizacji; statusKonta(): Promise<StatusKonta>; uruchom(stanSilnika: Uint8Array | null): Promise<void>; wyslij(zmiany: readonly ZmianaDoWyslania[]): Promise<void>; odbieraj(fn: (p: PartiaIcloud) => Promise<void>): () => void; wyslane(fn: (p: PotwierdzenieIcloud) => Promise<void>): () => void; zdarzeniaKonta(fn: (z: ZdarzenieKonta) => void): () => void; usunStrefe(): Promise<Wynik<void>> } // ADR-0005 (fix-7 2026-10-26, P-221 Q5a): skrzynka zmian w bazie zamiast zglosZmiane
+// odbieraj/wyslane: obsługa w JS w jednej transakcji kolejki (partia + stanSilnika albo DELETE ze skrzynki z nr ≤ wysłanego + stanSilnika); Swift czeka na Promise przed potwierdzeniem silnikowi.
 export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // P-135 Q3a, ADR-0010: anulowanie i oczekiwanie nie są błędem (MON-04); adapter: statusZBledu
 export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<StatusZakupu>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
 export type WzorzecHaptyki = 'plus' | 'piataKreska' | 'rzadZInstrukcja' | 'minus' | 'blokadaStukniecie' | 'bladZapisu'; // klucze tokenów 04 „haptyka” (P-135 Q4a)
@@ -29,7 +30,11 @@ export interface Haptyka { zagraj(w: WzorzecHaptyki): void } // F-48: rozpoznawa
 export interface EkranAktywny { wlacz(tag: string): void; wylacz(tag: string): void } // F-10, każdy tag wyłączany (rejestr Expo 7)
 export interface CzasWTle { chron<T>(nazwa: string, fn: (s: SygnalCzasu) => Promise<T>): Promise<T> } // beginBackgroundTask (rejestr Apple 17); wygaśnięcie → sygnał (ADR-0002 (7))
 export type SygnalCzasu = { wygaslo(): boolean };  // sprawdzany między instrukcjami długiej transakcji; true → wyjątek → ROLLBACK
-export interface SkrzynkaImportu { pobierz(): Promise<PlikWejsciowy[]>; usun(id: string): Promise<void> } // ADR-0011
+export interface SkrzynkaImportu { pobierz(): Promise<ZlecenieImportu[]>; usun(id: string): Promise<void> } // ADR-0011 (fix-7): App Group, rozszerzenie tylko kopiuje
+export interface MigawkaProjektow { zapisz(projekty: readonly ProjektMigawki[]): Promise<void> } // P-220 R1a/N2: plik w App Group dla rozszerzenia; zapis atomowy, koperta z wersją
+export interface KonwersjaWzoru { naPdf(z: ZrodloWzoru, sygnal?: SygnalCzasu): Promise<Wynik<{ sciezka: string; strony: number }>> } // ADR-0011 (fix-7, P-221 Q2a): WWW, Word, obrazy, skan → PDF; plik tymczasowy
+export interface SkanerStron { skanuj(): Promise<Wynik<{ sciezki: string[] }>> } // P-220 W7a: skaner dokumentów systemu (VisionKit); jeden skan = jeden wzór (P-218 (1))
+export interface Orientacja { tylkoPion(): void; dowolna(): void } // P-221 Q3a: na iPhonie pion poza ekranem wzoru; na iPadzie no-op
 
 export type PrzypomnienieStanu = { od: number; co: number; razy: number; tekst: string }; // plan RD-13; tekst ucięty do STAN_PRZYPOMNIENIE_TEKST_MAKS znaków
 export type StanEkranuBlokady = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[]; zablokowany: boolean }; // wersja 3 (moduly.md „Stan Live Activity i zegarka”; N1 P-135 Q7a: zablokowany = licznik.zablokowany); < 4 KB (rejestr Apple 1b)
@@ -41,6 +46,15 @@ export type StanSynchronizacji = 'wylaczona' | 'aktywna' | 'blad' | 'brak_konta'
 export type Produkt = { id: string; cenaWyswietlana: string; okres: 'miesiac' | 'rok' | 'dozywotni' };
 export type Transakcja = { produkt: string; wygasa: number | null; odebrane: boolean; karencjaDo?: number | null }; // = Uprawnienie z docs/monetyzacja/dostep.mjs; karencjaDo: ADR-0010, KP-06
 export type PlikWejsciowy = { id: string; nazwa: string; sciezka: string; typ: string };
+export type ZlecenieImportu = { id: string; rodzaj: 'plik' | 'adres'; nazwa: string; sciezka: string | null; adres: string | null; typ: string; projektId: string | null; utworzonoMs: number }; // ADR-0011 fix-7: manifest zlecenia w skrzynce
+export type ProjektMigawki = { id: string; nazwa: string; nienazwany: boolean; utworzonoMs: number }; // tylko projekty w toku poza koszem (P-220 N2)
+export type ZrodloWzoru = { rodzaj: 'adres'; adres: string } | { rodzaj: 'word'; sciezka: string } | { rodzaj: 'obrazy'; sciezki: readonly string[] }; // PDF bez konwersji (importujWzor)
+export type StatusKonta = 'dostepne' | 'brak_konta' | 'ograniczone' | 'tymczasowo_niedostepne' | 'nieznany'; // CKAccountStatus (P-220 N3); iCloud wyłączony dla aplikacji: [DO USTALENIA] okno maszyn
+export type ZdarzenieKonta = 'zalogowano' | 'wylogowano' | 'zmiana_konta'; // CKSyncEngine accountChange (rejestr Apple 21c)
+export type RekordIcloud = { encja: string; klucz: string; pola: Record<string, string | number | null>; plik: string | null }; // encja/klucz jak w zmiana_icloud; plik = ścieżka zasobu (tabela plik)
+export type ZmianaDoWyslania = { encja: string; klucz: string; nr: number; rekord: RekordIcloud | null }; // null = usunięcie (zmiana_icloud.usuniete = 1)
+export type PartiaIcloud = { rekordy: readonly RekordIcloud[]; usuniete: readonly { encja: string; klucz: string }[]; stanSilnika: Uint8Array | null };
+export type PotwierdzenieIcloud = { wyslane: readonly { encja: string; klucz: string; nr: number }[]; stanSilnika: Uint8Array | null };
 
 // Archiwum, migracje i katalogi (ADR-0004, dane.md; przeniesione z src/przypadki-uzycia/porty-propozycja.ts, Z07-22).
 export interface Licznosci { [tabela: string]: number }    // tabela → liczba wierszy
