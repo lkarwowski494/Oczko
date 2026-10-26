@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Oczko · Lock Screen and Apple Watch (fix NZ-08-P3-04)</title>
+<title>Oczko · Lock Screen and Apple Watch (fix NZ-08-P3-04, NZ-05-F4-04)</title>
 <!-- Ekran blokady (Live Activity), Dynamic Island, zegarek i Smart Stack (rola 04, fix NZ-08-P3-04, P-133). Tokeny: tokeny.json; system: design-spec.md „Ekran blokady i zegarek”.
      Wymiary: Apple HIG „Live Activities”, Specifications (odczyt 2026-10-26): ekran blokady 371×84–160 pt przy 393 pt, 408×84–160 przy 430 pt (320 pt: założenie szerokość − 22 pt), margines 14 pt; Dynamic Island compact 52,33×36,67 (393) / 62,33×36,67 (430), minimal 36,67–45×36,67; Smart Stack 165×72,5 (41 mm), 194×80,5 (46 mm).
      Ekran aplikacji zegarka 176×215 (41 mm) i 208×248 (46 mm): z pamięci, [DO USTALENIA] na symulatorze. Dane: [PRZYKŁAD]. Tapeta: atrapa ekranu blokady (nie element aplikacji). -->
@@ -83,6 +83,10 @@ section[data-ekran="zegarek-smart-stack"] { height: auto; min-height: var(--zh);
 section[data-ekran^="zegarek"] .zakr { margin: 2px 0 0; padding: 3px 8px 3px 10px; }
 section[data-ekran="zegarek-przypomnienie"] .z-liczba .n { font-size: calc(40px * min(var(--dt), 1.15)); }
 section[data-ekran="zegarek-przypomnienie"] .z-dol .plus, section[data-ekran="zegarek-przypomnienie"] .z-dol .minus { min-height: 48px; }
+/* „Nie zapisano” (NZ-05-F4-04, P-142 1b): liczba 40 pt jak przy przypomnieniu, komunikat w miejscu podpisu, przyciski zostają */
+section[data-ekran^="zegarek-nie-zapisano"] .z-liczba .n { font-size: calc(40px * min(var(--dt), 1.15)); }
+section[data-ekran^="zegarek-nie-zapisano"] .z-dol .plus, section[data-ekran^="zegarek-nie-zapisano"] .z-dol .minus { min-height: 48px; }
+.z-tekst b { font-weight: 600; }
 section[data-ekran^="zegarek"] .zakr::before { background: var(--c-zakreslacz); border-left-color: var(--c-zakr-krawedz); }
 section[data-ekran^="zegarek"] .zakr span { color: var(--c-na-zakreslaczu); font-size: calc(13px * var(--dt)); }
 section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(13px * var(--dt)); padding: 0 6px; }
@@ -242,6 +246,26 @@ section[data-ekran^="zegarek"] .info { color: var(--c-grafit); font-size: calc(1
   <div class="z-tekst olowek">iPhone not nearby. 3 changes are saved on this watch.</div>
   </div>
   <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Now row 51">+1 row</span></div>
+</section>
+
+<!-- 10a. Zegarek: nieudany zapis stuknięcia (ADR-0009 uzupełnienie pkt 2; P-142 1b): stan bez zmian, haptyka „retry”, przyciski zostają -->
+<section data-ekran="zegarek-nie-zapisano">
+  <div class="z-gora"><span class="nazwa">Harbor Sweater</span><span class="godz">9:41</span></div>
+  <div class="z-srodek">
+  <div class="z-liczba"><span class="n">47</span></div>
+  <div class="z-tekst" role="status"><b>Row 48 wasn’t added.</b> Try again or count on iPhone.</div>
+  </div>
+  <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Now row 48">+1 row</span></div>
+</section>
+
+<!-- 10b. To samo po −1 -->
+<section data-ekran="zegarek-nie-zapisano-minus">
+  <div class="z-gora"><span class="nazwa">Harbor Sweater</span><span class="godz">9:41</span></div>
+  <div class="z-srodek">
+  <div class="z-liczba"><span class="n">47</span></div>
+  <div class="z-tekst" role="status"><b>Row 47 wasn’t removed.</b> Try again or count on iPhone.</div>
+  </div>
+  <div class="z-dol"><span class="minus" role="button" aria-label="Remove row">−1</span><span class="plus" role="button" aria-label="Add row. Now row 48">+1 row</span></div>
 </section>
 
 <!-- 11. Zegarek: brak żadnego stanu od telefonu -->
