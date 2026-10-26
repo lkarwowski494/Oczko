@@ -24,6 +24,9 @@ Opcja A. Odczyty idą przez to samo połączenie poza kolejką tylko wtedy, gdy 
 - Test: dwa równoległe wywołania `zapisz` wykonują się po kolei (atrapa portu z opóźnieniem); błąd w pierwszym nie blokuje drugiego.
 - `granice.mjs`: import `expo-sqlite` tylko w `src/dane/baza/`; zakaz `withExclusiveTransactionAsync` (grep w CI).
 
+## Uzupełnienie 2026-10-26 (fix-3 05: P-123 pkt 5; decyzja A bez zmian)
+- **(5) Sposób otwarcia transakcji.** Tekst opcji A („`BEGIN IMMEDIATE … COMMIT` z `withTransactionAsync`”) był niewykonalny: `withTransactionAsync` wysyła własne `BEGIN` (`node_modules/expo-sqlite/src/SQLiteDatabase.ts:142`, `expo-sqlite` 57.0.4, odczyt 2026-10-26). Obowiązuje: każda pozycja kolejki = `execAsync('BEGIN IMMEDIATE')` → funkcja na tym samym połączeniu → `execAsync('COMMIT')`, przy błędzie `execAsync('ROLLBACK')` (tak robi `src/dane/baza/adapter-expo.ts`). `withTransactionAsync` i `withExclusiveTransactionAsync` nie są używane.
+
 ## Opcje: zalety i wady
 ### A — zalety: poprawne kaskady, przewidywalna kolejność · wady: własny mały kod kolejki.
 ### B — zalety: zero kodu · wady: dokumentacja Expo sama ostrzega przed przeplataniem; ryzyko częściowego zapisu przy dwóch równoległych akcjach (np. +1 i scalanie dziennika).
