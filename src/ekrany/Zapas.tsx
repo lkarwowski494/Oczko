@@ -3,7 +3,7 @@
 // Pielęgnacja tylko tekstem (OG-13, OP-11). Krokowiec motków co KROK_MOTKA (jak karta ukończenia, P-126 (2a)).
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Arkusz, Komunikat, Pole, Tresc, Wybor } from './Arkusz';
+import { Arkusz, Komunikat, Pole, Przycisk, Tresc, Wybor } from './Arkusz';
 import { Przyciski, useZapis, type Zapis } from './FormularzeProjektu';
 import { WierszGrupy, style as styleNarzedzi } from './Narzedzia';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
@@ -114,6 +114,7 @@ export type PropsFormularzaWloczki = {
   naZapisz: Zapis<DaneWloczki>;
   naAnuluj(): void;
   zdjecia?: React.ReactNode;                                      // grupa „Label photo” (tylko przy edycji: zdjęcie potrzebuje id włóczki)
+  naUsun?(): void;                                                // P-209: „Delete yarn” (potwierdzenie z terminem w trasie), tylko przy edycji
 };
 export function FormularzWloczki(p: PropsFormularzaWloczki): React.ReactElement {
   const { t, poczatek: w } = p;
@@ -177,6 +178,7 @@ export function FormularzWloczki(p: PropsFormularzaWloczki): React.ReactElement 
       <Pole etykieta={t('narzedzia.pielegnacja')} wartosc={pielegnacja} naZmiane={ustawPielegnacje} wielowierszowe />
       <Pole etykieta={t('zapas.pole_notatka')} wartosc={notatka} naZmiane={ustawNotatke} wielowierszowe />
       {p.zdjecia}
+      {w && p.naUsun && <Przycisk tekst={t('usun.wloczka')} onPress={p.naUsun} rodzaj="tekstowy" testID="zapas-usun" />}
       {blad && <Komunikat tekst={t('licznik.blad_zapisu')} />}
     </Arkusz>
   );
@@ -211,7 +213,7 @@ export function ListaDrutow({ t, stan: s, naDodaj, naOtworz }: PropsListyDrutow)
 export type DaneDrutu = { rodzaj: RodzajNarzedzia; rozmiarMm: number | null; opis: string };
 export function FormularzDrutu(p: {
   t: Tlumacz; poczatek: DaneDrutu | null; podglad(tekst: string, r: RodzajNarzedzia): string | null; parsuj(tekst: string): number | null | 'zly';
-  formatuj(n: number): string; naZapisz: Zapis<DaneDrutu>; naAnuluj(): void;
+  formatuj(n: number): string; naZapisz: Zapis<DaneDrutu>; naAnuluj(): void; naUsun?(): void; // P-209, tylko przy edycji
 }): React.ReactElement {
   const { t, poczatek: w } = p;
   const [rodzaj, ustawRodzaj] = useState<RodzajNarzedzia>(w?.rodzaj ?? 'druty');
@@ -229,6 +231,7 @@ export function FormularzDrutu(p: {
       {r === 'zly' ? <Komunikat tekst={t('formularz.narzedzie_blad')} znak /> : podglad ? <Tresc podpis>{podglad}</Tresc> : null}
       <Pole etykieta={t('druty.pole_opis')} wartosc={opis} naZmiane={ustawOpis} />
       <Tresc podpis>{t('druty.pole_opis_przyklad')}</Tresc>
+      {w && p.naUsun && <Przycisk tekst={t('usun.narzedzie')} onPress={p.naUsun} rodzaj="tekstowy" testID="drut-usun" />}
       {blad && <Komunikat tekst={t('licznik.blad_zapisu')} />}
     </Arkusz>
   );

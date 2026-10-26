@@ -23,7 +23,7 @@ export function kartaUkonczenia(z: Zaleznosci, w: { projektId: string }): Promis
         WHERE c.projekt_id = ? AND c.usunieto_ms IS NULL`, [w.projektId]), 'kartaUkonczenia');
     const [s] = await wiersze(tx.all(
       "SELECT count(*) AS n, coalesce(sum(max(0, koniec_ms - start_ms - przerwy_ms)), 0) AS ms FROM sesja WHERE projekt_id = ? AND stan = 'zakonczona'", [w.projektId]), 'kartaUkonczenia');
-    const wl = await wiersze(tx.all('SELECT w.id, w.nazwa, w.motki, pw.zuzyto_motki FROM projekt_wloczka pw JOIN wloczka w ON w.id = pw.wloczka_id WHERE pw.projekt_id = ? AND w.usunieto_ms IS NULL ORDER BY w.nazwa', [w.projektId]), 'kartaUkonczenia');
+    const wl = await wiersze(tx.all('SELECT w.id, w.nazwa, w.motki, pw.zuzyto_motki FROM projekt_wloczka pw JOIN wloczka w ON w.id = pw.wloczka_id WHERE pw.projekt_id = ? ORDER BY w.nazwa', [w.projektId]), 'kartaUkonczenia');
     const [zd] = await wiersze(tx.all('SELECT plik_sha256 FROM zdjecie WHERE projekt_id = ? ORDER BY utworzono_ms DESC LIMIT 1', [w.projektId]), 'kartaUkonczenia');
     const utworzono = liczba(p, 'utworzono_ms');
     return {

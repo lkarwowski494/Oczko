@@ -44,6 +44,8 @@ export function stanKosza(elementy: readonly ElementKosza[], j: Jezyk, o: { tera
     pozycje: elementy.map((e) => {
       const data = krotkaData(e.doDnia, j.jezyk());
       const projekt = e.projektNienazwany ? etykietaRobocza(e.projektUtworzonoMs, o.terazMs, j, o.strefa) : e.projekt;
+      if (e.rodzaj === 'wloczka') return { rodzaj: e.rodzaj, id: e.id, nazwa: e.nazwa, podpis: t('kosz.wloczka', { data }) }; // P-209
+      if (e.rodzaj === 'narzedzie') return { rodzaj: e.rodzaj, id: e.id, nazwa: nazwaNarzedzia(e.narzedzie ?? null, j), podpis: t('kosz.narzedzie', { data }) };
       const nazwa = e.rodzaj === 'licznik' ? nazwaLicznika(e.nazwa, e.rodzajLicznika ?? 'rzedy', t) : e.rodzaj === 'projekt' ? projekt : e.nazwa;
       const podpis = e.rodzaj === 'projekt' ? t('kosz.projekt', { data })
         : e.rodzaj === 'czesc' ? t('kosz.czesc', { projekt, data })
@@ -51,6 +53,14 @@ export function stanKosza(elementy: readonly ElementKosza[], j: Jezyk, o: { tera
       return { rodzaj: e.rodzaj, id: e.id, nazwa, podpis };
     }),
   };
+}
+/** Nazwa narzędzia w koszu (P-209): rozmiar z numerem US (RD-11, RD-19) albo opis, w ostateczności nazwa grupy. */
+function nazwaNarzedzia(n: ElementKosza['narzedzie'] | null, j: Jezyk): string {
+  if (!n) return j.t('druty.inne');
+  if (n.rozmiarMm === null) return n.opis || j.t(n.rodzaj === 'druty' ? 'druty.igly' : n.rodzaj === 'szydelko' ? 'druty.szydelka' : 'druty.inne');
+  const mm = formatujLiczbe(n.rozmiarMm, j.jezyk(), { maks: 2 });
+  const us = n.rodzaj === 'inne' ? null : rozmiarUS(n.rozmiarMm, n.rodzaj);
+  return us === null ? j.t('projekt.rozmiar_mm', { mm }) : j.t('projekt.rozmiar_us', { mm, us });
 }
 /**
  * Stan ekranu projektu z `widokProjektu` (design-spec „Ekran projektu”): linia terminu wg gałęzi RD-15, szczegóły z numerem US, liczniki z nazwą

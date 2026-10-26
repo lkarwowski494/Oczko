@@ -428,6 +428,8 @@
     "czesc": "Przycisk destrukcyjny w potwierdzeniu usunięcia części.",
     "licznik_opis": "Treść potwierdzenia usunięcia licznika; {{data}} jak w usun.projekt_opis.",
     "licznik": "Przycisk destrukcyjny w potwierdzeniu usunięcia licznika.",
+    "wloczka": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Przycisk w arkuszu włóczki i w alercie potwierdzenia (wzór: usun.licznik); opis alertu: usun.projekt_opis.",
+    "narzedzie": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Przycisk w arkuszu drutu i w alercie potwierdzenia; opis alertu: usun.projekt_opis.",
     "a11y": "Etykieta VoiceOver czerwonego przycisku usunięcia w trybie Edit i akcji przesunięcia; {{nazwa}} = część albo licznik.",
     "ogloszenie": "Ogłoszenie VoiceOver po usunięciu; {{nazwa}} = usunięty element."
   },
@@ -437,6 +439,8 @@
     "projekt": "Podpis wiersza projektu w koszu; {{data}} = ostatni dzień przywrócenia, krótka data regionu.",
     "czesc": "Podpis wiersza części w koszu; {{projekt}} = projekt, do którego wróci, {{data}} jak wyżej.",
     "licznik": "Podpis wiersza licznika w koszu; {{projekt}}, {{czesc}} = gdzie wróci, {{data}} jak wyżej.",
+    "wloczka": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Podpis włóczki w „Recently deleted”; {{data}} = ostatni dzień w koszu.",
+    "narzedzie": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Podpis drutu/szydełka w „Recently deleted”; nazwa pozycji = rozmiar albo opis.",
     "przywroc": "Przycisk w wierszu kosza (BR-DAN-008). Ok. 10 znaków.",
     "przywroc_a11y": "Etykieta VoiceOver przycisku przywrócenia; {{nazwa}} = element.",
     "przywrocono": "Ogłoszenie VoiceOver po przywróceniu; {{nazwa}} = element.",

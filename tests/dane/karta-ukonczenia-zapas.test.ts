@@ -11,7 +11,9 @@ const karta = async (s: Awaited<ReturnType<typeof przygotuj>>) => {
 };
 
 describe('karta ukończenia: zapas', () => {
-  test('każda włóczka projektu ma zapas (motki) i poprzednie zużycie (null = nie potwierdzano); usunięta pominięta', async () => {
+  // Zmiana 08 (partia 5, sesja 3): było „usunięta pominięta” (F-37, przed P-209). Kontrakt P-209 (dane.md „Usuwanie włóczki i narzędzia przez
+  // kosz”): karta ukończenia i historia projektu pokazują nazwę i zużycie włóczki usuniętej (bez filtra usunieto_ms) — ochrona historii.
+  test('każda włóczka projektu ma zapas (motki) i poprzednie zużycie (null = nie potwierdzano); usunięta też (P-209)', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Sweter'), wloczka('y1', 'Merino', 3), wloczka('y2', 'Alpaka', 2), wloczka('y3', 'Stara', 1),
       projektWloczka('p1', 'y1'), projektWloczka('p1', 'y2'), projektWloczka('p1', 'y3'),
@@ -19,6 +21,7 @@ describe('karta ukończenia: zapas', () => {
     expect(await karta(s)).toEqual([
       { id: 'y2', nazwa: 'Alpaka', motki: 2, zuzyto: 1.5 },
       { id: 'y1', nazwa: 'Merino', motki: 3, zuzyto: null },
+      { id: 'y3', nazwa: 'Stara', motki: 1, zuzyto: null },
     ]);
   });
 

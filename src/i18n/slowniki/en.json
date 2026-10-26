@@ -471,6 +471,8 @@
     "czesc": "Delete part",
     "licznik_opis": "You can restore it with its history from Recently deleted on the Projects list until {{data}}.",
     "licznik": "Delete counter",
+    "wloczka": "Delete yarn",
+    "narzedzie": "Delete needles or hook",
     "a11y": "Delete {{nazwa}}",
     "ogloszenie": "{{nazwa}} moved to Recently deleted."
   },
@@ -481,6 +483,8 @@
     "projekt": "Project · until {{data}}",
     "czesc": "Part of {{projekt}} · until {{data}}",
     "licznik": "Counter in {{projekt}}, {{czesc}} · until {{data}}",
+    "wloczka": "Yarn · until {{data}}",
+    "narzedzie": "Needles and hooks · until {{data}}",
     "przywroc": "Restore",
     "przywroc_a11y": "Restore {{nazwa}}",
     "przywrocono": "{{nazwa}} is back.",

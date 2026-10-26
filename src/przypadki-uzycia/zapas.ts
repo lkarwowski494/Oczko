@@ -102,3 +102,21 @@ export async function narzedzia(z: Pick<Zaleznosci, 'baza'>): Promise<Wynik<Narz
   }
   return { ok: true, wartosc: lista };
 }
+
+/**
+ * Kosz włóczki i narzędzia (P-209; dane.md „Usuwanie włóczki i narzędzia przez kosz”): `usunieto_ms` = teraz albo NULL. Ponowne usunięcie
+ * i przywrócenie nieusuniętego → `niedozwolone_przejscie` (termin się nie przesuwa). Tabela z zamkniętej listy.
+ */
+function koszZapasu(z: Zaleznosci, tabela: 'wloczka' | 'narzedzie', id: string, usun: boolean): Promise<Wynik<void>> {
+  return operacjaZapisu(z, `${usun ? 'usun' : 'przywroc'}_${tabela}`, async (tx, teraz) => {
+    const [r] = await wiersze(tx.all(`SELECT usunieto_ms FROM ${tabela} WHERE id = ?`, [id]), 'koszZapasu');
+    if (!r) return blad('bledne_dane');
+    if ((liczbaLubNull(r, 'usunieto_ms') !== null) === usun) return blad('niedozwolone_przejscie');
+    await tx.run(`UPDATE ${tabela} SET usunieto_ms = ?, zmieniono_ms = ? WHERE id = ?`, [usun ? teraz : null, teraz, id]);
+    return { ok: true, wartosc: undefined };
+  });
+}
+export const usunWloczke = (z: Zaleznosci, w: { wloczkaId: string }) => koszZapasu(z, 'wloczka', w.wloczkaId, true);
+export const przywrocWloczke = (z: Zaleznosci, w: { wloczkaId: string }) => koszZapasu(z, 'wloczka', w.wloczkaId, false);
+export const usunNarzedzie = (z: Zaleznosci, w: { narzedzieId: string }) => koszZapasu(z, 'narzedzie', w.narzedzieId, true);
+export const przywrocNarzedzie = (z: Zaleznosci, w: { narzedzieId: string }) => koszZapasu(z, 'narzedzie', w.narzedzieId, false);

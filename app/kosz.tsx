@@ -11,6 +11,7 @@ import { stanKosza } from '../src/kompozycja/projekt';
 import { oglos } from '../src/kompozycja/system';
 import { przywrocCzesc, przywrocLicznik, przywrocProjekt } from '../src/przypadki-uzycia/projekt';
 import { widokKosza } from '../src/przypadki-uzycia/widok-kosza';
+import { przywrocNarzedzie, przywrocWloczke } from '../src/przypadki-uzycia/zapas';
 
 export default function EkranKosza(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
@@ -26,7 +27,10 @@ export default function EkranKosza(): React.ReactElement {
   async function przywroc(p: { rodzaj: PozycjaKosza['rodzaj']; id: string }): Promise<void> {
     const nazwa = stan?.pozycje.find((x) => x.id === p.id && x.rodzaj === p.rodzaj)?.nazwa ?? '';
     const r = p.rodzaj === 'projekt' ? await przywrocProjekt(z, { projektId: p.id })
-      : p.rodzaj === 'czesc' ? await przywrocCzesc(z, { czescId: p.id }) : await przywrocLicznik(z, { licznikId: p.id });
+      : p.rodzaj === 'czesc' ? await przywrocCzesc(z, { czescId: p.id })
+      : p.rodzaj === 'wloczka' ? await przywrocWloczke(z, { wloczkaId: p.id }) // P-209
+      : p.rodzaj === 'narzedzie' ? await przywrocNarzedzie(z, { narzedzieId: p.id })
+      : await przywrocLicznik(z, { licznikId: p.id });
     if (!r.ok) return;
     await licznik.poZmianie();
     oglos(kontener.j.t('kosz.przywrocono', { nazwa }));

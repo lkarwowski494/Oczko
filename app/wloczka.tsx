@@ -7,11 +7,12 @@ import { GrupaZdjec, type Miniatura } from '../src/ekrany/Zdjecia';
 import { wybieraczZdjec } from '../src/platforma/zdjecia';
 import { dodajZdjecie, zdjecia } from '../src/przypadki-uzycia/zdjecia';
 import { useKolory } from '../src/ekrany/motyw';
+import { potwierdzUsuniecie } from '../src/kompozycja/zapas-kosz';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { imperialny } from '../src/kompozycja/miary';
 import { bazowa, przeliczenie } from '../src/kompozycja/zapas';
 import { formatujLiczbe } from '../src/i18n/format';
-import { wloczka, zapiszWloczke, type FormularzWloczki as Dane } from '../src/przypadki-uzycia/zapas';
+import { usunWloczke, wloczka, zapiszWloczke, type FormularzWloczki as Dane } from '../src/przypadki-uzycia/zapas';
 
 export default function EkranWloczki(): React.ReactElement {
   const { kontener } = useAplikacja();
@@ -49,6 +50,8 @@ export default function EkranWloczki(): React.ReactElement {
     <FormularzWloczki t={j.t} poczatek={poczatek} jednostki={imperialny() ? 'imperialne' : 'metryczne'}
       przelicz={(x, u) => przeliczenie(x, u, j)} bazowa={(x, u) => bazowa(x, u, j.jezyk())} formatuj={(n) => formatujLiczbe(n, j.jezyk(), { maks: 2 })}
       naAnuluj={() => router.back()}
+      naUsun={id && poczatek ? () => potwierdzUsuniecie(kontener, { nazwa: poczatek.nazwa, przycisk: j.t('usun.wloczka'), alert: Alert.alert,
+        usun: () => usunWloczke(z, { wloczkaId: id }), potem: () => router.back() }) : undefined}
       zdjecia={id ? <GrupaZdjec t={j.t} miniatury={miniatury} naWybierz={(zr) => void wybierz(zr)} naOtworz={() => undefined}
         naglowek={j.t('zapas.zdjecie_etykiety')} testID="wloczka-zdjecia" /> : undefined}
       naZapisz={async (d) => {

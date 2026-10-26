@@ -11,7 +11,7 @@ import { wKolejce } from './kolejka';
 import { wTransakcji } from './zapis';
 import type { ZaleznosciPlikow } from './zaleznosci';
 
-export type WynikSprzatania = { projekty: number; czesci: number; liczniki: number; pliki: number };
+export type WynikSprzatania = { projekty: number; czesci: number; liczniki: number; wloczki: number; narzedzia: number; pliki: number };
 
 const ODWOLANIA = `SELECT pdf_sha256 AS h FROM wzor UNION SELECT oryginal_sha256 FROM wzor UNION SELECT plik_sha256 FROM rysunek UNION SELECT plik_sha256 FROM zdjecie`;
 /** Pliki odwoływane przez wiersze projektu (wzory, rysunki, zdjęcia) — kandydaci do usunięcia po trwałym usunięciu projektu. */
@@ -39,6 +39,15 @@ export async function sprzatnijKoszWKolejce(z: ZaleznosciPlikow): Promise<Wynik<
     }
     for (const c of czesci) await tx.run('DELETE FROM czesc WHERE id = ?', [c.id]);
     for (const l of liczniki) await tx.run('DELETE FROM licznik WHERE id = ?', [l.id]);
+    // P-209: narzędzie trwale; włóczka tylko bez przypisań (inaczej kaskada skasowałaby zużycie w projektach) — przypisana zostaje ukryta na stałe.
+    const narzedzia = (await usunieci(tx, 'SELECT id, usunieto_ms FROM narzedzie WHERE usunieto_ms IS NOT NULL')).filter(doKosza);
+    for (const n of narzedzia) await tx.run('DELETE FROM narzedzie WHERE id = ?', [n.id]);
+    let wloczki = 0;
+    for (const w of (await usunieci(tx, 'SELECT id, usunieto_ms FROM wloczka WHERE usunieto_ms IS NOT NULL')).filter(doKosza)) {
+      const pliki = await wiersze(tx.all('SELECT plik_sha256 AS h FROM zdjecie WHERE wloczka_id = ?', [w.id]), 'sprzatnijKosz');
+      const r = await tx.run('DELETE FROM wloczka WHERE id = ? AND NOT EXISTS (SELECT 1 FROM projekt_wloczka WHERE wloczka_id = wloczka.id)', [w.id]);
+      if (r.zmiany === 1) { wloczki++; for (const x of pliki) kandydaci.add(tekst(x, 'h')); } // zdjęcia etykiety kaskadą
+    }
     const uzywane = new Set((await wiersze(tx.all(ODWOLANIA), 'sprzatnijKosz')).filter((r) => r.h !== null).map((r) => tekst(r, 'h')));
     // Pliki zwolnione przez to usunięcie + stare pliki bez odwołań; młodsze niż PLIKI_OCHRONA_MIN mogą czekać na wiersz (import w toku, Z07-15).
     const sieroty = (await wiersze(tx.all('SELECT sha256 FROM plik WHERE utworzono_ms <= ?', [teraz - PLIKI_OCHRONA_MIN * 60_000]), 'sprzatnijKosz')).map((r) => tekst(r, 'sha256'));
@@ -47,7 +56,7 @@ export async function sprzatnijKoszWKolejce(z: ZaleznosciPlikow): Promise<Wynik<
       await tx.run('DELETE FROM plik WHERE sha256 = ?', [h]);
       doUsuniecia.push(h);
     }
-    return { ok: true, wartosc: { projekty: projekty.length, czesci: czesci.length, liczniki: liczniki.length, pliki: doUsuniecia.length } };
+    return { ok: true, wartosc: { projekty: projekty.length, czesci: czesci.length, liczniki: liczniki.length, wloczki, narzedzia: narzedzia.length, pliki: doUsuniecia.length } };
   });
   if (w.ok) for (const h of doUsuniecia) await z.magazyn.usun(h); // po COMMIT (ADR-0001)
   return w;

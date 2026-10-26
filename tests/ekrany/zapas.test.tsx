@@ -128,3 +128,23 @@ describe('druty', () => {
     await waitFor(() => expect(naZapisz).toHaveBeenCalledWith({ rodzaj: 'szydelko', rozmiarMm: 2.5, opis: 'bamboo' }));
   });
 });
+
+describe('P-209: usuwanie z arkusza (tylko edycja)', () => {
+  const pola = { przelicz: (x: string, u: 'm' | 'yd' | 'g' | 'oz') => przeliczenie(x, u, j()), bazowa: (x: string, u: 'm' | 'yd' | 'g' | 'oz') => bazowa(x, u, 'en-US') };
+  test('włóczka: „Delete yarn” przy edycji woła naUsun; nowa włóczka bez przycisku', () => {
+    const naUsun = jest.fn();
+    const r = render(<FormularzWloczki t={t} jednostki="metryczne" {...pola} formatuj={String} naZapisz={jest.fn()} naAnuluj={jest.fn()} naUsun={naUsun}
+      poczatek={{ nazwa: 'Fjord', producent: '', sklad: '', kolor: '', kategoria: null, motki: 1, dlugoscMotkaM: null, wagaMotkaG: null, pielegnacja: '', notatka: '' }} />);
+    fireEvent.press(screen.getByTestId('zapas-usun'));
+    expect(naUsun).toHaveBeenCalled();
+    r.rerender(<FormularzWloczki t={t} jednostki="metryczne" {...pola} formatuj={String} naZapisz={jest.fn()} naAnuluj={jest.fn()} naUsun={naUsun} poczatek={null} />);
+    expect(screen.queryByTestId('zapas-usun')).toBeNull();
+  });
+  test('drut: „Delete needles or hook” przy edycji', () => {
+    const naUsun = jest.fn();
+    render(<FormularzDrutu t={t} poczatek={{ rodzaj: 'druty', rozmiarMm: 4, opis: '' }} podglad={() => null} parsuj={() => 4} formatuj={String}
+      naZapisz={jest.fn()} naAnuluj={jest.fn()} naUsun={naUsun} />);
+    fireEvent.press(screen.getByRole('button', { name: 'Delete needles or hook' }));
+    expect(naUsun).toHaveBeenCalled();
+  });
+});

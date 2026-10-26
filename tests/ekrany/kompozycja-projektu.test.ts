@@ -90,3 +90,17 @@ test('U-10: wiersz „Swatch” w szczegółach — 22 stitches / 10 cm, 20 stit
   expect(stanProjektu({ ...W, probka: { oczka: 20, naCm: 10.16 } }, opcje).szczegoly?.probka).toBe('20 stitches / 4 in');
   expect(stanProjektu(W, opcje).szczegoly?.probka).toBeNull();
 });
+
+test('P-209: kosz — włóczka z nazwą i podpisem „Yarn · until …”, narzędzie z rozmiarem (US) albo opisem i „Needles and hooks · until …”', () => {
+  const baza = { rodzajLicznika: null, projekt: '', projektNienazwany: false, projektUtworzonoMs: 0, czesc: null, usunietoMs: 0, doDnia: '2026-11-25' };
+  const s = stanKosza([
+    { ...baza, rodzaj: 'wloczka', id: 'w1', nazwa: 'Fjord' },
+    { ...baza, rodzaj: 'narzedzie', id: 'n1', nazwa: '', narzedzie: { rodzaj: 'druty', rozmiarMm: 4, opis: '' } },
+    { ...baza, rodzaj: 'narzedzie', id: 'n2', nazwa: 'cable needle', narzedzie: { rodzaj: 'inne', rozmiarMm: null, opis: 'cable needle' } },
+  ], j, { terazMs: 0, strefa: 'UTC' });
+  expect(s.pozycje.map((p) => [p.rodzaj, p.nazwa, p.podpis])).toEqual([
+    ['wloczka', 'Fjord', 'Yarn · until Nov 25'],
+    ['narzedzie', '4 mm (US 6)', 'Needles and hooks · until Nov 25'],
+    ['narzedzie', 'cable needle', 'Needles and hooks · until Nov 25'],
+  ]);
+});

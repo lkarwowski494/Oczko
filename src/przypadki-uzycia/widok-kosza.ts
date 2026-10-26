@@ -6,5 +6,5 @@ import type { Zaleznosci } from './zaleznosci';
 
 export type { ElementKosza };
 export function widokKosza(z: Zaleznosci): Promise<Wynik<ElementKosza[]>> {
-  return operacjaZapisu(z, 'widokKosza', async (tx, _teraz, chwila) => ({ ok: true, wartosc: await elementyKosza(tx, chwila.strefa) }));
+  return operacjaZapisu(z, 'widokKosza', async (tx, _teraz, chwila) => ({ ok: true, wartosc: await elementyKosza(tx, chwila.strefa, chwila.ms) }));
 }

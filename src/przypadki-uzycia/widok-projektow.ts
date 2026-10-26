@@ -62,6 +62,6 @@ export function widokProjektow(z: Zaleznosci): Promise<Wynik<WidokProjektow>> {
     const pro = z.pro();
     const zaw = mozeZaczacDzien({ dni: await dniLimituMiesiaca(tx, dzis.slice(0, 7)), dzis, teraz, ostatniPlus: await ostatniPlus(tx, dodajDni(dzis, -2)), pro });
     return { ok: true, wartosc: { wToku: await poKolei(wToku), ukonczone: await poKolei(l.ukonczone), dni: pro ? null : { zostalo: zaw.zostalo, limit: LIMIT_DNI_W_MIESIACU, dzis },
-      kosz: (await elementyKosza(tx, chwila.strefa)).length } };
+      kosz: (await elementyKosza(tx, chwila.strefa, chwila.ms)).length } };
   });
 }
