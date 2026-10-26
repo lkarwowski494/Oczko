@@ -5,8 +5,9 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P2-04 2026-10-
 | Co | Plik |
 |---|---|
 | Tokeny (moduł motywu, propozycja) | `tokeny.json` |
-| Tabela kontrastu (62 pary, kod 0) | `kontrast-tabela.txt` (z `narzedzia/tokeny-kontrast.mjs` + `narzedzia/kontrast.mjs`) |
+| Tabela kontrastu (70 par, kod 0) | `kontrast-tabela.txt` (z `narzedzia/tokeny-kontrast.mjs` + `narzedzia/kontrast.mjs`) |
 | Kluczowe ekrany (7 stanów; fix NZ-08-P2-04: +10 nowych, 2 zmienione) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (204 pliki, linia bazowa SP-13); kontrola pokrycia fixu: `narzedzia/kontrola-nz08p204.mjs` |
+| Ekran blokady, Dynamic Island, zegarek, Smart Stack (fix NZ-08-P3-04) | `aktywnosc.html`; zrzuty wzorcowe: `wzorce-zrzuty/aktywnosc-*` (blokada i wyspa 320/393/430 × jasny/ciemny × tekst domyślny/duży; zegarek 41/46 mm × domyślny/duży), `narzedzia/zrzuty-aktywnosc.mjs`; kontrola fixu: `narzedzia/kontrola-nz08p304.mjs` |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -78,6 +79,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 - Słowa dziergających: row, part, decrease, skein; nie „item”, „entry”, „session data”.
 - Zdania zwykłe, strona czynna, bez wykrzykników i sprzedawania. Błąd: co się stało i co zrobić. Pusty ekran: jedno zaproszenie do działania.
 - Zakazane: „Oops”, „Upgrade now”, „Unlock”, „free trial”, procenty i porównania cen (P-054), straszenie utratą danych.
+- **Wyjątek nazwany (P-133 (1.2a)):** „Unlock” wolno tylko z dopełnieniem „iPhone” i tylko w znaczeniu odblokowania telefonu („Unlock iPhone to count.”); nigdy o funkcjach ani zakupie. *Dlaczego:* to słowo iOS dla zablokowanego telefonu, a zakaz chroni przed językiem sprzedaży, nie przed nazwą czynności systemowej.
 - Teksty dziedzinowe (instrukcje, nazwy ściegów) pisze użytkownik; aplikacja ich nie uczy.
 
 ## Teksty ofert (P-065 (3a): wariant 1)
@@ -206,6 +208,48 @@ Nazwy języków nie są kluczami `t()`: stała mapa tag → nazwa własna w `jez
 - Zależności: flaga „nienazwany” (05 fix-3, `dane.md`); `ustawZnacznik` z wymaganym `kierunek` (ekran zawsze go podaje, bez domyślnego); rząd znacznika domyślnie licznik + 1 do potwierdzenia przez 01 (N3); `oknoUczciweZasady` z listą dozwolonych ekranów z sekcji okna; zapas `max(0, zapas − zużycie)` w domenie (partia 2).
 - Kolory znacznika z `tokeny.json` `kolor.wzor`; obrysy krokowca i pól `drugiPrzyciskObrys`.
 
+## Ekran blokady i zegarek (F-11, F-12, F-21; BR-LIC-014, BR-LIC-015, BR-PRJ-008; ADR-0007–0009; P-133)
+Makiety: `aktywnosc.html`. Wymiary z Apple HIG „Live Activities”, Specifications (odczyt 2026-10-26): ekran blokady 371×84–160 pt (393 pt) i 408×84–160 (430 pt), margines 14 pt; Dynamic Island compact 52,33/62,33×36,67, minimal 36,67–45×36,67 (w wąskim kontekście 28 pt); Smart Stack zegarka 152×69,5 (40 mm) … 198×81,5 (49 mm). Ekran aplikacji zegarka 176×215 (41 mm) i 208×248 (46 mm): z pamięci, `[DO USTALENIA]` na symulatorze.
+- **Jeden element sterujący na Live Activity: +1 (P-133 (1.1a)).** Ekran blokady i rozwinięta Dynamic Island mają tylko przycisk „+1 row”; −1 jest w aplikacji i na zegarku. *Dlaczego:* HIG: „prefer limiting it to a single element to help people avoid accidentally tapping the wrong control”; F-11 to „rząd (+1)”. Dotknięcie karty poza przyciskiem otwiera licznik w aplikacji (tam −1, historia, limit z odnośnikiem do Pro).
+- **Ekran blokady (karta):** własne tło `papier` i tekst `grafit`/`olowek` w motywie jasnym i ciemnym (tylko tu HIG pozwala na własne tło). Góra: kropka koloru włóczki + `nazwa` ze stanu, po prawej stoper sesji (symbol stopera + czas rysowany przez system od `sesjaStartMs`; brak sesji = brak stopera, F-21). Środek: liczba rzędów skończonych (Libre Franklin 48 pt, najwyżej ×1,2), obok „Now row {{n}}” i podpis „tap when row {{n}} is done” (jak w aplikacji), z prawej „+1 row” (≥ 96 × 60 pt). Gdy opis nie mieści ≥ 130 pt × skala tekstu (320 pt, duży tekst), przycisk przechodzi pod spód na całą szerokość (większy cel, nic nie jest ucięte). Wysokość rośnie od 84 pt do 160 pt tylko o to, co jest w stanie (HIG: „reduce the height … when there’s less information”).
+- **Rząd z przypomnieniem:** pas zakreślacza pod liczbą „Row 48: decrease at both ends · 7 of 8” (z `przypomnienia` w stanie); etykieta przycisku dla VoiceOver zawiera instrukcję. To element firmowy na ekranie blokady (zakreślacz = rząd z instrukcją, jedno znaczenie).
+- **Kreski sesji nie są pokazywane** na ekranie blokady ani zegarku: stan (`moduly.md:67`) nie niesie liczby rzędów posiedzenia, a kreski bez danych byłyby ozdobą (zasada studia 2). W Dynamic Island znak kresek z ikony (cztery kreski z przekreśleniem) rozpoznaje aplikację obok liczby.
+- **Dynamic Island:** compact = znak kresek (z lewej) + liczba (z prawej), oba otwierają licznik; minimal = sama liczba (mieści się w 28 pt; HIG: zamiast logo dane); expanded = układ karty bez podpisu „tap when …” (mniej miejsca), z „+1 row”. Tło systemowe czarne, kolory `kolor.systemCzarny`.
+- **Limit wyczerpany (BR-ZAK-006, KP-13):** bez przycisku; „Counting paused” / „Your rows are kept.” i linia informacji (ikona „i” + tekst, nie kolor błędu) „**No free knitting days left in {{miesiac}}.** Counting resumes {{data}}.” (`{{data}}` = `wznowienieLimitu`). Bez odnośnika do Pro poza aplikacją (oferty tylko z limitu w aplikacji i z Ustawień, KP-13). Na zegarku to samo, bez przycisków.
+- **Telefon po restarcie, przed pierwszym odblokowaniem (ADR-0008, plik niedostępny):** po stuknięciu „Row {{n}} wasn’t added” / „Unlock iPhone to count.”; liczba bez zmian; przycisk zostaje (po odblokowaniu telefonu +1 z ekranu blokady działa). Wyjątek w „Głosie” (P-133 (1.2a)).
+- **Błąd zapisu linii (ADR-0008 (8A)):** „Row {{n}} wasn’t added” / „Try again.”; liczba bez zmian (stuknięcie nie jest pokazane jako zapisane). Rozróżnienie od stanu „Unlock iPhone” wymaga pola w stanie (05 fix-4, P-133 N2).
+- **Projekt roboczy:** w miejscu nazwy etykieta krótka `aktywnosc.nazwa_robocza` („Counter from Oct 26”), wyliczona przez aplikację w bieżącym języku i wpisana do `nazwa` stanu (sekcja „Projekt roboczy”).
+- **Zegarek (zawsze ciemny, tło czarne):** nazwa (ucięta wielokropkiem) i godzina systemowa; liczba (52 pt) z „Now row {{n}}”; na dole −1 (koło 52 pt, obrys) i „+1 row” (pigułka ≥ 64 pt wysokości, tło `przyciskTlo`), 8 pt odstępu — ten sam układ co w aplikacji (−1 mniejsze, z lewej). Przy dużym tekście środek ekranu przewija się koroną, a przyciski zostają przypięte na dole; „+1 row” nie łamie się.
+  - Przypomnienie (BR-LIC-015 S2): liczba 40 pt, pod nią pas zakreślacza „Row 13: decrease at both ends · 2 of 5” zamiast podpisu „Now row”; wibracja przy wejściu w rząd (wzorzec haptyki „przypomnienie” z tokenów).
+  - Limit: liczba z podpisem „rows done” i linia informacji jak na ekranie blokady; bez przycisków i bez oferty.
+  - Telefon poza zasięgiem (ADR-0009): liczenie działa; pod liczbą cicha linia „iPhone not nearby. 3 changes are saved on this watch.” (liczba niepotwierdzonych zdarzeń z listy zegarka); znika po potwierdzeniu `glowa` z kontekstu telefonu. Bez ostrzegawczego koloru (nic nie jest źle).
+  - Brak stanu od telefonu (pierwsze uruchomienie zegarka): „Open Oczko on your iPhone to start counting.”, bez przycisków.
+- **Smart Stack (Live Activity na zegarku):** własny widok: znak kresek + nazwa, czas sesji, liczba i „Now row {{n}}”; **bez przycisku** — dotknięcie otwiera aplikację zegarka z +1 i −1 (HIG: przy aplikacji zegarka dotknięcie ją otwiera; jedna droga liczenia na zegarku).
+- **VoiceOver:** karta jako jeden element „{{nazwa}}, {{count}} rows done, now row {{n}}[, session {{czas}}]”; przycisk „Add row. Now row {{n}}” (z instrukcją przy przypomnieniu); −1 na zegarku „Remove row”. Komunikaty stanu (limit, „wasn’t added”) czytane jako część karty.
+- **Kontrast:** karta ekranu blokady = pary motywu (tabela, bez zmian); czarne tło systemowe i karta Smart Stack: 8 nowych par `system czarny` / `Smart Stack` w `kontrast-tabela.txt` (70/70). Always-On i StandBy (skala 2×): sprawdzenie na urządzeniu przy TestFlight `[DO USTALENIA]`.
+
+| Klucz | en | Gdzie |
+|---|---|---|
+| `aktywnosc.plus` | +1 row | przycisk ekranu blokady, Dynamic Island, zegarka (tekst 08 przyjęty) |
+| `aktywnosc.plus_a11y` | Add row. Now row {{n}} | etykieta VoiceOver przycisku |
+| `aktywnosc.minus` | −1 row | etykieta −1 na zegarku (widoczne „−1”; tekst 08 przyjęty, tylko zegarek, P-133) |
+| `aktywnosc.minus_a11y` | Remove row | VoiceOver −1 na zegarku |
+| `aktywnosc.teraz` | Now row {{n}} | karta, Dynamic Island, zegarek |
+| `aktywnosc.podpis_plus` | tap when row {{n}} is done | karta ekranu blokady (jak `licznik` w aplikacji) |
+| `aktywnosc.zrobione_one` / `_other` | {{count}} row done / {{count}} rows done | VoiceOver karty; podpis na zegarku przy limicie („rows done”) |
+| `aktywnosc.wstrzymane` | Counting paused | karta przy limicie |
+| `aktywnosc.zachowane` | Your rows are kept. | karta przy limicie |
+| `aktywnosc.limit` | No free knitting days left in {{miesiac}}. | zamiast tekstu 08 z „this month” (bez nazwy miesiąca i daty wznowienia, inaczej niż limit w aplikacji); `{{miesiac}}` = nazwa miesiąca w bieżącym języku |
+| `aktywnosc.limit_wznowienie` | Counting resumes {{data}}. | `{{data}}` = `wznowienieLimitu`, krótki format regionu |
+| `aktywnosc.nie_dodano` | Row {{n}} wasn’t added | nagłówek stanu odblokowania i błędu zapisu |
+| `aktywnosc.odblokuj` | Unlock iPhone to count. | zamiast „Unlock to count” (P-133 (1.2a)) |
+| `aktywnosc.blad_zapisu` | Try again. | błąd zapisu linii (8A) |
+| `aktywnosc.bez_telefonu_one` / `aktywnosc.bez_telefonu_other` | iPhone not nearby. {{count}} change is saved on this watch. / iPhone not nearby. {{count}} changes are saved on this watch. | zegarek poza zasięgiem |
+| `aktywnosc.otworz_iphone` | Open Oczko on your iPhone to start counting. | zegarek bez stanu (zamiast „Open Oczko on your iPhone”, 08) |
+| `aktywnosc.nazwa_robocza` | Counter from {{data}} | projekt roboczy; `{{data}}` bez godziny (sekcja „Projekt roboczy”) |
+| `aktywnosc.karta_a11y` | {{nazwa}}, {{zrobione}}, now row {{n}} | VoiceOver karty; przy sesji dopisek `aktywnosc.sesja_a11y` „session {{czas}}” |
+Teksty Live Activity i zegarka idą do celów natywnych z generatora tekstów Swift (ADR-0017), te same klucze co w JS.
+
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
 
@@ -219,7 +263,7 @@ Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF,
 Zegarek: `ikona/watch.png` (1088 × 1088). Ikona warstwowa `.icon` (Liquid Glass) wymaga Icon Composer na macOS: warstwy `ikona/tlo.svg` i `ikona/pierwszy-plan*.svg` to paczka dla kroku właściciela; PNG działają bez `.icon`.
 
 ## Poza tym etapem (dla audytu roli 04 po roli 08 albo osobnej sesji)
-Makiety nienarysowane w build: wzór poziomo i licznik poziomo (znacznik na wzorze pionowo: fix NZ-08-P2-04) (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), zegarek (F-12), sesja na ekranie blokady (F-11, F-21), kalendarz i podsumowanie (F-59), reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
+Makiety nienarysowane w build (zegarek i ekran blokady: fix NZ-08-P3-04, `aktywnosc.html`): wzór poziomo i licznik poziomo (znacznik na wzorze pionowo: fix NZ-08-P2-04) (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), kalendarz i podsumowanie (F-59), reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
 
 ## Propozycja wpisu do pamięci portfolio (repo `prompts`, dopisuje właściciel)
 | Aplikacja | Metafora / element firmowy | Paleta (rdzeń) | Kroje | Uwagi właściciela |

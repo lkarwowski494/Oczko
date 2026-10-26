@@ -54,6 +54,19 @@
    "znacznikTlo": "#26282C14",
    "etykietaTlo": "#26282C",
    "etykietaTekst": "#FCFCFA"
+  },
+  "systemCzarny": {
+   "_opis": "Zegarek, Dynamic Island i Smart Stack (fix NZ-08-P3-04, P-133): tło systemowe czarne (Dynamic Island: tła nie da się zmienić, HIG Live Activities), kolory z motywu ciemnego; karta Smart Stack rysowana przez system — #1E2024 to przybliżenie do pomiaru [DO USTALENIA na urządzeniu]. Ekran blokady (Live Activity) używa motywu jasnego/ciemnego z papierem jako własnym tłem.",
+   "tlo": "#000000",
+   "kartaStack": "#1E2024",
+   "grafit": "#ECECE8",
+   "olowek": "#A9ACB2",
+   "przyciskTlo": "#2E3136",
+   "przyciskTekst": "#ECECE8",
+   "przyciskObrys": "#8C9098",
+   "zakreslacz": "#38351F",
+   "tekstNaZakreslaczu": "#F4ECB4",
+   "zakreslaczKrawedz": "#E2CB3A"
   }
  },
  "typografia": {

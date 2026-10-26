@@ -267,5 +267,39 @@
  "wzór: etykieta znacznika tekst / tło": [
   "#FCFCFA",
   "#26282C"
+ ],
+ "system czarny: tekst / tło": [
+  "#ECECE8",
+  "#000000"
+ ],
+ "system czarny: ołówek / tło": [
+  "#A9ACB2",
+  "#000000"
+ ],
+ "system czarny: przycisk tekst / tło": [
+  "#ECECE8",
+  "#2E3136"
+ ],
+ "system czarny: przycisk obrys / tło (element, 3:1)": [
+  "#8C9098",
+  "#000000",
+  3
+ ],
+ "system czarny: tekst na zakreślaczu": [
+  "#F4ECB4",
+  "#38351F"
+ ],
+ "system czarny: krawędź zakreślenia / tło (element, 3:1)": [
+  "#E2CB3A",
+  "#000000",
+  3
+ ],
+ "Smart Stack: tekst / karta": [
+  "#ECECE8",
+  "#1E2024"
+ ],
+ "Smart Stack: ołówek / karta": [
+  "#A9ACB2",
+  "#1E2024"
  ]
 }

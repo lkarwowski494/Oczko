@@ -60,3 +60,11 @@ OK   9.03:1 (min 3) ciemny+kontrast: wybrany przełącznik: obrys / arkusz (elem
 OK   11.02:1 (min 4.5) ciemny+kontrast: wybrany przełącznik: tekst / tło #ECECE8 na #2E3136
 OK   14.76:1 (min 3) wzór: znacznik / strona (element, 3:1) #26282C na #FFFFFF
 OK   14.37:1 (min 4.5) wzór: etykieta znacznika tekst / tło #FCFCFA na #26282C
+OK   17.73:1 (min 4.5) system czarny: tekst / tło #ECECE8 na #000000
+OK   9.23:1 (min 4.5) system czarny: ołówek / tło #A9ACB2 na #000000
+OK   11.02:1 (min 4.5) system czarny: przycisk tekst / tło #ECECE8 na #2E3136
+OK   6.56:1 (min 3) system czarny: przycisk obrys / tło (element, 3:1) #8C9098 na #000000
+OK   10.31:1 (min 4.5) system czarny: tekst na zakreślaczu #F4ECB4 na #38351F
+OK   12.84:1 (min 3) system czarny: krawędź zakreślenia / tło (element, 3:1) #E2CB3A na #000000
+OK   13.77:1 (min 4.5) Smart Stack: tekst / karta #ECECE8 na #1E2024
+OK   7.17:1 (min 4.5) Smart Stack: ołówek / karta #A9ACB2 na #1E2024

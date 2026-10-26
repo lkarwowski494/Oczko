@@ -28,4 +28,16 @@ if (w) {
   pary['wzór: znacznik / strona (element, 3:1)'] = [w.znacznik, w.strona, 3];
   pary['wzór: etykieta znacznika tekst / tło'] = [w.etykietaTekst, w.etykietaTlo];
 }
+// Zegarek, Dynamic Island, Smart Stack: czarne tło systemowe (NZ-08-P3-04).
+const c = t.systemCzarny;
+if (c) {
+  pary['system czarny: tekst / tło'] = [c.grafit, c.tlo];
+  pary['system czarny: ołówek / tło'] = [c.olowek, c.tlo];
+  pary['system czarny: przycisk tekst / tło'] = [c.przyciskTekst, c.przyciskTlo];
+  pary['system czarny: przycisk obrys / tło (element, 3:1)'] = [c.przyciskObrys, c.tlo, 3];
+  pary['system czarny: tekst na zakreślaczu'] = [c.tekstNaZakreslaczu, c.zakreslacz];
+  pary['system czarny: krawędź zakreślenia / tło (element, 3:1)'] = [c.zakreslaczKrawedz, c.tlo, 3];
+  pary['Smart Stack: tekst / karta'] = [c.grafit, c.kartaStack];
+  pary['Smart Stack: ołówek / karta'] = [c.olowek, c.kartaStack];
+}
 console.log(JSON.stringify(pary, null, 1));
