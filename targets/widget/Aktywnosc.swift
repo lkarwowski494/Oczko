@@ -9,7 +9,7 @@ import WidgetKit
 struct OczkoAktywnosc: Widget {
   var body: some WidgetConfiguration {
     ActivityConfiguration(for: OczkoAtrybuty.self) { kontekst in
-      EkranBlokady(a: kontekst.state)
+      WidokAktywnosci(a: kontekst.state)
         .activityBackgroundTint(Color("papier"))
         .activitySystemActionForegroundColor(Color("grafit"))
     } dynamicIsland: { kontekst in
@@ -30,6 +30,60 @@ struct OczkoAktywnosc: Widget {
         Liczba(stan: kontekst.state.stan).monospacedDigit()
       }
     }
+    // Smart Stack zegarka i CarPlay (P-158, design-spec „Smart Stack”): własny widok małego rozmiaru zamiast złożenia z compact.
+    .supplementalActivityFamilies([.small])
+  }
+}
+
+/// Ekran blokady (`.medium`) albo Smart Stack / CarPlay (`.small`) według `activityFamily` (iOS 18).
+struct WidokAktywnosci: View {
+  let a: StanAktywnosci
+  @Environment(\.activityFamily) private var rodzina
+  var body: some View {
+    switch rodzina {
+    case .small: SmartStack(a: a)
+    default: EkranBlokady(a: a)
+    }
+  }
+}
+
+/// Smart Stack i CarPlay (P-158; design-spec „Smart Stack (Live Activity na zegarku) i CarPlay”): bez przycisków (CarPlay wyłącza elementy
+/// interaktywne; liczenie na zegarku w jego aplikacji), `uwaga` pomijana (3.1a). Wiersz 1: znak, liczba, nazwa, czas sesji; wiersz 2: linia stanu
+/// według pierwszeństwa zablokowany → limit → przypomnienie (pas, tylko pierwsze, wersja krótka) → typowy. Ustępowanie przy dużym tekście:
+/// czas sesji, potem nazwa; linia stanu ucina się ostatnia.
+struct SmartStack: View {
+  let a: StanAktywnosci
+  var body: some View {
+    let s = a.stan, j = a.jezyk, n = String(rzadWRobocie(s))
+    VStack(alignment: .leading, spacing: 4) {
+      HStack(alignment: .firstTextBaseline, spacing: 4) {
+        Image(systemName: "number").font(.system(size: 13)).foregroundStyle(Color("grafit")).accessibilityHidden(true) // znak kresek: zasób jak w compact (zgłoszenie partii 4)
+        Liczba(stan: s).font(.system(size: 30, weight: .bold).monospacedDigit()).foregroundStyle(Color("grafit")).fixedSize().layoutPriority(3)
+        Text(s.nazwa).font(.system(size: 13)).foregroundStyle(Color("olowek")).lineLimit(1).truncationMode(.tail).layoutPriority(1)
+        Spacer(minLength: 0)
+        if let start = s.sesjaStartMs {
+          Text(timerInterval: Date(timeIntervalSince1970: TimeInterval(start) / 1000)...Date.distantFuture, countsDown: false)
+            .font(.system(size: 13).monospacedDigit()).foregroundStyle(Color("olowek")).lineLimit(1).layoutPriority(0)
+        }
+      }
+      Group {
+        if s.zablokowany {
+          Text(Teksty.t("zablokowany", j))
+        } else if !s.dzienDozwolony {
+          Text(Teksty.t("wstrzymane", j))
+        } else if let pas = pasPrzypomnienia(s) {
+          Text(Teksty.t("przypomnienie_krotkie", j, ["n": String(pas.rzad), "tekst": pas.tekst]))
+            .foregroundStyle(Color("tekstNaZakreslaczu"))
+            .padding(.horizontal, 4)
+            .background(RoundedRectangle(cornerRadius: 3).fill(Color("zakreslacz")))
+            .accessibilityLabel(Teksty.t("przypomnienie_a11y", j, ["n": String(pas.rzad), "tekst": pas.tekst, "k": String(pas.k), "razy": String(pas.razy)]))
+        } else {
+          Text(Teksty.t("teraz", j, ["n": n]))
+        }
+      }
+      .font(.system(size: 15, weight: .semibold)).foregroundStyle(Color("grafit")).lineLimit(1).truncationMode(.tail).layoutPriority(4)
+    }
+    .padding(.horizontal, 8)
   }
 }
 
