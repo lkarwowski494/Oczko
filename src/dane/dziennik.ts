@@ -87,28 +87,45 @@ function zapiszUszkodzonaLinie(baza: PortBazy, czasMs: number, linia: number, te
   }).catch(() => undefined); // diagnostyka nie zmienia wyniku odczytu (jak zapiszBlad)
 }
 
+/** Źródło pliku dziennika: surowy tekst i skrócenie (Node: plik; urządzenie: moduł Swift `OczkoDziennikPlus`, jedyny pisarz — ADR-0008 (8A)). */
+export interface ZrodloDziennika {
+  tekst(): Promise<string>;
+  skroc(doId: string): Promise<void>;
+}
+
 /**
- * Adapter DziennikPlus na pliku (Node, testy; w aplikacji: moduł Swift `oczko-dziennik-plus`, ADR-0008): uszkodzona linia → wiersz `blad`
- * (diagnostyka F-57). `skroc(doId)` usuwa linie do `doId` włącznie i ucięty ogon za nim, późniejsze pełne linie zostają (8S).
+ * Port DziennikPlus nad źródłem tekstu: odczyt i diagnostyka w TS (uszkodzona linia → `blad`, ADR-0008 (3′)), skrócenie u źródła.
  */
-export function utworzDziennikNode(sciezka: string, baza: PortBazy): DziennikPlus {
+export function utworzDziennik(zrodlo: ZrodloDziennika, baza: PortBazy): DziennikPlus {
   return {
     async odczytaj() {
-      if (!istniejePlik(sciezka)) return [];
-      const { zdarzenia, uszkodzone } = odczytajTekst(await czytajTekst(sciezka));
+      const { zdarzenia, uszkodzone } = odczytajTekst(await zrodlo.tekst());
       // Chwila zapisu diagnostyki: zegar systemu w adapterze platformy (przypadki użycia biorą czas z portu Zegar).
       for (const u of uszkodzone) await zapiszUszkodzonaLinie(baza, Date.now(), u.linia, u.tekst);
       return zdarzenia;
     },
+    skroc: (doId) => zrodlo.skroc(doId),
+  };
+}
+
+/** (8S) na tekście pliku: linie do `doId` włącznie (także w linii sklejonej) i ucięty ogon za nim; null = brak `doId` (bez zmian, R-024). */
+export function poSkroceniu(tekst: string, doId: string): string | null {
+  const linie = tekst.split('\n'); // ostatni element: bajty po ostatnim `\n` (pusty albo ucięty ogon)
+  const i = linie.findIndex((l) => odczytajLinie(l).zdarzenie?.id === doId);
+  if (i < 0) return null;
+  const reszta = linie.slice(i + 1); // pełne linie po `doId` zostają (R-022)
+  if (reszta.length > 0) reszta[reszta.length - 1] = '';
+  return reszta.join('\n');
+}
+
+/** Adapter na pliku (Node, testy; w aplikacji: moduł Swift `oczko-dziennik-plus`, src/platforma/dziennik-plus.ts). */
+export function utworzDziennikNode(sciezka: string, baza: PortBazy): DziennikPlus {
+  return utworzDziennik({
+    tekst: async () => (istniejePlik(sciezka) ? czytajTekst(sciezka) : ''),
     async skroc(doId) {
       if (!istniejePlik(sciezka)) return;
-      const linie = (await czytajTekst(sciezka)).split('\n'); // ostatni element: bajty po ostatnim `\n` (pusty albo ucięty ogon)
-      const i = linie.findIndex((l) => odczytajLinie(l).zdarzenie?.id === doId); // także w linii sklejonej (8S)
-      if (i < 0) return; // nie ma takiej linii: nic do skrócenia (R-024)
-      // (8S): linie do `doId` włącznie i ucięty ogon za nim; pełne linie po `doId` zostają (R-022).
-      const reszta = linie.slice(i + 1);
-      if (reszta.length > 0) reszta[reszta.length - 1] = '';
-      zapiszTekst(sciezka, reszta.join('\n'));
+      const nowy = poSkroceniu(await czytajTekst(sciezka), doId);
+      if (nowy !== null) zapiszTekst(sciezka, nowy);
     },
-  };
+  }, baza);
 }
