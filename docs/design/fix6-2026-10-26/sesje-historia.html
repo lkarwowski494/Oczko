@@ -197,6 +197,26 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .kolo-pas::before { content: ""; position: absolute; left: 16px; right: 16px; top: 40px; height: 36px; border-radius: 8px; background: var(--linia); opacity: .6; }
 .kolo-pas > * { position: relative; }
 .grupa .el .tx { min-width: auto; }
+/* obraz karty ukończenia (P10a): plik 1080 × 1350, zawsze kolory motywu jasnego (obraz trafia poza aplikację), wielkości względem szerokości obrazu, nie Dynamic Type */
+.karta-obraz { container-type: inline-size; width: 100%; aspect-ratio: 4 / 5; background: #FCFCFA; color: #26282C; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.25); }
+.karta-obraz .foto { flex: 0 0 46%; background: linear-gradient(135deg, #8BA4C4, #4F6F94); }
+.karta-obraz .k-tresc { padding: 6cqw 7cqw 0; flex: 1; }
+.karta-obraz .k-okres { color: #5E626A; font: 400 4.2cqw/1.3 var(--tresc); }
+.karta-obraz .k-nazwa { display: flex; align-items: center; gap: 2.5cqw; font: 700 8.5cqw/1.1 var(--tytul); margin-top: 1.5cqw; }
+.karta-obraz .k-nazwa .kropka { width: 3.5cqw; height: 3.5cqw; box-shadow: none; }
+.karta-obraz .k-liczby { display: flex; gap: 8cqw; margin-top: 5cqw; }
+.karta-obraz .k-liczby div { display: flex; flex-direction: column; }
+.karta-obraz .k-liczby b { font: 700 9cqw/1 var(--tytul); font-variant-numeric: tabular-nums; }
+.karta-obraz .k-liczby span { color: #5E626A; font: 400 3.8cqw/1.3 var(--tresc); margin-top: 1cqw; }
+.karta-obraz .k-wloczka { margin-top: 5cqw; font: 400 4.2cqw/1.3 var(--tresc); }
+.karta-obraz .k-stopka { display: flex; align-items: center; gap: 2cqw; padding: 0 7cqw 6cqw; color: #5E626A; font: 600 3.6cqw var(--tresc); }
+.karta-obraz .k-stopka svg { width: 6cqw; }
+/* krytyka renderu D (AX5, 320 pt): przełączniki łamią się, kafel „Add photo” rośnie z tekstem, pasek podglądu zdjęcia łamie się */
+.pole-liczby .segment { flex-basis: 100% !important; }
+.segment { flex-wrap: wrap; } .segment span { flex: 1 1 auto; padding: 0 8px; text-align: center; }
+.miniatury .m.dodaj { width: auto; min-width: 88px; height: auto; min-height: 88px; padding: 8px 12px; }
+.pasek-zdjecia { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 8px 20px 32px; font-size: calc(17px * var(--dt-tresc)); }
+.pasek-zdjecia span { min-height: 44px; display: flex; align-items: center; }
 </style>
 </head>
 <body>
@@ -339,7 +359,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="naglowek-grupy">Time</div>
   <div class="grupa">
     <div class="el"><div class="tx">Knitting time</div><span class="wartosc">19 h 40 min</span></div>
-    <div class="el" role="button" data-testid="projekt-sesje"><div class="tx">Sessions<small><span class="znak-uwagi" style="width:16px;height:16px;font-size:10px;vertical-align:-2px">i</span> 1 session to check</small></div><span class="wartosc">14</span><span aria-hidden="true">›</span></div>
+    <div class="el" role="button" data-testid="projekt-sesje"><div class="tx">Sessions<small><span class="znak-uwagi" style="vertical-align:-4px">i</span> 1 session to check</small></div><span class="wartosc">14</span><span aria-hidden="true">›</span></div>
   </div>
   <div class="naglowek-grupy">Note</div>
   <div class="grupa"><div class="el"><div class="tx">next: 3 knit, then the cable on row 52</div><span aria-hidden="true">›</span></div></div>
@@ -353,7 +373,7 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
   <div class="tytul"><h1>Sessions</h1><p class="pod">19 h 40 min in 14 sessions</p></div>
   <div class="naglowek-grupy">Monday, Oct 26</div>
   <div class="grupa">
-    <div class="el" role="button" data-testid="sesje-do-sprawdzenia"><div class="tx">20:32–4:32 the next day<small><span class="znak-uwagi" style="width:16px;height:16px;font-size:10px;vertical-align:-2px">i</span> Stopped after 8 hours. Check the end time.</small></div><span class="wartosc">8 h</span><span aria-hidden="true">›</span></div>
+    <div class="el" role="button" data-testid="sesje-do-sprawdzenia"><div class="tx">20:32–4:32 the next day<small><span class="znak-uwagi" style="vertical-align:-4px">i</span> Stopped after 8 hours. Check the end time.</small></div><span class="wartosc">8 h</span><span aria-hidden="true">›</span></div>
     <div class="el" role="button"><div class="tx">18:05–19:10<small>10 min paused</small></div><span class="wartosc">55 min</span><span aria-hidden="true">›</span></div>
   </div>
   <div class="naglowek-grupy">Saturday, Oct 24</div>
