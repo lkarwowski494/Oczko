@@ -91,6 +91,8 @@ final class WidokWzoru: ExpoView, PDFPageOverlayViewProvider, PKCanvasViewDelega
 
   private let pdf = PDFView()
   private var plik = ""
+  private var wzorId = ""
+  private var katalogRysunkow: URL?                    // pliki rysunków czekające na zapis w JS (odzyskiwane przy następnym otwarciu)
   private var nakladki: [Int: NakladkaStrony] = [:]   // strony wyświetlane
   private var rysunki: [Int: PKDrawing] = [:]         // bieżący rysunek każdej strony (wczytany albo narysowany)
   private var historia: [Int: [PKDrawing]] = [:]      // cofanie ostatniej kreski na stronie
@@ -139,28 +141,36 @@ final class WidokWzoru: ExpoView, PDFPageOverlayViewProvider, PKCanvasViewDelega
 
   // MARK: właściwości z JS
 
-  func ustawPlik(_ s: String) {
-    guard s != plik else { return }
-    zapiszTeraz()
-    plik = s
-    nakladki = [:]; rysunki = [:]; historia = [:]; doZapisu = []
-    rysikZgloszony = false
-    pdf.document = PDFDocument(url: URL(fileURLWithPath: s))
-    przejdzDoStrony(stronaDocelowa)
-    zmianaStrony()
+  /// Jeden prop zamiast plikPdf + rysunki (przegląd 2026-10-26): kolejność propsów w Expo nie jest określona, a zmiana wzoru musi
+  /// najpierw zapisać kreski starego wzoru pod JEGO identyfikatorem, potem wczytać nowy plik, rysunki i obroty.
+  func ustawDokument(wzorId nowy: String, plikPdf: String, rysunki r: [(Int, String)], obroty: [Int: Int]) {
+    if nowy != wzorId || plikPdf != plik {
+      zapiszTeraz() // zdarzenia z dotychczasowym wzorId
+      wzorId = nowy
+      plik = plikPdf
+      nakladki = [:]; rysunki = [:]; historia = [:]; doZapisu = []
+      rysikZgloszony = false
+      pdf.document = PDFDocument(url: URL(fileURLWithPath: plikPdf))
+      for (s, sciezka) in r {
+        guard let d = try? Data(contentsOf: URL(fileURLWithPath: sciezka)), let rys = try? PKDrawing(data: d) else { continue }
+        rysunki[s] = rys
+      }
+      przejdzDoStrony(stronaDocelowa)
+      zmianaStrony()
+      zglosZakreslenia()
+    }
+    // Obrót widoku strony (P-246 S3a): tylko w pamięci dokumentu, plik bez zmian (P-218 (2)).
+    if let d = pdf.document {
+      for i in 0..<d.pageCount { d.page(at: i)?.rotation = obroty[i] ?? 0 }
+    }
+  }
+  func ustawKatalogRysunkow(_ k: String) {
+    katalogRysunkow = k.isEmpty ? nil : URL(fileURLWithPath: k, isDirectory: true)
   }
   func przejdzDoStrony(_ s: Int) {
     stronaDocelowa = s
     guard let d = pdf.document, s >= 0, s < d.pageCount, let p = d.page(at: s), pdf.currentPage != p else { return }
     pdf.go(to: p)
-  }
-  func ustawRysunki(_ r: [(Int, String)]) {
-    for (s, sciezka) in r where !doZapisu.contains(s) { // zmiana niezapisana na stronie wygrywa z plikiem z magazynu
-      guard let d = try? Data(contentsOf: URL(fileURLWithPath: sciezka)), let rys = try? PKDrawing(data: d) else { continue }
-      rysunki[s] = rys
-      if let n = nakladki[s] { zKodu = true; n.plotno.drawing = rys; zKodu = false }
-    }
-    zglosZakreslenia()
   }
   func ustawZnacznik(_ z: Znacznik?) {
     znacznik = z
@@ -237,15 +247,19 @@ final class WidokWzoru: ExpoView, PDFPageOverlayViewProvider, PKCanvasViewDelega
     zegar?.invalidate()
     zegar = Timer.scheduledTimer(withTimeInterval: Double(StaleWzoru.rysunekZapisMs) / 1000, repeats: false) { [weak self] _ in self?.zapiszTeraz() }
   }
-  /// Rysunki zmienionych stron do plików tymczasowych → `onRysunek` (JS: zapiszRysunek do magazynu i bazy, ADR-0012).
+  /// Rysunki zmienionych stron do plików w katalogu oczekujących → `onRysunek` (JS: zapiszRysunek, ADR-0012). Nazwa pliku niesie wzorId
+  /// i stronę, więc plik zapisany przy zamykaniu ekranu (zdarzenie bez odbiorcy) JS odzyska przy następnym otwarciu (przegląd 2026-10-26).
   @objc func zapiszTeraz() {
     zegar?.invalidate()
     zegar = nil
+    guard !wzorId.isEmpty else { return }
+    let k = katalogRysunkow ?? FileManager.default.temporaryDirectory
+    try? FileManager.default.createDirectory(at: k, withIntermediateDirectories: true)
     for s in doZapisu.sorted() {
-      let u = FileManager.default.temporaryDirectory.appendingPathComponent("rysunek-\(UUID().uuidString).pkdrawing")
-      guard (try? (rysunki[s] ?? PKDrawing()).dataRepresentation().write(to: u)) != nil else { continue } // zostaje w doZapisu: następna próba
+      let u = k.appendingPathComponent("\(wzorId)__\(s)__\(UUID().uuidString).pkdrawing")
+      guard (try? (rysunki[s] ?? PKDrawing()).dataRepresentation().write(to: u, options: .atomic)) != nil else { continue } // zostaje w doZapisu: następna próba
       doZapisu.remove(s)
-      onRysunek(["strona": s, "plikTymczasowy": u.path])
+      onRysunek(["wzorId": wzorId, "strona": s, "plikTymczasowy": u.path])
     }
   }
   private func zglosZakreslenia() {
@@ -265,10 +279,10 @@ final class WidokWzoru: ExpoView, PDFPageOverlayViewProvider, PKCanvasViewDelega
     let p = g.location(in: pdf)
     guard let strona = pdf.page(for: p, nearest: true) else { return }
     let wStronie = pdf.convert(p, to: strona)
-    let ramka = strona.bounds(for: .mediaBox)
+    let ramka = strona.bounds(for: pdf.displayBox) // ramka wyświetlana (cropBox), jak nakładka i znacznik (przegląd 2026-10-26)
     guard ramka.height > 0 else { return }
     let y = min(max((ramka.maxY - wStronie.y) / ramka.height, 0), 1) // PDF: początek układu na dole strony
-    onStukniecie(["strona": d.index(for: strona), "y": y])
+    onStukniecie(["wzorId": wzorId, "strona": d.index(for: strona), "y": y])
   }
   @objc private func zmianaStrony() {
     guard let d = pdf.document, let s = biezacaStrona() else { return }

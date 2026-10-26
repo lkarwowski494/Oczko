@@ -92,7 +92,7 @@ enum WejscieStrony { case adres(URL), plik(URL) }
     ciag = nil
   }
 
-  func webView(_ w: WKWebView, decidePolicyFor r: WKNavigationResponse, decisionHandler: @escaping @MainActor (WKNavigationResponsePolicy) -> Void) {
+  func webView(_ w: WKWebView, decidePolicyFor r: WKNavigationResponse, decisionHandler: @escaping @MainActor @Sendable (WKNavigationResponsePolicy) -> Void) {
     if r.isForMainFrame, let h = r.response as? HTTPURLResponse { kodHttp = h.statusCode }
     decisionHandler(.allow)
   }

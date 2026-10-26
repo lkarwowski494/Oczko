@@ -33,3 +33,11 @@ Stan 2026-10-26 ok. 20:30 UTC · gałąź lokalna `partia6-natywne` (od d817ce1)
 - Liczba stron w podglądzie arkusza (`wzor.wiersz_opis` „PDF · 6 pages”) pominięta: rozszerzenie nie dekoduje pliku (kontrakt) — pokazuje sam rodzaj.
 - Reguła aktywacji (predykat SUBQUERY) do sprawdzenia na urządzeniu: Safari (strona), Pliki (PDF, .docx), Zdjęcia (1 i 20), poczta (załącznik PDF).
 - Teksty celu share: przy nowych językach generator wpisze je sam (test porówna plik); klucze spoza tabeli wykrywa test.
+
+## Po przeglądzie kodu (2026-10-26 ok. 21:30 UTC)
+- Widok: jeden prop `dokument` (`wzorId`, `plikPdf`, `rysunki`, `obroty`) zamiast `plikPdf` + `rysunki` — kolejność propsów w Expo nieokreślona; zmiana wzoru najpierw zapisuje kreski starego pod jego `wzorId` (zdarzenia `onRysunek`/`onStukniecie` niosą `wzorId`). Rysunki wczytywane tylko przy zmianie wzoru (JS `useMemo`), więc +1 nie nadpisuje płótna starszym plikiem.
+- Kreski zapisane przy zamykaniu ekranu: pliki `<wzorId>__<strona>__<uuid>.pkdrawing` w `katalogRysunkow`; JS odzyskuje je przy następnym otwarciu (`odzyskajRysunki`).
+- Obrót strony: `PDFPage.rotation` w pamięci dokumentu (plik bez zmian). [DO SPRAWDZENIA w oknie]: współrzędne przytrzymania i znacznika na obróconej stronie.
+- Przytrzymanie liczone w `pdf.displayBox` (jak nakładka); `skanerDostepny` na wątku głównym; `decisionHandler` z `@Sendable` (sygnatura SDK iOS 18).
+- Rozszerzenie: błąd kolejnego zlecenia cofa wcześniejsze z tego samego udostępnienia.
+- Otwarte z przeglądu: podwójna kopia pliku w rozszerzeniu (kopia tymczasowa + kopia do skrzynki) na wątku głównym — do pomiaru z plikiem 100–200 MB w oknie (W2), ewentualnie `moveItem` z kopii tymczasowej.

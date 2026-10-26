@@ -88,21 +88,25 @@ final class ShareViewController: UIViewController {
   private func zapisz(_ grupa: URL?) {
     guard let grupa else { zakoncz(NSError(domain: "Oczko", code: 1)); return }
     let teraz = Int64(Date().timeIntervalSince1970 * 1000)
+    var zapisane: [String] = [] // przy błędzie kolejnego zlecenia wcześniejsze z tego udostępnienia są cofane (bez duplikatu po ponowieniu)
     do {
       let zdjecia = model.zalaczniki.filter { $0.rodzaj == .obraz && $0.plik != nil }
       if let pierwsze = zdjecia.first {
-        _ = try zapiszZlecenie(grupa: grupa, wejscie: .pliki(zdjecia.compactMap(\.plik), typ: pierwsze.typ), projektId: model.wybrany, terazMs: teraz)
+        zapisane.append(try zapiszZlecenie(grupa: grupa, wejscie: .pliki(zdjecia.compactMap(\.plik), typ: pierwsze.typ), projektId: model.wybrany, terazMs: teraz).id)
       }
       for z in model.zalaczniki where z.rodzaj != .obraz {
         if let u = z.adres {
-          _ = try zapiszZlecenie(grupa: grupa, wejscie: .adres(u, film: model.jakoFilm), projektId: model.wybrany, terazMs: teraz)
+          zapisane.append(try zapiszZlecenie(grupa: grupa, wejscie: .adres(u, film: model.jakoFilm), projektId: model.wybrany, terazMs: teraz).id)
         } else if let p = z.plik {
-          _ = try zapiszZlecenie(grupa: grupa, wejscie: .pliki([p], typ: z.typ), projektId: model.wybrany, terazMs: teraz)
+          zapisane.append(try zapiszZlecenie(grupa: grupa, wejscie: .pliki([p], typ: z.typ), projektId: model.wybrany, terazMs: teraz).id)
         }
       }
       for z in model.zalaczniki { if let p = z.plik { try? FileManager.default.removeItem(at: p.deletingLastPathComponent()) } }
       zakoncz(nil)
-    } catch { zakoncz(error) }
+    } catch {
+      for id in zapisane { try? FileManager.default.removeItem(at: grupa.appendingPathComponent("skrzynka/\(id)", isDirectory: true)) }
+      zakoncz(error)
+    }
   }
 
   private func zakoncz(_ e: Error?) {

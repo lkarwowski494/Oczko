@@ -14,17 +14,19 @@ export interface OczkoWzorNatywny {
 
 export type ZnacznikNatywny = { strona: number; y: number; wysokosc: number; pozaStrona: boolean; przedSchematem: boolean; kierunek: 1 | -1; etykieta: string };
 export type PropsWidokuNatywnego = {
-  plikPdf: string;
+  /** Dokument jednym propsem (kolejność propsów nieokreślona): zmiana wzorId najpierw zapisuje kreski starego wzoru (przegląd 2026-10-26).
+   *  rysunki: pliki PKDrawing z magazynu (osobna warstwa, P-218 (2)) — wczytywane tylko przy zmianie wzoru; obroty: P-246 S3a. */
+  dokument: { wzorId: string; plikPdf: string; rysunki: { strona: number; plik: string }[]; obroty: { strona: number; kat: number }[] };
+  katalogRysunkow: string;                           // katalog plików rysunków czekających na zapis (odzyskiwane przy następnym otwarciu)
   strona: number;                                    // 0 = pierwsza; zmiana z JS przewija do strony
-  rysunki: { strona: number; plik: string }[];       // pliki PKDrawing z magazynu (osobna warstwa, P-218 (2))
   znacznik: ZnacznikNatywny | null;                  // wynik polozenieZnacznika — widok tylko rysuje (testID `wzor-znacznik`, P-237 (2))
   narzedzie: 'brak' | 'zakreslacz' | 'pioro' | 'gumka';
   polityka: 'wylaczone' | 'dowolne' | 'tylkoRysik'; // politykaPlotna (src/domena/rysik.ts)
   cofnij: number;                                    // licznik: każda zmiana = cofnięcie ostatniej kreski na bieżącej stronie
   style?: StyleProp<ViewStyle>;
   testID?: string;
-  onRysunek?: (e: NativeSyntheticEvent<{ strona: number; plikTymczasowy: string }>) => void; // po RYSUNEK_ZAPIS_MS, zmianie strony, zamknięciu, tle
-  onStukniecie?: (e: NativeSyntheticEvent<{ strona: number; y: number }>) => void;            // przytrzymanie; y = ułamek wysokości strony bez /Rotate
+  onRysunek?: (e: NativeSyntheticEvent<{ wzorId: string; strona: number; plikTymczasowy: string }>) => void; // po RYSUNEK_ZAPIS_MS, zmianie strony, zamknięciu, tle
+  onStukniecie?: (e: NativeSyntheticEvent<{ wzorId: string; strona: number; y: number }>) => void;            // przytrzymanie; y = ułamek wysokości strony bez /Rotate
   onStrona?: (e: NativeSyntheticEvent<{ strona: number; stron: number }>) => void;
   onPierwszyRysik?: (e: NativeSyntheticEvent<Record<string, never>>) => void;                  // P-218 Q2a
   onZakreslenia?: (e: NativeSyntheticEvent<{ liczba: number }>) => void;                       // kreski zakreślacza na wszystkich stronach

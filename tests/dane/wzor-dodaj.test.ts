@@ -143,3 +143,10 @@ test('drugi import tego samego PDF do projektu = drugi wzór (osobny wiersz), pl
   expect(await ile(s.baza, 'wzor')).toBe(2);
   expect(await ile(s.baza, 'plik')).toBe(1);
 });
+
+test('przegląd: oryginał .doc zapisany z rozszerzeniem doc (nie docx)', async () => {
+  const { s, z } = await srodowisko();
+  const p = plikWe(s.katalog, 'Stary.doc', Buffer.from('ÐÏ doc'), 'application/msword');
+  expect((await dodajWzor(z, { projektId: 'p1', nazwa: 'Stary', zrodlo: { rodzaj: 'word', plik: p } })).ok).toBe(true);
+  expect(await ile(s.baza, 'plik', "rozszerzenie = 'doc'")).toBe(1);
+});

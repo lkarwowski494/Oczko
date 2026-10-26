@@ -5,7 +5,8 @@ import { polozenieZnacznika } from '../domena/znacznik-wzoru';
 import { znacznikWzoru } from '../dane/repozytoria/wzory';
 import { liczba, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { OK, blad, operacjaZapisu } from './zapis';
-import { wzorDoZapisu } from './wzor';
+import { wzorDoZapisu, zapiszRysunek } from './wzor';
+import { lista, polacz } from '../dane/pliki/system';
 import type { ZaleznosciPlikow } from './zaleznosci';
 
 export type KatObrotu = 0 | 90 | 180 | 270;
@@ -64,4 +65,20 @@ export function widokWzoru(z: ZaleznosciPlikow, w: { wzorId: string }): Promise<
       rysunki: rys.map((x) => ({ strona: liczba(x, 'strona'), plik: z.magazyn.sciezka(tekst(x, 'plik_sha256')) })), obroty, znacznik,
     } };
   });
+}
+
+const PLIK_OCZEKUJACY = /^(.+)__(\d+)__[^/]+\.pkdrawing$/;
+/**
+ * Odzysk rysunków zapisanych przez widok natywny, gdy ekran już się zamykał (zdarzenie `onRysunek` bez odbiorcy; przegląd 2026-10-26):
+ * pliki `<wzorId>__<strona>__<uuid>.pkdrawing` z katalogu oczekujących → `zapiszRysunek` (usuwa plik). Wynik = liczba zapisanych.
+ */
+export async function odzyskajRysunki(z: ZaleznosciPlikow, w: { katalog: string }): Promise<Wynik<number>> {
+  let n = 0;
+  for (const nazwa of lista(w.katalog)) {
+    const m = PLIK_OCZEKUJACY.exec(nazwa);
+    if (!m) continue;
+    const r = await zapiszRysunek(z, { wzorId: m[1], strona: Number(m[2]), plikTymczasowy: polacz(w.katalog, nazwa) });
+    if (r.ok) n += 1;
+  }
+  return { ok: true, wartosc: n };
 }

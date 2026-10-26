@@ -9,6 +9,17 @@ struct RysunekStrony: Record {
   @Field var strona: Int = 0
   @Field var plik: String = ""
 }
+struct ObrotStrony: Record {
+  @Field var strona: Int = 0
+  @Field var kat: Int = 0
+}
+/// Dokument wzoru jednym propsem (przegląd 2026-10-26: kolejność propsów nieokreślona; zmiana wzoru najpierw zapisuje stary).
+struct DokumentProp: Record {
+  @Field var wzorId: String = ""
+  @Field var plikPdf: String = ""
+  @Field var rysunki: [RysunekStrony] = []
+  @Field var obroty: [ObrotStrony] = []
+}
 struct ZnacznikProp: Record {
   @Field var strona: Int = 0
   @Field var y: Double = 0
@@ -34,14 +45,17 @@ public class OczkoWzorModule: Module {
       case let .failure(p): return wynikBlad(p)
       }
     }
-    Function("skanerDostepny") { () -> Bool in VNDocumentCameraViewController.isSupported }
+    Function("skanerDostepny") { () -> Bool in VNDocumentCameraViewController.isSupported }.runOnQueue(.main) // API izolowane do MainActor (przegląd 2026-10-26)
     AsyncFunction("skanuj") { () async -> String in await Skaner.skanuj() }
 
     View(WidokWzoru.self) {
       Events("onRysunek", "onStukniecie", "onStrona", "onPierwszyRysik", "onZakreslenia")
-      Prop("plikPdf") { (v: WidokWzoru, s: String) in v.ustawPlik(s) }
+      Prop("dokument") { (v: WidokWzoru, d: DokumentProp) in
+        v.ustawDokument(wzorId: d.wzorId, plikPdf: d.plikPdf, rysunki: d.rysunki.map { ($0.strona, $0.plik) },
+                        obroty: Dictionary(d.obroty.map { ($0.strona, $0.kat) }, uniquingKeysWith: { a, _ in a }))
+      }
+      Prop("katalogRysunkow") { (v: WidokWzoru, k: String) in v.ustawKatalogRysunkow(k) }
       Prop("strona") { (v: WidokWzoru, s: Int) in v.przejdzDoStrony(s) }
-      Prop("rysunki") { (v: WidokWzoru, r: [RysunekStrony]) in v.ustawRysunki(r.map { ($0.strona, $0.plik) }) }
       Prop("znacznik") { (v: WidokWzoru, z: ZnacznikProp?) in
         v.ustawZnacznik(z.map { Znacznik(strona: $0.strona, y: $0.y, wysokosc: $0.wysokosc, pozaStrona: $0.pozaStrona, kierunek: $0.kierunek, etykieta: $0.etykieta) })
       }

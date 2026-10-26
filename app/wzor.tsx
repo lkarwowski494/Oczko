@@ -1,7 +1,7 @@
 // Trasa „/wzor”: przeglądarka wzoru bieżącego projektu (design-spec „Wzór, rysik i iPad”; P-220 W1a–W9b; moduly.md „Kontrakt partii 6”).
 // Bez wzoru: grupa „Add pattern” (W7a, subflow otworz-wzor-pdf). Widok strony = moduł natywny `oczko-wzor` (WidokWzoru); build bez modułu: pusta strona.
 // Pasek licznika woła te same usługi co licznik (+1/−1), więc znacznik idzie z licznikiem (BR-WZR-003). Ostatni wzór w `ostatnie_miejsce` (P-246).
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { WidokWzoruNatywny } from '../modules/oczko-wzor';
@@ -18,7 +18,7 @@ import { wybierzPlikWzoru } from '../src/platforma/system-plikow-uzytkownika';
 import { paneleE2e, szerokoscOknaE2e } from '../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../src/platforma/zdjecia';
 import { dodajNotatkeWzoru, dodajWzor, listaWzorow, usunWzor, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek, ustawZnacznik, type ZrodloDodania } from '../src/przypadki-uzycia/wzor';
-import { ustawObrot, widokWzoru, type WidokWzoru } from '../src/przypadki-uzycia/wzor-widok';
+import { odzyskajRysunki, ustawObrot, widokWzoru, type WidokWzoru } from '../src/przypadki-uzycia/wzor-widok';
 import type { WidokLicznika } from '../src/przypadki-uzycia/widok-licznika';
 import { KOSZ_DNI } from '../src/konfiguracja';
 
@@ -55,7 +55,9 @@ export default function EkranWzoru(): React.ReactElement {
     ustawWidok(v.ok ? v.wartosc : null);
     if (v.ok) await zapamietajWzor(zw, { licznikId: w.licznikId, wzorId });
   }, [licznik, zw]);
-  useEffect(() => { void wczytaj(id); setRysikOtwarcie(); }, [wczytaj, id]);
+  const katalogRysunkow = `${kontener.z.katalogi.tymczasowy}/rysunki-wzoru`;
+  // Odzysk kresek zapisanych przy poprzednim zamknięciu ekranu (zdarzenie bez odbiorcy), potem wczytanie (przegląd 2026-10-26).
+  useEffect(() => { void odzyskajRysunki(zw, { katalog: katalogRysunkow }).finally(() => { void wczytaj(id); }); setRysikOtwarcie(); }, [wczytaj, id, zw, katalogRysunkow]);
   useEffect(() => { const o = kontener.porty.orientacja; o.dowolna(); return () => o.tylkoPion(); }, [kontener]); // F-25: wzór w obu położeniach na iPhonie
   const [dodano, ustawDodano] = useState(false); // „Add pattern” z ekranu projektu: źródło od razu, raz (W7a)
   useEffect(() => {
@@ -101,6 +103,12 @@ export default function EkranWzoru(): React.ReactElement {
     if (a) Alert.alert(a.tytul, a.opis || undefined, [{ text: t('wspolne.ok') }]);
   }
 
+  // Dokument dla widoku natywnego: nowy obiekt tylko przy zmianie wzoru albo obrotów — +1 nie wysyła ponownie rysunków (przegląd 2026-10-26).
+  const obrotyKlucz = widok ? JSON.stringify(widok.obroty) : '';
+  const dokument = useMemo(() => (widok && widok.plikPdf ? {
+    wzorId: widok.wzorId, plikPdf: widok.plikPdf, rysunki: widok.rysunki,
+    obroty: Object.entries(widok.obroty).map(([k, v]) => ({ strona: Number(k), kat: v })),
+  } : null), [widok?.wzorId, widok?.plikPdf, obrotyKlucz]); // eslint-disable-line react-hooks/exhaustive-deps -- rysunki tylko przy zmianie wzoru
   if (link) return <Bezpieczny><ArkuszLinku t={t} naAnuluj={() => ustawLink(false)} naWklej={async () => null} naZapisz={(adres) => { ustawLink(false); void dodaj({ rodzaj: 'adres', adres }); }} /></Bezpieczny>;
   if (!lw || !wzory) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   const szerokosc = szerokoscOknaE2e() ?? okno.width;
@@ -119,15 +127,15 @@ export default function EkranWzoru(): React.ReactElement {
   const polityka = politykaPlotna({ narzedzie, tylkoRysik: rysik.tylkoRysik });
   const zn = widok.znacznik;
   const plikPdf = widok.plikPdf;
-  const natywny = WidokWzoruNatywny && plikPdf ? (
-    <WidokWzoruNatywny style={{ flex: 1 }} testID="wzor-pdf" plikPdf={plikPdf} strona={strona ? strona.n - 1 : 0} rysunki={widok.rysunki} narzedzie={narzedzie} polityka={polityka} cofnij={cofnij}
+  const natywny = WidokWzoruNatywny && dokument ? (
+    <WidokWzoruNatywny style={{ flex: 1 }} testID="wzor-pdf" dokument={dokument} katalogRysunkow={katalogRysunkow} strona={strona ? strona.n - 1 : 0} narzedzie={narzedzie} polityka={polityka} cofnij={cofnij}
       znacznik={zn ? { strona: zn.strona, y: zn.y, wysokosc: zn.wysokosc, pozaStrona: zn.pozaStrona, przedSchematem: zn.przedSchematem, kierunek: zn.kierunek,
         etykieta: t(zn.kierunek === -1 ? 'wzor.znacznik_a11y_gora' : 'wzor.znacznik_a11y_dol', { n: zn.rzad }) } : null}
-      onRysunek={(e) => void zapiszRysunek(zw, { wzorId: widok.wzorId, strona: e.nativeEvent.strona, plikTymczasowy: e.nativeEvent.plikTymczasowy })}
+      onRysunek={(e) => void zapiszRysunek(zw, { wzorId: e.nativeEvent.wzorId, strona: e.nativeEvent.strona, plikTymczasowy: e.nativeEvent.plikTymczasowy })} // wzorId ze zdarzenia: kreski starego wzoru po przełączeniu trafiają do niego
       onStrona={(e) => ustawStrone({ n: e.nativeEvent.strona + 1, razem: e.nativeEvent.stron })}
       onPierwszyRysik={() => ustawRysik((s) => poDotyku(s, 'rysik'))}
       onZakreslenia={(e) => ustawZakreslenia(e.nativeEvent.liczba)}
-      onStukniecie={(e) => zn && void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: e.nativeEvent.strona, y: Math.min(e.nativeEvent.y, 0.98), wysokoscRzedu: zn?.wysokosc ?? 0.02,
+      onStukniecie={(e) => zn && e.nativeEvent.wzorId === widok.wzorId && void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: e.nativeEvent.strona, y: Math.min(e.nativeEvent.y, 0.98), wysokoscRzedu: zn?.wysokosc ?? 0.02,
         rzadBazowy: lw.wartosc + 1, kierunek: zn.kierunek }).then(() => wczytaj(widok.wzorId))} /> // przytrzymanie przestawia znacznik o znanym kierunku; pierwszy: „Mark row” z pytaniem (3a)
   ) : <View style={{ flex: 1 }} />;
   const liczba = lw.znaczenie === 'w_trakcie' ? lw.wartosc + 1 : lw.wartosc;
