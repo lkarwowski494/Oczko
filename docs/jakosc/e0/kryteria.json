@@ -191,7 +191,7 @@
   "wyrocznia": "P-026",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "zegar wstrzykiwany",
-  "plik": "docs/brd/wymagania-dane.md:104",
+  "plik": "docs/brd/wymagania-dane.md:121",
   "rodzaj": "BR"
  },
  {
@@ -204,7 +204,7 @@
   "wyrocznia": "P-026",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "informacja o terminie przy usuwaniu → RNTL",
-  "plik": "docs/brd/wymagania-dane.md:108",
+  "plik": "docs/brd/wymagania-dane.md:125",
   "rodzaj": "BR"
  },
  {
@@ -217,7 +217,7 @@
   "wyrocznia": "P-047",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:112",
+  "plik": "docs/brd/wymagania-dane.md:129",
   "rodzaj": "BR"
  },
  {
@@ -230,7 +230,7 @@
   "wyrocznia": "P-047",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:116",
+  "plik": "docs/brd/wymagania-dane.md:133",
   "rodzaj": "BR"
  },
  {
@@ -243,7 +243,7 @@
   "wyrocznia": "KP-05",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "usunięcie w iCloud: mock CloudKit; prawdziwe konto: ryzyko szczątkowe",
-  "plik": "docs/brd/wymagania-dane.md:125",
+  "plik": "docs/brd/wymagania-dane.md:142",
   "rodzaj": "BR"
  },
  {
@@ -256,7 +256,7 @@
   "wyrocznia": "NFR-PRY-001",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "lista pól diagnostyki i brak treści projektów",
-  "plik": "docs/brd/wymagania-dane.md:134",
+  "plik": "docs/brd/wymagania-dane.md:151",
   "rodzaj": "BR"
  },
  {
@@ -269,7 +269,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "arkusz udostępniania systemowy: mock; „nie wysyła niczego sama” → szpieg sieci",
-  "plik": "docs/brd/wymagania-dane.md:138",
+  "plik": "docs/brd/wymagania-dane.md:155",
   "rodzaj": "BR"
  },
  {
@@ -282,7 +282,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:142",
+  "plik": "docs/brd/wymagania-dane.md:159",
   "rodzaj": "BR"
  },
  {
@@ -295,7 +295,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "stan wstrzyknięty",
-  "plik": "docs/brd/wymagania-dane.md:151",
+  "plik": "docs/brd/wymagania-dane.md:182",
   "rodzaj": "BR"
  },
  {
@@ -308,7 +308,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:155",
+  "plik": "docs/brd/wymagania-dane.md:186",
   "rodzaj": "BR"
  },
  {
@@ -321,7 +321,7 @@
   "wyrocznia": "S-39; OG-15",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "mock requestReview: 1 wywołanie po zamknięciu karty; czy system pokaże: poza kontrolą. Chwila prośby: OP-33 otwarte (docs/brd/README.md:123)",
-  "plik": "docs/brd/wymagania-dane.md:165",
+  "plik": "docs/brd/wymagania-dane.md:201",
   "rodzaj": "BR"
  },
  {
@@ -334,7 +334,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "0 wywołań w wymienionych czynnościach",
-  "plik": "docs/brd/wymagania-dane.md:169",
+  "plik": "docs/brd/wymagania-dane.md:205",
   "rodzaj": "BR"
  },
  {
@@ -347,7 +347,7 @@
   "wyrocznia": "S-39",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "mock Linking: URL z action=write-review",
-  "plik": "docs/brd/wymagania-dane.md:173",
+  "plik": "docs/brd/wymagania-dane.md:209",
   "rodzaj": "BR"
  },
  {
@@ -360,7 +360,7 @@
   "wyrocznia": "W-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "logika dostępu w Node; realna reinstalacja: TestFlight (docs/monetyzacja.md:586)",
-  "plik": "docs/brd/wymagania-dane.md:187",
+  "plik": "docs/brd/wymagania-dane.md:223",
   "rodzaj": "BR"
  },
  {
@@ -373,7 +373,7 @@
   "wyrocznia": "W-03, W-18; L-10 (L-13 opisowy, docs/monetyzacja.md:156)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "L-13 nie ma wektora w wektory-limitu.json (opis pliku: poza funkcją)",
-  "plik": "docs/brd/wymagania-dane.md:191",
+  "plik": "docs/brd/wymagania-dane.md:227",
   "rodzaj": "BR"
  },
  {
@@ -386,7 +386,7 @@
   "wyrocznia": "W-09; KP-08",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "TestFlight (docs/monetyzacja.md:588)",
-  "plik": "docs/brd/wymagania-dane.md:195",
+  "plik": "docs/brd/wymagania-dane.md:231",
   "rodzaj": "BR"
  },
  {
@@ -399,7 +399,7 @@
   "wyrocznia": "L-10, L-18; OP-22",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "odczyt Pro na zegarku: ADR-0009; brak wektora W dla zegarka",
-  "plik": "docs/brd/wymagania-dane.md:199",
+  "plik": "docs/brd/wymagania-dane.md:235",
   "rodzaj": "BR"
  },
  {
@@ -412,7 +412,7 @@
   "wyrocznia": "W-10",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "Family Sharing tylko TestFlight (docs/monetyzacja.md:591)",
-  "plik": "docs/brd/wymagania-dane.md:203",
+  "plik": "docs/brd/wymagania-dane.md:239",
   "rodzaj": "BR"
  },
  {
@@ -425,7 +425,7 @@
   "wyrocznia": "W-14; KP-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "realne odebranie: TestFlight",
-  "plik": "docs/brd/wymagania-dane.md:207",
+  "plik": "docs/brd/wymagania-dane.md:243",
   "rodzaj": "BR"
  },
  {
@@ -438,7 +438,7 @@
   "wyrocznia": "NFR-PRY-001; KP-11",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "przegląd zależności (lista SDK) + szpieg sieci w testach; etykieta App Privacy: rola 10",
-  "plik": "docs/brd/wymagania-dane.md:216",
+  "plik": "docs/brd/wymagania-dane.md:252",
   "rodzaj": "BR"
  },
  {
@@ -451,7 +451,7 @@
   "wyrocznia": "W-15/W-17; KP-01",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:225",
+  "plik": "docs/brd/wymagania-dane.md:261",
   "rodzaj": "BR"
  },
  {
@@ -464,7 +464,7 @@
   "wyrocznia": "KP-01 (LIMIT_DNI ≥ poprzednie wydanie)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "kontrola przed wydaniem: porównanie LIMIT_DNI i listy „zawsze działa” z poprzednim tagiem",
-  "plik": "docs/brd/wymagania-dane.md:229",
+  "plik": "docs/brd/wymagania-dane.md:265",
   "rodzaj": "BR"
  },
  {
@@ -477,7 +477,7 @@
   "wyrocznia": "KP-04",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:238",
+  "plik": "docs/brd/wymagania-dane.md:274",
   "rodzaj": "BR"
  },
  {
@@ -490,7 +490,7 @@
   "wyrocznia": "L-01",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:248",
+  "plik": "docs/brd/wymagania-dane.md:301",
   "rodzaj": "BR"
  },
  {
@@ -503,7 +503,7 @@
   "wyrocznia": "L-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:252",
+  "plik": "docs/brd/wymagania-dane.md:305",
   "rodzaj": "BR"
  },
  {
@@ -516,7 +516,7 @@
   "wyrocznia": "L-04, L-04b",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:256",
+  "plik": "docs/brd/wymagania-dane.md:309",
   "rodzaj": "BR"
  },
  {
@@ -529,7 +529,7 @@
   "wyrocznia": "L-03; Z-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:261",
+  "plik": "docs/brd/wymagania-dane.md:314",
   "rodzaj": "BR"
  },
  {
@@ -542,7 +542,7 @@
   "wyrocznia": "L-08; S-06",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:265",
+  "plik": "docs/brd/wymagania-dane.md:318",
   "rodzaj": "BR"
  },
  {
@@ -555,7 +555,7 @@
   "wyrocznia": "L-06",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:269",
+  "plik": "docs/brd/wymagania-dane.md:322",
   "rodzaj": "BR"
  },
  {
@@ -568,7 +568,7 @@
   "wyrocznia": "S-09 (L-07 opisowy)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "L-07 nie ma wektora startDnia; pokrywa S-09 + test „kalkulator nie woła strażnika”",
-  "plik": "docs/brd/wymagania-dane.md:273",
+  "plik": "docs/brd/wymagania-dane.md:326",
   "rodzaj": "BR"
  },
  {
@@ -581,7 +581,7 @@
   "wyrocznia": "L-05",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:277",
+  "plik": "docs/brd/wymagania-dane.md:330",
   "rodzaj": "BR"
  },
  {
@@ -594,7 +594,7 @@
   "wyrocznia": "L-10",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:281",
+  "plik": "docs/brd/wymagania-dane.md:334",
   "rodzaj": "BR"
  },
  {
@@ -607,7 +607,7 @@
   "wyrocznia": "L-11",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:285",
+  "plik": "docs/brd/wymagania-dane.md:338",
   "rodzaj": "BR"
  },
  {
@@ -620,7 +620,7 @@
   "wyrocznia": "S-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:289",
+  "plik": "docs/brd/wymagania-dane.md:342",
   "rodzaj": "BR"
  },
  {
@@ -633,7 +633,7 @@
   "wyrocznia": "S-07, S-08",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:293",
+  "plik": "docs/brd/wymagania-dane.md:346",
   "rodzaj": "BR"
  },
  {
@@ -646,7 +646,7 @@
   "wyrocznia": "L-18",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "reguła w Node; UI zegarka E2E para symulatorów albo urządzenie",
-  "plik": "docs/brd/wymagania-dane.md:297",
+  "plik": "docs/brd/wymagania-dane.md:350",
   "rodzaj": "BR"
  },
  {
@@ -659,7 +659,7 @@
   "wyrocznia": "L-16, L-17; KP-15",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:301",
+  "plik": "docs/brd/wymagania-dane.md:354",
   "rodzaj": "BR"
  },
  {
@@ -672,7 +672,7 @@
   "wyrocznia": "L-15",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:305",
+  "plik": "docs/brd/wymagania-dane.md:358",
   "rodzaj": "BR"
  },
  {
@@ -685,7 +685,7 @@
   "wyrocznia": "Z-02; KP-13; tekst docs/design/design-spec.md:16",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "zrzut wzorcowy `limit-zawczasu`",
-  "plik": "docs/brd/wymagania-dane.md:316",
+  "plik": "docs/brd/wymagania-dane.md:369",
   "rodzaj": "BR"
  },
  {
@@ -698,7 +698,7 @@
   "wyrocznia": "Z-03; L-04",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:321",
+  "plik": "docs/brd/wymagania-dane.md:374",
   "rodzaj": "BR"
  },
  {
@@ -711,7 +711,7 @@
   "wyrocznia": "L-03; tekst docs/design/design-spec.md:17",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "zrzut wzorcowy `limit`",
-  "plik": "docs/brd/wymagania-dane.md:325",
+  "plik": "docs/brd/wymagania-dane.md:378",
   "rodzaj": "BR"
  },
  {
@@ -724,7 +724,7 @@
   "wyrocznia": "KP-10, KP-13",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "przejście przepływów bez ekranu zakupu",
-  "plik": "docs/brd/wymagania-dane.md:330",
+  "plik": "docs/brd/wymagania-dane.md:383",
   "rodzaj": "BR"
  },
  {
@@ -737,7 +737,7 @@
   "wyrocznia": "Z-07; KP-13",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:334",
+  "plik": "docs/brd/wymagania-dane.md:387",
   "rodzaj": "BR"
  },
  {
@@ -750,7 +750,7 @@
   "wyrocznia": "Z-06",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "brak zrzutu wzorcowego (tekst w docs/design/design-spec.md:18)",
-  "plik": "docs/brd/wymagania-dane.md:338",
+  "plik": "docs/brd/wymagania-dane.md:391",
   "rodzaj": "BR"
  },
  {
@@ -763,7 +763,7 @@
   "wyrocznia": "W-15; KP-03, KP-14",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "showManageSubscriptions: mock; stan „do E4” w macierzy (docs/design/design-spec.md:56)",
-  "plik": "docs/brd/wymagania-dane.md:342",
+  "plik": "docs/brd/wymagania-dane.md:395",
   "rodzaj": "BR"
  },
  {
@@ -776,7 +776,7 @@
   "wyrocznia": "L-09",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dane.md:351",
+  "plik": "docs/brd/wymagania-dane.md:428",
   "rodzaj": "BR"
  },
  {
@@ -789,7 +789,7 @@
   "wyrocznia": "W-05, W-06, W-16; KP-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "tabela „tylko telefon” (docs/monetyzacja.md:591–592) ma oczekiwanie „dane do odczytu” z modelu B — sprzeczne z KP-02 V4",
-  "plik": "docs/brd/wymagania-dane.md:355",
+  "plik": "docs/brd/wymagania-dane.md:432",
   "rodzaj": "BR"
  },
  {
@@ -802,7 +802,7 @@
   "wyrocznia": "RD-16",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:10",
+  "plik": "docs/brd/wymagania-dni.md:12",
   "rodzaj": "BR"
  },
  {
@@ -815,7 +815,7 @@
   "wyrocznia": "RD-15",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:14",
+  "plik": "docs/brd/wymagania-dni.md:16",
   "rodzaj": "BR"
  },
  {
@@ -828,7 +828,7 @@
   "wyrocznia": "RD-15, RD-16; L-04, L-06",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:18",
+  "plik": "docs/brd/wymagania-dni.md:20",
   "rodzaj": "BR"
  },
  {
@@ -841,7 +841,7 @@
   "wyrocznia": "P-043",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "asercja negatywna + brak zaplanowanych powiadomień",
-  "plik": "docs/brd/wymagania-dni.md:23",
+  "plik": "docs/brd/wymagania-dni.md:25",
   "rodzaj": "BR"
  },
  {
@@ -854,7 +854,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:32",
+  "plik": "docs/brd/wymagania-dni.md:47",
   "rodzaj": "BR"
  },
  {
@@ -867,7 +867,7 @@
   "wyrocznia": "RD-16-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "strefa czasowa wstrzykiwana",
-  "plik": "docs/brd/wymagania-dni.md:36",
+  "plik": "docs/brd/wymagania-dni.md:51",
   "rodzaj": "BR"
  },
  {
@@ -880,7 +880,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "początek tygodnia z regionu (Intl/CLDR, ADR-0017)",
-  "plik": "docs/brd/wymagania-dni.md:45",
+  "plik": "docs/brd/wymagania-dni.md:68",
   "rodzaj": "BR"
  },
  {
@@ -893,7 +893,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:49",
+  "plik": "docs/brd/wymagania-dni.md:73",
   "rodzaj": "BR"
  },
  {
@@ -906,7 +906,7 @@
   "wyrocznia": "RD-14-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:58",
+  "plik": "docs/brd/wymagania-dni.md:86",
   "rodzaj": "BR"
  },
  {
@@ -919,7 +919,7 @@
   "wyrocznia": "RD-14-W4",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:62",
+  "plik": "docs/brd/wymagania-dni.md:90",
   "rodzaj": "BR"
  },
  {
@@ -932,7 +932,7 @@
   "wyrocznia": "RD-14-W6",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:66",
+  "plik": "docs/brd/wymagania-dni.md:94",
   "rodzaj": "BR"
  },
  {
@@ -945,7 +945,7 @@
   "wyrocznia": "RD-15-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:75",
+  "plik": "docs/brd/wymagania-dni.md:103",
   "rodzaj": "BR"
  },
  {
@@ -958,7 +958,7 @@
   "wyrocznia": "RD-15",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:79",
+  "plik": "docs/brd/wymagania-dni.md:107",
   "rodzaj": "BR"
  },
  {
@@ -971,7 +971,7 @@
   "wyrocznia": "RD-15",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:83",
+  "plik": "docs/brd/wymagania-dni.md:111",
   "rodzaj": "BR"
  },
  {
@@ -984,7 +984,7 @@
   "wyrocznia": "RD-15-W4",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:87",
+  "plik": "docs/brd/wymagania-dni.md:115",
   "rodzaj": "BR"
  },
  {
@@ -997,7 +997,7 @@
   "wyrocznia": "P-046",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:91",
+  "plik": "docs/brd/wymagania-dni.md:119",
   "rodzaj": "BR"
  },
  {
@@ -1010,7 +1010,7 @@
   "wyrocznia": "RD-15",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "kolejność dla dwóch projektów z terminem: według celu na dziś malejąco? Reguła sortowania nie jest zapisana w RD-15 ani BR. Brzmienie: „projekty z terminem według celu na dziś malejąco, potem bez terminu według ostatniej pracy”",
-  "plik": "docs/brd/wymagania-dni.md:100",
+  "plik": "docs/brd/wymagania-dni.md:150",
   "rodzaj": "BR"
  },
  {
@@ -1023,7 +1023,7 @@
   "wyrocznia": "RD-15-W4",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:104",
+  "plik": "docs/brd/wymagania-dni.md:154",
   "rodzaj": "BR"
  },
  {
@@ -1036,7 +1036,7 @@
   "wyrocznia": "BR-PRJ-012",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-dni.md:108",
+  "plik": "docs/brd/wymagania-dni.md:158",
   "rodzaj": "BR"
  },
  {
@@ -1153,7 +1153,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "fizyczny dotyk kolana nie do odtworzenia; test: zdarzenie press na +1 w stanie zablokowanym nie zmienia wartości. Brzmienie: „Gdy licznik dostaje zdarzenie stuknięcia w przycisk +1”",
-  "plik": "docs/brd/wymagania-licznik.md:55",
+  "plik": "docs/brd/wymagania-licznik.md:64",
   "rodzaj": "BR"
  },
  {
@@ -1166,7 +1166,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "„świadomy gest” nieokreślony; design: pasek „Counter locked · Unlock” (docs/design/design-spec.md:34). Brzmienie: „Gdy stuka Unlock na pasku blokady”",
-  "plik": "docs/brd/wymagania-licznik.md:59",
+  "plik": "docs/brd/wymagania-licznik.md:68",
   "rodzaj": "BR"
  },
  {
@@ -1179,7 +1179,7 @@
   "wyrocznia": "tekst z docs/design/design-spec.md:34",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:63",
+  "plik": "docs/brd/wymagania-licznik.md:72",
   "rodzaj": "BR"
  },
  {
@@ -1192,7 +1192,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "gestu systemowego od krawędzi nie da się wiernie odtworzyć w XCUITest; test zastępczy: przeciągnięcie z dolnej krawędzi strefy +1 nie dodaje rzędu (RNTL/E2E); reszta ryzyko szczątkowe",
-  "plik": "docs/brd/wymagania-licznik.md:67",
+  "plik": "docs/brd/wymagania-licznik.md:76",
   "rodzaj": "BR"
  },
  {
@@ -1205,7 +1205,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "haptyka i ciągłość podcastu tylko na urządzeniu; automat: wywołanie haptyki przy +1 (mock) i brak zmiany kategorii sesji audio (RNTL). Ryzyko szczątkowe P-041",
-  "plik": "docs/brd/wymagania-licznik.md:76",
+  "plik": "docs/brd/wymagania-licznik.md:85",
   "rodzaj": "BR"
  },
  {
@@ -1218,7 +1218,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "zakłada istnienie dźwięków i ustawienia ich wyłączenia; w design brak dźwięków i przełącznika (nie znaleziono w docs/design/design-spec.md). Brzmienie: „aplikacja nigdy nie odtwarza dźwięku przy +1” albo usunąć",
-  "plik": "docs/brd/wymagania-licznik.md:80",
+  "plik": "docs/brd/wymagania-licznik.md:89",
   "rodzaj": "BR"
  },
  {
@@ -1231,7 +1231,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:89",
+  "plik": "docs/brd/wymagania-licznik.md:98",
   "rodzaj": "BR"
  },
  {
@@ -1244,7 +1244,7 @@
   "wyrocznia": "RD-12-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:98",
+  "plik": "docs/brd/wymagania-licznik.md:107",
   "rodzaj": "BR"
  },
  {
@@ -1257,7 +1257,7 @@
   "wyrocznia": "RD-12-W2",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:102",
+  "plik": "docs/brd/wymagania-licznik.md:111",
   "rodzaj": "BR"
  },
  {
@@ -1270,7 +1270,7 @@
   "wyrocznia": "RD-12-W5",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "walidacja w domenie (RD-12-W5) + komunikat na ekranie",
-  "plik": "docs/brd/wymagania-licznik.md:106",
+  "plik": "docs/brd/wymagania-licznik.md:115",
   "rodzaj": "BR"
  },
  {
@@ -1283,7 +1283,7 @@
   "wyrocznia": "RD-12 (rachunek: r=17, n=10 → 2/7)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "wektora dokładnie dla tego przypadku nie ma w brd.json; wynik z wzoru RD-12",
-  "plik": "docs/brd/wymagania-licznik.md:115",
+  "plik": "docs/brd/wymagania-licznik.md:128",
   "rodzaj": "BR"
  },
  {
@@ -1296,7 +1296,7 @@
   "wyrocznia": "RD-13-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "reguła tak; „zmienia wygląd całego ekranu” → RNTL (stan zakreślenia, docs/design/design-spec.md:23); wibracja jak BR-LIC-020",
-  "plik": "docs/brd/wymagania-licznik.md:124",
+  "plik": "docs/brd/wymagania-licznik.md:138",
   "rodzaj": "BR"
  },
  {
@@ -1309,7 +1309,7 @@
   "wyrocznia": "RD-13-W2",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:128",
+  "plik": "docs/brd/wymagania-licznik.md:142",
   "rodzaj": "BR"
  },
  {
@@ -1322,7 +1322,7 @@
   "wyrocznia": "RD-13-W3",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:132",
+  "plik": "docs/brd/wymagania-licznik.md:146",
   "rodzaj": "BR"
  },
  {
@@ -1335,7 +1335,7 @@
   "wyrocznia": "RD-13 (lista s + kN)",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "podgląd planu w formularzu (U-3)",
-  "plik": "docs/brd/wymagania-licznik.md:141",
+  "plik": "docs/brd/wymagania-licznik.md:179",
   "rodzaj": "BR"
  },
  {
@@ -1348,7 +1348,7 @@
   "wyrocznia": "RD-13; OP-06 (docs/brd/README.md:107)",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:145",
+  "plik": "docs/brd/wymagania-licznik.md:183",
   "rodzaj": "BR"
  },
  {
@@ -1361,7 +1361,7 @@
   "wyrocznia": "brak (wartości w scenariuszu); U-11",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "treść „osiągnięcia” nieokreślona; test: stan celu + akcje „Następna część / Druga taka sama” (docs/scope-contract.md:22)",
-  "plik": "docs/brd/wymagania-licznik.md:154",
+  "plik": "docs/brd/wymagania-licznik.md:192",
   "rodzaj": "BR"
  },
  {
@@ -1374,7 +1374,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "oznaczenie „ponad cel”: brak tekstu w design",
-  "plik": "docs/brd/wymagania-licznik.md:158",
+  "plik": "docs/brd/wymagania-licznik.md:196",
   "rodzaj": "BR"
  },
  {
@@ -1387,7 +1387,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "design pokazuje zawsze obie wartości („Now knitting row 48” + liczba skończonych, docs/design/design-spec.md:30) — czy ustawienie F-09 zostaje? Do wyjaśnienia z 04/03",
-  "plik": "docs/brd/wymagania-licznik.md:167",
+  "plik": "docs/brd/wymagania-licznik.md:205",
   "rodzaj": "BR"
  },
  {
@@ -1400,7 +1400,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "automat: wywołanie keep-awake przy wejściu na ekran licznika (mock); realne niegaśnięcie tylko na urządzeniu",
-  "plik": "docs/brd/wymagania-licznik.md:176",
+  "plik": "docs/brd/wymagania-licznik.md:218",
   "rodzaj": "BR"
  },
  {
@@ -1413,7 +1413,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "automat: brak keep-awake przy wyłączonej opcji",
-  "plik": "docs/brd/wymagania-licznik.md:180",
+  "plik": "docs/brd/wymagania-licznik.md:222",
   "rodzaj": "BR"
  },
  {
@@ -1426,7 +1426,7 @@
   "wyrocznia": "S-05 (strażnik przy +1 z ekranu blokady)",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "logika dziennika +1 (ADR-0008) testowalna w dane-node; Live Activity tylko urządzenie/E2E częściowo",
-  "plik": "docs/brd/wymagania-licznik.md:189",
+  "plik": "docs/brd/wymagania-licznik.md:231",
   "rodzaj": "BR"
  },
  {
@@ -1439,7 +1439,7 @@
   "wyrocznia": "NFR-ZEG-001; S-04, L-11",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "logika synchronizacji z symulowanym transportem (domena); UI zegarka para symulatorów „jeśli CI pozwala”; prawdziwy zegarek: ryzyko szczątkowe",
-  "plik": "docs/brd/wymagania-licznik.md:198",
+  "plik": "docs/brd/wymagania-licznik.md:240",
   "rodzaj": "BR"
  },
  {
@@ -1452,7 +1452,7 @@
   "wyrocznia": "RD-13-W1",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "wibracja zegarka tylko urządzenie",
-  "plik": "docs/brd/wymagania-licznik.md:202",
+  "plik": "docs/brd/wymagania-licznik.md:244",
   "rodzaj": "BR"
  },
  {
@@ -1465,7 +1465,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:220",
+  "plik": "docs/brd/wymagania-licznik.md:262",
   "rodzaj": "BR"
  },
  {
@@ -1478,7 +1478,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:224",
+  "plik": "docs/brd/wymagania-licznik.md:266",
   "rodzaj": "BR"
  },
  {
@@ -1491,7 +1491,7 @@
   "wyrocznia": "RD-15 (wykonanie bez wpisań)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:228",
+  "plik": "docs/brd/wymagania-licznik.md:270",
   "rodzaj": "BR"
  },
  {
@@ -1504,7 +1504,7 @@
   "wyrocznia": "S-06, L-08 (pośrednio), D4 w P-057",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "brak wektora L dla wpisania w dniu w limicie (2 z 5 → 3 z 5); test złożony z S-06 + L-01-podobnego",
-  "plik": "docs/brd/wymagania-licznik.md:232",
+  "plik": "docs/brd/wymagania-licznik.md:274",
   "rodzaj": "BR"
  },
  {
@@ -1517,7 +1517,7 @@
   "wyrocznia": "L-08, S-06",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:237",
+  "plik": "docs/brd/wymagania-licznik.md:279",
   "rodzaj": "BR"
  },
  {
@@ -1530,7 +1530,7 @@
   "wyrocznia": "S-07",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "potwierdzenie + cofnięcie z historii",
-  "plik": "docs/brd/wymagania-licznik.md:241",
+  "plik": "docs/brd/wymagania-licznik.md:283",
   "rodzaj": "BR"
  },
  {
@@ -1543,7 +1543,7 @@
   "wyrocznia": "brak (reguła w scenariuszu)",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:245",
+  "plik": "docs/brd/wymagania-licznik.md:287",
   "rodzaj": "BR"
  },
  {
@@ -1556,7 +1556,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:254",
+  "plik": "docs/brd/wymagania-licznik.md:313",
   "rodzaj": "BR"
  },
  {
@@ -1569,7 +1569,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:258",
+  "plik": "docs/brd/wymagania-licznik.md:317",
   "rodzaj": "BR"
  },
  {
@@ -1582,7 +1582,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:262",
+  "plik": "docs/brd/wymagania-licznik.md:321",
   "rodzaj": "BR"
  },
  {
@@ -1595,7 +1595,7 @@
   "wyrocznia": "RD-17-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "reguła w domenie; baner i „Undo” w RNTL (docs/design/design-spec.md:35)",
-  "plik": "docs/brd/wymagania-licznik.md:271",
+  "plik": "docs/brd/wymagania-licznik.md:338",
   "rodzaj": "BR"
  },
  {
@@ -1608,7 +1608,7 @@
   "wyrocznia": "RD-17-W4",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-licznik.md:275",
+  "plik": "docs/brd/wymagania-licznik.md:342",
   "rodzaj": "BR"
  },
  {
@@ -1621,7 +1621,7 @@
   "wyrocznia": "RD-17 (tylko liczniki rzędów)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "wektora dla licznika oczek nie ma w brd.json",
-  "plik": "docs/brd/wymagania-licznik.md:279",
+  "plik": "docs/brd/wymagania-licznik.md:346",
   "rodzaj": "BR"
  },
  {
@@ -1634,7 +1634,7 @@
   "wyrocznia": "P-046",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "asercja negatywna",
-  "plik": "docs/brd/wymagania-licznik.md:283",
+  "plik": "docs/brd/wymagania-licznik.md:350",
   "rodzaj": "BR"
  },
  {
@@ -1647,7 +1647,7 @@
   "wyrocznia": "F-48: dwa wzorce",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "automat: różne ID wzorca haptyki (mock); odczucie różnicy: ryzyko szczątkowe (docs/scope-contract.md:219)",
-  "plik": "docs/brd/wymagania-licznik.md:292",
+  "plik": "docs/brd/wymagania-licznik.md:372",
   "rodzaj": "BR"
  },
  {
@@ -1660,7 +1660,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "niejednoznaczne: „wzór przypisany do zdarzenia” a F-48 „tylko dwa wzorce” (docs/scope-contract.md:58). Brzmienie: „wibruje wzorem przypomnienia (nie rzędu)”",
-  "plik": "docs/brd/wymagania-licznik.md:296",
+  "plik": "docs/brd/wymagania-licznik.md:376",
   "rodzaj": "BR"
  },
  {
@@ -1673,7 +1673,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "mock haptyki: 0 wywołań",
-  "plik": "docs/brd/wymagania-licznik.md:300",
+  "plik": "docs/brd/wymagania-licznik.md:380",
   "rodzaj": "BR"
  },
  {
@@ -1738,7 +1738,7 @@
   "wyrocznia": "RD-10 (kategorie)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-narzedzia.md:42",
+  "plik": "docs/brd/wymagania-narzedzia.md:50",
   "rodzaj": "BR"
  },
  {
@@ -1751,7 +1751,7 @@
   "wyrocznia": "NFR-OFF-001",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-narzedzia.md:46",
+  "plik": "docs/brd/wymagania-narzedzia.md:54",
   "rodzaj": "BR"
  },
  {
@@ -1764,7 +1764,7 @@
   "wyrocznia": "RD-01-W1",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "przegląd 06 wykonany (docs/tresci/README.md:2)",
-  "plik": "docs/brd/wymagania-narzedzia.md:56",
+  "plik": "docs/brd/wymagania-narzedzia.md:64",
   "rodzaj": "BR"
  },
  {
@@ -1777,7 +1777,7 @@
   "wyrocznia": "RD-01-W5",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-narzedzia.md:60",
+  "plik": "docs/brd/wymagania-narzedzia.md:68",
   "rodzaj": "BR"
  },
  {
@@ -1790,7 +1790,7 @@
   "wyrocznia": "RD-01-W2",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-narzedzia.md:64",
+  "plik": "docs/brd/wymagania-narzedzia.md:72",
   "rodzaj": "BR"
  },
  {
@@ -1803,7 +1803,7 @@
   "wyrocznia": "RD-04-W1; KL10-* (docs/tresci/wektory.json:1526)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "liczba tak; „sposób pokazania zależy od OP-03” — w BRD otwarte (docs/brd/README.md:103), rozstrzygnięte P-081 P3a (docs/decyzje.md:87); BRD do aktualizacji",
-  "plik": "docs/brd/wymagania-narzedzia.md:86",
+  "plik": "docs/brd/wymagania-narzedzia.md:111",
   "rodzaj": "BR"
  },
  {
@@ -1816,7 +1816,7 @@
   "wyrocznia": "RD-03-W3; JW-oz-3_5",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-narzedzia.md:90",
+  "plik": "docs/brd/wymagania-narzedzia.md:115",
   "rodzaj": "BR"
  },
  {
@@ -1829,7 +1829,7 @@
   "wyrocznia": "RD-10-W2; KL4-23",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "P-084 zaokrągla próbkę przed klasyfikacją; reguly.md:157 („luka 25,5 → poza tabelą”) sprzeczne z KL4-25_5 → [2]",
-  "plik": "docs/brd/wymagania-narzedzia.md:155",
+  "plik": "docs/brd/wymagania-narzedzia.md:197",
   "rodzaj": "BR"
  },
  {
@@ -1920,7 +1920,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:53",
+  "plik": "docs/brd/wymagania-projekt.md:57",
   "rodzaj": "BR"
  },
  {
@@ -1933,7 +1933,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "U-9",
-  "plik": "docs/brd/wymagania-projekt.md:62",
+  "plik": "docs/brd/wymagania-projekt.md:66",
   "rodzaj": "BR"
  },
  {
@@ -1946,7 +1946,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "U-2",
-  "plik": "docs/brd/wymagania-projekt.md:71",
+  "plik": "docs/brd/wymagania-projekt.md:75",
   "rodzaj": "BR"
  },
  {
@@ -1959,7 +1959,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "czas z znaczników, nie z timera w pamięci",
-  "plik": "docs/brd/wymagania-projekt.md:80",
+  "plik": "docs/brd/wymagania-projekt.md:89",
   "rodzaj": "BR"
  },
  {
@@ -1972,7 +1972,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "stoper na ekranie blokady (Live Activity) tylko urządzenie; zatrzymanie przez intencję testowalne w dane-node",
-  "plik": "docs/brd/wymagania-projekt.md:84",
+  "plik": "docs/brd/wymagania-projekt.md:93",
   "rodzaj": "BR"
  },
  {
@@ -1985,7 +1985,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "terminate + relaunch",
-  "plik": "docs/brd/wymagania-projekt.md:111",
+  "plik": "docs/brd/wymagania-projekt.md:120",
   "rodzaj": "BR"
  },
  {
@@ -1998,7 +1998,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "tło/pierwszy plan",
-  "plik": "docs/brd/wymagania-projekt.md:115",
+  "plik": "docs/brd/wymagania-projekt.md:124",
   "rodzaj": "BR"
  },
  {
@@ -2011,7 +2011,7 @@
   "wyrocznia": "NFR-DAN-003",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "dwa magazyny z symulowanym transportem; prawdziwe dwa urządzenia: ryzyko szczątkowe",
-  "plik": "docs/brd/wymagania-projekt.md:119",
+  "plik": "docs/brd/wymagania-projekt.md:128",
   "rodzaj": "BR"
  },
  {
@@ -2024,7 +2024,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:128",
+  "plik": "docs/brd/wymagania-projekt.md:137",
   "rodzaj": "BR"
  },
  {
@@ -2037,7 +2037,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:132",
+  "plik": "docs/brd/wymagania-projekt.md:141",
   "rodzaj": "BR"
  },
  {
@@ -2050,7 +2050,7 @@
   "wyrocznia": "tekst „No project called …” (docs/design/design-spec.md:55)",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:136",
+  "plik": "docs/brd/wymagania-projekt.md:145",
   "rodzaj": "BR"
  },
  {
@@ -2063,7 +2063,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:145",
+  "plik": "docs/brd/wymagania-projekt.md:155",
   "rodzaj": "BR"
  },
  {
@@ -2076,7 +2076,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:149",
+  "plik": "docs/brd/wymagania-projekt.md:159",
   "rodzaj": "BR"
  },
  {
@@ -2089,7 +2089,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:153",
+  "plik": "docs/brd/wymagania-projekt.md:163",
   "rodzaj": "BR"
  },
  {
@@ -2102,7 +2102,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:162",
+  "plik": "docs/brd/wymagania-projekt.md:177",
   "rodzaj": "BR"
  },
  {
@@ -2115,7 +2115,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:166",
+  "plik": "docs/brd/wymagania-projekt.md:181",
   "rodzaj": "BR"
  },
  {
@@ -2128,7 +2128,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:170",
+  "plik": "docs/brd/wymagania-projekt.md:185",
   "rodzaj": "BR"
  },
  {
@@ -2141,7 +2141,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:179",
+  "plik": "docs/brd/wymagania-projekt.md:194",
   "rodzaj": "BR"
  },
  {
@@ -2154,7 +2154,7 @@
   "wyrocznia": "NFR-PRY-001; ZP-03",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "test pliku karty: brak EXIF GPS; arkusz udostępniania mock",
-  "plik": "docs/brd/wymagania-projekt.md:183",
+  "plik": "docs/brd/wymagania-projekt.md:198",
   "rodzaj": "BR"
  },
  {
@@ -2167,7 +2167,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:187",
+  "plik": "docs/brd/wymagania-projekt.md:202",
   "rodzaj": "BR"
  },
  {
@@ -2180,7 +2180,7 @@
   "wyrocznia": "brak (wartości w scenariuszu)",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:196",
+  "plik": "docs/brd/wymagania-projekt.md:212",
   "rodzaj": "BR"
  },
  {
@@ -2193,7 +2193,7 @@
   "wyrocznia": "BR-PRJ-011",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:200",
+  "plik": "docs/brd/wymagania-projekt.md:216",
   "rodzaj": "BR"
  },
  {
@@ -2206,7 +2206,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "rozszerzenie udostępniania (ADR-0011) w XCUITest trudne; zapis i odczyt offline w dane-node",
-  "plik": "docs/brd/wymagania-projekt.md:212",
+  "plik": "docs/brd/wymagania-projekt.md:232",
   "rodzaj": "BR"
  },
  {
@@ -2219,7 +2219,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "plik uszkodzony jako wejście testu",
-  "plik": "docs/brd/wymagania-projekt.md:216",
+  "plik": "docs/brd/wymagania-projekt.md:236",
   "rodzaj": "BR"
  },
  {
@@ -2232,7 +2232,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "aparat: mock; „można powiększać” → RNTL (gest pinch) częściowo",
-  "plik": "docs/brd/wymagania-projekt.md:225",
+  "plik": "docs/brd/wymagania-projekt.md:245",
   "rodzaj": "BR"
  },
  {
@@ -2245,7 +2245,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:234",
+  "plik": "docs/brd/wymagania-projekt.md:254",
   "rodzaj": "BR"
  },
  {
@@ -2258,7 +2258,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:238",
+  "plik": "docs/brd/wymagania-projekt.md:258",
   "rodzaj": "BR"
  },
  {
@@ -2271,7 +2271,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "odrzucenie dłoni tylko na iPadzie z Pencil; automat: konfiguracja PencilKit drawingPolicy = pencilOnly (P-042). Ryzyko szczątkowe (docs/scope-contract.md:219)",
-  "plik": "docs/brd/wymagania-projekt.md:247",
+  "plik": "docs/brd/wymagania-projekt.md:285",
   "rodzaj": "BR"
  },
  {
@@ -2284,7 +2284,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "orientacja pozioma w symulatorze; makiety brak (docs/design/design-spec.md:95)",
-  "plik": "docs/brd/wymagania-projekt.md:256",
+  "plik": "docs/brd/wymagania-projekt.md:294",
   "rodzaj": "BR"
  },
  {
@@ -2297,7 +2297,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "udostępnienie z Safari tylko E2E/urządzenie; zapis offline strony w dane-node",
-  "plik": "docs/brd/wymagania-projekt.md:274",
+  "plik": "docs/brd/wymagania-projekt.md:312",
   "rodzaj": "BR"
  },
  {
@@ -2310,7 +2310,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "jak WZR-001/S1",
-  "plik": "docs/brd/wymagania-projekt.md:278",
+  "plik": "docs/brd/wymagania-projekt.md:316",
   "rodzaj": "BR"
  },
  {
@@ -2323,7 +2323,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "„nie ma treści wzoru” niemierzalne. Brzmienie: „strona zwraca 401/403 albo po zapisie nie ma tekstu ani obrazu”",
-  "plik": "docs/brd/wymagania-projekt.md:282",
+  "plik": "docs/brd/wymagania-projekt.md:320",
   "rodzaj": "BR"
  },
  {
@@ -2336,7 +2336,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "adapter sieci „brak połączenia”",
-  "plik": "docs/brd/wymagania-projekt.md:286",
+  "plik": "docs/brd/wymagania-projekt.md:324",
   "rodzaj": "BR"
  },
  {
@@ -2349,7 +2349,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "gest palcem po PDF w E2E; trwałość adnotacji w dane-node",
-  "plik": "docs/brd/wymagania-projekt.md:295",
+  "plik": "docs/brd/wymagania-projekt.md:333",
   "rodzaj": "BR"
  },
  {
@@ -2362,7 +2362,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "plik wzoru niezmieniony: skrót pliku przed i po",
-  "plik": "docs/brd/wymagania-projekt.md:299",
+  "plik": "docs/brd/wymagania-projekt.md:337",
   "rodzaj": "BR"
  },
  {
@@ -2375,7 +2375,7 @@
   "wyrocznia": "BR-WZR-004",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "",
-  "plik": "docs/brd/wymagania-projekt.md:303",
+  "plik": "docs/brd/wymagania-projekt.md:341",
   "rodzaj": "BR"
  },
  {
@@ -2557,7 +2557,7 @@
   "wyrocznia": "LIMIT_DNI wobec poprzedniego wydania",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "kontrola przed wydaniem (07)",
-  "plik": "docs/monetyzacja.md:50",
+  "plik": "docs/monetyzacja.md:86",
   "rodzaj": "KP"
  },
  {
@@ -2570,7 +2570,7 @@
   "wyrocznia": "W-05, W-06, W-14, W-16; L-09",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "wersja V4; wersja sesji 2 (docs/monetyzacja.md:539) nieaktualna",
-  "plik": "docs/monetyzacja.md:51",
+  "plik": "docs/monetyzacja.md:87",
   "rodzaj": "KP"
  },
  {
@@ -2583,7 +2583,7 @@
   "wyrocznia": "W-15, W-17",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/monetyzacja.md:52",
+  "plik": "docs/monetyzacja.md:88",
   "rodzaj": "KP"
  },
  {
@@ -2596,7 +2596,7 @@
   "wyrocznia": "BR-ZAK-004",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "metadane: rola 11, przegląd",
-  "plik": "docs/monetyzacja.md:53",
+  "plik": "docs/monetyzacja.md:89",
   "rodzaj": "KP"
  },
  {
@@ -2609,7 +2609,7 @@
   "wyrocznia": "W-02",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "potwierdzenie z tekstem (RNTL); TestFlight (docs/monetyzacja.md:590)",
-  "plik": "docs/monetyzacja.md:542",
+  "plik": "docs/monetyzacja.md:98",
   "rodzaj": "KP"
  },
  {
@@ -2622,7 +2622,7 @@
   "wyrocznia": "W-03, W-04, W-11, P-01–P-06",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/monetyzacja.md:543",
+  "plik": "docs/monetyzacja.md:95",
   "rodzaj": "KP"
  },
  {
@@ -2635,7 +2635,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "mock adaptera: listener zarejestrowany przy starcie",
-  "plik": "docs/monetyzacja.md:544",
+  "plik": "docs/monetyzacja.md:96",
   "rodzaj": "KP"
  },
  {
@@ -2648,7 +2648,7 @@
   "wyrocznia": "W-02, W-07",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "mock: restore wołane tylko z akcji",
-  "plik": "docs/monetyzacja.md:545",
+  "plik": "docs/monetyzacja.md:585",
   "rodzaj": "KP"
  },
  {
@@ -2661,7 +2661,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "kontrola statyczna: brak literałów cen w kodzie i tłumaczeniach",
-  "plik": "docs/monetyzacja.md:546",
+  "plik": "docs/monetyzacja.md:586",
   "rodzaj": "KP"
  },
  {
@@ -2674,7 +2674,7 @@
   "wyrocznia": "zawężone KP-13",
   "poziom_sugerowany": "E2E-symulator",
   "uwagi": "",
-  "plik": "docs/monetyzacja.md:547",
+  "plik": "docs/monetyzacja.md:587",
   "rodzaj": "KP"
  },
  {
@@ -2687,7 +2687,7 @@
   "wyrocznia": "NFR-PRY-001",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "lista zależności; zakaz verifyPurchaseWithProvider itd. (docs/monetyzacja.md:571)",
-  "plik": "docs/monetyzacja.md:548",
+  "plik": "docs/monetyzacja.md:588",
   "rodzaj": "KP"
  },
  {
@@ -2700,7 +2700,7 @@
   "wyrocznia": "S-01–S-10, L-01–L-18",
   "poziom_sugerowany": "domena-Node",
   "uwagi": "",
-  "plik": "docs/monetyzacja.md:54",
+  "plik": "docs/monetyzacja.md:90",
   "rodzaj": "KP"
  },
  {
@@ -2713,7 +2713,7 @@
   "wyrocznia": "Z-01–Z-08",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "",
-  "plik": "docs/monetyzacja.md:55",
+  "plik": "docs/monetyzacja.md:91",
   "rodzaj": "KP"
  },
  {
@@ -2726,7 +2726,7 @@
   "wyrocznia": "brak",
   "poziom_sugerowany": "ekran-RNTL",
   "uwagi": "mock showManageSubscriptions",
-  "plik": "docs/monetyzacja.md:56",
+  "plik": "docs/monetyzacja.md:92",
   "rodzaj": "KP"
  },
  {
@@ -2739,7 +2739,7 @@
   "wyrocznia": "L-11, L-14, L-16, L-17, L-18",
   "poziom_sugerowany": "dane-node:sqlite",
   "uwagi": "",
-  "plik": "docs/monetyzacja.md:57",
+  "plik": "docs/monetyzacja.md:93",
   "rodzaj": "KP"
  },
  {
@@ -2752,7 +2752,7 @@
   "wyrocznia": "W-01",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia)",
-  "plik": "docs/monetyzacja.md:585",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2765,7 +2765,7 @@
   "wyrocznia": "W-02",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia)",
-  "plik": "docs/monetyzacja.md:586",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2778,7 +2778,7 @@
   "wyrocznia": "W-03",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia)",
-  "plik": "docs/monetyzacja.md:587",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2791,7 +2791,7 @@
   "wyrocznia": "W-09",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia)",
-  "plik": "docs/monetyzacja.md:588",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2804,7 +2804,7 @@
   "wyrocznia": "W-07",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia)",
-  "plik": "docs/monetyzacja.md:589",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2817,7 +2817,7 @@
   "wyrocznia": "W-02",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia)",
-  "plik": "docs/monetyzacja.md:590",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2830,7 +2830,7 @@
   "wyrocznia": "W-10, W-14",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia); oczekiwanie „dane do odczytu” z modelu B, w V4 pełne dane (KP-02)",
-  "plik": "docs/monetyzacja.md:591",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2843,7 +2843,7 @@
   "wyrocznia": "W-05, W-06; OP-21",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia); OP-21 otwarte; oczekiwanie „dane do odczytu” z modelu B, w V4 pełne dane (KP-02)",
-  "plik": "docs/monetyzacja.md:592",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  },
  {
@@ -2856,7 +2856,7 @@
   "wyrocznia": "brak (OP-22)",
   "poziom_sugerowany": "tylko-urządzenie",
   "uwagi": "krok właściciela w TestFlight (P-041: brak testów ręcznych — konflikt do rozstrzygnięcia); OP-22 → ADR-0009",
-  "plik": "docs/monetyzacja.md:593",
+  "plik": "docs/monetyzacja.md:622",
   "rodzaj": "tylko-telefon"
  }
 ]
