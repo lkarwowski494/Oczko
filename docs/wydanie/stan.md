@@ -13,5 +13,6 @@ Aktualizacja: 2026-10-26 · tryb build · prompt `prompts@97ec212` (`10-wydanie 
 - **P-239 (dziennik, 2026-10-26):** strona opublikowana przez projekt strony w `apps4brew-www` (f1b1e04); `curl` 19:41 UTC (ta sesja): `apps4brew.com/oczko/privacy.html`, `support.html` → 200; `ADRESY.polityka` i `adres-strony.json` = apps4brew.com/oczko/. Wpisy wyżej o github.io i odłożeniu D10 są historią.
 - **P-241:** od 22:15 UTC do sygnału koordynatora bez pushu na gałąź roboczą (nocny „Jakość · iOS”).
 - **P-244:** ten plik aktualizuję po każdym kroku (na wypadek wyczerpania limitu konta); zapisy w `docs/` nie uruchamiają CI iOS.
+- **P-251:** koordynacja w sesji `session_01VjtVbMx8DYWkBfH4pvaCXK`; raporty tylko na końcu etapu, przy STOP albo przy problemie.
 - **Czeka:** przegląd zakresu 27–28.10 → opisy, zrzuty, ścieżki w notatce; raport 07 → E3; pierwszy przebieg dowodowy `bez_wysylki` za zgodą w oknie macOS.
 - **Następny krok po akceptacji:** po D1/D2 — potwierdzenie adresu po wdrożeniu Pages; po przeglądzie zakresu — E2 metadane (opisy, słowa, zrzuty) i notatka ze ścieżkami.
