@@ -1,0 +1,6 @@
+{
+  "_opis": "Adres strony Oczka — jedna stała (rola 10, P-196). Pages publikuje repo pod apps4brew.com/<nazwa repo>/ z rozróżnieniem wielkości liter; dziś repo to „Oczko” (D1 czeka na właściciela: zmiana na „oczko”). Przy zmianie: ta baza i ADRESY.polityka w src/kompozycja/adresy.ts naraz (test tests/wydanie/repo-wydanie.test.ts).",
+  "baza": "https://apps4brew.com/oczko/",
+  "polityka": "privacy.html",
+  "wsparcie": "support.html"
+}

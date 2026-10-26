@@ -1,51 +1,107 @@
-// Reguły wydania z tests/public-repo.test.ts 0.1.0 (F07-09, P-117 Q6a): wyjątek nazwany roli 10 (P-114 Q5) — `testflight.yml`, `app.json`
-// i `site/` zostają do partii 3–4, potem rola 10 zastępuje je kontrolami według ADR-0014. Reguły workflowów (JAK-10) są w
-// scripts/jakosc/sprawdz-workflowy.mjs, pliki sekretów w scripts/jakosc/kontrole-repo.mjs (PLIK-SEKRETU), oba z pułapkami w tests/jakosc.
+// Kontrole wydania roli 10 (build E2, 2026-10-26): strona `site/` (P-093 (1), P-196), adres strony jako jedna stała
+// (`docs/wydanie/adres-strony.json`, P-196: D1 czeka na właściciela) i workflow TestFlight według ADR-0014 i P-196 (D3a–D5a).
+// Reguły ogólne workflowów: scripts/jakosc/sprawdz-workflowy.mjs; pliki sekretów: scripts/jakosc/kontrole-repo.mjs.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { YAML } from '../jakosc/maestro-runner'; // dist CommonJS (wejście „browser” pakietu yaml to ESM)
+import { ADRESY } from '../../src/kompozycja/adresy';
 
 const root = join(__dirname, '../..');
-const wfDir = join(root, '.github', 'workflows');
+const czytaj = (p: string) => readFileSync(join(root, p), 'utf8');
+const STRONY = ['index.html', 'privacy.html', 'support.html'];
 
-describe('Wydanie 0.1.0: testflight.yml, app.json, site/ (wyjątek roli 10, P-114 Q5)', () => {
-  test('testflight.yml zapisuje klucz .p8 dopiero po pod install, filtruje logi i nie wysyła .ipa do artefaktów', () => {
-    const tfPath = join(wfDir, 'testflight.yml');
-    if (!existsSync(tfPath)) return;
-    const tf = readFileSync(tfPath, 'utf8');
-    const podIdx = tf.indexOf('pod install');
-    const keyIdx = tf.indexOf('ASC_KEY_P8_BASE64');
-    expect(podIdx).toBeGreaterThan(0);
-    expect(keyIdx).toBeGreaterThan(podIdx);
-    expect(tf).toContain('umask 077');
-    expect(tf).toContain('<KEY_ID>');
-    expect(tf).toContain('<ISSUER_ID>');
-    expect(tf).toContain('EXPO_PUBLIC_STORE_FAKE');
-    expect(tf).not.toMatch(/path:.*\.(ipa|xcarchive)/);
+describe('site/: strona produktu, polityka prywatności i wsparcie (PL, EN)', () => {
+  test.each(STRONY)('%s: obie wersje językowe, bez skryptów, linki wewnętrzne względne', (strona) => {
+    const html = czytaj(`site/${strona}`);
+    expect(html).toMatch(/^<!doctype html>/i);
+    expect(html).toContain('<section lang="pl">');
+    expect(html).toMatch(/<section lang="en"[ >]/);
+    // Bez skryptów i zasobów z zewnątrz: strona działa pod każdą ścieżką i niczego nie wczytuje.
+    expect(html).not.toMatch(/<script|<link[^>]+href="https?:|<img[^>]+src="https?:/i);
+    // Adres strony to jedna stała (P-196): linki wewnętrzne względne, bez ścieżki repo zaszytej w HTML.
+    for (const [, href] of html.matchAll(/href="([^"]+)"/g)) {
+      expect(href.startsWith('/') || /apps4brew\.com\/(oczko|Oczko)/.test(href)).toBe(false);
+    }
+    expect(html).toContain('mailto:support@apps4brew.com');
+    expect(html).not.toMatch(/\b(TODO|FIXME|PLACEHOLDER|example\.com|Purlo)\b/i);
   });
 
-  test('app.json ma ustawione ITSAppUsesNonExemptEncryption: false oraz kompletny PrivacyManifests', () => {
-    const appJson = JSON.parse(readFileSync(join(root, 'app.json'), 'utf8')).expo;
-    expect(appJson.ios?.infoPlist?.ITSAppUsesNonExemptEncryption).toBe(false);
-    const apiTypes = (appJson.ios?.privacyManifests?.NSPrivacyAccessedAPITypes || []).map(
-      (x: { NSPrivacyAccessedAPIType: string }) => x.NSPrivacyAccessedAPIType
-    );
-    expect(apiTypes).toEqual(
-      expect.arrayContaining([
-        'NSPrivacyAccessedAPICategoryUserDefaults',
-        'NSPrivacyAccessedAPICategoryFileTimestamp',
-        'NSPrivacyAccessedAPICategorySystemBootTime',
-        'NSPrivacyAccessedAPICategoryDiskSpace',
-      ])
-    );
+  test('polityka: brak zbierania danych, reklam i śledzenia; sekcja o e-mailu z elementami art. 13 RODO', () => {
+    const html = czytaj('site/privacy.html');
+    for (const fraza of ['nie zbiera', 'reklam', 'śledzenia', 'Administrator', 'PUODO', 'Zgłoś problem']) expect(html).toContain(fraza);
+    for (const fraza of ['does not collect', 'advertising', 'tracking', 'Controller', 'PUODO', 'Report a problem']) expect(html).toContain(fraza);
+    // P-108: bez listy źródeł; P-121 (5): odbiorcy opisowo — jedyne adresy zewnętrzne to e-mail wsparcia.
+    expect(html).not.toMatch(/href="https?:/);
+  });
+});
+
+describe('adres strony: jedna stała (docs/wydanie/adres-strony.json)', () => {
+  const adres = JSON.parse(czytaj('docs/wydanie/adres-strony.json')) as { baza: string; polityka: string; wsparcie: string };
+
+  test('baza to katalog na apps4brew.com, strony istnieją w site/', () => {
+    expect(adres.baza).toMatch(/^https:\/\/apps4brew\.com\/[A-Za-z0-9-]+\/$/);
+    for (const plik of [adres.polityka, adres.wsparcie]) expect(existsSync(join(root, 'site', plik))).toBe(true);
   });
 
-  test('strony prawne site/ (index.html, privacy.html, support.html) istnieją i mają poprawne linki', () => {
-    for (const page of ['index.html', 'privacy.html', 'support.html']) {
-      const p = join(root, 'site', page);
-      expect(existsSync(p)).toBe(true);
-      const html = readFileSync(p, 'utf8');
-      expect(html).toMatch(/<!DOCTYPE html>/i);
-      expect(html).not.toMatch(/\b(TODO|FIXME|PLACEHOLDER|example\.com)\b/i);
+  test('adres polityki w aplikacji = baza + polityka (zmiana nazwy repo zmienia oba miejsca naraz)', () => {
+    expect(ADRESY.polityka).toBe(adres.baza + adres.polityka);
+  });
+});
+
+describe('testflight.yml według ADR-0014 i P-196', () => {
+  const tekst = czytaj('.github/workflows/testflight.yml');
+  type Zadanie = { environment?: string; 'runs-on'?: string; needs?: string[] };
+  const wf = YAML.parse(tekst) as { on?: object; true?: object; jobs: Record<string, Zadanie> }; // dane z repo
+  const on = wf.on ?? wf.true ?? {};
+  const build = wf.jobs.build;
+
+  test('tylko ręcznie (workflow_dispatch), bez tagów i pushy', () => {
+    expect(Object.keys(on)).toEqual(['workflow_dispatch']);
+  });
+
+  test('sekrety tylko w zadaniu ze środowiskiem testflight, na macos-26', () => {
+    expect(build.environment).toBe('testflight');
+    expect(build['runs-on']).toBe('macos-26');
+    for (const [id, job] of Object.entries(wf.jobs)) {
+      if (id !== 'build') expect(JSON.stringify(job)).not.toMatch(/secrets\.ASC_/);
     }
   });
+
+  test('wysyłka czeka na zielony „Jakość · iOS” tego commitu (bramka, D5a)', () => {
+    expect(build.needs).toContain('bramka');
+    expect(tekst).toContain('node scripts/wydanie/testflight.mjs bramka');
+  });
+
+  test('numer buildu: run_number × 10 + run_attempt + przesunięcie (D3a), sprawdzany przed wysyłką', () => {
+    expect(tekst).toMatch(/GITHUB_RUN_NUMBER \* 10 \+ GITHUB_RUN_ATTEMPT \+ PRZESUNIECIE/);
+    expect(tekst).toContain('scripts/wydanie/kontrola-ipa.sh');
+  });
+
+  test('klucz .p8 dopiero po archiwum, w RUNNER_TEMP z umask 077, usuwany zawsze; logi maskowane; bez .ipa w artefaktach', () => {
+    const archiwum = tekst.indexOf('-archivePath "$RUNNER_TEMP/Oczko.xcarchive" archive');
+    expect(archiwum).toBeGreaterThan(0);
+    expect(tekst.indexOf('AuthKey.p8"')).toBeGreaterThan(archiwum);
+    expect(tekst).toContain('umask 077');
+    expect(tekst).toMatch(/if: always\(\)\s+run: rm -f "\$RUNNER_TEMP\/AuthKey\.p8"/);
+    expect(tekst).toContain('<KEY_ID>');
+    expect(tekst).toContain('<ISSUER_ID>');
+    expect(tekst).not.toMatch(/path:.*\.(ipa|xcarchive)/);
+    expect(tekst).not.toMatch(/set -x/);
+  });
+});
+
+test('app.json: ITSAppUsesNonExemptEncryption = false i manifest prywatności z kategoriami z inwentarza 05', () => {
+  const appJson = JSON.parse(czytaj('app.json')).expo;
+  expect(appJson.ios?.infoPlist?.ITSAppUsesNonExemptEncryption).toBe(false);
+  const apiTypes = (appJson.ios?.privacyManifests?.NSPrivacyAccessedAPITypes || []).map(
+    (x: { NSPrivacyAccessedAPIType: string }) => x.NSPrivacyAccessedAPIType
+  );
+  expect(apiTypes).toEqual(
+    expect.arrayContaining([
+      'NSPrivacyAccessedAPICategoryUserDefaults',
+      'NSPrivacyAccessedAPICategoryFileTimestamp',
+      'NSPrivacyAccessedAPICategorySystemBootTime',
+      'NSPrivacyAccessedAPICategoryDiskSpace',
+    ])
+  );
 });
