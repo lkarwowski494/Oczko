@@ -115,7 +115,7 @@ export default function EkranUstawien(): React.ReactElement {
       naOferty={() => router.push('/oferty')}
       naWstecz={() => router.back()}
       naWibracje={(w) => { preferencje.ustaw({ wibracje: w }); ustawWibracje(w); }}
-      naZglosProblem={() => undefined /* „Zgłoś problem”: diagnostyka (ADR-0018) — następny krok */}
+      naZglosProblem={() => router.push('/zglos')}
       naStanDanych={() => undefined /* stan danych (F-58): synchronizacja iCloud poza tą partią */}
       dane={{
         naEksport: () => void eksport().then((s) => { if (s && !E2E) void udostepnijPlik(s); }),
