@@ -27,7 +27,28 @@ const swift = [
   '}',
   '',
 ].join('\n');
-const pliki = { 'modules/oczko-reguly/stale.json': json, 'modules/oczko-reguly/Sources/OczkoReguly/Stale.swift': swift };
+// Partia 6 (moduly.md „Kontrakt partii 6”): stałe modułu `oczko-wzor` i celu share w pakiecie logiki wzoru (StaleTests porównuje z stale.json).
+const STALE_WZORU = {
+  wzorMaksMb: ['WZOR_MAKS_MB', 'Int'],
+  rysunekZapisMs: ['RYSUNEK_ZAPIS_MS', 'Int'],
+  migawkaWersja: ['MIGAWKA_WERSJA', 'Int'],
+};
+const wartosciWzoru = Object.fromEntries(Object.entries(STALE_WZORU).map(([n, [z]]) => {
+  if (!(z in k)) throw new Error(`generuj-stale: brak ${z} w src/konfiguracja.ts`);
+  return [n, k[z]];
+}));
+const swiftWzoru = [
+  '// Wygenerowane: node --experimental-strip-types scripts/natywne/generuj-stale.mjs — nie edytować (źródło: src/konfiguracja.ts).',
+  '// Zgodność z stale.json sprawdza `swift test` (StaleTests), z konfiguracja.ts — `--check` w jakosc:kontrole.',
+  'public enum StaleWzoru {',
+  ...Object.entries(STALE_WZORU).map(([n, [z, t]]) => `  /// ${z}\n  public static let ${n}: ${t} = ${JSON.stringify(wartosciWzoru[n])}`),
+  '}',
+  '',
+].join('\n');
+const pliki = {
+  'modules/oczko-reguly/stale.json': json, 'modules/oczko-reguly/Sources/OczkoReguly/Stale.swift': swift,
+  'modules/oczko-wzor/Pakiet/stale.json': `${JSON.stringify(wartosciWzoru, null, 2)}\n`, 'modules/oczko-wzor/Pakiet/Sources/OczkoWzorLogika/StaleWzoru.swift': swiftWzoru,
+};
 if (process.argv.includes('--check')) {
   const zle = Object.entries(pliki).filter(([p, t]) => { try { return readFileSync(join(KORZEN, p), 'utf8') !== t; } catch { return true; } }).map(([p]) => p);
   if (zle.length) { console.error(`generuj-stale: nieaktualne ${zle.join(', ')} — uruchom node --experimental-strip-types scripts/natywne/generuj-stale.mjs`); process.exit(1); }

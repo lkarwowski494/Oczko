@@ -1,5 +1,5 @@
 {
-  "_opis": "Kopie źródeł pakietu modules/oczko-reguly w celach natywnych (P-129 Q2a, jak Trening): Xcode nie kompiluje pakietu z modules/, więc moduł aplikacji i widżet dostają te same pliki. Zapis: node scripts/natywne/kopiuj-zrodla.mjs; kontrola identyczności: scripts/natywne/kontrola-swift.mjs (KOPIA).",
+  "_opis": "Kopie źródeł pakietu modules/oczko-reguly w celach natywnych (P-129 Q2a, jak Trening): Xcode nie kompiluje pakietu z modules/, więc moduł aplikacji i widżet dostają te same pliki. Zapis: node scripts/natywne/kopiuj-zrodla.mjs; kontrola identyczności: scripts/natywne/kontrola-swift.mjs (KOPIA). Partia 6: pakiet logiki wzoru modules/oczko-wzor/Pakiet → cel share (moduł oczko-wzor kompiluje pakiet wprost z podspecu).",
   "zrodla": {
     "modules/oczko-reguly/Sources/OczkoReguly/Json.swift": [
       "modules/oczko-dziennik-plus/ios/Wspolne/Json.swift",
@@ -54,6 +54,12 @@
     "modules/oczko-reguly/Sources/OczkoReguly/Przypomnienia.swift": [
       "targets/widget/Wspolne/Przypomnienia.swift",
       "targets/watch/Wspolne/Przypomnienia.swift"
+    ],
+    "modules/oczko-wzor/Pakiet/Sources/OczkoWzorLogika/Skrzynka.swift": [
+      "targets/share/Wspolne/Skrzynka.swift"
+    ],
+    "modules/oczko-wzor/Pakiet/Sources/OczkoWzorLogika/StaleWzoru.swift": [
+      "targets/share/Wspolne/StaleWzoru.swift"
     ]
   }
 }

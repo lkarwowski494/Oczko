@@ -13,6 +13,17 @@ const KORZEN = join(__dirname, '../..');
 const SLOWNIKI = join(KORZEN, 'src/i18n/slowniki');
 const CELE = ['targets/widget/Teksty.swift', 'targets/watch/Teksty.swift'].map((c) => join(KORZEN, c)); // ta sama tabela w widżecie i na zegarku
 const KLUCZE = Object.keys(en.aktywnosc).sort();
+// Partia 6 (cel share, design-spec „Udostępnij do Oczka” R1a): klucze „przestrzeń.klucz” z kilku sekcji słownika w osobnej tabeli celu.
+const CEL_SHARE = join(KORZEN, 'targets/share/Teksty.swift');
+const SEKCJE_SHARE: Record<string, RegExp> = {
+  udostepnij: /./, wspolne: /^(anuluj|zapisz|zamknij)$/, projekty: /^(ostatnia_praca_|nazwa_robocza$)/,
+  wzor: /^(blad_rozmiar|blad_typ|wiersz_opis|strony_|rodzaj_)/,
+};
+type Slownik = Record<string, Record<string, string> | undefined>;
+const kluczeShare = (s: Slownik): [string, string][] => Object.entries(SEKCJE_SHARE)
+  .flatMap(([sek, wz]) => Object.entries(s[sek] ?? {}).filter(([k]) => wz.test(k)).map(([k, t]): [string, string] => [`${sek}.${k}`, t]))
+  .sort(([a], [b]) => (a < b ? -1 : 1));
+const KLUCZE_SHARE = kluczeShare(en as unknown as Slownik).map(([k]) => k);
 const ZNAK: Record<KategoriaLiczby, string> = { zero: 'z', one: 'o', two: 't', few: 'f', many: 'm', other: 'r' };
 
 /** Kategorie liczb całkowitych: n = 0…199 wprost; n ≥ 200 → wpis 100 + n mod 100, a pełne miliony mają własny znak (`many` w es, fr, it, pt). */
@@ -25,17 +36,22 @@ function kategoriaZTabeli(t: { male: string; milion: string }, n: number): strin
 
 /** Napis Swift: ucieczka `\` i `"` (teksty bez znaków sterujących — sprawdza test niżej). */
 const swift = (t: string) => `"${t.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-function generuj(): string {
+function generuj(share = false): string {
   const jezyki = readdirSync(SLOWNIKI).filter((n) => /^[a-zA-Z-]+\.json$/.test(n) && !n.includes('kontekst')).map((n) => n.replace(/\.json$/, '')).sort();
   const wiersze = jezyki.map((j) => {
-    const s = (JSON.parse(readFileSync(join(SLOWNIKI, `${j}.json`), 'utf8')) as { aktywnosc?: Record<string, string> }).aktywnosc ?? {};
-    return `    ${swift(j)}: [${KLUCZE.filter((k) => s[k]).map((k) => `${swift(k)}: ${swift(s[k] ?? '')}`).join(', ')}],`;
+    const slownik = JSON.parse(readFileSync(join(SLOWNIKI, `${j}.json`), 'utf8')) as Slownik;
+    const pary: [string, string][] = share ? kluczeShare(slownik) : KLUCZE.filter((k) => slownik.aktywnosc?.[k]).map((k) => [k, slownik.aktywnosc?.[k] ?? '']);
+    return `    ${swift(j)}: [${pary.map(([k, t]) => `${swift(k)}: ${swift(t)}`).join(', ')}],`;
   });
   const lancuchy = JEZYKI.map((j) => `    ${swift(j)}: [${lancuchZastepczy(j).map(swift).join(', ')}],`);
   const liczby = JEZYKI.map((j) => { const k = kategorie(j); return `    ${swift(j)}: (${swift(k.male)}, ${swift(k.milion)}),`; });
   return [
-    '// Wygenerowane z src/i18n/slowniki/*.json (sekcja `aktywnosc`), src/i18n/jezyki.ts i src/i18n/plural.ts przez tests/adaptery/teksty-natywne.test.ts',
-    '// — nie edytować (ADR-0017). Język = język aplikacji ze stanu (P-139); brak albo nieznany → angielski (P-115).',
+    share
+      ? '// Wygenerowane z src/i18n/slowniki/*.json (klucze `udostepnij.*` i wybrane `wspolne`, `projekty`, `wzor`), src/i18n/jezyki.ts i src/i18n/plural.ts'
+      : '// Wygenerowane z src/i18n/slowniki/*.json (sekcja `aktywnosc`), src/i18n/jezyki.ts i src/i18n/plural.ts przez tests/adaptery/teksty-natywne.test.ts',
+    share
+      ? '// przez tests/adaptery/teksty-natywne.test.ts — nie edytować (ADR-0017). Język = pierwszy obsługiwany z języków systemu (rozszerzenie nie czyta bazy).'
+      : '// — nie edytować (ADR-0017). Język = język aplikacji ze stanu (P-139); brak albo nieznany → angielski (P-115).',
     'import Foundation',
     '',
     'enum Teksty {',
@@ -82,6 +98,18 @@ test.each(CELE.map((c) => [c.slice(KORZEN.length + 1), c] as const))('%s = tabel
   const g = generuj();
   if (process.env.UPDATE_TEKSTY_NATYWNE === '1') writeFileSync(cel, g);
   expect(readFileSync(cel, 'utf8')).toBe(g);
+});
+test('targets/share/Teksty.swift = tabela wygenerowana ze słowników t() (cel share, partia 6)', () => {
+  const g = generuj(true);
+  if (process.env.UPDATE_TEKSTY_NATYWNE === '1') writeFileSync(CEL_SHARE, g);
+  expect(readFileSync(CEL_SHARE, 'utf8')).toBe(g);
+});
+test('każdy klucz Teksty.t/tl("…") w Swift celu share jest w tabeli share (tl: z formą `_other`)', () => {
+  const kod = readdirSync(join(KORZEN, 'targets/share')).filter((n) => n.endsWith('.swift')).map((n) => readFileSync(join(KORZEN, 'targets/share', n), 'utf8')).join('\n');
+  const uzyte = [...new Set([...kod.matchAll(/Teksty\.t\("([^"]+)"/g)].map((m) => m[1] ?? ''))];
+  const mnogie = [...new Set([...kod.matchAll(/Teksty\.tl\("([^"]+)"/g)].map((m) => `${m[1]}_other`))];
+  expect(uzyte.length).toBeGreaterThan(0);
+  expect([...uzyte, ...mnogie].filter((k) => !KLUCZE_SHARE.includes(k))).toEqual([]);
 });
 test('P-143: klucze `aktywnosc` = tabela „Ekran blokady i zegarek” w design-spec (04 fix-2, fix-3); bez znaków sterujących', () => {
   const spec = readFileSync(join(KORZEN, 'docs/design/design-spec.md'), 'utf8');
