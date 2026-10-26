@@ -1,5 +1,5 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-26 (P-220: wzór, rysik, iPad; grupa W); fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-26 (P-220: wzór, rysik, iPad; rozszerzenie „Udostępnij”, iCloud); fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
@@ -12,6 +12,7 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-2
 | Stoper, sesje, Historia (fix NZ-08-P5-BD, grupa B) | `fix6-2026-10-26/sesje-historia.html` (17 stanów), wzorce `wzorce-zrzuty/sesje-historia-*` (204), klucze `fix6-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix6.mjs`; kontrola `narzedzia/kontrola-nz08p5bd.mjs` |
 | Narzędzia, zapas, zdjęcia, obraz karty (fix NZ-08-P5-BD, grupa D) | `fix6-2026-10-26/narzedzia-zdjecia.html` (17 stanów), wzorce `wzorce-zrzuty/narzedzia-zdjecia-*` (204) |
 | Wzór, rysik, iPad (fix NZ-P217-04, grupa W) | `fix7-2026-10-26/wzor.html` (27 stanów), wzorce `wzorce-zrzuty/wzor-*` (268, `narzedzia/zrzuty-fix7.mjs`), klucze `fix7-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix7.mjs`; kontrola `narzedzia/kontrola-nzp21704.mjs` |
+| „Udostępnij do Oczka”, skrzynka, iCloud (fix NZ-P217-04, grupy R i I) | `fix7-2026-10-26/udostepnij-icloud.html` (19 stanów), wzorce `wzorce-zrzuty/udostepnij-icloud-*` (228) |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -75,6 +76,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Narzędzia i zapas | kalkulator: typowy, na 4 in, błąd (`probka*`); zapas: typowy, filtr, pusty, formularz (`zapas*`, `wloczka`); druty (`druty-lista`, `drut`); offline bez zmian |
 | Zdjęcia i karta | grupa w projekcie, źródło, podgląd, usunięcie, brak dostępu do aparatu (`projekt-zdjecia`, `zdjecie-*`); obraz karty z czasem i bez stopera (`karta-obraz*`) |
 | Usuwanie i kosz | potwierdzenia z datą (`usun-projekt`, `usun-czesc`, `usun-licznik`); kosz (`kosz`), pusty (`kosz-pusty`); offline bez zmian |
+| Udostępnij, skrzynka, iCloud | arkusz z listą projektów, link (wzór albo film), bez migawki, za duży, nieobsługiwany (`udostepnij*`); skrzynka i błąd (`skrzynka*`); iCloud: wyłączony, włączanie, aktywny, czeka, brak konta, brak miejsca, inne konto, konflikt na liczniku i wybór, niepełna historia, „Replace” przy włączonej, usuń wszystko (`icloud-*`) |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
 ## VoiceOver: komunikaty i zachowanie (dla 08; z przejścia poznawczego E3)
@@ -751,9 +753,90 @@ Istniejące klucze użyte bez zmian: `licznik.teraz`, `licznik.plus`, `licznik.p
 - **Klucze:** łatka `fix7-2026-10-26/klucze.json` + `node docs/design/narzedzia/nakladaj-klucze-fix7.mjs` (idempotentna, kod 1 przy konflikcie; regeneruje pseudolokalizację). Grupa W: 96 kluczy en (w tym 25 kluczy znacznika i notatki z sekcji wyżej, które nie trafiły do słownika — N1), 94 wpisy kontekstu; `targets/` bez zmian. Sprawdzone: nałożona → `env -u NODE_PATH npm run verify` kod 0 → cofnięta.
 - **Stany** (wzorce `wzorce-zrzuty/wzor-<stan>-*`): `licznik-z-wzorem`, `projekt-wzor-pusty`, `projekt-wzory`, `wzor-dodaj`, `wzor-link`, `wzor-film`, `wzor-import-w-toku`, `wzor-czeka-siec`, `wzor-blad-plik`, `wzor-blad-typ`, `wzor-blad-rozmiar`, `wzor-blad-strona`, `wzor-brak-dostepu`, `wzor-pionowo`, `wzor-przelacz`, `wzor-menu`, `wzor-usun`, `wzor-zakreslacz`, `wzor-word`, `wzor-film-bez-sieci`, `wzor-poziomo`, `ipad-wzor-pion`, `ipad-wzor-poziom`, `ipad-rysik`, `ipad-waskie`, `ipad-licznik`, `ipad-projekty`.
 - **Tokeny:** bez nowych kolorów (zakreślacz `kolor.zakreslacz`, pióro i znacznik `kolor.wzor.*`, strona `kolor.wzor.strona`); kontrast bez nowych par. Wymiary: pasek licznika −1 56 pt, +1 ≥ 72 × 132 pt; kolumna poziomo 34 % (220–360 pt), iPad 340 pt; kolumna treści iPada maks. 640 pt.
-- **testID:** istniejące `wzor-dodaj`, `wzor-widok`, `wzor-zrodlo`, `wzor-strona`, `wzor-zakreslacz`, `wzor-zakreslenia` bez zmian; w pasku licznika pod wzorem te same id co na liczniku (jeden komponent). Nowe id grupy W to propozycja dla 07 w `fix7-2026-10-26.md` („Dla 07”); trafiają tutaj po dopisaniu wierszy w `e2e/README.md` (kontrakt F07-17).
+- **testID:** istniejące `wzor-dodaj`, `wzor-widok`, `wzor-zrodlo`, `wzor-strona`, `wzor-zakreslacz`, `wzor-zakreslenia` bez zmian; w pasku licznika pod wzorem te same id co na liczniku (jeden komponent). Nowe id grupy W (wiersze w `e2e/README.md` dopisała 07, 12aa394): `licznik-wzor`, `wzor-dodaj-film`, `wzor-przelacz`, `wzor-menu`, `wzor-obroc`, `wzor-usun`, `wzor-gumka`, `wzor-pioro`, `wzor-cofnij-rysunek`, `wzor-link-pole`, `wzor-film-wiersz`, `wzor-czeka-siec`.
 - **Zależności 05:** skaner dokumentów (moduł natywny), wiele wierszy wzoru na projekt i usunięcie bez kosza (N4), obrót strony jako dana wzoru (strona → kąt), „ostatnio oglądany wzór” projektu.
 - **Kolejność VoiceOver i Magic Tap** jak na liczniku; pasek licznika pod wzorem to ten sam komponent co strefa +1 w mniejszym rozmiarze.
+
+## „Udostępnij do Oczka” i iCloud (F-24, F-55, F-27, F-58; BR-WZR-001, BR-WZR-007, BR-DAN-002, BR-DAN-011; ADR-0005, ADR-0011; P-220)
+Makiety: `fix7-2026-10-26/udostepnij-icloud.html` (19 stanów), wzorce `wzorce-zrzuty/udostepnij-icloud-<stan>-*` (228; 320/390/430 × jasny/ciemny × domyślny/AX5).
+
+**Arkusz rozszerzenia (R1a).** Arkusz systemowy z nagłówkiem `wspolne.anuluj` / `udostepnij.tytul` / `wspolne.zapisz`; podgląd pliku (miniatura, nazwa, `wzor.wiersz_opis`); lista „Add as a pattern to” (`udostepnij.do_projektu`) z migawki projektów w toku (kolejność jak lista projektów, druga linia `udostepnij.wiersz`: ostatnia praca i `udostepnij.wzory_*`), domyślnie zaznaczony projekt ostatnio otwarty; ostatni wiersz `udostepnij.nowy_projekt`. Pod listą `udostepnij.gotowe` / `udostepnij.gotowe_nowy`, a przy projekcie z wzorem `udostepnij.kolejny` (nowy wzór obok istniejącego, W9b). Link ze strony: przełącznik segmentowy `udostepnij.jako` — `udostepnij.jako_wzor` (zapis strony jako PDF) albo `udostepnij.jako_film` (sam link, P-218 (4)). „Save” zapisuje do skrzynki App Group i zamyka arkusz; rozszerzenie niczego nie zamienia (ADR-0011).
+- **Bez migawki** (aplikacja jeszcze nie otwarta albo migawka niedostępna): bez listy, podpis `udostepnij.bez_migawki`; plik czeka w skrzynce (R1b jako stan zastępczy).
+- **Za duży** (`WZOR_MAKS_MB`) i **nieobsługiwany**: zamiast listy linia ostrzeżenia (`wzor.blad_rozmiar` + `udostepnij.za_duzy`, `wzor.blad_typ` + `udostepnij.nieobslugiwany`), w nagłówku tylko `wspolne.zamknij`; nic nie trafia do skrzynki.
+- **VoiceOver:** lista jako `radiogroup`, wiersze `radio` z `checked`; fokus po otwarciu na nagłówku.
+
+**Skrzynka importu (R2).** Przy otwarciu aplikacji pozycje z wybranym projektem dodają się same (wiersz w grupie wzorów: `wzor.import_w_toku`, strona bez sieci `wzor.czeka_siec`). Pozycje bez projektu: arkusz nad listą projektów `skrzynka.tytul_*` z podglądem pliku i listą `skrzynka.dodaj_do` (projekty w toku + `udostepnij.nowy_projekt`); `wspolne.nie_teraz` zostawia pozycje w skrzynce do następnego otwarcia. Nie pokazuje się nad licznikiem (licznik zostaje wolny, P-046) — dopiero na liście projektów albo ekranie projektu. Błąd pozycji: alert `skrzynka.nie_dodano` z przyczyną (`skrzynka.uszkodzony`, `wzor.blad_typ_opis`, `wzor.blad_strona_opis`), `wspolne.ok`; pozycja znika ze skrzynki.
+
+**iCloud (I1a–I3).** Ustawienia › „Data and sync” (`ustawienia.stan_danych`, istniejący ekran `stan_danych.*`).
+- **Przełącznik** `icloud.przelacznik`, **domyślnie wyłączony** (BR-DAN-002 S3, P-021), podpis `icloud.opis`. Przy ZM-06 (test „rekord z telefonu na iPadzie” niezaliczony) cały wiersz i podpis ukryte. Włączenie: alert `icloud.wlacz_tytul` / `icloud.wlacz_opis` / `icloud.wlacz_potwierdz` / `wspolne.anuluj`. Wyłączenie: `icloud.wylacz_*` (dane lokalne zostają, ADR-0005).
+- **Stan** (grupa pod przełącznikiem, `role=status`): włączona — `stan_danych.aktywna` + `stan_danych.ostatnia` albo `icloud.synchronizuje`; bez sieci — `stan_danych.czeka` + `stan_danych.ostatnia` (BR-DAN-011 S1); zawsze `stan_danych.zapisane` i `stan_danych.zegarek_kontakt`; wyłączona — `stan_danych.zapisane`. Liczniki w konflikcie: wiersz `icloud.konflikty_*` → lista.
+- **Problemy** (linia informacji z ikoną „!”, nigdy sam kolor): brak konta albo iCloud wyłączony dla Oczka — `icloud.brak_konta` + `icloud.brak_konta_opis`, przycisk `icloud.ustawienia`; brak miejsca — `icloud.brak_miejsca` + `icloud.brak_miejsca_opis`, przycisk `icloud.zarzadzaj`; poczekalnia ponad 7 dni — `icloud.niepelna` + `icloud.niepelna_nowsza` albo `icloud.niepelna_opis` (ikona „i”, to nie błąd). Inne konto: alert `icloud.konto_zmienione_tytul` / `icloud.konto_zmienione_opis` / `icloud.polacz` / `icloud.nie_synchronizuj`.
+- **Konflikt na liczniku (I1a; nazwany wyjątek od P-046, P-220):** pod liczbą linia `icloud.konflikt_licznik` + `icloud.konflikt_opis` + przycisk `icloud.konflikt_wybierz` → arkusz `dane.konflikt_tytul`, zdanie `icloud.konflikt_wybor_opis`, dwa wybory `dane.konflikt_wybor` (`dane.konflikt_a11y`), `wspolne.nie_teraz`. Liczba pokazuje wersję tego urządzenia; zachowanie +1 w konflikcie: N5 → 05. Linia znika po wyborze; ogłoszenie VoiceOver raz przy pojawieniu się.
+- **„Replace what’s here” i przywrócenie kopii przy włączonej synchronizacji:** alert `icloud.zastap_wylacz` / `icloud.zastap_wylacz_opis` / `icloud.do_ustawien` / `wspolne.anuluj`.
+- **„Delete all data”** (`ustawienia.usun_wszystko`): arkusz z `ustawienia.usun_pytanie`, przełącznikiem `icloud.usun_z_icloud` (domyślnie wyłączony, podpis `icloud.usun_z_icloud_opis`) i zdaniem `icloud.usun_zostaje`, gdy wyłączony; przycisk `ustawienia.usun_potwierdz` (tło `blad`, tekst `papier`: 6,36:1 jasny, 9,98:1 ciemny). Przełącznik widoczny tylko przy synchronizacji włączonej.
+
+| Klucz | en |
+|---|---|
+| `udostepnij.tytul` | Add to Oczko |
+| `udostepnij.do_projektu` | Add as a pattern to |
+| `udostepnij.nowy_projekt` | New project |
+| `udostepnij.wzory_one` / `udostepnij.wzory_other` | {{count}} pattern / {{count}} patterns |
+| `udostepnij.wiersz` | {{ostatnia}} · {{wzory}} |
+| `udostepnij.jako` | Add as |
+| `udostepnij.jako_wzor` | Pattern |
+| `udostepnij.jako_film` | Video link |
+| `udostepnij.gotowe` | It’ll be in {{projekt}} next time you open Oczko. |
+| `udostepnij.gotowe_nowy` | It’ll be in a new project next time you open Oczko. |
+| `udostepnij.kolejny` | {{projekt}} already has a pattern. This one is added next to it, and you can switch between them. |
+| `udostepnij.bez_migawki` | Oczko will ask which project it’s for when you open it. |
+| `udostepnij.za_duzy` | A pattern can be up to {{mb}} MB, so Oczko can’t add this file. |
+| `udostepnij.nieobslugiwany` | Patterns can be PDFs, Word documents, photos or web pages. |
+| `skrzynka.tytul_one` / `skrzynka.tytul_other` | {{count}} pattern to add / {{count}} patterns to add |
+| `skrzynka.dodaj_do` | Add to |
+| `skrzynka.nie_dodano` | “{{plik}}” wasn’t added |
+| `skrzynka.uszkodzony` | It may be damaged. Download or save it again, then add it. |
+| `icloud.przelacznik` | Sync with iCloud |
+| `icloud.opis` | Keeps projects, patterns and history the same on your devices. Your data goes only to your own iCloud; Oczko has no server. |
+| `icloud.wlacz_tytul` | Turn on iCloud sync? |
+| `icloud.wlacz_opis` | Projects on this iPhone and those already in your iCloud are combined. Nothing is deleted. If a counter has different values, Oczko shows both and you choose. |
+| `icloud.wlacz_potwierdz` | Turn on |
+| `icloud.wylacz_tytul` | Turn off iCloud sync? |
+| `icloud.wylacz_opis` | Everything stays on this iPhone. Changes here stop going to iCloud, and your other devices keep what they have. |
+| `icloud.wylacz_potwierdz` | Turn off |
+| `icloud.synchronizuje` | Syncing… |
+| `icloud.brak_konta` | iCloud isn’t available to Oczko |
+| `icloud.brak_konta_opis` | Check that you’re signed in to iCloud and that iCloud is on for Oczko in Settings. Everything stays saved on this iPhone. |
+| `icloud.ustawienia` | Open Settings |
+| `icloud.brak_miejsca` | Your iCloud storage is full |
+| `icloud.brak_miejsca_opis` | Changes aren’t syncing. They’re saved on this iPhone and will sync when there’s space. |
+| `icloud.zarzadzaj` | Manage storage |
+| `icloud.konto_zmienione_tytul` | A different iCloud account |
+| `icloud.konto_zmienione_opis` | This iPhone is now signed in to another iCloud account. Sync is paused and your data here is unchanged. Sync with this account? Your projects here and in that account are combined. |
+| `icloud.polacz` | Sync with this account |
+| `icloud.nie_synchronizuj` | Don’t sync |
+| `icloud.konflikt_licznik` | Two versions of this counter |
+| `icloud.konflikt_opis` | {{lokalna}} rows here, {{zdalna}} from {{urzadzenie}}. Choose the one that matches your knitting. |
+| `icloud.konflikt_wybierz` | Choose |
+| `icloud.konflikt_wybor_opis` | Pick the one that matches your knitting. The other stays in the history. |
+| `icloud.konflikty_one` / `icloud.konflikty_other` | {{count}} counter has two versions / {{count}} counters have two versions |
+| `icloud.niepelna` | Some changes from your other devices aren’t shown yet |
+| `icloud.niepelna_nowsza` | They come from a newer version of Oczko. Update Oczko on this iPhone to see them. Your counters here are unchanged. |
+| `icloud.niepelna_opis` | Oczko keeps trying. Your counters here are unchanged. |
+| `icloud.zastap_wylacz` | Turn off iCloud sync first |
+| `icloud.zastap_wylacz_opis` | To replace what’s here, iCloud sync needs to be off. Otherwise iCloud would bring the old data back. You can turn it on again afterwards. |
+| `icloud.do_ustawien` | Go to Data and sync |
+| `icloud.usun_z_icloud` | Also delete from iCloud |
+| `icloud.usun_z_icloud_opis` | Your other devices lose these projects the next time they sync. |
+| `icloud.usun_zostaje` | Data in iCloud and on your other devices stays. |
+
+Istniejące klucze użyte bez zmian: `stan_danych.*` (7), `dane.konflikt_tytul`, `dane.konflikt_wybor`, `dane.konflikt_a11y`, `ustawienia.stan_danych`, `ustawienia.usun_wszystko`, `ustawienia.usun_pytanie`, `ustawienia.usun_potwierdz`, `wspolne.zamknij`, `wspolne.nie_teraz`, `wspolne.zapisz`, `wspolne.anuluj`, `projekty.ostatnia_praca_*`.
+
+## Dla 08 (fix NZ-P217-04, grupa R i I: rozszerzenie, skrzynka, iCloud; P-220)
+- **Klucze:** ta sama łatka i skrypt co grupa W (`nakladaj-klucze-fix7.mjs`): razem 150 kluczy en, 145 wpisów kontekstu; sprawdzona nałożona (verify kod 0) i cofnięta. Teksty rozszerzenia czyta cel rozszerzenia z tego samego słownika (ADR-0017; generator tekstów celów natywnych — decyzja 05/08, jak `Teksty.swift` dla `aktywnosc.*`).
+- **Stany** (wzorce `wzorce-zrzuty/udostepnij-icloud-<stan>-*`): `udostepnij`, `udostepnij-ma-wzor`, `udostepnij-bez-migawki`, `udostepnij-za-duzy`, `udostepnij-nieobslugiwany`, `skrzynka`, `skrzynka-blad`, `icloud-wylaczony`, `icloud-wlacz`, `icloud-aktywny`, `icloud-czeka`, `icloud-brak-konta`, `icloud-brak-miejsca`, `icloud-konto-zmienione`, `icloud-konflikt-licznik`, `icloud-konflikt-wybor`, `icloud-niepelna`, `icloud-zastap-wylacz`, `icloud-usun-wszystko`.
+- **Tokeny:** bez nowych; przełączniki systemowe (`Switch`), arkusz rozszerzenia w kolorach motywu (`arkusz`, `grupa`, `linia`).
+- **testID:** propozycja dla 07 w `fix7-2026-10-26.md` („Dla 07”, grupa R i I) — do spec po dopisaniu wierszy w `e2e/README.md`.
+- **Zależności 05:** migawka projektów w App Group (N2: id, nazwa, ostatnia praca, liczba wzorów; zapis przy zmianie listy), stan konta (N3 — jeden tekst na brak konta i iCloud wyłączony dla aplikacji), +1 w konflikcie (N5).
 
 ## Ikona: wpisy konfiguracji (dla 08)
 ```json
