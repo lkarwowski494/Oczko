@@ -12,10 +12,10 @@ export function sklepSztuczny(terazMs: () => number = Date.now): Sklep & { wygas
   return {
     async produkty() { return Object.entries(CENY).map(([id, [cena, okres]]) => ({ id, cenaWyswietlana: cena, okres })); },
     async kup(id) {
-      if (!(id in CENY)) return { ok: false, powod: 'bledne_dane' };
+      if (!(id in CENY)) return 'blad'; // nieznany produkt: jak błąd sklepu
       transakcje = [...transakcje.filter((t) => t.produkt !== id), { produkt: id, wygasa: id === 'oczko.pro.lifetime' ? null : terazMs() + 30 * DOBA_MS, odebrane: false, karencjaDo: null }];
       powiadom();
-      return { ok: true, wartosc: undefined };
+      return 'sukces';
     },
     async przywroc() { powiadom(); return { ok: true, wartosc: undefined }; },
     async transakcje() { return transakcje; },

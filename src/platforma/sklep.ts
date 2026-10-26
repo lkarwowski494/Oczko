@@ -3,7 +3,7 @@
 // subskrypcji w karencji, której lista aktywnych nie zawiera — z subscriptionStatusIOS (P-103 (2a), KP-06). Dostępu adapter nie liczy (dostep.ts).
 // Bez verifyPurchaseWithProvider i usług zewnętrznych (ADR-0010 „Brak żądań sieciowych poza StoreKit”). Sztuczny sklep: sklep-sztuczny.ts.
 import type { Wynik } from '../domena/bledy';
-import type { Produkt, Sklep, Transakcja } from '../domena/porty';
+import type { Produkt, Sklep, StatusZakupu, Transakcja } from '../domena/porty';
 import { PRODUKTY_PRO } from '../konfiguracja';
 import { sklepSztuczny } from './sklep-sztuczny';
 
@@ -19,7 +19,6 @@ export interface ModulIap {
   purchaseErrorListener(l: (e: unknown) => void): { remove(): void };
   subscriptionStatusIOS(sku: string): Promise<unknown[]>;
 }
-export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // wejście komunikatZakupu (dostep.ts, K-*)
 
 const DOZYWOTNI = 'oczko.pro.lifetime';
 const liczba = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
@@ -62,10 +61,11 @@ async function biezace(m: ModulIap, terazMs: () => number): Promise<Transakcja[]
   return lista;
 }
 
-export function sklepIap(m: ModulIap, terazMs: () => number = Date.now): Sklep & { kupZeStatusem(id: string): Promise<StatusZakupu> } {
+export function sklepIap(m: ModulIap, terazMs: () => number = Date.now): Sklep {
   let polaczenie: Promise<boolean> | null = null;
   const polacz = () => (polaczenie ??= m.initConnection().catch((e: unknown) => { polaczenie = null; throw e; }));
-  async function kupZeStatusem(id: string): Promise<StatusZakupu> {
+  // Anulowanie i oczekiwanie nie są błędem (MON-04): status wybiera komunikat (komunikatZakupu, P-135 Q3a).
+  async function kup(id: string): Promise<StatusZakupu> {
     try {
       await polacz();
       const r = await m.requestPurchase({ request: { apple: { sku: id } }, type: id === DOZYWOTNI ? 'in-app' : 'subs' });
@@ -80,11 +80,7 @@ export function sklepIap(m: ModulIap, terazMs: () => number = Date.now): Sklep &
       await polacz();
       return ((await m.fetchProducts({ skus: [...PRODUKTY_PRO], type: 'all' })) ?? []).map(produktZeSklepu).filter((p): p is Produkt => p !== null);
     },
-    kupZeStatusem,
-    async kup(id): Promise<Wynik<void>> {
-      const s = await kupZeStatusem(id);
-      return s === 'sukces' ? { ok: true, wartosc: undefined } : { ok: false, powod: 'zapis' }; // status do komunikatu: kupZeStatusem; kontrakt partii 4: kup → StatusZakupu (moduly.md, P-135 Q3a)
-    },
+    kup,
     async przywroc(): Promise<Wynik<void>> {
       try { await polacz(); await m.restorePurchases(); return { ok: true, wartosc: undefined }; } catch { return { ok: false, powod: 'zapis' }; }
     },

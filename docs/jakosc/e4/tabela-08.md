@@ -34,7 +34,6 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wektory-limitu.test.ts` | zielony (główny zestaw) | 4 | BR-ZAK-005, BR-ZAK-006, KP-12, KP-13, NFR-PIE-001, P-057, P-065, P-067, P-068, R-097, R-103, R-178 | `src/domena/limit`<br>`src/konfiguracja` | Z07-07 |
 | 1 domena: limit, dostęp, informacje o Pro | `tests/domena/zakup/wlasnosci.test.ts` | zielony (główny zestaw) | 14 | KP-02, KP-06, KP-12, KP-13, KP-15, P-057, P-065, R-099, R-102, R-113 | `src/domena/dostep`<br>`src/domena/limit`<br>`src/konfiguracja` | Z07-07 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/akceptacja/dane/haptyka-wzorce.test.ts` | oczekuje | 2 | P-135 | `src/platforma/haptyka` | — |
-| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/akceptacja/dane/sklep-status.test.ts` | oczekuje | 1 | KP-13, P-135 | `src/domena/dostep`<br>`src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/akceptacja/dane/ukonczenie-pora.test.ts` | oczekuje | 0 | P-137, RD-16 | `src/przypadki-uzycia/projekt` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/archiwum-format.test.ts` | zielony (główny zestaw) | 6 | P-120 | `src/dane/archiwum/sha256`<br>`src/dane/archiwum/zip` | — |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/archiwum.test.ts` | zielony (główny zestaw) | 15 | BR-DAN-002/S2, BR-DAN-005, BR-DAN-005/S1, BR-DAN-006, BR-DAN-006/S1, BR-DAN-006/S2, BR-DAN-006/S3, BR-DAN-006/S4, BR-DAN-006/S5, NFR-DAN-003, P-047, P-091, R-063, R-064, R-066, R-067, R-068, R-088 | `src/dane/archiwum`<br>`src/dane/kopia-ratunkowa`<br>`src/dane/migracje/migruj`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/archiwum`<br>`src/przypadki-uzycia/porty-propozycja` | ER-42, Z07-22 |
@@ -78,7 +77,8 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/live-activity.test.ts` | zielony (główny zestaw) | 7 | P-115, P-139 | `src/domena/porty`<br>`src/platforma/dziennik-plus`<br>`src/platforma/live-activity`<br>`src/platforma/zegarek` | Z07-22 |
 | 9 ? | `tests/adaptery/magazyn.test.ts` | zielony (główny zestaw) | 2 | P-130 | `src/dane/pliki/magazyn` | — |
 | 9 ? | `tests/adaptery/platforma-proste.test.ts` | zielony (główny zestaw) | 3 | RD-16 | `src/platforma/ekran-aktywny`<br>`src/platforma/haptyka`<br>`src/platforma/zegar` | — |
-| 9 ? | `tests/adaptery/sklep.test.ts` | zielony (główny zestaw) | 7 | KP-06, P-103 | `src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
+| 9 ? | `tests/adaptery/sklep-status.test.ts` | zielony (główny zestaw) | 1 | KP-13, P-135 | `src/domena/dostep`<br>`src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
+| 9 ? | `tests/adaptery/sklep.test.ts` | zielony (główny zestaw) | 7 | KP-06, P-103, P-135 | `src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
 | 9 ? | `tests/adaptery/teksty-natywne.test.ts` | zielony (główny zestaw) | 5 | P-115, P-139, P-143 | `src/i18n/jezyki`<br>`src/i18n/plural`<br>`src/i18n/slowniki/en.json` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, P-135, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
 

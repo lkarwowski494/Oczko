@@ -1,9 +1,9 @@
 // Status zakupu w porcie Sklep (NZ-08-P3-05 (a), P-135 Q3a; KP-*: komunikatZakupu w src/domena/dostep.ts): `kup` zwraca StatusZakupu
 // zamiast Wynik<void>, bo anulowanie i oczekiwanie nie są błędem (MON-04) i wybierają inny komunikat. Test oczekujący roli 05 (fix-4):
 // czerwony na asercji do wdrożenia przez 08 (partia 4, razem z adapterem i sztucznym sklepem); sygnatura: „Kontrakt partii 4” w moduly.md.
-import { komunikatZakupu } from '../../../src/domena/dostep';
-import { sklepIap, type ModulIap } from '../../../src/platforma/sklep';
-import { sklepSztuczny } from '../../../src/platforma/sklep-sztuczny';
+import { komunikatZakupu } from '../../src/domena/dostep';
+import { sklepIap, type ModulIap } from '../../src/platforma/sklep';
+import { sklepSztuczny } from '../../src/platforma/sklep-sztuczny';
 
 const blad = (code: string) => Object.assign(new Error(code), { code });
 function atrapa(zakup?: unknown): ModulIap {

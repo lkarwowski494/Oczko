@@ -22,7 +22,8 @@ export interface LiveActivity { start(s: StanEkranuBlokady): Promise<Wynik<void>
 export interface Zegarek { wyslijStan(s: StanZegarka): Promise<void>; potwierdz(ids: readonly string[]): void; odbieraj(fn: (z: ZdarzenieWejsciowe[]) => void): () => void } // ADR-0009 (2026-10-26) pkt 3
 export type WynikPartii = { scalono: number; pominieto: number; potwierdzone: string[] }; // scalDziennik: id linii zegarka w `zdarzenie` po COMMIT albo odrzucone na stałe
 export interface Synchronizacja { wlacz(): Promise<Wynik<void>>; wylacz(): Promise<void>; stan(): StanSynchronizacji; zglosZmiane(encja: string, id: string): void }
-export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<Wynik<void>>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
+export type StatusZakupu = 'sukces' | 'oczekujacy' | 'anulowany' | 'blad'; // P-135 Q3a, ADR-0010: anulowanie i oczekiwanie nie są błędem (MON-04); adapter: statusZBledu
+export interface Sklep { produkty(): Promise<Produkt[]>; kup(id: string): Promise<StatusZakupu>; przywroc(): Promise<Wynik<void>>; transakcje(): Promise<Transakcja[]>; obserwuj(fn: () => void): () => void } // ADR-0010
 export interface Haptyka { rzad(): void; przypomnienie(): void }               // dwa wzorce F-48; brak dźwięku (BR-LIC-005)
 export interface EkranAktywny { wlacz(tag: string): void; wylacz(tag: string): void } // F-10, każdy tag wyłączany (rejestr Expo 7)
 export interface CzasWTle { chron<T>(nazwa: string, fn: (s: SygnalCzasu) => Promise<T>): Promise<T> } // beginBackgroundTask (rejestr Apple 17); wygaśnięcie → sygnał (ADR-0002 (7))

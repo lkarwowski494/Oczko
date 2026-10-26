@@ -56,9 +56,10 @@ describe('transakcje: karencja płatności (P-103 (2a)) i błąd odczytu', () =>
     expect((await zDozywotnim.transakcje()).map((t) => t.produkt)).toEqual(['oczko.pro.lifetime']);
     await expect(sklepIap(atrapa({ statusy: { 'oczko.pro.yearly': new Error('sieć') } }), () => TERAZ).transakcje()).rejects.toThrow('sieć');
   });
-  test('kupZeStatusem i kup: sukces → ok; anulowanie → status anulowany, kup = błąd', async () => {
-    expect(await sklepIap(atrapa()).kup('oczko.pro.lifetime')).toEqual({ ok: true, wartosc: undefined });
-    expect(await sklepIap(atrapa({ zakup: blad('user-cancelled') })).kupZeStatusem('oczko.pro.monthly')).toBe('anulowany');
+  // 08 partia 4 (P-135 Q3a): kup zwraca StatusZakupu (bez kupZeStatusem) — te same przypadki, asercja na statusie.
+  test('kup: sukces → sukces; anulowanie → anulowany (nie błąd)', async () => {
+    expect(await sklepIap(atrapa()).kup('oczko.pro.lifetime')).toBe('sukces');
+    expect(await sklepIap(atrapa({ zakup: blad('user-cancelled') })).kup('oczko.pro.monthly')).toBe('anulowany');
   });
 });
 
@@ -67,7 +68,7 @@ test('sztuczny sklep (build E2E): zakup bez okna Apple, „wygaś dostęp” ko�
   const s = sklepSztuczny(() => teraz);
   let powiadomienia = 0;
   s.obserwuj(() => { powiadomienia += 1; });
-  expect(await s.kup('oczko.pro.yearly')).toEqual({ ok: true, wartosc: undefined });
+  expect(await s.kup('oczko.pro.yearly')).toBe('sukces'); // P-135 Q3a: status zamiast Wynik
   expect(await s.transakcje()).toEqual([{ produkt: 'oczko.pro.yearly', wygasa: TERAZ + 30 * 86_400_000, odebrane: false, karencjaDo: null }]);
   teraz += 1000;
   s.wygas();
