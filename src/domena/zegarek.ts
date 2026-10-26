@@ -12,7 +12,7 @@ export type WejscieStanuZegarka = {
   dzis: string; // RRRR-MM-DD (RD-16)
   dzienDozwolony: boolean;
   sesjaStartMs: number | null;
-  ostatniPlusMs: number | null; // czas ostatniej zmiany licznika (przerwa nowego dnia w intencji, ADR-0008 (1))
+  ostatniPlusMs: number | null; // czas ostatniego +1 w dowolnym projekcie (moduly.md, wersja 2; P-132 (2c)) — przerwa nowego dnia w intencji, ADR-0008 (1)
   dostep: { pro: boolean; wygasa: number | null }; // wygasa null = bez końca (R-031)
   dniLimitu: DzienLimitu[]; // wszystkie wiersze dzien_limitu, dowolna kolejność
   przypomnienia: PrzypomnienieStanu[]; // plan RD-13 licznika
