@@ -57,7 +57,6 @@ final class StanTests: XCTestCase {
 
   /// X-ST-07 (N1, P-135 Q7a): plik v3 z `zablokowany` dekoduje się; plik v2 (`*-v2.json`) bez pola → `false`; v3 bez pola → błąd; wersja 4 → odrzucona.
   func testWersja3Blokada() throws {
-    XCTExpectFailure("08 partia 4 C1: ścisły dekoder v3 czeka na kod (ADR-0008, 2026-10-26)", strict: true)
     let v3 = try Repo.tekst("tests/wspolne/stan-zegarka-typowy.json")
     XCTAssertEqual(try StanEkranuBlokady.dekoduj(Data(v3.utf8)).zablokowany, false)
     let v3z = v3.replacingOccurrences(of: "\"zablokowany\": false", with: "\"zablokowany\": true")

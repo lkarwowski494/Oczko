@@ -40,7 +40,6 @@ final class ZegarekSkrzynkaTests: XCTestCase {
 
   /// X-ZG-01–X-ZG-09, X-ZG-11 na scenariuszach ZG-01–ZG-10; „wykonano N z N”.
   func testScenariusze() throws {
-    XCTExpectFailure("08 partia 4 C1: skrzynka zegarka czeka na kod (ADR-0009, 2026-10-26 pkt 1–5)", strict: true)
     let opis = try Repo.json("tests/wspolne/wzorce.json")["zegarek_skrzynka"]
     let scenariusze = opis?["scenariusze"]?.tablica ?? []
     let licznikB = try XCTUnwrap(opis?["licznik_b"]?.tekst)
@@ -92,7 +91,6 @@ final class ZegarekSkrzynkaTests: XCTestCase {
 
   /// X-ZG-02: błąd `dopisz` — `stuknijNaZegarku` rzuca, plik bez zmian (zero bajtów nowej linii).
   func testBladZapisuPlikBezZmian() throws {
-    XCTExpectFailure("08 partia 4 C1: zapis do magazynu czeka na kod (ADR-0009, 2026-10-26 pkt 2)", strict: true)
     let magazyn = MagazynTestowy(PlikSkrzynki(sciezka: sciezka))
     var s = try SkrzynkaZegarka(magazyn: magazyn, kontekst: try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/stan-zegarka-typowy.json")))
     _ = try s.stuknijNaZegarku(.plus, teraz: 1_794_340_800_000, strefa: "Europe/Warsaw", id: "z1", urzadzenie: "zegarek-test")
@@ -105,7 +103,6 @@ final class ZegarekSkrzynkaTests: XCTestCase {
 
   /// X-ZG-10: przepisanie przerwane przed `rename` — plik = stan sprzed usunięcia, plik tymczasowy sprzątany przy odczycie.
   func testPrzepisaniePrzerwane() throws {
-    XCTExpectFailure("08 partia 4 C1: przepisanie atomowe czeka na kod (ADR-0009, 2026-10-26 pkt 1)", strict: true)
     let plik = PlikSkrzynki(sciezka: sciezka)
     let k = try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/stan-zegarka-typowy.json"))
     var s = try SkrzynkaZegarka(magazyn: plik, kontekst: k)

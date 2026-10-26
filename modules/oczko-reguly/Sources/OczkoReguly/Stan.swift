@@ -63,7 +63,8 @@ public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState L
     proWaznoscDo = try zNull(Int64.self, .proWaznoscDo)
     dniWMiesiacu = try c.decode([DzienStanu].self, forKey: .dniWMiesiacu)
     przypomnienia = try c.decode([PrzypomnienieStanu].self, forKey: .przypomnienia)
-    zablokowany = c.contains(.zablokowany) ? try c.decode(Bool.self, forKey: .zablokowany) : false
+    // Wersja 2 (Live Activity i kontekst zegarka sprzed aktualizacji) nie zna pola: odblokowany; od wersji 3 pole obowiązkowe (X-ST-07).
+    zablokowany = wersja >= 3 ? try c.decode(Bool.self, forKey: .zablokowany) : false
   }
 
   /// Kodowanie z `null` dla pustych pól (ten sam zbiór kluczy co TS, X-ST-02).
@@ -76,10 +77,11 @@ public struct StanEkranuBlokady: Codable, Hashable { // Hashable: ContentState L
     try c.encode(dniWMiesiacu, forKey: .dniWMiesiacu); try c.encode(przypomnienia, forKey: .przypomnienia); try c.encode(zablokowany, forKey: .zablokowany)
   }
 
-  /// Stan po zapisanym stuknięciu (ADR-0008 (1)): wartość ± 1, `glowa` = nowe zdarzenie, `ostatniPlusMs` = czas zdarzenia, dzień i dni limitu.
+  /// Stan po zapisanym stuknięciu (ADR-0008 (1)): wartość ± 1, `glowa` = nowe zdarzenie, dzień i dni limitu; `ostatniPlusMs` = czas zdarzenia
+  /// tylko po +1 (wejście przerwy nowego dnia = ostatnie +1, jak TS `ostatniPlus`; P-132 (2c), P-138).
   public func po(_ wartoscZmiana: Int, glowa: String, czasMs: Int64, dzien: String, dni: [DzienStanu]) -> StanEkranuBlokady {
     StanEkranuBlokady(wersja: wersja, licznikId: licznikId, nazwa: nazwa, wartosc: max(0, wartosc + wartoscZmiana), znaczenie: znaczenie, glowa: glowa,
-                      ostatniPlusMs: czasMs, dzien: dzien, dzienDozwolony: true, sesjaStartMs: sesjaStartMs, pro: pro, proWaznoscDo: proWaznoscDo,
+                      ostatniPlusMs: wartoscZmiana > 0 ? czasMs : ostatniPlusMs, dzien: dzien, dzienDozwolony: true, sesjaStartMs: sesjaStartMs, pro: pro, proWaznoscDo: proWaznoscDo,
                       dniWMiesiacu: dni, przypomnienia: przypomnienia, zablokowany: zablokowany)
   }
 

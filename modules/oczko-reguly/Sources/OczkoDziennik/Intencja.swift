@@ -21,6 +21,7 @@ public enum WynikIntencji: Equatable {
 /// `zrodlo`: ekran blokady (intencja) albo zegarek (ta sama reguła na stanie z kontekstu telefonu, ADR-0009).
 public func stuknij(_ rodzaj: ZdarzenieWejsciowe.Rodzaj, stan: StanEkranuBlokady, teraz: Int64, strefa: String, id: String, urzadzenie: String,
                     zrodlo: ZdarzenieWejsciowe.Zrodlo = .ekran_blokady, proZegarkaSklep: [Uprawnienie] = []) throws -> WynikIntencji {
+  if stan.zablokowany { return .zablokowany } // F-03, N1: przed limitem i przed −1 (ADR-0008, 2026-10-26); bez linii
   let dzis = try dzienLokalny(ms: teraz, strefa: strefa)
   // KP-17: Pro, gdy potwierdza je stan od telefonu albo StoreKit zegarka (OR, proZegarka).
   let pro = proZegarka([.telefon(pro: stan.pro, wygasa: stan.proWaznoscDo)] + (proZegarkaSklep.isEmpty ? [] : [.zegarek(proZegarkaSklep)]), teraz: teraz)

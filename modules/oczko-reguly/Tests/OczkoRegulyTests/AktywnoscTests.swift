@@ -8,7 +8,6 @@ final class AktywnoscTests: XCTestCase {
 
   /// Brak `uwaga` i `jezyk` (Live Activity sprzed aktualizacji) → nil; znana wartość → ta wartość; pola stanu jak `StanEkranuBlokady`.
   func testDekoderUwagaIJezyk() throws {
-    XCTExpectFailure("08 partia 4 C1: dekoder StanAktywnosci czeka na kod (P-135 Q5a, P-139)", strict: true)
     let tekst = try Repo.tekst(plik)
     let bez = try JSONDecoder().decode(StanAktywnosci.self, from: Data(tekst.utf8))
     XCTAssertEqual([bez.uwaga?.rawValue, bez.jezyk], [nil, nil])

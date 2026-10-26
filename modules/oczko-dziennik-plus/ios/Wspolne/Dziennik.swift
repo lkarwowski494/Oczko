@@ -143,6 +143,27 @@ public final class DziennikPlus {
     }
   }
 
+  /// Przepisanie atomowe (ADR-0009, 2026-10-26 pkt 1): linie do pliku tymczasowego w tym samym katalogu, `fsync`, `rename` — przerwane
+  /// w połowie zostawia stary albo nowy plik, nigdy pusty ani częściowy. Pozostały plik tymczasowy usuwa `sprzatnijTymczasowy`.
+  public func zastap(_ linie: [String]) throws {
+    try kolejka.sync {
+      let tymczasowy = sciezka + ".zastap"
+      guard FileManager.default.createFile(atPath: tymczasowy, contents: Data(linie.map { $0 + "\n" }.joined().utf8)) else {
+        throw BladDziennika.system(operacja: "create", errno: errno)
+      }
+      let u = try otworz(tymczasowy)
+      defer { u.zamknij() }
+      try u.synchronizuj()
+      try przedPodmiana?()
+      if rename(tymczasowy, sciezka) != 0 { throw BladDziennika.system(operacja: "rename", errno: errno) }
+    }
+  }
+
+  /// Plik tymczasowy przerwanego `zastap` (przy starcie, przed odczytem).
+  public func sprzatnijTymczasowy() {
+    kolejka.sync { try? FileManager.default.removeItem(atPath: sciezka + ".zastap") }
+  }
+
   func tekstPliku() throws -> String {
     guard FileManager.default.fileExists(atPath: sciezka) else { return "" }
     guard let d = FileManager.default.contents(atPath: sciezka) else { throw BladDziennika.system(operacja: "read", errno: errno) }

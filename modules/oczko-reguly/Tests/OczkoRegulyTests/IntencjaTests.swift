@@ -68,7 +68,6 @@ final class IntencjaTests: XCTestCase {
 
   /// X-DZ-15 (N1, P-135 Q7a): `zablokowany: true` → `.zablokowany`, bez linii; przed limitem (zablokowany i `dzienDozwolony: false` → zablokowany); −1 też.
   func testZablokowanyPrzedLimitem() throws {
-    XCTExpectFailure("08 partia 4 C1: reguła blokady w stuknij czeka na kod (ADR-0008, 2026-10-26)", strict: true)
     XCTAssertEqual(try stuknij(.plus, stan: zablokowany(try stan("stan-ekranu-blokady-typowy.json")), teraz: waw(10, 21), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u"), .zablokowany)
     XCTAssertEqual(try stuknij(.plus, stan: zablokowany(try stan("stan-ekranu-blokady-limit.json")), teraz: waw(7, 9), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u"), .zablokowany)
     XCTAssertEqual(try stuknij(.minus, stan: zablokowany(try stan("stan-ekranu-blokady-typowy.json")), teraz: waw(10, 21), strefa: "Europe/Warsaw", id: "x", urzadzenie: "u"), .zablokowany)
@@ -77,7 +76,6 @@ final class IntencjaTests: XCTestCase {
 
   /// P-138, P-132 (2c): `ostatniPlusMs` = ostatnie +1 (wejście przerwy nowego dnia) — −1 go nie zmienia, +1 ustawia na czas stuknięcia (jak TS `ostatniPlus`).
   func testOstatniPlusTylkoPoPlus() throws {
-    XCTExpectFailure("08 partia 4 C1: ostatniPlusMs po −1 czeka na poprawkę (P-138)", strict: true)
     let s = try stan("stan-ekranu-blokady-typowy.json")
     guard case let .zapisz(_, poMinus) = try stuknij(.minus, stan: s, teraz: waw(10, 21, 30), strefa: "Europe/Warsaw", id: "m", urzadzenie: "u") else { return XCTFail() }
     XCTAssertEqual(poMinus.ostatniPlusMs, s.ostatniPlusMs, "−1 nie przesuwa ostatniego +1")

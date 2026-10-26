@@ -57,10 +57,8 @@ final class ZegarekTests: XCTestCase {
   }
 
   /// NZ-08-P3-05 (e3), P-135, X-ZG-03 (wektor ZG-03): głowa kontekstu licznika B nie usuwa niepotwierdzonego zdarzenia licznika A.
-  /// Test oczekujący (roli 05, fix-4): dziś czerwony na asercji — `przyjmij` usuwa wszystko do pozycji `glowa` w kolejce (Zegarek.swift).
-  /// 08 usuwa `XCTExpectFailure` w commicie poprawki (strict: przejście testu bez poprawki też jest czerwone).
+  /// Test oczekujący roli 05 (fix-4), zazieleniony przez 08 (partia 4): reguła głowy w obrębie licznika (ADR-0009, 2026-10-26 pkt 4).
   func testGlowaInnegoLicznikaNieUsuwa() throws {
-    XCTExpectFailure("NZ-08-P3-05 (e3): czeka na poprawkę 08 (ADR-0009, uzupełnienie 2026-10-26 pkt 4)", strict: true)
     var s = try nowaSkrzynka()
     let a = try stan("stan-zegarka-typowy.json")
     s.przyjmij(a)
@@ -79,7 +77,6 @@ final class ZegarekTrwaloscTests: XCTestCase {
   /// Trwały zapis zegarka: kontekst i linie oczekujących → po odtworzeniu ten sam stan pokazywany (zegarek uruchomiony ponownie bez telefonu).
   /// 08 partia 4: kolejka z pliku magazynu (nie z pamięci ustawień, ADR-0009 2026-10-26 pkt 1), kontekst z utrwalonego JSON.
   func testOdtworzenie() throws {
-    XCTExpectFailure("08 partia 4 C1: zapis do magazynu czeka na kod (ADR-0009, 2026-10-26 pkt 1)", strict: true)
     let magazyn = PlikSkrzynki(sciezka: FileManager.default.temporaryDirectory.appendingPathComponent("oczko-skrzynka-\(UUID().uuidString).jsonl").path)
     var s = try nowaSkrzynka(magazyn)
     let k = try StanEkranuBlokady.dekoduj(Repo.dane("tests/wspolne/stan-zegarka-typowy.json"))

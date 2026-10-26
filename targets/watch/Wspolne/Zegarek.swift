@@ -13,13 +13,20 @@ public protocol MagazynSkrzynki: AnyObject {
   func zastap(_ linie: [String]) throws
 }
 
-/// Plik `skrzynka-zegarka.jsonl` (zaślepka 08, partia 4 C1: bez zapisu — kod w następnym commicie).
+/// Plik `skrzynka-zegarka.jsonl` rdzeniem dziennika (8A: `O_APPEND`, jeden `write`, `fsync`, `ftruncate` przy błędzie; odczyt 8R).
 public final class PlikSkrzynki: MagazynSkrzynki {
   public let dziennik: DziennikPlus
   public init(sciezka: String) { dziennik = DziennikPlus(sciezka: sciezka) }
-  public func odczytaj() throws -> [String] { [] }
-  public func dopisz(_ linia: String) throws {}
-  public func zastap(_ linie: [String]) throws {}
+  /// Zdarzenia z pliku (linie uszkodzone pomijane, sklejone odzyskane — 8R); najpierw sprzątanie przerwanego przepisania (X-ZG-10).
+  public func odczytaj() throws -> [String] {
+    dziennik.sprzatnijTymczasowy()
+    return try dziennik.odczytaj().zdarzenia.map(\.linia)
+  }
+  public func dopisz(_ linia: String) throws {
+    guard let z = ZdarzenieWejsciowe.zLinii(Substring(linia)) else { throw BladDanych("skrzynka zegarka: linia nie jest zdarzeniem") }
+    try dziennik.dopisz(z)
+  }
+  public func zastap(_ linie: [String]) throws { try dziennik.zastap(linie) }
 }
 
 public struct SkrzynkaZegarka: Equatable {
@@ -46,22 +53,47 @@ public struct SkrzynkaZegarka: Equatable {
     a.kontekst == b.kontekst && a.potwierdzone == b.potwierdzone && a.oczekujace == b.oczekujace && a.pokazywany == b.pokazywany
   }
 
-  /// Nowy kontekst z telefonu (zaślepka 08, partia 4 C1: dawna reguła głowy po całej kolejce, bez `potwierdzone`).
+  /// Nowy kontekst z telefonu (pkt 4): zdarzenie licznika L wymienione w `potwierdzone` albo równe `glowa` kontekstu licznika L usuwa z kolejki
+  /// siebie i wcześniejsze zdarzenia tego samego licznika (zdarzenie w bazie ⇒ jego przodkowie w bazie); innych liczników nie rusza (e3).
+  /// Pokazywane = kontekst + pozostałe zdarzenia jego licznika (e5). Nieudane przepisanie pliku nie cofa usunięcia w pamięci: po restarcie
+  /// utrwalony kontekst z tą samą listą usuwa je ponownie (duplikat wysyłki nieszkodliwy, M-02).
   public mutating func przyjmij(_ k: StanEkranuBlokady, potwierdzone: [String] = []) {
     kontekst = k
     self.potwierdzone = potwierdzone
-    if let g = k.glowa, let i = oczekujace.firstIndex(where: { $0.id == g }) { oczekujace.removeSubrange(...i) }
+    let ids = Set(potwierdzone)
+    var usun = Set<String>()
+    for licznik in Set(oczekujace.map(\.licznikId)) {
+      let wlasne = oczekujace.filter { $0.licznikId == licznik }
+      if let i = wlasne.lastIndex(where: { ids.contains($0.id) || (licznik == k.licznikId && $0.id == k.glowa) }) {
+        usun.formUnion(wlasne[...i].map(\.id))
+      }
+    }
+    if !usun.isEmpty {
+      oczekujace.removeAll { usun.contains($0.id) }
+      for id in usun { wyslano[id] = nil }
+      try? magazyn.zastap(oczekujace.map(\.linia))
+    }
     pokazywany = oczekujace.filter { $0.licznikId == k.licznikId }.reduce(k) { s, z in s.po(z, dni: s.dniWMiesiacu) }
   }
 
-  /// Stuknięcie na zegarku (zaślepka 08, partia 4 C1: bez zapisu do magazynu).
+  /// Stuknięcie na zegarku (pkt 2): reguły z pakietu (blokada, limit) na stanie pokazywanym → `dopisz` z `fsync` → dopiero potem kolejka
+  /// i stan pokazywany. Błąd zapisu rzuca (stan i kolejka bez zmian; wołający: komunikat „nie zapisano”, bez haptyki potwierdzenia).
   public mutating func stuknijNaZegarku(_ rodzaj: ZdarzenieWejsciowe.Rodzaj, teraz: Int64, strefa: String, id: String, urzadzenie: String, sklep: [Uprawnienie] = []) throws -> WynikIntencji {
     guard let s = pokazywany else { return .bezZmiany } // przed pierwszym kontaktem z telefonem zegarek nie zna licznika
     let w = try stuknij(rodzaj, stan: s, teraz: teraz, strefa: strefa, id: id, urzadzenie: urzadzenie, zrodlo: .zegarek, proZegarkaSklep: sklep)
-    if case let .zapisz(z, nowy) = w { oczekujace.append(z); pokazywany = nowy }
+    if case let .zapisz(z, nowy) = w {
+      try magazyn.dopisz(z.linia)
+      oczekujace.append(z)
+      pokazywany = nowy
+    }
     return w
   }
 
-  /// Linie do `transferUserInfo` (zaślepka 08, partia 4 C1: nic).
-  public mutating func doWyslania(teraz: Int64, wToku: Set<String>) -> [ZdarzenieWejsciowe] { [] }
+  /// Linie do `transferUserInfo` (pkt 5): bez tych w toku (`outstandingUserInfoTransfers`), niewysłane w tym uruchomieniu albo wysłane
+  /// co najmniej `Stale.zegarekPonowienieMs` temu; zwrócone dostają czas wysyłki `teraz`.
+  public mutating func doWyslania(teraz: Int64, wToku: Set<String>) -> [ZdarzenieWejsciowe] {
+    let lista = oczekujace.filter { z in !wToku.contains(z.id) && (wyslano[z.id].map { teraz - $0 >= Stale.zegarekPonowienieMs } ?? true) }
+    for z in lista { wyslano[z.id] = teraz }
+    return lista
+  }
 }

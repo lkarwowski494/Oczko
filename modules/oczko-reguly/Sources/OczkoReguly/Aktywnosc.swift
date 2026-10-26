@@ -15,8 +15,9 @@ public struct StanAktywnosci: Codable, Hashable {
 
   public init(from decoder: Decoder) throws {
     stan = try StanEkranuBlokady(from: decoder)
-    uwaga = nil // zaślepka 08 (partia 4, C1): dekoder pola w następnym commicie
-    jezyk = nil
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    uwaga = try c.decodeIfPresent(Uwaga.self, forKey: .uwaga) // brak klucza albo null = nil; nieznana wartość = błąd
+    jezyk = try c.decodeIfPresent(String.self, forKey: .jezyk)
   }
 
   public func encode(to encoder: Encoder) throws {
