@@ -110,6 +110,16 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
 .naglowek-arkusza .ikona { width: 44px; height: 44px; display: grid; place-items: center; }
 .grupa .el .wybrany { font-weight: 700; }
 .krokowiec { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; }
+/* fix NZ-08-P3-04: systemowy wybór daty (atrapa UIDatePicker w stylu kalendarza) */
+.kalendarz { flex-direction: column; align-items: stretch !important; }
+.kalendarz .mies { display: flex; justify-content: space-between; font-size: calc(17px * var(--dt-tresc)); }
+.kalendarz .siatka { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: calc(17px * min(var(--dt-tresc), 1.6)); }
+.kalendarz .siatka i { font-style: normal; color: var(--olowek); font-size: calc(13px * min(var(--dt-tresc), 1.6)); }
+.kalendarz .siatka span { min-height: 40px; display: grid; place-items: center; border-radius: 50%; }
+.kalendarz .wyb { background: var(--p-tlo); color: var(--p-tekst); font-weight: 700; box-shadow: inset 0 0 0 2px var(--p-obrys); }
+.daty .el { flex-wrap: wrap; } .daty .el .tx { flex: 1 0 auto; }
+.kalendarz .dzis { font-weight: 700; text-decoration: underline; }
+.kalendarz .poza { color: var(--olowek); opacity: .45; }
 </style>
 </head>
 <body>
@@ -415,6 +425,30 @@ h1 { font: 700 calc(30px * var(--dt-tytul)) / 1.15 var(--tytul); margin: 0; }
       <button class="przycisk-tekst">Cancel</button>
     </div>
   </div>
+</main>
+
+<!-- 15. Data ukończenia: systemowy wybór samej daty, od dnia startu do dziś (BR-PRJ-013, ukonczono_dzien) -->
+<main data-ekran="ukonczenie-data">
+  <div class="status"><span>20:05</span><span>▂▄▆ ▭</span></div>
+  <div class="nav"><a href="#">‹ Finished</a></div>
+  <div class="tytul"><h1>Harbor Sweater</h1><p class="pod"><span class="kropka"></span>640 rows · 18 h 10 min</p></div>
+  <div class="grupa daty">
+    <div class="el"><div class="tx">Started</div><span class="wybrany">Oct 1, 2026</span></div>
+    <div class="el" aria-expanded="true"><div class="tx">Finished</div><span class="wybrany">Nov 18, 2026</span></div>
+    <div class="el kalendarz" role="group" aria-label="Finished date">
+      <div class="mies"><b>November 2026</b><span aria-hidden="true">‹ ›</span></div>
+      <div class="siatka" aria-hidden="true">
+        <i>M</i><i>T</i><i>W</i><i>T</i><i>F</i><i>S</i><i>S</i>
+        <span></span><span></span><span></span><span></span><span></span><span></span><span>1</span>
+        <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span>
+        <span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+        <span>16</span><span>17</span><span class="wyb">18</span><span>19</span><span>20</span><span class="dzis">21</span><span class="poza">22</span>
+        <span class="poza">23</span><span class="poza">24</span><span class="poza">25</span><span class="poza">26</span><span class="poza">27</span><span class="poza">28</span><span class="poza">29</span>
+        <span class="poza">30</span>
+      </div>
+    </div>
+  </div>
+  <p class="podpis" style="margin:8px 32px 0">The calendar and the weekly summary count the project as finished on this day.</p>
 </main>
 
 <section class="uwagi">

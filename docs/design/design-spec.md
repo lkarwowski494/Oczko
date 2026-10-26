@@ -57,7 +57,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
 | Import | przerwany przez czas w tle, dane sprzed importu, „Try again” (`import-przerwany`) |
-| Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); bez włóczki w projekcie: pytanie pominięte |
+| Ukończenie | karta z pytaniem o zużycie włóczki w motkach (`ukonczenie`, prototyp z5); zużycie ponad zapas: linia informacji, zapas 0 (`ukonczenie-ponad-zapas`); zmiana daty ukończenia (`ukonczenie-data`); bez włóczki w projekcie: pytanie pominięte |
 | Wzór: znacznik | pierwsze ustawienie z wyborem kierunku (`wzor-kierunek`); ustawiony (`wzor-znacznik`); koniec strony (`wzor-koniec-strony`); notatka bez znacznika (`wzor-notatka-bez-znacznika`); Word w podglądzie zastępczym: bez znacznika |
 | Projekt roboczy | lista z etykietą z daty (`projekty-robocze`); licznik nienazwany z arkuszem nazwy (`projekt-nazwij`); pusta nazwa przy Save: zostaje nienazwany |
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
@@ -206,6 +206,19 @@ Znacznik to „linijka” na jednym dokumencie wzoru (reguła OG-07 bez zmian): 
 | `import.przerwany_rada` | Keep Oczko open until the import finishes. |
 | `import.ponow` | Try again |
 | `wspolne.anuluj` | Cancel |
+
+## Data ukończenia (BR-PRJ-013 „Data ukończenia”, `ukonczono_dzien`, moduly.md „Ukończone w tygodniu…”)
+- **Gdzie:** szczegóły ukończonego projektu, grupa dat: „Started” i „Finished” z datą (format regionu, rok zawsze — daty historii). Stuknięcie w „Finished” rozwija pod wierszem systemowy wybór daty (`UIDatePicker`, styl kalendarza, **sama data, bez godziny**), tydzień od poniedziałku (P-110).
+- **Zakres:** od dnia startu projektu do dziś; dni poza zakresem są nieaktywne w kalendarzu (nie ma komunikatu po fakcie). Wybór zapisuje się od razu (jak systemowe pola daty), bez „Save”.
+- **Zapis:** ekran podaje dzień lokalny `RRRR-MM-DD` (`ukonczonoDzien`) — tak liczy kalendarz i podsumowanie tygodnia. `ukonczonoMs` przy zmianie dnia: propozycja 04 — ta sama pora dnia co pierwotne ukończenie, w strefie urządzenia `[DO USTALENIA: 05]`.
+- Pod grupą podpis „The calendar and the weekly summary count the project as finished on this day.” Wybrany dzień: tło przycisku + obrys + pogrubienie (nie sam kolor); dziś: pogrubienie z podkreśleniem.
+- **VoiceOver:** wiersz „Finished, Nov 18, 2026, button”, rozwinięty — systemowy wybór daty (dostępny z natury).
+
+| Klucz | en |
+|---|---|
+| `projekt.data_startu` | Started |
+| `projekt.data_ukonczenia` | Finished |
+| `projekt.data_ukonczenia_opis` | The calendar and the weekly summary count the project as finished on this day. |
 
 ## Kreski sesji przez północ (NZ-06, P-097 (4a), P-126 (6a), N2)
 - **Posiedzenie** (dla kresek i podpisu): zaczyna je pierwsze +1 w projekcie po przerwie ≥ `PRZERWA_NOWEGO_DNIA_MS` (60 min) bez +1 w tym projekcie albo start stopera sesji (wtedy posiedzenie = sesja stopera); kończy je taka przerwa albo zatrzymanie stopera. **Północ go nie przerywa:** o 00:20 kreski i podpis „since 22:10” zostają — jak sesja stopera liczona do dnia startu (P-097 (4a)).
