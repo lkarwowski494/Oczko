@@ -16,12 +16,16 @@ final class ModelArkusza: ObservableObject {
   var naZapisz: () -> Void = {}
 }
 
-/// Pierwszy język systemu, który ma tabelę (rozszerzenie nie czyta preferencji języka z bazy aplikacji) [DO USTALENIA: język aplikacji w migawce].
-let JEZYK: String? = Locale.preferredLanguages.lazy.compactMap { id -> String? in
-  let czesci = id.split(separator: "-").map(String.init)
-  let kandydaci = (1...czesci.count).reversed().map { czesci.prefix($0).joined(separator: "-") }
-  return kandydaci.first { Teksty.lancuch[$0] != nil }
-}.first
+/// Język arkusza: język aplikacji z migawki (P-248 D2a), a bez niego pierwszy język systemu, który ma tabelę. Ustawia go kontroler przed pokazaniem arkusza.
+func jezykArkusza(_ zAplikacji: String?) -> String? {
+  if let j = zAplikacji, Teksty.lancuch[j] != nil { return j }
+  return Locale.preferredLanguages.lazy.compactMap { id -> String? in
+    let czesci = id.split(separator: "-").map(String.init)
+    let kandydaci = (1...czesci.count).reversed().map { czesci.prefix($0).joined(separator: "-") }
+    return kandydaci.first { Teksty.lancuch[$0] != nil }
+  }.first
+}
+nonisolated(unsafe) var JEZYK: String? = jezykArkusza(nil)
 
 struct ArkuszUdostepnij: View {
   @ObservedObject var model: ModelArkusza

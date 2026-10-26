@@ -111,24 +111,36 @@ final class ZlecenieTests: XCTestCase {
   func testPlikKopiowanyManifestNaKoncu() throws {
     let zrodlo = grupa.appendingPathComponent("Harbor.pdf")
     try Data("%PDF-1.4\n%%EOF\n".utf8).write(to: zrodlo)
-    let z = try zapiszZlecenie(grupa: grupa, wejscie: .plik(zrodlo, typ: "com.adobe.pdf"), projektId: "p1", terazMs: 5, id: "z1")
-    XCTAssertEqual(z.sciezka, "Harbor.pdf")
+    let z = try zapiszZlecenie(grupa: grupa, wejscie: .pliki([zrodlo], typ: "com.adobe.pdf"), projektId: "p1", terazMs: 5, id: "z1")
+    XCTAssertEqual(z.sciezki, ["Harbor.pdf"])
     let k = grupa.appendingPathComponent("skrzynka/z1")
     XCTAssertTrue(FileManager.default.fileExists(atPath: k.appendingPathComponent("Harbor.pdf").path))
     let m = try JSONSerialization.jsonObject(with: Data(contentsOf: k.appendingPathComponent("zlecenie.json"))) as? [String: Any]
     XCTAssertEqual(m?["id"] as? String, "z1")
     XCTAssertEqual(m?["rodzaj"] as? String, "plik")
     XCTAssertEqual(m?["nazwa"] as? String, "Harbor.pdf")
-    XCTAssertEqual(m?["sciezka"] as? String, "Harbor.pdf")
+    XCTAssertEqual(m?["sciezki"] as? [String], ["Harbor.pdf"])
     XCTAssertEqual(m?["projektId"] as? String, "p1")
     XCTAssertEqual(m?["utworzonoMs"] as? Int, 5)
     XCTAssertTrue(m?["adres"] is NSNull) // null zapisany jawnie
     XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: k.path).sorted(), ["Harbor.pdf", "zlecenie.json"]) // bez pliku tymczasowego
   }
 
+  func testKilkaZdjecJednoZlecenie() throws { // P-248 D1a: jedno udostępnienie kilku zdjęć = jedno zlecenie = jeden wzór
+    let a = grupa.appendingPathComponent("a/IMG.jpeg"), b = grupa.appendingPathComponent("b/IMG.jpeg")
+    for u in [a, b] { try FileManager.default.createDirectory(at: u.deletingLastPathComponent(), withIntermediateDirectories: true); try Data("j".utf8).write(to: u) }
+    let z = try zapiszZlecenie(grupa: grupa, wejscie: .pliki([a, b], typ: "public.jpeg"), projektId: nil, terazMs: 1, id: "z5")
+    XCTAssertEqual(z.sciezki, ["IMG.jpeg", "2-IMG.jpeg"]) // ta sama nazwa dwóch zdjęć: druga z numerem, bez nadpisania
+    XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: grupa.appendingPathComponent("skrzynka/z5").path).sorted(), ["2-IMG.jpeg", "IMG.jpeg", "zlecenie.json"])
+  }
+  func testJezykMigawki() { // P-248 D2a: arkusz mówi językiem aplikacji
+    XCTAssertEqual(jezykMigawki(Data(#"{"format":"oczko-migawka","wersja":1,"utworzono":1,"jezyk":"pl","projekty":[]}"#.utf8)), "pl")
+    XCTAssertNil(jezykMigawki(Data(#"{"format":"oczko-migawka","wersja":1,"utworzono":1,"projekty":[]}"#.utf8)))
+    XCTAssertNil(jezykMigawki(nil))
+  }
   func testAdresBezPlikuIProjektuNull() throws {
     let z = try zapiszZlecenie(grupa: grupa, wejscie: .adres(URL(string: "https://example.org/czapka")!, film: false), projektId: nil, terazMs: 1, id: "z2")
-    XCTAssertNil(z.sciezka)
+    XCTAssertEqual(z.sciezki, [])
     XCTAssertEqual(z.typ, "public.url")
     let m = try JSONSerialization.jsonObject(with: Data(contentsOf: grupa.appendingPathComponent("skrzynka/z2/zlecenie.json"))) as? [String: Any]
     XCTAssertTrue(m?["projektId"] is NSNull)
@@ -145,7 +157,7 @@ final class ZlecenieTests: XCTestCase {
     let h = try FileHandle(forWritingTo: zrodlo)
     try h.truncate(atOffset: UInt64(StaleWzoru.wzorMaksMb) * 1024 * 1024 + 1) // plik rzadki
     try h.close()
-    XCTAssertThrowsError(try zapiszZlecenie(grupa: grupa, wejscie: .plik(zrodlo, typ: "com.adobe.pdf"), projektId: nil, terazMs: 1, id: "z4")) { e in
+    XCTAssertThrowsError(try zapiszZlecenie(grupa: grupa, wejscie: .pliki([zrodlo], typ: "com.adobe.pdf"), projektId: nil, terazMs: 1, id: "z4")) { e in
       XCTAssertEqual(e as? BladZlecenia, .zaDuzy)
     }
     XCTAssertFalse(FileManager.default.fileExists(atPath: grupa.appendingPathComponent("skrzynka/z4").path))

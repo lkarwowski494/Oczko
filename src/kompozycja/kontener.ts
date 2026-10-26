@@ -114,7 +114,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
   // Partia 6: App Group (ADR-0011 fix-7) — skrzynka rozszerzenia i migawka projektów; bez grupy w podpisie (build symulatora) obie są puste.
   const grupa = katalogGrupyAplikacji(GRUPA_APLIKACJI);
   const platforma = platformaWzoru();
-  const zWzoru: ZaleznosciKompozycjiWzoru = { ...z, konwersja: platforma, skrzynka: skrzynkaWKatalogu(grupa, () => zegar.teraz().ms), migawka: migawkaWKatalogu(grupa, () => zegar.teraz().ms) };
+  const zWzoru: ZaleznosciKompozycjiWzoru = { ...z, konwersja: platforma, skrzynka: skrzynkaWKatalogu(grupa, () => zegar.teraz().ms), migawka: migawkaWKatalogu(grupa, () => zegar.teraz().ms), jezyk };
   const wzor = { z: zWzoru, platforma, k: kompozycjaWzoru(zWzoru, { grupa, zlecenieE2e: skrzynkaE2e() && skrzynkaTestowa ? skrzynkaTestowa.wlozZlecenieTestowe : null }) };
   const t: Tlumacz = (k, p) => i18n.t(k, p);
   return {

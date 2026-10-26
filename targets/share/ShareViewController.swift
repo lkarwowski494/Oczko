@@ -22,7 +22,9 @@ final class ShareViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     let grupa = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: GRUPA_APLIKACJI)
-    model.projekty = odczytajMigawke(grupa.flatMap { try? Data(contentsOf: $0.appendingPathComponent(PLIK_MIGAWKI)) })
+    let migawka = grupa.flatMap { try? Data(contentsOf: $0.appendingPathComponent(PLIK_MIGAWKI)) }
+    model.projekty = odczytajMigawke(migawka)
+    JEZYK = jezykArkusza(jezykMigawki(migawka)) // P-248 D2a: język aplikacji z migawki, inaczej systemu
     model.wybrany = model.projekty?.first?.id
     model.naAnuluj = { [weak self] in self?.zakoncz(NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError)) }
     model.naZapisz = { [weak self] in self?.zapisz(grupa) }
@@ -82,19 +84,23 @@ final class ShareViewController: UIViewController {
     }
   }
 
-  /// Jedno zlecenie na załącznik (kilka zdjęć = kilka zleceń — [DO USTALENIA] manifest z listą plików, P-218 Q6a); manifest zapisany na końcu.
+  /// Zdjęcia jednego udostępnienia = jedno zlecenie (P-248 D1a, P-218 (1)); PDF, Word i adres — każdy osobno; manifest zapisany na końcu.
   private func zapisz(_ grupa: URL?) {
     guard let grupa else { zakoncz(NSError(domain: "Oczko", code: 1)); return }
     let teraz = Int64(Date().timeIntervalSince1970 * 1000)
     do {
-      for z in model.zalaczniki {
+      let zdjecia = model.zalaczniki.filter { $0.rodzaj == .obraz && $0.plik != nil }
+      if let pierwsze = zdjecia.first {
+        _ = try zapiszZlecenie(grupa: grupa, wejscie: .pliki(zdjecia.compactMap(\.plik), typ: pierwsze.typ), projektId: model.wybrany, terazMs: teraz)
+      }
+      for z in model.zalaczniki where z.rodzaj != .obraz {
         if let u = z.adres {
           _ = try zapiszZlecenie(grupa: grupa, wejscie: .adres(u, film: model.jakoFilm), projektId: model.wybrany, terazMs: teraz)
         } else if let p = z.plik {
-          _ = try zapiszZlecenie(grupa: grupa, wejscie: .plik(p, typ: z.typ), projektId: model.wybrany, terazMs: teraz)
-          try? FileManager.default.removeItem(at: p.deletingLastPathComponent())
+          _ = try zapiszZlecenie(grupa: grupa, wejscie: .pliki([p], typ: z.typ), projektId: model.wybrany, terazMs: teraz)
         }
       }
+      for z in model.zalaczniki { if let p = z.plik { try? FileManager.default.removeItem(at: p.deletingLastPathComponent()) } }
       zakoncz(nil)
     } catch { zakoncz(error) }
   }

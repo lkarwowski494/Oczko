@@ -26,10 +26,10 @@ Stan 2026-10-26 ok. 20:30 UTC · gałąź lokalna `partia6-natywne` (od d817ce1)
 
 ## [DO USTALENIA] i ryzyka
 - **Kompilacja nieweryfikowana:** cały kod UIKit/PDFKit/PencilKit/WebKit/VisionKit sprawdzony tylko parserem. Miejsca najbardziej ryzykowne: układ współrzędnych nakładki strony (`PDFPageOverlayViewProvider` — czy nakładka nie jest odwrócona; znacznik liczony od góry strony), przewijanie palcem przy `.pencilOnly` (gesty przodka PDFView), `minimumNumberOfTouches = 2` dla trybu zakreślacza (wewnętrzny UIScrollView PDFView), `viewPrintFormatter` WKWebView poza oknem (może wymagać dołączenia do okna), sygnatura `decidePolicyFor … decisionHandler` w SDK iOS 26.
-- **Kilka zdjęć z arkusza = kilka zleceń** (manifest ma jedną `sciezka`), więc aplikacja zrobi kilka wzorów, a „Choose photos” w aplikacji robi jeden (P-218 Q6a, ograniczenie 1 nie jest naruszone, ale zachowanie się różni). Propozycja: pole `sciezki` w manifeście (zmiana kontraktu ZlecenieImportu — 05).
-- **„Video link” z arkusza (S4):** zlecenie `rodzaj: 'adres'`, `typ: 'film'`. `src/przypadki-uzycia/skrzynka.ts` (`zrodloZlecenia`) dziś traktuje każdy adres jako wzór — musi rozpoznać `typ === 'film'` i zapisać link filmu (miejsce zapisu: S4) zamiast zamiany strony na PDF.
+- **Kilka zdjęć z arkusza = jedno zlecenie** (P-248 D1a): manifest ma `sciezki`, `WejscieZlecenia.pliki([URL])`, ta sama nazwa dwóch zdjęć dostaje numer; `swift test` 17/17.
+- **„Video link” z arkusza** (P-246 S4a): zlecenie `rodzaj: 'film'` → film projektu w aplikacji, bez konwersji.
 - **„New project” w arkuszu** = `projektId: null` (aplikacja zapyta o projekt w arkuszu skrzynki) — bez tworzenia projektu w rozszerzeniu.
-- **Język arkusza:** rozszerzenie nie czyta preferencji języka z bazy (P-190) — bierze pierwszy obsługiwany język systemu. Propozycja: pole `jezyk` w kopercie migawki (05).
+- **Język arkusza** (P-248 D2a): `jezyk` z koperty migawki (`jezykMigawki`), bez niego pierwszy obsługiwany język systemu (`jezykArkusza`).
 - Liczba stron w podglądzie arkusza (`wzor.wiersz_opis` „PDF · 6 pages”) pominięta: rozszerzenie nie dekoduje pliku (kontrakt) — pokazuje sam rodzaj.
 - Reguła aktywacji (predykat SUBQUERY) do sprawdzenia na urządzeniu: Safari (strona), Pliki (PDF, .docx), Zdjęcia (1 i 20), poczta (załącznik PDF).
 - Teksty celu share: przy nowych językach generator wpisze je sam (test porówna plik); klucze spoza tabeli wykrywa test.
