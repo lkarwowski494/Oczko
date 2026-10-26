@@ -2,7 +2,8 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków; nie w repo)
 Zakres: P-138 (start partii 4), P-136 (łatka NZ-RD15 + test 07 + kod RD-15), P-134 Q1a, P-135 (Q1a–Q7a), P-137 (N3, pora ukończenia), P-139 (aneks 05: N3, pora, RD-15 z `zrobioneTeraz`, RD-21 `przedSchematem`, pole `jezyk`), P-133 (tylko +1 na Live Activity), P-126 (1b), P-129 Q6b, P-118 Q1a, P-114 Q1a, P-036. Specyfikacja: ADR-0009 „Uzupełnienie 2026-10-26” pkt 1–7, ADR-0008 „Uzupełnienie 2026-10-26 (fix-4)”, `docs/architektura/moduly.md` „Kontrakt partii 4”, `docs/architektura/fix-4-2026-10-26.md`, `oczko-warsztat/05-architekt/2026-10-26-fix4/E2-dowody.md` „Dla 08”, `tests/wspolne/wzorce.json` → `zegarek_skrzynka` (ZG-01–ZG-10), `tests/wspolne/xctest-specyfikacja.md` §4 (X-ZG-01–11), `docs/design/design-spec.md` („Dla 08” z P-126, P-133, P-137), `docs/jakosc/e4/tabela-08.md` („4 ekrany”).
 
-## Stan: E0 → STOP E0 (plan, pytania Q1–Q3)
+## Stan: punkt kontrolny po (1) + (2) → STOP (P-138, P-140 Q1a)
+E0 przyjęty (P-140: Q1a, Q2a, Q3a). (1) 7f9d86a, 4c71855; (2) 9182662…fd4da86 (2.1 potwierdzenia, 2.2 stan v3, 2.5/2.6 Swift C1+C2, 2.7/2.10 widoki natywne i teksty 04 w języku aplikacji, 2.3 sklep, 2.4 haptyka, 2.8 pora ukończenia, 2.9 RD-21). `env -u NODE_PATH npm run verify` kod 0, **1618/1618**; `test:akceptacja` 89 (tylko ekrany, znacznik); `swift test` lokalnie (Swift 6.2 Linux) 40/40; CI iOS: w pliku dowodów. Dowody: `oczko-warsztat/08-programista/2026-10-26-partia4/punkt-kontrolny-2.md`. Do (3) przechodzą: wołający `zegarek.potwierdz` przed `odswiezEkranBlokady`, odświeżenie po przełączeniu blokady (N1) i zmianie języka (N3) — kompozycja aplikacji, krok 3A.
 
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
@@ -57,4 +58,5 @@ Procedura DS-02 jak w partiach 1–3. Swift: test najpierw czerwony w CI na aser
 Agent: E0 ok. 1 h; (1)+(2) ok. 11–15 h; (3) ok. 25–35 h. Czekanie: CI iOS (każdy krok natywny), E2 04 fix-3 (teksty), odpowiedzi koordynatora. Właściciel: nic (lista TT bez zmian).
 
 ## Dziennik sesji
-- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1553/1553, akceptacja 110 (20 asercji), plan (1)–(3), Q1–Q3 (Q4 rozstrzygnięte przez P-139); STOP do koordynatora.
+- 2026-10-26: E0 — prompt złożony (47510 znaków), stan wyjściowy verify 1553/1553, akceptacja 110 (20 asercji), plan (1)–(3), Q1–Q3 (Q4 rozstrzygnięte przez P-139); STOP do koordynatora. Odpowiedź: P-140 (Q1a, Q2a, Q3a).
+- 2026-10-26: E1 (1) łatka NZ-RD15 + test 07 + kod RD-15, jeden push; (2) 2.1–2.10 (Swift sprawdzany lokalnie kompilatorem 6.2 dla Linuksa — odstępstwo nazwane w dowodach); punkt kontrolny STOP.
