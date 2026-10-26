@@ -181,16 +181,44 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 - Słowa kluczowe i opis bez cudzych znaków towarowych i nazw popularnych aplikacji [FAKT S-07] (np. „Ravelry”, „knitCompanion”).
 ### OG-07: Patenty
 - Zakaz użycia opatentowanych rozwiązań bez zgody [FAKT S-08]. Patent US8506303 (knitCompanion) obejmuje m.in. śledzenie postępu w rzędach instrukcji złożonej z kilku źródeł; status według Google Patents „Active”, wygaśnięcie przewidywane 2032-07-13 [FAKT S-10]. Drugi patent US8529263 ma ten sam status i dodatkowo „companion instructions” zależne od postępu [FAKT S-32]. RYZ-01.
-- **Weryfikacja własna (P-024), stan 2026-10-21:** wszystkie niezależne zastrzeżenia (1, 9, 13 obu patentów) zawierają łącznie: pobranie treści z kilku instrukcji („a plurality of instructional manuals”), wybór części, ich edycję, złożenie w jeden zintegrowany zestaw instrukcji, prezentację i śledzenie postępu [FAKT S-10] [FAKT S-32].
+- **Weryfikacja własna (P-024), stan 2026-10-26 (P-217, P-218; pierwsza wersja 2026-10-21):** tekst zastrzeżeń przeczytany w źródle 2026-10-26 [FAKT S-10] [FAKT S-32]. Niezależne są zastrzeżenia 1, 9 i 13 obu patentów (pozostałe odwołują się do nich). Elementy:
 
-| Funkcja Oczka | Treść z kilku instrukcji | Edycja i złożenie w jeden zestaw | Śledzenie postępu | Uwaga |
-|---|---|---|---|---|
-| BR-WZR-001, BR-WZR-002 (jeden wzór w projekcie) | nie | nie | — | — |
-| BR-WZR-003 (znacznik rzędu) | nie | nie | tak | brak dwóch elementów |
-| BR-WZR-004 (pisanie po wzorze) | nie | nie (adnotacja, nie złożenie części) | — | — |
-| BR-LIC-009, BR-LIC-010 (przypomnienia, plan rzędów) | nie | nie | tak | brak dwóch elementów |
+| El. | Treść zastrzeżenia (cytat z zastrzeżenia 1) | US8506303 zastrz. 1, 9, 13 | US8529263 zastrz. 1, 9, 13 |
+|---|---|---|---|
+| E1 | „receiving electronic instructional content from a plurality of instructional manuals” | 1, 9, 13 | 1, 9, 13 |
+| E2 | „selecting a plurality of instructional parts” | 1, 9, 13 | 1, 9, 13 |
+| E3 | „editing the plurality of instructional parts to create at least one edited instructional part” | 1, 9, 13 | 1, 9, 13 |
+| E4 | „receiving user content” (składanej do zestawu) | tylko 1 | — (tylko zależne 3, 15) |
+| E5 | „assembling … to create an integrated assembly instruction set” | 1, 9, 13 | 1, 9, 13 |
+| E6 | „presenting the integrated assembly instruction set” | 1, 9, 13 | 1, 9, 13 |
+| E7 | „tracking the progress of the user with respect to … a row of instructions” (US8529263: „with respect to the integrated assembly instruction set”) | 1, 9, 13 | 1, 9, 13 |
+| E8 | „presenting at least one set of companion instructions … based upon user progress” | — | 1, 9, 13 |
+| E9 | nośnik, ekran, wykonanie dzianiny przez użytkownika | 1, 9, 13 | 1, 9, 13 |
 
-- **Ograniczenie projektowe (kandydat dla 03 i 04):** Oczko nie łączy fragmentów kilku wzorów w jeden zestaw instrukcji (jak „JOIN CHARTS or WRITTEN” w opisie knitCompanion). Każda nowa funkcja wzoru przechodzi tę tabelę przed projektem i przed wydaniem. To ocena projektu, nie opinia prawna.
+Funkcje Oczka 1.0 (P-217) wobec elementów; E9 spełnia każda aplikacja, więc pominięty. „Częściowo” = element występuje w słabszej postaci, opis w uwadze.
+
+| Funkcja Oczka | E1 | E2 | E3 | E4 | E5 | E6 | E7 | E8 | Uwaga |
+|---|---|---|---|---|---|---|---|---|---|
+| F-24 (PDF z Plików; BR-WZR-001) | nie | nie | nie | — | nie | nie | — | — | jeden plik = jeden wzór; pokazany jeden dokument, nie zestaw |
+| F-24 (zdjęcie strony → PDF; BR-WZR-002) | nie | nie | nie | — | nie | nie | — | — | seria zdjęć z jednego importu = jeden wzór (Q6a); prostowanie strony to obraz, nie treść |
+| F-25 (wzór obok licznika, poziomo, iPad; BR-WZR-005) | nie | nie | nie | — | nie | nie | — | — | licznik nie jest treścią instrukcji |
+| F-26 (znacznik rzędu; BR-WZR-003, RD-21) | nie | nie | nie | — | nie | nie | tak | częściowo | rząd jednego dokumentu; notatka na znaczniku przy rzędzie to treść użytkownika zależna od postępu |
+| F-28 (rysik; BR-WZR-004) | nie | nie | nie | tak | nie | nie | — | — | osobna warstwa, plik wzoru bez zmian (ADR-0012) |
+| F-55 (WWW i Word → PDF; BR-WZR-007) | nie | nie | nie | — | nie | nie | — | — | zmiana formatu jednej strony albo pliku, nie treści |
+| F-55 (film; BR-WZR-007) | częściowo | nie | nie | — | nie | nie | — | — | drugie źródło w projekcie, ale tylko odnośnik otwierany poza wzorem |
+| F-56 (zakreślanie i notatki palcem; BR-WZR-008) | nie | nie | nie | tak | nie | nie | — | — | warstwa nad wzorem; plik wzoru bez zmian (BR-WZR-008) |
+| Rozszerzenie „Udostępnij do Oczka” (ADR-0011; BR-WZR-001, BR-WZR-007) | nie | nie | nie | — | nie | — | — | — | kopiuje jeden plik do skrzynki importu; import tworzy nowy wzór |
+| Kilka wzorów w projekcie (tabela `wzor` w `docs/architektura/schemat.sql`) | częściowo | nie | nie | — | nie | nie | osobno | — | każdy wzór pokazywany i śledzony osobno, z własnym znacznikiem |
+| BR-LIC-009, BR-LIC-010, BR-PRJ-014 (przypomnienia, plan rzędów, para części) | nie | nie | nie | — | nie | — | tak | częściowo | postęp na liczniku; treść od użytkownika |
+
+- **Wynik [OCENA]:** żadna funkcja ani ich połączenie nie ma E3 i E5, a oba są w każdym z sześciu niezależnych zastrzeżeń; funkcje mają E7, E4 i częściowo E1 i E8. Granicą jest więc połączenie E1+E2+E3+E5. To ocena projektu, nie opinia prawna.
+- **Ograniczenia projektowe dla 04 i 05** (wiążą też 08; P-218). *Dlaczego:* każde z nich trzyma Oczko z dala od E3 albo E5, bez których żadne zastrzeżenie nie jest spełnione.
+  1. Jeden wzór = jedno źródło: jeden plik, jedna strona WWW albo seria zdjęć z jednego importu. Bez łączenia wzorów, bez dołączania stron do istniejącego wzoru (nowe zdjęcia = nowy wzór, Q6a), bez wycinania fragmentów i składania ich w nowy dokument (E1+E2+E5; jak „JOIN CHARTS or WRITTEN” w opisie knitCompanion).
+  2. Bez edycji treści wzoru: dozwolona zmiana formatu (WWW, Word, zdjęcie → PDF), prostowanie i obrót strony; adnotacje (zakreślenia, rysik, notatki) tylko jako osobna warstwa, oryginał bez zmian. Bez OCR z edycją tekstu i bez przepisywania liczb w treści wzoru (E3).
+  3. Jeden wzór naraz z jednym znacznikiem: bez widoku łączącego fragmenty kilku wzorów i bez znacznika prowadzącego po kilku wzorach; przełączanie wzorów projektu dozwolone; na iPadzie obok wzoru jest licznik, nie drugi wzór (Q4a) (E5+E6+E7).
+  4. Film tylko jako odnośnik otwierany poza wzorem, nie krok wstawiony do wzoru (E1+E4+E5).
+  5. Treść zależna od postępu (notatka na znaczniku, przypomnienia, para części) pochodzi od użytkownika albo licznika, nigdy z fragmentów kilku wzorów (E8 bez E1–E5).
+  6. Każda nowa funkcja wzoru albo zmiana poza punktami 1–5 przechodzi tę tabelę przed projektem (P-024); rola 07 przed wydaniem sprawdza ekrany wzoru z punktami 1–5.
 ### OG-08: Usługi zewnętrzne tylko zgodnie z ich warunkami
 - Korzystanie z usługi zewnętrznej wymaga zgody jej warunków [FAKT S-09]; P-021 i tak wyklucza usługi. Import pliku, który użytkownik sam pobrał (PDF, arkusz zapasu z Ravelry [FAKT S-31]), nie korzysta z API.
 ### OG-09: CloudKit: koszt i sieć
@@ -210,7 +238,7 @@ Macierz 14 aplikacji × 36 funkcji z pochodzeniem każdej komórki (opis, strona
 
 ## Ryzyka produktu (RYZ)
 ### RYZ-01: Patent na śledzenie postępu we wzorze (brzegowy)
-- OG-07. Weryfikacja własna zamiast konsultacji prawnej (P-024); ryzyko szczątkowe: błędna interpretacja zastrzeżeń bez prawnika. Tańsza kontrola: tabela elementów zastrzeżeń przy każdej funkcji wzoru.
+- OG-07. Weryfikacja własna zamiast konsultacji prawnej (P-024); ryzyko szczątkowe: błędna interpretacja zastrzeżeń bez prawnika. Tańsza kontrola: tabela elementów zastrzeżeń przy każdej funkcji wzoru i ograniczenia projektowe 1–6 (stan 2026-10-26, P-218).
 ### RYZ-02: Synchronizacja myli liczbę rzędów (realny)
 - Najczęstsza skarga zaawansowanych, także przy iCloud (Loopsy). Dotyczy P-021, J-07; projektuje rola 12, testy konfliktów przed wydaniem.
 ### RYZ-03: Terminologia US/UK w szydełku (realny, mienie)
