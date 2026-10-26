@@ -1,5 +1,5 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
@@ -53,6 +53,8 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Ekran | Stany (wzorcowe zrzuty albo prototyp) |
 |---|---|
 | Licznik | pierwsze uruchomienie (`licznik-start`); typowy z instrukcją (`licznik-w-toku`); zablokowany (prototyp); seria stuknięć z banerem (prototyp, z2); na limicie (`limit`); błąd zapisu: „Couldn’t save that row. It’s still on screen; try again.” (do E4); offline: bez zmian (wszystko lokalne, NFR-OFF-001) |
+| Ekran blokady (Live Activity) | typowy ze stoperem (`blokada-typowy`); przypomnienie (`blokada-przypomnienie`); limit (`blokada-limit`); restart bez odblokowania (`blokada-odblokuj`); błąd zapisu (`blokada-blad-zapisu`); projekt roboczy (`blokada-robocza`); Dynamic Island: `wyspa-compact`, `wyspa-minimal`, `wyspa-rozwinieta` (`aktywnosc.html`) |
+| Zegarek | typowy (`zegarek-typowy`); przypomnienie z wibracją (`zegarek-przypomnienie`); limit (`zegarek-limit`); telefon poza zasięgiem (`zegarek-bez-telefonu`); brak stanu (`zegarek-bez-stanu`); Smart Stack (`zegarek-smart-stack`) |
 | Licznik przez północ | posiedzenie trwa po północy, podpis z godziną startu (`licznik-przez-polnoc`) |
 | Projekty | typowy z sekcjami i uśpionymi (`projekty`); pusty: „No projects yet. Your first row starts one.” (prototyp); brak wyników: „No project called “…”.” |
 | Oferty | typowy (`oferty`); aktywna subskrypcja: stan Pro + „Manage subscription” (KP-03, KP-14; do E4); brak sieci: ceny niedostępne, „Restore purchases” działa po powrocie sieci |
@@ -300,6 +302,13 @@ Makiety: `aktywnosc.html`. Wymiary z Apple HIG „Live Activities”, Specificat
 | `aktywnosc.nazwa_robocza` | Counter from {{data}} | projekt roboczy; `{{data}}` bez godziny (sekcja „Projekt roboczy”) |
 | `aktywnosc.karta_a11y` | {{nazwa}}, {{zrobione}}, now row {{n}} | VoiceOver karty; przy sesji dopisek `aktywnosc.sesja_a11y` „session {{czas}}” |
 Teksty Live Activity i zegarka idą do celów natywnych z generatora tekstów Swift (ADR-0017), te same klucze co w JS.
+
+## Dla 08 (fix NZ-08-P3-04, partia 4: ekrany, cele natywne)
+- **Teksty `aktywnosc` (zastępują propozycje z partii 3):** `aktywnosc.plus` „+1 row” i `aktywnosc.minus` „−1 row” bez zmian (−1 tylko na zegarku); `aktywnosc.limit` + `aktywnosc.limit_wznowienie` zamiast tekstu limitu z partii 3 (bez nazwy miesiąca i daty wznowienia); `aktywnosc.otworz_iphone` „Open Oczko on your iPhone to start counting.”; nowe: `aktywnosc.odblokuj`, `aktywnosc.nie_dodano`, `aktywnosc.blad_zapisu`, `aktywnosc.bez_telefonu_one`/`_other`, `aktywnosc.teraz`, `aktywnosc.podpis_plus`, `aktywnosc.wstrzymane`, `aktywnosc.zachowane`, `aktywnosc.zrobione_one`/`_other`, `aktywnosc.nazwa_robocza`, etykiety VoiceOver (tabela „Ekran blokady i zegarek”). Do Swift przez generator tekstów (ADR-0017).
+- **Live Activity: usuń −1** z widoku ekranu blokady i Dynamic Island (P-133 (1.1a)); intencja −1 może zostać w kodzie dla zegarka. Wzorce: `wzorce-zrzuty/aktywnosc-blokada-*`, `aktywnosc-wyspa-*`; zegarek: `aktywnosc-zegarek-*` (41/46 mm, wymiary do sprawdzenia na symulatorze).
+- **Ekrany w aplikacji (wzorce `wzorce-zrzuty/ekrany-<stan>-*`):** `wzor-notatka-bez-znacznika` (reakcja na `niedozwolone_przejscie` z `dodajNotatkeWzoru`), `import-przerwany` (wyjątek wygaśnięcia z `CzasWTle` → arkusz), `ukonczenie-data` (`zmienDateUkonczenia` z `ukonczonoDzien`).
+- **Zależności od 05 fix-4:** pole stanu rozróżniające „telefon nieodblokowany” i „błąd zapisu” (N2, X-DZ-07); blokada licznika w stanie (N1: ekran blokady i zegarek bez przycisku, „Counter is locked.” `[tekst po decyzji 05]`); zmiana języka jako wyzwalacz odświeżenia stanu (N3); pora dnia w `ukonczonoMs` przy zmianie daty.
+- Kolory zegarka, Dynamic Island i Smart Stack: `tokeny.json` → `kolor.systemCzarny`; karta ekranu blokady: motyw jasny/ciemny (`papier`, `grafit`, `olowek`, `przycisk*`, `zakreslacz*`).
 
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
