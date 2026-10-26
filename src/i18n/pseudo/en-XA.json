@@ -54,6 +54,7 @@
   "limit.arkusz_pro": "⟦Öçžkö Pŕö ŕémövéš thé möñthlý lîmît.~~~~~~~~~~~~~~~~~~~⟧",
   "limit.zobacz_pro": "⟦Šéé Öçžkö Pŕö~~~~~~~~~⟧",
   "limit.ogloszenie": "⟦Ŕöw {{n}} wàšñ’t àddéd. Fŕéé kñîttîñg dàýš föŕ {{miesiac}} àŕé ûšéd. Ñöthîñg îš löšt.~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
+  "ustawienia.tytul": "⟦Šéttîñgš~~~~~~~~⟧",
   "ustawienia.jezyk": "⟦Làñgûàgé~~~~~~~~⟧",
   "ustawienia.jezyk_automatyczny": "⟦Àûtömàtîç (šýštém)~~~~~~~~~~~~⟧",
   "ustawienia.uklad_miar": "⟦Ûñîtš~~~~~⟧",
@@ -94,5 +95,6 @@
   "projekty.w_toku": "⟦Îñ pŕögŕéšš~~~~~~~~~~⟧",
   "projekty.ukonczone": "⟦Fîñîšhéd~~~~~~~~⟧",
   "projekty.dni": "⟦{{zostalo}} öf {{limit}} fŕéé kñîttîñg dàýš léft îñ {{miesiac}}~~~~~~~~~~~~~~~⟧",
-  "projekty.tytul": "⟦Pŕöjéçtš~~~~~~~~⟧"
+  "projekty.tytul": "⟦Pŕöjéçtš~~~~~~~~⟧",
+  "projekty.nazwa_robocza": "⟦Çöûñtéŕ fŕöm {{data}}~~~~~~~~~⟧"
 }

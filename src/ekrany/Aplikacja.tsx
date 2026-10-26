@@ -70,9 +70,19 @@ export function Aplikacja(p: PropsAplikacji): React.ReactElement {
 
   if (!stan) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   const d = p.dzialania ?? {};
+  async function odswiez() {
+    if (!d.odswiez) return;
+    const l = await d.odswiez();
+    ustawStan((s) => (s ? { ...s, licznik: l } : s));
+  }
+  // Działanie zmieniające licznik poza +1/−1 (cofnięcie serii, odblokowanie): po COMMIT pełny stan z kompozycji.
+  const poDzialaniu = (f?: () => unknown) => async () => { await f?.(); await odswiez(); };
   async function naPlus(): Promise<WynikPlus> {
     const w = await uslugi.dodajRzad();
-    if (w.ok) ustawStan((s) => (s ? { ...s, licznik: { ...s.licznik, skonczone: w.wartosc.skonczone, dziergany: w.wartosc.dziergany } } : s));
+    if (w.ok) {
+      ustawStan((s) => (s ? { ...s, licznik: { ...s.licznik, skonczone: w.wartosc.skonczone, dziergany: w.wartosc.dziergany } } : s));
+      await odswiez(); // baner serii, przypomnienie, kreski i projekt roboczy po pierwszym +1
+    }
     return w;
   }
   return (
@@ -84,15 +94,19 @@ export function Aplikacja(p: PropsAplikacji): React.ReactElement {
       naPlus={naPlus}
       naMinus={async () => {
         const w = d.naMinus ? await d.naMinus() : { ok: false as const, powod: 'niedozwolone_przejscie' as const };
-        if (w.ok) ustawStan((s) => (s ? { ...s, licznik: { ...s.licznik, skonczone: w.wartosc.skonczone, dziergany: w.wartosc.skonczone + 1 } } : s));
+        if (w.ok) {
+          ustawStan((s) => (s ? { ...s, licznik: { ...s.licznik, skonczone: w.wartosc.skonczone, dziergany: w.wartosc.skonczone + 1 } } : s));
+          await odswiez();
+        }
         return w;
       }}
-      naOdblokuj={d.naOdblokuj ?? nic}
-      naCofnijSerie={d.naCofnijSerie ?? nic}
+      naOdblokuj={poDzialaniu(d.naOdblokuj)}
+      naCofnijSerie={poDzialaniu(d.naCofnijSerie)}
       naOferty={d.naOferty ?? nic}
       naHistorie={d.naHistorie ?? nic}
       naMenu={d.naMenu ?? nic}
       naNastepnaCzesc={d.naNastepnaCzesc ?? nic}
+      naProjekty={d.naProjekty}
     />
   );
 }

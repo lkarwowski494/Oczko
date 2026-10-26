@@ -65,6 +65,7 @@ export type PropsLicznika = {
   naHistorie(): void;
   naMenu(): void;                      // menu ••• projektu
   naNastepnaCzesc(): void;             // BR-LIC-011/S1 (U-11)
+  naProjekty?(): void;                 // „Projects” w pasku nawigacji (powrót do listy, F-50)
 };
 
 /** F-48: rozpoznawalne są tylko dwa wzorce — rząd i rząd „ze znaczeniem” (instrukcja, koniec powtórzenia, cel dnia lub części). */
@@ -134,12 +135,17 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
   return (
     <View style={st.ekran}>
       <View style={st.pasek}>
+        {p.naProjekty ? (
+          <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.tytul')} onPress={p.naProjekty} style={st.ikona} testID="nav-projekty">
+            <Text style={[st.tresc, st.link]}>{`‹ ${t('projekty.tytul')}`}</Text>
+          </Pressable>
+        ) : <View />}
         <View style={st.paskaPrawa}>
-          <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.historia')} onPress={p.naHistorie} style={st.ikona}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.historia')} onPress={p.naHistorie} style={st.ikona} testID="licznik-historia">
             <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>◷</Text>
           </Pressable>
           {s.projekt !== null && (
-            <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.menu_a11y')} onPress={p.naMenu} style={st.ikona}>
+            <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.menu_a11y')} onPress={p.naMenu} style={st.ikona} testID="licznik-menu">
               <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>•••</Text>
             </Pressable>
           )}
@@ -148,26 +154,26 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
       {s.zablokowany && (
         <View style={st.blokada} accessibilityRole="summary">
           <Text style={st.tresc}>{t('licznik.zablokowany')}</Text>
-          <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.odblokuj')} onPress={p.naOdblokuj} style={st.blokadaPrzycisk}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.odblokuj')} onPress={p.naOdblokuj} style={st.blokadaPrzycisk} testID="pasek-blokady-odblokuj">
             <Text style={[st.tresc, st.pogrubiony]}>{t('licznik.odblokuj')}</Text>
           </Pressable>
         </View>
       )}
       <ScrollView contentContainerStyle={st.srodek}>
-        {s.projekt !== null && <Text style={st.podpis}>{s.projekt}</Text>}
+        {s.projekt !== null && <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>}
         <Text style={st.tytul} accessibilityRole="header">{s.czesc ?? t('licznik.tytul_roboczy')}</Text>
-        {!start && <Text style={st.instrukcja}>{t('licznik.teraz', { n: nrRobocza })}</Text>}
+        {!start && <Text style={st.instrukcja} testID="licznik-teraz-rzad">{t('licznik.teraz', { n: nrRobocza })}</Text>}
         {baner?.rodzaj === 'seria' && (
-          <View style={st.baner}>
+          <View style={st.baner} testID="baner-serii">
             <Text style={st.tresc}>{t('licznik.baner_seria', { count: baner.n, sekundy: baner.sekundy })}</Text>
-            <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.cofnij', { count: baner.n })} onPress={p.naCofnijSerie} style={st.drugiPrzycisk}>
+            <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.cofnij', { count: baner.n })} onPress={p.naCofnijSerie} style={st.drugiPrzycisk} testID="baner-serii-cofnij">
               <Text style={[st.tresc, st.pogrubiony]}>{t('licznik.cofnij', { count: baner.n })}</Text>
             </Pressable>
           </View>
         )}
         {baner?.rodzaj === 'cofnieto' && <Text style={[st.tresc, st.baner]}>{t('licznik.cofnieto', { count: baner.n, wartosc: baner.wartosc })}</Text>}
         <View style={st.liczbaWiersz}>
-          <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY}>{String(liczba)}</Text>
+          <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(liczba)}</Text>
           <Text style={st.podpis}>{s.cel !== null ? t('licznik.z_celu', { cel: s.cel }) : t('licznik.jednostka')}</Text>
         </View>
         {start && <Text style={st.tresc}>{t('licznik.podpowiedz_start')}</Text>}
@@ -175,13 +181,13 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         {s.celDnia && <Text style={st.podpis}>{t('licznik.cel_dnia', { count: s.celDnia.rzedy })}</Text>}
         {s.limit.rodzaj === 'ostatni-darmowy' && <Text style={st.podpis}>{t('licznik.ostatni_darmowy', { miesiac: s.miesiac.nazwa })}</Text>}
         {zawczasu && (
-          <Pressable accessibilityRole="link" accessibilityLabel={t('limit.pro_link')} onPress={p.naOferty}>
+          <Pressable accessibilityRole="link" accessibilityLabel={t('limit.pro_link')} onPress={p.naOferty} testID="limit-oferta-link">
             <Text style={[st.tresc, st.link]}>{t('limit.pro_link')}</Text>
           </Pressable>
         )}
         {s.sesja && s.sesja.rzedy > 0 && (
           <View>
-            <Text style={st.podpis}>{t('licznik.znaczniki_sesji', { count: s.sesja.rzedy, godzina: s.sesja.od })}</Text>
+            <Text style={st.podpis} testID="kreski-podpis">{t('licznik.znaczniki_sesji', { count: s.sesja.rzedy, godzina: s.sesja.od })}</Text>
             <Kreski n={s.sesja.rzedy} kolor={k.kreska} />
           </View>
         )}
@@ -208,21 +214,21 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
           <Text style={st.tresc}>{t('licznik.blizniak', { rzad: s.blizniak.rzad, tresc: [s.blizniak.notatka, s.blizniak.przypomnienie].filter(Boolean).join(' · ') })}</Text>
         )}
         {komunikat && (
-          <Text style={st.tresc} accessibilityRole="alert" accessibilityLiveRegion="assertive">
+          <Text style={st.tresc} accessibilityRole="alert" accessibilityLiveRegion="assertive" testID={komunikat === 'blad_zapisu' ? 'blad-zapisu' : undefined}>
             {t(komunikat === 'zablokowany' ? 'licznik.zablokowany_stukniecie' : 'licznik.blad_zapisu')}
           </Text>
         )}
       </ScrollView>
       {zawczasu ? (
-        <View style={st.komunikatLimitu} accessibilityRole="summary">
+        <View style={st.komunikatLimitu} accessibilityRole="summary" testID="limit-zawczasu">
           <Text style={st.tresc}>{t('limit.zawczasu', { count: s.miesiac.rzedyDanych, miesiac: s.miesiac.nazwa, data: s.miesiac.wznowienie })}</Text>
         </View>
       ) : (
         <View style={st.przyciski}>
-          <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.minus_a11y')} onPress={minus} style={st.minus}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.minus_a11y')} onPress={minus} style={st.minus} testID="licznik-minus">
             <Text style={st.minusTekst}>{t('licznik.minus')}</Text>
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel={etykietaPlus} onPress={plus} style={st.plus}>
+          <Pressable accessibilityRole="button" accessibilityLabel={etykietaPlus} onPress={plus} style={st.plus} testID="licznik-plus">
             <Text style={st.plusTekst}>{t('licznik.plus')}</Text>
             {!start && <Text style={st.plusPodpis}>{t('licznik.podpis_plus', { n: nrRobocza })}</Text>}
           </Pressable>
@@ -275,7 +281,7 @@ type Style = ReturnType<typeof style>;
 function style(k: Kolory) {
   return StyleSheet.create({
     ekran: { flex: 1, backgroundColor: k.papier },
-    pasek: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: odstep.l, minHeight: rozmiary.minimum },
+    pasek: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: odstep.l, minHeight: rozmiary.minimum },
     paskaPrawa: { flexDirection: 'row', gap: odstep.s },
     ikona: { minWidth: rozmiary.minimum, minHeight: rozmiary.minimum, alignItems: 'center', justifyContent: 'center' },
     ikonaTekst: { ...typografia.instrukcja, color: k.grafit },

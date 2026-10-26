@@ -15,17 +15,18 @@ export type PropsListyProjektow = {
   naSzukaj(zapytanie: string): void;
   naOtworz(id: string): void;
   naNowy(): void;
+  naUstawienia?(): void;
 };
 
-export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy }: PropsListyProjektow): React.ReactElement {
+export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy, naUstawienia }: PropsListyProjektow): React.ReactElement {
   const k = useKolory();
   const st = style(k);
   const pusto = s.wToku.length === 0 && s.ukonczone.length === 0;
-  const sekcja = (naglowek: string, wiersze: WierszProjektu[]) => wiersze.length > 0 && (
-    <View style={st.grupa}>
+  const sekcja = (naglowek: string, wiersze: WierszProjektu[], testID?: string) => wiersze.length > 0 && (
+    <View style={st.grupa} testID={testID}>
       <Text style={st.naglowek} accessibilityRole="header">{naglowek}</Text>
       {wiersze.map((w) => (
-        <Pressable key={w.id} accessibilityRole="button" onPress={() => naOtworz(w.id)} style={st.wiersz} testID={`projekt-${w.id}`}>
+        <Pressable key={w.id} accessibilityRole="button" onPress={() => naOtworz(w.id)} style={st.wiersz} testID="projekty-wiersz">
           {w.kolorWloczki && <View style={[st.kropka, { backgroundColor: w.kolorWloczki }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />}
           <View style={st.wierszTekst}>
             <Text style={st.nazwa}>{w.nazwa}</Text>
@@ -36,8 +37,13 @@ export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy }: Props
     </View>
   );
   return (
-    <ScrollView style={st.ekran} contentContainerStyle={st.tresc}>
+    <ScrollView style={st.ekran} contentContainerStyle={st.tresc} testID="projekty-lista">
       <View style={st.pasek}>
+        {naUstawienia && (
+          <Pressable accessibilityRole="button" accessibilityLabel={t('ustawienia.tytul')} onPress={naUstawienia} style={st.ikona} testID="nav-ustawienia">
+            <Text style={st.ikonaTekst} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">⚙︎</Text>
+          </Pressable>
+        )}
         <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.nowy')} onPress={naNowy} style={st.ikona} testID="projekty-nowy">
           <Text style={st.ikonaTekst} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">＋</Text>
         </Pressable>
@@ -47,8 +53,8 @@ export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy }: Props
         onChangeText={naSzukaj} style={st.szukaj} autoCorrect={false} testID="projekty-szukaj" />
       {pusto && <Text style={st.info}>{s.zapytanie ? t('projekty.brak_wynikow', { zapytanie: s.zapytanie }) : t('projekty.pusto')}</Text>}
       {sekcja(t('projekty.w_toku'), s.wToku)}
-      {sekcja(t('projekty.ukonczone'), s.ukonczone)}
-      {s.dni && <Text style={st.info}>{t('projekty.dni', { zostalo: s.dni.zostalo, limit: s.dni.limit, miesiac: s.dni.miesiac })}</Text>}
+      {sekcja(t('projekty.ukonczone'), s.ukonczone, 'projekty-ukonczone')}
+      {s.dni && <Text style={st.info} testID="projekty-dni-darmowe">{t('projekty.dni', { zostalo: s.dni.zostalo, limit: s.dni.limit, miesiac: s.dni.miesiac })}</Text>}
     </ScrollView>
   );
 }

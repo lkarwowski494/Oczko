@@ -49,6 +49,7 @@
     "ogloszenie": "Ogłoszenie VoiceOver arkusza limitu (design-spec „VoiceOver”)."
   },
   "ustawienia": {
+    "tytul": "Etykieta VoiceOver przycisku Ustawień na liście projektów i tytuł ekranu Ustawień (ekrany.html roli 04, ekran „Settings”). Dopisane przez 08 (partia 4, 3A). Ok. 8 znaków.",
     "jezyk": "Etykieta wiersza w Ustawieniach, otwiera listę języków (P-075, 3b). Propozycja roli 09, tekst zatwierdza rola 04. Ok. 12 znaków.",
     "jezyk_automatyczny": "Pierwsza pozycja listy języków: język jak w systemie telefonu. Propozycja roli 09, zatwierdza 04. Ok. 25 znaków.",
     "uklad_miar": "Etykieta wiersza w Ustawieniach: metryczne czy imperialne (P-075, 4a). Propozycja roli 09, zatwierdza 04. Ok. 10 znaków.",
@@ -93,6 +94,7 @@
     "w_toku": "Nagłówek sekcji projektów w toku.",
     "ukonczone": "Nagłówek sekcji projektów ukończonych.",
     "dni": "Licznik darmowych dni na liście (design-spec „Limit dni”, P-065 (2a)); bez linii przy Pro.",
-    "tytul": "Duży tytuł listy projektów."
+    "tytul": "Duży tytuł listy projektów.",
+    "nazwa_robocza": "Etykieta projektu roboczego bez nazwy na liście projektów, w wyszukiwaniu i nad tytułem licznika (design-spec „Projekt roboczy”, P-126 (1b)). {{data}} = data i godzina startu w krótkim formacie regionu, rok tylko gdy inny niż bieżący. Tekst roli 04."
   }
 }

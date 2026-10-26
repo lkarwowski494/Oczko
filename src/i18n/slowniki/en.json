@@ -59,6 +59,7 @@
     "ogloszenie": "Row {{n}} wasn’t added. Free knitting days for {{miesiac}} are used. Nothing is lost."
   },
   "ustawienia": {
+    "tytul": "Settings",
     "jezyk": "Language",
     "jezyk_automatyczny": "Automatic (system)",
     "uklad_miar": "Units",
@@ -105,6 +106,7 @@
     "w_toku": "In progress",
     "ukonczone": "Finished",
     "dni": "{{zostalo}} of {{limit}} free knitting days left in {{miesiac}}",
-    "tytul": "Projects"
+    "tytul": "Projects",
+    "nazwa_robocza": "Counter from {{data}}"
   }
 }
