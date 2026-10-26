@@ -1,5 +1,5 @@
 # 0022. Atlas technik (1.1): rysunki liczone z danych karty w czystym TS — model rysunku (części nitki z warstwami z reguł przeplotu) i zapis SVG bez tekstu; ten sam kod w aplikacji i w generatorze strony
-Data: 2026-10-26 · Status: **proponowana** (prototyp E1; P-201: Q1a przyjęte przez koordynatora wg P-087) · Rola: 05 (build, atlas 1.1) · Zależy od: P-093 (2), P-095, P-178, P-179, P-192, P-201, ADR-0003, ADR-0017, ADR-0023, ADR-0024
+Data: 2026-10-26 · Status: **proponowana** (prototyp E1, uzupełnienie E2: łatki przeplotu; P-201: Q1a przyjęte przez koordynatora wg P-087) · Rola: 05 (build, atlas 1.1) · Zależy od: P-093 (2), P-095, P-178, P-179, P-192, P-201, ADR-0003, ADR-0017, ADR-0023, ADR-0024
 
 ## Kontekst i problem
 Atlas technik w 1.1–1.2 (P-093 (2), P-179) ma rysunki technik dziewiarskich, które muszą być prawdziwe (przebieg nitki, kolejność przeplotu, liczba oczek, kierunek pochylenia zgodny ze źródłem), jedne dla wszystkich 35 języków (P-192), bez generatora obrazów (P-178) i bez odrysowywania cudzych materiałów (P-095). Te same rysunki pokazuje ekran aplikacji i strona statyczna. Przepływy A1–A3, S1 i G1 z `docs/atlas/e0-rozpoznanie.md` §3 (do kontraktu zakresu dopisze je rola 03).
@@ -20,7 +20,7 @@ C. Rysunki ręczne (SVG z edytora) sprawdzane przeglądem.
 Opcja A. Szczegóły:
 1. **Rodzina = funkcja z parametrami karty** (`rysunek.rodzina`, `probka`, `tlo`, `operacja`; kontrakt w ADR-0023). Prototyp: `siatka-petli` (druty: oczko prawe, lewe, ujęcia) w `scripts/atlas/silnik/`; planowane: `graf-szydelkowy`, `nabieranie`.
 2. **Geometria z ograniczeń, nie ze współrzędnych w danych.** Pętla to łańcuch Catmulla-Roma przez 7 węzłów (podstawa, szyjka, początek głowy, wierzchołek…), jeden łańcuch na rząd — ciągłość nitki i stycznej wynika z konstrukcji. Wymiary w jednym obiekcie `WYMIAR` (uproszczenie ilustracyjne, bez liczb na rysunku).
-3. **Kolejność warstw wynika z reguł przeplotu**, nie jest wpisana: silnik wykrywa każde skrzyżowanie części (platyna, nóżka, głowa) i stosuje regułę (oczko prawe: nowa pętla spod spodu na wierzch; lewe odwrotnie; ujęcie: pętla z `na_wierzchu` nad pozostałymi), potem sortuje topologicznie. Skrzyżowanie bez reguły (np. pętle, które nie są rodzicem i dzieckiem) albo cykl warstw = błąd rysunku.
+3. **Przeplot wynika z reguł, nie jest wpisany:** silnik wykrywa każde skrzyżowanie części (platyna, nóżka, głowa, drut) i przypisuje mu część „nad” z reguły (oczko prawe: nowa pętla spod spodu na wierzch; lewe odwrotnie; ujęcie: pętla z `na_wierzchu` nad pozostałymi; drut: przez pętlę według kierunku wkłucia; założenia A-1–A-3 w `docs/atlas/e2-moduly-dane.md` §3). Rysowanie (E2): warstwa bazowa + **łatka** części „nad” na każdym skrzyżowaniu, kolejność łatek z lokalnych zależności. Globalnej kolejności warstw nie ma, bo jedna część bywa raz nad, raz pod tą samą inną częścią (drut przez głowę — wykazane w E2). Skrzyżowanie bez reguły albo łatki zasłaniające się nawzajem = błąd rysunku.
 4. **Pochylenie i bilans wylicza silnik** z operacji (`na_wierzchu: lewe` → pętla lewa nachylona w prawo); test porównuje je z twierdzeniami karty.
 5. **SVG bez tekstu:** tylko `<svg>`, `<rect>`, `<g>`, `<path>` z poleceniami `M`, `C`, `L` (bez łuków `A` — zastrzeżenie dekodera SVG na iOS, rejestr E0), kolory z tokenów, klasy ról `a-t`, `a-o`, `a-z`, `a-n` dla podmiany motywu na stronie. Strażnik liter to biała lista elementów, atrybutów i postaci wartości.
 6. **Przeniesienie do aplikacji (rola 08, 1.1):** `scripts/atlas/silnik/` → `src/domena/atlas/` (czysty TS, w granicach `granice.mjs`); importy bez rozszerzenia `.ts` (prototyp ma je dla `node --experimental-strip-types`). Do tego czasu kod nie jest w `src/` (1.0 w budowie).
@@ -31,7 +31,7 @@ Opcja A. Szczegóły:
 - Od czego zależy: przegląd wyglądu przez 04 (kształt pętli, grubość kreski, wyróżnienie — zgłoszenie Z-04-01 w `docs/atlas/e1-decyzje.md`); twierdzenia 06 dla każdej karty.
 
 ### Potwierdzenie
-- `npx jest scripts/atlas` (w `npm test`/`verify`): każdy krok karty bez błędów `sprawdzRysunek` (ciągłość nitki, przeplot, liczba oczek, topologia, obejmowanie, twierdzenia, wyróżnienie, litery, kontrast nitki ≥ 3:1 w obu motywach); 10 mutantów, z których każdy oblewa właściwe sprawdzenie; 7 przypadków strażnika liter; determinizm bajtowy względem `docs/atlas/prototyp/*.svg`.
+- `npx jest scripts/atlas` (w `npm test`/`verify`): każdy krok karty bez błędów `sprawdzRysunek` (ciągłość nitki, przeplot — reguła liczona od nowa i ostatnia łatka w punkcie skrzyżowania, liczba oczek, topologia, obejmowanie, wkłucie, twierdzenia, wyróżnienie, litery, kontrast nitki i drutu ≥ 3:1 w obu motywach); 13 mutantów, z których każdy oblewa właściwe sprawdzenie; 7 przypadków strażnika liter; determinizm bajtowy względem `docs/atlas/prototyp/*.svg`.
 - `node --experimental-strip-types --no-warnings scripts/atlas/generuj.mjs --check` kod 0.
 - Po przeniesieniu (08): `granice.mjs src` bez naruszeń dla `src/domena/atlas`.
 

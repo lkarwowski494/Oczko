@@ -7,7 +7,8 @@ import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { siatkaPetli } from './silnik/siatka-petli.ts';
-import { sprawdzRysunek } from './silnik/sprawdz.ts';
+import { walidujKarte } from './silnik/kontrakt.ts';
+import { sprawdzKrok } from './silnik/sprawdz.ts';
 import { doSvg, paletaZTokenow } from './silnik/svg.ts';
 
 const KORZEN = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -23,12 +24,13 @@ let bledy = 0;
 const rysunki = [];
 for (const plik of readdirSync(katKart).filter((f) => f.endsWith('.json')).sort()) {
   const karta = JSON.parse(readFileSync(join(katKart, plik), 'utf8'));
+  const b = walidujKarte(karta, { sprawdzKrok: sprawdzKrok(Object.values(palety)) }); // schemat, semantyka i rysunek każdego kroku (ADR-0023)
+  for (const e of b) console.log(`BŁĄD ${plik} [${e.kod}] ${e.sciezka}: ${e.szczegol}`);
+  bledy += b.length;
+  if (b.some((e) => !e.kod.startsWith('rysunek:'))) continue;
   for (const krok of karta.kroki ?? []) {
     const rys = siatkaPetli(karta, krok);
-    const b = sprawdzRysunek(karta, krok, rys, Object.values(palety));
     const nazwa = `${karta.id}.${krok.faza}`;
-    for (const e of b) console.log(`BŁĄD ${nazwa} [${e.kod}] ${e.szczegol}`);
-    bledy += b.length;
     const svg = doSvg(rys, palety.jasny);
     const cel = join(katWyj, `${nazwa}.svg`);
     if (sprawdzaj) {

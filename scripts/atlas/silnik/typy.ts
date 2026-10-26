@@ -4,7 +4,13 @@ import type { Bez, P } from './geometria.ts';
 export type Strona = 'prawe' | 'lewe';
 export type Operacja =
   | { typ: 'oczko'; strona: Strona; kolumna?: number }
-  | { typ: 'scal'; zuzywa: number; strona: Strona; na_wierzchu: 'lewe' | 'prawe'; kolumna?: number };
+  | { typ: 'scal'; zuzywa: number; strona: Strona; na_wierzchu: 'lewe' | 'prawe'; kolumna?: number }
+  | { typ: 'narzut'; kolumna?: number }
+  | { typ: 'z_nitki_poziomej'; scianka: 'przednia' | 'tylna'; pochylenie: 'prawo' | 'lewo'; kolumna?: number }
+  | { typ: 'scieg'; wzor: Strona[][] }
+  | { typ: 'warkocz'; zuzywa: number; przekladane: number; pomocniczy: 'przod' | 'tyl'; kolumna?: number }
+  | { typ: 'zamknij'; ile: number }
+  | { typ: 'oczko_szydelkowe'; narzuty: number };
 
 export type Faza = 'tkanina' | 'wklucie' | 'narzut' | 'przeciagniecie' | 'zdjecie' | 'wynik';
 export type Miejsce = { rzad: number; kolumna: number };
@@ -15,15 +21,23 @@ export interface Krok {
   wyroznij: Miejsce[];
   kierunek: 'od_przodu' | 'od_tylu' | null;
   strzalka: null | { ruch: 'drut' | 'nitka'; od: string; do: string };
+  /** faza „wklucie”: które narzędzie i w którą stronę rysunku wskazuje jego grot (wartości ze źródła roli 06) */
+  drut?: { ktory: 'prawy' | 'lewy' | 'pomocniczy' | 'szydelko'; grot: 'w_lewo' | 'w_prawo' };
+  nitka?: 'przod' | 'tyl';
+  scianka?: 'przednia' | 'tylna';
+  petle_na_narzedziu?: number;
+  faza_opis?: string;
   klucz: string;
 }
 
 export interface Karta {
+  format?: number;
   id: string;
-  rzemioslo: 'druty' | 'szydelko';
+  rzemioslo: 'druty' | 'szydelko' | 'oba';
   rodzaj: string;
+  pozycje?: string[];
   klucze: { nazwa: string; podpis: string; opis_alt: string };
-  terminy: Record<string, { skrot: string | null; twierdzenie: string }>;
+  terminy: Record<string, { nazwa?: string | null; skrot: string | null; twierdzenie: string }[]>;
   twierdzenia: { id: string; wartosc: Record<string, string | number> }[];
   jezyki_gotowe: string[];
   rysunek?: {
@@ -35,7 +49,7 @@ export interface Karta {
   kroki?: Krok[];
 }
 
-export type RodzajCzesci = 'platyna_l' | 'noga_l' | 'glowa' | 'noga_p' | 'platyna_p';
+export type RodzajCzesci = 'platyna_l' | 'noga_l' | 'glowa' | 'noga_p' | 'platyna_p' | 'drut';
 
 /** Pętla: jedno oczko w jednym rzędzie. `rodzice` = pętle rzędu niżej, przez które ją przeciągnięto. */
 export interface Petla {
@@ -71,12 +85,16 @@ export interface Rysunek {
   wys: number;
   petle: Petla[];
   czesci: Czesc[];
-  /** id części w kolejności rysowania (od spodu) */
+  /** id części w kolejności rysowania warstwy bazowej; przeplot daje łatki na skrzyżowaniach (svg.ts `latki`) */
   kolejnosc: string[];
   /** dla każdego rzędu id części w kolejności biegu nitki */
   rzedy: string[][];
   skrzyzowania: Skrzyzowanie[];
   wyroznione: string[];
+  /** strzałka kroku (od, do) w układzie rysunku; null = brak */
+  strzalka: { od: P; do: P } | null;
+  /** numer kroku rysowany glifem własnym (1–8); null = karta jednokrokowa */
+  numer: number | null;
   /** operacja, z której wynika reguła „na wierzchu” przy ujęciu */
   scalenia: { dziecko: string; nad: string; pod: string[] }[];
   /** błędy budowy (np. cykl warstw, skrzyżowanie bez reguły); pusty = rysunek spójny */

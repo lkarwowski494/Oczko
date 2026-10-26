@@ -1,7 +1,9 @@
 // Rodzina „siatka-petli” (druty: oczko prawe i lewe, ujęcia): rysunek liczony z danych karty (ADR-0022).
 // Pętla = łańcuch Catmulla-Roma przez 7 węzłów (podstawa, szyjka, początek głowy, wierzchołek, …); podział na 5 części
-// (platyna lewa, nóżka lewa, głowa, nóżka prawa, platyna prawa). Kolejność warstw NIE jest wpisana: wynika z reguł przeplotu
-// na każdym wykrytym skrzyżowaniu i z sortowania topologicznego. Skrzyżowanie bez reguły albo cykl warstw = błąd rysunku.
+// (platyna lewa, nóżka lewa, głowa, nóżka prawa, platyna prawa). Przeplot NIE jest wpisany: silnik wykrywa każde skrzyżowanie
+// i przypisuje mu część „nad” z reguły; rysowanie kładzie na każdym skrzyżowaniu łatkę części „nad” (svg.ts). Globalna kolejność
+// warstw nie istnieje, bo jedna część może być raz nad, raz pod tą samą inną częścią (drut przez głowę pętli; E2).
+// Skrzyżowanie bez reguły = błąd rysunku.
 //
 // Reguły przeplotu na stronie prawej (oczko górne G przeciągnięte przez oczko dolne D; dla oczka prawego nowa pętla idzie
 // spod spodu na wierzch, dla lewego odwrotnie):
@@ -9,7 +11,7 @@
 //                         stronie starej pętli niż część nad przejściem; głowa występuje przy ujęciu, gdy głowy ujmowanych zachodzą na siebie)
 //   nóżka G × głowa D:    prawe → G na wierzchu;  lewe → D na wierzchu
 //   dwa oczka ujęte razem (ten sam rząd, wspólne dziecko): na wierzchu to z `na_wierzchu` operacji
-import { catmullRom, probkuj, przeciecia, type P } from './geometria.ts';
+import { catmullRom, odleglosc, probkuj, przeciecia, punktBeziera, type Bez, type P } from './geometria.ts';
 import type { Czesc, Karta, Krok, Petla, RodzajCzesci, Rysunek, Skrzyzowanie, Strona } from './typy.ts';
 
 /** Wymiary w jednostkach rysunku; jedno miejsce (konfiguracja rodziny). Uproszczenie ilustracyjne, nie pomiar dzianiny. */
@@ -24,6 +26,10 @@ export const WYMIAR = {
   przesuniecieUjecia: 0.42, // × kolumna: przesunięcie głów oczek ujmowanych ku dziecku
   glowaUjecia: 1.35, // × glowa: szerokość głowy oczka ujmowanego
   margines: 8,
+  drutWysokosc: 0.82, // × wysokość pętli: przejście drutu przez głowę
+  drutNachylenie: 0.18, // tangens nachylenia drutu
+  drutZapas: 0.12, // × kolumna: drut wystaje poza głowy pętli (nie sięga głowy sąsiada)
+  drutGrot: 0.12, // × kolumna: dodatkowa długość po stronie grotu
 } as const;
 
 const KOLEJNOSC: RodzajCzesci[] = ['platyna_l', 'noga_l', 'glowa', 'noga_p', 'platyna_p'];
@@ -45,8 +51,10 @@ export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
   const op = rys.operacja;
   const W = WYMIAR.kolumna, H = WYMIAR.rzad;
   const bledy: string[] = [];
-  const doOperacji = krok.faza === 'tkanina' ? R - 1 : R; // liczba rysowanych rzędów
+  const przed = krok.faza === 'tkanina' || krok.faza === 'wklucie';
+  const doOperacji = przed ? R - 1 : R; // liczba rysowanych rzędów
   const rzadOp = R - 1;
+  if (op && op.typ !== 'oczko' && op.typ !== 'scal') throw new Error(`karta ${karta.id}: operacja „${op.typ}” nierysowana (walidator: rysunek-nieobslugiwany)`);
   const zuzywa = op?.typ === 'scal' ? op.zuzywa : 1;
   const k0 = op?.kolumna ?? Math.floor((N - zuzywa) / 2);
   const petle: PetlaRob[] = [];
@@ -137,16 +145,45 @@ export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
     rzedy.push(ids);
   }
 
-  // Skrzyżowania i reguły przeplotu.
   const petla = new Map(petle.map((p) => [p.id, p]));
+  const glowaPetli = (id: string): Bez[] | undefined => czesci.find((c) => c.id === `${id}.glowa`)?.segmenty;
+
+  // Drut (faza „wklucie”): prosta przez głowy pętli z `petle`, grot według `krok.drut.grot`.
+  const cele = krok.faza === 'wklucie' ? krok.petle.map((m) => idP(m.rzad, m.kolumna)) : [];
+  for (const id of cele) if (!petla.has(id)) bledy.push(`wklucie: brak pętli ${id} w rysunku przed operacją`);
+  if (cele.length && cele.every((id) => petla.has(id))) {
+    const cp = cele.map((id) => petla.get(id)!);
+    const r = cp[0].rzad;
+    const y = Y(r * H + WYMIAR.drutWysokosc * L);
+    const xs = cp.map((p) => p.x);
+    const a = WYMIAR.glowa * W;
+    const lewo = krok.drut?.grot === 'w_lewo';
+    const x0 = Math.min(...xs) - a - WYMIAR.drutZapas * W - (lewo ? WYMIAR.drutGrot * W : 0);
+    const x1 = Math.max(...xs) + a + WYMIAR.drutZapas * W + (lewo ? 0 : WYMIAR.drutGrot * W);
+    const xm = (x0 + x1) / 2, k = WYMIAR.drutNachylenie;
+    const A: P = { x: x0, y: y + k * (x0 - xm) }, B: P = { x: x1, y: y + k * (x1 - xm) };
+    const [ogon, grot] = lewo ? [B, A] : [A, B];
+    const odc: Bez = [ogon, { x: ogon.x + (grot.x - ogon.x) / 3, y: ogon.y + (grot.y - ogon.y) / 3 }, { x: ogon.x + (2 * (grot.x - ogon.x)) / 3, y: ogon.y + (2 * (grot.y - ogon.y)) / 3 }, grot];
+    czesci.push({ id: 'drut', petla: 'drut', rodzaj: 'drut', rzad: r, segmenty: [odc] });
+  }
+
+  // Skrzyżowania i reguły przeplotu.
   const lamane = new Map(czesci.map((c) => [c.id, probkuj(c.segmenty)]));
   const konce = (c: Czesc): P[] => [c.segmenty[0][0], c.segmenty[c.segmenty.length - 1][3]];
   const skrzyzowania: Skrzyzowanie[] = [];
+  const zDrutem: { drut: Czesc; czesc: Czesc; punkt: P }[] = [];
   for (let i = 0; i < czesci.length; i++) {
     for (let j = i + 1; j < czesci.length; j++) {
       const A = czesci[i], B = czesci[j];
       if (Math.abs(A.rzad - B.rzad) > 1) continue;
       const pkt = przeciecia(lamane.get(A.id)!, lamane.get(B.id)!, [...konce(A), ...konce(B)]);
+      if (A.rodzaj === 'drut' || B.rodzaj === 'drut') {
+        const [D, C] = A.rodzaj === 'drut' ? [A, B] : [B, A];
+        if (!pkt.length) continue;
+        if (!cele.includes(C.petla)) { bledy.push(`drut przecina ${C.id} — pętlę spoza „petle” kroku`); continue; }
+        for (const punkt of pkt) zDrutem.push({ drut: D, czesc: C, punkt });
+        continue;
+      }
       for (const punkt of pkt) {
         const nad = regula(A, B, petla, scalenia);
         if (typeof nad !== 'string' || !nad.startsWith('p')) {
@@ -158,13 +195,54 @@ export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
     }
   }
 
-  const kolejnosc = sortujWarstwy(czesci.map((c) => c.id), skrzyzowania, bledy);
+  // Drut przez pętlę: na każdej pętli docelowej dokładnie 2 skrzyżowania. Kierunek „od_przodu” (drut wchodzi od strony patrzącego):
+  // bliżej ogona drut na wierzchu, bliżej grotu pętla na wierzchu; „od_tylu” odwrotnie.
+  for (const id of cele) {
+    const drut = czesci.find((c) => c.id === 'drut');
+    if (!drut) break;
+    const ogon = drut.segmenty[0][0];
+    const s = zDrutem.filter((x) => x.czesc.petla === id).sort((p, q) => odleglosc(p.punkt, ogon) - odleglosc(q.punkt, ogon));
+    if (s.length !== 2) { bledy.push(`wklucie: drut przecina pętlę ${id} ${s.length} razy, oczekiwane 2 (przejście przez pętlę)`); continue; }
+    skrzyzowania.push({ a: 'drut', b: s[0].czesc.id, punkt: s[0].punkt, nad: regulaDrutu(krok.kierunek, 0, s[0].czesc.id) });
+    skrzyzowania.push({ a: 'drut', b: s[1].czesc.id, punkt: s[1].punkt, nad: regulaDrutu(krok.kierunek, 1, s[1].czesc.id) });
+  }
+
+  // Strzałka kroku: kotwice w układzie rysunku.
+  let strzalka: Rysunek['strzalka'] = null;
+  if (krok.strzalka) {
+    const pkt = (k: string): P | null => {
+      const drut = czesci.find((c) => c.id === 'drut');
+      if (k === 'drut_prawy') return drut ? drut.segmenty[0][3] : null;
+      const m = /^(glowa|nozka_lewa|nozka_prawa):(\d+):(\d+)$/.exec(k);
+      if (!m) return null;
+      const rodzaj = m[1] === 'glowa' ? 'glowa' : m[1] === 'nozka_lewa' ? 'noga_l' : 'noga_p';
+      const c = czesci.find((x) => x.id === `${idP(Number(m[2]), Number(m[3]))}.${rodzaj}`);
+      if (!c) return null;
+      return rodzaj === 'glowa' ? c.segmenty[0][3] : punktBeziera(c.segmenty[0], 0.5);
+    };
+    const od = pkt(krok.strzalka.od), doo = pkt(krok.strzalka.do);
+    if (!od) bledy.push(`strzałka: brak kotwicy „${krok.strzalka.od}” w fazie ${krok.faza}`);
+    if (!doo) bledy.push(`strzałka: brak kotwicy „${krok.strzalka.do}” w fazie ${krok.faza}`);
+    if (od && doo) strzalka = { od, do: doo };
+  }
+
+  const kolejnosc = czesci.map((c) => c.id);
   const wyroznione = krok.wyroznij.map((m) => idP(m.rzad, m.kolumna)).filter((id) => petla.has(id));
   for (const m of krok.wyroznij) if (!petla.has(idP(m.rzad, m.kolumna))) bledy.push(`wyroznij: brak pętli rząd ${m.rzad} kolumna ${m.kolumna} w fazie ${krok.faza}`);
 
-  const szer = Math.max(...petle.map((p) => p.prawa)) + WYMIAR.margines;
+  const szer = Math.max(...petle.map((p) => p.prawa), ...czesci.filter((c) => c.rodzaj === 'drut').map((c) => Math.max(c.segmenty[0][0].x, c.segmenty[0][3].x))) + WYMIAR.margines;
+  const przesun = Math.min(0, ...czesci.filter((c) => c.rodzaj === 'drut').map((c) => Math.min(c.segmenty[0][0].x, c.segmenty[0][3].x) - WYMIAR.margines));
+  if (przesun < 0) { // drut wystaje w lewo poza próbkę: przesunięcie całego rysunku
+    const dx = -przesun;
+    const t = (q: P): P => ({ x: q.x + dx, y: q.y });
+    for (const c of czesci) c.segmenty = c.segmenty.map((b) => b.map(t) as Bez);
+    for (const p of petle) p.x += dx;
+    for (const s of skrzyzowania) s.punkt = t(s.punkt);
+    if (strzalka) strzalka = { od: t(strzalka.od), do: t(strzalka.do) };
+  }
+  const nKrok = (karta.kroki ?? []).findIndex((k) => k.klucz === krok.klucz); // klucz `atlas.<id>.krokN` jest unikalny (walidator)
   return {
-    szer,
+    szer: szer - przesun,
     wys: wysRys,
     petle: petle.map(({ lewa: _l, prawa: _p, szer: _s, glowaSzer: _g, dxGlowy: _d, ...p }) => p),
     czesci,
@@ -173,6 +251,8 @@ export function siatkaPetli(karta: Karta, krok: Krok): Rysunek {
     skrzyzowania,
     wyroznione,
     scalenia,
+    strzalka,
+    numer: (karta.kroki?.length ?? 0) > 1 && nKrok >= 0 ? nKrok + 1 : null,
     bledy,
   };
 }
@@ -197,29 +277,9 @@ export function regula(A: Czesc, B: Czesc, petla: Map<string, Petla>, scalenia: 
   return `brak reguły dla ${gg} (rząd ${G.rzad}) × ${gd} (rząd ${D.rzad})`;
 }
 
-/** Kolejność rysowania z relacji „nad” (Kahn, stabilnie według kolejności wejścia). Cykl = błąd. */
-export function sortujWarstwy(ids: string[], skrzyzowania: Skrzyzowanie[], bledy: string[]): string[] {
-  const wej = new Map(ids.map((id) => [id, 0]));
-  const nast = new Map<string, Set<string>>(ids.map((id) => [id, new Set()]));
-  for (const s of skrzyzowania) {
-    const pod = s.nad === s.a ? s.b : s.a;
-    if (!nast.get(pod)!.has(s.nad)) {
-      nast.get(pod)!.add(s.nad);
-      wej.set(s.nad, wej.get(s.nad)! + 1);
-    }
-  }
-  const out: string[] = [];
-  const gotowe = ids.filter((id) => wej.get(id) === 0);
-  while (gotowe.length) {
-    const id = gotowe.shift()!;
-    out.push(id);
-    for (const n of nast.get(id)!) {
-      wej.set(n, wej.get(n)! - 1);
-      if (wej.get(n) === 0) gotowe.push(n);
-    }
-  }
-  if (out.length < ids.length) bledy.push(`cykl warstw: ${ids.filter((id) => !out.includes(id)).join(', ')}`);
-  return out;
+/** Reguła drutu: dla pętli docelowej 2 skrzyżowania posortowane od ogona; „od_przodu” → bliżej ogona drut nad, bliżej grotu pętla nad. */
+export function regulaDrutu(kierunek: Krok['kierunek'], odOgona: 0 | 1, czesc: string): string {
+  return (kierunek === 'od_przodu') === (odOgona === 0) ? 'drut' : czesc;
 }
 
 export { KOLEJNOSC };
