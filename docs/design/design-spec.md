@@ -1,5 +1,5 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
@@ -9,6 +9,7 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-08-P5-Q1 2026-10-
 | Kluczowe ekrany (7 stanów; fix NZ-08-P2-04: +10 nowych, 2 zmienione) | `ekrany.html`; zrzuty wzorcowe 320/390/430 pt × jasny/ciemny × domyślny/AX5: `wzorce-zrzuty/` (204 pliki, linia bazowa SP-13); kontrola pokrycia fixu: `narzedzia/kontrola-nz08p204.mjs` |
 | Ekran blokady, Dynamic Island, zegarek, Smart Stack (fix NZ-08-P3-04) | `aktywnosc.html`; zrzuty wzorcowe: `wzorce-zrzuty/aktywnosc-*` (blokada i wyspa 320/393/430 × jasny/ciemny × tekst domyślny/duży; zegarek 41/46 mm × domyślny/duży), `narzedzia/zrzuty-aktywnosc.mjs`; kontrola fixu: `narzedzia/kontrola-nz08p304.mjs`; fix NZ-05-F4-04: `narzedzia/kontrola-nz05f404.mjs` |
 | Projekt, części, kosz (fix NZ-08-P5-Q1) | `fix5-2026-10-26/projekt-kosz.html` (22 stany), wzorce `wzorce-zrzuty/projekt-kosz-*` (264), klucze `fix5-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix5.mjs`; kontrola `narzedzia/kontrola-nz08p5q1.mjs` |
+| Stoper, sesje, Historia (fix NZ-08-P5-BD, grupa B) | `fix6-2026-10-26/sesje-historia.html` (16 stanów), wzorce `wzorce-zrzuty/sesje-historia-*` (192), klucze `fix6-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix6.mjs`; kontrola `narzedzia/kontrola-nz08p5bd.mjs` |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -66,6 +67,8 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Źródła wiedzy | typowy (`zrodla-wiedzy`); offline bez zmian (treść w aplikacji) |
 | Język | lista z „Same as phone” (`jezyk`); język telefonu spoza 35: angielski bez podpowiedzi (P-115); uszkodzony zapis: „Same as phone” |
 | Projekt i części | typowy (`projekt`), bez celów i terminu (`projekt-bez-celow`), ukończony z „Resume” (`projekt-ukonczony`), menu „+” i ••• (`projekt-dodaj`, `projekt-menu`), tryb Edit (`projekt-edycja`), arkusze (`nowy-projekt`, `dodaj-czesc`, `dodaj-licznik`, `notatka`, `znaczenie`, `narzedzie`, `termin`), cel części i „What’s next?” (`licznik-cel`, `co-dalej`), całość (`licznik-calosc`); błąd pola rozmiaru: `formularz.narzedzie_blad` |
+| Stoper i sesje | bez sesji, trwa, menu, wstrzymana, inny projekt, limit, blokada, po automatycznym zamknięciu (`licznik-stoper*`); czas projektu (`projekt-czas`), lista (`sesje`), korekta i błąd (`sesja-korekta`, `sesja-korekta-blad`) |
+| Historia | typowy (`historia`), dzień pusty, okres bez stopera, pierwsze użycie (`historia-*`); offline bez zmian |
 | Usuwanie i kosz | potwierdzenia z datą (`usun-projekt`, `usun-czesc`, `usun-licznik`); kosz (`kosz`), pusty (`kosz-pusty`); offline bez zmian |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
@@ -501,6 +504,77 @@ Istniejące klucze użyte bez zmian: `projekt.postep`, `projekt.postep_bez_celow
 - **Otwarte:** nazwa kopii „Make another” (N1 → 08), flaga `licznik.sekcja` dla „Whole piece” (N2 → 05: propozycja 04 — każdy licznik rzędów części jest sekcją, całość widać przy ≥ 2).
 - Kolory i obrysy tylko z istniejących tokenów (`blad` na arkuszu: para w `kontrast-tabela.txt`); bez nowych kolorów i komponentów poza wierszem z przyciskiem tekstowym i ⊖ (systemowe wzorce list iOS).
 
+## Stoper, sesje i Historia (F-21, F-51, F-59; BR-PRJ-008, BR-PRJ-013, BR-DNI-001–003; P-191)
+Makiety: `fix6-2026-10-26/sesje-historia.html` (16 stanów), wzorce `wzorce-zrzuty/sesje-historia-<stan>-*` (192), klucze `fix6-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix6.mjs`, kontrola `narzedzia/kontrola-nz08p5bd.mjs`. Plan i decyzje: `fix6-2026-10-26.md` (P-191: P1a–P6a).
+
+**Stoper na liczniku (P1a, U-4: „start jednym stuknięciem”).**
+- Bez sesji: ikona stopera w pasku nawigacji, pierwsza z prawej grupy (przed Historią i •••), etykieta `stoper.start_a11y`, testID `licznik-stoper` (`licznik-stoper`). Stuknięcie = start (`sesja.start`), haptyka lekka, ogłoszenie `stoper.uruchomiono`. Na kartce nic nowego; kreski i podpis „since …” liczą od startu stopera (sekcja „Kreski sesji przez północ”).
+- Trwa: ikona zamienia się w **kapsułę** (tło `przyciskTlo`, tekst `przyciskTekst`, Libre Franklin 700 17 pt, cyfry tabelaryczne, skala tekstu najwyżej ×1,6) z symbolem stopera i czasem `m:ss` / `h:mm:ss`, rysowanym przez system od znacznika (bez `setInterval`, moduly.md „Jedno źródło czasu”) (`licznik-stoper-trwa`). Etykieta `stoper.trwa_a11y`.
+- Stuknięcie w kapsułę: menu systemowe z nagłówkiem `stoper.menu_naglowek` i pozycjami `stoper.wstrzymaj` / `stoper.wznow` oraz `stoper.zatrzymaj` (`licznik-stoper-menu`). Stop bez potwierdzenia (sesja zapisana, korekta w „Sessions”), ogłoszenie `stoper.zapisano`.
+- Wstrzymana: kapsuła z obrysem `drugiPrzyciskObrys` na tle papieru, symbol pauzy zamiast stopera, czas stoi (`licznik-stoper-pauza`); `stoper.wstrzymana_a11y`. Stan rozróżnia kształt i symbol, nie sam kolor.
+- Przy dużym tekście pasek łamie się: przyciski przechodzą do drugiego wiersza pod „‹ Projects”, kapsuła się nie ucina.
+- **Limit (P2a):** stoper działa (`licznik-stoper-limit`) — limit wstrzymuje liczenie rzędów (BR-ZAK), nie czas. **Blokada licznika:** stoper działa (`licznik-stoper-zablokowany`), jak na ekranie blokady (P-142: „stoper sesji zostaje”).
+- **Sesja w innym projekcie (P3a):** start przy otwartej sesji innego projektu (`sesja_jedna_otwarta`) → alert `stoper.inny_tytul` / `stoper.inny_opis` / `stoper.inny_potwierdz` + `wspolne.anuluj` (`licznik-stoper-inny`); potwierdzenie kończy tamtą sesję i zaczyna tu w jednej transakcji.
+- **Zapomniany stoper (P5a, P-072 7a):** po automatycznym zamknięciu na `SESJA_MAKS_H` licznik tego projektu pokazuje raz linię informacji (znak „i” + tekst, nie kolor błędu) `stoper.sprawdz_*` + odnośnik `stoper.sprawdz_link` → arkusz korekty (`licznik-stoper-sprawdz`). Linia znika po otwarciu korekty albo po następnym +1; znacznik zostaje w liście sesji.
+
+**Czas projektu i sesje (P4a).** Ekran projektu: grupa `projekt.czas` między „Parts” a „Note”: `projekt.czas_wiersz` z sumą (ukonczenie.czas_*) albo — bez sesji — sam wiersz z `projekt.czas_brak` (bez „0 h”, bez wiersza „Sessions”); `projekt.sesje` z liczbą sesji i drugą linią `projekt.sesje_sprawdz_*` przy sesjach do sprawdzenia (`projekt-czas`; testID `projekt-sesje`).
+- Ekran „Sessions” (`sesje`): duży tytuł `sesje.tytul`, pod nim `sesje.podsumowanie_*`; grupy według dnia startu (nagłówek: data z Intl, rok tylko inny niż bieżący), od najnowszej. Wiersz: `sesje.wiersz` albo `sesje.wiersz_nastepny_dzien`, wartość = czas trwania, druga linia jedna z: `sesje.do_sprawdzenia_*` (znak „i”, testID `sesje-do-sprawdzenia`), `sesje.trwa`, `sesje.wstrzymana`, `sesje.pauzy`, `sesje.skorygowana`. VoiceOver `sesje.wiersz_a11y` + druga linia. Sesja trwająca nie otwiera korekty.
+- Arkusz korekty (`sesja-korekta`): `wspolne.anuluj` / `formularz.sesja_tytul` / `wspolne.zapisz`; wiersze `formularz.sesja_start` i `formularz.sesja_koniec` z wartością, stuknięcie rozwija systemowy wybór daty i godziny (styl koła; zakres: koniec ≥ start, nie później niż teraz); pod spodem podgląd na żywo `formularz.sesja_trwanie` + `formularz.sesja_projekt` (BR-PRJ-013 S1). Dla sesji do sprawdzenia na górze `formularz.sesja_sprawdz_*`; przy przerwach `formularz.sesja_przerwy` (reguła korekty z przerwami: N2 → 05/01). **Save zawsze zdejmuje `do_korekty`** (także bez zmian — to potwierdzenie) i ustawia `skorygowano`.
+- Koniec przed początkiem (`sesja-korekta-blad`, BR-PRJ-013 S3): pod polami `formularz.sesja_blad` ze znakiem „!” w kolorze `blad` (tekst + znak), Save nieaktywny (token nieaktywny: grupa D, R1); nic się nie zapisuje.
+
+**Historia (P6a, U-7: jeden widok w zakładce „History”, nic na liczniku).**
+- Duży tytuł `dni.tytul`; kalendarz miesiąca: nagłówek miesiąca (Intl) ze strzałkami `dni.poprzedni_miesiac_a11y` / `dni.nastepny_miesiac_a11y` (44 × 44 pt; także przesunięcie w poziomie — gest ma przycisk, SP-15), kolumny od poniedziałku dla każdego regionu (RD-20), skróty dni z Intl; pod siatką `dni.od_poniedzialku`.
+- **Dzień z robótką: kreska ołówkiem pod liczbą** (`kreska`, 14 × 3 pt, lekko pochylona) — element firmowy niesie dane (dzień z pracą wg RD-15), nie kolor. Wybrany dzień: koło `przyciskTlo` z liczbą `przyciskTekst` (kreska w kolorze tekstu); dziś: pogrubienie z podkreśleniem. Komórki 44 pt wysokości. VoiceOver: `dni.dzien_*` (z robótką) albo `dni.dzien_bez_a11y`; wybrany z cechą „selected”.
+- Pod kalendarzem nagłówek wybranego dnia (Intl, dzień tygodnia + data; domyślnie dziś) i grupa projektów dnia: kropka włóczki, nazwa, `dni.rzedy_*` albo `dni.rzedy_czas`; stuknięcie = ekran projektu (BR-DNI-002); ukończenia tego dnia — `dni.ukonczone`. Dzień bez robótki: `dni.pusto_dzien` (`historia-dzien-pusty`).
+- **Dwa bloki podsumowania bez przełącznika (P6a):** `dni.tydzien` (albo `dni.tydzien_biezacy`) — tydzień wybranego dnia, pon.–niedz.: `dni.suma_czas` (rzędy · `dni.czas`), `dni.ukonczono_*` (przy 0 pominięte), `dni.tydzien_poprzedni_*` (BR-DNI-003 S1–S2); blok miesiąca z kalendarza (nagłówek: nazwa miesiąca z Intl): rzędy · czas, `dni.ukonczono_*` · `dni.dni_robotki_*`. Bez sesji w okresie: same rzędy i `dni.bez_stopera` (BR-DNI-003 S3, `historia-bez-stopera`). Zmiana miesiąca strzałką przenosi wybór na 1. dzień tego miesiąca (albo dziś w bieżącym).
+- Pierwsze użycie (`historia-pierwsze`): kalendarz bez kresek i `dni.pierwsze`; żadnych serii ani ponagleń (BR-DNI-001 S5).
+- Dzień i tydzień liczą `podsumowanieTygodnia` (repozytorium, od poniedziałku); miesiąc — ta sama metoda w granicach miesiąca kalendarza (dzień RD-16). Rozjazd „komponent pokazuje miesiąc” znika: komponent pokazuje oba bloki.
+
+**Teksty robocze 08 (Z07-05) zatwierdzone bez zmiany en:** `dni.dzien_*`, `dni.rzedy_*`, `dni.ukonczone`, `dni.czas`, `dni.bez_stopera` — w łatce tylko nowy kontekst (lista „zastap”).
+
+| Klucz | en |
+|---|---|
+| `stoper.start_a11y` | Start session timer |
+| `stoper.trwa_a11y` | Session timer, {{czas}}, running. Pause or stop |
+| `stoper.wstrzymana_a11y` | Session timer, {{czas}}, paused. Resume or stop |
+| `stoper.menu_naglowek` | Session started {{godzina}} |
+| `stoper.wstrzymaj` / `stoper.wznow` / `stoper.zatrzymaj` | Pause timer / Resume timer / Stop timer |
+| `stoper.uruchomiono` / `stoper.wstrzymano` / `stoper.wznowiono` / `stoper.zapisano` | Session timer started. / Session timer paused at {{czas}}. / Session timer running again. / Session saved: {{czas}}. |
+| `stoper.inny_tytul` | The timer is running for {{projekt}} |
+| `stoper.inny_opis` | One session runs at a time. Stop it there and start one for {{biezacy}}? |
+| `stoper.inny_potwierdz` | Stop and start here |
+| `stoper.sprawdz_one` / `_other` | The timer ran for {{count}} hour(s), so Oczko stopped it. |
+| `stoper.sprawdz_link` | Check the end time |
+| `projekt.czas` / `projekt.czas_wiersz` / `projekt.czas_brak` | Time / Knitting time / Time shows here when you use the stopwatch. |
+| `projekt.sesje` / `projekt.sesje_sprawdz_one` / `_other` | Sessions / {{count}} session(s) to check |
+| `sesje.tytul` / `sesje.podsumowanie_one` / `_other` | Sessions / {{czas}} in {{count}} session(s) |
+| `sesje.wiersz` / `sesje.wiersz_nastepny_dzien` | {{start}}–{{koniec}} / {{start}}–{{koniec}} the next day |
+| `sesje.trwa` / `sesje.wstrzymana` / `sesje.pauzy` / `sesje.skorygowana` | Running now / Paused now / {{czas}} paused / Edited |
+| `sesje.do_sprawdzenia_one` / `_other` | Stopped after {{count}} hour(s). Check the end time. |
+| `sesje.wiersz_a11y` | {{data}}, {{start}} to {{koniec}}, {{czas}}. Edit |
+| `formularz.sesja_trwanie` / `formularz.sesja_projekt` | Lasts {{czas}}. / Project time after saving: {{czas}}. |
+| `formularz.sesja_sprawdz_one` / `_other` | Oczko stopped this timer after {{count}} hour(s). Set when you really stopped. |
+| `formularz.sesja_przerwy` | {{czas}} of pauses are not counted. |
+| `dni.tytul` / `dni.od_poniedzialku` | History / Weeks start on Monday. |
+| `dni.poprzedni_miesiac_a11y` / `dni.nastepny_miesiac_a11y` | Previous month / Next month |
+| `dni.tydzien` / `dni.tydzien_biezacy` | Week of {{data}} / This week |
+| `dni.tydzien_poprzedni_one` / `_other` | Previous week: {{count}} row(s) |
+| `dni.ukonczono_one` / `_other` | {{count}} project(s) finished |
+| `dni.dni_robotki_one` / `_other` | {{count}} knitting day(s) |
+| `dni.rzedy_czas` / `dni.suma_czas` | {{rzedy}} · {{czas}} |
+| `dni.pusto_dzien` | No knitting on this day. |
+| `dni.pierwsze` | Days you knit get a pencil mark here. Count a row to start. |
+| `dni.dzien_bez_a11y` | {{etykieta}} |
+Pełne formy liczby mnogiej i kontekst dla tłumaczy: `fix6-2026-10-26/klucze.json`.
+
+## Dla 08 (fix NZ-08-P5-BD, grupa B: sesje i Historia; P-191)
+- **Klucze:** `node docs/design/narzedzia/nakladaj-klucze-fix6.mjs` w pierwszym commicie ekranów B (jak P-183 4a): nakłada `fix6-2026-10-26/klucze.json` (grupa B + pozycje przeglądu P-188: `aktywnosc.plus_a11y_przypomnienie`, `projekty.wiersz`, `projekty.wiersz_cel`, `projekt.oczka_*`, `formularz.termin_osiagniety`), zastępuje 5 wpisów kontekstu tekstów roboczych `dni.*` (en bez zmian) regeneruje pseudolokalizację, tabele `targets/*/Teksty.swift` (nowy klucz `aktywnosc.*`, ADR-0017) i wstawia wiersz `aktywnosc.plus_a11y_przypomnienie` do tabeli „Ekran blokady i zegarek” tego dokumentu (test P-143 wiąże tabelę ze słownikiem, więc wiersz wchodzi razem z kluczem). Zmiana `targets/` → push z nocnym przebiegiem iOS (P-187). Przy grupie D łatka dostanie dalsze klucze; skrypt jest idempotentny (ten sam tekst = bez konfliktu).
+- **Stany do zbudowania** (wzorce `wzorce-zrzuty/sesje-historia-<stan>-*`): `licznik-stoper`, `licznik-stoper-trwa`, `licznik-stoper-menu`, `licznik-stoper-pauza`, `licznik-stoper-inny`, `licznik-stoper-limit`, `licznik-stoper-zablokowany`, `licznik-stoper-sprawdz`, `projekt-czas`, `sesje`, `sesja-korekta`, `sesja-korekta-blad`, `historia`, `historia-dzien-pusty`, `historia-bez-stopera`, `historia-pierwsze`.
+- **Czas w kapsule:** wartość od `start_ms` i `przerwy_ms` (trwa) albo stała (wstrzymana), odświeżana przez komponent czasu, nie `setInterval` w stanie ekranu; ogłoszenia tylko przy zmianie stanu.
+- **testID** (propozycja dla tabeli 07): `licznik-stoper`, `stoper-wstrzymaj`, `stoper-zatrzymaj`, `stoper-inny-potwierdz`, `stoper-sprawdz`, `projekt-sesje`, `sesje-lista`, `sesje-do-sprawdzenia`, `formularz-sesja-start`, `formularz-sesja-koniec`, `historia-kalendarz`, `historia-dzien`, `historia-tydzien`, `historia-miesiac`.
+- **Bez nowych kolorów:** kapsuła = tokeny przycisku głównego (pary w `kontrast-tabela.txt`), kreska dnia = `kreska` na `papier` (grafika 3:1: ta sama para co kreski sesji), wybrany dzień = przycisk główny.
+- **Otwarte (P-191, przegląd 05/01):** N1 Live Activity bez pola pauzy (czas wstrzymanej sesji na ekranie blokady), N2 korekta sesji z przerwami, N3 dzień z samym stoperem w kalendarzu.
+
 ## Ekrany wzoru a patenty (OG-07, P-024)
 Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF, zdjęcie, strona, Word), w całości i bez zmian; aplikacja nie wycina ani nie łączy fragmentów kilku wzorów w jeden widok instrukcji. Znacznik rzędu, zakreślenia i notatki (F-26, F-28, F-56) to adnotacje na tym jednym dokumencie. Wtedy funkcje wzoru nie zawierają elementów „treść z kilku instrukcji” i „edycja i złożenie w jeden zestaw” z niezależnych zastrzeżeń 1, 9, 13 (tabela w `docs/brd/odkrywanie.md` OG-07, źródła S-10, S-32, odczyt 2026-10-21). Ocena projektu, nie opinia prawna; makieta wzoru poziomo (F-25) w E4 przechodzi tę tabelę ponownie.
 
@@ -514,7 +588,7 @@ Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF,
 Zegarek: `ikona/watch.png` (1088 × 1088). Ikona warstwowa `.icon` (Liquid Glass) wymaga Icon Composer na macOS: warstwy `ikona/tlo.svg` i `ikona/pierwszy-plan*.svg` to paczka dla kroku właściciela; PNG działają bez `.icon`.
 
 ## Poza tym etapem (dla audytu roli 04 po roli 08 albo osobnej sesji)
-Makiety nienarysowane w build (zegarek i ekran blokady: fix NZ-08-P3-04, `aktywnosc.html`): wzór poziomo i licznik poziomo (znacznik na wzorze pionowo: fix NZ-08-P2-04) (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), kalendarz i podsumowanie (F-59), reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
+Makiety nienarysowane w build (zegarek i ekran blokady: fix NZ-08-P3-04, `aktywnosc.html`): wzór poziomo i licznik poziomo (znacznik na wzorze pionowo: fix NZ-08-P2-04) (F-25, F-26, F-56; przed nimi tabela patentowa OG-07), reszta Ustawień (eksport, kopia, polityka, „Oceń”, „Zgłoś problem”; język i „Źródła wiedzy” są w fixie NZ-08-P2-04), test długości tekstu po polsku i niemiecku (P-061 (2a)). System (tokeny, komponenty, głos) je obejmuje; rola 08 buduje je z tokenów, a rola 04 sprawdza je w audycie wobec tego dokumentu.
 
 ## Propozycja wpisu do pamięci portfolio (repo `prompts`, dopisuje właściciel)
 | Aplikacja | Metafora / element firmowy | Paleta (rdzeń) | Kroje | Uwagi właściciela |
