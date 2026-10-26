@@ -1,0 +1,146 @@
+// Model odczytu ekranu licznika (design-spec „Licznik”, F-49, BR-LIC-001, P-065, RD-13, RD-15, RD-17, BR-PRJ-014): same dane, bez tekstów.
+// Formatowanie (miesiąc, godzina, etykieta projektu roboczego przez t(), P-126 (1b)) robi kompozycja ekranu. Odczyt w kolejce: widzi zapisy zlecone wcześniej.
+import type { Wynik } from '../domena/bledy';
+import { mozeZaczacDzien, wznowienieLimitu } from '../domena/limit';
+import { czyPrzypomnienie, planPrzypomnien } from '../domena/przypomnienia';
+import { serieDoSprawdzenia } from '../domena/straznik-tempa';
+import type { PortBazy } from '../domena/porty';
+import type { ZrodloZdarzenia } from '../domena/stany';
+import { PRZERWA_NOWEGO_DNIA_MS, STRAZNIK_OKNO_S, STRAZNIK_SERIA_ZDARZEN } from '../konfiguracja';
+import { celProjektu } from '../dane/repozytoria/kalendarz';
+import { dniLimituMiesiaca, ostatniPlus } from '../dane/repozytoria/liczniki';
+import { odczytajUstawienie, zapiszUstawienie } from '../dane/repozytoria/ustawienia';
+import { liczba, liczbaLubNull, listaTekstow, tekst, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
+import { dodajDni } from './daty';
+import { blad, operacjaZapisu, OK } from './zapis';
+import type { Zaleznosci } from './zaleznosci';
+
+export type WidokLicznika = {
+  licznikId: string;
+  projektId: string;
+  czescId: string;
+  projekt: { nazwa: string; nienazwany: boolean; utworzonoMs: number; notatka: string };
+  czesc: { nazwa: string; cel: number | null };
+  nazwa: string;                        // nazwa licznika (powtórzenie, RD-12)
+  wartosc: number;
+  glowa: string | null;
+  znaczenie: 'skonczone' | 'w_trakcie';
+  zablokowany: boolean;
+  /** Rząd dziergany (wartość + 1) z instrukcją przypomnienia (RD-13); `nastepny` = kolejny rząd tego planu. */
+  przypomnienie: { tekst: string; ktory: number; razy: number; nastepny: number | null } | null;
+  powtorzenie: { numer: number; rzadW: number; dlugosc: number } | null;
+  /** Kreski posiedzenia: dodania +1 bez przerwy ≥ PRZERWA_NOWEGO_DNIA_MS, liczone wstecz od ostatniego. */
+  sesja: { rzedy: number; odMs: number } | null;
+  limit: 'zawczasu' | 'ostatni-darmowy' | 'brak';
+  dzis: string;
+  wznowienie: string;
+  /** Seria RD-17 na końcu historii (pytanie „Undo n rows”): od pierwszego zdarzenia serii, `ile` dodań w `sekundy` s. */
+  seria: { ile: number; sekundy: number; odZdarzeniaId: string } | null;
+  blizniak: { rzad: number; notatka: string | null; przypomnienie: string | null } | null;
+  celDnia: number | null;
+};
+
+const OKNO_SESJI = 200; // ostatnie zdarzenia czytane dla kresek i strażnika (posiedzenie dłuższe niż 200 rzędów pokazuje 200)
+
+type Plus = { id: string; czasMs: number; zrodlo: ZrodloZdarzenia };
+/** Dodania +1 nieobjęte cofnięciem, od najnowszego. */
+async function ostatnieDodania(tx: PortBazy, licznikId: string): Promise<Plus[]> {
+  const r = await wiersze(tx.all('SELECT id, rodzaj, cofa, czas_ms, zrodlo FROM zdarzenie WHERE licznik_id = ? ORDER BY czas_ms DESC, rowid DESC LIMIT ?', [licznikId, OKNO_SESJI]), 'widokLicznika');
+  const cofniete = new Set(r.flatMap((w) => listaTekstow(w, 'cofa')));
+  return r.filter((w) => tekst(w, 'rodzaj') === 'plus' && !cofniete.has(tekst(w, 'id')))
+    .map((w) => ({ id: tekst(w, 'id'), czasMs: liczba(w, 'czas_ms'), zrodlo: tekst(w, 'zrodlo') as ZrodloZdarzenia }));
+}
+function sesja(dodania: readonly Plus[], terazMs: number): WidokLicznika['sesja'] {
+  if (dodania.length === 0 || terazMs - dodania[0].czasMs >= PRZERWA_NOWEGO_DNIA_MS) return null;
+  let i = 0;
+  while (i + 1 < dodania.length && dodania[i].czasMs - dodania[i + 1].czasMs < PRZERWA_NOWEGO_DNIA_MS) i += 1;
+  return { rzedy: i + 1, odMs: dodania[i].czasMs };
+}
+/** Pytanie o serię tylko, gdy seria kończy się ostatnim dodaniem i nic po nim nie zmieniło licznika (cofnięcie serii na końcu historii, F-47). */
+function seria(dodania: readonly Plus[], glowa: string | null): WidokLicznika['seria'] {
+  if (dodania.length === 0 || dodania[0].id !== glowa) return null;
+  const s = serieDoSprawdzenia([...dodania].reverse(), { seria: STRAZNIK_SERIA_ZDARZEN, oknoS: STRAZNIK_OKNO_S });
+  if (!s.ok) return null;
+  const ostatnia = s.wartosc.find((x) => x.ids[x.ids.length - 1] === glowa);
+  return ostatnia ? { ile: ostatnia.ids.length, sekundy: Math.max(1, Math.round((ostatnia.doMs - ostatnia.odMs) / 1000)), odZdarzeniaId: ostatnia.ids[0] } : null;
+}
+async function przypomnienie(tx: PortBazy, licznikId: string, rzad: number): Promise<WidokLicznika['przypomnienie']> {
+  for (const p of await wiersze(tx.all('SELECT od_rzedu, co_n, razy, tekst FROM przypomnienie WHERE licznik_id = ? ORDER BY od_rzedu, id', [licznikId]), 'widokLicznika')) {
+    const plan = { od: liczba(p, 'od_rzedu'), co: liczba(p, 'co_n'), razy: liczba(p, 'razy') };
+    const c = czyPrzypomnienie(rzad, plan);
+    if (!c.ok || !c.wartosc) continue;
+    const rzedy = planPrzypomnien(plan);
+    const ktory = (rzad - plan.od) / plan.co + 1;
+    return { tekst: tekst(p, 'tekst'), ktory, razy: plan.razy, nastepny: rzedy.ok ? rzedy.wartosc[ktory] ?? null : null };
+  }
+  return null;
+}
+async function blizniak(tx: PortBazy, paraZ: string | null, rzad: number): Promise<WidokLicznika['blizniak']> {
+  if (!paraZ) return null;
+  const [l] = await wiersze(tx.all("SELECT l.id FROM licznik l JOIN czesc c ON c.id = l.czesc_id WHERE l.czesc_id = ? AND l.rodzaj = 'rzedy' AND l.usunieto_ms IS NULL AND c.usunieto_ms IS NULL ORDER BY l.kolejnosc LIMIT 1", [paraZ]), 'widokLicznika');
+  if (!l) return null;
+  const id = tekst(l, 'id');
+  const [n] = await wiersze(tx.all('SELECT tekst FROM notatka_rzedu WHERE licznik_id = ? AND rzad = ? ORDER BY zmieniono_ms DESC LIMIT 1', [id, rzad]), 'widokLicznika');
+  const p = await przypomnienie(tx, id, rzad);
+  return n || p ? { rzad, notatka: n ? tekst(n, 'tekst') : null, przypomnienie: p ? p.tekst : null } : null;
+}
+
+/** Stan ekranu licznika `licznikId`; licznik w koszu albo nieistniejący → `bledne_dane` (kompozycja otwiera wtedy listę projektów, F-49). */
+export function widokLicznika(z: Zaleznosci, w: { licznikId: string }): Promise<Wynik<WidokLicznika>> {
+  return operacjaZapisu(z, 'widokLicznika', async (tx, teraz, chwila) => {
+    const [r] = await wiersze(tx.all(
+      `SELECT l.id, l.nazwa, l.wartosc, l.glowa, l.znaczenie, l.zablokowany, l.dlugosc_powtorzenia, c.id AS czesc_id, c.nazwa AS czesc, c.cel_rzedow, c.para_z,
+              p.id AS projekt_id, p.nazwa AS projekt, p.nienazwany, p.utworzono_ms, p.notatka, p.termin_dzien
+         FROM licznik l JOIN czesc c ON c.id = l.czesc_id JOIN projekt p ON p.id = c.projekt_id
+        WHERE l.id = ? AND l.usunieto_ms IS NULL AND c.usunieto_ms IS NULL AND p.usunieto_ms IS NULL`, [w.licznikId]), 'widokLicznika');
+    if (!r) return blad('bledne_dane');
+    const wartosc = liczba(r, 'wartosc'), glowa = tekstLubNull(r, 'glowa'), dzis = chwila.dzien;
+    const dodania = await ostatnieDodania(tx, w.licznikId);
+    const zaw = mozeZaczacDzien({ dni: await dniLimituMiesiaca(tx, dzis.slice(0, 7)), dzis, teraz, ostatniPlus: await ostatniPlus(tx, dodajDni(dzis, -2)), pro: z.pro() });
+    const dl = liczbaLubNull(r, 'dlugosc_powtorzenia');
+    const termin = tekstLubNull(r, 'termin_dzien');
+    const cel = termin ? await celProjektu(tx, tekst(r, 'projekt_id'), termin, dzis) : null;
+    return {
+      ok: true,
+      wartosc: {
+        licznikId: w.licznikId, projektId: tekst(r, 'projekt_id'), czescId: tekst(r, 'czesc_id'),
+        projekt: { nazwa: tekst(r, 'projekt'), nienazwany: liczba(r, 'nienazwany') === 1, utworzonoMs: liczba(r, 'utworzono_ms'), notatka: tekst(r, 'notatka') },
+        czesc: { nazwa: tekst(r, 'czesc'), cel: liczbaLubNull(r, 'cel_rzedow') },
+        nazwa: tekst(r, 'nazwa'), wartosc, glowa,
+        znaczenie: tekst(r, 'znaczenie') === 'w_trakcie' ? 'w_trakcie' : 'skonczone',
+        zablokowany: liczba(r, 'zablokowany') === 1,
+        przypomnienie: await przypomnienie(tx, w.licznikId, wartosc + 1),
+        powtorzenie: dl ? { numer: Math.floor(wartosc / dl) + 1, rzadW: (wartosc % dl) + 1, dlugosc: dl } : null, // RD-12-W5
+        sesja: sesja(dodania, teraz),
+        limit: zaw.limitZawczasu ? 'zawczasu' : zaw.ostatniDarmowy ? 'ostatni-darmowy' : 'brak',
+        dzis, wznowienie: wznowienieLimitu({ dzis }),
+        seria: seria(dodania, glowa),
+        blizniak: await blizniak(tx, tekstLubNull(r, 'para_z'), wartosc + 1),
+        celDnia: cel && cel.rodzaj === 'cel' ? cel.rzedy : null,
+      },
+    };
+  });
+}
+
+export type MiejsceLicznika = { ekran: 'licznik'; id: string };
+/** F-49: ostatni licznik z `ostatnie_miejsce`; brak klucza → null; wskazanie na licznik w koszu → klucz usunięty, null (moduly.md:238). */
+export function biezacyLicznik(z: Zaleznosci): Promise<Wynik<string | null>> {
+  return operacjaZapisu(z, 'biezacyLicznik', async (tx) => {
+    const m = await odczytajUstawienie(tx, 'ostatnie_miejsce');
+    if (!m || typeof m !== 'object' || !('ekran' in m) || m.ekran !== 'licznik' || !('id' in m) || typeof m.id !== 'string') return { ok: true, wartosc: null };
+    const [l] = await wiersze(tx.all(
+      `SELECT l.id FROM licznik l JOIN czesc c ON c.id = l.czesc_id JOIN projekt p ON p.id = c.projekt_id
+        WHERE l.id = ? AND l.usunieto_ms IS NULL AND c.usunieto_ms IS NULL AND p.usunieto_ms IS NULL`, [m.id]), 'biezacyLicznik');
+    if (!l) {
+      await tx.run("DELETE FROM ustawienie WHERE klucz = 'ostatnie_miejsce'");
+      return { ok: true, wartosc: null };
+    }
+    return { ok: true, wartosc: m.id };
+  });
+}
+export function zapamietajLicznik(z: Zaleznosci, w: { licznikId: string }): Promise<Wynik<void>> {
+  return operacjaZapisu(z, 'ostatnieMiejsce', async (tx, teraz) => {
+    await zapiszUstawienie(tx, 'ostatnie_miejsce', { ekran: 'licznik', id: w.licznikId } satisfies MiejsceLicznika, teraz);
+    return OK;
+  });
+}

@@ -9,7 +9,7 @@ import { scalDziennikWKolejce } from './dziennik';
 import { sprzatnijKoszWKolejce } from './kosz';
 import { wKolejce } from './kolejka';
 import { wTransakcji } from './zapis';
-import type { ZaleznosciDziennika, ZaleznosciStartu } from './zaleznosci';
+import type { Zaleznosci, ZaleznosciDziennika, ZaleznosciStartu } from './zaleznosci';
 
 // potwierdzone: id linii zegarka do `Zegarek.potwierdz` przed `odswiezEkranBlokady` (ADR-0009, 2026-10-26 pkt 3; woła kompozycja aplikacji).
 export type WynikStartuDanych = { migracja: { z: number; do: number }; scalono: number; potwierdzone: string[]; sprzatnieto: number; domknieteSesje: number };
@@ -57,4 +57,9 @@ export function naPierwszyPlan(z: ZaleznosciDziennika): Promise<Wynik<{ scalono:
     const w = await scalDziennikWKolejce(z);
     return w.ok ? { ok: true, wartosc: { scalono: w.wartosc.scalono, potwierdzone: w.wartosc.potwierdzone } } : w;
   });
+}
+
+/** `AppState → background` (R-091, e3-tlo-bledy-prywatnosc-wydajnosc.md §1): po zapisach z kolejki checkpoint WAL do pliku bazy (kopia urządzenia). */
+export function przyTle(z: Pick<Zaleznosci, 'baza'>): Promise<void> {
+  return wKolejce(z.baza, async () => { await z.baza.all('PRAGMA wal_checkpoint(TRUNCATE)'); });
 }

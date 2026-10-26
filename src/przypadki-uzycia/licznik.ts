@@ -149,3 +149,22 @@ export function utworzSzybkiLicznik(z: Zaleznosci): Promise<Wynik<{ projektId: s
     }
   });
 }
+
+/** Blokada licznika (F-03, BR-LIC-004): stan licznika, nie zdarzenie historii; licznik w koszu → `niedozwolone_przejscie`. */
+export function ustawBlokade(z: Zaleznosci, w: { licznikId: string; zablokowany: boolean }): Promise<Wynik<void>> {
+  return wKolejce(z.baza, async () => {
+    const teraz = z.zegar.teraz();
+    try {
+      return await z.baza.transakcja(async (tx): Promise<Wynik<void>> => {
+        const s = await stanLicznika(tx, w.licznikId);
+        if (!s) return blad('bledne_dane');
+        if (s.usuniety) return blad('niedozwolone_przejscie');
+        await tx.run('UPDATE licznik SET zablokowany = ?, zmieniono_ms = ? WHERE id = ?', [w.zablokowany ? 1 : 0, teraz.ms, w.licznikId]);
+        return { ok: true, wartosc: undefined };
+      });
+    } catch (e) {
+      await zapiszBlad(z.baza, { czasMs: teraz.ms, kod: 'zapis_licznika', szczegoly: { operacja: 'ustawBlokade', sqlite: kodBledu(e) } });
+      return blad('zapis');
+    }
+  });
+}
