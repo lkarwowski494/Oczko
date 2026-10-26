@@ -84,6 +84,40 @@ export function dzienLokalny(ms: number, strefa: string): Wynik<string> {
   return { ok: true, wartosc: `${year.padStart(4, '0')}-${month}-${day}` };
 }
 
+const formatyChwili = new Map<string, Intl.DateTimeFormat>();
+/** Czas ścienny chwili `ms` w strefie IANA jako „ms UTC” tej samej daty i godziny (różnica z `ms` = przesunięcie strefy); zła strefa → null. */
+function scienny(ms: number, strefa: string): number | null {
+  let f = formatyChwili.get(strefa);
+  if (!f) {
+    try {
+      f = new Intl.DateTimeFormat('en-US-u-ca-gregory-nu-latn', { timeZone: strefa, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    } catch {
+      return null;
+    }
+    formatyChwili.set(strefa, f);
+  }
+  const c: Record<string, number> = {};
+  for (const p of f.formatToParts(new Date(ms))) if (p.type !== 'literal') c[p.type] = Number(p.value);
+  const { year, month, day, hour, minute, second } = c;
+  if (year === undefined || month === undefined || day === undefined || hour === undefined || minute === undefined || second === undefined) return null;
+  return Date.UTC(year, month - 1, day, hour, minute, second, ((ms % 1000) + 1000) % 1000);
+}
+/**
+ * Chwila dnia `dzien` (RRRR-MM-DD) w strefie o tej samej porze lokalnej (godz., min., s, ms) co chwila `wzorMs` (P-137: zmiana daty ukończenia).
+ * Pora w luce zmiany czasu → przesunięta o długość luki (02:30 → 03:30); pora podwójna → wcześniejsza chwila. Sygnatura 08 (P-114 Q2a).
+ */
+export function chwilaOPorze(w: { dzien: string; wzorMs: number; strefa: string }): Wynik<number> {
+  const n = numerDnia(w.dzien);
+  const wzor = Number.isFinite(w.wzorMs) ? scienny(w.wzorMs, w.strefa) : null;
+  if (n === null || wzor === null) return BLAD;
+  const lokalnie = n * 86_400_000 + (((wzor % 86_400_000) + 86_400_000) % 86_400_000); // dzień + pora jako „ms UTC” czasu ściennego
+  const przesuniecie = (ms: number) => (scienny(ms, w.strefa) ?? ms) - ms;
+  const przed = lokalnie - przesuniecie(lokalnie - 43_200_000), po = lokalnie - przesuniecie(lokalnie + 43_200_000);
+  const trafione = [przed, po].filter((c) => scienny(c, w.strefa) === lokalnie);
+  // Luka: żadna chwila nie ma tej pory — przesunięcie sprzed zmiany daje porę przesuniętą o długość luki.
+  return { ok: true, wartosc: trafione.length ? Math.min(...trafione) : przed };
+}
+
 /** RD-20 (P-110 Q7, jak Trening `thisMonday`): poniedziałek tygodnia dnia RRRR-MM-DD, dla każdego regionu. Sygnatura 08 (P-114 Q2a). */
 export function poczatekTygodnia(dzien: string): Wynik<string> {
   const n = numerDnia(dzien);

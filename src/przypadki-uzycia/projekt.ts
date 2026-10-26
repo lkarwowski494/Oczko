@@ -2,6 +2,7 @@
 // sygnatura: propozycja 07, zatwierdzona w fix 05 2026-10-25 (Z07-22).
 import type { Wynik } from '../domena/bledy';
 import { przejdzProjekt, type ZdarzenieProjektu } from '../domena/maszyny/projekt';
+import { chwilaOPorze } from '../domena/postep';
 import type { PortBazy } from '../domena/porty';
 import { stanProjektu, ustawUsuniecie, usunietoMs, zapiszStanProjektu, type TabelaKosza } from '../dane/repozytoria/projekty-zapis';
 import { liczba, liczbaLubNull, tekst, wiersze } from '../dane/repozytoria/wiersze';
@@ -64,14 +65,19 @@ export const wznowProjekt = (z: Zaleznosci, w: { projektId: string }): Promise<W
 export const usunProjekt = (z: Zaleznosci, w: { projektId: string }): Promise<Wynik<void>> => przejscie(z, w.projektId, 'usun');
 export const przywrocProjekt = (z: Zaleznosci, w: { projektId: string }): Promise<Wynik<void>> => przejscie(z, w.projektId, 'przywroc');
 
-/** Data ukończenia wybrana na ekranie: chwila i dzień lokalny razem (moduly.md „Ukończone w tygodniu…”, fix-3 05). */
-export function zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoMs: number; ukonczonoDzien: string }): Promise<Wynik<void>> {
-  if (!Number.isInteger(w.ukonczonoMs) || !jestDniem(w.ukonczonoDzien)) return Promise.resolve(blad('bledne_dane'));
-  return operacjaZapisu(z, 'zmienDateUkonczenia', async (tx, teraz) => {
+/**
+ * Data ukończenia wybrana na ekranie (tylko dzień, 04 fix-2): `ukonczono_dzien` = dzień, `ukonczono_ms` = ta sama pora lokalna co dotychczas
+ * w strefie z `Zegar` (P-137, aneks 05 fix-4: luka DST → przesunięcie, pora podwójna → wcześniejsza), nie później niż teraz.
+ */
+export function zmienDateUkonczenia(z: Zaleznosci, w: { projektId: string; ukonczonoDzien: string }): Promise<Wynik<void>> {
+  if (!jestDniem(w.ukonczonoDzien)) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'zmienDateUkonczenia', async (tx, teraz, chwila) => {
     const p = await stanProjektu(tx, w.projektId);
     if (!p) return blad('bledne_dane');
-    if (p.stan !== 'ukonczony' || p.usunietoMs !== null) return blad('niedozwolone_przejscie');
-    await zapiszStanProjektu(tx, w.projektId, { ...p, ukonczonoMs: w.ukonczonoMs }, teraz, w.ukonczonoDzien);
+    if (p.stan !== 'ukonczony' || p.usunietoMs !== null || p.ukonczonoMs === null) return blad('niedozwolone_przejscie');
+    const ms = chwilaOPorze({ dzien: w.ukonczonoDzien, wzorMs: p.ukonczonoMs, strefa: chwila.strefa });
+    if (!ms.ok) return ms;
+    await zapiszStanProjektu(tx, w.projektId, { ...p, ukonczonoMs: Math.min(ms.wartosc, teraz) }, teraz, w.ukonczonoDzien);
     return OK;
   });
 }

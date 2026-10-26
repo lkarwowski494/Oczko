@@ -37,9 +37,10 @@ describe('ukonczono_dzien (P-123 pkt 4, P-124 Q5a)', () => {
   test('zmienDateUkonczenia zmienia oba pola; dzień spoza RRRR-MM-DD → bledne_dane, bez zapisu', async () => {
     const { s, id } = await zProjektem();
     await zakonczProjekt(s.z, { projektId: id });
-    expect(await zmienDateUkonczenia(s.z, { projektId: id, ukonczonoMs: Date.UTC(2026, 9, 1, 12), ukonczonoDzien: '2026-10-01' })).toEqual(OK);
-    expect(await stan(s, id)).toMatchObject({ ukonczono_ms: Date.UTC(2026, 9, 1, 12), ukonczono_dzien: '2026-10-01' });
-    expect(await zmienDateUkonczenia(s.z, { projektId: id, ukonczonoMs: Date.UTC(2026, 9, 2, 12), ukonczonoDzien: '2.10.2026' })).toEqual({ ok: false, powod: 'bledne_dane' });
+    // 08 partia 4 (P-137, aneks 05 fix-4): sygnatura bez ukonczonoMs — chwila = ta sama pora co ukończenie (T0 = 12:00 Warszawa = 10:00 UTC).
+    expect(await zmienDateUkonczenia(s.z, { projektId: id, ukonczonoDzien: '2026-10-01' })).toEqual(OK);
+    expect(await stan(s, id)).toMatchObject({ ukonczono_ms: Date.UTC(2026, 9, 1, 10), ukonczono_dzien: '2026-10-01' });
+    expect(await zmienDateUkonczenia(s.z, { projektId: id, ukonczonoDzien: '2.10.2026' })).toEqual({ ok: false, powod: 'bledne_dane' });
     expect(await stan(s, id)).toMatchObject({ ukonczono_dzien: '2026-10-01' });
   });
 

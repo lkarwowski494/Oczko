@@ -241,7 +241,8 @@ describe('projekty i części (BR-PRJ-*)', () => {
   test('BR-PRJ-013/S2: data ukończenia zmieniona na 3 dni wcześniej → lista ukończonych pokazuje tę datę', async () => {
     const s = await przygotuj();
     await wykonaj(s.baza, [projekt('p1', 'Sweter', T0, { stan: 'ukonczony', ukonczono: T0 })]);
-    expect(await zmienDateUkonczenia(s.z, { projektId: 'p1', ukonczonoMs: T0 - 3 * DOBA, ukonczonoDzien: dzienLokalny(T0 - 3 * DOBA, 'Europe/Warsaw') })).toEqual(OK);
+    // 08 partia 4 (P-137): bez ukonczonoMs — ta sama pora co ukończenie (T0), więc chwila = T0 − 3 doby (bez zmiany czasu w tym okresie).
+    expect(await zmienDateUkonczenia(s.z, { projektId: 'p1', ukonczonoDzien: dzienLokalny(T0 - 3 * DOBA, 'Europe/Warsaw') })).toEqual(OK);
     expect((await listaProjektow(s.baza)).ukonczone.map((p) => p.ukonczonoMs)).toEqual([T0 - 3 * DOBA]);
   });
 

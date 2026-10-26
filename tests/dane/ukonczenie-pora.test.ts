@@ -2,8 +2,8 @@
 // lokalna (strefa urządzenia z Zegar) co pierwotnie, w nowym dniu; zmienia się tylko data. Test oczekujący roli 05 (fix-4): czerwony na asercji
 // do wdrożenia przez 08 (partia 4; sygnatura bez ukonczonoMs: „Kontrakt partii 4” w docs/architektura/moduly.md). Wyrocznia: rachunek dat
 // (Europe/Warsaw: CEST = UTC+2 do 2026-10-25 03:00, potem CET = UTC+1; 2026-03-29 02:00–03:00 nie istnieje).
-import { utworzProjekt, zakonczProjekt, zmienDateUkonczenia } from '../../../src/przypadki-uzycia/projekt';
-import { jeden, przygotuj } from '../../dane/pomocnicze/srodowisko';
+import { utworzProjekt, zakonczProjekt, zmienDateUkonczenia } from '../../src/przypadki-uzycia/projekt';
+import { jeden, przygotuj } from './pomocnicze/srodowisko';
 
 type Wejscie = Parameters<typeof zmienDateUkonczenia>[1];
 async function ukonczony(ukonczonoUtc: number) {
