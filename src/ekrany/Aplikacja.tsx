@@ -111,6 +111,7 @@ export function Aplikacja(p: PropsAplikacji): React.ReactElement {
       naNastepnaCzesc={d.naNastepnaCzesc ?? nic}
       naProjekty={d.naProjekty}
       naProjekt={d.naProjekt}
+      naWzor={d.naWzor}
       stoper={p.stoper}
       sprawdzStopera={p.sprawdzStopera}
       naKonflikt={d.naKonflikt}

@@ -11,7 +11,7 @@ import { utworzMagazyn } from '../dane/pliki/magazyn';
 import { utworzArchiwum } from '../dane/archiwum';
 import { czasWTle } from '../platforma/czas-w-tle';
 import type { ZaleznosciArchiwum } from '../przypadki-uzycia/zaleznosci';
-import { czytajTekst, istniejePlik, katalogBiblioteki, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
+import { czytajTekst, istniejePlik, katalogBiblioteki, katalogGrupyAplikacji, polacz, utworzKatalog, zapiszTekst } from '../dane/pliki/system';
 import { dostepPro, type DostepPro } from './dostep';
 import { utworzI18n } from '../i18n/i18n';
 import { ZASOBY } from '../i18n/slowniki';
@@ -24,8 +24,13 @@ import { identyfikatory } from '../platforma/identyfikatory';
 import { liveActivity } from '../platforma/live-activity';
 import { tagiSystemowe, zegar24h } from '../platforma/lokalizacja';
 import { sklepAplikacji } from '../platforma/sklep';
-import { trybIcloudE2e, zegarAplikacji } from '../platforma/tryb-e2e';
+import { skrzynkaE2e, skrzynkaTestowa, trybIcloudE2e, zegarAplikacji } from '../platforma/tryb-e2e';
 import { przelacznikIcloudWidoczny, silnikIcloud, type SilnikIcloud } from '../platforma/icloud';
+import { platformaWzoru, type PlatformaWzoru } from '../platforma/wzor';
+import { skrzynkaWKatalogu } from '../platforma/skrzynka';
+import { migawkaWKatalogu } from '../platforma/migawka';
+import { GRUPA_APLIKACJI } from '../platforma/identyfikatory';
+import { kompozycjaWzoru, type KompozycjaWzoru, type ZaleznosciKompozycjiWzoru } from './wzor';
 import { sterownikSynchronizacji, type Sterownik } from '../przypadki-uzycia/synchronizacja';
 import { zegarek } from '../platforma/zegarek';
 import type { Tlumacz } from '../ekrany/wspolne';
@@ -40,6 +45,8 @@ export type Kontener = {
   dostep: DostepPro;
   katalogDanych: string;
   /** iCloud (partia 7): sterownik albo null, gdy silnika nie ma w buildzie; `widoczny` = wiersz w Data and sync (ZM-06, P-242). */
+  /** Partia 6: wzory (konwersja, skaner), skrzynka importu i migawka w App Group, stan arkusza skrzynki. */
+  wzor: { z: ZaleznosciKompozycjiWzoru; k: KompozycjaWzoru; platforma: PlatformaWzoru };
   icloud: { sterownik: Sterownik; widoczny: boolean; e2e: SilnikIcloud['e2e']; naPartie(f: () => void): () => void } | null;
 };
 
@@ -103,6 +110,11 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     ...z0, czasWTle: czasWTle(), ...(silnik ? { synchronizacja: silnik } : {}),
     archiwum: utworzArchiwum({ baza, magazyn: z0.magazyn, zegar, katalogi: z0.katalogi, migruj: z0.migruj, aplikacja: 'oczko' }),
   };
+  // Partia 6: App Group (ADR-0011 fix-7) — skrzynka rozszerzenia i migawka projektów; bez grupy w podpisie (build symulatora) obie są puste.
+  const grupa = katalogGrupyAplikacji(GRUPA_APLIKACJI);
+  const platforma = platformaWzoru();
+  const zWzoru: ZaleznosciKompozycjiWzoru = { ...z, konwersja: platforma, skrzynka: skrzynkaWKatalogu(grupa, () => zegar.teraz().ms), migawka: migawkaWKatalogu(grupa, () => zegar.teraz().ms) };
+  const wzor = { z: zWzoru, platforma, k: kompozycjaWzoru(zWzoru, { grupa, zlecenieE2e: skrzynkaE2e() && skrzynkaTestowa ? skrzynkaTestowa.wlozZlecenieTestowe : null }) };
   const t: Tlumacz = (k, p) => i18n.t(k, p);
   return {
     ok: true,
@@ -110,7 +122,7 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
       z,
       j: { t, jezyk, zegar24h, naZmiane: (f) => i18n.naZmiane(f), preferencja: () => i18n.preferencja(), ustawJezyk: (p) => i18n.ustawJezyk(p) },
       porty: { sklep, ekranAktywny: ekranAktywny(), haptyka: haptyka() },
-      dostep, katalogDanych, icloud,
+      dostep, katalogDanych, icloud, wzor,
     },
   };
 }

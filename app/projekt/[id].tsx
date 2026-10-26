@@ -9,6 +9,8 @@ import { GrupaZdjec, type Miniatura } from '../../src/ekrany/Zdjecia';
 import { zaleznosciObrazu } from '../../src/kompozycja/obrazy-aplikacji';
 import { zdjecieBezMetadanych } from '../../src/kompozycja/zdjecie-bez-metadanych';
 import { usunPlik } from '../../src/dane/pliki/system';
+import { GrupaWzorow } from '../../src/ekrany/WzorGrupa';
+import { listaWzorow, type WzorNaLiscie } from '../../src/przypadki-uzycia/wzor';
 import { paneleE2e } from '../../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../../src/platforma/zdjecia';
 import { dodajZdjecie, zdjecia } from '../../src/przypadki-uzycia/zdjecia';
@@ -34,6 +36,7 @@ export default function EkranProjektu(): React.ReactElement {
   const [edycja, ustawEdycje] = useState(false);
   const [sesje, ustawSesje] = useState<SesjaNaEkranie[]>([]); // grupa „Time” (P-191 P4a)
   const [miniatury, ustawMiniatury] = useState<Miniatura[]>([]); // grupa „Photos” (P-191 P9a)
+  const [wzory, ustawWzory] = useState<WzorNaLiscie[]>([]); // grupa „Pattern(s)” (partia 6, W8)
   const z = kontener.z, j = kontener.j, t = j.t;
   const wczytaj = useCallback(async () => {
     const r = await widokProjektu(z, { projektId: id });
@@ -43,6 +46,8 @@ export default function EkranProjektu(): React.ReactElement {
     if (s.ok) ustawSesje(s.wartosc);
     const f = await zdjecia(z, { projektId: id });
     if (f.ok) ustawMiniatury(f.wartosc.map((x) => ({ id: x.id, uri: `file://${z.magazyn.sciezka(x.sha256)}` })));
+    const lw = await listaWzorow(z, { projektId: id });
+    if (lw.ok) ustawWzory(lw.wartosc);
   }, [z, id, router]);
   useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
   if (!w) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
@@ -77,11 +82,25 @@ export default function EkranProjektu(): React.ReactElement {
       naOtworz={(i) => router.push({ pathname: '/zdjecie', params: { projekt: w.id, i: String(i) } })}
       panelE2e={paneleE2e ? <paneleE2e.PanelZdjecia katalogTymczasowy={z.katalogi.tymczasowy} naPlik={(p) => void dodajPlik(p)} /> : undefined} />
   );
+  // Partia 6 (W8): wzór otwiera się z licznikiem projektu (pasek licznika pod wzorem); dodanie przez trasę /wzor (te same źródła W7a).
+  const doWzoru = async (params: Record<string, string>) => {
+    const l = w.czesci.flatMap((c) => c.liczniki)[0];
+    if (!l) return;
+    await licznik.otworz(l.id);
+    router.push({ pathname: '/wzor', params });
+  };
+  const RODZ = { pdf: 'wzor.rodzaj_pdf', obraz: 'wzor.rodzaj_zdjecie', www: 'wzor.rodzaj_strona', word: 'wzor.rodzaj_word' } as const;
+  const grupaWzorow = (
+    <GrupaWzorow t={t} wzory={wzory.map((x) => ({ wzorId: x.wzorId, nazwa: x.nazwa, opis: t(RODZ[x.zrodlo as keyof typeof RODZ] ?? 'wzor.rodzaj_pdf') }))}
+      oczekujace={kontener.wzor.k.stan().czekaSiec.filter((x) => x.projektId === w.id).map((x) => ({ id: x.id, nazwa: x.nazwa, stan: 'siec' as const }))}
+      skaner={kontener.wzor.platforma.skanerDostepny()} naOtworz={(wid) => void doWzoru({ id: wid })} naDodaj={(zr) => void doWzoru({ dodaj: zr })}
+      naUsunOczekujacy={(zid) => void kontener.wzor.k.potwierdzBlad(zid).then(wczytaj)} />
+  );
   const licznikW = (lid: string) => stan.czesci.flatMap((c) => c.liczniki ?? []).find((l) => l.id === lid);
   return (
     <Bezpieczny>
       <Projekt
-        stan={stan} t={t} edycja={edycja} zdjecia={grupaZdjec}
+        stan={stan} t={t} edycja={edycja} zdjecia={grupaZdjec} wzory={grupaWzorow}
         naSesje={() => router.push({ pathname: '/sesje', params: { projekt: w.id } })}
         naProbka={() => router.push({ pathname: '/probka', params: { projekt: w.id } })}
         naWstecz={() => (router.canGoBack() ? router.back() : router.replace('/projekty'))}

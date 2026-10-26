@@ -8,20 +8,23 @@ import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { ustawBlokade, wyzeruj } from '../src/przypadki-uzycia/licznik';
 import { zakonczProjekt } from '../src/przypadki-uzycia/projekt';
 import type { WidokLicznika } from '../src/przypadki-uzycia/widok-licznika';
+import { listaWzorow } from '../src/przypadki-uzycia/wzor';
 
 export default function EkranMenu(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
   const router = useRouter();
   const k = useKolory();
   const [w, ustaw] = useState<WidokLicznika | null>(null);
-  useEffect(() => { void licznik.widok().then(ustaw); }, [licznik]);
+  const [maWzor, ustawMaWzor] = useState(false); // partia 6: „Pattern” albo „Add pattern…” (W2a)
+  useEffect(() => { void licznik.widok().then(async (x) => { ustaw(x); if (x) { const l = await listaWzorow(kontener.z, { projektId: x.projektId }); ustawMaWzor(l.ok && l.wartosc.length > 0); } }); }, [licznik, kontener]);
   if (!w) return <View style={{ flex: 1, backgroundColor: k.arkusz }} />;
   const z = kontener.z;
   const poZapisie = async (r: { ok: boolean }) => { if (r.ok) await licznik.poZmianie(); router.back(); };
   const formularz = (rodzaj: string) => router.replace({ pathname: '/formularz/[rodzaj]', params: { rodzaj } });
   return (
     <MenuProjektu
-      stan={{ projekt: licznik.nazwaProjektu(w), zablokowany: w.zablokowany, wartosc: w.wartosc }}
+      stan={{ projekt: licznik.nazwaProjektu(w), zablokowany: w.zablokowany, wartosc: w.wartosc, maWzor }}
+      naWzor={() => router.replace('/wzor')}
       t={kontener.j.t}
       naNazwa={() => formularz('nazwa')} naCel={() => formularz('cel')} naPrzypomnienie={() => formularz('przypomnienie')}
       naPowtorzenie={() => formularz('powtorzenie')} naWpisz={() => formularz('wpisz')} naZnaczenie={() => formularz('znaczenie')}

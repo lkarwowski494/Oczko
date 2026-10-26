@@ -35,3 +35,13 @@ describe('wybieraczZdjec', () => {
     expect(await wybieraczZdjec(modul({ blad: true }).m).wybierz('biblioteka')).toEqual({ rodzaj: 'blad' });
   });
 });
+
+describe('wybieraczZdjec.wybierzStrony (wzór ze zdjęć, W7a; P-218 (1): kilka zdjęć = jeden wzór)', () => {
+  test('biblioteka z wyborem wielu (do 20), bez EXIF; ścieżki bez file://; anulowanie i wyjątek', async () => {
+    const a = modul({ uri: 'file:///tmp/ImagePicker/S%201.jpeg' });
+    expect(await wybieraczZdjec(a.m).wybierzStrony()).toEqual({ rodzaj: 'zdjecia', sciezki: ['/tmp/ImagePicker/S 1.jpeg'] });
+    expect(a.wywolania).toEqual([{ rodzaj: 'biblioteka', opcje: { mediaTypes: ['images'], exif: false, allowsMultipleSelection: true, selectionLimit: 20 } }]);
+    expect(await wybieraczZdjec(modul({ anuluj: true }).m).wybierzStrony()).toEqual({ rodzaj: 'anulowano' });
+    expect(await wybieraczZdjec(modul({ blad: true }).m).wybierzStrony()).toEqual({ rodzaj: 'blad' });
+  });
+});

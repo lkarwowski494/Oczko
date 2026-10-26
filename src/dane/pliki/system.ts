@@ -89,3 +89,8 @@ export function czasZmianyKatalogu(sciezka: string): number | null {
   const i = new Directory(uri(sciezka)).info();
   return i.exists && typeof i.modificationTime === 'number' ? i.modificationTime : null;
 }
+/** Katalog kontenera App Group (ADR-0011 fix-7; `Paths.appleSharedContainers` czyta grupy z uprawnień aplikacji); null bez grupy w podpisie. */
+export function katalogGrupyAplikacji(grupa: string): string | null {
+  const k = (Paths as { appleSharedContainers?: Record<string, Directory> }).appleSharedContainers?.[grupa];
+  return k ? decodeURIComponent(k.uri.replace(/^file:\/\//, '').replace(/\/$/, '')) : null;
+}

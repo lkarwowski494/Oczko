@@ -4,3 +4,5 @@ import { randomUUID } from 'expo-crypto';
 import type { Identyfikatory } from '../domena/porty';
 
 export const identyfikatory: Identyfikatory = { nowy: () => randomUUID() };
+/** App Group aplikacji i rozszerzenia „Udostępnij do Oczka” (L3b, P-234; identyfikator rejestruje właściciel). */
+export const GRUPA_APLIKACJI = 'group.com.apps4brew.knitting';

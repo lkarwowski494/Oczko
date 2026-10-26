@@ -6,9 +6,10 @@ import { Pressable, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { PLIK_BAZY } from '../../dane/baza/sciezki';
 import { stanPlikuBazy } from '../../dane/pliki/magazyn';
-import { polacz } from '../../dane/pliki/system';
+import { polacz, zapiszTekst } from '../../dane/pliki/system';
 import { plikiE2e } from '../e2e-pliki';
 import { zdjecieTestowe } from '../e2e-zdjecie';
+import { pdfTestowy } from './skrzynka';
 
 /** Oferty: „wygaś dostęp” sztucznego sklepu (app/oferty.tsx). */
 export function PanelSklepu({ naWygas }: { naWygas(): void }): React.ReactElement {
@@ -75,4 +76,23 @@ export function PanelIcloud({ wyslane, usuniete }: { wyslane: number; usuniete: 
       <Text testID="e2e-icloud-usuniete">{usuniete ? 'tak' : 'nie'}</Text>
     </View>
   );
+}
+
+/** Dodanie wzoru (partia 6, e2e/README.md `e2e-wzor-pdf`, `e2e-wzor-zdjecie`): pliki testowe bez okna Plików i Zdjęć (subflow otworz-wzor-pdf, scenariusze 21, 22). */
+export function PanelWzoru(p: { katalogTymczasowy: string; naPdf(sciezka: string): void; naZdjecie(sciezka: string): void }): React.ReactElement {
+  return (
+    <View>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-pdf" onPress={() => p.naPdf(pdfTestowyPlik(p.katalogTymczasowy))} style={{ padding: 12 }}>
+        <Text>Test pattern (PDF)</Text>
+      </Pressable>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-zdjecie" onPress={() => p.naZdjecie(zdjecieTestowe(p.katalogTymczasowy))} style={{ padding: 12 }}>
+        <Text>Test pattern (photo)</Text>
+      </Pressable>
+    </View>
+  );
+}
+function pdfTestowyPlik(katalog: string): string {
+  const sciezka = polacz(katalog, `e2e-wzor-${Date.now()}.pdf`);
+  zapiszTekst(sciezka, pdfTestowy());
+  return sciezka;
 }

@@ -26,3 +26,13 @@ export const portOcenySklepu: PortOceny = {
   wersja: () => Constants.expoConfig?.version ?? '',
   popros: () => StoreReview.requestReview(),
 };
+/** Wybór pliku wzoru z Plików (W7a „Choose file (PDF or Word)”): PDF albo .docx, kopia w katalogu tymczasowym. `null` = anulowano. */
+export async function wybierzPlikWzoru(): Promise<{ sciezka: string; nazwa: string; typ: string } | null> {
+  const w = await DocumentPicker.getDocumentAsync({
+    copyToCacheDirectory: true, multiple: false,
+    type: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'],
+  });
+  const a = w.canceled ? undefined : w.assets?.[0];
+  if (!a) return null;
+  return { sciezka: sciezkaZUri(a.uri), nazwa: a.name, typ: a.mimeType ?? '' };
+}

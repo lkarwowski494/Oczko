@@ -12,6 +12,7 @@ import { pokazacOknoUczciweZasady } from '../src/przypadki-uzycia/informacje-pro
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
 import { SprawdzStopera, StoperLicznika } from '../src/kompozycja/StoperLicznika';
 import { powodAwaryjny, zapiszKamien } from '../src/kompozycja/start-aplikacji';
+import { listaWzorow } from '../src/przypadki-uzycia/wzor';
 
 export default function EkranLicznika(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
@@ -27,6 +28,8 @@ export default function EkranLicznika(): React.ReactElement {
   }), [licznik]);
   const [projektId, ustawProjekt] = useState<string | null>(null); // stoper sesji w pasku (P-191 P1a) — projekt bieżącego licznika
   useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik]);
+  const [maWzor, ustawMaWzor] = useState(false); // ikona „Pattern” tylko z wzorem (P-220 W2a)
+  useFocusEffect(useCallback(() => { if (projektId) void listaWzorow(kontener.z, { projektId }).then((l) => ustawMaWzor(l.ok && l.wartosc.length > 0)); else ustawMaWzor(false); }, [projektId, kontener]));
   // Partia z iCloud (partia 7): stan ekranu blokady i licznik od nowa (np. linia konfliktu, P-220 I1a).
   useEffect(() => kontener.icloud?.naPartie(() => { void licznik.poZmianie().then(() => ustawWersje(licznik.wersja())); }), [kontener, licznik]);
   useEffect(() => {
@@ -67,7 +70,7 @@ export default function EkranLicznika(): React.ReactElement {
         system={systemAplikacji}
         oglos={oglos}
         t={kontener.j.t}
-        dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty'),
+        dzialania={{ ...licznik.dzialania, naProjekty: () => router.push('/projekty'), naHistorie: () => router.push('/historia'), naWzor: maWzor ? () => router.push('/wzor') : undefined, naMenu: () => router.push('/menu'), naOferty: () => router.push('/oferty'),
           naProjekt: () => void licznik.widok().then((w) => { if (w) router.push({ pathname: '/projekt/[id]', params: { id: w.projektId } }); }),
           naNastepnaCzesc: () => void naNastepnaCzesc(), naKonflikt: () => router.push('/konflikt') }}
         stoper={projektId ? (

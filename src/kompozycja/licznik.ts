@@ -101,7 +101,7 @@ export type KompozycjaLicznika = {
 const NAZWA_URZADZENIA = { iphone: 'iPhone', ipad: 'iPad' } as const;
 export type WyborKonfliktu = { glowa: string; wartosc: number; tekst: string; etykieta: string };
 /** Opcje: `icloud` = sterownik synchronizacji (partia 7), uruchamiany po danych startu i poza kolejką `uruchomDane`. */
-export type OpcjeKompozycji = { wibracje(): boolean; icloud?: { start(): Promise<void> } };
+export type OpcjeKompozycji = { wibracje(): boolean; icloud?: { start(): Promise<void> }; skrzynka?: { start(): Promise<void> } }; // skrzynka: partia 6 (P-246)
 
 /** `przygotuj` uruchamia dane raz na proces (ADR-0019: błąd → ekran awaryjny, wołający); potem ekran licznika czyta przez `uslugi`. */
 export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKompozycji = { wibracje: () => true }): KompozycjaLicznika {
@@ -144,6 +144,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
   const k: KompozycjaLicznika = {
     async przygotuj() {
       const d = await (start ??= uruchomDane(z).then(async (r) => {
+        if (r.ok && o.skrzynka) void o.skrzynka.start().catch(() => undefined); // partia 6: skrzynka importu i migawka w tle (konwersja może czekać na sieć; NFR-PIE-001)
         if (r.ok && o.icloud) await o.icloud.start().catch(() => undefined); // iCloud nie blokuje startu; błąd silnika = stan w Data and sync
         return r;
       }));
@@ -229,6 +230,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
         return { ok: true, wartosc: { skonczone: w.wartosc, dziergany: w.wartosc + 1, zdarzenia: zdarzeniaPlus(w, sygnal !== null), wejscieWPrzypomnienie: sygnal } };
       },
       async scalDziennik() {
+        void o.skrzynka?.start().catch(() => undefined); // partia 6: nowe zlecenia z rozszerzenia po powrocie na pierwszy plan
         const r = await naPierwszyPlan(z);
         if (r.ok) potwierdz(r.wartosc.potwierdzone);
         const { w } = await stan();
