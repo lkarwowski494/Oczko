@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Kalkulator, Wloczka } from '../../../src/ekrany/Narzedzia';
 import { LinkFilmu } from '../../../src/ekrany/Wzor';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaSystemu, tEn } from './pomoc';
+import { atrapaSystemu, tEn } from '../../ekrany/pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

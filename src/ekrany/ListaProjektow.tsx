@@ -1,7 +1,8 @@
-// Lista projektów (F-50, F-54, F-60; design-spec.md:55, ekrany.html `projekty`).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
-import type React from 'react';
-import { niezaimplementowane } from '../domena/zaslepka';
+// Lista projektów (F-50, F-54, F-60; design-spec.md:55, ekrany.html `projekty`). Sygnatura: propozycja 07 (E3), granice zatwierdzone przez 05.
+// Wyszukiwanie liczy przypadek użycia (stan przychodzi przefiltrowany); licznik darmowych dni tylko bez Pro (design-spec „Limit dni”).
+import React from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import type { Tlumacz } from './wspolne';
 
 export type WierszProjektu = { id: string; nazwa: string; opis: string; kolorWloczki: string | null }; // opis sformatowany: „Left sleeve · row 47 of 96 · today”
@@ -15,6 +16,59 @@ export type PropsListyProjektow = {
   naOtworz(id: string): void;
   naNowy(): void;
 };
-export function ListaProjektow(_p: PropsListyProjektow): React.ReactElement {
-  return niezaimplementowane('ekrany/ListaProjektow');
+
+export function ListaProjektow({ stan: s, t, naSzukaj, naOtworz, naNowy }: PropsListyProjektow): React.ReactElement {
+  const k = useKolory();
+  const st = style(k);
+  const pusto = s.wToku.length === 0 && s.ukonczone.length === 0;
+  const sekcja = (naglowek: string, wiersze: WierszProjektu[]) => wiersze.length > 0 && (
+    <View style={st.grupa}>
+      <Text style={st.naglowek} accessibilityRole="header">{naglowek}</Text>
+      {wiersze.map((w) => (
+        <Pressable key={w.id} accessibilityRole="button" onPress={() => naOtworz(w.id)} style={st.wiersz} testID={`projekt-${w.id}`}>
+          {w.kolorWloczki && <View style={[st.kropka, { backgroundColor: w.kolorWloczki }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />}
+          <View style={st.wierszTekst}>
+            <Text style={st.nazwa}>{w.nazwa}</Text>
+            <Text style={st.opis}>{w.opis}</Text>
+          </View>
+        </Pressable>
+      ))}
+    </View>
+  );
+  return (
+    <ScrollView style={st.ekran} contentContainerStyle={st.tresc}>
+      <View style={st.pasek}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.nowy')} onPress={naNowy} style={st.ikona} testID="projekty-nowy">
+          <Text style={st.ikonaTekst} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">＋</Text>
+        </Pressable>
+      </View>
+      <Text style={st.tytul} accessibilityRole="header">{t('projekty.tytul')}</Text>
+      <TextInput placeholder={t('projekty.szukaj')} accessibilityLabel={t('projekty.szukaj')} placeholderTextColor={k.olowek} value={s.zapytanie}
+        onChangeText={naSzukaj} style={st.szukaj} autoCorrect={false} testID="projekty-szukaj" />
+      {pusto && <Text style={st.info}>{s.zapytanie ? t('projekty.brak_wynikow', { zapytanie: s.zapytanie }) : t('projekty.pusto')}</Text>}
+      {sekcja(t('projekty.w_toku'), s.wToku)}
+      {sekcja(t('projekty.ukonczone'), s.ukonczone)}
+      {s.dni && <Text style={st.info}>{t('projekty.dni', { zostalo: s.dni.zostalo, limit: s.dni.limit, miesiac: s.dni.miesiac })}</Text>}
+    </ScrollView>
+  );
+}
+
+function style(k: Kolory) {
+  return StyleSheet.create({
+    ekran: { flex: 1, backgroundColor: k.papier },
+    tresc: { padding: odstep.l, gap: odstep.l },
+    pasek: { flexDirection: 'row', justifyContent: 'flex-end' },
+    ikona: { minWidth: cel.minimum, minHeight: cel.minimum, alignItems: 'center', justifyContent: 'center' },
+    ikonaTekst: { ...typografia.instrukcja, color: k.grafit },
+    tytul: { ...typografia.tytul, color: k.grafit },
+    szukaj: { ...typografia.tresc, color: k.grafit, minHeight: cel.minimum, borderRadius: promien.pole, backgroundColor: k.papierGrupa, paddingHorizontal: odstep.m },
+    grupa: { borderRadius: promien.grupa, backgroundColor: k.papierGrupa, overflow: 'hidden' },
+    naglowek: { ...typografia.podpis, color: k.olowek, paddingHorizontal: odstep.l, paddingTop: odstep.m },
+    wiersz: { flexDirection: 'row', alignItems: 'center', gap: odstep.m, minHeight: cel.minimum, padding: odstep.l, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: k.linia },
+    kropka: { width: odstep.m, height: odstep.m, borderRadius: odstep.m / 2 },
+    wierszTekst: { flex: 1 },
+    nazwa: { ...typografia.tresc, color: k.grafit, fontWeight: '700' },
+    opis: { ...typografia.podpis, color: k.olowek },
+    info: { ...typografia.podpis, color: k.olowek },
+  });
 }

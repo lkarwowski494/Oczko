@@ -1,11 +1,11 @@
 // Pomocnicy testów ekranów (rola 07, E3). `t` to prawdziwy mechanizm i18n (ADR-0017) ze słownikiem en: test pyta po tekście
 // z design-spec.md, więc zazieleni się dopiero, gdy 08 doda klucz z tym tekstem do en.json (DEV-12). Atrapy portów: jest.fn.
 import { screen, waitFor } from '@testing-library/react-native';
-import { utworzI18n } from '../../../src/i18n/i18n';
-import { ZASOBY } from '../../../src/i18n/slowniki';
-import type { Tlumacz, System, CyklAplikacji, StanCyklu } from '../../../src/ekrany/wspolne';
-import type { Haptyka } from '../../../src/domena/porty';
-import type { StanEkranuLicznika, WynikPlus } from '../../../src/ekrany/Licznik';
+import { utworzI18n } from '../../src/i18n/i18n';
+import { ZASOBY } from '../../src/i18n/slowniki';
+import type { Tlumacz, System, CyklAplikacji, StanCyklu } from '../../src/ekrany/wspolne';
+import type { Haptyka } from '../../src/domena/porty';
+import type { StanEkranuLicznika, WynikPlus } from '../../src/ekrany/Licznik';
 
 export async function tEn(): Promise<Tlumacz> {
   const i = await utworzI18n({ magazyn: { odczytaj: async () => null, zapisz: async () => {} }, systemowe: () => ['en-US'], zasoby: ZASOBY });

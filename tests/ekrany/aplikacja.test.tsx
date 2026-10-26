@@ -2,9 +2,9 @@
 // `UslugiAplikacji` = atrapa przypadków użycia (sygnatury [DO USTALENIA] 05).
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { Aplikacja, type UslugiAplikacji } from '../../../src/ekrany/Aplikacja';
-import type { EkranAktywny, Sklep } from '../../../src/domena/porty';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
+import { Aplikacja, type UslugiAplikacji } from '../../src/ekrany/Aplikacja';
+import type { EkranAktywny, Sklep } from '../../src/domena/porty';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaCyklu, atrapaHaptyki, atrapaSystemu, plusOk, stanLicznika, tEn, znajdzPrzycisk } from './pomoc';
 
 let t: Tlumacz;

@@ -2,8 +2,8 @@
 // Decyzję „zawczasu / praca w toku” liczy domena (`mozeZaczacDzien`, wektory Z-02, Z-03, L-04); ekran pokazuje stan, który dostał.
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../../src/ekrany/Licznik';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
+import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../src/ekrany/Licznik';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaHaptyki, plusOk, przycisk, stanLicznika, tEn, wywolaniaLicznika, znajdzPrzycisk } from './pomoc';
 
 let t: Tlumacz;

@@ -3,8 +3,8 @@
 // klucze z tymi tekstami dodaje 08 (DEV-12). Stany bez makiety: zapytanie robocze z komentarzem Z07-05.
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../../src/ekrany/Licznik';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
+import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../src/ekrany/Licznik';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaHaptyki, odroczona, zagrane, plusOk, przycisk, stanLicznika, tEn, wywolaniaLicznika } from './pomoc';
 
 let t: Tlumacz;

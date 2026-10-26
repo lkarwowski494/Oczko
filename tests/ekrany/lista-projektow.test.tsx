@@ -1,8 +1,8 @@
 // Lista projektów (F-50, BR-PRJ-012, BR-ZAK-006/S5; design-spec.md:18, :55; ekrany.html `projekty`).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { ListaProjektow, type StanListyProjektow } from '../../../src/ekrany/ListaProjektow';
-import type { Tlumacz } from '../../../src/ekrany/wspolne';
+import { ListaProjektow, type StanListyProjektow } from '../../src/ekrany/ListaProjektow';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { przycisk, tEn } from './pomoc';
 
 let t: Tlumacz;

@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { TrybAwaryjny } from '../../../src/ekrany/TrybAwaryjny';
 import { Import, Konflikt } from '../../../src/ekrany/Dane';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { tEn, tekst } from './pomoc';
+import { tEn, tekst } from '../../ekrany/pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

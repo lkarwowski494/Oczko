@@ -1,11 +1,14 @@
 // Korzeń aplikacji: pierwszy ekran, start, cykl życia (NFR-PIE-001, BR-LIC-001, KP-07, KP-08, KP-13, BR-DAN-012/S2, R-020, R-091).
-// Zaślepka roli 07 (E3, P-090 Q2a): tylko sygnatura, zero logiki i wyglądu. Sygnatura = propozycja 07; do zatwierdzenia przez 04 (teksty, stany); porty i granice zatwierdzone przez 05 (fix 2026-10-25, Z07-22).
-// `UslugiAplikacji` to atrapa warstwy przypadków użycia widziana z ekranu (src/przypadki-uzycia: sygnatury od 05, moduly.md:20) — [DO USTALENIA] 05.
-import type React from 'react';
+// Sygnatura: propozycja 07 (E3), porty i granice zatwierdzone przez 05 (Z07-22). Pierwszy ekran to licznik — nic przed nim (NFR-PIE-001);
+// nasłuch transakcji od startu (KP-07), bez przywracania i ekranu zakupu przy starcie (KP-08, KP-13); powrót na pierwszy plan scala dziennik
+// +1 (R-020); przejście w tło wyłącza każdy tag ekranu aktywnego i robi checkpoint (R-091). Pozostałe działania licznika podaje kompozycja.
+import React, { useEffect, useRef, useState } from 'react';
+import { View } from 'react-native';
 import type { EkranAktywny, Haptyka, Sklep } from '../domena/porty';
-import { niezaimplementowane } from '../domena/zaslepka';
+import { wejdzNaEkranLicznika } from '../przypadki-uzycia/ekran-aktywny';
+import { Licznik, type PropsLicznika, type StanEkranuLicznika, type WynikPlus } from './Licznik';
+import { useKolory } from './motyw';
 import type { CyklAplikacji, Oglos, System, Tlumacz } from './wspolne';
-import type { StanEkranuLicznika, WynikPlus } from './Licznik';
 
 export type StanStartu = {
   licznik: StanEkranuLicznika;          // F-49: powrót do miejsca; świeża instalacja: licznik bez nazwy z 0
@@ -17,6 +20,11 @@ export interface UslugiAplikacji {
   scalDziennik(): Promise<void>;        // ADR-0008: przy wejściu na pierwszy plan (R-020)
   przyTle(): Promise<void>;             // wal_checkpoint(TRUNCATE) w kolejce (R-091)
 }
+/** Pozostałe działania ekranu licznika (kompozycja aplikacji, app/); bez nich — nic nie robią. */
+export type DzialaniaLicznika = Partial<Omit<PropsLicznika, 'stan' | 't' | 'oglos' | 'haptyka' | 'naPlus'>> & {
+  /** Stan licznika po zmianie z innego ekranu (np. odblokowanie, cofnięcie serii); kompozycja woła po COMMIT. */
+  odswiez?(): Promise<StanEkranuLicznika>;
+};
 export type PropsAplikacji = {
   porty: { sklep: Sklep; ekranAktywny: EkranAktywny; haptyka: Haptyka }; // DziennikPlus czyta przypadek użycia scalDziennik
   uslugi: UslugiAplikacji;
@@ -24,7 +32,67 @@ export type PropsAplikacji = {
   system: System;
   oglos: Oglos;
   t: Tlumacz;
+  dzialania?: DzialaniaLicznika;
 };
-export function Aplikacja(_p: PropsAplikacji): React.ReactElement {
-  return niezaimplementowane('ekrany/Aplikacja');
+
+const nic = () => undefined;
+
+export function Aplikacja(p: PropsAplikacji): React.ReactElement {
+  const k = useKolory();
+  const [stan, ustawStan] = useState<StanStartu | null>(null);
+  const ekranWlaczony = useRef<boolean | null>(null); // opcja F-10 ze startu (do ponownego wejścia po powrocie z tła)
+  const wyjscieEkranu = useRef<(() => void) | null>(null);
+  const { uslugi, porty, cykl } = p;
+
+  useEffect(() => porty.sklep.obserwuj(nic), [porty.sklep]); // KP-07: nasłuch transakcji od startu
+  useEffect(() => {
+    let zywy = true;
+    void uslugi.start().then((s) => {
+      if (!zywy) return;
+      ustawStan(s);
+      ekranWlaczony.current = s.ekranWlaczony;
+      wyjscieEkranu.current = wejdzNaEkranLicznika({ ekran: porty.ekranAktywny }, { opcjaWlaczona: s.ekranWlaczony });
+    });
+    return () => { zywy = false; wyjscieEkranu.current?.(); wyjscieEkranu.current = null; };
+  }, [uslugi, porty.ekranAktywny]);
+  useEffect(() => cykl.naZmiane((c) => {
+    if (c === 'background') {
+      wyjscieEkranu.current?.(); // każdy włączony tag wyłączony (rejestr Expo 7)
+      wyjscieEkranu.current = null;
+      void uslugi.przyTle();
+    } else if (c === 'active') {
+      void uslugi.scalDziennik().then(async () => { if (p.dzialania?.odswiez) { const l = await p.dzialania.odswiez(); ustawStan((s) => (s ? { ...s, licznik: l } : s)); } });
+      if (ekranWlaczony.current !== null && !wyjscieEkranu.current) {
+        wyjscieEkranu.current = wejdzNaEkranLicznika({ ekran: porty.ekranAktywny }, { opcjaWlaczona: ekranWlaczony.current });
+      }
+    }
+  }), [cykl, uslugi, porty.ekranAktywny, p.dzialania]);
+
+  if (!stan) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
+  const d = p.dzialania ?? {};
+  async function naPlus(): Promise<WynikPlus> {
+    const w = await uslugi.dodajRzad();
+    if (w.ok) ustawStan((s) => (s ? { ...s, licznik: { ...s.licznik, skonczone: w.wartosc.skonczone, dziergany: w.wartosc.dziergany } } : s));
+    return w;
+  }
+  return (
+    <Licznik
+      stan={stan.licznik}
+      t={p.t}
+      oglos={p.oglos}
+      haptyka={porty.haptyka}
+      naPlus={naPlus}
+      naMinus={async () => {
+        const w = d.naMinus ? await d.naMinus() : { ok: false as const, powod: 'niedozwolone_przejscie' as const };
+        if (w.ok) ustawStan((s) => (s ? { ...s, licznik: { ...s.licznik, skonczone: w.wartosc.skonczone, dziergany: w.wartosc.skonczone + 1 } } : s));
+        return w;
+      }}
+      naOdblokuj={d.naOdblokuj ?? nic}
+      naCofnijSerie={d.naCofnijSerie ?? nic}
+      naOferty={d.naOferty ?? nic}
+      naHistorie={d.naHistorie ?? nic}
+      naMenu={d.naMenu ?? nic}
+      naNastepnaCzesc={d.naNastepnaCzesc ?? nic}
+    />
+  );
 }

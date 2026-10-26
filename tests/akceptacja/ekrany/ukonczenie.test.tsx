@@ -3,7 +3,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Ukonczenie, type StanUkonczenia } from '../../../src/ekrany/Ukonczenie';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { atrapaSystemu, przycisk, tEn } from './pomoc';
+import { atrapaSystemu, przycisk, tEn } from '../../ekrany/pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

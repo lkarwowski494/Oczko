@@ -10,7 +10,7 @@ import { join, relative, dirname, resolve } from 'node:path';
 
 const ik = process.argv.indexOf('--korzen');
 const KORZEN = ik > 0 ? resolve(process.argv[ik + 1]) : resolve(dirname(new URL(import.meta.url).pathname), '../../..');
-const KATALOGI = [['tests/akceptacja', 'oczekuje'], ['tests/domena', 'zielony (główny zestaw)'], ['tests/dane', 'zielony (główny zestaw)'], ['tests/adaptery', 'zielony (główny zestaw)']]; // tests/adaptery: 08 partia 3 (P-127)
+const KATALOGI = [['tests/akceptacja', 'oczekuje'], ['tests/domena', 'zielony (główny zestaw)'], ['tests/dane', 'zielony (główny zestaw)'], ['tests/adaptery', 'zielony (główny zestaw)'], ['tests/ekrany', 'zielony (główny zestaw)']]; // tests/adaptery: 08 partia 3 (P-127); tests/ekrany: 08 partia 4 (DS-02, ekrany warstwy 4)
 const WYLACZONE = ['tests/i18n']; // rola 09 (i18n E0–E1), poza przekazaniem 07 → 08
 const w = (rel, k) => rel.startsWith(k + '/');
 const wszystkie = [];

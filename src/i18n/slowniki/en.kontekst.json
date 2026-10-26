@@ -2,10 +2,51 @@
   "licznik": {
     "po_dodaniu": "Ogłoszenie VoiceOver po +1 (design-spec, VoiceOver). {{zrobione}} = liczba wykonanych rzędów, {{nastepny}} = numer następnego rzędu. Krótkie zdanie, czytane na głos; ok. 30 znaków.",
     "seria": "Baner strażnika tempa pod tytułem (F-47, RD-17) i ogłoszenie VoiceOver; {{count}} = liczba rzędów dodanych w serii (>= 2 w praktyce, ale forma pojedyncza istnieje dla reguł języka). Nie znika po czasie. Ok. 50 znaków.",
-    "cofnij": "Przycisk w banerze strażnika, cofa całą serię; {{count}} = liczba rzędów serii. Ok. 15 znaków, musi się mieścić na 320 pt."
+    "cofnij": "Przycisk w banerze strażnika, cofa całą serię; {{count}} = liczba rzędów serii. Ok. 15 znaków, musi się mieścić na 320 pt.",
+    "tytul_roboczy": "Duży tytuł licznika bez projektu (pierwsze uruchomienie) i projektu nienazwanego (design-spec „Projekt roboczy”).",
+    "podpowiedz_start": "Podpowiedź pierwszego liczenia pod liczbą 0 (ekrany.html licznik-start, NFR-PIE-001).",
+    "jednostka": "Podpis przy dużej liczbie bez celu („0 rows”, ekrany.html licznik-start).",
+    "z_celu": "Podpis przy dużej liczbie, gdy część ma cel („47 of 96”).",
+    "teraz": "Pod tytułem części: rząd, który się dzierga (design-spec „Komponenty”).",
+    "plus": "Widoczny tekst przycisku +1 (WCAG 2.5.3).",
+    "plus_a11y": "Etykieta VoiceOver przycisku +1; {{n}} = rząd w robocie (ekrany.html licznik-w-toku).",
+    "plus_a11y_instrukcja": "Etykieta +1 w rzędzie z przypomnieniem; {{tekst}} = treść instrukcji użytkowniczki.",
+    "podpis_plus": "Mały tekst w przycisku +1 (design-spec „Przycisk +1: podpis”).",
+    "minus": "Widoczny tekst przycisku −1 (znak minusa U+2212).",
+    "minus_a11y": "Etykieta VoiceOver przycisku −1.",
+    "historia": "Etykieta VoiceOver ikony historii w pasku nawigacji.",
+    "menu_a11y": "Etykieta VoiceOver przycisku ••• (ekrany.html licznik-w-toku).",
+    "blad_zapisu": "Błąd zapisu +1 (macierz stanów: licznik, NFR-DAN-002); bez przeprosin.",
+    "zablokowany": "Pasek pod nawigacją w stanie blokady (design-spec „Blokada licznika”).",
+    "odblokuj": "Przycisk na pasku blokady (odblokowuje licznik, nie zakup).",
+    "zablokowany_stukniecie": "Po stuknięciu w zablokowany licznik (BR-LIC-004/S3).",
+    "cel": "Linijka celu części (design-spec „Linijka celu”).",
+    "do_celu": "Druga część linijki celu: ile rzędów zostało do celu.",
+    "cel_osiagniety": "Linijka celu, gdy skończone = cel (BR-LIC-011/S1; tekst 08 do akceptacji 04, Z07-05).",
+    "ponad_cel": "Linijka celu, gdy skończone > cel (BR-LIC-011/S2; tekst 08 do akceptacji 04).",
+    "nastepna_czesc": "Przycisk po osiągnięciu celu części (U-11, „Następna część” w kontrakcie zakresu; tekst do akceptacji 04).",
+    "baner_seria": "Baner strażnika serii pod tytułem (design-spec „Baner strażnika”).",
+    "cofnieto": "Potwierdzenie po Undo serii.",
+    "przypomnienie": "Pas zakreślacza z instrukcją rzędu (element firmowy).",
+    "przypomnienie_postep": "Pod instrukcją: które powtórzenie i następny rząd z instrukcją.",
+    "przypomnienie_postep_ostatnie": "Pod instrukcją przy ostatnim powtórzeniu (bez następnego rzędu).",
+    "wejscie_w_przypomnienie": "Ogłoszenie VoiceOver raz, przy wejściu w rząd z instrukcją (design-spec „VoiceOver”).",
+    "powtorzenie": "Linia powtórzenia wzoru („Cable pattern · repeat 6 · row 7 of 8”).",
+    "notatka": "Etykieta notatki projektu przy liczniku (BR-PRJ-002/S1).",
+    "blizniak": "Notatka i przypomnienie z tego samego rzędu części-pary (BR-PRJ-014/S2; tekst 08 do akceptacji 04, Z07-05).",
+    "znaczniki_sesji": "Podpis nad kreskami sesji (design-spec „Kreski sesji przez północ”).",
+    "ostatni_darmowy": "Cicha linia pod liczbą w ostatnim darmowym dniu (design-spec „Limit dni”, P-065 (2a)).",
+    "cel_dnia": "Cel dzienny tylko przy terminie (BR-DNI-005/S5; tekst 08 do akceptacji 04)."
   },
   "limit": {
-    "zawczasu": "Komunikat zamiast przycisków +1 i −1 po wyczerpaniu darmowych dni (BR-ZAK-006, design-spec „Limit dni”). {{miesiac}} = nazwa miesiąca w języku aplikacji, {{data}} = data wznowienia w formacie języka, {{count}} = liczba rzędów zachowanych w projekcie. Ton: spokojnie, bez straszenia; nie wolno użyć „unlock”, „upgrade”. Ok. 110 znaków."
+    "zawczasu": "Komunikat zamiast przycisków +1 i −1 po wyczerpaniu darmowych dni (BR-ZAK-006, design-spec „Limit dni”). {{miesiac}} = nazwa miesiąca w języku aplikacji, {{data}} = data wznowienia w formacie języka, {{count}} = liczba rzędów zachowanych w projekcie. Ton: spokojnie, bez straszenia; nie wolno użyć „unlock”, „upgrade”. Ok. 110 znaków.",
+    "pro_link": "Odnośnik pod liczbą przy limicie zawczasu (rola link, poza strefą +1, KP-13).",
+    "nie_dodano": "Nagłówek arkusza, gdy nowy dzień zaczął się przy otwartej aplikacji (ekrany.html limit).",
+    "arkusz_dni": "Treść arkusza limitu: definicja dnia i data powrotu.",
+    "arkusz_zachowane": "Treść arkusza limitu: dane zostają.",
+    "arkusz_pro": "Cicha linia w arkuszu limitu.",
+    "zobacz_pro": "Przycisk arkusza limitu, otwiera oferty.",
+    "ogloszenie": "Ogłoszenie VoiceOver arkusza limitu (design-spec „VoiceOver”)."
   },
   "ustawienia": {
     "jezyk": "Etykieta wiersza w Ustawieniach, otwiera listę języków (P-075, 3b). Propozycja roli 09, tekst zatwierdza rola 04. Ok. 12 znaków.",
@@ -40,5 +81,18 @@
     "nazwa_robocza": "Projekt roboczy w miejscu nazwy; {{data}} bez godziny (sekcja „Projekt roboczy”).",
     "karta_a11y": "VoiceOver karty; przy sesji dopisek aktywnosc.sesja_a11y.",
     "sesja_a11y": "Dopisek VoiceOver karty przy trwającej sesji; {{czas}} = czas sesji."
+  },
+  "wspolne": {
+    "nie_teraz": "Neutralna odmowa (słownik interakcji)."
+  },
+  "projekty": {
+    "szukaj": "Pole wyszukiwania na liście projektów (ekrany.html projekty).",
+    "nowy": "Etykieta VoiceOver przycisku „+” na liście projektów.",
+    "pusto": "Lista bez projektów (macierz stanów: projekty, pusty).",
+    "brak_wynikow": "Brak wyników wyszukiwania (macierz stanów).",
+    "w_toku": "Nagłówek sekcji projektów w toku.",
+    "ukonczone": "Nagłówek sekcji projektów ukończonych.",
+    "dni": "Licznik darmowych dni na liście (design-spec „Limit dni”, P-065 (2a)); bez linii przy Pro.",
+    "tytul": "Duży tytuł listy projektów."
   }
 }

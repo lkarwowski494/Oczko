@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react-native';
 import { Projekt, type PropsProjektu } from '../../../src/ekrany/Projekt';
 import { Kalendarz, Podsumowanie } from '../../../src/ekrany/Dni';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { tEn } from './pomoc';
+import { tEn } from '../../ekrany/pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });

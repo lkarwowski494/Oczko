@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Historia } from '../../../src/ekrany/Historia';
 import { MenuProjektu } from '../../../src/ekrany/MenuProjektu';
 import type { Tlumacz } from '../../../src/ekrany/wspolne';
-import { przycisk, tEn } from './pomoc';
+import { przycisk, tEn } from '../../ekrany/pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
