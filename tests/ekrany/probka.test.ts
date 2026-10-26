@@ -1,0 +1,87 @@
+// Kalkulator „Swatch” (BR-KAL-001, BR-KAL-003, RD-01, RD-04, RD-10; design-spec „Kalkulator Swatch”): stan ekranu z pól (08 partia 5, grupa D).
+import { stanProbki, type WejscieProbki } from '../../src/kompozycja/probka';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { tEn } from './pomoc';
+
+let t: Tlumacz;
+beforeAll(async () => { t = await tEn(); });
+const licz = (w: Partial<WejscieProbki>, jezyk = 'en-US') =>
+  stanProbki({ oczka: '', na: '10cm', szerokosc: '', jednostka: 'cm', ...w }, { t, jezyk: () => jezyk });
+
+describe('BR-KAL-001 (RD-01)', () => {
+  test('S1: 22 o./10 cm, 50 cm → 110 oczek z danymi wejściowymi i uwagą o blokowaniu', () => {
+    const s = licz({ oczka: '22', szerokosc: '50' });
+    expect(s.wynik).toEqual({ liczba: '110 stitches', zDanych: 'From 22 stitches per 10 cm and 50 cm.', uwaga: t('probka.uwaga_oczka') });
+    expect(s.bladOczka).toBeNull();
+  });
+  test('S2 (RD-01-W5): brak próbki przy szerokości 50 cm → prośba o próbkę, bez wyniku', () => {
+    const s = licz({ szerokosc: '50' });
+    expect(s.bladOczka).toBe('Enter the stitches in your swatch first.');
+    expect([s.wynik, s.grubosc]).toEqual([null, null]);
+  });
+  test('S3 (RD-01-W2): szerokość 0 → błąd danych, bez wyniku; kategoria i tak się liczy', () => {
+    const s = licz({ oczka: '22', szerokosc: '0' });
+    expect(s.bladSzerokosci).toBe('Enter a number above 0.');
+    expect(s.wynik).toBeNull();
+    expect(s.grubosc).not.toBeNull();
+  });
+  test('ER-43: 21,5 w pl-PL → 107,5 oczka w zapisie regionu', () => {
+    expect(licz({ oczka: '21,5', szerokosc: '50' }, 'pl-PL').wynik?.liczba).toBe('107,5 stitches');
+  });
+  test('ER-43: 21.5 w de-DE → bez wyniku, przykład zapisu 21,5', () => {
+    const s = licz({ oczka: '21.5', szerokosc: '50' }, 'de-DE');
+    expect(s.bladOczka).toBe('Write it as 21,5.');
+    expect([s.wynik, s.grubosc]).toEqual([null, null]);
+  });
+  test('bez szerokości: bez bloku wyniku i bez błędu; puste pola — nic', () => {
+    expect(licz({ oczka: '22' }).wynik).toBeNull();
+    expect(licz({ oczka: '22' }).bladSzerokosci).toBeNull();
+    expect(licz({})).toEqual({ bladOczka: null, przeliczona: null, uwaga4in: null, bladSzerokosci: null, wynik: null, grubosc: null });
+  });
+  test('1 oczko → liczba pojedyncza', () => {
+    expect(licz({ oczka: '2', szerokosc: '5' }).wynik?.liczba).toBe('1 stitch');
+  });
+});
+
+describe('BR-KAL-003 (RD-04) i grubość (RD-10)', () => {
+  test('S1: 20 o./4 in → „= 19.685 stitches per 10 cm” + uwaga 4 in; 10 in → 50 oczek', () => {
+    const s = licz({ oczka: '20', na: '4in', szerokosc: '10', jednostka: 'in' });
+    expect(s.przeliczona).toBe('= 19.685 stitches per 10 cm');
+    expect(s.uwaga4in).toBe(t('probka.uwaga_4in'));
+    expect(s.wynik?.liczba).toBe('50 stitches');
+    expect(s.wynik?.zDanych).toBe('From 20 stitches per 4 in and 10 in.');
+  });
+  test('22 o./10 cm → kategoria 3 z dokładną wartością na 4 in i uwagą o zaokrągleniu', () => {
+    const g = licz({ oczka: '22' }).grubosc;
+    expect(g?.linie).toEqual(['Category 3, light: 21–24 stitches per 4 in, knitted in stockinette stitch.']);
+    expect(g?.dokladnie).toBe('22.352 stitches per 4 in.');
+    expect(g?.uwagi).toEqual([t('probka.uwaga_zaokraglenie'), t('probka.uwaga_kategoria')]);
+  });
+  test('23 o./4 in → obie kategorie 2 i 3, bez wartości dokładnej i bez uwagi o zaokrągleniu', () => {
+    const g = licz({ oczka: '23', na: '4in' }).grubosc;
+    expect(g?.linie).toEqual([
+      'This gauge fits both category 2 and category 3.',
+      'Category 2, fine: 23–26 stitches per 4 in, knitted in stockinette stitch.',
+      'Category 3, light: 21–24 stitches per 4 in, knitted in stockinette stitch.',
+    ]);
+    expect(g?.dokladnie).toBeNull();
+    expect(g?.uwagi).toEqual([t('probka.uwaga_kategoria')]);
+  });
+  test('połówka 20.5 o./4 in bez części wspólnej → między kategoriami 3 i 4', () => {
+    expect(licz({ oczka: '20.5', na: '4in' }).grubosc?.linie).toEqual(['This gauge falls between categories 3 and 4.']);
+  });
+  test('45 o./4 in → powyżej tabeli z uwagą o koronce; 35 → kategoria 0 też z uwagą o koronce', () => {
+    const g = licz({ oczka: '45', na: '4in' }).grubosc;
+    expect(g?.linie).toEqual(['This gauge is above category 0, which goes up to 40 stitches per 4 in.']);
+    expect(g?.uwagi).toEqual([t('probka.uwaga_koronka'), t('probka.uwaga_kategoria')]);
+    expect(licz({ oczka: '35', na: '4in' }).grubosc?.uwagi).toEqual([t('probka.uwaga_koronka'), t('probka.uwaga_kategoria')]);
+  });
+  test('5 o./4 in → kategoria 7 bez dolnej granicy (wariant otwarty)', () => {
+    expect(licz({ oczka: '5', na: '4in' }).grubosc?.linie).toEqual(['Category 7, jumbo: at most 6 stitches per 4 in, knitted in stockinette stitch.']);
+  });
+  test('próbka 0 → błąd wartości, bez kategorii', () => {
+    const s = licz({ oczka: '0' });
+    expect(s.bladOczka).toBe('Enter a number above 0.');
+    expect(s.grubosc).toBeNull();
+  });
+});

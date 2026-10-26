@@ -38,6 +38,7 @@ export default function EkranProjektow(): React.ReactElement {
         naNowy={() => router.push({ pathname: '/formularz/[rodzaj]', params: { rodzaj: 'nowy-projekt' } })}
         naUstawienia={() => router.push('/ustawienia')}
         naHistoria={() => router.push('/dni')}
+        naNarzedzia={() => router.push('/narzedzia')}
         naKosz={() => router.push('/kosz')}
       />
     </Bezpieczny>

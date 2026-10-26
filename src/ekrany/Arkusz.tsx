@@ -60,9 +60,10 @@ export function Wybor<T extends string>(p: { opcje: { wartosc: T; tekst: string;
   );
 }
 
-export function Komunikat({ tekst }: { tekst: string }): React.ReactElement {
+/** Komunikat błędu; `znak` dodaje „!” przed tekstem (design-spec: błąd tekstem i znakiem, nie samym kolorem), VoiceOver czyta sam tekst. */
+export function Komunikat({ tekst, znak }: { tekst: string; znak?: boolean }): React.ReactElement {
   const st = style(useKolory());
-  return <Text style={st.blad} accessibilityRole="alert" accessibilityLiveRegion="assertive">{tekst}</Text>;
+  return <Text style={st.blad} accessibilityRole="alert" accessibilityLiveRegion="assertive" accessibilityLabel={znak ? tekst : undefined}>{znak ? `! ${tekst}` : tekst}</Text>;
 }
 export function Tresc({ children, podpis, testID }: { children: React.ReactNode; podpis?: boolean; testID?: string }): React.ReactElement {
   const st = style(useKolory());

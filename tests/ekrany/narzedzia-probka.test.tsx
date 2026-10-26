@@ -1,0 +1,59 @@
+// Ekrany „Tools” i „Swatch” (P-191 P7a; BR-KAL-001, BR-KAL-003; design-spec „Narzędzia, zapas, zdjęcia”; makieta fix6 `narzedzia`, `probka`).
+import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import { Narzedzia, Probka } from '../../src/ekrany/Narzedzia';
+import { stanProbki } from '../../src/kompozycja/probka';
+import type { Tlumacz } from '../../src/ekrany/wspolne';
+import { tEn } from './pomoc';
+
+let t: Tlumacz;
+beforeAll(async () => { t = await tEn(); });
+
+test('Tools: zapas (Yarn 7, Needles and hooks 9) i kalkulator z opisem; wiersze otwierają ekrany', () => {
+  const na = { naWloczki: jest.fn(), naDruty: jest.fn(), naProbke: jest.fn() };
+  render(<Narzedzia stan={{ wloczki: 7, druty: 9 }} t={t} {...na} />);
+  expect(screen.getByText('Tools')).toBeTruthy();
+  expect(screen.getByText('Stash')).toBeTruthy();
+  expect(screen.getByText(t('narzedzia.probka_opis'))).toBeTruthy();
+  fireEvent.press(screen.getByTestId('narzedzia-wloczki'));
+  fireEvent.press(screen.getByTestId('narzedzia-druty'));
+  fireEvent.press(screen.getByTestId('narzedzia-probka'));
+  expect([na.naWloczki, na.naDruty, na.naProbke].map((f) => f.mock.calls.length)).toEqual([1, 1, 1]);
+  expect(screen.getByTestId('narzedzia-wloczki')).toHaveProperty('props.accessibilityLabel', 'Yarn, 7');
+});
+
+describe('Swatch', () => {
+  const ekran = (uklad: 'cm' | 'in', zProjektu?: string) => render(
+    <Probka t={t} jednostka={uklad} poczatek={{ oczka: '', na: uklad === 'cm' ? '10cm' : '4in' }} zProjektu={zProjektu}
+      licz={(w) => stanProbki(w, { t, jezyk: () => 'en-US' })} />,
+  );
+  test('R-131 / BR-KAL-003: jednostka z ustawień przy polu szerokości (P-075 (4a)); domyślna podstawa próbki', () => {
+    const r = ekran('cm');
+    expect(screen.getByLabelText('Width you want, cm')).toBeTruthy();
+    expect(screen.getByRole('radio', { name: 'per 10 cm' }).props.accessibilityState).toMatchObject({ selected: true });
+    r.unmount();
+    ekran('in');
+    expect(screen.getByLabelText('Width you want, in')).toBeTruthy();
+    expect(screen.queryByLabelText('Width you want, cm')).toBeNull();
+    expect(screen.getByRole('radio', { name: 'per 4 in' }).props.accessibilityState).toMatchObject({ selected: true });
+  });
+  test('BR-KAL-003/S1 + BR-KAL-001/S1 na żywo (scenariusz 41): 20 na 4 in, 10 in → 19.685 na 10 cm i 50 oczek, blok grubości', () => {
+    ekran('in');
+    fireEvent.changeText(screen.getByTestId('probka-oczka'), '20');
+    expect(screen.getByText('= 19.685 stitches per 10 cm')).toBeTruthy();
+    expect(screen.queryByTestId('probka-wynik-oczka')).toBeNull();
+    fireEvent.changeText(screen.getByTestId('probka-szerokosc'), '10');
+    expect(screen.getByTestId('probka-wynik-oczka')).toHaveProperty('props.children', '50 stitches');
+    expect(screen.getByTestId('probka-wynik-grubosc')).toBeTruthy();
+  });
+  test('przełączenie na 10 cm liczy od nowa; brak próbki przy szerokości → komunikat ze znakiem, bez wyniku (RD-01-W5)', () => {
+    ekran('cm', 'Swatch of Harbor Sweater · saved with the project');
+    expect(screen.getByText('Swatch of Harbor Sweater · saved with the project')).toBeTruthy();
+    fireEvent.changeText(screen.getByTestId('probka-szerokosc'), '50');
+    expect(screen.getByRole('alert')).toHaveProperty('props.children', '! Enter the stitches in your swatch first.');
+    fireEvent.changeText(screen.getByTestId('probka-oczka'), '22');
+    expect(screen.getByTestId('probka-wynik-oczka')).toHaveProperty('props.children', '110 stitches');
+    fireEvent.press(screen.getByRole('radio', { name: 'per 4 in' }));
+    expect(screen.getByTestId('probka-wynik-oczka')).toHaveProperty('props.children', '108.268 stitches');
+  });
+});

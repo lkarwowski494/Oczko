@@ -2,7 +2,8 @@
 // Ekrany nienarysowane (design-spec.md:95; Z07-05).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Kalkulator, Wloczka } from '../../src/ekrany/Narzedzia';
+import { Probka, Wloczka } from '../../src/ekrany/Narzedzia';
+import { stanProbki } from '../../src/kompozycja/probka';
 import { LinkFilmu } from '../../src/ekrany/Wzor';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaSystemu, tEn } from './pomoc';
@@ -19,12 +20,16 @@ describe('Narzędzia i wzór', () => {
     expect(screen.getAllByRole('image')).toHaveLength(1); // tylko zdjęcie etykiety
   });
 
+  // Zmiana 08 (partia 5, grupa D): `Kalkulator` (pola Z07-05) zastąpiony kalkulatorem „Swatch” z makiety 04 fix-6 (design-spec: `narzedzia.kalk_*`
+  // i `narzedzia.oblicz` przestają być używane, P-191). Asercja bez zmian: jednostka z ustawień przy polu długości (szerokości), bez drugiej.
   test('R-131 / BR-KAL-003: jednostka z ustawień widoczna przy polu długości (P-075 (4a); Z07-05)', () => {
-    const r = render(<Kalkulator stan={{ uklad: 'metryczny' }} t={t} naOblicz={jest.fn()} />);
-    expect(screen.getByLabelText(/\bcm\b/)).toBeTruthy();
-    r.rerender(<Kalkulator stan={{ uklad: 'imperialny' }} t={t} naOblicz={jest.fn()} />);
-    expect(screen.getByLabelText(/\bin\b|inch/)).toBeTruthy();
-    expect(screen.queryByLabelText(/\bcm\b/)).toBeNull();
+    const licz = (w: Parameters<typeof stanProbki>[0]) => stanProbki(w, { t, jezyk: () => 'en-US' });
+    // getAll: przełącznik podstawy próbki („per 10 cm” / „per 4 in”) jest na ekranie zawsze (makieta `probka`).
+    const r = render(<Probka t={t} jednostka="cm" poczatek={{ oczka: '', na: '10cm' }} licz={licz} />);
+    expect(screen.getAllByLabelText(/\bcm\b/).length).toBeGreaterThan(0);
+    r.rerender(<Probka t={t} jednostka="in" poczatek={{ oczka: '', na: '4in' }} licz={licz} />);
+    expect(screen.getAllByLabelText(/\bin\b|inch/).length).toBeGreaterThan(0);
+    expect(screen.queryByLabelText(/^Width you want, cm$/)).toBeNull();
   });
 
   test('BR-WZR-007/S4: link do filmu bez sieci — informacja, że film wymaga sieci; Oczko trzyma tylko link (Z07-05)', () => {
