@@ -12,9 +12,11 @@
     g.append(el('text', { x: 40, y: 64, 'font-size': 30, 'font-weight': 700 }, 'Harbor Sweater'));
     g.append(el('text', { x: 40, y: 94, 'font-size': 15, fill: '#5E626A' }, 'Sleeves · page 3 of 6'));
     [128, 150, 172].forEach((y, i) => g.append(el('rect', { x: 40, y, width: [520, 480, 300][i], height: 9, rx: 3, fill: '#C9CBD0' })));
-    g.append(el('text', { x: 40, y: 222, 'font-size': 17 }, 'Sizes: S (M, L, XL)'));
-    g.append(el('text', { x: 40, y: 250, 'font-size': 17 }, 'Cast on 48 (52, 56, 60) sts.'));
-    g.append(el('text', { x: 40, y: 278, 'font-size': 17 }, 'Work chart A, then dec every 6 (6, 4, 4) rows.'));
+    // wartości rozmiaru M w <tspan class="m"> — zakreślenie liczy ich prostokąty (getBBox), nie zgaduje położenia
+    const linia = (y, czesci) => { const tx = el('text', { x: 40, y, 'font-size': 17 }); czesci.forEach((c, i) => tx.append(i % 2 ? el('tspan', { class: 'm' }, c) : document.createTextNode(c))); g.append(tx); };
+    linia(222, ['Sizes: S (', 'M', ', L, XL)']);
+    linia(250, ['Cast on 48 (', '52', ', 56, 60) sts.']);
+    linia(278, ['Work chart A, then dec every 6 (', '6', ', 4, 4) rows.']);
     [306, 328, 350, 372].forEach((y, i) => g.append(el('rect', { x: 40, y, width: [500, 520, 440, 360][i], height: 9, rx: 3, fill: '#C9CBD0' })));
     g.append(el('text', { x: 40, y: 410, 'font-size': 15, 'font-weight': 700 }, 'Chart A'));
     for (let r = 0; r < rzedy; r++) for (let c = 0; c < kol; c++) {
@@ -27,11 +29,11 @@
     for (let r = 0; r < rzedy; r++) g.append(el('text', { x: x0 + kol * k + 8, y: y0 + (rzedy - 1 - r) * k + 17, 'font-size': 13, fill: '#5E626A' }, String(r + 1)));
     svg.append(g);
     if (svg.dataset.zakr) {
-      // zakreślenie rozmiaru M (palcem albo rysikiem): pas zakreślacza z mnożeniem, krawędź jak element firmowy
+      // zakreślenie rozmiaru M: pas zakreślacza z mnożeniem; liczone po załadowaniu kroju (inaczej getBBox mierzy krój zastępczy)
       const z = el('g', { style: 'mix-blend-mode:multiply' });
-      const kolor = svg.dataset.zakrKolor || '#F6E04A';
-      [[143, 231, 22], [138, 259, 22], [210, 287, 22]].forEach(([x, y, w]) => z.append(el('rect', { x, y: y - 17, width: w + 6, height: 22, rx: 3, fill: kolor, opacity: .85, transform: `skewX(-4)` })));
       svg.append(z);
+      const rysuj = () => { z.replaceChildren(); svg.querySelectorAll('tspan.m').forEach((s) => { const b = s.getBBox(); z.append(el('rect', { x: b.x - 3, y: b.y + 1, width: b.width + 6, height: b.height - 1, rx: 3, fill: svg.dataset.zakrKolor || '#F6E04A', opacity: .85 })); }); };
+      rysuj(); document.fonts.ready.then(rysuj);
     }
     if (svg.dataset.pioro) {
       svg.append(el('path', { d: 'M420 214 q 20 -14 40 0 t 40 0 M430 236 l 60 -4', stroke: '#2B5FA8', 'stroke-width': 3, fill: 'none', 'stroke-linecap': 'round' }));
