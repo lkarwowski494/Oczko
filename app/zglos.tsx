@@ -22,6 +22,7 @@ export default function EkranZgloszenia(): React.ReactElement {
         { pole: 'wersja', wartosc: `${Constants.expoConfig?.version ?? '?'} (${Constants.expoConfig?.ios?.buildNumber ?? '?'})` },
         { pole: 'system', wartosc: `iOS ${String(Platform.Version)}` },
         { pole: 'model', wartosc: c?.model ?? Constants.deviceName ?? '?' },
+        { pole: 'jezyk', wartosc: kontener.j.jezyk() }, // BR-DAN-010 (ER-45): język aplikacji w diagnostyce, też przy „Report a translation problem”
         { pole: 'synchronizacja', wartosc: kontener.z.synchronizacja ? kontener.z.synchronizacja.stan() : 'wylaczona' },
         { pole: 'zegarek', wartosc: '—' },
         { pole: 'bledy', wartosc: w.ok ? w.wartosc.tresc : '—' },

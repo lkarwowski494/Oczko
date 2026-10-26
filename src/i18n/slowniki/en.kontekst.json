@@ -52,7 +52,7 @@
   "ustawienia": {
     "tytul": "Etykieta VoiceOver przycisku Ustawień na liście projektów i tytuł ekranu Ustawień (ekrany.html roli 04, ekran „Settings”). Dopisane przez 08 (partia 4, 3A). Ok. 8 znaków.",
     "jezyk": "Etykieta wiersza w Ustawieniach, otwiera listę języków (P-075, 3b). Propozycja roli 09, tekst zatwierdza rola 04. Ok. 12 znaków.",
-    "jezyk_automatyczny": "Pierwsza pozycja listy języków: język jak w systemie telefonu. Propozycja roli 09, zatwierdza 04. Ok. 25 znaków.",
+    "jezyk_automatyczny": "Pierwsza pozycja listy języków i wartość wiersza „Language”: język jak w systemie telefonu. Tekst z design-spec roli 04 („Ustawienia › Język”).",
     "uklad_miar": "Etykieta wiersza w Ustawieniach: metryczne czy imperialne (P-075, 4a). Propozycja roli 09, zatwierdza 04. Ok. 10 znaków.",
     "jakosc_tlumaczenia": "Etykieta wiersza informującego, że przekład jest maszynowy (P-075, 2a). Propozycja roli 09, zatwierdza 04. Ok. 20 znaków.",
     "zglos_tlumaczenie": "Odnośnik pod wierszem jakości przekładu: otwiera zgłoszenie błędu (F-57) z kodem języka. Propozycja roli 09, zatwierdza 04. Ok. 30 znaków.",
@@ -398,5 +398,14 @@
     "przywroc_a11y": "Etykieta VoiceOver przycisku przywrócenia; {{nazwa}} = element.",
     "przywrocono": "Ogłoszenie VoiceOver po przywróceniu; {{nazwa}} = element.",
     "pusto": "Pusty ekran kosza; {{count}} = KOSZ_DNI (dziś 30)."
+  },
+  "jezyk": {
+    "wybrany_a11y": "Etykieta VoiceOver wybranej pozycji listy języków; {{nazwa}} = nazwa języka we własnym języku. Tekst z design-spec roli 04.",
+    "ustawienia_ios": "Wiersz pod listą języków, otwiera Ustawienia iOS. Tekst z design-spec roli 04.",
+    "ustawienia_ios_opis": "Opis pod wierszem „Change in iOS Settings”. Tekst z design-spec roli 04."
+  },
+  "zrodla": {
+    "zdanie": "Jedno ogólne zdanie ekranu „Źródła wiedzy” (P-108 (4)). Tekst z design-spec roli 04.",
+    "linia_standardow": "Linia źródła wymagana warunkami użycia organizacji standardów (BR-KAL-008, P-112 (2)), dosłownie z BRD. W przekładzie zmienia się tylko słowo „Source:”; nazwa i adres zostają."
   }
 }

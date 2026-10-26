@@ -1,7 +1,7 @@
 // Stan danych: synchronizacja iCloud i zegarek (F-58, BR-DAN-011). Ekran nienarysowany (Z07-05), teksty robocze 08.
 // Sygnatura: propozycja 07 (E3), granice 05 (Z07-22). Zawsze mówi, że dane są zapisane na telefonie (bez straszenia utratą, design-spec „Głos”).
 import React from 'react';
-import { Arkusz, Tresc } from './Arkusz';
+import { Arkusz, Przycisk, Tresc } from './Arkusz';
 import type { StanSynchronizacji } from '../domena/porty';
 import type { Tlumacz } from './wspolne';
 
@@ -13,10 +13,11 @@ export type PropsStanuDanych = {
     zegarek: { oczekujace: number } | null;   // null = brak zegarka
   };
   t: Tlumacz;
+  naZamknij?(): void;
 };
-export function StanDanych({ stan: s, t }: PropsStanuDanych): React.ReactElement {
+export function StanDanych({ stan: s, t, naZamknij }: PropsStanuDanych): React.ReactElement {
   return (
-    <Arkusz tytul={t('stan_danych.tytul')} przyciski={null}>
+    <Arkusz tytul={t('stan_danych.tytul')} przyciski={naZamknij ? <Przycisk tekst={t('wspolne.zamknij')} onPress={naZamknij} rodzaj="tekstowy" testID="arkusz-zamknij" /> : null}>
       <Tresc>{t(s.synchronizacja === 'wylaczona' ? 'stan_danych.wylaczona' : 'stan_danych.aktywna')}</Tresc>
       {s.ostatniaUdana && <Tresc podpis>{t('stan_danych.ostatnia', { data: s.ostatniaUdana })}</Tresc>}
       {s.czekaNaSiec && <Tresc>{t('stan_danych.czeka')}</Tresc>}

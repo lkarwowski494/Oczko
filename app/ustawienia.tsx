@@ -119,7 +119,9 @@ export default function EkranUstawien(): React.ReactElement {
         naWstecz={() => router.back()}
         naWibracje={(w) => { preferencje.ustaw({ wibracje: w }); ustawWibracje(w); }}
         naZglosProblem={() => router.push('/zglos')}
-        naStanDanych={() => undefined /* stan danych (F-58): synchronizacja iCloud poza tą partią */}
+        jezyk={{ stan: { wartosc: kontener.j.preferencja(), jezyk: kontener.j.jezyk() }, naJezyk: () => router.push('/jezyk'), naZglosTlumaczenie: () => router.push('/zglos') }}
+        naZrodla={() => router.push('/zrodla')}
+        naStanDanych={() => router.push('/stan-danych')}
         dane={{
           naEksport: () => void eksport().then((s) => { if (s && !E2E) void udostepnijPlik(s); }),
           naImport: () => void wybierzArchiwum().then((p) => { if (p) void importZ(p); }),

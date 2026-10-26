@@ -1,14 +1,18 @@
 // Kontekst aplikacji dla tras expo-router (app/): kontener zależności i kompozycja licznika tworzone raz na proces.
-import React, { createContext, useContext } from 'react';
+// Zmiana języka (F-36) daje nową wartość kontekstu, więc ekrany w stosie przerenderowują się z nowym t() bez ponownego uruchomienia.
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { Kontener } from './kontener';
 import type { KompozycjaLicznika } from './licznik';
 import type { preferencje } from './preferencje';
 
 export type Aplikacja = { kontener: Kontener; licznik: KompozycjaLicznika; preferencje: ReturnType<typeof preferencje> };
-const K = createContext<Aplikacja | null>(null);
+const K = createContext<(Aplikacja & { jezyk: string }) | null>(null);
 
 export function DostawcaAplikacji({ wartosc, children }: { wartosc: Aplikacja; children: React.ReactNode }): React.ReactElement {
-  return <K.Provider value={wartosc}>{children}</K.Provider>;
+  const [jezyk, ustawJezyk] = useState(() => wartosc.kontener.j.jezyk());
+  useEffect(() => wartosc.kontener.j.naZmiane(ustawJezyk), [wartosc]);
+  const v = useMemo(() => ({ ...wartosc, jezyk }), [wartosc, jezyk]);
+  return <K.Provider value={v}>{children}</K.Provider>;
 }
 export function useAplikacja(): Aplikacja {
   const a = useContext(K);

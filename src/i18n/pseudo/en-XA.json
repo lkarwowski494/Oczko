@@ -58,7 +58,7 @@
   "limit.ogloszenie": "⟦Ŕöw {{n}} wàšñ’t àddéd. Fŕéé kñîttîñg dàýš föŕ {{miesiac}} àŕé ûšéd. Ñöthîñg îš löšt.~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
   "ustawienia.tytul": "⟦Šéttîñgš~~~~~~~~⟧",
   "ustawienia.jezyk": "⟦Làñgûàgé~~~~~~~~⟧",
-  "ustawienia.jezyk_automatyczny": "⟦Àûtömàtîç (šýštém)~~~~~~~~~~~~⟧",
+  "ustawienia.jezyk_automatyczny": "⟦Šàmé àš phöñé~~~~~~~~~⟧",
   "ustawienia.uklad_miar": "⟦Ûñîtš~~~~~⟧",
   "ustawienia.jakosc_tlumaczenia": "⟦Tŕàñšlàtîöñ qûàlîtý~~~~~~~~~~~~~~~⟧",
   "ustawienia.zglos_tlumaczenie": "⟦Ŕépöŕt à tŕàñšlàtîöñ pŕöblém~~~~~~~~~~~~~~~~⟧",
@@ -392,5 +392,10 @@
   "kosz.przywroc_a11y": "⟦Ŕéštöŕé {{nazwa}}~~~~~~~⟧",
   "kosz.przywrocono": "⟦{{nazwa}} îš bàçk.~~~~~~⟧",
   "kosz.pusto_one": "⟦Ñöthîñg héŕé. Délétéd pŕöjéçtš, pàŕtš àñd çöûñtéŕš štàý héŕé föŕ {{count}} dàý.~~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
-  "kosz.pusto_other": "⟦Ñöthîñg héŕé. Délétéd pŕöjéçtš, pàŕtš àñd çöûñtéŕš štàý héŕé föŕ {{count}} dàýš.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧"
+  "kosz.pusto_other": "⟦Ñöthîñg héŕé. Délétéd pŕöjéçtš, pàŕtš àñd çöûñtéŕš štàý héŕé föŕ {{count}} dàýš.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
+  "jezyk.wybrany_a11y": "⟦{{nazwa}}, šéléçtéd~~~~~~~~⟧",
+  "jezyk.ustawienia_ios": "⟦Çhàñgé îñ îÖŠ Šéttîñgš~~~~~~~~~~~~~~~~⟧",
+  "jezyk.ustawienia_ios_opis": "⟦Thé àpp ñàmé ûñdéŕ thé îçöñ àñd thé çàméŕà péŕmîššîöñ téxt föllöw thé làñgûàgé šét föŕ Öçžkö îñ îÖŠ Šéttîñgš.~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
+  "zrodla.zdanie": "⟦Thé tàbléš àñd tîpš îñ Öçžkö àŕé wŕîttéñ îñ öûŕ öwñ wöŕdš, bàšéd öñ îñdûštŕý štàñdàŕdš àñd kñîttîñg hàñdböökš.~~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
+  "zrodla.linia_standardow": "⟦Šöûŕçé: Çŕàft Ýàŕñ Çöûñçîl'š www.ÝàŕñŠtàñdàŕdš.çöm~~~~~~~~~~~~~~~~~⟧"
 }

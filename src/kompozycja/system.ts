@@ -26,6 +26,8 @@ export const systemAplikacji: System = {
     void udostepnijPlik(sciezka, 'text/plain');
   },
 };
+/** „Change in iOS Settings” (design-spec „Ustawienia › Język”): strona aplikacji w Ustawieniach iOS (`Linking.openSettings`). */
+export const otworzUstawieniaSystemu = (): void => { void Linking.openSettings().catch(nic); };
 let katalogTymczasowy = '/tmp';
 /** Kontener podaje katalog tymczasowy aplikacji przy starcie. */
 export function ustawKatalogTymczasowy(k: string): void { katalogTymczasowy = k; }

@@ -63,7 +63,7 @@
   "ustawienia": {
     "tytul": "Settings",
     "jezyk": "Language",
-    "jezyk_automatyczny": "Automatic (system)",
+    "jezyk_automatyczny": "Same as phone",
     "uklad_miar": "Units",
     "jakosc_tlumaczenia": "Translation quality",
     "zglos_tlumaczenie": "Report a translation problem",
@@ -436,5 +436,14 @@
     "przywrocono": "{{nazwa}} is back.",
     "pusto_one": "Nothing here. Deleted projects, parts and counters stay here for {{count}} day.",
     "pusto_other": "Nothing here. Deleted projects, parts and counters stay here for {{count}} days."
+  },
+  "jezyk": {
+    "wybrany_a11y": "{{nazwa}}, selected",
+    "ustawienia_ios": "Change in iOS Settings",
+    "ustawienia_ios_opis": "The app name under the icon and the camera permission text follow the language set for Oczko in iOS Settings."
+  },
+  "zrodla": {
+    "zdanie": "The tables and tips in Oczko are written in our own words, based on industry standards and knitting handbooks.",
+    "linia_standardow": "Source: Craft Yarn Council's www.YarnStandards.com"
   }
 }

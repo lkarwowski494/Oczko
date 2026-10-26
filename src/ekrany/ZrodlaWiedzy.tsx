@@ -1,0 +1,19 @@
+// Ekran „Źródła wiedzy” (BR-KAL-008, ZM-04, P-108, P-112, P-126 (5); design-spec „Ekran «Źródła wiedzy»”): jedno ogólne zdanie i linia
+// źródła wymagana warunkami użycia organizacji standardów, stylem podpisu (ołówek). Nic więcej; linia nie jest odnośnikiem; działa bez sieci.
+import React from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import { Przycisk } from './Arkusz';
+import { odstep, typografia, useKolory } from './motyw';
+import type { Tlumacz } from './wspolne';
+
+export function ZrodlaWiedzy({ t, naWstecz }: { t: Tlumacz; naWstecz?(): void }): React.ReactElement {
+  const k = useKolory();
+  return (
+    <ScrollView style={{ flex: 1, backgroundColor: k.papier }} contentContainerStyle={{ padding: odstep.l, gap: odstep.l }} testID="zrodla-wiedzy">
+      {naWstecz && <View style={{ flexDirection: 'row' }}><Przycisk tekst={`‹ ${t('wspolne.wstecz')}`} etykieta={t('wspolne.wstecz')} onPress={naWstecz} rodzaj="tekstowy" testID="nav-wstecz" /></View>}
+      <Text style={{ ...typografia.tytul, color: k.grafit }} accessibilityRole="header">{t('ustawienia.zrodla_wiedzy')}</Text>
+      <Text style={{ ...typografia.tresc, color: k.grafit }}>{t('zrodla.zdanie')}</Text>
+      <Text style={{ ...typografia.podpis, color: k.olowek }}>{t('zrodla.linia_standardow')}</Text>
+    </ScrollView>
+  );
+}
