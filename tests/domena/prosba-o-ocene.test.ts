@@ -1,16 +1,14 @@
 // Bramka prośby o ocenę (P-150 E2-1a, P-156; kontrakt: docs/architektura/moduly.md „Prośba o ocenę”).
-// Test oczekujący roli 05 (fix-5): czerwony na znaczniku, dopóki 08 nie doda `czyProsicOOcene` w src/domena/ocena.ts (P-156 Q2a:
-// rola 05 nie pisze ciała funkcji, więc brak eksportu daje znacznik `NIEZAIMPLEMENTOWANE`). 08 przenosi test do tests/domena/
-// w commicie, który go zazielenia (DS-02). Wyrocznia: wektory PO-01–PO-11 (docs/wzrost.md, rola 11) z wejściami roli 05.
+// Test roli 05 (fix-5, P-156 Q2a), przeniesiony przez 08 (partia 4, NZ-05-F5-08) z tests/akceptacja/domena/ w commicie z funkcją (DS-02). Wyrocznia: wektory PO-01–PO-11 (docs/wzrost.md, rola 11) z wejściami roli 05.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { CzyProsicOOcene, WejscieProsby } from '../../../src/domena/ocena';
-import { niezaimplementowane } from '../../../src/domena/zaslepka';
+import type { CzyProsicOOcene, WejscieProsby } from '../../src/domena/ocena';
+import { niezaimplementowane } from '../../src/domena/zaslepka';
 
 type Wektor = { id: string; wariant?: string; opis: string; wejscie: WejscieProsby; oczekiwane: boolean };
-const { wektory } = JSON.parse(readFileSync(join(__dirname, '../../../docs/architektura/wektory-prosby-o-ocene.json'), 'utf8')) as { wektory: Wektor[] };
+const { wektory } = JSON.parse(readFileSync(join(__dirname, '../../docs/architektura/wektory-prosby-o-ocene.json'), 'utf8')) as { wektory: Wektor[] };
 
-const modul = jest.requireActual('../../../src/domena/ocena') as { czyProsicOOcene?: CzyProsicOOcene };
+const modul = jest.requireActual('../../src/domena/ocena') as { czyProsicOOcene?: CzyProsicOOcene };
 const czyProsicOOcene: CzyProsicOOcene = modul.czyProsicOOcene ?? (() => niezaimplementowane('P-150 czyProsicOOcene'));
 
 describe('P-150 prośba o ocenę: czyProsicOOcene', () => {
