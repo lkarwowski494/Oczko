@@ -7,6 +7,8 @@ export type Kolory = typeof tokeny.kolor.jasny;
 export const odstep = tokeny.odstep;
 export const promien = tokeny.promien;
 export const cel = tokeny.cel;
+/** Kolory na stałym czarnym tle (zegarek, Dynamic Island, podgląd zdjęcia; design-spec „systemCzarny”). */
+export const systemCzarny = tokeny.kolor.systemCzarny;
 /**
  * Krój tytułowy (P-064). Pliku `docs/design/fonty/LibreFranklin.ttf` (design-spec.md:13) jeszcze nie ma w repo — zgłoszenie do 04 (08 partia 4, 3A);
  * do tego czasu krój systemowy w tej samej wadze (nazwa niezarejestrowanego kroju dałaby błąd RCTFont). Po dostarczeniu pliku: nazwa 'LibreFranklin'.

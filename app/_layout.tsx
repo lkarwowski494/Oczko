@@ -70,6 +70,7 @@ export default function Korzen(): React.ReactElement {
         <Stack.Screen name="sesja-korekta" options={{ presentation: 'modal' }} />
         <Stack.Screen name="wloczka" options={{ presentation: 'modal' }} />
         <Stack.Screen name="drut" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="zdjecie" options={{ presentation: 'fullScreenModal' }} />
       </Stack>
     </DostawcaAplikacji>
   );

@@ -2,9 +2,14 @@
 // Potwierdzenia „Make another” i „Delete …” to alerty systemowe (design-spec „Usuwanie”, słownik „Delete {object}”); termin w treści = dzień
 // usunięcia + KOSZ_DNI. Po zapisie: ekran blokady i licznik (`poZmianie` / `poUsunieciu`, C2), ogłoszenie VoiceOver, model od nowa.
 import React, { useCallback, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, Linking, Pressable, Text, View } from 'react-native';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { Projekt } from '../../src/ekrany/Projekt';
+import { GrupaZdjec, type Miniatura } from '../../src/ekrany/Zdjecia';
+import { zdjecieTestowe } from '../../src/kompozycja/e2e-zdjecie';
+import { E2E } from '../../src/platforma/tryb-e2e';
+import { wybieraczZdjec } from '../../src/platforma/zdjecia';
+import { dodajZdjecie, zdjecia } from '../../src/przypadki-uzycia/zdjecia';
 import { useKolory } from '../../src/ekrany/motyw';
 import { dzienLokalny } from '../../src/domena/postep';
 import { KOSZ_DNI } from '../../src/konfiguracja';
@@ -26,6 +31,7 @@ export default function EkranProjektu(): React.ReactElement {
   const [w, ustaw] = useState<WidokProjektu | null>(null);
   const [edycja, ustawEdycje] = useState(false);
   const [sesje, ustawSesje] = useState<SesjaNaEkranie[]>([]); // grupa „Time” (P-191 P4a)
+  const [miniatury, ustawMiniatury] = useState<Miniatura[]>([]); // grupa „Photos” (P-191 P9a)
   const z = kontener.z, j = kontener.j, t = j.t;
   const wczytaj = useCallback(async () => {
     const r = await widokProjektu(z, { projektId: id });
@@ -33,6 +39,8 @@ export default function EkranProjektu(): React.ReactElement {
     else router.replace('/projekty'); // projekt w koszu albo nieistniejący
     const s = await sesjeProjektu(z, { projektId: id });
     if (s.ok) ustawSesje(s.wartosc);
+    const f = await zdjecia(z, { projektId: id });
+    if (f.ok) ustawMiniatury(f.wartosc.map((x) => ({ id: x.id, uri: `file://${z.magazyn.sciezka(x.sha256)}` })));
   }, [z, id, router]);
   useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
   if (!w) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
@@ -45,11 +53,33 @@ export default function EkranProjektu(): React.ReactElement {
     Alert.alert(tytul, opis, [{ text: t('wspolne.anuluj'), style: 'cancel' }, { text: przycisk, style: destrukcyjny ? 'destructive' : 'default', onPress: () => void f() }]);
   const poUsunieciu = async (nazwa: string) => { await licznik.poUsunieciu(w.id); oglos(t('usun.ogloszenie', { nazwa })); await wczytaj(); };
   const czesc = (cid: string) => w.czesci.find((c) => c.id === cid);
+  const dodajPlik = async (sciezka: string, rozszerzenie: string) => {
+    const r = await dodajZdjecie(z, { cel: { projektId: w.id }, plik: { sciezka, rozszerzenie } });
+    if (r.ok) await wczytaj(); else Alert.alert(t('licznik.blad_zapisu'));
+  };
+  const wybierzZdjecie = async (zrodlo: 'aparat' | 'biblioteka') => {
+    const r = await wybieraczZdjec().wybierz(zrodlo);
+    if (r.rodzaj === 'zdjecie') await dodajPlik(r.sciezka, r.rozszerzenie);
+    else if (r.rodzaj === 'brak_zgody') {
+      Alert.alert(t('zdjecia.brak_aparatu_tytul'), t('zdjecia.brak_aparatu_opis'), [
+        { text: t('wspolne.anuluj'), style: 'cancel' }, { text: t('zdjecia.otworz_ustawienia'), onPress: () => void Linking.openSettings() },
+      ]);
+    } else if (r.rodzaj === 'blad') Alert.alert(t('licznik.blad_zapisu'));
+  };
+  const grupaZdjec = (
+    <GrupaZdjec t={t} miniatury={miniatury} naWybierz={(zr) => void wybierzZdjecie(zr)}
+      naOtworz={(i) => router.push({ pathname: '/zdjecie', params: { projekt: w.id, i: String(i) } })}
+      panelE2e={E2E ? (
+        <Pressable accessibilityRole="button" testID="e2e-zdjecie-testowe" onPress={() => void dodajPlik(zdjecieTestowe(z.katalogi.tymczasowy), 'jpg')}>
+          <Text>Test photo (EXIF GPS)</Text>
+        </Pressable>
+      ) : undefined} />
+  );
   const licznikW = (lid: string) => stan.czesci.flatMap((c) => c.liczniki ?? []).find((l) => l.id === lid);
   return (
     <Bezpieczny>
       <Projekt
-        stan={stan} t={t} edycja={edycja}
+        stan={stan} t={t} edycja={edycja} zdjecia={grupaZdjec}
         naSesje={() => router.push({ pathname: '/sesje', params: { projekt: w.id } })}
         naWstecz={() => (router.canGoBack() ? router.back() : router.replace('/projekty'))}
         naOtworzCzesc={(cid) => { const l = czesc(cid)?.liczniki[0]; if (l) otworzLicznik(l.id); }}

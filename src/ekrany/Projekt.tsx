@@ -41,6 +41,8 @@ export type PropsProjektu = {
   naWstecz?(): void;
   naDataUkonczenia?(dzien: string): void; // zapis od razu po wyborze (bez „Save”, design-spec)
   naSesje?(): void;
+  /** Grupa „Photos” po „Note” (P-191 P9a); składa kompozycja (`GrupaZdjec`). */
+  zdjecia?: React.ReactNode;
 };
 
 export function Projekt(p: PropsProjektu): React.ReactElement {
@@ -180,6 +182,8 @@ export function Projekt(p: PropsProjektu): React.ReactElement {
           </Pressable>
         </>
       )}
+
+      {p.zdjecia}
 
       {s.szczegoly && (
         <>
