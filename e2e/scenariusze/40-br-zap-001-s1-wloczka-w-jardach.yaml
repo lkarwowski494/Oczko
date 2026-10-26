@@ -1,6 +1,6 @@
 # BR-ZAP-001/S1 (docs/brd/wymagania-narzedzia.md:7): etykieta podaje 437 yd → zapas pokazuje 437 yd i 399,59 m (RD-03-W1). Wyrocznia: wektor BRD.
 # „Tools” → „Yarn” → „Add yarn” (04 fix-6 D, P-191 P7a–P8a); pole długości z przełącznikiem m/yd. Id `nav-narzedzia`, `zapas-dlugosc`,
-# `zapas-jednostka-yd`, `zapas-przeliczone` — propozycje 07 do potwierdzenia przez 04/08. Funkcja bez UI na 2026-10-26 — pakiet pełny.
+# `zapas-jednostka-yd`, `zapas-przeliczone` — kontrakt 07 (koordynator 2026-10-26), wdraża 08. Funkcja bez UI na 2026-10-26 — pakiet pełny.
 # Region symulatora en-US: separator dziesiętny „.” (wzorzec „399.59”).
 appId: com.apps4brew.knitting
 name: "BR-ZAP-001/S1 · Włóczka z etykiety 437 yd: zapas pokazuje 437 yd i 399.59 m"

@@ -44,7 +44,7 @@ Argumenty startu (`launchApp: arguments:`; na iOS Maestro przekazuje je jako arg
 | `oczkoE2eAwariaStartu` | `przed-kamieniem` | wymuszona awaria procesu przed kamieniem milowym ADR-0019 (start liczony jako nieudany); po zapisie stanu startu pusty ekran z `testID` `e2e-awaria-startu` |
 
 ## testID (propozycja 07 dla 08; zmiana nazwy = zmiana scenariuszy)
-Wiersze `projekt-*`, `kosz-*`, `co-dalej-*`, `projekty-kosz`, `projekty-ostatnia-praca`, `licznik-nastepna-czesc`, `menu-znaczenie` i `formularz-*` arkuszy projektu dopisała rola 08 w partii 5 według propozycji 04 fix-5 („Dla 08”, P-183) — do przeglądu 07. Potwierdzenia usuwania to alerty systemowe (bez testID; scenariusz stuka w tekst przycisku). Wiersze grup B i D (`licznik-stoper`, `stoper-*`, `sesje-*`, `historia-*`, `narzedzia-*`, `probka-*`, `projekt-sesje`, `projekt-zdjecia`, `projekt-probka`, `zapas-filtr`, `zdjecie-usun`, `karta-udostepnij`) dopisała rola 07 z „Dla 08” 04 fix-6 (P-191, P-205); usunięte `menu-sesja`, `sesja-trwa`, `sesja-zakoncz`, `menu-zdjecia`, `zdjecia-licznik`, `nav-zapas` (zastąpione przez 04 fix-6; F07-17). Wiersze z dopiskiem „propozycja 07” czekają na potwierdzenie 04/08.
+Wiersze `projekt-*`, `kosz-*`, `co-dalej-*`, `projekty-kosz`, `projekty-ostatnia-praca`, `licznik-nastepna-czesc`, `menu-znaczenie` i `formularz-*` arkuszy projektu dopisała rola 08 w partii 5 według propozycji 04 fix-5 („Dla 08”, P-183) — do przeglądu 07. Potwierdzenia usuwania to alerty systemowe (bez testID; scenariusz stuka w tekst przycisku). Wiersze grup B i D (`licznik-stoper`, `stoper-*`, `sesje-*`, `historia-*`, `narzedzia-*`, `probka-*`, `projekt-sesje`, `projekt-zdjecia`, `projekt-probka`, `zapas-filtr`, `zdjecie-usun`, `karta-udostepnij`) dopisała rola 07 z „Dla 08” 04 fix-6 (P-191, P-205); usunięte `menu-sesja`, `sesja-trwa`, `sesja-zakoncz`, `menu-zdjecia`, `zdjecia-licznik`, `nav-zapas` (zastąpione przez 04 fix-6; F07-17). Id `nav-narzedzia`, `zapas-dlugosc`, `zapas-jednostka-yd`, `zapas-przeliczone` (spoza listy 04) koordynator przyjął jako kontrakt 07 (2026-10-26, po zamknięciu 04 fix-6); wdraża 08.
 
 Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`; „—” = tekst ustala 04 (Z07-05), scenariusz używa tylko id. Kolumna ostatnia: klawiatura pola (`liczbowa`, `tekstowa`) albo puste.
 
@@ -109,15 +109,15 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `probka-wynik-grubosc` | Swatch | blok kategorii grubości | — | |
 | `projekt-probka` | ekran projektu, „Details” | wiersz próbki projektu (U-10) | — | |
 | `zapas-filtr` | zapas | chipy kategorii (rola radio) | „All”, „Weight {n}” | |
-| `zapas-dlugosc` | formularz włóczki | długość motka — **propozycja 07, do potwierdzenia przez 04/08** | „Length per skein” | liczbowa |
-| `zapas-jednostka-yd` | formularz włóczki | przełącznik jednostki długości na jardy — **propozycja 07** | „yd” | |
-| `zapas-przeliczone` | formularz włóczki | przeliczenie pod polem (RD-03) — **propozycja 07** | „≈ {n} m” | |
+| `zapas-dlugosc` | formularz włóczki | długość motka — kontrakt 07 (koordynator 2026-10-26) | „Length per skein” | liczbowa |
+| `zapas-jednostka-yd` | formularz włóczki | przełącznik jednostki długości na jardy — kontrakt 07 (koordynator 2026-10-26) | „yd” | |
+| `zapas-przeliczone` | formularz włóczki | przeliczenie pod polem (RD-03) — kontrakt 07 (koordynator 2026-10-26) | „≈ {n} m” | |
 | `projekt-zdjecia` | ekran projektu | grupa „Photos” (P-191 P9a) | „Photos” | |
 | `zdjecie-usun` | podgląd zdjęcia | Delete photo (alert z potwierdzeniem, bez kosza) | „Delete photo” | |
 | `karta-udostepnij` | karta ukończenia | Share: obraz 1080 × 1350 bez EXIF/GPS (P-191 P10a) | „Share” | |
 | `nav-projekty` | licznik | powrót do listy projektów | „Projects” | |
 | `nav-ustawienia` | lista projektów | wejście do Ustawień | — | |
-| `nav-narzedzia` | lista projektów | wejście do „Tools” (zapas, druty, kalkulator; P-191 P7a) — **propozycja 07, do potwierdzenia przez 04/08** (design-spec nie podaje id wejścia) | „Tools” | |
+| `nav-narzedzia` | lista projektów | wejście do „Tools” (zapas, druty, kalkulator; P-191 P7a) — kontrakt 07, przyjęty przez koordynatora 2026-10-26 (design-spec nie podaje id wejścia) | „Tools” | |
 | `nav-wstecz` | ekrany wtórne | systemowy „Back” | „Back” | |
 | `projekty-lista` | lista projektów | lista | „Projects” | |
 | `projekty-wiersz` | lista projektów | wiersz projektu (powtarzalny, `index`) | nazwa · część · rząd | |
