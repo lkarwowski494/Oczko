@@ -70,6 +70,10 @@ export async function podsumowanieTygodnia(baza: PortBazy, w: { dzis: string; pi
 export type ProjektDzis = { id: string; nazwa: string; cel: CelDnia | null };
 /** Z_przed = Σ min(r_i, c_i) części z celem, r_i = wartość liczników rzędów części na koniec wczoraj (RD-15 jak RD-14); Z_teraz z bieżącej wartości licznika (`licznik.wartosc` = scal, P-134 Q1a). */
 export async function celProjektu(baza: PortBazy, projektId: string, termin: string, dzis: string): Promise<CelDnia | null> {
+  return (await dzienProjektu(baza, projektId, termin, dzis)).cel;
+}
+/** Cel na dziś (RD-15) i rzędy zrobione dziś na częściach z celem: Z_teraz − Z_przed (do „today {{zrobione}} of {{count}}”, 04 fix-5). */
+export async function dzienProjektu(baza: PortBazy, projektId: string, termin: string, dzis: string): Promise<{ cel: CelDnia | null; zrobioneDzis: number }> {
   const czesci = await wiersze(baza.all('SELECT id, cel_rzedow FROM czesc WHERE projekt_id = ? AND usunieto_ms IS NULL AND cel_rzedow IS NOT NULL', [projektId]), 'kolejnosc');
   let suma = 0, przed = 0, teraz = 0;
   for (const c of czesci) {
@@ -83,7 +87,7 @@ export async function celProjektu(baza: PortBazy, projektId: string, termin: str
     teraz += Math.min(r ? liczba(r, 't') : 0, cel);
   }
   const w = celDzienny({ suma, przedDzis: przed, zrobioneTeraz: teraz, termin, dzis });
-  return w.ok ? w.wartosc : null; // termin bez celów części (C = 0): brak celu dnia, nie zgadywany cel
+  return { cel: w.ok ? w.wartosc : null, zrobioneDzis: Math.max(0, teraz - przed) }; // termin bez celów części (C = 0): brak celu dnia, nie zgadywany cel
 }
 const ranga = (c: CelDnia | null): number => (c === null ? 3 : c.rodzaj === 'po_terminie' ? 0 : c.rodzaj === 'cel' ? 1 : 2);
 export async function kolejnoscProjektow(baza: PortBazy, dzis: string): Promise<ProjektDzis[]> {
