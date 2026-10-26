@@ -1,8 +1,8 @@
 # Stan roli 07-jakosc — fix-3 NZ-P5-07 (2026-10-26)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-P5-07 --galaz claude/jolly-thompson-paz6d8`; 64 343 znaków). Plan i pytania: `docs/jakosc/fix-3-2026-10-26.md`.
-- E0 plan: **STOP** — przegląd wyjątków P-176, P-177, P-183, `WYLACZONE` (rola 12, c1d3a51), `test:akceptacja` (P-180): przyjęte, poprawki F07-16, F07-17; „Źródła wiedzy” zgodne z P-108/P-112, luka strażnika F07-14; bramka `[e2e-pelny]` F07-15 (P1); scenariusze 33–43 F07-18. Pytania Q1–Q5 do koordynatora.
+- E0 plan: **STOP** — przegląd wyjątków P-176, P-177, P-183, `WYLACZONE` (rola 12, c1d3a51), `test:akceptacja` (P-180): przyjęte, poprawki F07-16, F07-17; „Źródła wiedzy” zgodne z P-108/P-112, luka strażnika F07-14; bramka `[e2e-pelny]` F07-15 (P1); scenariusze 33–43 F07-18. Pytania Q1–Q7 do koordynatora (Q6, Q7 z P-197: N12-11 → F07-19, N-03 → F07-20).
 - Wejście 855230e: `env -u NODE_PATH npm run verify` kod 0, 1974/1974; `test:akceptacja` kod 0 (3 testy).
-- Następny krok: odpowiedź koordynatora (P-087) na Q1–Q5 → E1; push `e2e/**` tylko po uzgodnieniu momentu (P-187).
+- Następny krok: odpowiedź koordynatora (P-087) na Q1–Q7 → E1; push `e2e/**` tylko po uzgodnieniu momentu (P-187).
 
 # Stan roli 07-jakosc — fix-2 NZ-08-P2-07 (2026-10-26)
 Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-08-P2-07 --galaz claude/jolly-thompson-paz6d8`; 64 346 znaków). Plan i pytania: `docs/jakosc/fix-2-2026-10-26.md`.
