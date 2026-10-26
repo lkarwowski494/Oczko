@@ -2,6 +2,20 @@
 Plik stanu sesji · start 2026-10-26 · gałąź `claude/jolly-thompson-paz6d8` · prompt: biblioteka `prompts` 97ec212, `08-programista --tryb build --moduly sqlite-expo` (47510 znaków — zgodny; nie w repo)
 Zakres: P-181 (partia 5 = A + C + zaległości P-180; tylko grupy wspólne dla wariantów zakresu, bez wzorów, iCloud, sesji i narzędzi), P-180 (PLIK_BAZY, krok CI członkostwa `_shared/Stuknij.swift`, zdjęcie `continue-on-error` pakietu podstawowego E2E, pas przypomnienia po stronie Swift). Wejście: inwentaryzacja koordynatora `oczko-warsztat/koordynacja/2026-10-26-inwentaryzacja-mvp.md` (6575a46), `docs/scope-contract.md` (F-04, F-08, F-09, F-14, F-15, F-17, F-18, F-20, F-33, F-46, F-52, F-54, F-60, F-61), BRD (BR-PRJ-001/002/004/005/007/014/016, BR-LIC-006/011/012/018, BR-DNI-004/005/006, BR-DAN-008), `docs/architektura/moduly.md` „Projekt”, design-spec.
 
+## Stan: sesja 3 — kolejka P-215 zrobiona; czeka na nocny CI iOS (STOP E2 po zielonym „Jakość · iOS” w oknie maszyn) · 2026-10-26 ok. 17:55 UTC
+Prompt 97ec212 = 47510 znaków (zgodny). Start: a305c33 po `npm ci` — verify kod 2 (typecheck:testy: test 07 p202 bez `formatuj`, naprawione w df261f7). Koniec: **0bd9210**, `env -u NODE_PATH npm run verify` kod 0, **2296/2296**; `swift test` (Swift 6.2, Linux) 46/46.
+
+**Zrobione w sesji 3** (każdy krok: test czerwony z właściwego powodu → kod → zielony; wyjątki opisane w commitach):
+- (1) kontrakt 07 z P-203 pkt 1–2: zrobiła sesja 2 (bd0b1f0), mój duplikat porzucony przy rebase; 07 nałożyło scenariusz 09 (641f4ad).
+- (2) natywne: 16d5d87 P-199 Q6a (linia „niewysłane zmiany” na zegarku po ZEGAREK_PONOWIENIE_MS), 08a8b82 R3a Smart Stack (`supplementalActivityFamilies([.small])`); P-219 2A: 5577a5e (expo-image-manipulator 57.0.21, react-native-view-shot 5.1.0; zdjęcia bez EXIF/GPS, „Share” zdjęcia), 0bd9210 (obraz karty 1080 × 1350, „Share” karty); 93e02a1 typ `.oczko` w app.json. Wszystko natywne wypchnięte przed 22:30 UTC.
+- (3) UI grupy D: 08dda42 dane zapasu i drutów, 4f836f6 „Tools” + „Swatch”, b7fe657 zapas i druty, f288554 zdjęcia projektu, 614c72b próbka projektu (U-10).
+- (4) P-209: 9124946 kosz włóczki i drutu z ochroną historii.
+- (5) zgłoszenia 10: 93e02a1 (opis, `.oczko`, otwarcie pliku → import). `version` 1.0.0 celowo nie (Q-S3-2), `ADRESY.recenzja` [DO USTALENIA: Apple ID z kroku 0 ASC], `FAMILY_SHARING` po kroku 2.
+- (6) testy oczekujące 07 (cca1ca9): df261f7 (S3 ostatni kontakt; zglos-stan-danych.test.tsx:44 zmieniony z powodem P-193); tests/akceptacja pusty.
+- (7) a00873e P5a (linia „zapomniany stoper”), f7d438e + 1522237 Q4a (globalna obsługa błędów JS; „Zgłoś problem” w trybie awaryjnym).
+
+**Następny krok:** po północy koordynator uruchamia nocny CI iOS na 0bd9210 (build z nowymi modułami natywnymi, swift-test, E2E podstawowy; informacyjnie 16, 17, 40, 41, 42). Zielony → STOP E2 partii 5 z raportem `oczko-warsztat/08-programista/2026-10-26-partia5/E2-raport.md` (sekcja „Sesja 3”). Czerwony → 08 fix na tej gałęzi. Otwarte: Q-S3-2 (wersja 1.0.0 a strażnik v1.db).
+
 ## Stan: STOP (kontekst sesji 2, P-187 pkt 4) 2026-10-26 ok. 16:45 UTC — B zrobione, D: dane + F-37; reszta D, natywne i zgłoszenia w nowej sesji
 Potwierdzenie stanu sesji 2: prompt 97ec212 = 47510 znaków; start 71f8ae3 verify 1875/1875; koniec a98e651 (po rebase), `env -u NODE_PATH npm run verify` kod 0, **2213/2213**.
 
@@ -109,6 +123,7 @@ Podział: jedna sesja wystarczy (partia 4 miała ok. 40 h w jednej sesji); punkt
 - 2026-10-26: ekrany C3/A4, A5/A3/C2, termin (pytanie Q5 → P-186) i A6; push a51f4b1; czekam na CI iOS.
 - 2026-10-26: CI iOS bez runnera (P-187: okno 15–24 bez macOS); STOP E1 A+C → P-188. Lista luk B/D/E → P-189 (04 fix-6, karta Pro po imporcie poza 1.0). B: dane stopera, F-51. STOP z powodu długości kontekstu.
 - 2026-10-26 (sesja 2, cd.): P-203, łatki 05, łatka 04, B1–B3 UI; STOP z powodu długości kontekstu (2213/2213).
+- 2026-10-26 (sesja 3): kolejka P-215 (1)–(7) i P-219 2A (koordynator: Q-S3-1 a); 0bd9210, 2296/2296; czeka na nocny CI iOS.
 - 2026-10-26 (sesja 2): potwierdzenie stanu 1875/1875; E (język P-190, ustawienia, źródła, stan danych); D (F-37 karta, F-16 dane i adapter). Q-E1 → P-193. Łatki 12 (P-194), P-195, P-199 Q4a/Q5a, N12-12.
 ### Do raportu E2 (zbierane w trakcie)
 - Sesja 2 (druga część) — odstępstwa i zgłoszenia: P-203 bez otwarcia „tylko do odczytu” (expo-sqlite `sqlite3_open` bez flag; `query_only` blokuje VACUUM INTO) — połączenie bez zapisów i bez zamknięcia; menu stopera i alert „inny projekt” jako widoki (jak R8); wejście „History”/„Tools” w pasku listy (design-spec: „zakładka”, aplikacji brak paska zakładek) — testID `nav-historia` do kontraktu 07; dni z robótką poza wybranym czytane samą etykietą (brak klucza 04); komunikat błędu korekty bez znaku „!” (Komunikat przyjmuje tekst); `stanSesji` — etykieta VoiceOver trwającej sesji składana z daty, godziny i czasu (brak klucza). Zmiany testów: formularze.test.tsx (korekta — wybór daty zamiast pól Z07-05), niezawodnosc-kamien.test.tsx (atrapa `licznik.widok`), łatka 05 A (luki/licznik.test.ts, wyjątek nazwany P-199 Q1a).
