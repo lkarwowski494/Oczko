@@ -1,9 +1,9 @@
 // Test roli 08 (P-163, P-161): RD-13-W11–W19 (pas rzędu w robocie: skończone + tryb → liczba na liczniku, rząd pasa, k) i W20–W25 (sygnał przy
 // zmianie skończonych). Wyrocznia: tests/wektory/brd.json (łatka 01 fix-4 NZ-RD13-CHWILA) i wzór RD-13 (docs/brd/reguly.md).
 import { przypomnienieChwili, sygnalZmiany, type TrybLicznika } from '../../../src/domena/przypomnienia';
-import { wektoryReguly, liczba, licznikWektorow, BLAD_DANYCH } from '../../narzedzia/akceptacja';
+import { wektoryReguly, liczba, licznikWektorow, BLAD_DANYCH, type WartoscBrd } from '../../narzedzia/akceptacja';
 
-const plan = (w: Record<string, unknown>) => ({ od: liczba(w['s [rz.]']), co: liczba(w['N [rz.]']), razy: liczba(w['M [-]']) });
+const plan = (w: Record<string, WartoscBrd>) => ({ od: liczba(w['s [rz.]']), co: liczba(w['N [rz.]']), razy: liczba(w['M [-]']) });
 const TRYB: Record<string, TrybLicznika> = { 'skończone rzędy': 'skonczone', 'rząd w trakcie': 'w_trakcie' };
 
 describe('RD-13 przypomnienieChwili: wektory BRD W11–W19 (P-161)', () => {
