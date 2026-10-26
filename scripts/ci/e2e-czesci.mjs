@@ -14,7 +14,8 @@
 // Algorytm: LPT — największa waga najpierw na najmniej obciążoną część; remisy według nazwy pliku i numeru części.
 // Tag `osobny-krok` (np. NFR-DOS-002: rozmiar tekstu AX5 ustawiany przez simctl) — scenariusz w swojej części, ale w osobnym kroku workflow.
 // P-091 (9a): scenariusze z tagiem `stan-licznika` (asercja wartości licznika) NIE są ponawiane — wyjście `bez_ponowien`; `ponawialne` = reszta.
-// Wyjście ($GITHUB_OUTPUT): main, osobne, any (true/false), ponawialne, bez_ponowien (nazwy plików po spacji), timeout_min (30 + 4 × scenariusze części, strategia §5).
+// Wyjście ($GITHUB_OUTPUT): main, osobne, any (true/false), ponawialne, bez_ponowien, bramka (nazwy plików po spacji), timeout_min (30 + 4 × scenariusze części, strategia §5).
+// bramka (F07-15, P-198 Q1a): scenariusze części z tagiem `podstawowy` — ich porażka czerwieni krok w KAŻDYM pakiecie; reszta pełnego pakietu informacyjnie.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -77,15 +78,15 @@ export function buildPlan(katalog, cfg, opt = {}) {
   const elementy = pliki.map(f => {
     const tagi = wczytajScenariusz(path.join(katalog, f)).tagi;
     const osobny = tagi.includes('osobny-krok');
-    return { f, osobny, bezPonowien: tagi.includes('stan-licznika'), waga: waga(katalog, cfg, f) + (osobny ? cfg.narzut_osobnego_kroku_s ?? 0 : 0) };
+    return { f, osobny, bezPonowien: tagi.includes('stan-licznika'), bramka: tagi.includes('podstawowy'), waga: waga(katalog, cfg, f) + (osobny ? cfg.narzut_osobnego_kroku_s ?? 0 : 0) };
   });
   elementy.sort((a, b) => b.waga - a.waga || a.f.localeCompare(b.f));
-  const czesciL = Array.from({ length: czesci }, (_, i) => ({ czesc: i + 1, files: [], osobne: [], waga_s: 0, bez_ponowien: [], ponawialne: [], timeout_min: 0 }));
+  const czesciL = Array.from({ length: czesci }, (_, i) => ({ czesc: i + 1, files: [], osobne: [], waga_s: 0, bez_ponowien: [], ponawialne: [], bramka: [], timeout_min: 0 }));
   for (const e of elementy) {
     const c = czesciL.reduce((m, x) => (x.waga_s < m.waga_s ? x : m), czesciL[0]);
-    (e.osobny ? c.osobne : c.files).push(e.f); (e.bezPonowien ? c.bez_ponowien : c.ponawialne).push(e.f); c.waga_s += e.waga;
+    (e.osobny ? c.osobne : c.files).push(e.f); (e.bezPonowien ? c.bez_ponowien : c.ponawialne).push(e.f); if (e.bramka) c.bramka.push(e.f); c.waga_s += e.waga;
   }
-  for (const c of czesciL) { c.files.sort(); c.osobne.sort(); c.bez_ponowien.sort(); c.ponawialne.sort(); c.timeout_min = 30 + 4 * (c.files.length + c.osobne.length); }
+  for (const c of czesciL) { c.files.sort(); c.osobne.sort(); c.bez_ponowien.sort(); c.ponawialne.sort(); c.bramka.sort(); c.timeout_min = 30 + 4 * (c.files.length + c.osobne.length); }
   return czesciL;
 }
 
@@ -133,7 +134,7 @@ function main() {
   const unknown = only.split(/[\s,]+/).filter(Boolean).filter(x => !wybierzPliki(wszystkie, x).length);
   if (unknown.length) console.log(`::warning::Wybrane numery bez scenariusza: ${unknown.join(' ')}`);
   /* pakiet podstawowy ma mniej części niż macierz workflow — nadmiarowe maszyny kończą od razu (any=false) */
-  const moja = parts[n - 1] ?? { files: [], osobne: [], waga_s: 0, bez_ponowien: [], ponawialne: [], timeout_min: 30 };
+  const moja = parts[n - 1] ?? { files: [], osobne: [], waga_s: 0, bez_ponowien: [], ponawialne: [], bramka: [], timeout_min: 30 };
   const zwykle = wybierzPliki(moja.files, only), osobne = wybierzPliki(moja.osobne, only);
   const out = path.resolve(arg('--out', '.maestro-czesc'));
   fs.rmSync(out, { recursive: true, force: true }); fs.mkdirSync(out, { recursive: true });
@@ -141,11 +142,11 @@ function main() {
   for (const f of zwykle) fs.copyFileSync(path.join(katalog, f), path.join(out, f));
   if (osobne.length) { fs.mkdirSync(path.join(out, 'osobne'), { recursive: true }); fs.cpSync(path.join(katalog, 'subflows'), path.join(out, 'osobne', 'subflows'), { recursive: true }); for (const f of osobne) fs.copyFileSync(path.join(katalog, f), path.join(out, 'osobne', f)); }
   const wybrane = [...zwykle, ...osobne];
-  const bezPon = wybrane.filter(f => moja.bez_ponowien.includes(f)), pon = wybrane.filter(f => moja.ponawialne.includes(f));
+  const bezPon = wybrane.filter(f => moja.bez_ponowien.includes(f)), pon = wybrane.filter(f => moja.ponawialne.includes(f)), bramka = wybrane.filter(f => moja.bramka.includes(f));
   console.log(`Pakiet: ${pakiet}. Część ${n}/${parts.length}: ${zwykle.length} scenariuszy${osobne.length ? ` + ${osobne.length} w osobnym kroku` : ''} (waga ok. ${Math.round(moja.waga_s / 60)} min; bez ponowień P-091 9a: ${bezPon.length})`);
-  for (const f of zwykle) console.log(`  ${f}${bezPon.includes(f) ? ' (stan-licznika: bez ponowienia)' : ''}`);
+  for (const f of zwykle) console.log(`  ${f}${bezPon.includes(f) ? ' (stan-licznika: bez ponowienia)' : ''}${bramka.includes(f) ? '' : ' (informacyjnie)'}`);
   for (const f of osobne) console.log(`  ${f} (osobny krok)`);
-  const lines = [`main=${zwykle.length > 0}`, `osobne=${osobne.length > 0}`, `any=${wybrane.length > 0}`, `ponawialne=${pon.join(' ')}`, `bez_ponowien=${bezPon.join(' ')}`, `timeout_min=${30 + 4 * wybrane.length}`];
+  const lines = [`main=${zwykle.length > 0}`, `osobne=${osobne.length > 0}`, `any=${wybrane.length > 0}`, `ponawialne=${pon.join(' ')}`, `bez_ponowien=${bezPon.join(' ')}`, `bramka=${bramka.join(' ')}`, `timeout_min=${30 + 4 * wybrane.length}`];
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, lines.join('\n') + '\n');
 }
 

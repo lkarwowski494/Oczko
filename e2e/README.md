@@ -21,6 +21,7 @@ Stan: rola 07, E3 (testy akceptacyjne przed kodem), 2026-10-25. Scenariusze **ni
 | Tag | Znaczenie |
 |---|---|
 | `podstawowy` | pakiet bramki TestFlight (P-091 9a): pierwsze +1 świeżej instalacji offline (01–03), +1/−1/cofnij (04), limit zawczasu (05), zakup i przywrócenie na sztucznym sklepie (06), okno „Uczciwe zasady” (07), eksport/import (08), start awaryjny ADR-0019 (09) |
+| `podstawowy` w pakiecie pełnym | porażka scenariusza z tagiem `podstawowy` czerwieni zadanie także przy `[e2e-pelny]`; porażka pozostałych to „czerwony-informacyjnie” w podsumowaniu (wyjście `bramka` planu części; F07-15, P-198 Q1a) |
 | `stan-licznika` | asercja wartości licznika — bez ponowień (P-091 9a) |
 | `osobny-krok` | workflow uruchamia scenariusz w osobnym kroku swojej części (30: rozmiar tekstu AX5 przez `simctl ui … content_size`) |
 | `wzor`, `zegarek`, `pomiar` | grupy informacyjne (filtr `--include-tags`); `pomiar` = wynik informacyjny bez progu (OP-17) |

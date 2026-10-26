@@ -54,9 +54,7 @@ describe('jakosc-ios.yml (P-180)', () => {
     expect(prebuild).toBeGreaterThanOrEqual(0);
     expect(krok).toBeGreaterThan(prebuild);
   });
-  test('e2e: continue-on-error tylko dla pakietu pełnego, pakiet podstawowy jest bramką', () => {
-    const coe = String(wf.jobs.e2e['continue-on-error']);
-    expect(coe).not.toBe('true');
-    expect(coe).toMatch(/^\$\{\{.*e2e-pelny.*\}\}$/);
+  test('e2e: pakiet podstawowy jest bramką — zadanie bez continue-on-error (zmiana 07: F07-15, P-198 Q1a; reguła kroków w e2e-bramka.test.ts)', () => {
+    expect(wf.jobs.e2e['continue-on-error']).toBeUndefined();
   });
 });

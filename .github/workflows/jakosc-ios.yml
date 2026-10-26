@@ -132,8 +132,9 @@ jobs:
     name: e2e (część ${{ matrix.czesc }})
     needs: build
     runs-on: macos-26
-    # Pakiet podstawowy jest bramką od pierwszego zielonego przebiegu 40313538454 (P-180); pełny ([e2e-pelny]) zostaje informacyjny.
-    continue-on-error: ${{ contains(github.event.head_commit.message, '[e2e-pelny]') }}
+    # Pakiet podstawowy jest bramką od pierwszego zielonego przebiegu 40313538454 (P-180) — w KAŻDYM pakiecie: kroki liczą porażki tylko
+    # scenariuszy z wyjścia `bramka` (tag `podstawowy`), resztę pełnego pakietu wypisują jako „czerwony-informacyjnie” (F07-15, P-198 Q1a).
+    # Bez continue-on-error na zadaniu: przy „[e2e-pelny]” wyłączał też bramkę scenariuszy podstawowych (test tests/jakosc/e2e-bramka.test.ts).
     strategy:
       fail-fast: false
       matrix:
@@ -199,6 +200,7 @@ jobs:
           MAESTRO_DRIVER_STARTUP_TIMEOUT: '480000' # Trening: świeży symulator potrzebuje więcej czasu na sterownik XCTest
           MAESTRO_CLI_NO_ANALYTICS: '1'
           PONAWIALNE: ${{ steps.plan.outputs.ponawialne }}
+          BRAMKA: ${{ steps.plan.outputs.bramka }}
         run: |
           mkdir -p e2e-out; porazki=0; : > e2e-out/wyniki.txt
           for f in e2e-czesc/[0-9][0-9]-*.yaml; do
@@ -206,8 +208,11 @@ jobs:
             if maestro --device "$SIM" test "$f" --format junit --output "e2e-out/$n.xml" --test-output-dir "e2e-out/$n"; then echo "zielony $n" >> e2e-out/wyniki.txt; continue; fi
             if [[ " $PONAWIALNE " == *" $n.yaml "* ]] && maestro --device "$SIM" test "$f" --format junit --output "e2e-out/$n.ponowienie.xml" --test-output-dir "e2e-out/$n.ponowienie"; then
               echo "w-ponowieniu $n" >> e2e-out/wyniki.txt # P-091 9a: liczony osobno, nie jako zaliczenie bez śladu
-            else
+            elif [[ " $BRAMKA " == *" $n.yaml "* ]]; then
               echo "czerwony $n" >> e2e-out/wyniki.txt; porazki=$((porazki + 1))
+              python3 .github/scripts/jakosc/maestro-failures.py "e2e-out/$n" || true
+            else
+              echo "czerwony-informacyjnie $n" >> e2e-out/wyniki.txt # poza pakietem podstawowym (F07-15)
               python3 .github/scripts/jakosc/maestro-failures.py "e2e-out/$n" || true
             fi
           done
@@ -215,12 +220,16 @@ jobs:
           exit $porazki
       - name: Scenariusze w osobnym kroku (duży tekst AX5)
         if: steps.plan.outputs.osobne == 'true'
+        env:
+          BRAMKA: ${{ steps.plan.outputs.bramka }}
         run: |
           xcrun simctl ui "$SIM" content_size accessibility-extra-extra-extra-large
           mkdir -p e2e-out; porazki=0
           for f in e2e-czesc/osobne/[0-9][0-9]-*.yaml; do
             n=$(basename "$f" .yaml)
-            maestro --device "$SIM" test "$f" --format junit --output "e2e-out/$n.xml" --test-output-dir "e2e-out/$n" && echo "- zielony $n (AX5)" >> "$GITHUB_STEP_SUMMARY" || { echo "- czerwony $n (AX5)" >> "$GITHUB_STEP_SUMMARY"; porazki=$((porazki + 1)); }
+            if maestro --device "$SIM" test "$f" --format junit --output "e2e-out/$n.xml" --test-output-dir "e2e-out/$n"; then echo "- zielony $n (AX5)" >> "$GITHUB_STEP_SUMMARY"
+            elif [[ " $BRAMKA " == *" $n.yaml "* ]]; then echo "- czerwony $n (AX5)" >> "$GITHUB_STEP_SUMMARY"; porazki=$((porazki + 1))
+            else echo "- czerwony-informacyjnie $n (AX5)" >> "$GITHUB_STEP_SUMMARY"; fi
           done
           exit $porazki
       - name: Spakowanie wyników (Maestro zapisuje katalogi z „:” w nazwie scenariusza, których upload-artifact nie przyjmuje; run 40223597670)

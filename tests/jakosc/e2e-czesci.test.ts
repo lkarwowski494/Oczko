@@ -164,6 +164,17 @@ describe('polecenie „czesc” (krok „Plan części” w jakosc-ios.yml)', ()
     expect(rs.flatMap(r => r.o.bez_ponowien.split(' ').filter(Boolean)).sort()).toEqual(scenariusze(katalog).filter(f => /^(04|10)-/.test(f))); /* oba mają asercję wartości licznika */
   });
 
+  test('F07-15 (P-198 Q1a): wyjście bramka = scenariusze części z tagiem podstawowy — w pakiecie pełnym tylko one, w podstawowym wszystkie', () => {
+    const lista = (s: string) => s.split(' ').filter(Boolean).sort();
+    const podst = scenariusze(katalog).filter(f => maTag(f, 'podstawowy'));
+    const pelny = plan().map(c => run(c.czesc, { PAKIET: 'pelny' }));
+    pelny.forEach(r => expect(lista(r.o.bramka)).toEqual([...r.pliki, ...r.osobne].filter(f => podst.includes(f)).sort()));
+    expect(pelny.flatMap(r => lista(r.o.bramka)).sort()).toEqual(podst);
+    const podstawowy = Array.from({ length: cfg.czesci }, (_, i) => run(i + 1));
+    podstawowy.forEach(r => expect(lista(r.o.bramka)).toEqual([...r.pliki, ...r.osobne].sort()));
+    expect(podst.length).toBeGreaterThan(0);
+  });
+
   test('zły numer części kończy się błędem', () => {
     expect(() => execFileSync('node', [skrypt, 'czesc', String(cfg.czesci + 1)], { stdio: 'pipe' })).toThrow();
     expect(() => execFileSync('node', [skrypt, 'czesc', '0'], { stdio: 'pipe' })).toThrow();
