@@ -23,7 +23,7 @@ function domknijSesje(z: ZaleznosciStartu): Promise<Wynik<number>> {
       const s: Sesja = { stan: 'trwa', startMs: liczba(r, 'start_ms'), wstrzymanoMs: liczbaLubNull(r, 'wstrzymano_ms'), przerwyMs: liczba(r, 'przerwy_ms'), koniecMs: null, skorygowano: false, doSprawdzenia: false };
       const w = przejdzSesje(s, { rodzaj: 'start_aplikacji' }, teraz, SESJA_MAKS_H);
       if (!w.ok || w.wartosc.stan !== 'zakonczona') continue;
-      await tx.run("UPDATE sesja SET stan = 'zakonczona', koniec_ms = ?, do_korekty = 1 WHERE id = ?", [w.wartosc.koniecMs, tekst(r, 'id')]);
+      await tx.run("UPDATE sesja SET stan = 'zakonczona', koniec_ms = ?, do_korekty = 1, zmieniono_ms = ? WHERE id = ?", [w.wartosc.koniecMs, teraz, tekst(r, 'id')]);
       if (w.wartosc.koniecMs !== null) await pracaDoKonca(tx, tekst(r, 'id'), w.wartosc.koniecMs); // P-195 Q5
       n += 1;
     }

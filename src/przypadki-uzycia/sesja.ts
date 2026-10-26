@@ -38,7 +38,7 @@ export function startSesji(z: Zaleznosci, w: { projektId: string }): Promise<Wyn
     const [o] = await wiersze(tx.all("SELECT count(*) AS n FROM sesja WHERE stan IN ('trwa', 'wstrzymana')"), 'startSesji');
     if (o && liczba(o, 'n') > 0) return blad('niedozwolone_przejscie');
     const sesjaId = z.id.nowy();
-    await tx.run("INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien) VALUES (?, ?, 'trwa', ?, ?, ?)", [sesjaId, w.projektId, teraz, chwila.strefa, chwila.dzien]);
+    await tx.run("INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien, zmieniono_ms) VALUES (?, ?, 'trwa', ?, ?, ?, ?)", [sesjaId, w.projektId, teraz, chwila.strefa, chwila.dzien, teraz]);
     return { ok: true, wartosc: { sesjaId } };
   });
 }
@@ -56,8 +56,8 @@ function przejscie<T>(z: Zaleznosci, operacja: string, id: string, zd: Zdarzenie
       zd, teraz, SESJA_MAKS_H);
     if (!n.ok) return n;
     const x = n.wartosc;
-    await tx.run('UPDATE sesja SET stan = ?, start_ms = ?, wstrzymano_ms = ?, przerwy_ms = ?, koniec_ms = ?, skorygowano = ?, do_korekty = ? WHERE id = ?',
-      [x.stan, x.startMs, x.wstrzymanoMs, x.przerwyMs, x.koniecMs, x.skorygowano ? 1 : 0, zd.rodzaj === 'koryguj' ? 0 : x.doSprawdzenia ? 1 : 0, id]); // korekta rozstrzyga „do sprawdzenia”
+    await tx.run('UPDATE sesja SET stan = ?, start_ms = ?, wstrzymano_ms = ?, przerwy_ms = ?, koniec_ms = ?, skorygowano = ?, do_korekty = ?, zmieniono_ms = ? WHERE id = ?',
+      [x.stan, x.startMs, x.wstrzymanoMs, x.przerwyMs, x.koniecMs, x.skorygowano ? 1 : 0, zd.rodzaj === 'koryguj' ? 0 : x.doSprawdzenia ? 1 : 0, teraz, id]); // korekta rozstrzyga „do sprawdzenia”
     if (x.koniecMs !== null) await pracaDoKonca(tx, id, x.koniecMs);
     return { ok: true, wartosc: po(x) };
   });
@@ -94,11 +94,11 @@ export function przelaczSesje(z: Zaleznosci, w: { projektId: string }): Promise<
       const n = przejdzSesje({ stan: o.stan, startMs: o.startMs, koniecMs: o.koniecMs, przerwyMs: o.przerwyMs, wstrzymanoMs: o.wstrzymanoMs, skorygowano: o.skorygowano, doSprawdzenia: o.doKorekty },
         { rodzaj: 'zakoncz' }, teraz, SESJA_MAKS_H);
       if (!n.ok) return n;
-      await tx.run('UPDATE sesja SET stan = ?, wstrzymano_ms = ?, przerwy_ms = ?, koniec_ms = ? WHERE id = ?', [n.wartosc.stan, n.wartosc.wstrzymanoMs, n.wartosc.przerwyMs, n.wartosc.koniecMs, o.id]);
+      await tx.run('UPDATE sesja SET stan = ?, wstrzymano_ms = ?, przerwy_ms = ?, koniec_ms = ?, zmieniono_ms = ? WHERE id = ?', [n.wartosc.stan, n.wartosc.wstrzymanoMs, n.wartosc.przerwyMs, n.wartosc.koniecMs, teraz, o.id]);
       if (n.wartosc.koniecMs !== null) await pracaDoKonca(tx, o.id, n.wartosc.koniecMs);
     }
     const sesjaId = z.id.nowy();
-    await tx.run("INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien) VALUES (?, ?, 'trwa', ?, ?, ?)", [sesjaId, w.projektId, teraz, chwila.strefa, chwila.dzien]);
+    await tx.run("INSERT INTO sesja (id, projekt_id, stan, start_ms, strefa, dzien, zmieniono_ms) VALUES (?, ?, 'trwa', ?, ?, ?, ?)", [sesjaId, w.projektId, teraz, chwila.strefa, chwila.dzien, teraz]);
     return { ok: true, wartosc: { sesjaId } };
   });
 }

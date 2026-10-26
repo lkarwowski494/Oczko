@@ -65,7 +65,7 @@ const ENCJE: Record<string, { klucz: string; czas: boolean; pomin?: string[] }> 
   notatka_rzedu: { klucz: 'id', czas: true }, przypomnienie: { klucz: 'id', czas: true }, wzor: { klucz: 'id', czas: true },
   rysunek: { klucz: 'wzor_id, strona', czas: true }, wloczka: { klucz: 'id', czas: true }, narzedzie: { klucz: 'id', czas: true },
   projekt_wloczka: { klucz: 'projekt_id, wloczka_id', czas: true },
-  plik: { klucz: 'sha256', czas: false }, zdarzenie: { klucz: 'id', czas: false }, sesja: { klucz: 'id', czas: false },
+  plik: { klucz: 'sha256', czas: false }, zdarzenie: { klucz: 'id', czas: false }, sesja: { klucz: 'id', czas: true }, // sesja: zmieniono_ms od łatki L2 (fix-7)
   zdjecie: { klucz: 'id', czas: false }, obliczenie: { klucz: 'id', czas: false },
 };
 
