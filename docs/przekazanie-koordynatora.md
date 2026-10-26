@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-26 21:05 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-251 · **koordynator przeniesiony do nowej, lekkiej sesji (P-251)**
+**Ostatnia aktualizacja:** 2026-10-26 21:05 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-251 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -24,7 +24,7 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 | 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | scenariusze 44–52 (P-237, P-250 93fb215) | czeka na nocny przebieg → E2 fix-3 |
 | 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | JAK-15 zrobione | czeka; potem metadane i zrzuty |
 
-Zaplanowane zadania: stary koordynator (session_01PMNU6KLHHk1wC8z78R16i6) skasował swoje; nowy koordynator tworzy własne (dyżur, start nocnego przebiegu).
+Zaplanowane zadania: stary koordynator (session_01PMNU6KLHHk1wC8z78R16i6) skasował swoje. Nowy koordynator: przypomnienie 22:15 UTC (commit `[e2e-pelny]`, trig_01CWvVzvKA7sJWWAAg8mLVou), dalej sprawdzenia co 60–90 min.
 
 ## Zasady nocy (P-241, P-244, P-251)
 - Role raportują koordynatorowi tylko na końcu etapu, przy STOP albo problemie (oszczędność limitu, P-251).
