@@ -23,6 +23,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.apps4brew.knitting",
+      "deploymentTarget": "18.0",
       "appleTeamId": "8NQ9GHY8GF",
       "buildNumber": "1",
       "privacyManifests": {

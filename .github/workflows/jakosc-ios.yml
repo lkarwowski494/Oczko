@@ -70,7 +70,14 @@ jobs:
       - name: expo prebuild
         run: npx expo prebuild --platform ios --no-install --clean
       - name: pods
-        run: cd ios && pod install
+        run: cd ios && pod install 2>&1 | tee pod-install.log
+      - name: Cele natywne podłączone (ADR-0006, ADR-0007; 08 partia 3)
+        # Moduł z wyższym minimum niż aplikacja jest po cichu pomijany („was not linked”) — build zostaje zielony bez modułu.
+        run: |
+          set -e
+          if grep -q 'was not linked' ios/pod-install.log; then grep 'was not linked' ios/pod-install.log; echo "::error::moduł Expo niepodłączony"; exit 1; fi
+          grep -q 'IPHONEOS_DEPLOYMENT_TARGET = 18.0' ios/*.xcodeproj/project.pbxproj || { echo "::error::IPHONEOS_DEPLOYMENT_TARGET ≠ 18.0 (ADR-0006)"; exit 1; }
+          for p in OczkoDziennikPlus OczkoCzasWTle; do grep -q "$p" ios/Podfile.lock || { echo "::error::brak poda $p"; exit 1; }; done
       - name: Platforma iOS zgodna z SDK (pobranie tylko, gdy jej brak)
         run: bash .github/scripts/jakosc/ensure-ios-platform.sh
       - name: Build (Release, symulator, bez podpisu)
@@ -88,6 +95,13 @@ jobs:
             -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee xcodebuild.log | xcbeautify
           ls -d build/Build/Products/Release-iphonesimulator/*.app
+          APP=$(ls -d build/Build/Products/Release-iphonesimulator/*.app | head -1)
+          # Widżet osadzony i z kodem Live Activity; intencja i moduł w aplikacji (nazwy typów Swift w metadanych binarek)
+          test -d "$APP/PlugIns/OczkoWidget.appex"
+          strings -a "$APP/PlugIns/OczkoWidget.appex/OczkoWidget" | grep -q OczkoAktywnosc || { echo "::error::widżet bez OczkoAktywnosc"; exit 1; }
+          strings -a "$APP/$(basename "$APP" .app)" | grep -q OczkoStuknij || { echo "::error::aplikacja bez intencji OczkoStuknij"; exit 1; }
+          strings -a "$APP/$(basename "$APP" .app)" | grep -q IntencjaEkranuBlokady || { echo "::error::aplikacja bez modułu OczkoDziennikPlus"; exit 1; }
+          echo "Cele natywne: widżet, intencja i moduł w binarkach" >> "$GITHUB_STEP_SUMMARY"
       - name: Zapis aplikacji (do ponownego użycia przez części)
         run: |
           cd ios/build/Build/Products/Release-iphonesimulator
