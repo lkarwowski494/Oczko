@@ -6,6 +6,7 @@ Prompt: `prompts` @97ec212 (`node tools/assemble.mjs 07-jakosc --tryb fix --zada
 - Przekazanie 01 (P-202): F07-21 31324a9 (granica dnia ze stoperem), F07-22 cca1ca9 (testy oczekujące BR-DAN-011/S3, BR-PRJ-013/S4; S2 zegarka w §9 strategii).
 - Przekazanie 01 fix-6 (P-224): plan testów iPada i przeglądu OG-07 na partię 6 — `docs/jakosc/plan-partia-6-ipad.md`, decyzja P-225 (Q1a, Q2 a+c, Q3c); scenariusze po „Dla 08” 04 fix-7.
 - P-229: testID grup R i I w `e2e/README.md`; plan partii 7 (iCloud, „Udostępnij do Oczka”) — `docs/jakosc/plan-partia-7-icloud.md`, Q1–Q2 do koordynatora.
+- Partie 6 i 7 (P-229, P-230, P-233): F07-23 d4c19b1 (kontrola ATRAPA-ICLOUD), F07-24 + F07-25 0956131 (macierz e2e iphone/ipad, scenariusze 44–52 w pełnym pakiecie). Zgłoszenia: `oczkoE2eSzerokoscOkna` do kontraktu 05/08, testID znacznika (04/08), kontrola napisów testowych w .ipa (10).
 - E1: F07-15 (bramka w pakiecie pełnym), F07-14 (strażnik nazw źródeł: tylko klucz `zrodla.linia_standardow`), F07-16 (pusty `test:akceptacja` tylko przy katalogu bez plików testów), F07-17 (kontrakt testID B i D z 04 fix-6; scenariusze 16, 17, 28), F07-18 (scenariusze 33–43 w pakiecie pełnym) — zrobione. F07-20 (linie inwentarza kryteriów, `--check` w `jakosc:kontrole`) — zrobione (P-203 Q7a). F07-19 (P-203 Q6a) nałożone po kodzie 08 bd0b1f0 („Zapisz kopię” tylko do odczytu, panel SHA ukryty w trakcie liczenia); bez niego scenariusz 09 zostaje na poranne okno. E2 po nocnym przebiegu iOS.
 
 # Stan roli 07-jakosc — fix-2 NZ-08-P2-07 (2026-10-26)
