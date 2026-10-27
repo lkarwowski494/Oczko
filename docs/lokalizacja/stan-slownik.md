@@ -12,7 +12,7 @@ Słownik terminów dziewiarskich i szydełkowych przed przekładem interfejsu (l
 
 ## Stan
 - [x] Lista 44 pojęć z inwentarza `src/i18n/slowniki/en.json` (719 kluczy) i `docs/tresci` (28 w interfejsie, 16 technik spoza interfejsu 1.0: atlas, treści 06).
-- [x] en (CYC szczebel 1, TKGA, Stylecraft UK) i pl (Kurto-Dzikielewska, Guzowska, 450 ściegów RM, Barnden, DROPS — pojedyncze terminy).
+- [x] en (S-CYC-*, S-TKG-*, S-SC-UK) i pl (S-KD, S-GUZ, S-RM450, S-BAR, S-DRP — pojedyncze terminy).
 - [ ] 33 języki: research źródeł w toku (6 grup).
 - [ ] Scalenie, kontrola, raport do koordynatora.
 
