@@ -8,15 +8,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Arkusz, Komunikat, Pole, Przycisk, Tresc, liczbaZPola } from './Arkusz';
 import type { Tlumacz, WynikEkranu } from './wspolne';
 
-type Przyciski = { t: Tlumacz; naZapisz(): void; naAnuluj(): void; zapisz?: string; zapiszA11y?: string; testZapisz?: string; wylaczony?: boolean };
-function PrzyciskiFormularza(p: Przyciski): React.ReactElement {
-  return (
-    <>
-      <Przycisk tekst={p.zapisz ?? p.t('wspolne.zapisz')} etykieta={p.zapiszA11y} onPress={p.naZapisz} rodzaj="glowny" testID={p.testZapisz ?? 'formularz-zapisz'} wylaczony={p.wylaczony} />
-      <Przycisk tekst={p.t('wspolne.anuluj')} onPress={p.naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />
-    </>
-  );
-}
 /** Wynik zapisu z przypadku użycia; nieudany → komunikat formularza (bez makiety, Z07-05), wpisane dane zostają w polach. */
 async function zapiszZ<T>(f: () => Promise<WynikEkranu<T>>, naBlad: () => void): Promise<void> {
   const w = await f();
@@ -35,7 +26,7 @@ export function FormularzWartosci({ stan, t, naZapisz, naAnuluj }: PropsFormular
   const n = liczbaZPola(tekst);
   const zapisz = () => { if (n === null) { ustawBlad(true); return; } ustawBlad(false); void zapiszZ(() => naZapisz(n), () => ustawBlad(true)); };
   return (
-    <Arkusz tytul={t('formularz.wpisz_tytul')} przyciski={<PrzyciskiFormularza t={t} naZapisz={zapisz} naAnuluj={naAnuluj} />}>
+    <Arkusz tytul={t('formularz.wpisz_tytul')} formularz={{ t, naZapisz: zapisz, naAnuluj }}>
       <Tresc>{t('formularz.wpisz_opis')}</Tresc>
       <Pole etykieta={t('formularz.wpisz_pole')} wartosc={tekst} naZmiane={ustaw} liczbowe testID="wpisz-wartosc-pole" />
       {n !== null && <Tresc podpis>{t('formularz.wpisz_podglad', { n: n + 1 })}</Tresc>}
@@ -60,7 +51,7 @@ export function FormularzPowtorzenia({ stan, t, naZapisz, naAnuluj }: PropsFormu
     void zapiszZ(() => naZapisz({ nazwa: stan.nazwa, dlugosc: n }), () => ustawBlad(true));
   };
   return (
-    <Arkusz tytul={t('formularz.powt_tytul')} przyciski={<PrzyciskiFormularza t={t} naZapisz={zapisz} naAnuluj={naAnuluj} />}>
+    <Arkusz tytul={t('formularz.powt_tytul')} formularz={{ t, naZapisz: zapisz, naAnuluj }}>
       <Pole etykieta={t('formularz.powt_pole')} wartosc={tekst} naZmiane={ustaw} liczbowe />
       {blad && <Komunikat tekst={t('formularz.powt_blad')} />}
     </Arkusz>
@@ -94,10 +85,7 @@ export function FormularzPrzypomnienia({ stan, t, podglad, naZapisz, naAnuluj }:
     void zapiszZ(() => naZapisz(plan), () => ustawBlad('plan'));
   };
   return (
-    <Arkusz tytul={t('formularz.przyp_tytul')} przyciski={
-      <PrzyciskiFormularza t={t} naZapisz={zapisz} naAnuluj={naAnuluj} zapisz={t('formularz.przyp_zapisz')} testZapisz="przypomnienie-zapisz"
-        zapiszA11y={rzedy ? t('formularz.przyp_zapisz_a11y', { rzedy }) : t('formularz.przyp_zapisz')} />
-    }>
+    <Arkusz tytul={t('formularz.przyp_tytul')} formularz={{ t, naZapisz: zapisz, naAnuluj, zapisz: t('formularz.przyp_zapisz'), testZapisz: 'przypomnienie-zapisz', zapiszA11y: rzedy ? t('formularz.przyp_zapisz_a11y', { rzedy }) : t('formularz.przyp_zapisz') }}>
       <Tresc>{t('formularz.przyp_opis')}</Tresc>
       <Pole etykieta={t('formularz.przyp_od')} wartosc={od} naZmiane={ustawOd} liczbowe testID="przypomnienie-od-rzedu" />
       <Pole etykieta={t('formularz.przyp_co')} wartosc={co} naZmiane={ustawCo} liczbowe testID="przypomnienie-co-ile" />
@@ -140,10 +128,7 @@ export function KorektaSesji({ stan: s, t, formatuj, naZapisz, naAnuluj }: Props
     </View>
   );
   return (
-    <Arkusz tytul={t('formularz.sesja_tytul')} testID="sesja-korekta" przyciski={
-      <PrzyciskiFormularza t={t} wylaczony={zly} naAnuluj={naAnuluj}
-        naZapisz={() => { if (!zly) void zapiszZ(() => naZapisz({ startMs, koniecMs }), () => ustawBladZapisu(true)); }} />
-    }>
+    <Arkusz tytul={t('formularz.sesja_tytul')} testID="sesja-korekta" formularz={{ t, wylaczony: zly, naAnuluj, naZapisz: () => { if (!zly) void zapiszZ(() => naZapisz({ startMs, koniecMs }), () => ustawBladZapisu(true)); } }}>
       {s.doSprawdzenia !== null && <Tresc>{t('formularz.sesja_sprawdz', { count: s.doSprawdzenia })}</Tresc>}
       {wiersz('start', startMs, ustawStart)}
       {wiersz('koniec', koniecMs, ustawKoniec)}
@@ -172,7 +157,7 @@ export function FormularzNazwy({ stan, t, naZapisz, naAnuluj }: PropsFormularzaN
   const [blad, ustawBlad] = useState(false);
   const zapisz = () => void zapiszZ(() => naZapisz({ projekt: projekt.trim(), czesc: czesc.trim() }), () => ustawBlad(true));
   return (
-    <Arkusz tytul={t('formularz.nazwa_tytul')} przyciski={<PrzyciskiFormularza t={t} naZapisz={zapisz} naAnuluj={naAnuluj} />}>
+    <Arkusz tytul={t('formularz.nazwa_tytul')} formularz={{ t, naZapisz: zapisz, naAnuluj }}>
       <Pole etykieta={t('formularz.nazwa_czesc')} wartosc={czesc} naZmiane={ustawCzesc} />
       <Pole etykieta={t('formularz.nazwa_projekt')} wartosc={projekt} naZmiane={ustawProjekt} testID="formularz-nazwa-projektu" />
       <Tresc podpis>{t('formularz.nazwa_opis')}</Tresc>
@@ -198,7 +183,7 @@ export function FormularzCelu({ stan, t, naZapisz, naAnuluj }: PropsFormularzaCe
     void zapiszZ(() => naZapisz(n), () => ustawBlad(true));
   };
   return (
-    <Arkusz tytul={t('formularz.cel_tytul')} przyciski={<PrzyciskiFormularza t={t} naZapisz={zapisz} naAnuluj={naAnuluj} />}>
+    <Arkusz tytul={t('formularz.cel_tytul')} formularz={{ t, naZapisz: zapisz, naAnuluj }}>
       <Pole etykieta={t('formularz.cel_pole')} wartosc={tekst} naZmiane={ustaw} liczbowe />
       {blad && <Komunikat tekst={t('formularz.przyp_blad')} />}
     </Arkusz>

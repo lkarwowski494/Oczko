@@ -71,17 +71,14 @@ export function GrupaWzorow(p: PropsGrupyWzorow): React.ReactElement {
   );
 }
 
-/** Arkusz „Web page” (W7a): pole adresu, „Paste”, „Save page”; zły adres → `wzor.link_blad` pod polem. */
+/** Arkusz „Web page” (W7a): pole adresu, „Paste”, „Save page” w nagłówku (makieta fix7 `wzor.html`, P-275 (4)); zły adres → `wzor.link_blad` pod polem. */
 export function ArkuszLinku(p: { t: Tlumacz; naZapisz(adres: string): void; naAnuluj(): void; naWklej(): Promise<string | null> }): React.ReactElement {
   const { t } = p;
   const [adres, ustawAdres] = useState('');
   const [blad, ustawBlad] = useState(false);
   const zapisz = () => { const a = adresStrony(adres); if (a) p.naZapisz(a); else ustawBlad(true); };
   return (
-    <Arkusz tytul={t('wzor.link_tytul')} przyciski={<>
-      <Przycisk tekst={t('wzor.zapisz_strone')} rodzaj="glowny" onPress={zapisz} />
-      <Przycisk tekst={t('wspolne.anuluj')} rodzaj="tekstowy" onPress={p.naAnuluj} />
-    </>}>
+    <Arkusz tytul={t('wzor.link_tytul')} formularz={{ t, zapisz: t('wzor.zapisz_strone'), naZapisz: zapisz, naAnuluj: p.naAnuluj }}>
       <Pole etykieta={t('wzor.link_pole')} wartosc={adres} naZmiane={(x) => { ustawAdres(x); ustawBlad(false); }} testID="wzor-link-pole" naKoniec={zapisz} />
       {blad && <Komunikat tekst={t('wzor.link_blad')} />}
       <Przycisk tekst={t('wzor.wklej')} rodzaj="tekstowy" onPress={() => void p.naWklej().then((x) => { if (x) { ustawAdres(x); ustawBlad(false); } })} />
