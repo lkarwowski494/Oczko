@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 04:00 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-260 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 04:00 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-261 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -46,7 +46,7 @@ Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, 
 - Właściciel ma drugie konto z pełnym limitem; przy wyczerpaniu limitu bieżącego konta praca przechodzi tam według tego dokumentu (właściciel, 2026-10-26: „A — i tak mam drugie konto z full limitem”).
 
 ## Do porannego raportu dla właściciela
-- Raport poranny wysłany 2026-10-27 04:00 UTC (w sesji koordynatora).
+- Raport poranny wysłany 2026-10-27 04:00 UTC. Właściciel (04:20 UTC): w pracy, pingować tylko przy rzeczywistej potrzebie (koszty, konta, scalenie, Apple), bez raportów stanu; brak Maca → W1–W3 w CI (P-261).
 - Wynik nocnego przebiegu iOS partii 5; postęp partii 6 (P-243, P-246, P-248) i 7 (P-242, P-245, P-247).
 - Propozycja reguły do biblioteki ról (trzeci push przed verify: 10, 06, 08 — P-248): np. `pre-push` w repo uruchamiający verify albo obowiązkowy krok „verify po każdym rebase z cudzymi zmianami” w zasadach wspólnych; dwie opcje z rekomendacją, decyzja właściciela.
 - Przypomnienie: identyfikatory App Group i iCloud w Apple Developer (P-233).
