@@ -30,6 +30,15 @@ export const typografia = {
 };
 /** Największa skala kluczowej liczby licznika (bez ucięcia przy dużym tekście, tokeny „liczba.maxSkala”). */
 export const MAX_SKALA_LICZBY = ty.liczba.maxSkala;
+/**
+ * Wyjątek nazwany P-277 (do zastąpienia tokenami po audycie 04): RN mnoży każdy tekst przez jeden mnożnik Dynamic Type (AX5 = 3,571,
+ * react-native RCTAccessibilityManager.mm `multipliers`), a system 04 skaluje krój tytułowy najwyżej ×1,8 (tokeny.json typografia._zasada)
+ * i „−1” najwyżej ×1,4 (fix8-2026-10-27/fix8.html `.minus`). Jak Trening `TEXT_SCALE_MAX` / `NUM_SCALE_MAX`.
+ */
+export const MAX_SKALA_TYTULOWA = 1.8;
+export const MAX_SKALA_MINUSA = 1.4;
+/** Pierwsza kategoria dostępności Dynamic Type (AX1) w mnożniku RN; od niej układ licznika „liczba nad nazwami” (04 fix-8 wariant (d), P-275). */
+export const PROG_KATEGORII_DOSTEPNOSCI = 1.786;
 
 export function useKolory(): Kolory {
   return useColorScheme() === 'dark' ? tokeny.kolor.ciemny : tokeny.kolor.jasny;
