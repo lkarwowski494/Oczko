@@ -18,7 +18,9 @@
    "kreska": "#26282C",
    "arkusz": "#FCFCFA",
    "przyciskNieaktywnyTlo": "#D9DBDF",
-   "przyciskNieaktywnyTekst": "#5E626A"
+   "przyciskNieaktywnyTekst": "#5E626A",
+   "przyciskNiszczacyTlo": "#B3261E",
+   "przyciskNiszczacyTekst": "#FCFCFA"
   },
   "ciemny": {
    "papier": "#1B1C1F",
@@ -37,7 +39,9 @@
    "kreska": "#ECECE8",
    "arkusz": "#2A2C31",
    "przyciskNieaktywnyTlo": "#34363B",
-   "przyciskNieaktywnyTekst": "#A9ACB2"
+   "przyciskNieaktywnyTekst": "#A9ACB2",
+   "przyciskNiszczacyTlo": "#F2B8B5",
+   "przyciskNiszczacyTekst": "#1B1C1F"
   },
   "jasnyKontrast": {
    "olowek": "#44474D",

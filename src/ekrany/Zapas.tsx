@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Arkusz, Komunikat, Pole, Przycisk, Tresc, Wybor } from './Arkusz';
-import { Przyciski, useZapis, type Zapis } from './FormularzeProjektu';
+import { useZapis, type Zapis } from './FormularzeProjektu';
 import { WierszGrupy, style as styleNarzedzi } from './Narzedzia';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import type { Tlumacz } from './wspolne';
@@ -148,7 +148,7 @@ export function FormularzWloczki(p: PropsFormularzaWloczki): React.ReactElement 
   const liniaPola = (tekst: string, wartosc: number | null | 'zly', j: Jednostka, testID?: string) =>
     wartosc === 'zly' ? <Komunikat tekst={t('probka.blad_wartosc')} znak /> : (() => { const l = p.przelicz(tekst, j); return l ? <Tresc podpis testID={testID}>{l}</Tresc> : null; })();
   return (
-    <Arkusz tytul={t(w ? 'zapas.edytuj' : 'zapas.dodaj')} przyciski={<Przyciski t={t} tekst={t(w ? 'wspolne.zapisz' : 'wspolne.dodaj')} naZapisz={naZapisz} naAnuluj={p.naAnuluj} wylaczony={!mozna} />}>
+    <Arkusz tytul={t(w ? 'zapas.edytuj' : 'zapas.dodaj')} formularz={{ t, zapisz: t(w ? 'wspolne.zapisz' : 'wspolne.dodaj'), naZapisz, naAnuluj: p.naAnuluj, wylaczony: !mozna }}>
       <Pole etykieta={t('zapas.pole_nazwa')} wartosc={nazwa} naZmiane={ustawNazwe} testID="zapas-nazwa" />
       <Pole etykieta={t('zapas.pole_producent')} wartosc={producent} naZmiane={ustawProducenta} />
       <Pole etykieta={t('zapas.pole_sklad')} wartosc={sklad} naZmiane={ustawSklad} />
@@ -223,8 +223,7 @@ export function FormularzDrutu(p: {
   const r = p.parsuj(mm);
   const podglad = p.podglad(mm, rodzaj);
   return (
-    <Arkusz tytul={t(w ? 'druty.edytuj' : 'druty.dodaj')} przyciski={<Przyciski t={t} tekst={t(w ? 'wspolne.zapisz' : 'wspolne.dodaj')} wylaczony={r === 'zly'} naAnuluj={p.naAnuluj}
-      naZapisz={() => { if (r !== 'zly') zapisz(p.naZapisz, { rodzaj, rozmiarMm: r, opis: opis.trim() }); }} />}>
+    <Arkusz tytul={t(w ? 'druty.edytuj' : 'druty.dodaj')} formularz={{ t, zapisz: t(w ? 'wspolne.zapisz' : 'wspolne.dodaj'), wylaczony: r === 'zly', naAnuluj: p.naAnuluj, naZapisz: () => { if (r !== 'zly') zapisz(p.naZapisz, { rodzaj, rozmiarMm: r, opis: opis.trim() }); } }}>
       <Wybor<RodzajNarzedzia> opcje={[{ wartosc: 'druty', tekst: t('druty.igly') }, { wartosc: 'szydelko', tekst: t('projekt.szydelko') }, { wartosc: 'inne', tekst: t('druty.inne') }]}
         wybrana={rodzaj} naWybor={ustawRodzaj} />
       <Pole etykieta={t('formularz.narzedzie_mm')} wartosc={mm} naZmiane={ustawMm} dziesietne testID="formularz-rozmiar-mm" />

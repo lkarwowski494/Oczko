@@ -1,82 +1,20 @@
 // Ekran licznika (F-01–F-10, F-47, BR-LIC-*, BR-ZAK-006). Sygnatura: propozycja 07 (E3), porty i granice zatwierdzone przez 05 (Z07-22).
 // Wygląd: docs/design/design-spec.md (komponenty, macierz stanów, VoiceOver) i ekrany.html `licznik-start`, `licznik-w-toku`, `limit`,
 // `limit-zawczasu`; wartości z modułu motywu (tokeny 04), teksty przez t(). Decyzje (limit, blokada w danych, cel dnia) liczy domena —
-// ekran pokazuje stan, który dostał; ogłoszenie i haptyka dopiero po wyniku ok (R-148).
+// ekran pokazuje stan, który dostał; ogłoszenie i haptyka dopiero po wyniku ok (R-148). Typy: LicznikTypy.ts, style: LicznikStyl.ts.
 import React, { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { LiniaKonfliktu, type KonfliktNaLiczniku } from './IcloudKonflikt';
-import type { Haptyka, WzorzecHaptyki } from '../domena/porty';
-import { cel as rozmiary, MAX_SKALA_LICZBY, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
+import { Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
+import { LiniaKonfliktu } from './IcloudKonflikt';
+import type { WzorzecHaptyki } from '../domena/porty';
+import { MAX_SKALA_LICZBY, MAX_SKALA_MINUSA, MAX_SKALA_TYTULOWA, PROG_KATEGORII_DOSTEPNOSCI, useKolory } from './motyw';
 import { Kreski } from './Kreski';
 import { ArkuszLimitu } from './LicznikArkuszLimitu';
-import type { Oglos, Tlumacz, WynikEkranu } from './wspolne';
+import { LinijkaCelu } from './LicznikCel';
+import { style } from './LicznikStyl';
+import type { PropsLicznika, ZdarzeniePlus } from './LicznikTypy';
 
-/** Stan limitu dni na liczniku (P-065, design-spec.md:15–19). Decyzję liczy domena (`mozeZaczacDzien`), ekran tylko pokazuje. */
-export type LimitNaLiczniku =
-  | { rodzaj: 'brak' }                 // Pro albo zostały ≥ 2 dni: na liczniku nic o dniach (BR-ZAK-006/S5, P-046)
-  | { rodzaj: 'ostatni-darmowy' }      // cicha linia „1 free knitting day left in {month}” (design-spec.md:18)
-  | { rodzaj: 'zawczasu' };            // komunikat zamiast +1 i −1 (design-spec.md:16)
-
-/** Baner pod tytułem (design-spec.md:35); `null` = nic (BR-LIC-019/S4). */
-export type BanerLicznika =
-  | { rodzaj: 'seria'; n: number; sekundy: number }   // „Added 3 rows in 1 s. Undo?”
-  | { rodzaj: 'cofnieto'; n: number; wartosc: number } // „Removed 3 rows. Back to 30.”
-  | null;
-
-export type StanEkranuLicznika = {
-  projekt: string | null;              // null: pierwszy licznik bez nazwy (BR-LIC-001, NFR-PIE-001)
-  czesc: string | null;
-  skonczone: number;                   // duża liczba = rzędy skończone (design-spec.md:30)
-  dziergany: number;                   // „Now knitting row N”
-  znaczenie: 'skonczone' | 'w_trakcie'; // F-09; zgłoszenie Z07-04 (czy tryb zostaje)
-  cel: number | null;                  // „Goal 96 rows · 49 to go” (design-spec.md:24)
-  celDnia: { rzedy: number } | null;   // tylko przy terminie (BR-DNI-005/S5)
-  przypomnienie: { tekst: string; ktory: number; razy: number; nastepny: number | null } | null; // rząd dziergany z instrukcją
-  powtorzenie: { nazwa: string; numer: number; rzadW: number; dlugosc: number } | null;
-  notatka: string | null;              // BR-PRJ-002/S1: widoczna przy liczniku
-  sesja: { rzedy: number; od: string } | null; // „Marks this session: 14 rows since 19:52” (od: godzina sformatowana)
-  zablokowany: boolean;                // F-03 (design-spec.md:34)
-  limit: LimitNaLiczniku;
-  miesiac: { nazwa: string; wznowienie: string; rzedyDanych: number }; // sformatowane („November”, „December 1”); rzedyDanych do „Your {n} rows …”
-  baner: BanerLicznika;
-  blizniak: { rzad: number; notatka: string | null; przypomnienie: string | null } | null; // BR-PRJ-014/S2
-  wibracje: boolean;                   // ustawienie (BR-LIC-020/S3)
-  calosc?: { czesc: string; rzedy: number } | null; // licznik sekcji: „{część} in total: N rows” (BR-LIC-018/S1, partia 5)
-  konflikt?: KonfliktNaLiczniku;
-};
-
-/** Co zaszło w rzędzie po +1 (haptyka F-48: dwa wzorce; ogłoszenie przy wejściu w rząd z instrukcją). */
-export type ZdarzeniePlus = 'rzad' | 'przypomnienie' | 'koniec-powtorzenia' | 'cel-dnia' | 'cel-czesci';
-export type WynikPlus = WynikEkranu<{
-  skonczone: number;
-  dziergany: number;
-  zdarzenia: ZdarzeniePlus[];
-  wejscieWPrzypomnienie: { rzad: number; tekst: string; ktory: number; razy: number } | null;
-}>;
-
-export type PropsLicznika = {
-  stan: StanEkranuLicznika;
-  t: Tlumacz;
-  oglos: Oglos;                        // ogłoszenie dopiero po wyniku ok (R-148)
-  haptyka: Haptyka;
-  /** Przypadek użycia `dodajRzad` (moduly.md:69–75); wynik po COMMIT; `powod: 'zapis' | 'limit' | 'zablokowany'`. */
-  naPlus(): Promise<WynikPlus>;
-  naMinus(): Promise<WynikEkranu<{ skonczone: number }>>;
-  naOdblokuj(): void;                  // pasek „Counter locked · Unlock”
-  naCofnijSerie(): void;               // „Undo 3 rows”
-  naOferty(): void;                    // tylko z komunikatu limitu (KP-13)
-  naHistorie(): void;
-  naMenu(): void;                      // menu ••• projektu
-  naNastepnaCzesc(): void;             // BR-LIC-011/S1 (U-11)
-  naProjekty?(): void;                 // „Projects” w pasku nawigacji (powrót do listy, F-50)
-  naWzor?(): void;                     // ikona „Pattern” — tylko gdy projekt ma ≥ 1 wzór (P-220 W2a, P-046); partia 6
-  naProjekt?(): void;                  // nazwa projektu nad tytułem części otwiera ekran projektu (design-spec „Ekran projektu”, partia 5)
-  /** Stoper sesji (P-191 P1a): pierwszy z prawej grupy paska, przed Historią; działa przy limicie i blokadzie (P2a). Składa kompozycja. */
-  stoper?: React.ReactNode;
-  /** Linia „zapomniany stoper” (P-191 P5a) pod kreskami sesji; składa kompozycja. */
-  sprawdzStopera?: React.ReactNode;
-  naKonflikt?(): void;
-};
+export type { BanerLicznika, LimitNaLiczniku, PropsLicznika, StanEkranuLicznika, WynikPlus, ZdarzeniePlus } from './LicznikTypy';
+export type { Style } from './LicznikStyl';
 
 /** F-48: rozpoznawalne są tylko dwa wzorce — rząd i rząd „ze znaczeniem” (instrukcja, koniec powtórzenia, cel dnia lub części). */
 function wzorzecPoPlus(z: readonly ZdarzeniePlus[]): WzorzecHaptyki {
@@ -135,12 +73,21 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
   }
 
   const liczba = s.znaczenie === 'w_trakcie' ? s.dziergany : s.skonczone;
+  // Kategorie dostępności (04 fix-8 wariant (d), P-275 (3)): liczba nad nazwami, podpis +1 tylko w etykiecie VoiceOver (scen. 30).
+  const duzyTekst = useWindowDimensions().fontScale >= PROG_KATEGORII_DOSTEPNOSCI;
   const zawczasu = s.limit.rodzaj === 'zawczasu';
   const etykietaPlus = start
     ? t('licznik.plus')
     : s.przypomnienie
       ? t('licznik.plus_a11y_instrukcja', { n: nrRobocza, tekst: s.przypomnienie.tekst })
       : t('licznik.plus_a11y', { n: nrRobocza });
+
+  const wierszLiczby = (
+    <View style={st.liczbaWiersz} testID="licznik-wartosc-wiersz">
+      <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(liczba)}</Text>
+      <Text style={st.podpis}>{s.cel !== null ? t('licznik.z_celu', { cel: s.cel }) : t('licznik.jednostka')}</Text>
+    </View>
+  );
 
   return (
     <View style={st.ekran}>
@@ -176,13 +123,14 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         </View>
       )}
       <ScrollView contentContainerStyle={st.srodek}>
+        {duzyTekst && wierszLiczby}
         {s.projekt !== null && (p.naProjekt ? (
           <Pressable accessibilityRole="button" accessibilityLabel={s.projekt} onPress={p.naProjekt} style={st.wpisProjektu}>
             <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>
           </Pressable>
         ) : <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>)}
-        <Text style={st.tytul} accessibilityRole="header">{s.czesc ?? t('licznik.tytul_roboczy')}</Text>
-        {!start && <Text style={st.instrukcja} testID="licznik-teraz-rzad">{t('licznik.teraz', { n: nrRobocza })}</Text>}
+        <Text style={st.tytul} accessibilityRole="header" maxFontSizeMultiplier={MAX_SKALA_TYTULOWA}>{s.czesc ?? t('licznik.tytul_roboczy')}</Text>
+        {!start && <Text style={st.instrukcja} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA} testID="licznik-teraz-rzad">{t('licznik.teraz', { n: nrRobocza })}</Text>}
         {baner?.rodzaj === 'seria' && (
           <View style={st.baner}>
             {/* testID na tekście: Maestro porównuje tekst elementu o tym id (E2E 40290477970, scenariusz 04) */}
@@ -193,10 +141,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
           </View>
         )}
         {baner?.rodzaj === 'cofnieto' && <Text style={[st.tresc, st.baner]}>{t('licznik.cofnieto', { count: baner.n, wartosc: baner.wartosc })}</Text>}
-        <View style={st.liczbaWiersz}>
-          <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(liczba)}</Text>
-          <Text style={st.podpis}>{s.cel !== null ? t('licznik.z_celu', { cel: s.cel }) : t('licznik.jednostka')}</Text>
-        </View>
+        {!duzyTekst && wierszLiczby}
         {s.konflikt && <LiniaKonfliktu k={s.konflikt} t={t} oglos={p.oglos} na={p.naKonflikt} />}
         {start && <Text style={st.tresc}>{t('licznik.podpowiedz_start')}</Text>}
         {s.cel !== null && <LinijkaCelu s={s} t={t} st={st} naNastepnaCzesc={p.naNastepnaCzesc} />}
@@ -217,7 +162,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
         {p.sprawdzStopera}
         {s.przypomnienie && (
           <View style={st.zakreslacz} accessibilityRole="text">
-            <Text style={[st.instrukcja, { color: k.tekstNaZakreslaczu }]}>{t('licznik.przypomnienie', { n: nrRobocza, tekst: s.przypomnienie.tekst })}</Text>
+            <Text style={[st.instrukcja, { color: k.tekstNaZakreslaczu }]} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA}>{t('licznik.przypomnienie', { n: nrRobocza, tekst: s.przypomnienie.tekst })}</Text>
             <Text style={[st.podpis, { color: k.tekstNaZakreslaczu }]}>
               {s.przypomnienie.nastepny !== null
                 ? t('licznik.przypomnienie_postep', { ktory: s.przypomnienie.ktory, razy: s.przypomnienie.razy, nastepny: s.przypomnienie.nastepny })
@@ -250,11 +195,11 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
       ) : (
         <View style={st.przyciski}>
           <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.minus_a11y')} onPress={minus} style={st.minus} testID="licznik-minus">
-            <Text style={st.minusTekst}>{t('licznik.minus')}</Text>
+            <Text style={st.minusTekst} maxFontSizeMultiplier={MAX_SKALA_MINUSA}>{t('licznik.minus')}</Text>
           </Pressable>
           <Pressable accessibilityRole="button" accessibilityLabel={etykietaPlus} onPress={plus} style={st.plus} testID="licznik-plus">
-            <Text style={st.plusTekst}>{t('licznik.plus')}</Text>
-            {!start && <Text style={st.plusPodpis}>{t('licznik.podpis_plus', { n: nrRobocza })}</Text>}
+            <Text style={st.plusTekst} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA}>{t('licznik.plus')}</Text>
+            {!start && !duzyTekst && <Text style={st.plusPodpis}>{t('licznik.podpis_plus', { n: nrRobocza })}</Text>}
           </Pressable>
         </View>
       )}
@@ -263,57 +208,4 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
       )}
     </View>
   );
-}
-
-function LinijkaCelu({ s, t, st, naNastepnaCzesc }: { s: StanEkranuLicznika; t: Tlumacz; st: Style; naNastepnaCzesc(): void }) {
-  const c = s.cel ?? 0;
-  const zostalo = c - s.skonczone;
-  return (
-    <View style={st.linijka}>
-      <Text style={st.podpis}>{t('licznik.cel', { count: c })}</Text>
-      <Text style={st.podpis}>
-        {zostalo > 0 ? t('licznik.do_celu', { count: zostalo }) : zostalo === 0 ? t('licznik.cel_osiagniety') : t('licznik.ponad_cel', { count: -zostalo })}
-      </Text>
-      {zostalo <= 0 && (
-        <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.nastepna_czesc')} onPress={naNastepnaCzesc} style={st.drugiPrzycisk} testID="licznik-nastepna-czesc">
-          <Text style={[st.tresc, st.pogrubiony]}>{t('licznik.nastepna_czesc')}</Text>
-        </Pressable>
-      )}
-    </View>
-  );
-}
-
-export type Style = ReturnType<typeof style>;
-function style(k: Kolory) {
-  return StyleSheet.create({
-    ekran: { flex: 1, backgroundColor: k.papier },
-    pasek: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: odstep.l, minHeight: rozmiary.minimum },
-    paskaPrawa: { flexDirection: 'row', gap: odstep.s },
-    ikona: { minWidth: rozmiary.minimum, minHeight: rozmiary.minimum, alignItems: 'center', justifyContent: 'center' },
-    ikonaTekst: { ...typografia.instrukcja, color: k.grafit },
-    blokada: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: odstep.l, backgroundColor: k.papierGrupa, minHeight: rozmiary.minimum },
-    blokadaPrzycisk: { minHeight: rozmiary.minimum, justifyContent: 'center', paddingHorizontal: odstep.s },
-    srodek: { paddingHorizontal: odstep.xl, gap: odstep.m, paddingBottom: odstep.sekcja },
-    tytul: { ...typografia.tytul, color: k.grafit },
-    instrukcja: { ...typografia.instrukcja, color: k.grafit },
-    tresc: { ...typografia.tresc, color: k.grafit },
-    wpisProjektu: { minHeight: rozmiary.minimum, justifyContent: 'center' },
-    podpis: { ...typografia.podpis, color: k.olowek },
-    pogrubiony: { fontWeight: '700' },
-    link: { textDecorationLine: 'underline' },
-    liczbaWiersz: { flexDirection: 'row', alignItems: 'baseline', gap: odstep.s },
-    liczba: { ...typografia.liczba, color: k.grafit },
-    linijka: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: odstep.s },
-    baner: { gap: odstep.s, padding: odstep.m, borderRadius: promien.grupa, backgroundColor: k.papierGrupa },
-    zakreslacz: { backgroundColor: k.zakreslacz, borderLeftWidth: 3, borderLeftColor: k.zakreslaczKrawedz, borderRadius: promien.zakreslacz, padding: odstep.m },
-    przyciski: { flexDirection: 'row', alignItems: 'flex-end', gap: rozmiary.odstepMinusPlus, padding: odstep.l },
-    minus: { width: rozmiary.przyciskMinus, height: rozmiary.przyciskMinus, borderRadius: promien.przyciskDrugi, borderWidth: 2, borderColor: k.drugiPrzyciskObrys, alignItems: 'center', justifyContent: 'center' },
-    minusTekst: { ...typografia.przycisk, color: k.grafit },
-    plus: { flex: 1, minHeight: rozmiary.przyciskPlusWysokosc, borderRadius: promien.przyciskGlowny, backgroundColor: k.przyciskTlo, alignItems: 'center', justifyContent: 'center', padding: odstep.m },
-    plusTekst: { ...typografia.przycisk, color: k.przyciskTekst },
-    plusPodpis: { ...typografia.podpis, color: k.przyciskTekst },
-    drugiPrzycisk: { minHeight: rozmiary.minimum, borderRadius: promien.przyciskDrugi, borderWidth: 2, borderColor: k.drugiPrzyciskObrys, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
-    komunikatLimitu: { padding: odstep.l, margin: odstep.l, borderRadius: promien.grupa, backgroundColor: k.papierGrupa },
-    arkusz: { ...StyleSheet.absoluteFill, backgroundColor: k.arkusz, padding: odstep.xl, gap: odstep.m, justifyContent: 'center' },
-  });
 }

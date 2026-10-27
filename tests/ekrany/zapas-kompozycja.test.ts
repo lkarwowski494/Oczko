@@ -23,6 +23,13 @@ describe('lista zapasu', () => {
     expect(s.wiersze[2]).toMatchObject({ linia: 'Weight 3 · 0 skeins', motek: null });
     expect(s.wiersze[3]).toMatchObject({ linia: 'Not set · 1.5 skeins' });
   });
+  test('BR-ZAP-001/S1, scen. 40 (P-277 A): sama długość albo sama waga motka też w wierszu (teksty robocze zapas.motek_dlugosc / motek_waga)', () => {
+    const l = [w('e', 'Fjord', { dlugoscMotkaM: 399.5928 }), w('f', 'Tweed', { wagaMotkaG: 50 })];
+    const imp = stanZapasu(l, { zapytanie: '', filtr: 'wszystkie', imperialny: true, j: j() }).wiersze;
+    expect(imp.map((x) => x.motek)).toEqual(['437 yd (399.59 m) per skein', '1.76 oz (50 g) per skein']);
+    const met = stanZapasu(l, { zapytanie: '', filtr: 'wszystkie', imperialny: false, j: j() }).wiersze;
+    expect(met.map((x) => x.motek)).toEqual(['399.59 m per skein', '50 g per skein']);
+  });
   test('układ metryczny: sama jednostka metryczna („400 m · 100 g per skein”)', () => {
     expect(stanZapasu(LISTA, { zapytanie: '', filtr: 'wszystkie', imperialny: false, j: j() }).wiersze[1]?.motek).toBe('400 m · 100 g per skein');
   });

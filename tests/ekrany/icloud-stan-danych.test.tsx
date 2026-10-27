@@ -2,9 +2,11 @@
 // i „Delete all data” z „Also delete from iCloud” (BR-DAN-009, scenariusz 51). Teksty z en.json (łatka 04 fix-7).
 import React from 'react';
 import { Text } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
+import tokeny from '../../docs/design/tokeny.json';
 import { StanDanych, type PropsStanuDanych } from '../../src/ekrany/StanDanych';
 import { Ustawienia } from '../../src/ekrany/Ustawienia';
+import { ArkuszUsunWszystko } from '../../src/ekrany/UsunWszystko';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaSystemu, tEn } from './pomoc';
 
@@ -77,26 +79,25 @@ describe('Data and sync: przełącznik iCloud', () => {
 });
 
 describe('Delete all data z „Also delete from iCloud” (BR-DAN-009, P-229)', () => {
-  const props = (icloudWlaczona: boolean) => {
+  const props = (icloudWlaczona: boolean, blad = false) => ({ t, icloudWlaczona, blad, naUsun: jest.fn(), naZamknij: jest.fn() });
+  test('Ustawienia: „Delete all data” otwiera arkusz potwierdzenia (trasa), bez usuwania (P-266 (3))', () => {
     const naUsunWszystko = jest.fn();
-    return {
-      stan: { pro: null, dni: null, wibracje: true }, t, system: atrapaSystemu(), adresy: { polityka: 'p', recenzja: 'r' },
-      naOferty: jest.fn(), naWibracje: jest.fn(), naZglosProblem: jest.fn(), naStanDanych: jest.fn(),
-      dane: { naEksport: jest.fn(), naImport: jest.fn(), naUsunWszystko }, icloudWlaczona,
-    } satisfies React.ComponentProps<typeof Ustawienia>;
-  };
+    render(<Ustawienia stan={{ pro: null, dni: null, wibracje: true }} t={t} system={atrapaSystemu()} adresy={{ polityka: 'p', recenzja: 'r' }}
+      naOferty={jest.fn()} naWibracje={jest.fn()} naZglosProblem={jest.fn()} naStanDanych={jest.fn()} dane={{ naEksport: jest.fn(), naImport: jest.fn(), naUsunWszystko }} />);
+    fireEvent.press(screen.getByTestId('ustawienia-usun-wszystko'));
+    expect(naUsunWszystko).toHaveBeenCalledTimes(1);
+    expect(screen.queryByTestId('potwierdz-usun-wszystko')).toBeNull();
+  });
   test('synchronizacja wyłączona: bez przełącznika; potwierdzenie usuwa bez iCloud', () => {
     const p = props(false);
-    render(<Ustawienia {...p} />);
-    fireEvent.press(screen.getByTestId('ustawienia-usun-wszystko'));
+    render(<ArkuszUsunWszystko {...p} />);
     expect(screen.queryByTestId('usun-z-icloud')).toBeNull();
     fireEvent.press(screen.getByTestId('potwierdz-usun-wszystko'));
-    expect(p.dane.naUsunWszystko).toHaveBeenCalledWith(false);
+    expect(p.naUsun).toHaveBeenCalledWith(false);
   });
   test('włączona: przełącznik domyślnie wyłączony z „Data in iCloud … stays”; włączony → usunięcie także z iCloud', () => {
     const p = props(true);
-    render(<Ustawienia {...p} />);
-    fireEvent.press(screen.getByTestId('ustawienia-usun-wszystko'));
+    render(<ArkuszUsunWszystko {...p} />);
     const s = screen.getByTestId('usun-z-icloud');
     expect(s.props.accessibilityState).toMatchObject({ checked: false });
     expect(screen.getByText('Data in iCloud and on your other devices stays.')).toBeTruthy();
@@ -104,6 +105,18 @@ describe('Delete all data z „Also delete from iCloud” (BR-DAN-009, P-229)', 
     expect(screen.getByTestId('usun-z-icloud').props.accessibilityState).toMatchObject({ checked: true });
     expect(screen.getByText('Your other devices lose these projects the next time they sync.')).toBeTruthy();
     fireEvent.press(screen.getByTestId('potwierdz-usun-wszystko'));
-    expect(p.dane.naUsunWszystko).toHaveBeenCalledWith(true);
+    expect(p.naUsun).toHaveBeenCalledWith(true);
+  });
+  test('P-266 (3), scen. 51, design-spec:776: potwierdzenie w pasku arkusza (zawsze widoczny), tło `blad`; Cancel zamyka bez usuwania; błąd w arkuszu', () => {
+    const p = props(true);
+    const { rerender } = render(<ArkuszUsunWszystko {...p} />);
+    const pasek = screen.getByTestId('arkusz-przyciski');
+    expect(within(pasek).getByTestId('potwierdz-usun-wszystko')).toHaveStyle({ backgroundColor: tokeny.kolor.jasny.blad });
+    expect(within(pasek).queryByTestId('usun-z-icloud')).toBeNull(); // przełącznik w treści arkusza, nie w pasku
+    fireEvent.press(within(pasek).getByTestId('usun-wszystko-anuluj'));
+    expect(p.naZamknij).toHaveBeenCalledTimes(1);
+    expect(p.naUsun).not.toHaveBeenCalled();
+    rerender(<ArkuszUsunWszystko {...props(true, true)} />);
+    expect(screen.getByRole('alert')).toBeTruthy();
   });
 });

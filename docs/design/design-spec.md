@@ -1,5 +1,5 @@
 # Oczko: system projektowy (kierunek A „Kreski na wzorze”)
-Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-26 (P-220: wzór, rysik, iPad; rozszerzenie „Udostępnij”, iCloud); fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
+Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-26 (P-220: wzór, rysik, iPad; rozszerzenie „Udostępnij”, iCloud); fix NZ-08-P5-BD 2026-10-26 (P-191: stoper, sesje, Historia; narzędzia, zapas, zdjęcia, karta); fix NZ-08-P5-Q1 2026-10-26 (P-183: projekt, części, kosz, „last worked” bez progu); fix NZ-05-F4-04 2026-10-26 (P-142: zegarek „nie zapisano”, blokada licznika na ekranie blokady i zegarku, `uwaga` → makiety); fix NZ-08-P3-04 2026-10-26 (P-133: ekran blokady i zegarek, notatka bez znacznika, import przerwany, data ukończenia, etykieta robocza); fix NZ-08-P2-04 2026-10-26 (P-126: projekt roboczy, zużycie, znacznik wzoru, „Uczciwe zasady”, „Źródła wiedzy”, kreski przez północ, język) ; fix-8 2026-10-27 (P-243 S2a, P-268: kosz wzoru, przycisk niszczący; opcje dla licznika przy AX5 i arkusza przy klawiaturze w `fix8-2026-10-27.md`) · Decyzje: P-061 (E0), P-062 (metafory), P-063 (kierunek A), P-064 (Libre Franklin), P-065 (E3: limit zawczasu, licznik dni, oferty, ikona, cofanie serii). Programista (08) używa wyłącznie tokenów i komponentów stąd; zmiany wyglądu tylko przez rolę 04.
 
 ## Pliki
 | Co | Plik |
@@ -13,6 +13,7 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-2
 | Narzędzia, zapas, zdjęcia, obraz karty (fix NZ-08-P5-BD, grupa D) | `fix6-2026-10-26/narzedzia-zdjecia.html` (17 stanów), wzorce `wzorce-zrzuty/narzedzia-zdjecia-*` (204) |
 | Wzór, rysik, iPad (fix NZ-P217-04, grupa W) | `fix7-2026-10-26/wzor.html` (27 stanów), wzorce `wzorce-zrzuty/wzor-*` (268, `narzedzia/zrzuty-fix7.mjs`), klucze `fix7-2026-10-26/klucze.json` + `narzedzia/nakladaj-klucze-fix7.mjs`; kontrola `narzedzia/kontrola-nzp21704.mjs` |
 | „Udostępnij do Oczka”, skrzynka, iCloud (fix NZ-P217-04, grupy R i I) | `fix7-2026-10-26/udostepnij-icloud.html` (19 stanów), wzorce `wzorce-zrzuty/udostepnij-icloud-*` (228) |
+| Kosz wzoru, przycisk niszczący; opcje: licznik przy AX5, arkusz przy klawiaturze (fix-8) | `fix8-2026-10-27/fix8.html` (13 stanów na ekranie o wysokości urządzenia), wzorce `wzorce-zrzuty/fix8-*` (156, `narzedzia/zrzuty-fix8.mjs`), pomiar `fix8-2026-10-27/pomiar.json`, klucze `fix8-2026-10-27/klucze.json` |
 | Klikalny prototyp i przejście poznawcze | `prototyp.html`, scenorys `przejscie/` (`narzedzia/scenorys.mjs`) |
 | Ikona | `ikona/` (warstwy SVG, `icon.png`, `ios-dark.png`, `watch.png`, `android-foreground.png`, `android-monochrome.png`, `splash-icon.png`, `arkusz.png`) |
 | Kroje (OFL) | `fonty/LibreFranklin.ttf` + licencja; treść: krój systemowy |
@@ -34,12 +35,14 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-2
 | Komponent | Systemowy czy własny | Uwagi |
 |---|---|---|
 | Pasek nawigacji, wstecz, duży tytuł | systemowy | nad tytułem części nazwa projektu; pod tytułem „Now knitting row 48” (20 pt): duża liczba to rzędy skończone; stuknięcie w tytuł otwiera menu projektu |
-| Przycisk +1: podpis | własny | „tap when row 48 is done” (soczewki: niejasne, czy +1 zaczyna, czy kończy rząd) |
+| Przycisk +1: podpis | własny | „tap when row 48 is done” (soczewki: niejasne, czy +1 zaczyna, czy kończy rząd). **Przy kategoriach dostępności tekstu** (`isAccessibilityCategory`, AX1–AX5; fix-8, P-275 (3)): podpis tylko w etykiecie VoiceOver, strefa +1 wraca do 168 pt |
+| Licznik przy dużym tekście (fix-8, P-275 (3)) | układ | przy kategoriach dostępności liczba („47 of 96” i linijka celu) stoi **nad** nazwą projektu, nazwą części i „Now knitting row n”; reszta środka bez zmian i przewija się; kolejność VoiceOver idzie za wyglądem (liczba → nazwy); bez automatycznego przewijania do liczby. Pomiar: liczba widoczna bez przewijania przy 320×568, 390×844 i 430×932 (`fix8-2026-10-27/pomiar.json`, `licznik-d`); makieta `fix8-2026-10-27/fix8.html`, wzorce `wzorce-zrzuty/fix8-licznik-d-*` |
 | Przycisk +1 (strefa na dole, ≥ 168 pt wysokości) i −1 (72 × 72 pt, 28 pt odstępu) | własny kształt, zachowanie przycisku systemowego | etykieta zawiera widoczny tekst („+1 row …”, WCAG 2.5.3) |
 | Kreski sesji, zakreślenie instrukcji | własne (SVG → `react-native-svg`) | opis tekstowy w podpisie |
 | Blokada licznika | pozycja w menu ••• („Lock counter (ignore taps)”); w stanie zablokowanym pasek „Counter locked · Unlock” pod paskiem nawigacji | przeniesiona z paska: kłódka czytała się jak znak płatnej funkcji (przejście poznawcze, nowa osoba); stuknięcie w zablokowany licznik: „Counter is locked. Unlock it at the top.” (BR-LIC-004) |
 | Baner strażnika „Added 3 rows in 1 s. Undo?” | własny, w układzie pod tytułem (z dala od +1, rośnie z tekstem) | F-47, RD-17; nie znika po czasie (WCAG 2.2.1), znika przy kolejnym zwykłym +1; po Undo potwierdzenie „Removed 3 rows. Back to 30.” |
-| Arkusze (historia, menu •••, formularze, limit, oferty, ukończenie) | systemowe arkusze | przy dużym tekście sięgają pod pasek stanu, treść się przewija, przyciski zawsze widoczne |
+| Arkusze (historia, menu •••, formularze, limit, oferty, ukończenie) | systemowe arkusze | przy dużym tekście sięgają pod pasek stanu, treść się przewija, przyciski zawsze widoczne. Dwa rodzaje (jak w makietach od E3): **arkusz formularza** (pola, klawiatura) ma Cancel / tytuł / Save w nagłówku u góry (słownik studia; `naglowek-arkusza`), więc klawiatura go nie zasłania; **arkusz decyzji** bez pól (limit, ukończenie, skrzynka, „Delete all data”) ma przyciski na dole (`przyciski`) |
+| Przycisk niszczący (`niszczacy`, fix-8, P-268) | własny, zachowanie przycisku systemowego | tło `przyciskNiszczacyTlo` (= `blad`), tekst `przyciskNiszczacyTekst` (= `papier`), wymiary jak przycisk pełny (≥ 52 pt, promień 14); tylko w arkuszu decyzji, której jedynym celem jest nieodwracalne usunięcie (dziś: „Delete all data”), jeden na ekran, nad Cancel; etykieta to nazwa akcji („Delete all data”), więc znaczenie nie zależy od koloru (SP-05). Potwierdzenia usunięcia z koszem i bez zostają alertem systemowym ze stylem `destructive`. Nieaktywny: tokeny `przyciskNieaktywny*`. Kontrast: tekst 6,36:1 jasny / 9,98:1 ciemny, tło do arkusza 6,36:1 / 8,18:1 (`kontrast-tabela.txt`, także „Zwiększ kontrast”) |
 | Listy (projekty, ustawienia) | systemowe listy grupowane | nagłówki sekcji zwykłą wielką literą na początku (nie wersalikami) |
 | Symbole | SF Symbols, waga jak sąsiedni tekst | skalują się z tekstem |
 
@@ -75,7 +78,7 @@ Rutynowe usuwanie: potwierdzenie i „Recently deleted” 30 dni (P-026); cofni�
 | Historia | typowy (`historia`), dzień pusty, dzień z samym stoperem, okres bez stopera, pierwsze użycie (`historia-*`); offline bez zmian |
 | Narzędzia i zapas | kalkulator: typowy, na 4 in, błąd (`probka*`); zapas: typowy, filtr, pusty, formularz (`zapas*`, `wloczka`); druty (`druty-lista`, `drut`); offline bez zmian |
 | Zdjęcia i karta | grupa w projekcie, źródło, podgląd, usunięcie, brak dostępu do aparatu (`projekt-zdjecia`, `zdjecie-*`); obraz karty z czasem i bez stopera (`karta-obraz*`) |
-| Usuwanie i kosz | potwierdzenia z datą (`usun-projekt`, `usun-czesc`, `usun-licznik`); kosz (`kosz`), pusty (`kosz-pusty`); offline bez zmian |
+| Usuwanie i kosz | potwierdzenia z datą (`usun-projekt`, `usun-czesc`, `usun-licznik`, `fix8-usun-wzor`); kosz (`kosz`, z wzorem, włóczką i drutem: `fix8-kosz-z-wzorem`), pusty (`kosz-pusty`, `fix8-kosz-pusty`); offline bez zmian |
 | Udostępnij, skrzynka, iCloud | arkusz z listą projektów, link (wzór albo film), bez migawki, za duży, nieobsługiwany (`udostepnij*`); skrzynka i błąd (`skrzynka*`); iCloud: wyłączony, włączanie, aktywny, czeka, brak konta, brak miejsca, inne konto, konflikt na liczniku i wybór, niepełna historia, „Replace” przy włączonej, usuń wszystko (`icloud-*`) |
 | Okno „Uczciwe zasady” | raz nad dozwolonym ekranem (`uczciwe-zasady`); zamknięte dowolnie = widziane; przy Pro, stanie niepewnym albo na niedozwolonym ekranie: brak |
 
@@ -491,14 +494,17 @@ Makiety: `fix5-2026-10-26/projekt-kosz.html` (22 stany), wzorce `wzorce-zrzuty/p
 | `usun.a11y` | Delete {{nazwa}} |
 | `usun.ogloszenie` | {{nazwa}} moved to Recently deleted. |
 | `kosz.tytul` | Recently deleted |
-| `kosz.opis_one` / `kosz.opis_other` | Projects, parts and counters stay here for {{count}} day. Then they’re deleted for good. / Projects, parts and counters stay here for {{count}} days. Then they’re deleted for good. |
+| `kosz.opis_one` / `kosz.opis_other` | Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} day. Then they’re deleted for good. / Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} days. Then they’re deleted for good. (fix-8: P-209, P-243) |
 | `kosz.projekt` | Project · until {{data}} |
 | `kosz.czesc` | Part of {{projekt}} · until {{data}} |
 | `kosz.licznik` | Counter in {{projekt}}, {{czesc}} · until {{data}} |
+| `kosz.wzor` | Pattern in {{projekt}} · until {{data}} (fix-8, P-243 S2a) |
+| `kosz.wloczka` | Yarn · until {{data}} (fix-8, P-209) |
+| `kosz.narzedzie` | Needles or hook · until {{data}} (fix-8, P-209) |
 | `kosz.przywroc` | Restore |
 | `kosz.przywroc_a11y` | Restore {{nazwa}} |
 | `kosz.przywrocono` | {{nazwa}} is back. |
-| `kosz.pusto_one` / `kosz.pusto_other` | Nothing here. Deleted projects, parts and counters stay here for {{count}} day. / Nothing here. Deleted projects, parts and counters stay here for {{count}} days. |
+| `kosz.pusto_one` / `kosz.pusto_other` | Nothing here. Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} day. / Nothing here. Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} days. (fix-8) |
 | `licznik.calosc_one` / `licznik.calosc_other` | {{czesc}} in total: {{count}} row / {{czesc}} in total: {{count}} rows |
 Istniejące klucze użyte bez zmian: `projekt.postep`, `projekt.postep_bez_celow`, `projekt.czesc_cel`, `projekt.cel_z_pary`, `projekt.czesc_rzedy_*`, `projekt.ostatnia_zmiana`, `projekt.miejsce_wzoru`, `projekty.w_toku`, `projekty.ukonczone`, `projekty.nowy`, `licznik.notatka`, `licznik.cel_osiagniety`, `licznik.nastepna_czesc`, `formularz.nazwa_projekt`, `formularz.nazwa_czesc`, `formularz.nazwa_opis`, `wspolne.anuluj`, `wspolne.zapisz`, `wspolne.nie_teraz`. Źródło en i kontekst dla tłumaczy: `fix5-2026-10-26/klucze.json` (112 kluczy en, 98 wpisów kontekstu).
 
@@ -641,7 +647,7 @@ Reguła projektowa: w projekcie wyświetla się jeden dokument wzoru naraz (PDF,
 Makiety: `fix7-2026-10-26/wzor.html` (27 stanów: 20 telefonu w pionie, telefon poziomo, 6 iPada), wzorce `wzorce-zrzuty/wzor-<stan>-*` (telefon: 320/390/430 × jasny/ciemny × domyślny/AX5; poziomo i iPad: wymiar natywny `844x390`, `820x1180`, `1180x820`, `375x1180` × jasny/ciemny × domyślny/AX5; `narzedzia/zrzuty-fix7.mjs`), kontrola `narzedzia/kontrola-nzp21704.mjs`. Znacznik rzędu i notatka bez znacznika — sekcje wyżej, bez zmian. Ograniczenia patentowe P-218 (1)–(6) obowiązują każdy ekran tej sekcji (tabela w „Ekrany wzoru a patenty”).
 
 **Gdzie jest wzór.**
-- **Ekran projektu (W8):** grupa „Pattern” (`projekt.wzor`; przy ≥ 2 wzorach „Patterns”, `projekt.wzory`) nad „Details”. Wiersz wzoru: miniatura pierwszej strony, nazwa, `wzor.wiersz_opis` („PDF · 6 pages”); stuknięcie = przeglądarka tego wzoru. Wiersz „Video” (`wzor.film_wiersz`, pod nim nazwa albo adres), przycisk ↗ otwiera link w przeglądarce systemowej (P-218 (4): film poza wzorem). Na końcu zawsze „Add pattern” (`wzor.dodaj`); bez wzoru dodatkowo podpis `wzor.dodaj_opis` i wiersz „Add video link”. Usunięcie linku do filmu: menu kontekstowe wiersza `wzor.film_usun`. `projekt.miejsce_wzoru` (tekst roboczy 08) wychodzi z „Details”.
+- **Ekran projektu (W8):** grupa „Pattern” (`projekt.wzor`; przy ≥ 2 wzorach „Patterns”, `projekt.wzory`) nad „Details”. Wiersz wzoru: miniatura pierwszej strony, nazwa, `wzor.wiersz_opis` („PDF · 6 pages”); stuknięcie = przeglądarka tego wzoru. Wiersz „Video” (`wzor.film_wiersz`, pod nim nazwa albo adres), przycisk ↗ otwiera link w przeglądarce systemowej (P-218 (4): film poza wzorem). Na końcu zawsze „Add pattern” (`wzor.dodaj`); bez wzoru dodatkowo podpis `wzor.dodaj_opis` i wiersz „Add video link”. Menu kontekstowe wiersza „Video”: `wzor.film_zmien` (arkusz `wzor.film_tytul` wypełniony obecnym linkiem i nazwą; Save zastępuje) i `wzor.film_usun` (fix-8, P-276; jeden film na projekt, P-218 (4); makieta `fix8-2026-10-27/film.html`). `projekt.miejsce_wzoru` (tekst roboczy 08) wychodzi z „Details”.
 - **Licznik (W2a):** ikona dokumentu (SF Symbol `doc.text`) w pasku nawigacji przed Historią, **tylko gdy projekt ma ≥ 1 wzór** (wzór dodał użytkownik — P-046 spełnione); otwiera ostatnio oglądany wzór projektu. W menu ••• licznika wiersz `menu.wzor`, a bez wzoru `menu.dodaj_wzor` (menu źródeł). Przy AX5 pasek łamie się w dwa wiersze (ikony pod „‹ Projects”), jak w stoperze.
 
 **Dodanie wzoru (W7a).** „Add pattern” → menu systemowe: `wzor.z_pliku` (Pliki: PDF, `.docx`), `wzor.skanuj` (systemowy skaner dokumentów: kilka stron jednego wzoru w jednym przebiegu, prostowanie i obrót — P-218 (2); zależność 05: moduł natywny), `wzor.ze_zdjec` (kilka zdjęć z biblioteki = jeden wzór), `wzor.link_strony` (arkusz: pole `wzor.link_pole`, przycisk `wzor.wklej`, „Save page” `wzor.zapisz_strone`, podpis `wzor.link_opis`; zły adres: `wzor.link_blad` pod polem). „Add video link” → arkusz `wzor.film_tytul` z polami `wzor.film_pole`, `wzor.film_nazwa` i podpisem `wzor.film_opis`. Każde dodanie tworzy **nowy wzór**; stron do istniejącego się nie dokłada (P-218 Q6a). Nazwa domyślna: nazwa pliku bez rozszerzenia, tytuł strony, `wzor.nazwa_skan` albo `wzor.nazwa_zdjecia`.
@@ -660,7 +666,7 @@ Makiety: `fix7-2026-10-26/wzor.html` (27 stanów: 20 telefonu w pionie, telefon 
 | Film bez sieci (BR-WZR-007 S4) | alert `wzor.film_bez_sieci_tytul` + `narzedzia.film_bez_sieci` |
 
 **Przeglądarka wzoru, telefon w pionie (W1a).** Pasek nawigacji: ‹ (`wzor.wstecz_a11y`), tytuł = nazwa wzoru (przy ≥ 2 wzorach z ▾ i menu `wzor.przelacz_naglowek` z listą wzorów projektu i ✓ przy bieżącym — `wzor.przelacz_a11y`; W9b), „Mark row” (▭), zakreślacz, ••• (`wzor.menu_a11y`: `wzor.dodaj_notatke`, `wzor.obroc`, `wzor.zmien_nazwe`, `wzor.usun` czerwone). Strona na tle `grupa`, strony jedna pod drugą, plakietka `wzor.strona_z` na dole widoku. **Pasek licznika** na dole: liczba (Libre Franklin 40 pt), „Now knitting row n” (`licznik.teraz`), −1 (56 × 56 pt), +1 (≥ 72 pt wysokości, ≥ 132 pt szerokości; przy 320 pt i AX5 przechodzi pod liczbę na całą szerokość). +1 przesuwa znacznik (ruch tylko bez „Ogranicz ruch”). Ekran nie gaśnie, jak licznik. Kolejność VoiceOver: tytuł → narzędzia → strona → liczba → −1 → +1; Magic Tap = +1.
-- **Usunięcie wzoru:** alert `wzor.usun_tytul` / `wzor.usun_opis` / `wzor.usun_potwierdz` (destrukcyjny) / `wspolne.anuluj`; bez kosza (N4 → 05). Notatki rzędów należą do licznika i zostają.
+- **Usunięcie wzoru:** alert `wzor.usun_tytul` / `wzor.usun_opis` / `wzor.usun_potwierdz` (destrukcyjny) / `wspolne.anuluj`; wzór idzie do „Recently deleted” na 30 dni z zakreśleniami i rysunkami (P-229, P-243 S2a; wiersz `kosz.wzor`, makieta `fix8-2026-10-27/fix8.html` `usun-wzor`, `kosz-z-wzorem`). Notatki rzędów należą do licznika i zostają.
 - **Obrót strony:** obraca widok strony o 90° i zapamiętuje to dla strony; znacznik i rysunki liczą się w układzie strony przed obrotem (ADR-0011), więc zostają na miejscu.
 
 **Telefon poziomo (W3).** Bez ustawienia: po lewej wzór (pasek nawigacji jak w pionie), po stronie końcowej kolumna licznika (34 % szerokości, 220–360 pt): liczba 64 pt, „Now knitting row n”, +1 na całą resztę wysokości, −1 pod nim (56 pt). RTL: kolumna po lewej.
@@ -703,6 +709,7 @@ Makiety: `fix7-2026-10-26/wzor.html` (27 stanów: 20 telefonu w pionie, telefon 
 | `wzor.film_wiersz` | Video |
 | `wzor.film_otworz_a11y` | Open video link in browser |
 | `wzor.film_usun` | Remove link |
+| `wzor.film_zmien` | Change link (fix-8, P-276) |
 | `wzor.film_bez_sieci_tytul` | No internet connection |
 | `wzor.rodzaj_pdf` | PDF |
 | `wzor.rodzaj_zdjecie` | Photo |
@@ -723,7 +730,7 @@ Makiety: `fix7-2026-10-26/wzor.html` (27 stanów: 20 telefonu w pionie, telefon 
 | `wzor.nazwa_tytul` | Pattern name |
 | `wzor.usun` | Delete pattern… |
 | `wzor.usun_tytul` | Delete “{{nazwa}}”? |
-| `wzor.usun_opis` | The pattern and its highlights and drawings are deleted. Row notes and counters stay. This can’t be undone. |
+| `wzor.usun_opis` | You can restore it with its highlights and drawings from Recently deleted on the Projects list until {{data}}. Row notes and counters stay. (fix-8, P-243 S2a) |
 | `wzor.usun_potwierdz` | Delete pattern |
 | `wzor.zakreslacz` | Highlighter |
 | `wzor.zakreslenia_one` / `wzor.zakreslenia_other` | {{count}} highlight / {{count}} highlights |
@@ -754,13 +761,13 @@ Istniejące klucze użyte bez zmian: `licznik.teraz`, `licznik.plus`, `licznik.p
 - **Stany** (wzorce `wzorce-zrzuty/wzor-<stan>-*`): `licznik-z-wzorem`, `projekt-wzor-pusty`, `projekt-wzory`, `wzor-dodaj`, `wzor-link`, `wzor-film`, `wzor-import-w-toku`, `wzor-czeka-siec`, `wzor-blad-plik`, `wzor-blad-typ`, `wzor-blad-rozmiar`, `wzor-blad-strona`, `wzor-brak-dostepu`, `wzor-pionowo`, `wzor-przelacz`, `wzor-menu`, `wzor-usun`, `wzor-zakreslacz`, `wzor-word`, `wzor-film-bez-sieci`, `wzor-poziomo`, `ipad-wzor-pion`, `ipad-wzor-poziom`, `ipad-rysik`, `ipad-waskie`, `ipad-licznik`, `ipad-projekty`.
 - **Tokeny:** bez nowych kolorów (zakreślacz `kolor.zakreslacz`, pióro i znacznik `kolor.wzor.*`, strona `kolor.wzor.strona`); kontrast bez nowych par. Wymiary: pasek licznika −1 56 pt, +1 ≥ 72 × 132 pt; kolumna poziomo 34 % (220–360 pt), iPad 340 pt; kolumna treści iPada maks. 640 pt.
 - **testID:** istniejące `wzor-dodaj`, `wzor-widok`, `wzor-zrodlo`, `wzor-strona`, `wzor-zakreslacz`, `wzor-zakreslenia` bez zmian; w pasku licznika pod wzorem te same id co na liczniku (jeden komponent). Nowe id grupy W (wiersze w `e2e/README.md` dopisała 07, 12aa394): `licznik-wzor`, `wzor-dodaj-film`, `wzor-przelacz`, `wzor-menu`, `wzor-obroc`, `wzor-usun`, `wzor-gumka`, `wzor-pioro`, `wzor-cofnij-rysunek`, `wzor-link-pole`, `wzor-film-wiersz`, `wzor-czeka-siec`.
-- **Zależności 05:** skaner dokumentów (moduł natywny), wiele wierszy wzoru na projekt i usunięcie bez kosza (N4), obrót strony jako dana wzoru (strona → kąt), „ostatnio oglądany wzór” projektu.
+- **Zależności 05:** skaner dokumentów (moduł natywny), wiele wierszy wzoru na projekt i usunięcie do kosza (N4 → P-229, P-243 S2a), obrót strony jako dana wzoru (strona → kąt), „ostatnio oglądany wzór” projektu.
 - **Kolejność VoiceOver i Magic Tap** jak na liczniku; pasek licznika pod wzorem to ten sam komponent co strefa +1 w mniejszym rozmiarze.
 
 ## „Udostępnij do Oczka” i iCloud (F-24, F-55, F-27, F-58; BR-WZR-001, BR-WZR-007, BR-DAN-002, BR-DAN-011; ADR-0005, ADR-0011; P-220)
 Makiety: `fix7-2026-10-26/udostepnij-icloud.html` (19 stanów), wzorce `wzorce-zrzuty/udostepnij-icloud-<stan>-*` (228; 320/390/430 × jasny/ciemny × domyślny/AX5).
 
-**Arkusz rozszerzenia (R1a).** Arkusz systemowy z nagłówkiem `wspolne.anuluj` / `udostepnij.tytul` / `wspolne.zapisz`; podgląd pliku (miniatura, nazwa, `wzor.wiersz_opis`); lista „Add as a pattern to” (`udostepnij.do_projektu`) z migawki projektów w toku (kolejność jak lista projektów, druga linia `udostepnij.wiersz`: ostatnia praca i `udostepnij.wzory_*`), domyślnie zaznaczony projekt ostatnio otwarty; ostatni wiersz `udostepnij.nowy_projekt`. Pod listą `udostepnij.gotowe` / `udostepnij.gotowe_nowy`, a przy projekcie z wzorem `udostepnij.kolejny` (nowy wzór obok istniejącego, W9b). Link ze strony: przełącznik segmentowy `udostepnij.jako` — `udostepnij.jako_wzor` (zapis strony jako PDF) albo `udostepnij.jako_film` (sam link, P-218 (4)). „Save” zapisuje do skrzynki App Group i zamyka arkusz; rozszerzenie niczego nie zamienia (ADR-0011).
+**Arkusz rozszerzenia (R1a).** Arkusz systemowy z nagłówkiem `wspolne.anuluj` / `udostepnij.tytul` / `wspolne.zapisz`; podgląd pliku (miniatura, nazwa, `wzor.wiersz_opis`); lista „Add as a pattern to” (`udostepnij.do_projektu`) z migawki projektów w toku (kolejność jak lista projektów, druga linia `udostepnij.wiersz`: ostatnia praca i `udostepnij.wzory_*`), domyślnie zaznaczony projekt ostatnio otwarty; ostatni wiersz `udostepnij.nowy_projekt`. Pod listą `udostepnij.gotowe` / `udostepnij.gotowe_nowy`, a przy projekcie z wzorem `udostepnij.kolejny` (nowy wzór obok istniejącego, W9b). Link ze strony: przełącznik segmentowy `udostepnij.jako` — `udostepnij.jako_wzor` (zapis strony jako PDF) albo `udostepnij.jako_film` (sam link, P-218 (4)). Przy `udostepnij.jako_film` nagłówek listy `udostepnij.do_projektu_film`, a gdy zaznaczony projekt ma już film — linia `udostepnij.film_zastapi` zamiast `udostepnij.gotowe` (fix-8, P-276; to samo w arkuszu skrzynki; flaga `film` w migawce — 05). „Save” zapisuje do skrzynki App Group i zamyka arkusz; rozszerzenie niczego nie zamienia (ADR-0011).
 - **Bez migawki** (aplikacja jeszcze nie otwarta albo migawka niedostępna): bez listy, podpis `udostepnij.bez_migawki`; plik czeka w skrzynce (R1b jako stan zastępczy).
 - **Za duży** (`WZOR_MAKS_MB`) i **nieobsługiwany**: zamiast listy linia ostrzeżenia (`wzor.blad_rozmiar` + `udostepnij.za_duzy`, `wzor.blad_typ` + `udostepnij.nieobslugiwany`), w nagłówku tylko `wspolne.zamknij`; nic nie trafia do skrzynki.
 - **VoiceOver:** lista jako `radiogroup`, wiersze `radio` z `checked`; fokus po otwarciu na nagłówku.
@@ -773,12 +780,14 @@ Makiety: `fix7-2026-10-26/udostepnij-icloud.html` (19 stanów), wzorce `wzorce-z
 - **Problemy** (linia informacji z ikoną „!”, nigdy sam kolor): brak konta albo iCloud wyłączony dla Oczka — `icloud.brak_konta` + `icloud.brak_konta_opis`, przycisk `icloud.ustawienia`; brak miejsca — `icloud.brak_miejsca` + `icloud.brak_miejsca_opis`, przycisk `icloud.zarzadzaj`; poczekalnia ponad 7 dni — `icloud.niepelna` + `icloud.niepelna_nowsza` albo `icloud.niepelna_opis` (ikona „i”, to nie błąd). Inne konto: alert `icloud.konto_zmienione_tytul` / `icloud.konto_zmienione_opis` / `icloud.polacz` / `icloud.nie_synchronizuj`.
 - **Konflikt na liczniku (I1a; nazwany wyjątek od P-046, P-220):** pod liczbą linia `icloud.konflikt_licznik` + `icloud.konflikt_opis` + przycisk `icloud.konflikt_wybierz` → arkusz `dane.konflikt_tytul`, zdanie `icloud.konflikt_wybor_opis`, dwa wybory `dane.konflikt_wybor` (`dane.konflikt_a11y`), `wspolne.nie_teraz`. Liczba pokazuje wersję tego urządzenia; zachowanie +1 w konflikcie: N5 → 05. Linia znika po wyborze; ogłoszenie VoiceOver raz przy pojawieniu się.
 - **„Replace what’s here” i przywrócenie kopii przy włączonej synchronizacji:** alert `icloud.zastap_wylacz` / `icloud.zastap_wylacz_opis` / `icloud.do_ustawien` / `wspolne.anuluj`.
-- **„Delete all data”** (`ustawienia.usun_wszystko`): arkusz z `ustawienia.usun_pytanie`, przełącznikiem `icloud.usun_z_icloud` (domyślnie wyłączony, podpis `icloud.usun_z_icloud_opis`) i zdaniem `icloud.usun_zostaje`, gdy wyłączony; przycisk `ustawienia.usun_potwierdz` (tło `blad`, tekst `papier`: 6,36:1 jasny, 9,98:1 ciemny). Przełącznik widoczny tylko przy synchronizacji włączonej.
+- **„Delete all data”** (`ustawienia.usun_wszystko`): arkusz z `ustawienia.usun_pytanie`, przełącznikiem `icloud.usun_z_icloud` (domyślnie wyłączony, podpis `icloud.usun_z_icloud_opis`) i zdaniem `icloud.usun_zostaje`, gdy wyłączony; przycisk `ustawienia.usun_potwierdz` rodzaju `niszczacy` (komponenty; tło `blad`, tekst `papier`: 6,36:1 jasny, 9,98:1 ciemny). Przełącznik widoczny tylko przy synchronizacji włączonej.
 
 | Klucz | en |
 |---|---|
 | `udostepnij.tytul` | Add to Oczko |
 | `udostepnij.do_projektu` | Add as a pattern to |
+| `udostepnij.do_projektu_film` | Add the video link to (fix-8, P-276) |
+| `udostepnij.film_zastapi` | {{projekt}} already has a video link. Saving replaces it with this one. (fix-8, P-276) |
 | `udostepnij.nowy_projekt` | New project |
 | `udostepnij.wzory_one` / `udostepnij.wzory_other` | {{count}} pattern / {{count}} patterns |
 | `udostepnij.wiersz` | {{ostatnia}} · {{wzory}} |

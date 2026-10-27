@@ -7,6 +7,9 @@ import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../src/ekra
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaHaptyki, odroczona, zagrane, plusOk, przycisk, stanLicznika, tEn, wywolaniaLicznika } from './pomoc';
 
+// Domyślny rozmiar tekstu jak na urządzeniu (fontScale 1); preset jest RN daje 2, czyli kategorię dostępności (układ AX: licznik-ax5.test.tsx, P-275 (3)).
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({ __esModule: true, default: () => ({ width: 402, height: 874, scale: 3, fontScale: 1 }) }));
+
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
 

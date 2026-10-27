@@ -49,3 +49,8 @@ Opcja A. Zdarzenia licznika są tylko dopisywane, więc scalanie jest determinis
 ### B — zalety: mało kodu · wady: „ostatni wygrywa” nadpisuje rzędy z drugiego urządzenia bez pokazania konfliktu — łamie NFR-DAN-003.
 ### C — zalety: zero ryzyka konfliktów · wady: łamie decyzję P-021/P-031 bez spełnionego warunku powrotu.
 ### D — zalety: gotowy kod · wady: młode albo nieutrzymywane paczki bez `CKSyncEngine`; zależność w najbardziej ryzykownym miejscu.
+
+## Uzupełnienie 2026-10-27 (05 przeglądy, P-245, P-264, P-274; decyzja A bez zmian)
+- **Pola nil i różne wersje schematu:** brak kolumny NULL-owalnej w rekordzie = wyczyszczenie u nadawcy (P-264 A) tylko dla kolumn, które nadawca znał; reguła przy pierwszej migracji schematu tabel synchronizowanych: ADR-0027 (domyślnie nowe kolumny `NOT NULL DEFAULT`, inaczej `wersja_schematu` w rekordzie i `od_wersji` w `icloud-tabele.json`). Rekord z kolumną z `pomin` jest pomijany w tej kolumnie, nie odrzucany (P-274 Q3a).
+- **Wyzwalacz UPDATE licznika** odpala tylko przy zmianie kolumn synchronizowanych (`UPDATE OF`, P-274 Q1a); zapis pamięci podręcznej (`wartosc`, `glowa`, `konflikt`) nie dopisuje licznika do skrzynki.
+- **Start silnika nie wstrzymuje pierwszego ekranu** (P-274 Q2a): kompozycja uruchamia sterownik bez czekania na `statusKonta()` i wysyłkę.

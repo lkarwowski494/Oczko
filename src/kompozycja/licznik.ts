@@ -145,7 +145,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
     async przygotuj() {
       const d = await (start ??= uruchomDane(z).then(async (r) => {
         if (r.ok && o.skrzynka) void o.skrzynka.start().catch(() => undefined); // partia 6: skrzynka importu i migawka w tle (konwersja może czekać na sieć; NFR-PIE-001)
-        if (r.ok && o.icloud) await o.icloud.start().catch(() => undefined); // iCloud nie blokuje startu; błąd silnika = stan w Data and sync
+        if (r.ok && o.icloud) void o.icloud.start().catch(() => undefined); // w tle jak skrzynka (P-274 Q2a): sendChanges przez sieć nie blokuje pierwszego ekranu; odebrane partie odświeżają licznik (naPartie), błąd silnika = stan w Data and sync
         return r;
       }));
       if (!d.ok) return d;

@@ -22,8 +22,9 @@ tags:
 - assertVisible: { id: "licznik-stoper", text: "Session timer, .*, paused.*" }
 - takeScreenshot: 37-pauza
 - tapOn: { id: "licznik-stoper" }
-- assertVisible: { id: "stoper-wstrzymaj", text: "Resume timer" }
-- tapOn: { id: "stoper-wstrzymaj" }
+# Wznowienie ma własny testID `stoper-wznow` (src/ekrany/Stoper.tsx:67; przebieg 123: „Resume timer” jako stoper-wznow). F07-33.
+- assertVisible: { id: "stoper-wznow", text: "Resume timer" }
+- tapOn: { id: "stoper-wznow" }
 - assertVisible: { id: "licznik-stoper", text: "Session timer, .*, running.*" }
 - tapOn: { id: "licznik-stoper" }
 - assertVisible: { id: "stoper-zatrzymaj" }

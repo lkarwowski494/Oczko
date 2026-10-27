@@ -9,14 +9,6 @@ import { useKolory } from './motyw';
 import type { Tlumacz, WynikEkranu } from './wspolne';
 
 export type Zapis<T> = (w: T) => Promise<WynikEkranu<unknown>>;
-export function Przyciski(p: { t: Tlumacz; naZapisz(): void; naAnuluj(): void; tekst?: string; wylaczony?: boolean }): React.ReactElement {
-  return (
-    <>
-      <Przycisk tekst={p.tekst ?? p.t('wspolne.zapisz')} onPress={p.naZapisz} rodzaj="glowny" testID="formularz-zapisz" wylaczony={p.wylaczony} />
-      <Przycisk tekst={p.t('wspolne.anuluj')} onPress={p.naAnuluj} rodzaj="tekstowy" testID="arkusz-zamknij" />
-    </>
-  );
-}
 /** Nieudany zapis → komunikat „Couldn’t save…” (jak arkusz nazwy), wpisane dane zostają. */
 export function useZapis(): [boolean, <T>(f: Zapis<T>, w: T) => void] {
   const [blad, ustaw] = useState(false);
@@ -32,8 +24,7 @@ export function FormularzNowegoProjektu(p: { t: Tlumacz; naZapisz: Zapis<{ nazwa
   const [czesci, ustawCzesci] = useState<string[]>([]);
   const [blad, zapisz] = useZapis();
   return (
-    <Arkusz tytul={t('formularz.nowy_tytul')} przyciski={<Przyciski t={t} tekst={t('wspolne.dodaj')} naAnuluj={p.naAnuluj}
-      naZapisz={() => zapisz(p.naZapisz, { nazwa: nazwa.trim(), czesci: czesci.map((c) => c.trim()).filter((c) => c !== '') })} />}>
+    <Arkusz tytul={t('formularz.nowy_tytul')} formularz={{ t, zapisz: t('wspolne.dodaj'), naAnuluj: p.naAnuluj, naZapisz: () => zapisz(p.naZapisz, { nazwa: nazwa.trim(), czesci: czesci.map((c) => c.trim()).filter((c) => c !== '') }) }}>
       <Pole etykieta={t('formularz.nazwa_projekt')} wartosc={nazwa} naZmiane={ustawNazwe} testID="formularz-nazwa-projektu" />
       <Tresc podpis>{t('formularz.nowy_czesci')}</Tresc>
       {czesci.map((c, i) => (
@@ -60,7 +51,7 @@ export function FormularzCzesci(p: { t: Tlumacz; naZapisz: Zapis<{ nazwa: string
     zapisz(p.naZapisz, { nazwa: nazwa.trim(), cel: c });
   };
   return (
-    <Arkusz tytul={t('formularz.czesc_tytul')} przyciski={<Przyciski t={t} tekst={t('wspolne.dodaj')} naZapisz={naZapisz} naAnuluj={p.naAnuluj} wylaczony={nazwa.trim() === ''} />}>
+    <Arkusz tytul={t('formularz.czesc_tytul')} formularz={{ t, zapisz: t('wspolne.dodaj'), naZapisz, naAnuluj: p.naAnuluj, wylaczony: nazwa.trim() === '' }}>
       <Pole etykieta={t('formularz.nazwa_czesc')} wartosc={nazwa} naZmiane={ustawNazwe} testID="formularz-nazwa-czesci" />
       <Pole etykieta={t('formularz.cel_opcjonalny')} wartosc={cel} naZmiane={ustawCel} liczbowe testID="formularz-cel-czesci" />
       <Tresc podpis>{t('formularz.nazwa_opis')}</Tresc>
@@ -81,8 +72,7 @@ export function FormularzLicznika(p: {
   const [rodzaj, ustawRodzaj] = useState<'rzedy' | 'oczka'>('rzedy');
   const [blad, zapisz] = useZapis();
   return (
-    <Arkusz tytul={t('formularz.licznik_tytul')} przyciski={<Przyciski t={t} tekst={t('wspolne.dodaj')} naAnuluj={p.naAnuluj}
-      naZapisz={() => zapisz(p.naZapisz, { czescId: czesc, rodzaj, nazwa: nazwa.trim() })} />}>
+    <Arkusz tytul={t('formularz.licznik_tytul')} formularz={{ t, zapisz: t('wspolne.dodaj'), naAnuluj: p.naAnuluj, naZapisz: () => zapisz(p.naZapisz, { czescId: czesc, rodzaj, nazwa: nazwa.trim() }) }}>
       <Pole etykieta={t('formularz.licznik_nazwa')} wartosc={nazwa} naZmiane={ustawNazwe} testID="formularz-nazwa-licznika" />
       <Tresc podpis>{t('formularz.licznik_czesc')}</Tresc>
       <Wybor opcje={p.czesci.map((c) => ({ wartosc: c.id, tekst: c.nazwa }))} wybrana={czesc} naWybor={ustawCzesc} />
@@ -100,7 +90,7 @@ export function FormularzNotatki(p: { t: Tlumacz; projekt: string; tekst: string
   const [tekst, ustaw] = useState(p.tekst);
   const [blad, zapisz] = useZapis();
   return (
-    <Arkusz tytul={t('licznik.notatka')} przyciski={<Przyciski t={t} naZapisz={() => zapisz(p.naZapisz, tekst)} naAnuluj={p.naAnuluj} />}>
+    <Arkusz tytul={t('licznik.notatka')} formularz={{ t, naZapisz: () => zapisz(p.naZapisz, tekst), naAnuluj: p.naAnuluj }}>
       <Pole etykieta={t('formularz.notatka_pole', { projekt: p.projekt })} wartosc={tekst} naZmiane={ustaw} wielowierszowe testID="formularz-notatka" />
       <Tresc podpis>{t('formularz.notatka_opis')}</Tresc>
       {blad && <Komunikat tekst={t('licznik.blad_zapisu')} />}
@@ -114,7 +104,7 @@ export function FormularzZnaczenia(p: { t: Tlumacz; wartosc: number; znaczenie: 
   const [z, ustaw] = useState(p.znaczenie);
   const [blad, zapisz] = useZapis();
   return (
-    <Arkusz tytul={t('formularz.znaczenie_tytul')} przyciski={<Przyciski t={t} naZapisz={() => zapisz(p.naZapisz, z)} naAnuluj={p.naAnuluj} />}>
+    <Arkusz tytul={t('formularz.znaczenie_tytul')} formularz={{ t, naZapisz: () => zapisz(p.naZapisz, z), naAnuluj: p.naAnuluj }}>
       <Wybor<'skonczone' | 'w_trakcie'> wybrana={z} naWybor={ustaw} opcje={[
         { wartosc: 'skonczone', tekst: t('formularz.znaczenie_skonczone'), opis: t('formularz.znaczenie_skonczone_opis', { n: p.wartosc }) },
         { wartosc: 'w_trakcie', tekst: t('formularz.znaczenie_w_trakcie'), opis: t('formularz.znaczenie_w_trakcie_opis', { nastepny: p.wartosc + 1 }) },
@@ -140,7 +130,7 @@ export function FormularzNarzedzia(p: {
   const mm = mmZPola(tekst);
   const naZapisz = () => { if (mm === null) { ustawZly(true); return; } ustawZly(false); zapisz(p.naZapisz, { narzedzie: n, mm }); };
   return (
-    <Arkusz tytul={t('formularz.narzedzie_tytul')} przyciski={<Przyciski t={t} naZapisz={naZapisz} naAnuluj={p.naAnuluj} />}>
+    <Arkusz tytul={t('formularz.narzedzie_tytul')} formularz={{ t, naZapisz, naAnuluj: p.naAnuluj }}>
       <Wybor<'druty' | 'szydelko'> opcje={[{ wartosc: 'druty', tekst: t('projekt.druty') }, { wartosc: 'szydelko', tekst: t('projekt.szydelko') }]} wybrana={n} naWybor={ustawN} />
       <Pole etykieta={t('formularz.narzedzie_mm')} wartosc={tekst} naZmiane={ustaw} dziesietne testID="formularz-rozmiar-mm" />
       {mm !== null && <Tresc podpis>{t('formularz.narzedzie_podglad', { rozmiar: p.podglad(mm, n) })}</Tresc>}
@@ -191,7 +181,7 @@ export function FormularzTerminu(p: {
     return () => { zywy = false; };
   }, [dzien, podglad]);
   return (
-    <Arkusz tytul={t('formularz.termin_tytul')} przyciski={<Przyciski t={t} naZapisz={() => zapisz(p.naZapisz, dzien)} naAnuluj={p.naAnuluj} />}>
+    <Arkusz tytul={t('formularz.termin_tytul')} formularz={{ t, naZapisz: () => zapisz(p.naZapisz, dzien), naAnuluj: p.naAnuluj }}>
       <DateTimePicker value={dataZDnia(dzien)} mode="date" display="inline" locale={p.jezyk} minimumDate={dataZDnia(p.dzis)} testID="formularz-termin-data"
         accessibilityLabel={t('formularz.termin_tytul')} onValueChange={(_e, d) => ustawDzien(dzienZDaty(d))} />
       {cel !== undefined && <Tresc podpis>{cel === null ? t('formularz.termin_bez_celow') : t('formularz.termin_podglad', { count: cel })}</Tresc>}

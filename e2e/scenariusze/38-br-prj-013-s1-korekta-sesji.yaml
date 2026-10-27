@@ -29,4 +29,6 @@ tags:
 - takeScreenshot: 38-korekta
 - tapOn: { id: "formularz-zapisz" }
 - assertVisible: { id: "sesje-lista" }
-- assertVisible: "Edited"
+# „Edited” (en.json skorygowana) jest częścią etykiety wiersza sesji („Nov 10, 7:30 PM to 7:30 PM, 0 min. Edit Edited”, przebieg 123),
+# a Maestro dopasowuje cały tekst. F07-31.
+- assertVisible: ".*Edited"
