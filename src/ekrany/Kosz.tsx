@@ -3,16 +3,19 @@
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
+import { Przycisk } from './Arkusz';
 import type { Tlumacz } from './wspolne';
 
 export type PozycjaKosza = { rodzaj: 'projekt' | 'czesc' | 'licznik' | 'wzor' | 'wloczka' | 'narzedzie'; id: string; nazwa: string; podpis: string };
 export type StanKosza = { dni: number; pozycje: PozycjaKosza[] }; // dni = KOSZ_DNI, pozycje od najkrótszego terminu
-export type PropsKosza = { stan: StanKosza; t: Tlumacz; naPrzywroc(p: { rodzaj: PozycjaKosza['rodzaj']; id: string }): void };
+export type PropsKosza = { stan: StanKosza; t: Tlumacz; naPrzywroc(p: { rodzaj: PozycjaKosza['rodzaj']; id: string }): void; naWstecz?(): void };
 
-export function Kosz({ stan: s, t, naPrzywroc }: PropsKosza): React.ReactElement {
+export function Kosz({ stan: s, t, naPrzywroc, naWstecz }: PropsKosza): React.ReactElement {
   const st = style(useKolory());
   return (
     <ScrollView style={st.ekran} contentContainerStyle={st.tresc}>
+      {/* Powrót jak w Ustawieniach i Sesjach (trasa bez nagłówka stosu); także w pustym koszu (P-266 (2), scen. 36). */}
+      {naWstecz && <View style={{ flexDirection: 'row' }}><Przycisk tekst={`‹ ${t('wspolne.wstecz')}`} etykieta={t('wspolne.wstecz')} onPress={naWstecz} rodzaj="tekstowy" testID="nav-wstecz" /></View>}
       <Text style={st.tytul} accessibilityRole="header">{t('kosz.tytul')}</Text>
       {s.pozycje.length === 0 ? (
         <Text style={st.opis}>{t('kosz.pusto', { count: s.dni })}</Text>
