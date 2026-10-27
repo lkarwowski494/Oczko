@@ -205,7 +205,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `wzor-dodaj` | wzór | dodanie wzoru | — | |
 | `wzor-widok` | wzór | widok dokumentu (jeden naraz, OG-07) | — | |
 | `wzor-zrodlo` | wzór | rodzaj źródła | „PDF”, „Photo”, „Web page”, „Word document” | |
-| `wzor-strona` | wzór | numer strony | „Page 1 of 3” | |
+| `wzor-strona` | wzór | numer strony | „Page 1 of 3” (etykieta VoiceOver „Pattern page 1 of 3” — asercje `.*[Pp]age 1 of .*`, przebieg 40446976426) | |
 | `wzor-zakreslacz` | wzór | przełącznik zakreślacza (`accessibilityState.selected`) | — | |
 | `wzor-zakreslenia` | wzór | liczba zakreśleń | „1 highlight”, „0 highlights” | |
 | `licznik-wzor` | licznik | ikona wzoru w pasku (tylko gdy projekt ma wzór; 04 fix-7, grupa W) | „Pattern” | |

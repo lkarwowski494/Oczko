@@ -20,9 +20,9 @@ tags:
 - tapOn: { id: "e2e-wzor-pdf" }
 - extendedWaitUntil: { visible: { id: "wzor-widok" }, timeout: 30000 }
 - assertVisible: { id: "wzor-zakreslacz", selected: false }
-- swipe: { start: "50%, 80%", end: "50%, 20%", duration: 600 }
+- swipe: { start: "50%, 70%", end: "50%, 20%", duration: 600 } # pole wzoru 14–77 % wysokości; 80 % to pasek licznika (przebieg 40446976426)
 - assertVisible: { id: "wzor-zakreslenia", text: "0 highlights" }
-- swipe: { start: "50%, 80%", end: "50%, 10%", duration: 400 }
-- assertVisible: { id: "wzor-strona", text: "Page [2-9] of .*" }
+- swipe: { start: "50%, 70%", end: "50%, 15%", duration: 400 }
+- assertVisible: { id: "wzor-strona", text: ".*[Pp]age [2-9] of .*" }
 - assertVisible: { id: "wzor-zakreslenia", text: "0 highlights" }
 - takeScreenshot: 27-po-przewinieciu

@@ -15,13 +15,13 @@ tags:
 - runFlow: subflows/otworz-wzor-pdf.yaml
 - tapOn: { id: "licznik-plus" }
 - assertVisible: { id: "licznik-wartosc", text: "1" }
-- scrollUntilVisible: { element: { id: "wzor-strona", text: "Page 2 of .*" }, direction: DOWN }
-- assertVisible: { id: "wzor-strona", text: "Page 2 of .*" }
+- scrollUntilVisible: { element: { id: "wzor-strona", text: ".*[Pp]age 2 of .*" }, direction: DOWN }
+- assertVisible: { id: "wzor-strona", text: ".*[Pp]age 2 of .*" }
 - takeScreenshot: 45-przed-obrotem
 - setOrientation: LANDSCAPE_LEFT
-- assertVisible: { id: "wzor-strona", text: "Page 2 of .*" }
+- assertVisible: { id: "wzor-strona", text: ".*[Pp]age 2 of .*" }
 - assertVisible: { id: "licznik-wartosc", text: "1" }
 - takeScreenshot: 45-po-obrocie
 - setOrientation: PORTRAIT
-- assertVisible: { id: "wzor-strona", text: "Page 2 of .*" }
+- assertVisible: { id: "wzor-strona", text: ".*[Pp]age 2 of .*" }
 - assertVisible: { id: "licznik-wartosc", text: "1" }

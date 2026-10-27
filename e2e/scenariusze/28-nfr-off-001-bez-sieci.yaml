@@ -38,6 +38,8 @@ tags:
 - extendedWaitUntil: { visible: { id: "ukonczenie-karta" }, timeout: 20000 } # „Mark as finished” → karta, bez osobnego potwierdzenia (P-255)
 - takeScreenshot: 28-karta-ukonczenia
 - tapOn: { id: "ukonczenie-gotowe" }
+- assertNotVisible: { id: "ukonczenie-karta" }
+- tapOn: { text: "Not Now", optional: true } # systemowa prośba o ocenę po ukończeniu (przebieg 40446976426) zasłania listę
 - assertVisible: { id: "projekty-lista" }
 - assertVisible: { id: "projekty-ukonczone" }
 - assertVisible: "Harbor.*"

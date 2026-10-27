@@ -12,7 +12,9 @@ tags:
     arguments:
       oczkoE2eTeraz: "2026-11-10T19:30:00"
       oczkoE2eIcloud: "wlaczony"
-- extendedWaitUntil: { visible: { id: "licznik-plus" }, timeout: 60000 }
+- extendedWaitUntil: { visible: { id: "licznik-wartosc" }, timeout: 60000 } # górna część ekranu — czytelna także przy orientacji z poprzedniego scenariusza
+- setOrientation: PORTRAIT # jak start-czysty (przebieg 40446976426)
+- assertVisible: { id: "licznik-plus" }
 - tapOn: { id: "licznik-plus" }
 - assertVisible: { id: "licznik-wartosc", text: "1" }
 - runFlow: subflows/otworz-stan-danych.yaml

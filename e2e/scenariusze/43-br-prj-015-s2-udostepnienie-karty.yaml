@@ -1,7 +1,7 @@
 # BR-PRJ-015/S2 (docs/brd/wymagania-projekt.md:190): karta ukończenia udostępniana arkuszem systemowym — aplikacja nic nie wysyła sama (ZP-03).
 # Brak EXIF/GPS w pliku karty sprawdza test danych w Node (poziom kryterium: dane-node:sqlite, kryteria.json); tu tylko połączenie: „Share” na karcie
 # (karta-udostepnij, 04 fix-6 D, P-191 P10a) otwiera arkusz udostępniania z obrazem, zamknięcie wraca do karty.
-# [DO USTALENIA] teksty arkusza udostępniania iOS 26 („Save Image”, „Close”) — potwierdzi pierwszy przebieg. Funkcja bez UI na 2026-10-26 — pakiet pełny.
+# [DO USTALENIA] teksty arkusza udostępniania iOS 26: „Save Image” jest, „Close” nie ma (przebieg 40446976426) — zamknięcie przez „dismiss popup”. Funkcja bez UI na 2026-10-26 — pakiet pełny.
 appId: com.apps4brew.knitting
 name: "BR-PRJ-015/S2 · Karta ukończenia: Share otwiera arkusz systemowy z obrazem"
 tags:
@@ -24,5 +24,5 @@ tags:
 - tapOn: { id: "karta-udostepnij" }
 - extendedWaitUntil: { visible: "Save Image", timeout: 20000 }
 - takeScreenshot: 43-arkusz-udostepniania
-- tapOn: "Close"
+- tapOn: "dismiss popup" # arkusz iOS 26 bez „Close”; region zamknięcia z drzewa (PopoverDismissRegion) (przebieg 40446976426)
 - assertVisible: { id: "ukonczenie-karta" }
