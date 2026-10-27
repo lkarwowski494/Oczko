@@ -67,7 +67,7 @@ export default function EkranStanuDanych(): React.ReactElement {
 
   const synchronizacja = widok?.stan ?? 'wylaczona';
   const icloud: IcloudStanuDanych | undefined = ic && ic.widoczny && dane ? {
-    wlaczona: dane.wlaczona, stan: synchronizacja, przyczyna: widok?.przyczyna ?? null, konflikty: dane.konflikty, niepelna: dane.niepelna, niepelnaNowsza: dane.niepelnaNowsza,
+    wlaczona: dane.wlaczona, stan: synchronizacja, przyczyna: widok?.przyczyna ?? null, konflikty: dane.konflikty, niepelna: dane.niepelna, niepelnaNowsza: dane.niepelnaNowsza, synchronizuje: widok?.synchronizuje === true,
     naPrzelacz, naUstawienia: otworzUstawieniaSystemu, naZarzadzaj: otworzUstawieniaSystemu, // „Manage storage”: bez publicznego adresu strony iCloud — Ustawienia
   } : undefined;
   const panelE2e = paneleE2e && e2e ? <paneleE2e.PanelIcloud wyslane={e2e.wyslane} usuniete={e2e.usuniete} /> : null;

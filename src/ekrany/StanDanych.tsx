@@ -16,6 +16,7 @@ export type IcloudStanuDanych = {
   przyczyna: 'brak_miejsca' | 'siec' | 'inny' | null;
   konflikty: number;
   niepelna: boolean;                   // rekord z iCloud w poczekalni ponad POCZEKALNIA_DNI (P-110 Q1a)
+  synchronizuje?: boolean;             // wysyłka w toku → icloud.synchronizuje zamiast stan_danych.ostatnia (design-spec I1a–I3)
   niepelnaNowsza?: boolean;            // wśród nich rekord nowszej wersji aplikacji → icloud.niepelna_nowsza (design-spec I1a–I3)
   naPrzelacz(wlacz: boolean): void;
   naUstawienia(): void;                // „Open Settings” (ustawienia systemu)
@@ -77,7 +78,8 @@ export function StanDanych({ stan: s, t, naZamknij, icloud: i, panelE2e }: Props
         {i.wlaczona && !czeka && i.stan === 'aktywna' && <Tresc>{t('stan_danych.aktywna')}</Tresc>}
         {!i.wlaczona && <Tresc>{t('stan_danych.wylaczona')}</Tresc>}
         {i.wlaczona && czeka && <Tresc>{t('stan_danych.czeka')}</Tresc>}
-        {i.wlaczona && s.ostatniaUdana && <Tresc podpis>{t('stan_danych.ostatnia', { data: s.ostatniaUdana })}</Tresc>}
+        {i.wlaczona && !czeka && i.synchronizuje && <Tresc podpis>{t('icloud.synchronizuje')}</Tresc>}
+        {i.wlaczona && !i.synchronizuje && s.ostatniaUdana && <Tresc podpis>{t('stan_danych.ostatnia', { data: s.ostatniaUdana })}</Tresc>}
         <Tresc>{t('stan_danych.zapisane')}</Tresc>
         {s.zegarek && <Tresc podpis>{t('stan_danych.zegarek_kontakt', { data: s.zegarek.ostatniKontakt })}</Tresc>}
       </View>
