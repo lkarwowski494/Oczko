@@ -90,7 +90,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
   );
 
   return (
-    <View style={st.ekran}>
+    <View style={st.ekran} onMagicTap={() => void plus()}>{/* Magic Tap = +1, ta sama ścieżka co przycisk (design-spec:88, P-284) */}
       <View style={st.pasek}>
         {p.naProjekty ? (
           <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.tytul')} onPress={p.naProjekty} style={st.ikona} testID="nav-projekty">
