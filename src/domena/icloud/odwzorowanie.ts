@@ -37,13 +37,14 @@ export function rekordZWiersza(t: TabelaIcloud, w: Readonly<Wiersz>, sciezkaPlik
   return { encja: t.tabela, klucz: kluczWiersza(t, w), pola, plik: t.zasob ? sciezkaPliku : null };
 }
 
-/** Rekord z iCloud → tabela i wiersz do zapisu; każde odstępstwo od kontraktu = `bledne_dane` (wpis w `blad`, rekord pominięty). */
+/** Rekord z iCloud → tabela i wiersz do zapisu; kolumny `pomin` pominięte; każde inne odstępstwo od kontraktu = `bledne_dane` (wpis w `blad`, rekord pominięty). */
 export function wierszZRekordu(r: RekordIcloud): Wynik<{ tabela: TabelaIcloud; wiersz: Wiersz }> {
   const t = tabelaIcloud(r.encja);
   if (!t || typeof r.pola !== 'object' || r.pola === null) return { ok: false, powod: 'bledne_dane' };
   const wiersz: Wiersz = {};
   for (const [k, v] of Object.entries(r.pola)) {
-    if (!NAZWA_KOLUMNY.test(k) || t.pomin.includes(k)) return { ok: false, powod: 'bledne_dane' };
+    if (!NAZWA_KOLUMNY.test(k)) return { ok: false, powod: 'bledne_dane' };
+    if (t.pomin.includes(k)) continue; // liczona lokalnie; pominięta jak kolumna nieznana (P-274 Q3a: nowsza wersja może ją synchronizować)
     if (!(v === null || typeof v === 'string' || (typeof v === 'number' && Number.isFinite(v)))) return { ok: false, powod: 'bledne_dane' };
     wiersz[k] = v;
   }

@@ -51,14 +51,19 @@ describe('rekordZWiersza / wierszZRekordu', () => {
     expect(r.plik).toBe('/p/aaa.pdf');
     expect(r.klucz).toBe('a'.repeat(64));
   });
-  test('rekord z obcą encją, kolumną pomin, kluczem niezgodnym z polami albo polem złego typu → bledne_dane (rekord z sieci nie jest zaufany)', () => {
+  test('rekord z obcą encją, kluczem niezgodnym z polami albo polem złego typu → bledne_dane (rekord z sieci nie jest zaufany)', () => {
     const ok = { encja: 'projekt', klucz: 'p1', pola: { id: 'p1', nazwa: 'A' }, plik: null };
     expect(wierszZRekordu({ ...ok, encja: 'poczekalnia' })).toEqual({ ok: false, powod: 'bledne_dane' });
     expect(wierszZRekordu({ ...ok, klucz: 'p2' })).toEqual({ ok: false, powod: 'bledne_dane' });
-    expect(wierszZRekordu({ ...ok, encja: 'licznik', klucz: 'l1', pola: { id: 'l1', wartosc: 3 } })).toEqual({ ok: false, powod: 'bledne_dane' });
     expect(wierszZRekordu({ ...ok, pola: { id: 'p1', nazwa: { x: 1 } as unknown as string } })).toEqual({ ok: false, powod: 'bledne_dane' });
     expect(wierszZRekordu({ ...ok, pola: { id: 'p1', 'nazwa; DROP TABLE projekt': 'x' } })).toEqual({ ok: false, powod: 'bledne_dane' });
     expect(wierszZRekordu({ encja: 'ustawienie', klucz: 'jezyk', pola: { klucz: 'jezyk', wartosc: '"pl"', zmieniono_ms: 1 }, plik: null })).toEqual({ ok: false, powod: 'bledne_dane' });
+  });
+  test('P-274 Q3a: kolumna pomin w rekordzie z sieci pominięta jak nieznana, rekord przyjęty (nowsza wersja może ją synchronizować; ADR-0005 tylko dodające)', () => {
+    const t = tabelaIcloud('licznik')!;
+    expect(wierszZRekordu({ encja: 'licznik', klucz: 'l1', pola: { id: 'l1', nazwa: 'Rękaw', wartosc: 3, glowa: 'z3', konflikt: 1 }, plik: null }))
+      .toEqual({ ok: true, wartosc: { tabela: t, wiersz: { id: 'l1', nazwa: 'Rękaw' } } });
+    expect(wierszZRekordu({ encja: 'licznik', klucz: 'l1', pola: { id: 'l1', wartosc: { x: 1 } as unknown as number }, plik: null })).toEqual({ ok: true, wartosc: { tabela: t, wiersz: { id: 'l1' } } }); // wartość pominiętej kolumny nie trafia do bazy
   });
   test('własność: dla każdej tabeli wiersz → rekord → wiersz bez zmian (poza kolumnami pomin)', () => {
     const wartosc = fc.oneof(fc.string(), fc.integer(), fc.constant(null));
