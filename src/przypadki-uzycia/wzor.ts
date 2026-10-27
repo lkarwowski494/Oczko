@@ -185,6 +185,18 @@ export async function wzorDoZapisu(tx: PortBazy, wzorId: string): Promise<'bledn
   return liczbaLubNull(r, 'w') !== null || liczbaLubNull(r, 'p') !== null ? 'niedozwolone_przejscie' : null;
 }
 
+/** „Rename” z menu ••• przeglądarki (design-spec W1a): nazwa przycięta, pusta = `bledne_dane`; wzór w koszu albo projekt w koszu — jak inne zapisy wzoru. */
+export function zmienNazweWzoru(z: ZaleznosciPlikow, w: { wzorId: string; nazwa: string }): Promise<Wynik<void>> {
+  const nazwa = w.nazwa.trim();
+  if (!nazwa) return Promise.resolve(blad('bledne_dane'));
+  return operacjaZapisu(z, 'zmienNazweWzoru', async (tx, teraz) => {
+    const stan = await wzorDoZapisu(tx, w.wzorId);
+    if (stan) return blad(stan);
+    await tx.run('UPDATE wzor SET nazwa = ?, zmieniono_ms = ? WHERE id = ?', [nazwa, teraz, w.wzorId]);
+    return OK;
+  });
+}
+
 /** Do kosza (P-229, P-233 (6)): `usunieto_ms = teraz`; rysunki i znacznik zostają do przywrócenia; sprząta `sprzatnijKosz` po KOSZ_DNI. */
 export function usunWzor(z: ZaleznosciPlikow, w: { wzorId: string }): Promise<Wynik<void>> {
   return operacjaZapisu(z, 'usunWzor', async (tx, teraz) => {

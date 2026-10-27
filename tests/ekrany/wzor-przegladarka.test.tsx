@@ -19,7 +19,7 @@ const stan = (z: Partial<StanPrzegladarki> = {}): StanPrzegladarki => ({
 function wywolania() {
   return {
     naWstecz: jest.fn(), naPrzelacz: jest.fn(), naNarzedzie: jest.fn(), naCofnij: jest.fn(), naZaznaczRzad: jest.fn(), naObroc: jest.fn(),
-    naUsun: jest.fn(), potwierdz: jest.fn((_t: string, _o: string, _p: string, f: () => void) => f()),
+    naZmienNazwe: jest.fn(), naUsun: jest.fn(), potwierdz: jest.fn((_t: string, _o: string, _p: string, f: () => void) => f()),
     naPlus: jest.fn(async () => ({ ok: true as const, wartosc: undefined })), naMinus: jest.fn(async () => ({ ok: true as const, wartosc: undefined })),
   };
 }
@@ -159,4 +159,13 @@ describe('notatka wzoru (design-spec „Notatka wzoru bez znacznika”, P-124 Q6
     expect(screen.queryByText('A note sits next to a row.')).toBeNull();
     expect(w.naZaznaczRzad).not.toHaveBeenCalled();
   });
+});
+
+test('menu ••• (design-spec W1a): „Rename” między obrotem a usunięciem → naZmienNazwe', () => {
+  const w = wywolania();
+  render(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...w} />);
+  fireEvent.press(screen.getByTestId('wzor-menu'));
+  expect(screen.getAllByRole('menuitem').map((x) => x.props.accessibilityLabel)).toEqual(['Rotate page', 'Rename', 'Delete pattern…']);
+  fireEvent.press(screen.getByTestId('wzor-zmien-nazwe'));
+  expect(w.naZmienNazwe).toHaveBeenCalledTimes(1);
 });

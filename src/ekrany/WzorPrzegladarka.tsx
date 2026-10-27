@@ -34,6 +34,7 @@ export type PropsPrzegladarki = {
   naZaznaczRzad(kierunek: 1 | -1): void;
   naNotatka?(tekst: string): void;              // notatka przy rzędzie znacznika (BR-WZR-008/S2; bez znacznika — najpierw „Mark row”, P-124 Q6a)
   naObroc(): void;
+  naZmienNazwe(): void;                    // ••• → „Rename” (design-spec W1a)
   naUsun(): void;
   potwierdz(tytul: string, opis: string, przycisk: string, f: () => void): void;
   naPlus(): Promise<WynikEkranu<unknown>>;
@@ -194,6 +195,7 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
       {menu === 'opcje' && (
         <Menu st={st} zamknij={() => ustawMenu('brak')}>
           <Pozycja st={st} tekst={t('wzor.obroc')} id="wzor-obroc" onPress={() => { ustawMenu('brak'); p.naObroc(); }} />
+          <Pozycja st={st} tekst={t('wzor.zmien_nazwe')} id="wzor-zmien-nazwe" onPress={() => { ustawMenu('brak'); p.naZmienNazwe(); }} />
           <Pozycja st={st} tekst={t('wzor.usun')} id="wzor-usun" niszczaca onPress={() => {
             ustawMenu('brak');
             p.potwierdz(t('wzor.usun_tytul', { nazwa: s.nazwa }), t('wzor.usun_opis', { data: p.terminKosza ?? '' }), t('wzor.usun_potwierdz'), p.naUsun);

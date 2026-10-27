@@ -87,6 +87,18 @@ export function ArkuszLinku(p: { t: Tlumacz; naZapisz(adres: string): void; naAn
   );
 }
 
+/** Arkusz „Pattern name” (••• → `wzor.zmien_nazwe`, design-spec W1a): wypełniony obecną nazwą; pusta nazwa nie zapisuje. */
+export function ArkuszNazwyWzoru(p: { t: Tlumacz; nazwa: string; naZapisz(nazwa: string): void; naAnuluj(): void }): React.ReactElement {
+  const { t } = p;
+  const [nazwa, ustawNazwe] = useState(p.nazwa);
+  const zapisz = () => { const n = nazwa.trim(); if (n) p.naZapisz(n); };
+  return (
+    <Arkusz tytul={t('wzor.zmien_nazwe')} formularz={{ t, zapisz: t('wspolne.zapisz'), naZapisz: zapisz, naAnuluj: p.naAnuluj }}>
+      <Pole etykieta={t('wzor.nazwa_tytul')} wartosc={nazwa} naZmiane={ustawNazwe} naKoniec={zapisz} testID="wzor-nazwa-pole" />
+    </Arkusz>
+  );
+}
+
 function style(k: Kolory) {
   return StyleSheet.create({
     naglowek: { ...typografia.podpis, color: k.olowek, textTransform: 'uppercase', marginTop: odstep.l, marginBottom: odstep.s },

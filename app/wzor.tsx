@@ -7,7 +7,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { WidokWzoruNatywny } from '../modules/oczko-wzor';
 import { ukladOkna } from '../src/domena/uklad';
 import { politykaPlotna, poDotyku, type Narzedzie } from '../src/domena/rysik';
-import { ArkuszLinku, GrupaWzorow, type ZrodloDodaniaEkranu } from '../src/ekrany/WzorGrupa';
+import { ArkuszLinku, ArkuszNazwyWzoru, GrupaWzorow, type ZrodloDodaniaEkranu } from '../src/ekrany/WzorGrupa';
 import { PrzegladarkaWzoru } from '../src/ekrany/WzorPrzegladarka';
 import { useKolory } from '../src/ekrany/motyw';
 import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
@@ -17,7 +17,7 @@ import { alertImportu, nazwaDomyslna } from '../src/kompozycja/wzor-dodawanie';
 import { wybierzPlikWzoru } from '../src/platforma/system-plikow-uzytkownika';
 import { paneleE2e, szerokoscOknaE2e } from '../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../src/platforma/zdjecia';
-import { dodajNotatkeWzoru, dodajWzor, listaWzorow, usunWzor, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek, ustawZnacznik, type ZrodloDodania } from '../src/przypadki-uzycia/wzor';
+import { dodajNotatkeWzoru, dodajWzor, listaWzorow, usunWzor, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek, ustawZnacznik, zmienNazweWzoru, type ZrodloDodania } from '../src/przypadki-uzycia/wzor';
 import { odzyskajRysunki, ustawObrot, widokWzoru, type WidokWzoru } from '../src/przypadki-uzycia/wzor-widok';
 import type { WidokLicznika } from '../src/przypadki-uzycia/widok-licznika';
 import { KOSZ_DNI } from '../src/konfiguracja';
@@ -41,6 +41,7 @@ export default function EkranWzoru(): React.ReactElement {
   const [zakreslenia, ustawZakreslenia] = useState(0);
   const [cofnij, ustawCofnij] = useState(0);
   const [link, ustawLink] = useState(false);
+  const [nazwa, ustawArkuszNazwy] = useState(false); // ••• → „Rename” (W1a)
 
   const wczytaj = useCallback(async (wybrany?: string) => {
     const w = await licznik.widok();
@@ -108,6 +109,10 @@ export default function EkranWzoru(): React.ReactElement {
   } : null), [widok?.wzorId, widok?.plikPdf, obrotyKlucz]); // eslint-disable-line react-hooks/exhaustive-deps -- rysunki tylko przy zmianie wzoru
   if (link) return <Bezpieczny><ArkuszLinku t={t} naAnuluj={() => ustawLink(false)} naWklej={async () => null} naZapisz={(adres) => { ustawLink(false); void dodaj({ rodzaj: 'adres', adres }); }} /></Bezpieczny>;
   if (!lw || !wzory) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
+  if (nazwa && widok) return (
+    <Bezpieczny><ArkuszNazwyWzoru t={t} nazwa={widok.nazwa} naAnuluj={() => ustawArkuszNazwy(false)}
+      naZapisz={(n) => void zmienNazweWzoru(zw, { wzorId: widok.wzorId, nazwa: n }).then(async (r) => { if (r.ok) { ustawArkuszNazwy(false); await wczytaj(widok.wzorId); } })} /></Bezpieczny>
+  );
   const szerokosc = szerokoscOknaE2e() ?? okno.width;
   const uklad = ukladOkna({ szerokosc, wysokosc: okno.height });
   if (!widok) {
@@ -150,6 +155,7 @@ export default function EkranWzoru(): React.ReactElement {
         naZaznaczRzad={(kierunek) => void ustawZnacznik(zw, { wzorId: widok.wzorId, licznikId: lw.licznikId, strona: strona ? strona.n - 1 : 0, y: 0.5, wysokoscRzedu: zn?.wysokosc ?? 0.02, rzadBazowy: lw.wartosc + 1, kierunek }).then(() => wczytaj(widok.wzorId))}
         naNotatka={(tekst) => void dodajNotatkeWzoru(zw, { wzorId: widok.wzorId, rzad: zn?.rzad ?? lw.wartosc + 1, tekst })}
         naObroc={() => void ustawObrot(zw, { wzorId: widok.wzorId, strona: strona ? strona.n - 1 : 0, kat: (((widok.obroty[strona ? strona.n - 1 : 0] ?? 0) + 90) % 360) as 0 | 90 | 180 | 270 }).then(() => wczytaj(widok.wzorId))}
+        naZmienNazwe={() => ustawArkuszNazwy(true)}
         naUsun={() => void usunWzor(zw, { wzorId: widok.wzorId }).then(async (r) => { if (r.ok) { await kontener.wzor.k.odswiezMigawke(); await wczytaj(); } })}
         potwierdz={(tytul, opis, przycisk, f) => Alert.alert(tytul, opis, [{ text: t('wspolne.anuluj'), style: 'cancel' }, { text: przycisk, style: 'destructive', onPress: f }])}
         naPlus={async () => { const r = await licznik.uslugi.dodajRzad(); await wczytaj(widok.wzorId); return r.ok ? { ok: true, wartosc: undefined } : r; }}

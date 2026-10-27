@@ -1,7 +1,7 @@
 // Grupa „Pattern(s)” na ekranie projektu i dodanie wzoru (design-spec W7a, W8, W11; P-218 (1), Q6a — każde dodanie to nowy wzór; P-220 W9b).
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { ArkuszLinku, GrupaWzorow } from '../../src/ekrany/WzorGrupa';
+import { ArkuszLinku, ArkuszNazwyWzoru, GrupaWzorow } from '../../src/ekrany/WzorGrupa';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { tEn } from './pomoc';
 
@@ -54,4 +54,16 @@ test('arkusz linku strony: zły adres → zdanie pod polem, bez zapisu; dobry �
   fireEvent.changeText(screen.getByTestId('wzor-link-pole'), ' https://example.org/czapka ');
   fireEvent.press(screen.getByRole('button', { name: 'Save page' }));
   expect(naZapisz).toHaveBeenCalledWith('https://example.org/czapka');
+});
+
+test('arkusz „Pattern name” (••• → Rename): wypełniony obecną nazwą; pusta nazwa nie zapisuje; Save → nowa nazwa', () => {
+  const naZapisz = jest.fn();
+  render(<ArkuszNazwyWzoru t={t} nazwa="Harbor chart" naZapisz={naZapisz} naAnuluj={jest.fn()} />);
+  expect(screen.getByLabelText('Pattern name').props.value).toBe('Harbor chart');
+  fireEvent.changeText(screen.getByLabelText('Pattern name'), '   ');
+  fireEvent.press(screen.getByRole('button', { name: 'Save' }));
+  expect(naZapisz).not.toHaveBeenCalled();
+  fireEvent.changeText(screen.getByLabelText('Pattern name'), ' Edging ');
+  fireEvent.press(screen.getByRole('button', { name: 'Save' }));
+  expect(naZapisz).toHaveBeenCalledWith('Edging');
 });

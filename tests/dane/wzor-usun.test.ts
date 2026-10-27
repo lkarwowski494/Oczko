@@ -7,7 +7,7 @@ import { elementyKosza } from '../../src/dane/repozytoria/kosz';
 import { sprzatnijKosz } from '../../src/przypadki-uzycia/kosz';
 import { przywrocProjekt, usunProjekt } from '../../src/przypadki-uzycia/projekt';
 import { zapamietajLicznik } from '../../src/przypadki-uzycia/widok-licznika';
-import { dodajNotatkeWzoru, listaWzorow, przywrocWzor, usunWzor, ustawZnacznik, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek } from '../../src/przypadki-uzycia/wzor';
+import { dodajNotatkeWzoru, listaWzorow, przywrocWzor, usunWzor, ustawZnacznik, wzorDoOtwarcia, zapamietajWzor, zapiszRysunek, zmienNazweWzoru } from '../../src/przypadki-uzycia/wzor';
 import { czesc, licznik, plik, projekt, rysunek, wzor, type Instr } from './pomocnicze/dane-wejsciowe';
 import { DOBA, T0, ile, jeden, przygotuj, sha256, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
 
@@ -170,4 +170,17 @@ test('przegląd: powrót do licznika nie gubi ostatniego wzoru (zapamietajLiczni
   await zapamietajWzor(s.z, { licznikId: 'l1', wzorId: 'w1' });
   await zapamietajLicznik(s.z, { licznikId: 'l1' });
   expect(await wzorDoOtwarcia(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: 'w1' });
+});
+
+describe('zmiana nazwy wzoru (design-spec W1a ••• „Rename”, plan 1.1 pkt 1)', () => {
+  test('nazwa przycięta; pusta = bledne_dane bez zmiany; wzór w koszu = niedozwolone_przejscie; nieznany = bledne_dane', async () => {
+    const { s } = await zDwomaWzorami();
+    expect(await zmienNazweWzoru(s.z, { wzorId: 'w2', nazwa: '  Edging chart ' })).toEqual(OK);
+    expect(await jeden(s.baza, "SELECT nazwa, zmieniono_ms FROM wzor WHERE id = 'w2'")).toEqual({ nazwa: 'Edging chart', zmieniono_ms: s.zegar.teraz().ms });
+    expect(await zmienNazweWzoru(s.z, { wzorId: 'w2', nazwa: '   ' })).toEqual({ ok: false, powod: 'bledne_dane' });
+    expect(await jeden(s.baza, "SELECT nazwa FROM wzor WHERE id = 'w2'")).toEqual({ nazwa: 'Edging chart' });
+    await usunWzor(s.z, { wzorId: 'w2' });
+    expect(await zmienNazweWzoru(s.z, { wzorId: 'w2', nazwa: 'X' })).toEqual({ ok: false, powod: 'niedozwolone_przejscie' });
+    expect(await zmienNazweWzoru(s.z, { wzorId: 'brak', nazwa: 'X' })).toEqual({ ok: false, powod: 'bledne_dane' });
+  });
 });

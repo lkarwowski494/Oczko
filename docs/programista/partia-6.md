@@ -49,12 +49,12 @@ Pakiet `TestyOknaMaszyn` pierwszy raz skompilowany i uruchomiony (schemat z list
 Dane i przypadki użycia K1–K5 są zrobione, z testami. Braki są w ekranach. Każdy punkt: test RNTL czerwony → kod → zielony, tylko na kopii, push na sygnał.
 | # | Brak (spec) | Dowód braku | Pliki |
 |---|---|---|---|
-| 1 | W1a: „Rename” w menu ••• przeglądarki (klucz `wzor.zmien_nazwe` jest, nieużyty) | grep w `src`, `app` = 0 | `WzorPrzegladarka.tsx`, `src/przypadki-uzycia/wzor.ts` (zmiana nazwy w kolejce zapisu, jeśli brak) |
-| 2 | W7a/W8/S4a: link do filmu — wiersz „Video” w grupie wzorów, „Add video link”, arkusz; dane gotowe (`film.ts`) | `LinkFilmu` nieużyty; `wzor.dodaj_film` = 0 | `WzorGrupa.tsx`, `app/projekt/[id].tsx`, `Wzor.tsx` |
+| 1 ✅ (kopia, 11:45) | W1a: „Rename” w menu ••• przeglądarki (klucz `wzor.zmien_nazwe` jest, nieużyty) | grep w `src`, `app` = 0 | `WzorPrzegladarka.tsx`, `src/przypadki-uzycia/wzor.ts` (zmiana nazwy w kolejce zapisu, jeśli brak) |
+| 2 ✅ (kopia 92df7ea, P-276) | W7a/W8/S4a: link do filmu — wiersz „Video” w grupie wzorów, „Add video link”, arkusz; dane gotowe (`film.ts`) | `LinkFilmu` nieużyty; `wzor.dodaj_film` = 0 | `WzorGrupa.tsx`, `app/projekt/[id].tsx`, `Wzor.tsx` |
 | 3 | W7a: „Paste” w arkuszu linku jest zaślepką `async () => null` | `app/wzor.tsx:109` | adapter schowka (API sprawdzić w dokumentacji SDK 57; nowa zależność = STOP do 05) |
 | 4 | W11: alert braku aparatu przy skanie; wiersz „import w toku” (dziś tylko stan `siec`); film bez sieci | `app/projekt/[id].tsx:101`; `wzor.brak_aparatu_opis` = 0 | `app/projekt/[id].tsx`, `src/kompozycja/wzor-dodawanie.ts` |
 | 5 | W5a: podpowiedź `wzor.rysik_podpowiedz` | grep = 0 | `WzorPrzegladarka.tsx` |
-| 6 | W1a: Magic Tap (+1 z przeglądarki), ekran nie gaśnie na `/wzor` [DO SPRAWDZENIA, czy spec tego wymaga na wzorze] | `onMagicTap` = 0 | `WzorPrzegladarka.tsx`, `app/wzor.tsx` |
+| 6 | W1a: Magic Tap (+1 z przeglądarki), ekran nie gaśnie na `/wzor` — wymagane (design-spec:668); też „Add note” w ••• (`wzor.dodaj_notatke`) | `onMagicTap` = 0 | `WzorPrzegladarka.tsx`, `app/wzor.tsx` |
 | 7 | W8: miniatura pierwszej strony w grupie wzorów | brak | wymaga funkcji natywnej (okno maszyn) |
 | 8 | R2: arkusz skrzynki także na ekranie projektu; podgląd pliku | tylko `app/projekty.tsx:25-58` | `app/projekt/[id].tsx` |
 **P-276 (po kroku 3, priorytet poniżej kroku 2 i W1–W3):** link do filmu w projekcie, który go ma — menu wiersza „Video” → „Change link”/„Remove link” (`docs/design/fix8-2026-10-27/film.html`, `film-klucze.json` na roboczej, 04 robocze); w rozszerzeniu i skrzynce `udostepnij.film_zastapi` zamiast `udostepnij.gotowe` (flaga `film: boolean` w `ProjektMigawki` = `projekt.film_adres IS NOT NULL`, `MIGAWKA_WERSJA` bez zmian — kontrakt w moduly.md „Cel targets/share” → „Flaga film”, robocza 2434e42; wykonanie: `porty.ts` + blok „Porty domeny” w moduly.md jednym commitem (`sprawdz-porty.mjs`), `odswiezMigawke`, dekoder Swift, test film true/false przed kodem); nagłówek listy przy „Video link” → `udostepnij.do_projektu_film`. Zależy od punktu 2 planu (wiersz „Video” jeszcze nie istnieje) — robić razem z nim.
