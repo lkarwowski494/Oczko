@@ -4,6 +4,7 @@
 // ekran pokazuje stan, który dostał; ogłoszenie i haptyka dopiero po wyniku ok (R-148).
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useLiczbaWidoczna } from './LiczbaWidoczna';
 import { LiniaKonfliktu, type KonfliktNaLiczniku } from './IcloudKonflikt';
 import type { Haptyka, WzorzecHaptyki } from '../domena/porty';
 import { cel as rozmiary, MAX_SKALA_LICZBY, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
@@ -135,6 +136,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
   }
 
   const liczba = s.znaczenie === 'w_trakcie' ? s.dziergany : s.skonczone;
+  const lw = useLiczbaWidoczna(liczba); // AX5: liczba w widoku (P-266 (1))
   const zawczasu = s.limit.rodzaj === 'zawczasu';
   const etykietaPlus = start
     ? t('licznik.plus')
@@ -175,7 +177,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
           </Pressable>
         </View>
       )}
-      <ScrollView contentContainerStyle={st.srodek}>
+      <ScrollView contentContainerStyle={st.srodek} ref={lw.ref} onLayout={lw.naUklad} onScroll={lw.naPrzewiniecie} scrollEventThrottle={64}>
         {s.projekt !== null && (p.naProjekt ? (
           <Pressable accessibilityRole="button" accessibilityLabel={s.projekt} onPress={p.naProjekt} style={st.wpisProjektu}>
             <Text style={st.podpis} testID="licznik-projekt">{s.projekt}</Text>
@@ -193,7 +195,7 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
           </View>
         )}
         {baner?.rodzaj === 'cofnieto' && <Text style={[st.tresc, st.baner]}>{t('licznik.cofnieto', { count: baner.n, wartosc: baner.wartosc })}</Text>}
-        <View style={st.liczbaWiersz}>
+        <View style={st.liczbaWiersz} onLayout={lw.naUkladLiczby} testID="licznik-wartosc-wiersz">
           <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(liczba)}</Text>
           <Text style={st.podpis}>{s.cel !== null ? t('licznik.z_celu', { cel: s.cel }) : t('licznik.jednostka')}</Text>
         </View>
