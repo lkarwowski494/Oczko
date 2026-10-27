@@ -2,7 +2,8 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { LIMIT_DNI_W_MIESIACU } from '../konfiguracja';
-import type { StanEkranuLicznika, Style } from './Licznik';
+import type { StanEkranuLicznika } from './LicznikTypy';
+import type { Style } from './LicznikStyl';
 import type { Tlumacz } from './wspolne';
 
 export function ArkuszLimitu(p: { n: number; s: StanEkranuLicznika; t: Tlumacz; st: Style; naOferty(): void; naZamknij(): void }) {
