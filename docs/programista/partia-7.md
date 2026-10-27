@@ -12,7 +12,12 @@ Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-tho
 | 339a85b | XCTest `oczko-icloud`: pakiet `modules/oczko-icloud/Pakiet`, `wektory.json`, Jest `tests/domena/icloud/wektory-swift.test.ts`, krok `swift test` w `jakosc-ios.yml` (Swift nieskompilowany lokalnie) | tura 2 |
 | e756fa5 i nowsze | ten plik stanu | z turą 2 |
 
-**Kolejka pushy (P-263, P-264, P-265; tylko na sygnał koordynatora):**
+**AKTUALNIE (2026-10-27 08:25 UTC, P-268; koniec pracy konta 1):** tura 1 (P-262 ×3) wypchnięta jako 8c876ad `[e2e-pelny]`, przebieg 122 (zastąpiony przez 07, oczekiwane). Dalej:
+- **Krok 2** (po końcu przebiegu 123, na sygnał; najpierw push partii 6, zaraz po nim ten): gałąź `claude/kopia-partia-7-krok2` = 49d32c6 — cherry-pick TYLKO P-266 (85d1b0f, 48af829, cd33af0) na 2ca3a8b, head `[e2e-pelny]`, verify 2542/2542. Przy sygnale: `git checkout -B claude/jolly-thompson-paz6d8 origin/claude/kopia-partia-7-krok2`, `git pull --rebase origin claude/jolly-thompson-paz6d8`, generatory, verify, push.
+- **Krok 3** (po końcu przebiegu kroku 2, na sygnał): e996bae + 339a85b (iCloud: pola NULL, XCTest) i commity pliku stanu z tej gałęzi — cherry-pick na roboczą, generatory, verify, head `[e2e-pelny]`, push.
+- testID `usun-wszystko-anuluj` przekazany 07 (przyjęte, ich 47b9bd5). Audyt 04: rodzaj przycisku `niszczacy`, alternatywy dla scen. 30. Licznik.tsx przy limicie (20 090 B) — następna zmiana z podziałem pliku (P-268).
+
+**Kolejka pushy — historia (P-263, P-264, P-265):**
 1. Po końcu przebiegu 121 i sygnale: `git checkout -B claude/jolly-thompson-paz6d8 cf5c83b`, `git pull --rebase origin claude/jolly-thompson-paz6d8` (próba 2026-10-27 06:00: bez konfliktów, generatory bez zmian, verify 2537/2537), generatory (CLAUDE.md partii: tabela-08, generuj-migracje, generuj-schemat-ckdb), `env -u NODE_PATH npm run verify`, head commit z `[e2e-pelny]`, autor Łukasz Karwowski, push.
 2. Po końcu tego przebiegu i kolejnym sygnale (po 7af7ef2 partii 6 — poprawka `eksperymenty-wzoru`, też w `jakosc-ios.yml`: możliwy konflikt z krokiem `swift test` iCloud, rozwiązać dopisaniem obu): cherry-pick e996bae, 339a85b i commitów pliku stanu z kopii na gałąź roboczą, generatory, verify, `[e2e-pelny]`, push. Przed pushem tury 2 sprawdzić `jakosc:kontrole` (podspec, ścieżka `Pola.swift`).
 
