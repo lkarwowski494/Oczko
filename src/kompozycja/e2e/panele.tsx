@@ -1,7 +1,7 @@
 // Panele buildu E2E (e2e/README.md; bez t(), jak „Test store” Treningu). Ładowane wyłącznie przez `src/platforma/tryb-e2e.ts` (`paneleE2e`)
 // w gałęzi `process.env.EXPO_PUBLIC_E2E === '1'` — w buildzie wydania moduł nie trafia do bundla (P-238; kontrola `slady-testowe.mjs`).
 // testID i napisy bez zmian: używają ich scenariusze 07. Moduł nie importuje `tryb-e2e.ts` (bez cyklu).
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { PLIK_BAZY } from '../../dane/baza/sciezki';
@@ -11,6 +11,7 @@ import { plikiE2e } from '../e2e-pliki';
 import { zdjecieTestowe } from '../e2e-zdjecie';
 import { pdfTestowy } from './skrzynka';
 import type { ZrodloDodania } from '../../przypadki-uzycia/wzor';
+import type { StanZegarka, Zegarek } from '../../domena/porty';
 import { ADRES_STRONY_TESTOWEJ, wordTestowy } from './pliki-wzoru';
 
 /** Oferty: „wygaś dostęp” sztucznego sklepu (app/oferty.tsx). */
@@ -122,4 +123,26 @@ export function p95(probki: readonly number[]): number | null {
 export function PanelPomiaru({ probkiMs }: { probkiMs: readonly number[] }): React.ReactElement | null {
   const p = p95(probkiMs);
   return p === null ? null : <Text testID="e2e-pomiar-plus">{`p95 ${Math.round(p)} ms, n = ${probkiMs.length}`}</Text>;
+}
+
+/**
+ * Udawany zegarek (EXPO_PUBLIC_WATCH_FAKE=1, e2e/README.md:37; transferUserInfo nie działa w symulatorze, ADR-0009): `wyslijStan` zapamiętuje
+ * ostatni stan dla panelu `e2e-zegarek-stan` (scen. 15, P-287). Bez zdarzeń z zegarka — te sprawdza urządzenie.
+ */
+let ostatniStanZegarka: StanZegarka | null = null;
+const sluchaczeZegarka = new Set<(s: StanZegarka) => void>();
+export const zegarekSztuczny: Zegarek = {
+  async wyslijStan(s) { ostatniStanZegarka = s; for (const f of sluchaczeZegarka) f(s); },
+  potwierdz: () => undefined,
+  odbieraj: () => () => undefined,
+};
+export function opisStanuZegarka(s: StanZegarka): string {
+  const przyp = s.przypomnienia.map((p) => `from ${p.od} every ${p.co} ×${p.razy}: ${p.tekst}`).join('; ');
+  return `Watch state: ${s.nazwa} · ${s.wartosc} done · row ${s.wartosc + 1}${przyp ? ` · reminders: ${przyp}` : ''}`;
+}
+/** Licznik (slot pod kreskami): ostatni stan wysłany do udawanego zegarka. */
+export function PanelZegarka(): React.ReactElement {
+  const [s, ustaw] = useState<StanZegarka | null>(ostatniStanZegarka);
+  useEffect(() => { sluchaczeZegarka.add(ustaw); return () => { sluchaczeZegarka.delete(ustaw); }; }, []);
+  return <Text testID="e2e-zegarek-stan">{s ? opisStanuZegarka(s) : 'Watch state: none'}</Text>;
 }

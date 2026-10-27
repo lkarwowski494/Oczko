@@ -113,6 +113,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/bledy-js.test.ts` | zielony (główny zestaw) | 3 | P-194 | `src/kompozycja/bledy-js` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-pomiar-plus.test.tsx` | zielony (główny zestaw) | 2 | NFR-WYD-001, P-255 | `src/kompozycja/e2e/panele` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-zdjecie.test.ts` | zielony (główny zestaw) | 1 | — | `src/kompozycja/e2e-zdjecie` | — |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-zegarek-stan.test.tsx` | zielony (główny zestaw) | 2 | BR-LIC-015/S2, P-287 | `src/domena/porty`<br>`src/kompozycja/e2e/panele` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/formularze-projektu.test.tsx` | zielony (główny zestaw) | 9 | BR-LIC-011/S1, P-126, RD-11, RD-19 | `src/ekrany/FormularzeProjektu`<br>`src/ekrany/MenuProjektu`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/formularze.test.tsx` | zielony (główny zestaw) | 5 | BR-LIC-007/S3, BR-LIC-010/S1, BR-LIC-010/S2, BR-LIC-017/S7, BR-PRJ-013/S3, P-191, RD-12, RD-13 | `src/ekrany/Formularze`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/historia-dni.test.tsx` | zielony (główny zestaw) | 4 | BR-DNI-001, BR-DNI-003, P-191 | `src/ekrany/HistoriaDni`<br>`src/ekrany/wspolne`<br>`src/kompozycja/historia`<br>`src/przypadki-uzycia/historia` | ER-55, Z07-22 |
@@ -190,4 +191,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/uklad-rysik.test.ts` | zielony (główny zestaw) | 5 | BR-WZR-004, BR-WZR-008, P-218, P-220, P-225, P-226 | `src/domena/rysik`<br>`src/domena/uklad` | — |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 186; zależnych od poprawek: 125.
+Razem plików testów: 187; zależnych od poprawek: 126.

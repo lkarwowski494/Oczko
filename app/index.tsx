@@ -13,7 +13,7 @@ import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
 import { SprawdzStopera, StoperLicznika } from '../src/kompozycja/StoperLicznika';
 import { powodAwaryjny, zapiszKamien } from '../src/kompozycja/start-aplikacji';
 import { listaWzorow } from '../src/przypadki-uzycia/wzor';
-import { paneleE2e } from '../src/platforma/tryb-e2e';
+import { paneleE2e, ZEGAREK_SZTUCZNY } from '../src/platforma/tryb-e2e';
 
 export default function EkranLicznika(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
@@ -95,6 +95,7 @@ export default function EkranLicznika(): React.ReactElement {
               naKorekta={(sesja) => router.push({ pathname: '/sesja-korekta', params: { sesja, projekt: projektId } })} />
           ) : null}
           {paneleE2e ? <paneleE2e.PanelPomiaru probkiMs={pomiar} /> : null /* slot pod kreskami: Licznik.tsx przy limicie 20 KB (U8) */}
+          {paneleE2e && ZEGAREK_SZTUCZNY ? <paneleE2e.PanelZegarka /> : null /* scen. 15: stan udawanego zegarka */}
         </>}
       />
     </Bezpieczny>
