@@ -1,7 +1,8 @@
 // Przeglądarka wzoru (design-spec „Wzór, rysik i iPad”, makiety fix7 `wzor.html`; P-220 W1a, W3, W4b, W5a, W6a, W9b; P-218 (1)–(3)).
 // Strona PDF z rysunkami i znacznikiem to widok modułu natywnego `oczko-wzor` (slot `widok`, składa kompozycja); ekran rysuje pasek nawigacji,
 // narzędzia, plakietkę strony i pasek licznika (te same testID co licznik). Jeden wzór widoczny naraz; obok wzoru tylko licznik (P-218 (3)).
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { RYSIK_PODPOWIEDZ_MS } from '../konfiguracja';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { Narzedzie } from '../domena/rysik';
 import type { Uklad } from '../domena/uklad';
@@ -34,7 +35,8 @@ export type PropsPrzegladarki = {
   naZaznaczRzad(kierunek: 1 | -1): void;
   naNotatka?(tekst: string): void;              // notatka przy rzędzie znacznika (BR-WZR-008/S2; bez znacznika — najpierw „Mark row”, P-124 Q6a)
   naObroc(): void;
-  naZmienNazwe(): void;                    // ••• → „Rename” (design-spec W1a)
+  naZmienNazwe(): void;
+  tylkoRysik?: boolean;                    // po pierwszym rysiku (P-218 Q2a): podpowiedź raz na otwarcie (P-284 (1) A)                    // ••• → „Rename” (design-spec W1a)
   naUsun(): void;
   potwierdz(tytul: string, opis: string, przycisk: string, f: () => void): void;
   naPlus(): Promise<WynikEkranu<unknown>>;
@@ -50,6 +52,13 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
   const [pytanie, ustawPytanie] = useState(false); // „Which way do rows go on this page?” (3a: bez wartości domyślnej)
   const [notatka, ustawNotatke] = useState<'brak' | 'pasek' | 'arkusz'>('brak');
   const [tekst, ustawTekst] = useState('');
+  const [podpowiedz, ustawPodpowiedz] = useState<'nie' | 'widac' | 'byla'>('nie'); // `wzor.rysik_podpowiedz` raz na otwarcie (P-284 (1) A)
+  useEffect(() => {
+    if (!p.tylkoRysik || podpowiedz !== 'nie') return;
+    ustawPodpowiedz('widac');
+    const z = setTimeout(() => ustawPodpowiedz('byla'), RYSIK_PODPOWIEDZ_MS);
+    return () => clearTimeout(z);
+  }, [p.tylkoRysik]); // eslint-disable-line react-hooks/exhaustive-deps -- tylko przejście na rysik
   const [notatkaPo, ustawNotatkaPo] = useState(false); // po ustawieniu znacznika arkusz notatki otwiera się sam (design-spec)
   const znacznikUstawiony = (kier: 1 | -1) => { p.naZaznaczRzad(kier); if (notatkaPo) { ustawNotatkaPo(false); ustawNotatke('arkusz'); } };
   const zaznacz = () => { if (s.kierunek === 1 || s.kierunek === -1) znacznikUstawiony(s.kierunek); else ustawPytanie(true); };
@@ -166,6 +175,7 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
             {t('wzor.strona_z', { n: s.strona.n, razem: s.strona.razem })}
           </Text>
         )}
+        {podpowiedz === 'widac' && <Text role="status" accessibilityLiveRegion="polite" style={[st.plakietka, st.podpowiedz]}>{t('wzor.rysik_podpowiedz')}</Text>}
       </View>
     </View>
   );
@@ -252,6 +262,7 @@ function style(k: Kolory) {
     informacja: { padding: odstep.m, marginHorizontal: odstep.l, borderRadius: promien.grupa, backgroundColor: k.papierGrupa },
     strona: { flex: 1, backgroundColor: k.papierGrupa },
     stronaIpad: { alignSelf: 'center', width: '100%', maxWidth: 640 }, // kolumna strony iPada maks. 640 pt (W4b)
+    podpowiedz: { top: odstep.m, bottom: undefined }, // makieta ipad-rysik: nad stroną, nie na plakietce strony
     plakietka: { ...typografia.podpis, color: k.grafit, alignSelf: 'center', position: 'absolute', bottom: odstep.m, paddingHorizontal: odstep.m, borderRadius: promien.grupa, backgroundColor: k.papier },
     pasekLicznika: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: k.linia, paddingHorizontal: odstep.l, paddingVertical: odstep.s, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: odstep.m, backgroundColor: k.papier },
     kolumna: { borderLeftWidth: StyleSheet.hairlineWidth, borderLeftColor: k.linia, padding: odstep.l, gap: odstep.m, backgroundColor: k.papier },

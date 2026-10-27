@@ -32,6 +32,7 @@ export const MIN_WATCHOS = '11.0'; // P-070, ADR-0006
 export const PROG_NIEUDANYCH_STARTOW = 2; // P-080 (interpretacja do weta), ADR-0019
 export const KOPIE_RATUNKOWE_DNI = 30; // P-080, ADR-0020
 export const WZOR_MAKS_MB = 200; // MB; [OCENA] roli 05 (Z07-17): największy plik wzoru (rozszerzenie i import); do korekty po pomiarze
+export const RYSIK_PODPOWIEDZ_MS = 4000; // ms; [OCENA 08], P-284 (1) A: jak długo widać podpowiedź rysika (raz na otwarcie wzoru)
 export const RYSUNEK_ZAPIS_MS = 1000; // ms; ADR-0012 (uzupełnienie, Z07-17): najdłuższe opóźnienie zapisu rysunku
 export const SKRZYNKA_PORZUCONE_H = 1; // h; [OCENA] roli 05 (fix-7): katalog zlecenia bez manifestu usuwany po tym czasie
 export const MIGAWKA_WERSJA = 1; // wersja koperty migawki projektów w App Group (P-220 N2)

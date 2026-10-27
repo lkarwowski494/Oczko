@@ -756,7 +756,8 @@
     "tytul_other": "{{count}} patterns to add",
     "dodaj_do": "Add to",
     "nie_dodano": "“{{plik}}” wasn’t added",
-    "uszkodzony": "It may be damaged. Download or save it again, then add it."
+    "uszkodzony": "It may be damaged. Download or save it again, then add it.",
+    "film_zastapi": "Has a video link. This one replaces it."
   },
   "icloud": {
     "przelacznik": "Sync with iCloud",

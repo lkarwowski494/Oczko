@@ -7,7 +7,7 @@ import { skrzynkaWKatalogu } from '../../src/platforma/skrzynka';
 import { przetworzSkrzynke } from '../../src/przypadki-uzycia/skrzynka';
 import { usunWzor } from '../../src/przypadki-uzycia/wzor';
 import { obrotyWzoru, ustawObrot } from '../../src/przypadki-uzycia/wzor-widok';
-import { filmProjektu, ustawFilm, usunFilm } from '../../src/przypadki-uzycia/film';
+import { filmProjektu, projektyZFilmem, ustawFilm, usunFilm } from '../../src/przypadki-uzycia/film';
 import { usunProjekt } from '../../src/przypadki-uzycia/projekt';
 import { plik, projekt, wzor } from './pomocnicze/dane-wejsciowe';
 import { T0, czasWTle, ile, jeden, katalogTymczasowy, przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
@@ -72,6 +72,13 @@ describe('film projektu (S4a)', () => {
     await usunFilm(s.z, { projektId: 'p1' });
     expect(await filmProjektu(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: null });
     expect(await filmProjektu(s.z, { projektId: 'brak' })).toEqual({ ok: false, powod: 'bledne_dane' });
+  });
+
+  test('P-283: projekty z filmem (arkusz skrzynki) — tylko z linkiem', async () => {
+    const s = await srodowisko();
+    expect(await projektyZFilmem(s.z)).toEqual({ ok: true, wartosc: [] });
+    await ustawFilm(s.z, { projektId: 'p1', adres: 'https://video.example/abc', nazwa: '' });
+    expect(await projektyZFilmem(s.z)).toEqual({ ok: true, wartosc: ['p1'] });
   });
 
   test('zlecenie „Video link” z rozszerzenia (rodzaj film) → film projektu, bez wzoru i bez konwersji; zlecenie usunięte', async () => {

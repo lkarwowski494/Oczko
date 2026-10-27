@@ -2,7 +2,8 @@
 // i scenariuszy 44–47, 52). Widok strony PDF to moduł natywny `oczko-wzor` — tu slot (`widok`), więc ekran jest testowalny bez urządzenia.
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { RYSIK_PODPOWIEDZ_MS } from '../../src/konfiguracja';
 import { ukladOkna } from '../../src/domena/uklad';
 import { PrzegladarkaWzoru, type StanPrzegladarki } from '../../src/ekrany/WzorPrzegladarka';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
@@ -178,4 +179,20 @@ test('VoiceOver Magic Tap = +1 na ekranie wzoru (design-spec W1a :668, jak liczn
   korzen.props.onMagicTap?.();
   await new Promise((r) => setTimeout(r, 0));
   expect(w.naPlus).toHaveBeenCalledTimes(1);
+});
+
+// P-284 (1) A (design-spec W5a :676): po pierwszym rysiku podpowiedź `wzor.rysik_podpowiedz` (role=status) raz na otwarcie wzoru, znika po RYSIK_PODPOWIEDZ_MS.
+test('podpowiedź rysika: pojawia się po pierwszym rysiku, znika po czasie i nie wraca w tym otwarciu', () => {
+  jest.useFakeTimers();
+  const w = wywolania();
+  const r = render(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...w} tylkoRysik={false} />);
+  expect(screen.queryByText('The pencil writes. Your finger scrolls.')).toBeNull();
+  r.rerender(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...w} tylkoRysik />);
+  expect(screen.getByRole('status')).toBeTruthy();
+  expect(screen.getByText('The pencil writes. Your finger scrolls.')).toBeTruthy();
+  act(() => { jest.advanceTimersByTime(RYSIK_PODPOWIEDZ_MS); });
+  expect(screen.queryByText('The pencil writes. Your finger scrolls.')).toBeNull();
+  r.rerender(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...w} tylkoRysik />);
+  expect(screen.queryByText('The pencil writes. Your finger scrolls.')).toBeNull();
+  jest.useRealTimers();
 });

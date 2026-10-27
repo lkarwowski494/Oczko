@@ -56,3 +56,17 @@ test('ekran nieaktywny (pod innym w stosie): ani arkusza, ani alertu — jeden a
   expect(alert).not.toHaveBeenCalled();
   alert.mockRestore();
 });
+
+// P-283 (a): pozycja „Video link” — przy projekcie, który ma już film, druga linia (tekst roboczy 08 `skrzynka.film_zastapi`, do audytu 04);
+// przy zwykłym pliku linii nie ma. Wybór i tak zastępuje link (jeden film na projekt, P-218 (4)).
+test('P-283: film do projektu z filmem → linia „zastąpi”; plik → bez linii', async () => {
+  const FILM: ZlecenieImportu = { ...ZL, id: 'f1', rodzaj: 'film', nazwa: 'video.example', sciezki: [], adres: 'https://video.example/a', typ: 'public.url' };
+  const projekty = async () => [{ id: 'p1', nazwa: 'Harbor Sweater', film: true }, { id: 'p2', nazwa: 'Scarf', film: false }];
+  const r = render(<SkrzynkaNaEkranie wz={zrodlo({ doWyboru: [FILM], czekaSiec: [], bledy: [] })} t={t} projekty={projekty} naPoWyborze={jest.fn()} />);
+  await waitFor(() => expect(screen.getAllByTestId('skrzynka-projekt')).toHaveLength(2));
+  expect(screen.getAllByText(t('skrzynka.film_zastapi'))).toHaveLength(1);
+  r.unmount();
+  render(<SkrzynkaNaEkranie wz={zrodlo({ doWyboru: [ZL], czekaSiec: [], bledy: [] })} t={t} projekty={projekty} naPoWyborze={jest.fn()} />);
+  await waitFor(() => expect(screen.getAllByTestId('skrzynka-projekt')).toHaveLength(2));
+  expect(screen.queryByText(t('skrzynka.film_zastapi'))).toBeNull();
+});

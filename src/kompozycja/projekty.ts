@@ -4,6 +4,7 @@
 import type { StanListyProjektow, WierszProjektu } from '../ekrany/ListaProjektow';
 import { widokProjektow, type ProjektNaEkranie, type WidokProjektow } from '../przypadki-uzycia/widok-projektow';
 import type { Zaleznosci } from '../przypadki-uzycia/zaleznosci';
+import { projektyZFilmem } from '../przypadki-uzycia/film';
 import { etykietaRobocza, type Jezyk } from './licznik';
 import { liniaDzis, ostatniaPraca } from './projekt';
 
@@ -27,9 +28,11 @@ export function stanListy(w: WidokProjektow, o: { zapytanie: string; j: Jezyk; t
 }
 
 /** Projekty w toku dla arkusza skrzynki (R2): kolejność i nazwy jak na liście projektów, bez filtra wyszukiwania; błąd odczytu = pusta lista („New project” zostaje). */
-export async function projektyDoSkrzynki(z: Zaleznosci, j: Jezyk): Promise<{ id: string; nazwa: string }[]> {
+export async function projektyDoSkrzynki(z: Zaleznosci, j: Jezyk): Promise<{ id: string; nazwa: string; film: boolean }[]> {
   const w = await widokProjektow(z);
   if (!w.ok) return [];
+  const f = await projektyZFilmem(z);
+  const zFilmem = new Set(f.ok ? f.wartosc : []); // P-283 (a): linia „zastąpi” przy „Video link”
   const ch = z.zegar.teraz();
-  return stanListy(w.wartosc, { zapytanie: '', j, terazMs: ch.ms, strefa: ch.strefa }).wToku.map((p) => ({ id: p.id, nazwa: p.nazwa }));
+  return stanListy(w.wartosc, { zapytanie: '', j, terazMs: ch.ms, strefa: ch.strefa }).wToku.map((p) => ({ id: p.id, nazwa: p.nazwa, film: zFilmem.has(p.id) }));
 }

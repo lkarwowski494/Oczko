@@ -20,7 +20,7 @@ Przebieg 123 (40468002239): build ✅, swift-test ✅, e2e iPhone 1 ✅, iPad �
 
 **Otwarte sprawy.**
 - W1–W3 (P-261): pakiet SwiftPM `modules/oczko-wzor/TestyOknaMaszyn` (Package.swift, `Zrodla/` = dowiązania do `ios/KonwersjaNaPdf.swift`, `ios/SprawdzeniePdf.swift`, `Pakiet/Sources/OczkoWzorLogika`; testy `Testy/EksperymentyTests.swift`). **Nigdy nie skompilowany** (kontener bez Swift) — po pushu 7af7ef2 przeczytać artefakt `eksperymenty-wzoru` (manifest, lista schematów, `error:`), poprawić i wypchnąć na sygnał. Wynik W1 decyduje o Wordzie (porażka = podgląd zastępczy 5a, decyzja koordynatora).
-- Lista „tylko urządzenie” U1–U10 do TestFlight: `docs/programista/partia-6-natywne.md` (koniec pliku); rysik = ryzyko szczątkowe P-226.
+- Lista „tylko urządzenie” U1–U11 do TestFlight: `docs/programista/partia-6-natywne.md` (koniec pliku); rysik = ryzyko szczątkowe P-226.
 - P-259 (orientacja w react-native-screens): ADR-0016/0026 i moduly.md z adnotacjami „do przeglądu 05”.
 - Przed raportem końcowym: `npm run jakosc:slady-wydania` kod 0 (ostatnio 0 na bd60073), raport E2 w `oczko-warsztat` (`08-programista/2026-10-26-partia6/E2-raport.md`), sztafeta po akceptacji.
 - Otwarte z przeglądu kodu: podwójna kopia pliku w rozszerzeniu Udostępnij (pomiar z plikiem 100–200 MB na urządzeniu, U5).
@@ -53,7 +53,7 @@ Dane i przypadki użycia K1–K5 są zrobione, z testami. Braki są w ekranach. 
 | 2 ✅ (kopia 92df7ea, P-276) | W7a/W8/S4a: link do filmu — wiersz „Video” w grupie wzorów, „Add video link”, arkusz; dane gotowe (`film.ts`) | `LinkFilmu` nieużyty; `wzor.dodaj_film` = 0 | `WzorGrupa.tsx`, `app/projekt/[id].tsx`, `Wzor.tsx` |
 | 3 | W7a: „Paste” w arkuszu linku jest zaślepką `async () => null` | `app/wzor.tsx:109` | adapter schowka (API sprawdzić w dokumentacji SDK 57; nowa zależność = STOP do 05) |
 | 4 ✅ (kopia) | W11: alert braku aparatu przy skanie (był BŁĄD: odmowa aparatu pokazywała tekst o stronie WWW — `alertSkanu`, test); wiersz „import w toku” na `/wzor` w czasie konwersji (podłączenie trasy bez testu trasy); film bez sieci — luka źródła sieci (05); wiersz „import w toku” (dziś tylko stan `siec`); film bez sieci | `app/projekt/[id].tsx:101`; `wzor.brak_aparatu_opis` = 0 | `app/projekt/[id].tsx`, `src/kompozycja/wzor-dodawanie.ts` |
-| 5 ⏸ pytanie | W5a: podpowiedź `wzor.rysik_podpowiedz` („raz”: na otwarcie czy na zawsze — trwałe wymaga klucza `ustawienie`, dane.md 05) | grep = 0 | `WzorPrzegladarka.tsx` |
+| 5 ✅ (kopia, P-284 (1) A) | W5a: podpowiedź `wzor.rysik_podpowiedz` raz na otwarcie wzoru, po pierwszym rysiku, znika po `RYSIK_PODPOWIEDZ_MS` (4000 ms [OCENA 08]) | grep = 0 | `WzorPrzegladarka.tsx` |
 | 6 ✅ częściowo (kopia) | W1a: Magic Tap = +1 w przeglądarce — zrobione (test). Ekran nie gaśnie: licznik „/” zostaje zamontowany pod `/wzor` w stosie, więc jego tag keep-awake działa [DO POTWIERDZENIA na urządzeniu, U-lista]. Zgłoszone: Magic Tap brak też na liczniku (design-spec:88, partia 7); „Add note” jest ikoną paska, spec :668 mówi o ••• | `onMagicTap` = 0 | `WzorPrzegladarka.tsx`, `app/wzor.tsx` |
 | 7 | W8: miniatura pierwszej strony w grupie wzorów | brak | wymaga funkcji natywnej (okno maszyn) |
 | 8 ✅ (kopia) | R2: arkusz skrzynki także na ekranie projektu (wspólny `SkrzynkaNaEkranie`, tylko ekran na wierzchu — bez podwójnych alertów); podgląd = rodzaj pliku pod nazwą (`opisZlecenia`, ta sama klasyfikacja co import), miniatura — pkt 7 (natywna) | tylko `app/projekty.tsx:25-58` | `app/projekt/[id].tsx` |
@@ -97,6 +97,7 @@ Kod 0, 187 zestawów, **2330/2330**.
 - **S4 (P2, 04/05):** link do filmu — `[DO USTALENIA 08 z 04]` w kontrakcie (bez nowej tabeli) — do decyzji przed ekranem grupy wzorów.
 
 ## Odstępstwa nazwane
+- **Film bez sieci bez źródła stanu sieci (P-283 (b), 2026-10-27):** aplikacja nie ma portu stanu sieci; alert `wzor.film_bez_sieci_tytul` działa tylko z sygnałem E2E `oczkoE2eSiec=brak`, poza nim ↗ zawsze otwiera link, a brak połączenia pokazuje przeglądarka systemowa. Bez nowej zależności (jak Trening — bez NetInfo). Tańsza kontrola: test komponentu z `siec="brak"`.
 - Krok „skrzynka importu” nie jest w `uruchomDane` (`start.ts`), tylko w kompozycji po nim: `dodajWzor` czeka na sieć poza transakcją i sam wchodzi do kolejki, więc w pozycji kolejki startu by się zakleszczył. Kolejność bez zmian: po `sprzatnijKosz`, przed krokiem partii 7.
 - Błąd importu ze skrzynki (uszkodzony, typ, strona pusta): zlecenie zostaje do potwierdzenia alertu `skrzynka.nie_dodano`, potem `odrzucZlecenie` (kontrakt: „zlecenie zostaje”; 04 R2: „pozycja znika” — oba spełnione: nic nie ginie po cichu). Strona bez sieci czeka bez błędu (`czekaSiec`).
 - Migawka: podmiana pliku = usunięcie + przeniesienie (expo-file-system nie ma atomowego `rename` z nadpisaniem); w krótkiej chwili bez pliku rozszerzenie pokazuje stan zastępczy — bez utraty danych.

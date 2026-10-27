@@ -11,11 +11,11 @@ import type { StanSkrzynki } from './wzor';
 
 export type ZrodloSkrzynki = { stan(): StanSkrzynki; naZmiane(f: () => void): () => void; wybierzProjekt(id: string | null): Promise<Wynik<number>>; nieTeraz(): void; potwierdzBlad(id: string): Promise<unknown> };
 
-export function SkrzynkaNaEkranie(p: { wz: ZrodloSkrzynki; t: Tlumacz; aktywny?: boolean; projekty(): Promise<{ id: string; nazwa: string }[]>; naPoWyborze(): void }): React.ReactElement | null {
+export function SkrzynkaNaEkranie(p: { wz: ZrodloSkrzynki; t: Tlumacz; aktywny?: boolean; projekty(): Promise<{ id: string; nazwa: string; film?: boolean }[]>; naPoWyborze(): void }): React.ReactElement | null {
   const { wz, t } = p;
   const aktywny = p.aktywny ?? true; // trasa pod inną w stosie (np. lista pod projektem): bez arkusza i alertu — jeden naraz
   const [stan, ustawStan] = useState(wz.stan());
-  const [projekty, ustawProjekty] = useState<{ id: string; nazwa: string }[] | null>(null);
+  const [projekty, ustawProjekty] = useState<{ id: string; nazwa: string; film?: boolean }[] | null>(null);
   useEffect(() => wz.naZmiane(() => ustawStan(wz.stan())), [wz]);
   const czeka = aktywny && stan.doWyboru.length > 0;
   useEffect(() => {
@@ -31,8 +31,9 @@ export function SkrzynkaNaEkranie(p: { wz: ZrodloSkrzynki; t: Tlumacz; aktywny?:
     Alert.alert(t('skrzynka.nie_dodano', { plik: blad.zlecenie.nazwa }), przyczyna, [{ text: t('wspolne.ok'), onPress: () => void wz.potwierdzBlad(blad.zlecenie.id) }]);
   }, [blad, t, wz]);
   if (!czeka || !projekty) return null;
+  const film = stan.doWyboru.some((x) => x.rodzaj === 'film'); // P-283 (a): link zastąpi istniejący film projektu
   return (
-    <ArkuszSkrzynki t={t} pozycje={stan.doWyboru.map((x) => ({ id: x.id, nazwa: x.nazwa, opis: opisZlecenia(x, t) }))} projekty={projekty}
+    <ArkuszSkrzynki t={t} pozycje={stan.doWyboru.map((x) => ({ id: x.id, nazwa: x.nazwa, opis: opisZlecenia(x, t) }))} projekty={projekty.map((x) => ({ id: x.id, nazwa: x.nazwa, opis: film && x.film ? t('skrzynka.film_zastapi') : undefined }))}
       naWybierz={(pid) => void wz.wybierzProjekt(pid).then(p.naPoWyborze)} naNieTeraz={() => wz.nieTeraz()} />
   );
 }

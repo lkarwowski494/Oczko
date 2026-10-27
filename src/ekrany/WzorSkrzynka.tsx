@@ -9,7 +9,7 @@ import type { Tlumacz } from './wspolne';
 export type PropsArkuszaSkrzynki = {
   t: Tlumacz;
   pozycje: { id: string; nazwa: string; opis?: string }[]; // opis: rodzaj pliku (podgląd R2)
-  projekty: { id: string; nazwa: string }[];     // projekty w toku, kolejność listy
+  projekty: { id: string; nazwa: string; opis?: string }[]; // projekty w toku, kolejność listy; opis: druga linia (P-283 (a))
   naWybierz(projektId: string | null): void;      // null = nowy projekt
   naNieTeraz(): void;
 };
@@ -29,8 +29,9 @@ export function ArkuszSkrzynki(p: PropsArkuszaSkrzynki): React.ReactElement {
         <Text style={st.naglowek} accessibilityRole="header">{t('skrzynka.dodaj_do')}</Text>
         <View style={st.grupa}>
           {p.projekty.map((x) => (
-            <Pressable key={x.id} accessibilityRole="button" accessibilityLabel={x.nazwa} onPress={() => p.naWybierz(x.id)} style={st.wiersz} testID="skrzynka-projekt">
+            <Pressable key={x.id} accessibilityRole="button" accessibilityLabel={x.opis ? `${x.nazwa}, ${x.opis}` : x.nazwa} onPress={() => p.naWybierz(x.id)} style={st.wiersz} testID="skrzynka-projekt">
               <Text style={st.tekst}>{x.nazwa}</Text>
+              {!!x.opis && <Text style={st.podpis}>{x.opis}</Text>}
             </Pressable>
           ))}
           <Pressable accessibilityRole="button" accessibilityLabel={t('udostepnij.nowy_projekt')} onPress={() => p.naWybierz(null)} style={st.wiersz}>
