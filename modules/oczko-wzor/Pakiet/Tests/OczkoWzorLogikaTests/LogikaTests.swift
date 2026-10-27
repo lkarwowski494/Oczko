@@ -171,3 +171,25 @@ final class ZlecenieTests: XCTestCase {
     XCTAssertEqual(bezpiecznaNazwa("zlecenie.json"), "plik-zlecenie.json") // nie zasłania manifestu
   }
 }
+
+/// P-276 (04 fix-8, makieta film.html): teksty listy projektów arkusza „Add to Oczko” zależnie od „Pattern / Video link” i flagi `film`.
+final class PodpisListyTests: XCTestCase {
+  private func projekt(wzory: Int, film: Bool) -> ProjektMigawki {
+    let j = #"{"format":"oczko-migawka","wersja":1,"utworzono":1,"projekty":[{"id":"p1","nazwa":"Harbor","nienazwany":false,"utworzonoMs":1,"ostatniaPracaMs":2,"wzory":\#(wzory),"film":\#(film)}]}"#
+    return odczytajMigawke(Data(j.utf8))!.first!
+  }
+  func testNaglowek() {
+    XCTAssertEqual(kluczNaglowkaListy(jakoFilm: false), "udostepnij.do_projektu")
+    XCTAssertEqual(kluczNaglowkaListy(jakoFilm: true), "udostepnij.do_projektu_film")
+  }
+  func testPodpisWzoru() {
+    XCTAssertEqual(kluczPodpisuListy(wybrany: nil, jakoFilm: false), "udostepnij.gotowe_nowy")
+    XCTAssertEqual(kluczPodpisuListy(wybrany: projekt(wzory: 0, film: true), jakoFilm: false), "udostepnij.gotowe")
+    XCTAssertEqual(kluczPodpisuListy(wybrany: projekt(wzory: 2, film: false), jakoFilm: false), "udostepnij.kolejny")
+  }
+  func testPodpisFilmu() { // jeden film na projekt (P-218 (4)): zastąpienie jawne; liczba wzorów nie ma znaczenia
+    XCTAssertEqual(kluczPodpisuListy(wybrany: projekt(wzory: 2, film: true), jakoFilm: true), "udostepnij.film_zastapi")
+    XCTAssertEqual(kluczPodpisuListy(wybrany: projekt(wzory: 2, film: false), jakoFilm: true), "udostepnij.gotowe")
+    XCTAssertEqual(kluczPodpisuListy(wybrany: nil, jakoFilm: true), "udostepnij.gotowe_nowy")
+  }
+}

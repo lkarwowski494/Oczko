@@ -123,3 +123,13 @@ public func zapiszZlecenie(grupa: URL, wejscie: WejscieZlecenia, projektId: Stri
   try fm.moveItem(at: tmp, to: katalog.appendingPathComponent("zlecenie.json"))
   return z
 }
+
+/// Nagłówek listy projektów arkusza „Add to Oczko” (04 fix-8, P-276): przy „Video link” `udostepnij.do_projektu_film`.
+public func kluczNaglowkaListy(jakoFilm: Bool) -> String { jakoFilm ? "udostepnij.do_projektu_film" : "udostepnij.do_projektu" }
+/// Zdanie pod listą (R1a; P-276): film zastępuje istniejący link jawnie (`udostepnij.film_zastapi`, jeden film na projekt, P-218 (4));
+/// wzór obok istniejących — `udostepnij.kolejny`; brak wyboru = nowy projekt.
+public func kluczPodpisuListy(wybrany: ProjektMigawki?, jakoFilm: Bool) -> String {
+  guard let p = wybrany else { return "udostepnij.gotowe_nowy" }
+  if jakoFilm { return p.film ? "udostepnij.film_zastapi" : "udostepnij.gotowe" }
+  return p.wzory > 0 ? "udostepnij.kolejny" : "udostepnij.gotowe"
+}

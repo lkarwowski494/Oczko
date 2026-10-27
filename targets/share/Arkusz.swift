@@ -1,6 +1,6 @@
 // Arkusz „Add to Oczko” (design-spec „Arkusz rozszerzenia (R1a)”, makieta docs/design/fix7-2026-10-26/udostepnij-icloud.html, stany udostepnij*):
 // nagłówek Cancel / tytuł / Save; podgląd pliku; lista projektów w toku z migawki (radio, domyślnie pierwszy = ostatnio otwarty) i „New project”;
-// zdanie pod listą (`udostepnij.gotowe*`, `udostepnij.kolejny`); link: Pattern / Video link (P-218 (4)). Bez migawki: `udostepnij.bez_migawki`
+// zdanie pod listą (`udostepnij.gotowe*`, `udostepnij.kolejny`, przy filmie `udostepnij.film_zastapi` — P-276); link: Pattern / Video link (P-218 (4)). Bez migawki: `udostepnij.bez_migawki`
 // bez listy (R1b jako stan zastępczy). Za duży i nieobsługiwany: linia ostrzeżenia i tylko „Close”. Teksty: Teksty.swift (generator, ADR-0017).
 import SwiftUI
 
@@ -89,7 +89,7 @@ struct ArkuszUdostepnij: View {
           ForEach(Array(projekty.enumerated()), id: \.element.id) { _, p in wiersz(p) }
           Button { model.wybrany = nil } label: { radio(Teksty.t("udostepnij.nowy_projekt", JEZYK), nil, zaznaczony: model.wybrany == nil) }
             .accessibilityIdentifier("udostepnij-nowy-projekt")
-        } header: { Text(Teksty.t("udostepnij.do_projektu", JEZYK)) } footer: { Text(podpis(projekty)) }
+        } header: { Text(Teksty.t(kluczNaglowkaListy(jakoFilm: model.jakoFilm), JEZYK)) } footer: { Text(podpis(projekty)) }
         .accessibilityElement(children: .contain)
       } else {
         Section { Text(Teksty.t("udostepnij.bez_migawki", JEZYK)).foregroundStyle(Color("olowek")) }
@@ -138,7 +138,7 @@ struct ArkuszUdostepnij: View {
     return Teksty.t("udostepnij.wiersz", JEZYK, ["ostatnia": ostatnia, "wzory": wzory])
   }
   private func podpis(_ projekty: [ProjektMigawki]) -> String {
-    guard let id = model.wybrany, let p = projekty.first(where: { $0.id == id }) else { return Teksty.t("udostepnij.gotowe_nowy", JEZYK) }
-    return Teksty.t(p.wzory > 0 ? "udostepnij.kolejny" : "udostepnij.gotowe", JEZYK, ["projekt": nazwa(p)])
+    let p = model.wybrany.flatMap { id in projekty.first { $0.id == id } }
+    return Teksty.t(kluczPodpisuListy(wybrany: p, jakoFilm: model.jakoFilm), JEZYK, p.map { ["projekt": nazwa($0)] } ?? [:])
   }
 }
