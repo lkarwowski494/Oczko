@@ -39,7 +39,7 @@ jobs:
     # Testy przed kodem (DS-02): oczekiwane czerwone z właściwego powodu; zadanie pada tylko, gdy test pada ZŁE (import, typ) albo jest zielony przed kodem.
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    continue-on-error: true # informacja do pierwszego zielonego przebiegu (zasada 8)
+    # Bramka od P-290 (JAK-09): zielone w przebiegach 40482218300 … 40521164526 (2026-10-27); wcześniej continue-on-error do pierwszego zielonego (zasada 8).
     steps:
       - uses: actions/checkout@v5
         with:
