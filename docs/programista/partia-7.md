@@ -65,3 +65,8 @@ Sprawdzenie: każde API użyte w `modules/oczko-icloud/ios/*.swift` zgodne z dek
 | `CKRecord.encodeSystemFields(with:)` | https://developer.apple.com/documentation/cloudkit/ckrecord/encodesystemfields(with:) | „You might use this method when you want to store only the system metadata because you store the actual record data elsewhere.” |
 | Expo: kod błędu (ryzyko 1) | `node_modules/expo-modules-core` 57.0.23, `ios/Core/Exceptions/Exception.swift:39–50` | `init(name:description:code:)` → `customCode`; zamiast podklasy używam tego inicjalizatora |
 | Expo: `sendEvent` (ryzyko 2) | `ios/Core/Modules/Module.swift:24` | `public func sendEvent(_ eventName: String, _ body: [String: Any?] = [:])` — `[String: Any]` przechodzi przez niejawne rzutowanie kolekcji [OTWARTE: potwierdzi kompilacja w oknie maszyn] |
+
+## Stan po oknie maszyn 2026-10-27
+- 2b7c1f0 (moduł `oczko-icloud`) na gałęzi roboczej: „Jakość · iOS” przebieg 115 — build Release zielony (Swift skompilowany za pierwszym razem), swift-test zielony.
+- P-255 (a) wariant 1 (measureInWindow), (b), (c) przyjęte; commity na gałęzi kopii, push na roboczą po partii 6 (sygnał koordynatora).
+- **Otwarte (plan):** XCTest modułu `oczko-icloud` — odwzorowanie `RekordJs` ↔ `CKRecord` (Pola.double, zasób `dane`, recordName z dwukropkiem w kluczu), na wektorach JSON wspólnych z `tests/domena/icloud`; testy przed kodem przy następnej zmianie kodu natywnego (cel testów do ustalenia z 07).
