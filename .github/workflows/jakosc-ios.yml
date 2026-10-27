@@ -101,7 +101,7 @@ jobs:
           echo "- schemat: $SCHEMAT" >> "$GITHUB_STEP_SUMMARY"
           xcodebuild test -scheme "$SCHEMAT" -destination "id=$DEV" -resultBundlePath "$RUNNER_TEMP/w123.xcresult" \
             2>&1 | tee -a "$LOG" || kod=$?
-          { grep -E '^W[123] |Test Case .*(passed|failed)|Executed [0-9]+ tests|error:' "$LOG" | head -40 | sed 's/^/- /'; echo "- kod xcodebuild: $kod"; } >> "$GITHUB_STEP_SUMMARY"
+          { grep -E '^W[123][ :]|Test Case .*(passed|failed)|Executed [0-9]+ tests|error:' "$LOG" | head -40 | sed 's/^/- /'; echo "- kod xcodebuild: $kod"; } >> "$GITHUB_STEP_SUMMARY"
           exit $kod
       - uses: actions/upload-artifact@v4
         if: always()
