@@ -8,6 +8,8 @@ Gałąź robocza = 94a7657 (45c09b2 + naprawa kompilacji `skanerDostepny`: `runO
 
 **Pomiar (artefakty e2e część 2):** czas `launchApp` z czystą instalacją [ms], 2b7c1f0 → 94a7657: 01: 32474/47306/27458 → 48148/25651/57104; 06: 16757 → 41589; 08: 12427 → 31325; 09 (bez czyszczenia): podobne. Suma czystych instalacji ok. +60 s; szum duży (jedna próba). Hipoteza: rejestracja appex (PlugInKit) przy reinstalacji — teza otwarta. Gdy 01 znów czerwony, opcje do decyzji: (A) build E2E bez celu share (scenariusze nie dotykają appex; koszt: brak dymu instalacji appex w E2E), (B) dłuższy limit startu w `start-czysty.yaml` (koszt: nie leczy zawieszenia SpringBoard).
 
+**Wynik P-257 (2026-10-27 03:35 UTC):** przebieg 40441354895 na 1b44f4b (zawiera partię 6): e2e część 2 iphone zielona — 01, 06, 08, 09 zielone. Czasy czystych instalacji: 01: 155222/67198/15695; 06: 20903; 08: 18026 — rozrzut na tej samej wersji większy niż różnica przed/po, więc hipoteza appex słaba; czerwień 94a7657 oceniam jako maszynę. Według P-257 partia 6 przyjęta; czekam na sygnał.
+
 **Okno maszyn — kolejność:** (1) rebase `partia6-lokalna` na roboczą, verify; (2) push (build iOS z nowym modułem i celem); (3) poprawki kompilacji Swift; (4) W1–W3 według `partia-6-natywne.md`; (5) E2E iPhone (21, 22, 26, 27, 45, 52) i iPad (44, 46, 47) informacyjnie; (6) `npm run jakosc:slady-wydania` kod 0 → raport E2.
 
 **Otwarte:** Swift celu share i `Pakiet` na D1a (`sciezki`) i D2a (`jezyk` w migawce) — w lokalnej gałęzi; liczba stron wzoru nie jest w schemacie (opis wiersza bez „· N pages”) — do 05/04; e2e-wzor-www i e2e-wzor-word (scenariusze 24, 25) bez paneli; notatka wzoru bez znacznika (design-spec) — przepływ jeszcze nie podpięty; wiersz zegarka w Stanie danych na iPadzie (plik partii 7).
