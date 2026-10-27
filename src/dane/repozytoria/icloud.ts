@@ -4,6 +4,7 @@
 import { TABELE_ICLOUD, tabelaIcloud, type TabelaIcloud } from '../../domena/icloud/kontrakt';
 import { nazwaRekordu, rekordZJson, rekordZWiersza, wartosciKlucza, wierszZRekordu, type Wiersz as WierszIcloud } from '../../domena/icloud/odwzorowanie';
 import type { PartiaIcloud, PortBazy, PotwierdzenieIcloud, RekordIcloud, ZmianaDoWyslania } from '../../domena/porty';
+import { STANY } from '../../domena/stany';
 import { zapiszBladW } from './bledy';
 import { zapiszDzienLimitu } from './liczniki';
 import { przeliczLicznik } from './przelicz';
@@ -76,15 +77,31 @@ async function brakRodzica(tx: PortBazy, tabela: string, w: WierszIcloud): Promi
   }
   return false;
 }
-async function doPoczekalni(tx: PortBazy, r: RekordIcloud, powod: 'brak_rodzica' | 'brak_encji', terazMs: number): Promise<void> {
+async function doPoczekalni(tx: PortBazy, r: RekordIcloud, powod: 'brak_rodzica' | 'brak_encji' | 'nowsza_wersja', terazMs: number): Promise<void> {
   await tx.run(
     `INSERT INTO poczekalnia (id, rodzaj_rekordu, dane, powod, zrodlo, przyszlo_ms) VALUES (?, ?, ?, ?, 'synchronizacja', ?)
      ON CONFLICT (id) DO UPDATE SET dane = excluded.dane, powod = excluded.powod, proby = proby + 1`,
     [nazwaRekordu(r.encja, r.klucz), r.encja === 'zdarzenie' ? 'zdarzenie' : 'encja', JSON.stringify(r), powod, terazMs]);
 }
 
+const RODZAJE_ZDARZEN: ReadonlySet<string> = new Set(STANY['zdarzenie.rodzaj']);
+/**
+ * Rekord nowszej wersji aplikacji (dane.md:125, M-15): zdarzenie o rodzaju spoza `stany.json` albo encja spoza kontraktu, która nie jest
+ * tabelą tego urządzenia (nowa tabela nowszego schematu) → poczekalnia `nowsza_wersja` zamiast odrzucenia; „Data and sync” pokazuje
+ * `icloud.niepelna_nowsza`. Encja o nazwie tabeli lokalnej (np. `poczekalnia`) to błąd danych, jak dotąd.
+ */
+async function zNowszejWersji(tx: PortBazy, r: RekordIcloud): Promise<boolean> {
+  if (!tabelaIcloud(r.encja)) {
+    if (!/^[a-z][a-z0-9_]*$/.test(r.encja)) return false;
+    return (await tx.all("SELECT 1 FROM sqlite_schema WHERE type = 'table' AND name = ?", [r.encja])).length === 0;
+  }
+  const rodzaj = r.encja === 'zdarzenie' ? r.pola.rodzaj : undefined;
+  return typeof rodzaj === 'string' && !RODZAJE_ZDARZEN.has(rodzaj);
+}
+
 /** Jeden rekord: sprawdzenie, rodzic, zapis według sposobu scalenia; błąd SQL tylko tego rekordu (SAVEPOINT) → `blad`, partia idzie dalej. */
 async function zastosujRekord(tx: PortBazy, r: RekordIcloud, terazMs: number, liczniki: Set<string>, pliki: ReadonlySet<string>): Promise<Wynik1> {
+  if (await zNowszejWersji(tx, r)) { await doPoczekalni(tx, r, 'nowsza_wersja', terazMs); return 'poczekalnia'; }
   const w = wierszZRekordu(r);
   if (!w.ok) { await zapiszBladW(tx, { czasMs: terazMs, kod: 'icloud_bledny_rekord', szczegoly: { encja: tabelaIcloud(r.encja) ? r.encja : '?' } }); return 'blad'; }
   const { tabela: t } = w.wartosc;

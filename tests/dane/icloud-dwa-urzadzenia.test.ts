@@ -225,6 +225,25 @@ describe('rekordy z sieci: błędne, kolizja, zasoby', () => {
     const kody = (await b.s.baza.all<{ kod: string }>('SELECT kod FROM blad ORDER BY id')).map((r) => r.kod);
     expect(kody).toEqual(expect.arrayContaining(['icloud_bledny_rekord', 'icloud_kolizja_id']));
   });
+  test('rekord nowszej wersji (dane.md:125, M-15): nieznany rodzaj zdarzenia i encja spoza kontraktu → poczekalnia `nowsza_wersja`, nie `blad`; reszta zapisana', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const l = await szybki(a.s.z);
+    await dodajRzad(a.s.z, { licznikId: l });
+    await a.st.wlacz();
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    await b.st.wlacz();
+    const p = serwer.wszystko();
+    const zd = p.rekordy.find((r) => r.encja === 'zdarzenie')!;
+    const nowsze: RekordIcloud[] = [
+      { ...zd, klucz: 'z-nowy', pola: { ...zd.pola, id: 'z-nowy', rodzaj: 'potrojny_plus', rodzice: JSON.stringify([zd.klucz]) } },
+      { encja: 'wykres', klucz: 'w1', pola: { id: 'w1', nazwa: 'Chart' }, plik: null },
+    ];
+    await b.u.dostarcz({ rekordy: [...p.rekordy, ...nowsze] });
+    expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 1, konflikt: 0 }]);
+    expect(await b.s.baza.all('SELECT id, powod FROM poczekalnia ORDER BY id')).toEqual([{ id: 'wykres:w1', powod: 'nowsza_wersja' }, { id: 'zdarzenie:z-nowy', powod: 'nowsza_wersja' }]);
+    expect(await n(b.s.baza, "SELECT count(*) AS n FROM blad WHERE kod = 'icloud_bledny_rekord'")).toBe(0);
+  });
   test('zasób pliku: zgodny SHA-256 trafia do magazynu; inny SHA-256 nie trafia, rekord czeka, wpis `blad`', async () => {
     const serwer = serwerIcloud();
     const b = await urzadzenie(serwer, 'ipad', 'b');
