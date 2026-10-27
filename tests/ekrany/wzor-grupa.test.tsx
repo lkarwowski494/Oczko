@@ -67,3 +67,12 @@ test('arkusz „Pattern name” (••• → Rename): wypełniony obecną nazw
   fireEvent.press(screen.getByRole('button', { name: 'Save' }));
   expect(naZapisz).toHaveBeenCalledWith('Edging');
 });
+
+test('W8 (plan 1.1 pkt 7): wiersz wzoru z miniaturą pierwszej strony (obraz dekoracyjny — VoiceOver czyta nazwę i opis); bez miniatury sam tekst', () => {
+  render(<GrupaWzorow wzory={[{ wzorId: 'w1', nazwa: 'Harbor chart', opis: 'PDF · 6 pages', miniatura: 'file:///tmp/m/a.png' }, { wzorId: 'w2', nazwa: 'Edging', opis: 'Word document' }]}
+    oczekujace={[]} skaner t={t} {...wywolania()} />);
+  const m = screen.getAllByTestId('wzor-miniatura', { includeHiddenElements: true });
+  expect(m).toHaveLength(1);
+  expect(m[0].props.source).toEqual({ uri: 'file:///tmp/m/a.png' });
+  expect(screen.getByRole('button', { name: 'Harbor chart, PDF · 6 pages' })).toBeTruthy();
+});

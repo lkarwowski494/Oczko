@@ -152,6 +152,11 @@ export type WzorNaLiscie = { wzorId: string; nazwa: string; zrodlo: string; maZn
 export function listaWzorow(z: ZaleznosciPlikow, w: { projektId: string }): Promise<Wynik<WzorNaLiscie[]>> {
   return operacjaZapisu(z, 'listaWzorow', async (tx) => ({ ok: true, wartosc: await wzoryProjektu(tx, w.projektId) }));
 }
+/** Pliki PDF wzorów projektu poza koszem — do miniatur (W8, plan 1.1 pkt 7); Word w podglądzie zastępczym (bez PDF) pominięty. */
+export async function plikiPdfWzorow(z: ZaleznosciPlikow, w: { projektId: string }): Promise<Wynik<{ wzorId: string; sha256: string }[]>> {
+  const r = await wiersze(z.baza.all('SELECT id, pdf_sha256 FROM wzor WHERE projekt_id = ? AND usunieto_ms IS NULL AND pdf_sha256 IS NOT NULL ORDER BY id', [w.projektId]), 'plikiPdfWzorow');
+  return { ok: true, wartosc: r.map((x) => ({ wzorId: tekst(x, 'id'), sha256: tekst(x, 'pdf_sha256') })) };
+}
 async function wzoryProjektu(tx: PortBazy, projektId: string): Promise<WzorNaLiscie[]> {
   const r = await wiersze(tx.all(
     "SELECT id, nazwa, zrodlo, strony, json_extract(znacznik, '$.licznik_id') IS NOT NULL AS ma FROM wzor WHERE projekt_id = ? AND usunieto_ms IS NULL ORDER BY nazwa COLLATE NOCASE, id",

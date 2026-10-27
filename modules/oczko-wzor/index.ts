@@ -10,6 +10,8 @@ export interface OczkoWzorNatywny {
   sprawdzPdf(sciezka: string): Promise<string>;     // PDFKit: {ok, strony} | uszkodzony (w tym zaszyfrowany) | pusty
   skanerDostepny(): boolean;                         // VNDocumentCameraViewController.isSupported
   skanuj(): Promise<string>;                         // {ok, sciezki: JPEG stron} | anulowano | odmowa (aparat)
+  wklej(): Promise<string | null>;                   // P-285 (1) B: UIPasteboard (adres albo tekst); pusty schowek = null
+  miniatura(pdf: string, cel: string, szerokoscPt: number): Promise<string>; // plan 1.1 pkt 7: PNG pierwszej strony → {ok} | uszkodzony | zapis
 }
 
 export type ZnacznikNatywny = { strona: number; y: number; wysokosc: number; pozaStrona: boolean; przedSchematem: boolean; kierunek: 1 | -1; etykieta: string };

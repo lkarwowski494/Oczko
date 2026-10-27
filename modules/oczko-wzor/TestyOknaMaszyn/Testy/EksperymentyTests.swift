@@ -116,4 +116,21 @@ final class EksperymentyTests: XCTestCase {
     XCTAssertEqual(PDFDocument(url: u)?.pageCount, 1) // plik zapisany po przycięciu
     print("W1 pusta strona: przycięcie końcowych pustych stron sprawdzone")
   }
+
+  /// Plan 1.1 pkt 7: miniatura pierwszej strony — PNG o szerokości 96 pt × 2, proporcje strony; uszkodzony plik → .uszkodzony.
+  func testMiniaturaPierwszejStrony() throws {
+    let pdf = FileManager.default.temporaryDirectory.appendingPathComponent("mini-\(UUID().uuidString).pdf")
+    try UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 612, height: 792)).writePDF(to: pdf) { ctx in
+      ctx.beginPage(); ("Row 1" as NSString).draw(at: CGPoint(x: 72, y: 72), withAttributes: [.font: UIFont.systemFont(ofSize: 24)])
+    }
+    let cel = FileManager.default.temporaryDirectory.appendingPathComponent("miniatury/\(UUID().uuidString).png")
+    if case let .failure(p) = Miniatura.zapisz(pdf: pdf, cel: cel, szerokoscPt: 96) { XCTFail("miniatura: \(p)") }
+    let obraz = try XCTUnwrap(UIImage(contentsOfFile: cel.path))
+    XCTAssertEqual(obraz.size.width * obraz.scale, 192, accuracy: 2)
+    XCTAssertEqual(obraz.size.height / obraz.size.width, 792.0 / 612.0, accuracy: 0.02)
+    let zly = FileManager.default.temporaryDirectory.appendingPathComponent("zly.pdf")
+    try Data("nie pdf".utf8).write(to: zly)
+    guard case .failure(.uszkodzony) = Miniatura.zapisz(pdf: zly, cel: cel, szerokoscPt: 96) else { return XCTFail("zły plik nie dał .uszkodzony") }
+    print("Miniatura: \(Int(obraz.size.width * obraz.scale)) × \(Int(obraz.size.height * obraz.scale)) px")
+  }
 }

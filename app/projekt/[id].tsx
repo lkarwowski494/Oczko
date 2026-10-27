@@ -12,6 +12,7 @@ import { usunPlik } from '../../src/dane/pliki/system';
 import { GrupaWzorow } from '../../src/ekrany/WzorGrupa';
 import { ArkuszFilmu, DodajFilm, WierszFilmu, type FilmProjektu } from '../../src/ekrany/WzorFilm';
 import { filmProjektu } from '../../src/przypadki-uzycia/film';
+import { miniaturyWzorow } from '../../src/kompozycja/miniatury';
 import { listaWzorow, type WzorNaLiscie } from '../../src/przypadki-uzycia/wzor';
 import { paneleE2e, siecWylaczona } from '../../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../../src/platforma/zdjecia';
@@ -43,6 +44,7 @@ export default function EkranProjektu(): React.ReactElement {
   const [miniatury, ustawMiniatury] = useState<Miniatura[]>([]); // grupa „Photos” (P-191 P9a)
   const [wzory, ustawWzory] = useState<WzorNaLiscie[]>([]); // grupa „Pattern(s)” (partia 6, W8)
   const [film, ustawFilm] = useState<FilmProjektu | null>(null); // wiersz „Video” (W8, P-276)
+  const [obrazyWzorow, ustawObrazyWzorow] = useState<Record<string, string>>({}); // miniatury pierwszej strony (W8, plan 1.1 pkt 7)
   const [arkuszFilmu, ustawArkuszFilmu] = useState(false); // „Add video link” / „Change link”
   const z = kontener.z, j = kontener.j, t = j.t;
   const wczytaj = useCallback(async () => {
@@ -55,9 +57,10 @@ export default function EkranProjektu(): React.ReactElement {
     if (f.ok) ustawMiniatury(f.wartosc.map((x) => ({ id: x.id, uri: `file://${z.magazyn.sciezka(x.sha256)}` })));
     const lw = await listaWzorow(z, { projektId: id });
     if (lw.ok) ustawWzory(lw.wartosc);
+    void miniaturyWzorow(z, (pdf, cel) => kontener.wzor.platforma.miniatura(pdf, cel), { projektId: id }).then(ustawObrazyWzorow); // bez czekania: wiersze od razu, obraz po wygenerowaniu
     const fp = await filmProjektu(z, { projektId: id });
     if (fp.ok) ustawFilm(fp.wartosc);
-  }, [z, id, router]);
+  }, [z, id, router, kontener]);
   useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
   if (!w) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   if (arkuszFilmu) { // P-276: „Change link” = arkusz wypełniony, Save zastępuje (jeden film na projekt, P-218 (4))
@@ -114,7 +117,7 @@ export default function EkranProjektu(): React.ReactElement {
     return x.strony ? t('wzor.wiersz_opis', { rodzaj, strony: t('wzor.strony', { count: x.strony }) }) : rodzaj;
   };
   const grupaWzorow = (
-    <GrupaWzorow t={t} wzory={wzory.map((x) => ({ wzorId: x.wzorId, nazwa: x.nazwa, opis: opisWzoru(x) }))}
+    <GrupaWzorow t={t} wzory={wzory.map((x) => ({ wzorId: x.wzorId, nazwa: x.nazwa, opis: opisWzoru(x), miniatura: obrazyWzorow[x.wzorId] }))}
       oczekujace={kontener.wzor.k.stan().czekaSiec.filter((x) => x.projektId === w.id).map((x) => ({ id: x.id, nazwa: x.nazwa, stan: 'siec' as const }))}
       skaner={kontener.wzor.platforma.skanerDostepny()} naOtworz={(wid) => void doWzoru({ id: wid })} naDodaj={(zr) => void doWzoru({ dodaj: zr })}
       naUsunOczekujacy={(zid) => void kontener.wzor.k.potwierdzBlad(zid).then(wczytaj)}

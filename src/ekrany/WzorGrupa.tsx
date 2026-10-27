@@ -1,7 +1,7 @@
 // Grupa wzorów na ekranie projektu i dodanie wzoru (design-spec „Gdzie jest wzór” W8, „Dodanie wzoru” W7a, „Stany importu” W11; P-220 W9b).
 // Każde dodanie tworzy nowy wzór — stron do istniejącego się nie dokłada (P-218 (1), Q6a). Film to odnośnik poza wzorem (P-218 (4)) — slot `film`.
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { adresStrony } from '../domena/adres';
 import { Arkusz, Komunikat, Pole, Przycisk, Tresc } from './Arkusz';
 import { cel as rozmiary, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
@@ -9,7 +9,7 @@ import type { Tlumacz } from './wspolne';
 
 export type ZrodloDodaniaEkranu = 'plik' | 'skan' | 'zdjecia' | 'link';
 export type PropsGrupyWzorow = {
-  wzory: { wzorId: string; nazwa: string; opis: string }[];        // opis: `wzor.wiersz_opis`
+  wzory: { wzorId: string; nazwa: string; opis: string; miniatura?: string }[]; // opis: `wzor.wiersz_opis`; miniatura: uri PNG pierwszej strony (W8)
   oczekujace: { id: string; nazwa: string; stan: 'import' | 'siec' }[];
   skaner: boolean;                                                  // VNDocumentCameraViewController.isSupported
   t: Tlumacz;
@@ -34,9 +34,12 @@ export function GrupaWzorow(p: PropsGrupyWzorow): React.ReactElement {
       <Text style={st.naglowek} accessibilityRole="header">{t(p.wzory.length >= 2 ? 'projekt.wzory' : 'projekt.wzor')}</Text>
       <View style={st.grupa}>
         {p.wzory.map((w) => (
-          <Pressable key={w.wzorId} accessibilityRole="button" accessibilityLabel={`${w.nazwa}, ${w.opis}`} onPress={() => p.naOtworz(w.wzorId)} style={st.wiersz} testID="projekt-wzor">
-            <Text style={st.tekst}>{w.nazwa}</Text>
-            <Text style={st.podpis}>{w.opis}</Text>
+          <Pressable key={w.wzorId} accessibilityRole="button" accessibilityLabel={`${w.nazwa}, ${w.opis}`} onPress={() => p.naOtworz(w.wzorId)} style={[st.wiersz, st.wierszPoziomy]} testID="projekt-wzor">
+            {w.miniatura && <Image source={{ uri: w.miniatura }} style={st.miniatura} resizeMode="contain" accessibilityElementsHidden importantForAccessibility="no" testID="wzor-miniatura" />}
+            <View style={st.rosnie}>
+              <Text style={st.tekst}>{w.nazwa}</Text>
+              <Text style={st.podpis}>{w.opis}</Text>
+            </View>
           </Pressable>
         ))}
         {p.oczekujace.map((o) => (
@@ -106,6 +109,7 @@ function style(k: Kolory) {
     wiersz: { minHeight: rozmiary.minimum, justifyContent: 'center', paddingHorizontal: odstep.l, paddingVertical: odstep.s, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: k.linia },
     wierszPoziomy: { flexDirection: 'row', alignItems: 'center', gap: odstep.s },
     rosnie: { flex: 1 },
+    miniatura: { width: rozmiary.minimum, height: rozmiary.minimum * 1.3, backgroundColor: k.papier, borderWidth: StyleSheet.hairlineWidth, borderColor: k.linia }, // strona = papier, bez promienia; rozmiar z celu dotyku [do audytu 04]
     ikona: { minWidth: rozmiary.minimum, minHeight: rozmiary.minimum, alignItems: 'center', justifyContent: 'center' },
     tekst: { ...typografia.tresc, color: k.grafit },
     akcja: { fontWeight: '600' },

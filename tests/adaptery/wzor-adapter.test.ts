@@ -9,6 +9,7 @@ import { platformaWzoru } from '../../src/platforma/wzor';
 const atrapa = (o: Partial<Record<keyof OczkoWzorNatywny, unknown>>): OczkoWzorNatywny => ({
   naPdf: jest.fn(async () => String(o.naPdf)), sprawdzPdf: jest.fn(async () => String(o.sprawdzPdf)),
   skanerDostepny: () => Boolean(o.skanerDostepny), skanuj: jest.fn(async () => String(o.skanuj)),
+  wklej: jest.fn(async () => (o.wklej === undefined ? null : (o.wklej as string | null))), miniatura: jest.fn(async () => String(o.miniatura)),
 });
 
 test('naPdf: źródło jako JSON do Swift, wynik ok → ścieżka i strony; powód z kontraktu przechodzi', async () => {
@@ -40,4 +41,19 @@ test('bez modułu natywnego: konwersja i skaner → zapis, skaner niedostępny; 
   writeFileSync(join(k, 'zly.pdf'), '%PDF-1.7\n\u0000ÿ');
   expect(await p.sprawdzPdf(join(k, 'dobry.pdf'))).toEqual({ ok: true, wartosc: { strony: 1 } });
   expect(await p.sprawdzPdf(join(k, 'zly.pdf'))).toEqual({ ok: false, powod: 'uszkodzony' });
+});
+
+// P-285 (1) B: „Paste” w arkuszu linku — schowek przez moduł oczko-wzor (UIPasteboard), bez nowej zależności; brak modułu albo pusty schowek → null.
+test('wklej: tekst ze schowka; pusty schowek albo build bez modułu → null', async () => {
+  expect(await platformaWzoru(atrapa({ wklej: 'https://example.org/wzor' })).wklej()).toBe('https://example.org/wzor');
+  expect(await platformaWzoru(atrapa({ wklej: null })).wklej()).toBeNull();
+  expect(await platformaWzoru(null).wklej()).toBeNull();
+});
+// Plan 1.1 pkt 7 (W8): miniatura pierwszej strony — PNG z PDFKit do pliku celu; błąd → powód; build bez modułu → zapis.
+test('miniatura: PDF i cel do Swift, wynik ok albo powód; bez modułu → zapis', async () => {
+  const n = atrapa({ miniatura: JSON.stringify({ ok: true }) });
+  expect(await platformaWzoru(n).miniatura('/m/a.pdf', '/t/a.png')).toEqual({ ok: true, wartosc: undefined });
+  expect(n.miniatura).toHaveBeenCalledWith('/m/a.pdf', '/t/a.png', 96);
+  expect(await platformaWzoru(atrapa({ miniatura: JSON.stringify({ ok: false, powod: 'uszkodzony' }) })).miniatura('/a', '/b')).toEqual({ ok: false, powod: 'uszkodzony' });
+  expect(await platformaWzoru(null).miniatura('/a', '/b')).toEqual({ ok: false, powod: 'zapis' });
 });

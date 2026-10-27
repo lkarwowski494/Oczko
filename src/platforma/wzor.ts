@@ -6,6 +6,7 @@ import type { SkanerStron, ZrodloWzoru } from '../domena/porty';
 import { otworzDoCzytania } from '../dane/pliki/system';
 import { natywny as modul, type OczkoWzorNatywny } from '../../modules/oczko-wzor';
 import type { KonwersjaPlatformy } from '../przypadki-uzycia/wzor';
+import { MINIATURA_PT } from '../konfiguracja';
 
 const POWODY: readonly Powod[] = ['zablokowany', 'limit', 'zapis', 'bledne_dane', 'niedozwolone_przejscie', 'brak_miejsca', 'wersja_nowsza', 'uszkodzony', 'za_duze', 'konflikt', 'brak_sieci', 'odmowa', 'pusty', 'anulowano'];
 
@@ -32,7 +33,7 @@ function pdfWygladaNaCaly(sciezka: string): boolean {
   }
 }
 
-export type PlatformaWzoru = KonwersjaPlatformy & SkanerStron & { skanerDostepny(): boolean };
+export type PlatformaWzoru = KonwersjaPlatformy & SkanerStron & { skanerDostepny(): boolean; wklej(): Promise<string | null>; miniatura(pdf: string, cel: string): Promise<Wynik<void>> };
 
 export function platformaWzoru(n: OczkoWzorNatywny | null = modul()): PlatformaWzoru {
   return {
@@ -48,6 +49,11 @@ export function platformaWzoru(n: OczkoWzorNatywny | null = modul()): PlatformaW
       return wynik(await n.sprawdzPdf(sciezka), (r) => { const s = liczba(r.strony); return s === null ? null : { strony: s }; });
     },
     skanerDostepny: () => (n ? n.skanerDostepny() : false),
+    wklej: async () => (n ? await n.wklej() : null), // P-285 (1) B: schowek przez moduł, bez nowej zależności
+    async miniatura(pdf, cel) { // plan 1.1 pkt 7: PNG pierwszej strony (szerokość MINIATURA_PT, skala ekranu w Swift)
+      if (!n) return { ok: false, powod: 'zapis' };
+      return wynik(await n.miniatura(pdf, cel, MINIATURA_PT), () => undefined);
+    },
     async skanuj() {
       if (!n) return { ok: false, powod: 'zapis' };
       return wynik(await n.skanuj(), (r) => (Array.isArray(r.sciezki) && r.sciezki.every((x) => typeof x === 'string') ? { sciezki: r.sciezki as string[] } : null));

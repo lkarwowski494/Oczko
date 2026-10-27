@@ -41,3 +41,22 @@ extension SprawdzeniePdf {
     PDFDocument(url: url)?.pageCount ?? 0
   }
 }
+
+/// Miniatura pierwszej strony do wiersza wzoru (design-spec W8; plan 1.1 pkt 7): PNG o szerokości `szerokoscPt` × skala, proporcje strony
+/// (z obrotem zapisanym w PDF; obrót użytkownika `wzor.obroty` nie — nazwane w partia-6.md). Plik pochodny (pamięć podręczna), nie dane wzoru.
+enum Miniatura {
+  static func zapisz(pdf: URL, cel: URL, szerokoscPt: CGFloat, skala: CGFloat = 2) -> Result<Void, PowodWzoru> {
+    guard let d = PDFDocument(url: pdf), !d.isLocked, let s = d.page(at: 0) else { return .failure(.uszkodzony) }
+    let r = s.bounds(for: .mediaBox)
+    let obrocona = s.rotation % 180 != 0
+    let (w, h) = obrocona ? (r.height, r.width) : (r.width, r.height)
+    guard w > 0, h > 0 else { return .failure(.uszkodzony) }
+    let szer = szerokoscPt * skala
+    guard let png = s.thumbnail(of: CGSize(width: szer, height: szer * h / w), for: .mediaBox).pngData() else { return .failure(.zapis) }
+    do {
+      try FileManager.default.createDirectory(at: cel.deletingLastPathComponent(), withIntermediateDirectories: true)
+      try png.write(to: cel, options: .atomic)
+      return .success(())
+    } catch { return .failure(.zapis) }
+  }
+}

@@ -3,6 +3,7 @@
 // Pakiet/Sources/OczkoWzorLogika) — adapter TS: src/platforma/wzor.ts.
 import ExpoModulesCore
 import Foundation
+import UIKit
 import VisionKit
 
 struct RysunekStrony: Record {
@@ -47,6 +48,15 @@ public class OczkoWzorModule: Module {
     }
     Function("skanerDostepny") { () -> Bool in VNDocumentCameraViewController.isSupported } // runOnQueue jest tylko dla AsyncFunction; odczyt właściwości urządzenia (CI 2026-10-27)
     AsyncFunction("skanuj") { () async -> String in await Skaner.skanuj() }
+    // P-285 (1) B: „Paste” w arkuszu linku — adres albo tekst ze schowka (iOS pokazuje systemową zgodę na wklejenie); pusty = nil.
+    AsyncFunction("wklej") { () -> String? in UIPasteboard.general.url?.absoluteString ?? UIPasteboard.general.string }.runOnQueue(.main)
+    // Plan 1.1 pkt 7: miniatura pierwszej strony (PNG) do pamięci podręcznej JS.
+    AsyncFunction("miniatura") { (pdf: String, cel: String, szerokoscPt: Double) -> String in
+      switch Miniatura.zapisz(pdf: URL(fileURLWithPath: pdf), cel: URL(fileURLWithPath: cel), szerokoscPt: CGFloat(szerokoscPt)) {
+      case .success: return wynikOk([:])
+      case let .failure(p): return wynikBlad(p)
+      }
+    }
 
     View(WidokWzoru.self) {
       Events("onRysunek", "onStukniecie", "onStrona", "onPierwszyRysik", "onZakreslenia")

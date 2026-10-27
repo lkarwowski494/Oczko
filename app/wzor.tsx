@@ -114,7 +114,7 @@ export default function EkranWzoru(): React.ReactElement {
     wzorId: widok.wzorId, plikPdf: widok.plikPdf, rysunki: widok.rysunki,
     obroty: Object.entries(widok.obroty).map(([k, v]) => ({ strona: Number(k), kat: v })),
   } : null), [widok?.wzorId, widok?.plikPdf, obrotyKlucz]); // eslint-disable-line react-hooks/exhaustive-deps -- rysunki tylko przy zmianie wzoru
-  if (link) return <Bezpieczny><ArkuszLinku t={t} naAnuluj={() => ustawLink(false)} naWklej={async () => null} naZapisz={(adres) => { ustawLink(false); void dodaj({ rodzaj: 'adres', adres }); }} /></Bezpieczny>;
+  if (link) return <Bezpieczny><ArkuszLinku t={t} naAnuluj={() => ustawLink(false)} naWklej={() => kontener.wzor.platforma.wklej()} naZapisz={(adres) => { ustawLink(false); void dodaj({ rodzaj: 'adres', adres }); }} /></Bezpieczny>;
   if (!lw || !wzory) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
   if (arkuszNazwy && widok) return (
     <Bezpieczny><ArkuszNazwyWzoru t={t} nazwa={widok.nazwa} naAnuluj={() => ustawArkuszNazwy(false)}
