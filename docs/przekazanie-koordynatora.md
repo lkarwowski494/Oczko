@@ -2,7 +2,30 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 08:50 UTC — **konto 2 przejęło (P-269)**; sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-290 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
+**Ostatnia aktualizacja:** 2026-10-27 ok. 16:00 UTC — **WSTRZYMANE przez właściciela (sekcja niżej)**; wcześniej 08:50 UTC konto 2 przejęło (P-269); sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-290 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
+
+## WSTRZYMANIE (właściciel, 2026-10-27 ok. 16:00 UTC) — stan do wznowienia
+Praca wstrzymana na polecenie właściciela. Zaplanowane zadania koordynatora Oczka: brak (nocne sprawdzenie skasowane). Sesje ról zapisały stan i czekają bez zadań.
+
+**Gałąź robocza** `claude/jolly-thompson-paz6d8` — ostatni kod: 2c6d69e (krok 3: iCloud pola NULL + XCTest, hook P-260, Magic Tap, P0 wyścig pierwszego +1, panel zegarka, pasek AX5). Ostatnia decyzja: P-290.
+
+**CI:** przebieg 128 (run 40503412220, 2c6d69e, `[e2e-pelny]`) czekał w kolejce maszyn macOS od 12:23 — nie anulowany; ruszy sam przy wolnych maszynach. Jego wynik to pierwszy krok po wznowieniu: build i `swift-test` iCloud („wykonano N z N”), bramka 01 (P0, P-287/P-288), 11, 31, 15, 30.
+
+**Czeka na push (po końcu 128, kolejno, każdy po poprzednim):**
+| # | Kto | Gałąź kopii (HEAD) | Zawartość | Znacznik |
+|---|---|---|---|---|
+| 1 | 08 partia 6 | `claude/kopia-partia-6` (12aabe2) | P-271 strażnik startu (tło ≠ awaria), W1-A (Word tabela/obraz), P-276 film (zamiana jawna, flaga `film`), plan 1.1 pkt 1–8 („Rename”, Magic Tap we wzorze, W11 + błąd komunikatu aparatu, arkusz skrzynki na projekcie, „Paste” przez `oczko-wzor`, miniatura PDF), P-283–P-285, U9–U12; dużo nowego, nieskompilowanego Swift | bez |
+| 2 | 07 | `claude/kopia-07` (b71f1e0) | scen. 53 (Word), testID P-283, F07-34 (35), F07-35 (JAK-09: `akceptacja` jako bramka) | `[e2e-pelny]`, jeśli 3 nie idzie od razu |
+| 3 | 08 partia 7 | `claude/kopia-partia-7-noc` (9d94084) | iCloud TS: poczekalnia `nowsza_wersja`, „Update Oczko…”, „Syncing…” | `[e2e-pelny]` |
+Każdy: `git pull --rebase origin claude/jolly-thompson-paz6d8`, generatory, `env -u NODE_PATH npm run verify` (hook P-260 i tak uruchamia), push na sygnał koordynatora.
+
+**Sesje (konto 2):** koordynator session_01T66VBzy9qEVyo8a5aMd7r1; 08 p6 session_01T66VByADnL2T64RBV2HPqF; 08 p7 session_01T66VBwDdcBHrNrCt25ZNWW; 07 session_01T66VBvUS4tz9Ei2heewJzY. Zarchiwizowane: 04, 05, 09 (praca zakończona). 10 — nieuruchomiona.
+
+**Otwarte (bez okna maszyn):** pusta strona 2 przy konwersji Word (decyzja po zrzucie scen. 53, P-282 (a)); audyt 04 (lista zbiorcza w raporcie E2 partii 6 `oczko-warsztat` a9eefeb i P-275–P-284); 06 — D3/D4 słownika (P-281); plan TestFlight `docs/jakosc/testflight-na-urzadzeniu.md` (P-290: build TF z `ICLOUD_W_1_0 = true`).
+
+**Właściciel (niepilne):** usunąć gałąź `claude/kopia-09` (P-281); przed TestFlight: App Group i kontener iCloud w Apple Developer (P-233), produkty i Paid Apps w App Store Connect (blok E testów).
+
+**Zasada komunikacji:** właścicielowi nic nie pisać poza odpowiedzią na pytanie albo potrzebą (koszty, konta, scalenie, Apple).
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
