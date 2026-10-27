@@ -10,8 +10,10 @@ import { zaleznosciObrazu } from '../../src/kompozycja/obrazy-aplikacji';
 import { zdjecieBezMetadanych } from '../../src/kompozycja/zdjecie-bez-metadanych';
 import { usunPlik } from '../../src/dane/pliki/system';
 import { GrupaWzorow } from '../../src/ekrany/WzorGrupa';
+import { ArkuszFilmu, DodajFilm, WierszFilmu, type FilmProjektu } from '../../src/ekrany/WzorFilm';
+import { filmProjektu } from '../../src/przypadki-uzycia/film';
 import { listaWzorow, type WzorNaLiscie } from '../../src/przypadki-uzycia/wzor';
-import { paneleE2e } from '../../src/platforma/tryb-e2e';
+import { paneleE2e, siecWylaczona } from '../../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../../src/platforma/zdjecia';
 import { dodajZdjecie, zdjecia } from '../../src/przypadki-uzycia/zdjecia';
 import { useKolory } from '../../src/ekrany/motyw';
@@ -20,7 +22,7 @@ import { KOSZ_DNI } from '../../src/konfiguracja';
 import { useAplikacja } from '../../src/kompozycja/Kontekst';
 import { Bezpieczny } from '../../src/kompozycja/Bezpieczny';
 import { krotkaData, stanProjektu } from '../../src/kompozycja/projekt';
-import { oglos } from '../../src/kompozycja/system';
+import { oglos, systemAplikacji } from '../../src/kompozycja/system';
 import { dodajDni } from '../../src/przypadki-uzycia/daty';
 import { usunCzesc, usunLicznik, usunProjekt, wznowProjekt, zmienDateUkonczenia, zrobPonownie } from '../../src/przypadki-uzycia/projekt';
 import { widokProjektu, type WidokProjektu } from '../../src/przypadki-uzycia/widok-projektu';
@@ -37,6 +39,8 @@ export default function EkranProjektu(): React.ReactElement {
   const [sesje, ustawSesje] = useState<SesjaNaEkranie[]>([]); // grupa „Time” (P-191 P4a)
   const [miniatury, ustawMiniatury] = useState<Miniatura[]>([]); // grupa „Photos” (P-191 P9a)
   const [wzory, ustawWzory] = useState<WzorNaLiscie[]>([]); // grupa „Pattern(s)” (partia 6, W8)
+  const [film, ustawFilm] = useState<FilmProjektu | null>(null); // wiersz „Video” (W8, P-276)
+  const [arkuszFilmu, ustawArkuszFilmu] = useState(false); // „Add video link” / „Change link”
   const z = kontener.z, j = kontener.j, t = j.t;
   const wczytaj = useCallback(async () => {
     const r = await widokProjektu(z, { projektId: id });
@@ -48,9 +52,19 @@ export default function EkranProjektu(): React.ReactElement {
     if (f.ok) ustawMiniatury(f.wartosc.map((x) => ({ id: x.id, uri: `file://${z.magazyn.sciezka(x.sha256)}` })));
     const lw = await listaWzorow(z, { projektId: id });
     if (lw.ok) ustawWzory(lw.wartosc);
+    const fp = await filmProjektu(z, { projektId: id });
+    if (fp.ok) ustawFilm(fp.wartosc);
   }, [z, id, router]);
   useFocusEffect(useCallback(() => { void wczytaj(); }, [wczytaj]));
   if (!w) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
+  if (arkuszFilmu) { // P-276: „Change link” = arkusz wypełniony, Save zastępuje (jeden film na projekt, P-218 (4))
+    return (
+      <Bezpieczny>
+        <ArkuszFilmu t={t} poczatek={film} naAnuluj={() => ustawArkuszFilmu(false)}
+          naZapisz={(f) => void kontener.wzor.k.zapiszFilm(w.id, f).then(async (r) => { if (r.ok) { ustawArkuszFilmu(false); await wczytaj(); } })} />
+      </Bezpieczny>
+    );
+  }
   const ch = z.zegar.teraz();
   const stan = { ...stanProjektu(w, { j, terazMs: ch.ms, strefa: ch.strefa }), czas: stanCzasu(sesje, j) };
   const doDnia = () => { const d = dzienLokalny(ch.ms, ch.strefa); return d.ok ? krotkaData(dodajDni(d.wartosc, KOSZ_DNI), j.jezyk()) : ''; };
@@ -100,7 +114,11 @@ export default function EkranProjektu(): React.ReactElement {
     <GrupaWzorow t={t} wzory={wzory.map((x) => ({ wzorId: x.wzorId, nazwa: x.nazwa, opis: opisWzoru(x) }))}
       oczekujace={kontener.wzor.k.stan().czekaSiec.filter((x) => x.projektId === w.id).map((x) => ({ id: x.id, nazwa: x.nazwa, stan: 'siec' as const }))}
       skaner={kontener.wzor.platforma.skanerDostepny()} naOtworz={(wid) => void doWzoru({ id: wid })} naDodaj={(zr) => void doWzoru({ dodaj: zr })}
-      naUsunOczekujacy={(zid) => void kontener.wzor.k.potwierdzBlad(zid).then(wczytaj)} />
+      naUsunOczekujacy={(zid) => void kontener.wzor.k.potwierdzBlad(zid).then(wczytaj)}
+      film={film
+        ? <WierszFilmu film={film} siec={siecWylaczona() ? 'brak' : 'jest'} t={t} system={systemAplikacji}
+            naZmien={() => ustawArkuszFilmu(true)} naUsun={() => void kontener.wzor.k.usunFilm(w.id).then(wczytaj)} />
+        : <DodajFilm t={t} naDodaj={() => ustawArkuszFilmu(true)} />} />
   );
   const licznikW = (lid: string) => stan.czesci.flatMap((c) => c.liczniki ?? []).find((l) => l.id === lid);
   return (

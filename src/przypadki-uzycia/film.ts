@@ -1,7 +1,7 @@
 // Link do filmu projektu (F-55, P-246 S4a; P-218 (4): film poza wzorem) — jeden na projekt, tylko adres http(s) i opcjonalna nazwa.
 import type { Wynik } from '../domena/bledy';
 import { adresStrony } from '../domena/adres';
-import { liczbaLubNull, wiersze } from '../dane/repozytoria/wiersze';
+import { liczbaLubNull, tekstLubNull, wiersze } from '../dane/repozytoria/wiersze';
 import { OK, blad, operacjaZapisu } from './zapis';
 import type { ZaleznosciPlikow } from './zaleznosci';
 
@@ -24,3 +24,10 @@ function zapiszFilm(z: Pick<ZaleznosciPlikow, 'baza' | 'zegar'>, projektId: stri
   });
 }
 
+/** Film projektu do wiersza „Video” (W8; P-276): brak linku = null; nieznany projekt = `bledne_dane`. */
+export async function filmProjektu(z: Pick<ZaleznosciPlikow, 'baza'>, w: { projektId: string }): Promise<Wynik<{ adres: string; nazwa: string | null } | null>> {
+  const [p] = await wiersze(z.baza.all('SELECT film_adres, film_nazwa FROM projekt WHERE id = ?', [w.projektId]), 'film');
+  if (!p) return blad('bledne_dane');
+  const adres = tekstLubNull(p, 'film_adres');
+  return { ok: true, wartosc: adres === null ? null : { adres, nazwa: tekstLubNull(p, 'film_nazwa') } };
+}

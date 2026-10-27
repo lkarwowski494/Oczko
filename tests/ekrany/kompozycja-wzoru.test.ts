@@ -78,3 +78,13 @@ describe('poprawki po przeglądzie (2026-10-26)', () => {
     expect(k.stan().doWyboru).toEqual([]);
   });
 });
+
+test('P-276: zapis i usunięcie filmu z ekranu projektu odświeżają migawkę — flaga film dla rozszerzenia (linia udostepnij.film_zastapi)', async () => {
+  const { grupa, k } = await srodowisko();
+  const film = () => JSON.parse(readFileSync(join(grupa, 'projekty-migawka.json'), 'utf8')).projekty[0].film;
+  expect(await k.zapiszFilm('p1', { adres: 'https://video.example/a', nazwa: 'Seaming' })).toEqual({ ok: true, wartosc: undefined });
+  expect(film()).toBe(true);
+  expect(await k.usunFilm('p1')).toEqual({ ok: true, wartosc: undefined });
+  expect(film()).toBe(false);
+  expect((await k.zapiszFilm('p1', { adres: 'javascript:alert(1)', nazwa: '' })).ok).toBe(false);
+});

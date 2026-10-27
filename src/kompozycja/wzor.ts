@@ -3,6 +3,7 @@
 // arkusza „N patterns to add” na liście projektów (R2; nie nad licznikiem, P-046). Woła ją start aplikacji i powrót na pierwszy plan.
 import type { Powod, Wynik } from '../domena/bledy';
 import type { MigawkaProjektow, ZlecenieImportu } from '../domena/porty';
+import { ustawFilm, usunFilm as usunFilmProjektu } from '../przypadki-uzycia/film';
 import { odswiezMigawke } from '../przypadki-uzycia/migawka';
 import { utworzProjekt } from '../przypadki-uzycia/projekt';
 import { PRZEJSCIOWE, odrzucZlecenie, przetworzSkrzynke, przypiszZlecenie, type ZaleznosciSkrzynki } from '../przypadki-uzycia/skrzynka';
@@ -34,6 +35,17 @@ export function kompozycjaWzoru(z: ZaleznosciKompozycjiWzoru, o: { grupa: string
     ustawStanTestowy(s: StanSkrzynki): void { zmien(s); },
     naZmiane(f: () => void): () => void { sluchacze.add(f); return () => { sluchacze.delete(f); }; },
     odswiezMigawke: () => odswiezMigawke(z),
+    /** Film projektu z ekranu projektu (W8, P-276): po zapisie migawka (flaga `film` dla rozszerzenia — linia `udostepnij.film_zastapi`). */
+    async zapiszFilm(projektId: string, f: { adres: string; nazwa: string }): Promise<Wynik<void>> {
+      const w = await ustawFilm(z, { projektId, adres: f.adres, nazwa: f.nazwa });
+      if (w.ok) await odswiezMigawke(z);
+      return w;
+    },
+    async usunFilm(projektId: string): Promise<Wynik<void>> {
+      const w = await usunFilmProjektu(z, { projektId });
+      if (w.ok) await odswiezMigawke(z);
+      return w;
+    },
     /** Arkusz skrzynki: wszystkie zlecenia do wybranego projektu (null = nowy projekt z nazwą pierwszego pliku); wynik = liczba dodanych. */
     async wybierzProjekt(projektId: string | null): Promise<Wynik<number>> {
       if (wybieranie || stan.doWyboru.length === 0) return { ok: true, wartosc: 0 };

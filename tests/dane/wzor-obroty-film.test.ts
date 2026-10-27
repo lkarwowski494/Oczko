@@ -7,7 +7,7 @@ import { skrzynkaWKatalogu } from '../../src/platforma/skrzynka';
 import { przetworzSkrzynke } from '../../src/przypadki-uzycia/skrzynka';
 import { usunWzor } from '../../src/przypadki-uzycia/wzor';
 import { obrotyWzoru, ustawObrot } from '../../src/przypadki-uzycia/wzor-widok';
-import { ustawFilm, usunFilm } from '../../src/przypadki-uzycia/film';
+import { filmProjektu, ustawFilm, usunFilm } from '../../src/przypadki-uzycia/film';
 import { usunProjekt } from '../../src/przypadki-uzycia/projekt';
 import { plik, projekt, wzor } from './pomocnicze/dane-wejsciowe';
 import { T0, czasWTle, ile, jeden, katalogTymczasowy, przygotuj, wlozPlik, wykonaj } from './pomocnicze/srodowisko';
@@ -60,6 +60,18 @@ describe('film projektu (S4a)', () => {
     expect(await jeden(s.baza, "SELECT film_adres, film_nazwa FROM projekt WHERE id = 'p1'")).toEqual({ film_adres: null, film_nazwa: null });
     await usunProjekt(s.z, { projektId: 'p1' });
     expect(await ustawFilm(s.z, { projektId: 'p1', adres: 'https://video.example/x', nazwa: '' })).toEqual({ ok: false, powod: 'niedozwolone_przejscie' });
+  });
+
+  test('P-276: odczyt filmu projektu do wiersza „Video” — brak = null; po ustawieniu adres i nazwa (pusta nazwa = null); po usunięciu null', async () => {
+    const s = await srodowisko();
+    expect(await filmProjektu(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: null });
+    await ustawFilm(s.z, { projektId: 'p1', adres: 'https://video.example/abc', nazwa: 'Cable cast-on' });
+    expect(await filmProjektu(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: { adres: 'https://video.example/abc', nazwa: 'Cable cast-on' } });
+    await ustawFilm(s.z, { projektId: 'p1', adres: 'https://video.example/def', nazwa: '' });
+    expect(await filmProjektu(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: { adres: 'https://video.example/def', nazwa: null } });
+    await usunFilm(s.z, { projektId: 'p1' });
+    expect(await filmProjektu(s.z, { projektId: 'p1' })).toEqual({ ok: true, wartosc: null });
+    expect(await filmProjektu(s.z, { projektId: 'brak' })).toEqual({ ok: false, powod: 'bledne_dane' });
   });
 
   test('zlecenie „Video link” z rozszerzenia (rodzaj film) → film projektu, bez wzoru i bez konwersji; zlecenie usunięte', async () => {

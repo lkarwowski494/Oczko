@@ -27,6 +27,13 @@ Przebieg 123 (40468002239): build ✅, swift-test ✅, e2e iPhone 1 ✅, iPad �
 
 **Następny krok:** (1) sprawdzić koniec 121 i zgłosić koordynatorowi tylko problem; (2) na sygnał P-265: rebase 7af7ef2 na roboczą, verify, push bez znacznika, hash do koordynatora; (3) artefakt `eksperymenty-wzoru` → poprawki → wynik W1–W3 do koordynatora.
 
+## P-276 (film: zamiana jawna) + punkt 2 planu 1.1 · 2026-10-27 11:30 UTC — na kopii, push na sygnał
+- **S1** fc390bc: flaga `film` w `ProjektMigawki` (porty.ts + moduly.md razem, `odswiezMigawke`, dekoder Swift w Pakiecie + kopia share); testy TS i Swift czerwone na asercji → zielone (swift test na Linuksie).
+- **S2**: łatka 3 kluczy filmu fix-8 (en, kontekst), `Teksty.swift` share wygenerowany, pseudolokalizacja odświeżona.
+- **S3** c7ffc47: rozszerzenie — nagłówek `udostepnij.do_projektu_film` i linia `udostepnij.film_zastapi` (czyste funkcje `kluczNaglowkaListy`, `kluczPodpisuListy`, PodpisListyTests 3 czerwone → zielone). Przy okazji: „Video link” do projektu z wzorami mówił `udostepnij.kolejny`.
+- **S4**: ekran projektu — wiersz „Video” (`WierszFilmu`, `wzor-film-wiersz`: nazwa albo adres, ↗, bez sieci alert; menu przytrzymania i akcje VoiceOver „Change link”/„Remove link”, `activate` otwiera link), „Add video link” (`DodajFilm`, `wzor-dodaj-film`), arkusz „Video link” (`ArkuszFilmu`, `wzor-film-pole`, zły adres → `wzor.link_blad`; przy zmianie wypełniony), `filmProjektu`, `kompozycjaWzoru.zapiszFilm/usunFilm` z odświeżeniem migawki. Testy przed kodem: `wzor-film.test.tsx` (7), `wzor-obroty-film.test.ts` (odczyt), `kompozycja-wzoru.test.ts` (migawka po zapisie) — czerwone → zielone. Verify 2593/2593, lint 0. Test 07 `LinkFilmu` bez zmian.
+- **Luki zgłoszone:** (a) arkusz skrzynki w aplikacji przypisuje po stuknięciu, bez „Save” — linia `film_zastapi` wymaga przepływu od 04 (moduly.md: „tekst i przepływ: 04”); (b) brak źródła stanu sieci: „film bez sieci” działa tylko z sygnałem E2E `oczkoE2eSiec=brak`; prawdziwy stan = nowa zależność (05); (c) interpretacja design-spec:650: „Add video link” pokazuję zawsze, gdy projekt nie ma filmu (dosłownie tylko „bez wzoru” — z wzorami nie byłoby wejścia poza rozszerzeniem); (d) dla 07: nowy testID `wzor-film-pole`.
+
 ## W1–W3 · przebieg 126 (40484943291, zadanie 122124284550, artefakt 12726240916) · 2026-10-27 10:25 UTC — STOP W1 do koordynatora
 Pakiet `TestyOknaMaszyn` pierwszy raz skompilowany i uruchomiony (schemat z listy, symulator iPhone, iOS 26.5): 4 testy, 1 czerwony.
 - **W2 ✅** (pomiar, symulator): PDF 300 stron **72,4 MB** (generator dał mniej niż 100 MB — do poprawy przy okazji), otwarcie 0,30 s, przejście na stronę 300 1,31 s, pamięć +67,4 MB (przed 142,1 MB). Płynność na iPadzie: U4.
