@@ -18,7 +18,7 @@ describe('adapter migawki (zapis atomowy, koperta)', () => {
   test('zapisz → koperta z wersją i chwilą; drugi zapis zastępuje plik; bez plików tymczasowych', async () => {
     const k = katalogTymczasowy('oczko-grupa-');
     const m = migawkaWKatalogu(k, () => T0);
-    const a: ProjektMigawki = { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0, wzory: 1 };
+    const a: ProjektMigawki = { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0, wzory: 1, film: false };
     await m.zapisz([a], 'pl');
     expect(czytaj(k)).toEqual({ format: 'oczko-migawka', wersja: MIGAWKA_WERSJA, utworzono: T0, jezyk: 'pl', projekty: [a] }); // jezyk: P-248 D2a
     await m.zapisz([], 'pl');
@@ -45,18 +45,19 @@ describe('odswiezMigawke', () => {
       projekt('p3', 'Mittens', T0, { stan: 'ukonczony', ukonczono: T0 }), projekt('p4', 'Usunięty', T0, { usunieto: T0 }),
       plik(h, 'pdf', PDF.length), wzor('w1', 'p1', h), wzor('w2', 'p1', h), wzor('w3', 'p2', h),
       ["UPDATE wzor SET usunieto_ms = ? WHERE id = 'w3'", [T0]],
+      ["UPDATE projekt SET film_adres = ?, film_nazwa = ? WHERE id = 'p1'", ['https://example.org/video', 'Cast-on']], // P-276: flaga film
     ]);
     const k = katalogTymczasowy('oczko-grupa-');
     return { s, k, z: { ...s.z, migawka: migawkaWKatalogu(k, () => s.zegar.teraz().ms), jezyk: () => 'de' } };
   }
 
-  test('projekty w toku poza koszem, kolejność jak lista projektów (ostatnia praca), liczba wzorów poza koszem', async () => {
+  test('projekty w toku poza koszem, kolejność jak lista projektów (ostatnia praca), liczba wzorów poza koszem; P-276: film = projekt ma link do filmu', async () => {
     const { k, z } = await srodowisko();
     expect(await odswiezMigawke(z)).toEqual({ ok: true, wartosc: undefined });
     expect(czytaj(k).jezyk).toBe('de'); // język aplikacji (P-190), nie systemu (P-248 D2a)
     expect(czytaj(k).projekty).toEqual([
-      { id: 'p2', nazwa: 'Scarf', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0 + 2 * DOBA, wzory: 0 },
-      { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0 + DOBA, wzory: 2 },
+      { id: 'p2', nazwa: 'Scarf', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0 + 2 * DOBA, wzory: 0, film: false },
+      { id: 'p1', nazwa: 'Harbor', nienazwany: false, utworzonoMs: T0, ostatniaPracaMs: T0 + DOBA, wzory: 2, film: true },
     ]);
   });
 

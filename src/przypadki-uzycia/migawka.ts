@@ -13,11 +13,11 @@ export type ZaleznosciMigawki = Zaleznosci & { migawka: MigawkaProjektow; jezyk(
 /** Kolejność jak lista projektów w toku (`listaProjektow`: ostatnia praca malejąco). */
 export async function odswiezMigawke(z: ZaleznosciMigawki): Promise<Wynik<void>> {
   const w = await operacjaZapisu(z, 'migawka', async (tx) => {
-    const r = await wiersze(tx.all(`SELECT p.id, p.nazwa, p.nienazwany, p.utworzono_ms, p.ostatnia_praca_ms,
+    const r = await wiersze(tx.all(`SELECT p.id, p.nazwa, p.nienazwany, p.utworzono_ms, p.ostatnia_praca_ms, p.film_adres IS NOT NULL AS film,
         (SELECT count(*) FROM wzor w WHERE w.projekt_id = p.id AND w.usunieto_ms IS NULL) AS wzory
       FROM projekt p WHERE p.stan = 'w_toku' AND p.usunieto_ms IS NULL ORDER BY p.ostatnia_praca_ms DESC, p.id`), 'migawka');
     return { ok: true, wartosc: r.map((x): ProjektMigawki => ({ id: tekst(x, 'id'), nazwa: tekst(x, 'nazwa'), nienazwany: liczba(x, 'nienazwany') === 1,
-      utworzonoMs: liczba(x, 'utworzono_ms'), ostatniaPracaMs: liczbaLubNull(x, 'ostatnia_praca_ms'), wzory: liczba(x, 'wzory') })) };
+      utworzonoMs: liczba(x, 'utworzono_ms'), ostatniaPracaMs: liczbaLubNull(x, 'ostatnia_praca_ms'), wzory: liczba(x, 'wzory'), film: liczba(x, 'film') === 1 })) };
   });
   if (!w.ok) return w;
   try {

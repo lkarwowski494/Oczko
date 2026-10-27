@@ -58,11 +58,12 @@ final class ZrodloTests: XCTestCase {
 
 final class MigawkaTests: XCTestCase {
   func testKoperta() {
-    let j = #"{"format":"oczko-migawka","wersja":1,"utworzono":1,"projekty":[{"id":"p1","nazwa":"Harbor","nienazwany":false,"utworzonoMs":1,"ostatniaPracaMs":2,"wzory":1},{"id":"p2","nazwa":"2026-10-20","nienazwany":true,"utworzonoMs":3,"ostatniaPracaMs":null,"wzory":0}]}"#
+    let j = #"{"format":"oczko-migawka","wersja":1,"utworzono":1,"projekty":[{"id":"p1","nazwa":"Harbor","nienazwany":false,"utworzonoMs":1,"ostatniaPracaMs":2,"wzory":1,"film":true},{"id":"p2","nazwa":"2026-10-20","nienazwany":true,"utworzonoMs":3,"ostatniaPracaMs":null,"wzory":0,"film":false}]}"#
     let p = odczytajMigawke(Data(j.utf8))
     XCTAssertEqual(p?.map(\.id), ["p1", "p2"])
     XCTAssertNil(p?.last?.ostatniaPracaMs ?? nil)
     XCTAssertEqual(p?.first?.wzory, 1)
+    XCTAssertEqual(p?.map(\.film), [true, false]) // P-276: projekt ma już link do filmu → linia udostepnij.film_zastapi
   }
   func testStanZastepczy() {
     XCTAssertNil(odczytajMigawke(nil))

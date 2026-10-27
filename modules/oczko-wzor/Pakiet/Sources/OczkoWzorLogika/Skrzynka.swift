@@ -10,6 +10,7 @@ public struct ProjektMigawki: Codable, Equatable, Sendable {
   public let utworzonoMs: Int64
   public let ostatniaPracaMs: Int64?
   public let wzory: Int
+  public let film: Bool // P-276: projekt ma już link do filmu → przy „Video link” linia udostepnij.film_zastapi (pole wymagane; migawka niewydana, wersja 1)
 }
 struct KopertaMigawki: Codable {
   let format: String
