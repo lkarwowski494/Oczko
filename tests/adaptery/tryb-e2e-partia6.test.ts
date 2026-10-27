@@ -36,3 +36,14 @@ test('oczkoE2eSkrzynka: tylko „pdf”', () => {
   expect(zaladuj(true, { oczkoE2eSkrzynka: 'docx' }).skrzynkaE2e()).toBeNull();
   expect(zaladuj(true, {}).skrzynkaE2e()).toBeNull();
 });
+
+// P-266 (przebieg 121, scen. 52): build symulatora bez podpisu nie ma uprawnienia App Group („client is not entitled” w logu urządzenia),
+// więc `katalogGrupyAplikacji` = null i zlecenie testowe nie trafia do skrzynki. W E2E z `oczkoE2eSkrzynka=pdf` skrzynka i migawka używają
+// katalogu zastępczego w danych aplikacji (nazwany wyjątek: E2E nie sprawdza kontenera App Group — lista urządzenia U5).
+test('grupaAplikacjiE2e: prawdziwa grupa ma pierwszeństwo; bez niej katalog zastępczy tylko w E2E z oczkoE2eSkrzynka=pdf', () => {
+  expect(zaladuj(true, { oczkoE2eSkrzynka: 'pdf' }).grupaAplikacjiE2e(null, '/dane')).toBe('/dane/e2e-grupa');
+  expect(zaladuj(true, { oczkoE2eSkrzynka: 'pdf' }).grupaAplikacjiE2e('/grupa', '/dane')).toBe('/grupa');
+  expect(zaladuj(true, {}).grupaAplikacjiE2e(null, '/dane')).toBeNull();
+  expect(zaladuj(false, { oczkoE2eSkrzynka: 'pdf' }).grupaAplikacjiE2e(null, '/dane')).toBeNull();
+  expect(zaladuj(false, {}).grupaAplikacjiE2e('/grupa', '/dane')).toBe('/grupa');
+});

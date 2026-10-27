@@ -24,7 +24,7 @@ import { identyfikatory } from '../platforma/identyfikatory';
 import { liveActivity } from '../platforma/live-activity';
 import { tagiSystemowe, zegar24h } from '../platforma/lokalizacja';
 import { sklepAplikacji } from '../platforma/sklep';
-import { skrzynkaE2e, skrzynkaTestowa, trybIcloudE2e, zegarAplikacji } from '../platforma/tryb-e2e';
+import { grupaAplikacjiE2e, skrzynkaE2e, skrzynkaTestowa, trybIcloudE2e, zegarAplikacji } from '../platforma/tryb-e2e';
 import { przelacznikIcloudWidoczny, silnikIcloud, type SilnikIcloud } from '../platforma/icloud';
 import { platformaWzoru, type PlatformaWzoru } from '../platforma/wzor';
 import { skrzynkaWKatalogu } from '../platforma/skrzynka';
@@ -110,8 +110,10 @@ export async function utworzKontener(): Promise<Wynik<Kontener>> {
     ...z0, czasWTle: czasWTle(), ...(silnik ? { synchronizacja: silnik } : {}),
     archiwum: utworzArchiwum({ baza, magazyn: z0.magazyn, zegar, katalogi: z0.katalogi, migruj: z0.migruj, aplikacja: 'oczko' }),
   };
-  // Partia 6: App Group (ADR-0011 fix-7) — skrzynka rozszerzenia i migawka projektów; bez grupy w podpisie (build symulatora) obie są puste.
-  const grupa = katalogGrupyAplikacji(GRUPA_APLIKACJI);
+  // Partia 6: App Group (ADR-0011 fix-7) — skrzynka rozszerzenia i migawka projektów; bez grupy w podpisie (build symulatora) obie są puste,
+  // poza E2E ze zleceniem testowym: katalog zastępczy w danych aplikacji (P-266, tryb-e2e.ts).
+  const grupa = grupaAplikacjiE2e(katalogGrupyAplikacji(GRUPA_APLIKACJI), katalogDanych);
+  if (grupa) utworzKatalog(grupa); // katalog zastępczy E2E może jeszcze nie istnieć (kontener grupy istnieje zawsze; idempotentne)
   const platforma = platformaWzoru();
   const zWzoru: ZaleznosciKompozycjiWzoru = { ...z, konwersja: platforma, skrzynka: skrzynkaWKatalogu(grupa, () => zegar.teraz().ms), migawka: migawkaWKatalogu(grupa, () => zegar.teraz().ms), jezyk };
   const wzor = { z: zWzoru, platforma, k: kompozycjaWzoru(zWzoru, { grupa, zlecenieE2e: skrzynkaE2e() && skrzynkaTestowa ? skrzynkaTestowa.wlozZlecenieTestowe : null }) };
