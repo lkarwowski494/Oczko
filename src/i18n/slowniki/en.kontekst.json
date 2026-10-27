@@ -437,22 +437,21 @@
     "wloczka": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Przycisk w arkuszu włóczki i w alercie potwierdzenia (wzór: usun.licznik); opis alertu: usun.projekt_opis.",
     "narzedzie": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Przycisk w arkuszu drutu i w alercie potwierdzenia; opis alertu: usun.projekt_opis.",
     "a11y": "Etykieta VoiceOver czerwonego przycisku usunięcia w trybie Edit i akcji przesunięcia; {{nazwa}} = część albo licznik.",
-    "ogloszenie": "Ogłoszenie VoiceOver po usunięciu; {{nazwa}} = usunięty element.",
-    "wzor_opis": "Tekst roboczy 08 (partia 6, P-229) — do zatwierdzenia przez 04; zastępuje wzor.usun_opis („can’t be undone”), bo wzór idzie do kosza. Opis alertu usunięcia wzoru (wzór: usun.licznik_opis); {{data}} = ostatni dzień w koszu."
+    "ogloszenie": "Ogłoszenie VoiceOver po usunięciu; {{nazwa}} = usunięty element."
   },
   "kosz": {
     "tytul": "Tytuł ekranu kosza (duży tytuł); ta sama nazwa wszędzie (projekty.kosz, usun.*).",
-    "opis": "Zdanie pod tytułem kosza; {{count}} = KOSZ_DNI z konfiguracji (dziś 30).",
+    "opis": "Zdanie pod tytułem kosza; {{count}} = KOSZ_DNI (dziś 30). Wymienia wszystko, co trafia do kosza (BR-DAN-008, P-209, P-243); zdjęcia nie trafiają (bez kosza).",
     "projekt": "Podpis wiersza projektu w koszu; {{data}} = ostatni dzień przywrócenia, krótka data regionu.",
     "czesc": "Podpis wiersza części w koszu; {{projekt}} = projekt, do którego wróci, {{data}} jak wyżej.",
     "licznik": "Podpis wiersza licznika w koszu; {{projekt}}, {{czesc}} = gdzie wróci, {{data}} jak wyżej.",
-    "wloczka": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Podpis włóczki w „Recently deleted”; {{data}} = ostatni dzień w koszu.",
-    "narzedzie": "Tekst roboczy 08 (partia 5, P-209) — do zatwierdzenia przez 04. Podpis drutu/szydełka w „Recently deleted”; nazwa pozycji = rozmiar albo opis.",
+    "wloczka": "Podpis wiersza włóczki w koszu (P-209); {{data}} jak w kosz.projekt. „Yarn” jak nazwa zapasu włóczki.",
+    "narzedzie": "Podpis wiersza drutu albo szydełka w koszu (P-209); {{data}} jak w kosz.projekt. „Needles or hook” jak tytuł formularza formularz.narzedzie_tytul.",
     "przywroc": "Przycisk w wierszu kosza (BR-DAN-008). Ok. 10 znaków.",
     "przywroc_a11y": "Etykieta VoiceOver przycisku przywrócenia; {{nazwa}} = element.",
     "przywrocono": "Ogłoszenie VoiceOver po przywróceniu; {{nazwa}} = element.",
-    "pusto": "Pusty ekran kosza; {{count}} = KOSZ_DNI (dziś 30).",
-    "wzor": "Tekst roboczy 08 (partia 6, P-229 kosz wzoru) — do zatwierdzenia przez 04. Podpis wzoru w „Recently deleted”; {{projekt}} = nazwa projektu, {{data}} = ostatni dzień w koszu."
+    "pusto": "Pusty ekran kosza; {{count}} = KOSZ_DNI (dziś 30); lista rodzajów jak w kosz.opis.",
+    "wzor": "Podpis wiersza wzoru w koszu (P-243 S2a); {{projekt}} = projekt, do którego wzór wróci; {{data}} jak w kosz.projekt. Wzór pokazany tylko, gdy jego projekt nie jest w koszu (jak część)."
   },
   "jezyk": {
     "wybrany_a11y": "Etykieta VoiceOver wybranej pozycji listy języków; {{nazwa}} = nazwa języka we własnym języku. Tekst z design-spec roli 04.",
@@ -655,7 +654,7 @@
     "nazwa_tytul": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): tytuł arkusza zmiany nazwy wzoru.",
     "usun": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): pozycja menu ••• (destrukcyjna, czerwona); otwiera potwierdzenie.",
     "usun_tytul": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): nagłówek potwierdzenia usunięcia wzoru; {{nazwa}} = nazwa wzoru.",
-    "usun_opis": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): treść potwierdzenia: co znika, co zostaje; wzór nie trafia do kosza.",
+    "usun_opis": "Wzór (F-24…F-28; P-229, P-243 S2a): treść alertu potwierdzenia usunięcia wzoru; wzór idzie do kosza na KOSZ_DNI z zakreśleniami i rysunkami; notatki rzędów należą do licznika i zostają. „Recently deleted” i „Projects” jak kosz.tytul i projekty.tytul. {{data}} = ostatni dzień przywrócenia, krótka data regionu.",
     "usun_potwierdz": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): przycisk destrukcyjny potwierdzenia.",
     "zakreslacz": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): narzędzie zakreślacza: na iPhonie przełącznik trybu rysowania palcem, na iPadzie narzędzie w pasku (e2e wzor-zakreslacz).",
     "zakreslenia": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): liczba zakreśleń na wzorze; wartość VoiceOver przycisku zakreślacza i etykieta testowa (e2e wzor-zakreslenia).",
