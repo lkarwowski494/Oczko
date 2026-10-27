@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 08:50 UTC — **konto 2 przejęło (P-269)**; sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-289 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
+**Ostatnia aktualizacja:** 2026-10-27 08:50 UTC — **konto 2 przejęło (P-269)**; sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-290 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
