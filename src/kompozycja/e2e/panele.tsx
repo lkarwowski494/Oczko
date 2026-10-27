@@ -10,6 +10,7 @@ import { polacz, zapiszTekst } from '../../dane/pliki/system';
 import { plikiE2e } from '../e2e-pliki';
 import { zdjecieTestowe } from '../e2e-zdjecie';
 import { pdfTestowy } from './skrzynka';
+import type { ZrodloDodania } from '../../przypadki-uzycia/wzor';
 import { ADRES_STRONY_TESTOWEJ, wordTestowy } from './pliki-wzoru';
 
 /** Oferty: „wygaś dostęp” sztucznego sklepu (app/oferty.tsx). */
@@ -80,19 +81,26 @@ export function PanelIcloud({ wyslane, usuniete }: { wyslane: number; usuniete: 
 }
 
 /** Dodanie wzoru (partia 6, e2e/README.md `e2e-wzor-pdf`, `e2e-wzor-zdjecie`): pliki testowe bez okna Plików i Zdjęć (subflow otworz-wzor-pdf, scenariusze 21, 22, 24, 25). */
-export function PanelWzoru(p: { katalogTymczasowy: string; naPdf(sciezka: string): void; naZdjecie(sciezka: string): void; naWord(sciezka: string): void; naAdres(adres: string): void }): React.ReactElement {
+export function PanelWzoru(p: { katalogTymczasowy: string; naDodaj(w: { nazwa: string; zrodlo: ZrodloDodania }): void }): React.ReactElement {
+  // Źródła testowe składane tutaj (moduł tylko E2E, P-238): napisy i id plików testowych nie trafiają do bundla wydania przez trasę /wzor.
+  const plik = (sciezka: string, nazwa: string, typ: string) => ({ id: 'test', nazwa, sciezka, typ });
+  const nazwa = 'Test pattern';
   return (
     <View>
-      <Pressable accessibilityRole="button" testID="e2e-wzor-pdf" onPress={() => p.naPdf(pdfTestowyPlik(p.katalogTymczasowy))} style={{ padding: 12 }}>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-pdf" style={{ padding: 12 }}
+        onPress={() => p.naDodaj({ nazwa, zrodlo: { rodzaj: 'pdf', plik: plik(pdfTestowyPlik(p.katalogTymczasowy), `${nazwa}.pdf`, 'application/pdf') } })}>
         <Text>Test pattern (PDF)</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" testID="e2e-wzor-zdjecie" onPress={() => p.naZdjecie(zdjecieTestowe(p.katalogTymczasowy))} style={{ padding: 12 }}>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-zdjecie" style={{ padding: 12 }}
+        onPress={() => p.naDodaj({ nazwa, zrodlo: { rodzaj: 'obrazy', sciezki: [zdjecieTestowe(p.katalogTymczasowy)] } })}>
         <Text>Test pattern (photo)</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" testID="e2e-wzor-www" onPress={() => p.naAdres(ADRES_STRONY_TESTOWEJ)} style={{ padding: 12 }}>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-www" style={{ padding: 12 }}
+        onPress={() => p.naDodaj({ nazwa, zrodlo: { rodzaj: 'adres', adres: ADRES_STRONY_TESTOWEJ } })}>
         <Text>Test pattern (web page)</Text>
       </Pressable>
-      <Pressable accessibilityRole="button" testID="e2e-wzor-word" onPress={() => p.naWord(wordTestowy(p.katalogTymczasowy))} style={{ padding: 12 }}>
+      <Pressable accessibilityRole="button" testID="e2e-wzor-word" style={{ padding: 12 }}
+        onPress={() => p.naDodaj({ nazwa, zrodlo: { rodzaj: 'word', plik: plik(wordTestowy(p.katalogTymczasowy), `${nazwa}.docx`, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') } })}>
         <Text>Test pattern (Word)</Text>
       </Pressable>
     </View>
