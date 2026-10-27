@@ -91,13 +91,17 @@ jobs:
           [ -n "$DEV" ] || { echo "::error::brak symulatora iPhone"; exit 1; }
           echo "### Eksperymenty W1–W3 (informacyjnie, P-261) — symulator $DEV (iOS $SDK)" >> "$GITHUB_STEP_SUMMARY"
           cd modules/oczko-wzor/TestyOknaMaszyn
-          kod=0
-          # Schemat pakietu SwiftPM nadaje Xcode (produkt albo „<pakiet>-Package”) — z listy, nie zgadywany
-          SCHEMAT=$(xcodebuild -list -json 2>/dev/null | node -e 'const j=JSON.parse(require("fs").readFileSync(0,"utf8")); const s=(j.workspace||j.project).schemes; console.log(s.find((x)=>x.endsWith("-Package"))||s.find((x)=>x==="OczkoWzorEksperymenty")||s[0])')
+          LOG="$GITHUB_WORKSPACE/eksperymenty-wzoru.log"; kod=0
+          # Manifest i lista schematów do logu (przebieg 121: `xcodebuild -list -json` bez wyjścia, stderr był ukryty)
+          { echo "== swift package dump-package"; swift package dump-package > /dev/null && echo OK; echo "== xcodebuild -list"; } 2>&1 | tee "$LOG"
+          xcodebuild -list -json > "$RUNNER_TEMP/lista.json" 2>> "$LOG" || true
+          cat "$RUNNER_TEMP/lista.json" >> "$LOG"
+          # Schemat pakietu SwiftPM nadaje Xcode (produkt albo „<pakiet>-Package”) — z listy; bez listy produkt `WzorNatywny`
+          SCHEMAT=$(node -e 'let s=[]; try { const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); s=(j.workspace||j.project).schemes } catch {} console.log(s.find((x)=>x.endsWith("-Package"))||s.find((x)=>x==="WzorNatywny")||s[0]||"WzorNatywny")' "$RUNNER_TEMP/lista.json")
           echo "- schemat: $SCHEMAT" >> "$GITHUB_STEP_SUMMARY"
           xcodebuild test -scheme "$SCHEMAT" -destination "id=$DEV" -resultBundlePath "$RUNNER_TEMP/w123.xcresult" \
-            2>&1 | tee "$GITHUB_WORKSPACE/eksperymenty-wzoru.log" || kod=$?
-          { grep -E '^W[123] |Test Case .*(passed|failed)|Executed [0-9]+ tests' "$GITHUB_WORKSPACE/eksperymenty-wzoru.log" | sed 's/^/- /'; echo "- kod xcodebuild: $kod"; } >> "$GITHUB_STEP_SUMMARY"
+            2>&1 | tee -a "$LOG" || kod=$?
+          { grep -E '^W[123] |Test Case .*(passed|failed)|Executed [0-9]+ tests|error:' "$LOG" | head -40 | sed 's/^/- /'; echo "- kod xcodebuild: $kod"; } >> "$GITHUB_STEP_SUMMARY"
           exit $kod
       - uses: actions/upload-artifact@v4
         if: always()
