@@ -1,7 +1,7 @@
 # Rola 05, tryb fix (przeglądy), 2026-10-27 · stan i plan
 Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, U8; port `ProjektMigawki` (P-243 S1a); `ZlecenieImportu` rodzaj `film` (P-246, P-248 D1a); reguła wersji pól iCloud przy migracji schematu (P-264); adnotacje „do przeglądu 05” (P-259, P-247 U6a). Prompt: `oczko-warsztat` 71c83e0 `koordynacja/role-2026-10-27/05-architekt-fix.md` (673 linie, przeczytany w całości). Sesja session_01T66VBxEUVZa1a385Aya8Wy, kopia `claude/kopia-05`. Decyzje na STOP: koordynator (P-087). Kod (`src/`, `tests/`, `modules/`) czytany tylko jako materiał z `claude/kopia-partia-7` (458deea) i `claude/kopia-partia-6` (7e58f01); zmiany kodu idą jako polecenia dla 08.
 
-**Stan: E0 — plan i klasyfikacja wysłane koordynatorowi, czekam na decyzje (Q1–Q5 niżej).**
+**Stan: E1 zakończony (dokumenty) — decyzje P-274: Q1a, Q2a, Q3a, Q4a, Q5 A+C (koordynator wg P-087, 2026-10-27 09:11 UTC). P-273 oceniony (niżej). Polecenia kodu dla 08 p7 — sekcja „Polecenia dla 08”; wysyła je koordynator. „Video link” → 04 (koordynator).**
 
 ## E0. Środowisko
 | Sprawdzenie | Wynik |
@@ -54,7 +54,23 @@ Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, 
   - (C) zakaz kolumn NULL-owalnych w migracjach tabel synchronizowanych: nowe kolumny tylko `NOT NULL DEFAULT`, więc brak pola nigdy nie zeruje.
   - **Rekomendacja (A)**, z (C) jako regułą domyślną tam, gdzie NULL nie jest potrzebny; zapis w nowym ADR-0027 i `moduly.md`; przed 1.0 warunek: Q3 (a).
 
-## Plan E1 (po decyzjach)
+## E1. Commity (gałąź `claude/kopia-05`; na roboczą tylko `docs/`)
+| ID | Commit | Pliki |
+|---|---|---|
+| P-264, P-274 Q5 | d1116e6 | `docs/adr/0027-icloud-wersja-pol-przy-migracji-schematu.md` (nowy), `docs/adr/0005-…` (uzupełnienie 2026-10-27) |
+| P-243 S1a, P-246/P-248, P-274 Q4a | 2169528 | `docs/architektura/moduly.md` „Cel `targets/share`” — reguły rozwoju koperty migawki i manifestu zlecenia |
+| P-259 | 9ffe337 | `docs/adr/0026-…`, `docs/architektura/moduly.md` „iPad i orientacja” |
+| P-245 U1/U3, P-274 Q1a–Q3a, P-247 U7/U6a | 8635b3b | `docs/architektura/moduly.md` „Przegląd 05 partii 7” |
+| P-247 U6a | 538df87 | `docs/architektura/prywatnosc.md`, `docs/architektura/dane.md` |
+
+## Polecenia dla 08 p7 (kod; testy przed kodem, czerwone z właściwego powodu)
+1. **Q1a (U3) — `UPDATE OF` dla licznika.** `schemat.sql` i `src/dane/migracje/0001.sql` (+ `generuj-migracje.mjs`): `CREATE TRIGGER licznik_icloud_u AFTER UPDATE OF czesc_id, nazwa, rodzaj, znaczenie, dlugosc_powtorzenia, zablokowany, kolejnosc, zmieniono_ms, usunieto_ms ON licznik WHEN …` (lista = kolumny `licznik` poza `pomin` i poza kluczem `id`, który się nie zmienia). Testy oczekiwane (`tests/dane/icloud-skrzynka.test.ts`): (a) przy `wlaczona = 1` jedno +1 (`dodajRzad`) dopisuje do `zmiana_icloud` tylko `zdarzenie`, nie `licznik` — czerwony dziś; (b) dla każdej kolumny `licznik` spoza `pomin` (lista z `pragma_table_info` minus kontrakt) `UPDATE licznik SET <kolumna> = …` dopisuje `licznik` — łapie literówkę w `UPDATE OF`, której SQLite nie zgłasza; (c) test „trzy wyzwalacze na tabelę” bez zmian zielony.
+2. **Q2a (U7) — start silnika bez czekania.** `src/kompozycja/licznik.ts` (`przygotuj`): `void o.icloud.start().catch(() => undefined)` jak skrzynka. Test oczekiwany (`tests/dane/kompozycja-icloud.test.ts`): atrapa silnika, której `wyslij` (albo `statusKonta`) nigdy się nie kończy, przy `wlaczona = 1` — `przygotuj()` zwraca `{ cel: 'licznik' }` (czerwony dziś: czeka bez końca, limit czasu testu). Drugi: błąd `start()` nie zmienia wyniku `przygotuj()`.
+3. **Q3a (U4) — `pomin` w rekordzie z sieci pomijane.** `src/domena/icloud/odwzorowanie.ts` (`wierszZRekordu`): kolumna z `pomin` nie daje `bledne_dane`, tylko nie trafia do wiersza (nazwa nadal musi spełniać `NAZWA_KOLUMNY`). Testy oczekiwane (`tests/domena/icloud/icloud-odwzorowanie.test.ts`): rekord `licznik` z polem `wartosc` → wiersz bez `wartosc`, `ok: true` (czerwony dziś); rekord z polem `wersja_schematu` (kolumna nieznana) stosowany w `zastosujPartie` bez wpisu `blad` (zielony już dziś — test regresji U4 i ADR-0027 pkt 3); wektory Swift (`Pakiet/wektory.json`) bez zmian, bo Swift niczego nie filtruje.
+4. **Q5 (ADR-0027) w 1.0: bez kodu.** Brak pola `wersja_schematu` = 1, więc 1.0 nie wysyła go i nie zmienia `cloudkit/schemat.ckdb`. Kod `wersja_schematu`/`od_wersji` dopiero przy pierwszej migracji dodającej kolumnę NULL-owalną do tabeli synchronizowanej (test z ADR-0027 „Potwierdzenie”).
+5. Opcjonalnie (P2, przy najbliższej zmianie `porty.ts`): typ `BladSynchronizacji = { kod: 'brak_miejsca' | 'siec' | 'inny' }` obok portu `Synchronizacja` i użycie go w adapterze, atrapie i `przyczynaZ` (dziś kontrakt tylko w komentarzach i `moduly.md`).
+
+## Plan E1 (po decyzjach) — wykonany
 1. ADR-0027 (reguła wersji pól iCloud), `moduly.md` (kontrakt błędu `wyslij`, U3, reguły koperty migawki i manifestu zlecenia, sekcja orientacji), ADR-0026 (uporządkowanie po P-259), `prywatnosc.md` i `dane.md` (U6a) — osobne commity z ID.
 2. Polecenia dla 08 p7 (Q1–Q3) i 08 p6 (Q4 b, jeśli wybrane) z testem czerwonym przed poprawką; pytanie (b) filmu do 04.
 3. Na roboczą tylko `docs/`, po `git pull --rebase` i zielonym `env -u NODE_PATH npm run verify`.
