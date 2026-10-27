@@ -72,6 +72,14 @@ describe('Data and sync: przełącznik iCloud', () => {
     rerender(<StanDanych stan={stan()} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna', niepelna: true })} />);
     expect(screen.getByText(/Oczko keeps trying/)).toBeTruthy();
   });
+  test('„Syncing…” zamiast ostatniej synchronizacji, gdy trwa wysyłka (icloud.synchronizuje)', () => {
+    const { rerender } = render(<StanDanych stan={stan({ ostatniaUdana: 'Nov 10, 7:30 PM' })} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna', synchronizuje: true })} />);
+    expect(screen.getByText('Syncing…')).toBeTruthy();
+    expect(screen.queryByText(/Nov 10, 7:30 PM/)).toBeNull();
+    rerender(<StanDanych stan={stan({ ostatniaUdana: 'Nov 10, 7:30 PM' })} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna' })} />);
+    expect(screen.queryByText('Syncing…')).toBeNull();
+    expect(screen.getByText(/Nov 10, 7:30 PM/)).toBeTruthy();
+  });
   test('liczniki w konflikcie: wiersz z liczbą (odmiana)', () => {
     const { rerender } = render(<StanDanych stan={stan()} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna', konflikty: 1 })} />);
     expect(screen.getByTestId('icloud-konflikty')).toBeTruthy();

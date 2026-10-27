@@ -19,7 +19,7 @@ import type { Zaleznosci } from './zaleznosci';
 export type ZaleznosciSynchronizacji = Zaleznosci & { synchronizacja: Synchronizacja; magazyn: MagazynPlikow };
 /** Przyczyna stanu `blad` (linia problemu w Data and sync); silnik odrzuca `wyslij` błędem z polem `kod`. */
 export type PrzyczynaBledu = 'brak_miejsca' | 'siec' | 'inny';
-export type WidokSynchronizacji = { stan: StanSynchronizacji; przyczyna: PrzyczynaBledu | null; status: StatusKonta | null };
+export type WidokSynchronizacji = { stan: StanSynchronizacji; przyczyna: PrzyczynaBledu | null; status: StatusKonta | null; synchronizuje?: boolean }; // synchronizuje: wysyłka w toku („Syncing…”)
 export type Sterownik = {
   start(): Promise<void>;
   wlacz(): Promise<WidokSynchronizacji>;
@@ -56,11 +56,12 @@ export function sterownikSynchronizacji(z: ZaleznosciSynchronizacji, poPartii: (
     if (!s.wlaczona || widok.stan === 'konto_zmienione' || widok.stan === 'brak_konta' || (s.zalegle === 0 && !o.zawsze)) return; // konto_zmienione: wysyłka zatrzymana
     const zmiany = await zaleglosci(z.baza, PARTIA_SYNCHRONIZACJI, (sha) => z.magazyn.sciezka(sha));
     if (!zmiany.length && !o.zawsze) return;
+    ustaw({ synchronizuje: true });
     try {
       await z.synchronizacja.wyslij(zmiany);
-      if (widok.stan === 'blad') ustaw({ stan: 'aktywna', przyczyna: null }); // ustąpienie przyczyny
+      ustaw(widok.stan === 'blad' ? { stan: 'aktywna', przyczyna: null, synchronizuje: false } : { synchronizuje: false }); // ustąpienie przyczyny
     } catch (e) {
-      ustaw({ stan: 'blad', przyczyna: przyczynaZ(e) }); // zmiany zostają w skrzynce do następnej próby
+      ustaw({ stan: 'blad', przyczyna: przyczynaZ(e), synchronizuje: false }); // zmiany zostają w skrzynce do następnej próby
     }
   }
   async function wlaczZKontem(zerujSilnik: boolean): Promise<WidokSynchronizacji> {

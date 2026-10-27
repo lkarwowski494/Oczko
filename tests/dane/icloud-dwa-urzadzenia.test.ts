@@ -174,6 +174,19 @@ describe('BR-DAN-002/S1 i S2: drugie urządzenie, konflikt', () => {
     expect(serwer.rekordy.get(`licznik:${l}`)?.pola.nazwa).toBe('Rękaw'); // druga wysyłka po potwierdzeniu pierwszej
     expect(await skrzynka(a.s.baza)).toBe(0);
   });
+  test('„Syncing…” (design-spec I1a–I3): widok.synchronizuje = true w trakcie wysyłki, potem false; obserwator dostaje oba stany', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    await szybki(a.s.z);
+    const widziane: boolean[] = [];
+    a.st.obserwuj((w) => widziane.push(w.synchronizuje === true));
+    const wyslij = a.u.wyslij.bind(a.u);
+    let wTrakcie: boolean | undefined;
+    a.u.wyslij = async (z) => { wTrakcie = a.st.widok().synchronizuje; return wyslij(z); };
+    await a.st.wlacz();
+    expect([wTrakcie, a.st.widok().synchronizuje]).toEqual([true, false]);
+    expect(widziane).toContain(true);
+  });
   test('brak miejsca: stan blad z przyczyną, zmiany zostają; po ustąpieniu przyczyny aktywna i pusta skrzynka', async () => {
     const serwer = serwerIcloud();
     const a = await urzadzenie(serwer, 'iphone', 'a');
