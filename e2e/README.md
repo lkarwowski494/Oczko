@@ -214,12 +214,15 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `wzor-dodaj-film` | ekran projektu, grupa wzorów | dodanie odnośnika do filmu (P-218 (4): film poza wzorem) | „Add video link” | |
 | `wzor-przelacz` | wzór | tytuł z menu wzorów (≥ 2 wzory; jeden wzór naraz, P-218 (3)) | „Pattern: {nazwa}. Switch pattern” | |
 | `wzor-menu` | wzór | menu ••• | „Pattern options” | |
+| `wzor-zmien-nazwe` | wzór, menu ••• | Rename — otwiera arkusz „Rename” (design-spec W1a; partia 6 e779602) | „Rename” | |
+| `wzor-nazwa-pole` | arkusz „Rename” (wzór) | nazwa wzoru, wypełniona obecną; pusta nie zapisuje (partia 6 e779602) | „Pattern name” | tekstowa |
 | `wzor-obroc` | wzór, menu ••• | Rotate page (zmiana formatu dozwolona, P-218 (2)) | „Rotate page” | |
 | `wzor-usun` | wzór, menu ••• | Delete pattern… | „Delete pattern…” | |
 | `wzor-gumka` | pasek rysowania | gumka | „Eraser” | |
 | `wzor-pioro` | pasek rysowania (iPad) | pióro | „Pen” | |
 | `wzor-cofnij-rysunek` | pasek rysowania | cofnięcie ostatniej kreski | „Undo last stroke” | |
 | `wzor-link-pole` | arkusz „Web page” | pole adresu strony wzoru | „Link to the pattern page” | tekstowa |
+| `wzor-miniatura` | ekran projektu, wiersz wzoru (`projekt-wzor`) | miniatura pierwszej strony; ukryta dla VoiceOver (partia 6 e779602) | — | |
 | `wzor-film-wiersz` | ekran projektu | wiersz „Video” | „Video, {nazwa}” | |
 | `wzor-film-pole` | arkusz „Video link” | pole adresu filmu (przy zmianie wypełnione; zły adres → `wzor.link_blad`; partia 6 92df7ea, P-283) | „Link” | tekstowa |
 | `wzor-czeka-siec` | ekran projektu | wiersz strony czekającej na sieć | „Waiting for the internet to save the web page.” | |
