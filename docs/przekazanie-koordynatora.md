@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 05:50 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-262 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 05:52 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-262 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -13,7 +13,7 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 ## Stan (2026-10-26 21:05 UTC)
 - **Zakres 1.0:** pełne MVP z wzorami (F) i iCloud (G), P-217. Plan: `docs/plan-app-store.md` (do odświeżenia pod P-217).
 - **Partia 5:** STOP E2 przyjęty (P-253): przebieg 114 zielony, bramka 9/9. Czerwone informacyjne zdiagnozowane przez 07 (P-254, P-255): większość to scenariusze (F07-26 lokalnie u 07), 3 błędy kodu P1 → 08 partii 7.
-- **Kolejka pushy w oknie maszyn (P-255, P-262; każdy push kodu/`e2e/**` anuluje bieżący przebieg):** zrobione: 114 (partia 5), 115 (partia 7 natywne), 117–118 (partia 6 natywne, poprawki P-255), 119 (07 F07-26, `[e2e-pelny]`, zielony, bramka 9/9). Teraz [sygnał 05:46 UTC]: 07 wypchnęło F07-27–29 pierwsze (7c425e1, 7143d81, f8f6919 `[e2e-pelny]`, autor `Claude`, nie przepisujemy) → partia 6 P-259 + P-261 (W1–W3 w CI) z `[e2e-pelny]` w head commicie [polecenie 05:50 UTC], jej push anuluje przebieg 07 i daje jeden wspólny pełny przebieg → partia 7 poprawki P-262 (Save pod klawiaturą nadal, liczba w poziomie, stoper) → koordynator hook P-260 (lokalna gałąź `p260-pre-push`, b5b4e6c). Okno maszyn do ok. 14:00 UTC.
+- **Kolejka pushy w oknie maszyn (P-255, P-262; każdy push kodu/`e2e/**` anuluje bieżący przebieg):** zrobione: 114 (partia 5), 115 (partia 7 natywne), 117–118 (partia 6 natywne, poprawki P-255), 119 (07 F07-26, `[e2e-pelny]`, zielony, bramka 9/9). Teraz [sygnał 05:46 UTC]: 07 wypchnęło F07-27–29 pierwsze (7c425e1, 7143d81, f8f6919 `[e2e-pelny]`, autor `Claude`, nie przepisujemy) → partia 6 P-259 + P-261 (W1–W3 w CI) z `[e2e-pelny]` w head commicie — wypchnięte 05:48 UTC (bd60073), przebieg 121 (40457386369) wspólny pełny, anuluje 120; raport 07 ok. 07:05 → partia 7 poprawki P-262 (Save pod klawiaturą nadal, liczba w poziomie, stoper) → koordynator hook P-260 (lokalna gałąź `p260-pre-push`, b5b4e6c). Okno maszyn do ok. 14:00 UTC.
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 
