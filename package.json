@@ -8,6 +8,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage --forceExit",
     "typecheck": "tsc --noEmit",
+    "prepare": "git config core.hooksPath .githooks || true",
     "verify": "npm run typecheck && npm run typecheck:testy && npm run lint && npm run jakosc:kontrole && npm test",
     "i18n": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en",
     "i18n:kod": "node scripts/sprawdz-i18n.mjs src/i18n/slowniki --zrodlo en --kod src/ekrany,src/komponenty,app",
