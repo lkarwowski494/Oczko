@@ -36,7 +36,7 @@ export function EkranAwaryjny({ powod, t, naNormalnie }: { powod: PowodTrybuAwar
       }); }}
       naSprobujNormalnie={() => void sprobujNormalnieTeraz().then(naNormalnie)}
       naZglosProblem={() => void diagnostykaAwaryjna({
-        powod, nieudaneStarty: a.nieudaneStarty, bledy: a.bledyZKopii,
+        powod, nieudaneStarty: a.nieudaneStarty, etap: a.etapPoprzedniegoStartu, bledy: a.bledyZKopii,
         srodowisko: {
           wersja: `${Constants.expoConfig?.version ?? '?'} (${Constants.expoConfig?.ios?.buildNumber ?? '?'})`,
           system: `iOS ${String(Platform.Version)}`, model: Constants.platform?.ios?.model ?? Constants.deviceName ?? '?',

@@ -11,7 +11,8 @@ import { otworzPortExpo } from '../dane/baza/adapter-expo';
 import Constants from 'expo-constants';
 import { sprzatnijKopie, zipSurowejKopii } from '../niezawodnosc/kopie';
 import { kopiaAwaryjna } from './kopia-awaryjna';
-import { kamienMilowy, odczytajStan, poczatekStartu, sprobujNormalnie, type StanStartu } from '../niezawodnosc/start';
+import { kamienMilowy, odczytajStan, poczatekStartu, sprobujNormalnie, wyjscieDoTla, type StanStartu } from '../niezawodnosc/start';
+import { odczytajEtap, opisEtapu, type NazwaEtapu } from '../niezawodnosc/etap-startu';
 import { awariaStartu, zegarAplikacji } from '../platforma/tryb-e2e';
 
 export type TrybStartu = { tryb: 'normalny' } | { tryb: 'awaryjny'; powod: 'petla-startow' | 'wersja_nowsza' | 'uszkodzony' } | { tryb: 'awaria-e2e' };
@@ -26,20 +27,40 @@ async function czytajStan(plik: string): Promise<StanStartu> {
   try { return odczytajStan(istniejePlik(plik) ? await czytajTekst(plik) : null); } catch { return odczytajStan(null); }
 }
 const zapisz = (plik: string, s: StanStartu) => { try { zapiszTekst(plik, JSON.stringify(s)); } catch { /* brak zapisu stanu nie blokuje startu */ } };
+/** P-271: plik etapu obok stanu startu (ta sama nazwa bazowa, jedno źródło ścieżek). */
+const plikEtapu = (stanStartu: string) => stanStartu.replace(/\.json$/, '-etap.json');
+let poczatekMs = 0; // początek bieżącego startu normalnego w procesie (czas od niego w pliku etapu)
+function zapiszEtapStartu(etap: NazwaEtapu): void {
+  try { zapiszTekst(plikEtapu(sciezki().stanStartu), JSON.stringify({ etap, ms: Math.max(0, Date.now() - poczatekMs) })); } catch { /* diagnostyka nie blokuje startu */ }
+}
 
 /** Początek startu na pierwszym planie (wołający czeka na AppState = active). */
 export async function rozpocznijStart(): Promise<TrybStartu> {
   const s = sciezki();
   const p = poczatekStartu(await czytajStan(s.stanStartu));
   zapisz(s.stanStartu, p.stan); // przed otwarciem bazy (ADR-0019)
-  if (p.awaryjny) return { tryb: 'awaryjny', powod: 'petla-startow' };
+  if (p.awaryjny) return { tryb: 'awaryjny', powod: 'petla-startow' }; // etap poprzedniego startu zostaje do „Zgłoś problem”
+  poczatekMs = Date.now();
+  zapiszEtapStartu('poczatek');
   if (awariaStartu()) return { tryb: 'awaria-e2e' };
   return { tryb: 'normalny' };
 }
 export async function zapiszKamien(): Promise<void> {
   const s = sciezki();
   zapisz(s.stanStartu, kamienMilowy(await czytajStan(s.stanStartu)));
+  zapiszEtapStartu('kamien');
   sprzatnijKopie(s.kopie, zegarAplikacji().teraz().ms); // ADR-0020 (6): kopie po KOPIE_RATUNKOWE_DNI, tylko po kamieniu milowym; błąd nie blokuje startu
+}
+/** P-271 (Trening L-029): wyjście do tła przed kamieniem nie jest nieudanym startem (app/_layout.tsx, AppState „background”, tylko start normalny). */
+export async function zapiszWyjscieDoTla(): Promise<void> {
+  const s = sciezki();
+  const przed = await czytajStan(s.stanStartu);
+  const po = wyjscieDoTla(przed);
+  if (po !== przed) zapisz(s.stanStartu, po);
+}
+/** P-271: etap pośredni startu normalnego (kontener gotowy: baza otwarta, migracje zakończone). */
+export function zapiszEtap(etap: 'kontener'): void {
+  zapiszEtapStartu(etap);
 }
 export async function sprobujNormalnieTeraz(): Promise<void> {
   const s = sciezki();
@@ -66,6 +87,11 @@ export function trybAwaryjny() {
     },
     /** P-194 Q4a: liczba nieudanych startów ze stanu strażnika (ADR-0019) do „Zgłoś problem”. */
     nieudaneStarty: async (): Promise<number> => (await czytajStan(s.stanStartu)).nieudane,
+    /** P-271: etap, do którego doszedł ostatni start normalny (linia techniczna do „Zgłoś problem”). */
+    etapPoprzedniegoStartu: async (): Promise<string> => {
+      const plik = plikEtapu(s.stanStartu);
+      try { return opisEtapu(odczytajEtap(istniejePlik(plik) ? await czytajTekst(plik) : null)); } catch { return opisEtapu(null); }
+    },
     /**
      * P-194 Q4a: kody `blad` do „Zgłoś problem” bez otwierania oryginału — z kopii surowej przeniesionej do katalogu tymczasowego (zamknięcie
      * połączenia z oryginałem przeniosłoby WAL do `.db`, P-211). Tylko odczyt; katalog usuwany po odczycie. Błąd → wyjątek (wołający: „not_opened”).

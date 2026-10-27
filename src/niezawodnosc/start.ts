@@ -40,3 +40,10 @@ export function kamienMilowy(_s: StanStartu): StanStartu {
 export function sprobujNormalnie(_s: StanStartu, prog = PROG_NIEUDANYCH_STARTOW): StanStartu {
   return { nieudane: Math.max(0, prog - 1), wToku: true };
 }
+/**
+ * Wyjście do tła przed kamieniem (P-271, jak Trening L-029): start nie skończył się awarią — użytkownik wyszedł, a iOS mógł potem ubić proces.
+ * Licznik zerowany. Start nie „w toku” (ekran awaryjny, po kamieniu) bez zmian: tło na ekranie awaryjnym nie przerywa wykrytej pętli.
+ */
+export function wyjscieDoTla(s: StanStartu): StanStartu {
+  return s.wToku ? { nieudane: 0, wToku: false } : s;
+}

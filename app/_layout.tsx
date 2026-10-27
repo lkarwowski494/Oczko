@@ -6,7 +6,7 @@ import { AppState, Platform, View } from 'react-native';
 import { Stack } from 'expo-router';
 import type { PowodTrybuAwaryjnego } from '../src/ekrany/TrybAwaryjny';
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
-import { powodAwaryjny, rozpocznijStart } from '../src/kompozycja/start-aplikacji';
+import { powodAwaryjny, rozpocznijStart, zapiszEtap, zapiszWyjscieDoTla } from '../src/kompozycja/start-aplikacji';
 import { tAwaryjny } from '../src/kompozycja/jezyk-awaryjny';
 import { DostawcaAplikacji, type Aplikacja } from '../src/kompozycja/Kontekst';
 import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
@@ -33,11 +33,16 @@ export default function Korzen(): React.ReactElement {
   const [proba, ustawProbe] = useState(0); // „Spróbuj normalnie”: start normalny w tym samym procesie
   useEffect(() => {
     let koniecNasluchu: (() => void) | null = null;
+    let koniecTla: (() => void) | null = null;
     let zywy = true;
     async function normalny(): Promise<void> {
+      // P-271 (Trening L-029): wyjście do tła przed kamieniem nie jest awarią (start awaryjny i wymuszona awaria E2E nie słuchają — scen. 09).
+      const tlo = AppState.addEventListener('change', (st) => { if (st === 'background') void zapiszWyjscieDoTla(); });
+      koniecTla = () => tlo.remove();
       const w = await utworzKontener().catch(() => null);
       if (!zywy) return;
       if (!w || !w.ok) { ustaw({ rodzaj: 'awaryjny', powod: powodAwaryjny(w && !w.ok ? w.powod : 'zapis') }); return; } // bez zastępczej bazy (ADR-0019)
+      zapiszEtap('kontener'); // P-271: diagnostyka etapu dla „Zgłoś problem”
       const p = preferencje();
       koniecNasluchu = w.wartosc.dostep.nasluchuj(); // KP-07: nasłuch transakcji od startu
       await w.wartosc.dostep.odswiez(); // limit dni liczony z bieżącym dostępem już przy pierwszym ekranie
@@ -58,9 +63,9 @@ export default function Korzen(): React.ReactElement {
     if (AppState.currentState === 'active') void start();
     else {
       const sub = AppState.addEventListener('change', (st) => { if (st === 'active') { sub.remove(); void start(); } });
-      return () => { zywy = false; sub.remove(); koniecNasluchu?.(); };
+      return () => { zywy = false; sub.remove(); koniecNasluchu?.(); koniecTla?.(); };
     }
-    return () => { zywy = false; koniecNasluchu?.(); };
+    return () => { zywy = false; koniecNasluchu?.(); koniecTla?.(); };
   }, [proba]);
   if (faza.rodzaj === 'awaryjny') return <EkranAwaryjnyZJezykiem powod={faza.powod} naNormalnie={() => { ustaw({ rodzaj: 'czeka' }); ustawProbe((n) => n + 1); }} />;
   // Build E2E: znacznik po zapisie „start w toku” (scenariusz 09 czeka na niego, zanim zabije proces; E2E 40306542928).
