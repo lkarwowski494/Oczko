@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 06:20 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-265 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 06:30 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-265 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -10,22 +10,31 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 3. Nowa sesja roli: źródło `lkarwowski494/oczko`, rewizja i gałąź wyniku `claude/jolly-thompson-paz6d8` (kopie: rewizja z gałęzi kopii). Szablon polecenia startowego: niżej. Repo `prompts` bywa niedostępne dla sesji ról — wtedy skrót zasad roli z P-242/P-243 (wiadomości koordynatora) albo prompt złożony przez koordynatora.
 4. Odtwórz dyżur nocny: maszyny macOS GitHub Actions są dostępne po północy czasu polskiego (P-187). Nocny przebieg „Jakość · iOS” (`jakosc-ios.yml`) rusza z pushem kodu na gałąź roboczą albo ręcznie; `cancel-in-progress` — każdy kolejny push kodu go anuluje.
 
-## Stan (2026-10-26 21:05 UTC)
+## Stan (2026-10-27 06:30 UTC) — przejęcie na drugie konto (tygodniowy limit konta 1)
+Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role trzeba uruchomić od nowa z gałęzi kopii i plików stanu.
+
 - **Zakres 1.0:** pełne MVP z wzorami (F) i iCloud (G), P-217. Plan: `docs/plan-app-store.md` (do odświeżenia pod P-217).
-- **Partia 5:** STOP E2 przyjęty (P-253): przebieg 114 zielony, bramka 9/9. Czerwone informacyjne zdiagnozowane przez 07 (P-254, P-255): większość to scenariusze (F07-26 lokalnie u 07), 3 błędy kodu P1 → 08 partii 7.
-- **Kolejka pushy w oknie maszyn (P-255, P-262; każdy push kodu/`e2e/**` anuluje bieżący przebieg):** zrobione: 114 (partia 5), 115 (partia 7 natywne), 117–118 (partia 6 natywne, poprawki P-255), 119 (07 F07-26, `[e2e-pelny]`, zielony, bramka 9/9). Teraz [sygnał 05:46 UTC]: 07 wypchnęło F07-27–29 pierwsze (7c425e1, 7143d81, f8f6919 `[e2e-pelny]`, autor `Claude`, nie przepisujemy) → partia 6 P-259 + P-261 (W1–W3 w CI) z `[e2e-pelny]` w head commicie — wypchnięte 05:48 UTC (bd60073), przebieg 121 (40457386369) wspólny pełny, anuluje 120; raport 07 ok. 07:05 → partia 7 poprawki P-262 (gotowe: `proba-p262` b28a1d3, verify 2537/2537; push po końcu 121 na sygnał, `[e2e-pelny]`, P-263) → partia 6 7af7ef2 (poprawka `eksperymenty-wzoru`, P-265) i zaraz partia 7 iCloud e996bae + 339a85b (błąd pól NULL w odbiorze, XCTest wektorów; osobny przebieg, P-264) → koordynator hook P-260 (lokalna gałąź `p260-pre-push`, b5b4e6c). Okno maszyn do ok. 14:00 UTC.
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
+- **Okno maszyn macOS** do ok. 14:00 UTC (P-187). Każdy push w ścieżkach `jakosc-ios.yml` (kod, `e2e/**`, `package.json`, `modules/**`, workflow) anuluje bieżący przebieg; pełny pakiet tylko z `[e2e-pelny]` w treści HEAD.
+- **Przebieg 121** (run 40457386369, bd60073, pełny): partia 6 P-259 + P-261 i 07 F07-27–29. 06:17 UTC: build i swift-test zielone, `eksperymenty-wzoru` padło (informacyjne, P-265). Koniec ok. 07:20 UTC. Sprawdzić: bramka 01–09 + 33, kaskada orientacji (32, 35–37, 39, 41, 42, 51, 52) zniknęła, 36 → pakiet podstawowy jeśli zielony. Raport roli 07 do `oczko-warsztat` (`07-jakosc/.../E2-przebieg-121.md`).
+- **Kolejka pushy (po kolei, każdy po końcu poprzedniego przebiegu):**
+  1. Partia 7 — poprawki P-262 (a) Save pod klawiaturą, (b) liczba w poziomie, (c) stoper po pierwszym +1: commity do cf5c83b z `claude/kopia-partia-7` (próbny rebase `proba-p262` b28a1d3, verify 2537/2537), head z `[e2e-pelny]` (P-263). Dowód (a): odstęp paska w hierarchii > 0; jeśli 0 → STOP z opcjami (1) InputAccessoryView „Done”, (2) ScrollView z `automaticallyAdjustKeyboardInsets`.
+  2. Partia 6 7af7ef2 (poprawka zadania `eksperymenty-wzoru`, tylko workflow, bez znacznika) i zaraz partia 7 e996bae + 339a85b (błąd pól NULL w odbiorze iCloud + XCTest wektorów) z `[e2e-pelny]` (P-264, P-265).
+  3. Koordynator: hook pre-push P-260 — gałąź `claude/kopia-koordynator-p260` (b5b4e6c; `.githooks/pre-push`, `package.json` prepare, test). Rebase na roboczą, `env -u NODE_PATH npm run verify`, push (zmienia `package.json` = wyzwala CI).
+- Właściciel w pracy (P-251, 2026-10-27): pingować tylko przy kosztach, kontach, scaleniu do `main`, wysyłce do Apple; bez raportów stanu.
 
-## Sesje w toku (konto bieżące)
-| Rola | Sesja | Zadanie | Stan |
+
+## Sesje ról (konto 1 — po przejściu na konto 2 nieaktywne; uruchomić nowe z szablonu niżej)
+| Rola | Sesja konta 1 | Gałąź kopii / plik stanu | Następny krok |
 |---|---|---|---|
-| 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | wzory, rysik, iPad, rozszerzenie; E0 P-243 | K1–K6a wypchnięte (do 80bdeb5; P-246, P-248); kompozycja ekranów w toku; Swift K7 lokalnie i na kopii |
-| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | iCloud; E0 P-242 | TS kompletne (do cb0ad21; P-245, P-247, P-249, P-250); Swift tylko na `claude/kopia-partia-7` (4540d68, ostatni commit = natywny, do cherry-picka), niekompilowany; **gotowość** do okna maszyn |
-| 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | scenariusze 44–52 (P-237, P-250 93fb215) | czeka na nocny przebieg → E2 fix-3 |
-| 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | JAK-15 zrobione | czeka; potem metadane i zrzuty |
+| 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | `claude/kopia-partia-6`, `docs/programista/partia-6.md` | wynik 121 (W1–W3), push 7af7ef2 w kroku 2 kolejki; U1–U8 do TestFlight |
+| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | `claude/kopia-partia-7`, `docs/programista/partia-7.md` | kroki 1 i 2 kolejki |
+| 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | plik stanu 07 w repo i `oczko-warsztat/07-jakosc/` | raporty przebiegów 121, P-262, iCloud |
+| 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | `docs/wydanie/` | czeka; potem metadane i zrzuty |
+| koordynator | session_01VjtVbMx8DYWkBfH4pvaCXK | ten plik, `docs/decyzje.md` (ostatnia P-265) | dyżur kolejki okna |
 
-Zaplanowane zadania: stary koordynator (session_01PMNU6KLHHk1wC8z78R16i6) skasował swoje. Nowy koordynator: przypomnienie 22:15 UTC (commit `[e2e-pelny]`, trig_01CWvVzvKA7sJWWAAg8mLVou), dalej sprawdzenia co 60–90 min.
+Zaplanowane zadania konta 1 (nie przechodzą): dyżur koordynatora trig_011oVGqtX5QizTxHZt2qDNyw (07:25 UTC), przypomnienie 07 trig_01WvsxiGZvC9Vof2ziQecS4p (07:05 UTC). Na koncie 2 koordynator ustawia własne sprawdzenia (`send_later`, co 15–60 min w oknie).
 
 ## Zasady nocy (P-241, P-244, P-251)
 - Role raportują koordynatorowi tylko na końcu etapu, przy STOP albo problemie (oszczędność limitu, P-251).
@@ -44,13 +53,3 @@ Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, 
 
 ## Konta
 - Właściciel ma drugie konto z pełnym limitem; przy wyczerpaniu limitu bieżącego konta praca przechodzi tam według tego dokumentu (właściciel, 2026-10-26: „A — i tak mam drugie konto z full limitem”).
-
-## Do porannego raportu dla właściciela
-- Raport poranny wysłany 2026-10-27 04:00 UTC. Właściciel (04:20 UTC): w pracy, pingować tylko przy rzeczywistej potrzebie (koszty, konta, scalenie, Apple), bez raportów stanu; brak Maca → W1–W3 w CI (P-261).
-- Wynik nocnego przebiegu iOS partii 5; postęp partii 6 (P-243, P-246, P-248) i 7 (P-242, P-245, P-247).
-- Propozycja reguły do biblioteki ról (trzeci push przed verify: 10, 06, 08 — P-248): np. `pre-push` w repo uruchamiający verify albo obowiązkowy krok „verify po każdym rebase z cudzymi zmianami” w zasadach wspólnych; dwie opcje z rekomendacją, decyzja właściciela.
-- Przypomnienie: identyfikatory App Group i iCloud w Apple Developer (P-233).
-
-## Plan okna maszyn tej nocy
-1. Uruchomienie: `jakosc-ios.yml` ma tylko wyzwalacz `push` (ścieżki kodu, `e2e/**` itd.), bez ręcznego; pakiet pełny i iPad tylko, gdy treść commitu HEAD zawiera `[e2e-pelny]` (`scripts/ci/e2e-czesci.mjs`). Przebieg z pushu czeka w kolejce na maszynę do ok. północy czasu polskiego i rusza sam; każdy późniejszy push kodu go anuluje. Dlatego ok. 22:15 UTC, gdy sesje przestaną pushować, koordynator wypycha jeden mały rzeczywisty commit w `e2e/README.md` (np. wpis „przebieg nocny 2026-10-26/27, partia 5 + scenariusze 44–52”) z `[e2e-pelny]` w treści. Ok. 23:15 UTC sprawdza (narzędzia GitHub MCP `actions_list`/`actions_get`), że przebieg ruszył; „not acquired by Runner” albo awaria przed pierwszym scenariuszem → jedno ponowienie (CLAUDE.md, P-091 10a). Zielony → STOP E2 partii 5. Czerwony → diagnoza z logów (`get_job_logs`), poprawka w sesji 08.
-2. Po jego zakończeniu sygnał dla partii 7, potem 6: kod natywny z gałęzi kopii na roboczą (jeden push na partię, kolejno, po zielonym verify), build w tym samym oknie; błędy kompilacji Swift naprawia sesja partii. Eksperymenty W1–W3 partii 6 według `docs/programista/partia-6-natywne.md`.
