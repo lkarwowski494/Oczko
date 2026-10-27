@@ -39,7 +39,9 @@ export function stanZapasu(l: WierszZapasu[], o: { zapytanie: string; filtr: Fil
       linia: `${w.kategoria === null ? t('zapas.kategoria_brak') : t('zapas.kategoria', { n: w.kategoria })} · ${t('zapas.motki', { count: w.motki }).replace(String(w.motki), f(w.motki, o.j))}`,
       motek: w.dlugoscMotkaM !== null && w.wagaMotkaG !== null
         ? t('zapas.motek', { dlugosc: wartoscMotka(w.dlugoscMotkaM, 'm', o.imperialny, o.j), waga: wartoscMotka(w.wagaMotkaG, 'g', o.imperialny, o.j) })
-        : null, // jedna z dwóch wartości: brak klucza na samą długość albo wagę — zgłoszenie do 04
+        : w.dlugoscMotkaM !== null ? t('zapas.motek_dlugosc', { dlugosc: wartoscMotka(w.dlugoscMotkaM, 'm', o.imperialny, o.j) }) // P-277 (A), teksty robocze
+        : w.wagaMotkaG !== null ? t('zapas.motek_waga', { waga: wartoscMotka(w.wagaMotkaG, 'g', o.imperialny, o.j) })
+        : null,
       zdjecieSha: w.zdjecieSha,
     }));
   const pusto: StanZapasu['pusto'] = wiersze.length > 0 ? null

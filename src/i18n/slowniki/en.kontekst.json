@@ -540,6 +540,8 @@
     "filtr_a11y": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): VoiceOver grupy chipów (radio).",
     "motki": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): w drugiej linii wiersza po kategorii („Weight 4 · 5 skeins”); {{count}} może być ułamkiem (0,5).",
     "motek": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): trzecia linia wiersza; {{dlugosc}} = zapas.dlugosc_obie albo jedna wartość.",
+    "motek_dlugosc": "Tekst roboczy 08 (P-277 A, scen. 40) — do zatwierdzenia w audycie 04. Trzecia linia wiersza zapasu, gdy podano tylko długość motka (bez wagi); {{dlugosc}} jak w zapas.motek.",
+    "motek_waga": "Tekst roboczy 08 (P-277 A) — do zatwierdzenia w audycie 04. Trzecia linia wiersza zapasu, gdy podano tylko wagę motka (bez długości); {{waga}} jak w zapas.motek.",
     "dlugosc_obie": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): wartość z etykiety i przeliczona (BR-ZAP-001 S1: „437 yd (399.59 m)”); przy jednostkach jak wpisane — sama wartość.",
     "pusto": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): pusty zapas; pod spodem przycisk zapas.dodaj.",
     "filtr_pusto": "Zapas włóczki (F-37, BR-ZAP-001–004, P-191 P8a): brak wyników filtra (gdy po edycji zniknie ostatnia); obok odnośnik zapas.pokaz_wszystkie.",
