@@ -27,6 +27,20 @@ Przebieg 123 (40468002239): build ✅, swift-test ✅, e2e iPhone 1 ✅, iPad �
 
 **Następny krok:** (1) sprawdzić koniec 121 i zgłosić koordynatorowi tylko problem; (2) na sygnał P-265: rebase 7af7ef2 na roboczą, verify, push bez znacznika, hash do koordynatora; (3) artefakt `eksperymenty-wzoru` → poprawki → wynik W1–W3 do koordynatora.
 
+## Plan 1.1 — pozostałe funkcje partii 6 (2026-10-27 09:00 UTC; inwentarz kodu na 1c78e3f, kontrola na wyrywki: `app/wzor.tsx:109`, grep kluczy)
+Dane i przypadki użycia K1–K5 są zrobione, z testami. Braki są w ekranach. Każdy punkt: test RNTL czerwony → kod → zielony, tylko na kopii, push na sygnał.
+| # | Brak (spec) | Dowód braku | Pliki |
+|---|---|---|---|
+| 1 | W1a: „Rename” w menu ••• przeglądarki (klucz `wzor.zmien_nazwe` jest, nieużyty) | grep w `src`, `app` = 0 | `WzorPrzegladarka.tsx`, `src/przypadki-uzycia/wzor.ts` (zmiana nazwy w kolejce zapisu, jeśli brak) |
+| 2 | W7a/W8/S4a: link do filmu — wiersz „Video” w grupie wzorów, „Add video link”, arkusz; dane gotowe (`film.ts`) | `LinkFilmu` nieużyty; `wzor.dodaj_film` = 0 | `WzorGrupa.tsx`, `app/projekt/[id].tsx`, `Wzor.tsx` |
+| 3 | W7a: „Paste” w arkuszu linku jest zaślepką `async () => null` | `app/wzor.tsx:109` | adapter schowka (API sprawdzić w dokumentacji SDK 57; nowa zależność = STOP do 05) |
+| 4 | W11: alert braku aparatu przy skanie; wiersz „import w toku” (dziś tylko stan `siec`); film bez sieci | `app/projekt/[id].tsx:101`; `wzor.brak_aparatu_opis` = 0 | `app/projekt/[id].tsx`, `src/kompozycja/wzor-dodawanie.ts` |
+| 5 | W5a: podpowiedź `wzor.rysik_podpowiedz` | grep = 0 | `WzorPrzegladarka.tsx` |
+| 6 | W1a: Magic Tap (+1 z przeglądarki), ekran nie gaśnie na `/wzor` [DO SPRAWDZENIA, czy spec tego wymaga na wzorze] | `onMagicTap` = 0 | `WzorPrzegladarka.tsx`, `app/wzor.tsx` |
+| 7 | W8: miniatura pierwszej strony w grupie wzorów | brak | wymaga funkcji natywnej (okno maszyn) |
+| 8 | R2: arkusz skrzynki także na ekranie projektu; podgląd pliku | tylko `app/projekty.tsx:25-58` | `app/projekt/[id].tsx` |
+Zgłoszenie do 04: design-spec `:663` „bez kosza (N4 → 05)” sprzeczny z P-229/P-243 S2a. Kolejność: 1, 5, 4, 2, 3, 8, 6, 7 (najpierw czysty TS bez nowych zależności). Czas agenta ok. 6–9 h; czeka na: okno maszyn (7), decyzję o schowku (3), wynik W1 (Word).
+
 ## E0.1 Środowisko
 | Sprawdzenie | Wynik |
 |---|---|
