@@ -1,7 +1,7 @@
 // Wspólne elementy arkuszy (design-spec „Komponenty”: arkusze systemowe — treść się przewija, przyciski zawsze widoczne; formularze Save / Cancel).
 // Prezentację arkusza (formSheet) daje trasa expo-router; tu tylko zawartość. Wartości z modułu motywu (tokeny 04).
 import React, { useEffect, useRef, useState } from 'react';
-import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type KeyboardEvent } from 'react-native';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 
 /** Ile dół paska przycisków (współrzędne okna) zachodzi na górną krawędź klawiatury; bez klawiatury 0 (P-255 (a)). */
@@ -11,8 +11,9 @@ export function odstepNadKlawiatura(w: { dolPrzyciskow: number; gornaKlawiatury:
 type Pomiar = (f: (x: number, y: number, szer: number, wys: number) => void) => void;
 
 /**
- * Przyciski zawsze widoczne (design-spec „Komponenty”), także nad klawiaturą numeryczną (scen. 10: Save pod klawiszem „0”). Arkusz formSheet
- * jest przesunięty w oknie, więc pomiar w oknie (measureInWindow), nie ramka względem rodzica jak w KeyboardAvoidingView. `zmierz`: testy.
+ * Przyciski zawsze widoczne (design-spec „Komponenty”), także nad klawiaturą numeryczną (scen. 10: Save pod klawiszem „0”). Telefon: arkusz
+ * sięga dołu ekranu, więc odstęp = wysokość klawiatury, bez pomiaru — pomiar w oknie w formSheet zawiódł na urządzeniu (P-262 (a), przebieg
+ * 119: pasek bez odstępu). iPad: arkusz na środku, system go przesuwa → pomiar w oknie (measureInWindow). `zmierz`: testy.
  */
 export function Arkusz(p: { tytul: string; children: React.ReactNode; przyciski: React.ReactNode; testID?: string; zmierz?: Pomiar }): React.ReactElement {
   const st = style(useKolory());
@@ -22,11 +23,14 @@ export function Arkusz(p: { tytul: string; children: React.ReactNode; przyciski:
   useEffect(() => {
     const zmierz: Pomiar = p.zmierz ?? ((f) => pasek.current?.measureInWindow(f));
     const ustaw = (o: number) => { biezacy.current = o; ustawNadKlawiatura(o); };
-    const pokaz = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', (e) => {
+    const naPokaz = (e: KeyboardEvent) => {
+      if (Platform.OS === 'ios' && !Platform.isPad) { ustaw(Math.max(0, e.endCoordinates.height)); return; }
       zmierz((_x, y, _s, wys) => ustaw(odstepNadKlawiatura({ dolPrzyciskow: y + wys - biezacy.current, gornaKlawiatury: e.endCoordinates.screenY })));
-    });
+    };
+    // iOS: WillShow i DidShow (drugie, gdyby pierwsze przepadło przy zmianie pola); ustawienie jest idempotentne.
+    const pokaz = Platform.OS === 'ios' ? [Keyboard.addListener('keyboardWillShow', naPokaz), Keyboard.addListener('keyboardDidShow', naPokaz)] : [Keyboard.addListener('keyboardDidShow', naPokaz)];
     const schowaj = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => ustaw(0));
-    return () => { pokaz.remove(); schowaj.remove(); };
+    return () => { pokaz.forEach((s) => s.remove()); schowaj.remove(); };
   }, [p.zmierz]);
   return (
     <View style={st.arkusz} testID={p.testID}>

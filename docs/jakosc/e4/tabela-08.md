@@ -106,7 +106,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/zegarek-kontakt.test.ts` | zielony (główny zestaw) | 4 | BR-DAN-011, P-193, P-195, P-199 | `src/dane/baza/przeniesienie`<br>`src/dane/repozytoria/ustawienia`<br>`src/domena/porty`<br>`src/przypadki-uzycia/dziennik`<br>`src/przypadki-uzycia/start` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/zegarek-potwierdzenia.test.ts` | zielony (główny zestaw) | 6 | P-135, P-139, R-021 | `src/domena/porty`<br>`src/konfiguracja`<br>`src/platforma/zegarek`<br>`src/przypadki-uzycia/dziennik` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/aplikacja.test.tsx` | zielony (główny zestaw) | 6 | BR-DAN-012/S2, BR-LIC-001, BR-LIC-001/S1, KP-07, KP-08, KP-13, NFR-DAN-002, NFR-PIE-001, R-020, R-091 | `src/domena/porty`<br>`src/ekrany/Aplikacja`<br>`src/ekrany/wspolne` | Z07-11, Z07-22 |
-| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/arkusz-klawiatura.test.tsx` | zielony (główny zestaw) | 2 | P-255 | `src/ekrany/Arkusz`<br>`src/ekrany/motyw` | — |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/arkusz-klawiatura.test.tsx` | zielony (główny zestaw) | 3 | P-255, P-262 | `src/ekrany/Arkusz`<br>`src/ekrany/motyw` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/bezpieczny-ipad.test.tsx` | zielony (główny zestaw) | 2 | P-220 | `src/kompozycja/Bezpieczny` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/bledy-js.test.ts` | zielony (główny zestaw) | 3 | P-194 | `src/kompozycja/bledy-js` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-pomiar-plus.test.tsx` | zielony (główny zestaw) | 2 | NFR-WYD-001, P-255 | `src/kompozycja/e2e/panele` | — |
@@ -143,6 +143,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/projekt-p5.test.tsx` | zielony (główny zestaw) | 12 | BR-DNI-005, BR-LIC-018, BR-PRJ-002, BR-PRJ-005, P-183, P-191, RD-14 | `src/ekrany/Projekt`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/sesje.test.tsx` | zielony (główny zestaw) | 5 | BR-PRJ-013, BR-PRJ-013/S4, P-191, P-195 | `src/ekrany/Formularze`<br>`src/ekrany/Sesje`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/stoper-kompozycja.test.tsx` | zielony (główny zestaw) | 2 | P-191, P-199 | `src/ekrany/wspolne`<br>`src/kompozycja/StoperLicznika`<br>`src/przypadki-uzycia/sesja` | Z07-22 |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/stoper-po-pierwszym-plusie.test.tsx` | zielony (główny zestaw) | 1 | P-191, P-262 | `src/kompozycja/Kontekst` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/stoper-sprawdz.test.tsx` | zielony (główny zestaw) | 1 | P-191 | `src/ekrany/Stoper`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/stoper.test.tsx` | zielony (główny zestaw) | 5 | P-191 | `src/ekrany/Stoper`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/tryb-awaryjny-dane.test.tsx` | zielony (główny zestaw) | 4 | NFR-DAN-001, NFR-DAN-003, P-047, R-050, R-068, R-079 | `src/ekrany/Dane`<br>`src/ekrany/TrybAwaryjny`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
@@ -151,7 +152,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/ustawienia.test.tsx` | zielony (główny zestaw) | 7 | BR-DAN-010, BR-DAN-012/S3, BR-LIC-020/S3, BR-ZAK-004, BR-ZAK-004/S1, BR-ZAK-006/S5, BR-ZAK-006/S7, KP-13 | `src/ekrany/Ustawienia`<br>`src/ekrany/wspolne` | Z07-05, Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/wzor-dodawanie.test.ts` | zielony (główny zestaw) | 3 | — | `src/ekrany/wspolne`<br>`src/kompozycja/wzor-dodawanie` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/wzor-grupa.test.tsx` | zielony (główny zestaw) | 4 | P-218, P-220 | `src/ekrany/WzorGrupa`<br>`src/ekrany/wspolne` | Z07-22 |
-| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/wzor-przegladarka.test.tsx` | zielony (główny zestaw) | 10 | BR-WZR-005, BR-WZR-008, P-124, P-126, P-218, P-220, P-229 | `src/domena/uklad`<br>`src/ekrany/WzorPrzegladarka`<br>`src/ekrany/wspolne` | Z07-22 |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/wzor-przegladarka.test.tsx` | zielony (główny zestaw) | 12 | BR-WZR-005, BR-WZR-008, P-124, P-126, P-218, P-220, P-229, P-262 | `src/domena/uklad`<br>`src/ekrany/WzorPrzegladarka`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/wzor-skrzynka.test.tsx` | zielony (główny zestaw) | 2 | P-046, P-230 | `src/ekrany/WzorSkrzynka`<br>`src/ekrany/wspolne` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/zapas-kompozycja.test.ts` | zielony (główny zestaw) | 10 | BR-ZAP-001, BR-ZAP-001/S1, BR-ZAP-003, BR-ZAP-004, BR-ZAP-004/S1, BR-ZAP-004/S2, P-191, RD-03, RD-11, RD-19 | `src/ekrany/wspolne`<br>`src/kompozycja/zapas`<br>`src/przypadki-uzycia/zapas` | Z07-22 |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/zapas.test.tsx` | zielony (główny zestaw) | 11 | BR-ZAP-001, BR-ZAP-001/S1, BR-ZAP-004/S2, P-191, P-209 | `src/ekrany/Zapas`<br>`src/ekrany/wspolne`<br>`src/kompozycja/zapas`<br>`src/przypadki-uzycia/zapas` | Z07-22 |
@@ -184,4 +185,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/uklad-rysik.test.ts` | zielony (główny zestaw) | 5 | BR-WZR-004, BR-WZR-008, P-218, P-220, P-225, P-226 | `src/domena/rysik`<br>`src/domena/uklad` | — |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 180; zależnych od poprawek: 121.
+Razem plików testów: 181; zależnych od poprawek: 121.
