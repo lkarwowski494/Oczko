@@ -2,7 +2,7 @@
 // Bez wzoru: grupa „Add pattern” (W7a, subflow otworz-wzor-pdf). Widok strony = moduł natywny `oczko-wzor` (WidokWzoru); build bez modułu: pusta strona.
 // Pasek licznika woła te same usługi co licznik (+1/−1), więc znacznik idzie z licznikiem (BR-WZR-003). Ostatni wzór w `ostatnie_miejsce` (P-246).
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, View, useWindowDimensions } from 'react-native';
+import { Alert, Linking, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { WidokWzoruNatywny } from '../modules/oczko-wzor';
 import { ukladOkna } from '../src/domena/uklad';
@@ -13,7 +13,7 @@ import { useKolory } from '../src/ekrany/motyw';
 import { Bezpieczny } from '../src/kompozycja/Bezpieczny';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { krotkaData } from '../src/kompozycja/projekt';
-import { alertImportu, nazwaDomyslna } from '../src/kompozycja/wzor-dodawanie';
+import { alertImportu, alertSkanu, nazwaDomyslna } from '../src/kompozycja/wzor-dodawanie';
 import { wybierzPlikWzoru } from '../src/platforma/system-plikow-uzytkownika';
 import { paneleE2e, szerokoscOknaE2e } from '../src/platforma/tryb-e2e';
 import { wybieraczZdjec } from '../src/platforma/zdjecia';
@@ -41,7 +41,8 @@ export default function EkranWzoru(): React.ReactElement {
   const [zakreslenia, ustawZakreslenia] = useState(0);
   const [cofnij, ustawCofnij] = useState(0);
   const [link, ustawLink] = useState(false);
-  const [nazwa, ustawArkuszNazwy] = useState(false); // ••• → „Rename” (W1a)
+  const [arkuszNazwy, ustawArkuszNazwy] = useState(false); // ••• → „Rename” (W1a)
+  const [importWToku, ustawImport] = useState<string | null>(null); // W11: wiersz „import w toku” w czasie konwersji
 
   const wczytaj = useCallback(async (wybrany?: string) => {
     const w = await licznik.widok();
@@ -85,7 +86,12 @@ export default function EkranWzoru(): React.ReactElement {
       nazwa = nazwaDomyslna({ rodzaj: 'plik', nazwa: p.nazwa }, t, data); plik = p.nazwa;
     } else if (zrodlo === 'skan') {
       const s = await kontener.wzor.platforma.skanuj();
-      if (!s.ok) { pokaz(alertImportu(s.powod, '', t)); return; }
+      if (!s.ok) { // W11 :664: brak aparatu → „Open Settings” / „Cancel”
+        const a = alertSkanu(s.powod, t);
+        if (a?.ustawienia) Alert.alert(a.tytul, a.opis, [{ text: t('wspolne.anuluj'), style: 'cancel' }, { text: t('zdjecia.otworz_ustawienia'), onPress: () => void Linking.openSettings() }]);
+        else pokaz(a);
+        return;
+      }
       z = { rodzaj: 'obrazy', sciezki: s.wartosc.sciezki }; nazwa = nazwaDomyslna({ rodzaj: 'skan' }, t, data);
     } else {
       const s = await wybieraczZdjec().wybierzStrony();
@@ -93,7 +99,8 @@ export default function EkranWzoru(): React.ReactElement {
       z = { rodzaj: 'obrazy', sciezki: s.sciezki }; nazwa = nazwaDomyslna({ rodzaj: 'zdjecia' }, t, data);
     }
     if (!z) return;
-    const r = await dodajWzor(zw, { projektId: lw.projektId, nazwa, zrodlo: z });
+    ustawImport(nazwa);
+    const r = await dodajWzor(zw, { projektId: lw.projektId, nazwa, zrodlo: z }).finally(() => ustawImport(null));
     if (r.ok) { await kontener.wzor.k.odswiezMigawke(); await wczytaj(r.wartosc.wzorId); }
     else pokaz(alertImportu(r.powod, plik, t));
   }
@@ -109,7 +116,7 @@ export default function EkranWzoru(): React.ReactElement {
   } : null), [widok?.wzorId, widok?.plikPdf, obrotyKlucz]); // eslint-disable-line react-hooks/exhaustive-deps -- rysunki tylko przy zmianie wzoru
   if (link) return <Bezpieczny><ArkuszLinku t={t} naAnuluj={() => ustawLink(false)} naWklej={async () => null} naZapisz={(adres) => { ustawLink(false); void dodaj({ rodzaj: 'adres', adres }); }} /></Bezpieczny>;
   if (!lw || !wzory) return <View style={{ flex: 1, backgroundColor: k.papier }} />;
-  if (nazwa && widok) return (
+  if (arkuszNazwy && widok) return (
     <Bezpieczny><ArkuszNazwyWzoru t={t} nazwa={widok.nazwa} naAnuluj={() => ustawArkuszNazwy(false)}
       naZapisz={(n) => void zmienNazweWzoru(zw, { wzorId: widok.wzorId, nazwa: n }).then(async (r) => { if (r.ok) { ustawArkuszNazwy(false); await wczytaj(widok.wzorId); } })} /></Bezpieczny>
   );
@@ -119,7 +126,7 @@ export default function EkranWzoru(): React.ReactElement {
     return (
       <Bezpieczny>
         <View style={{ flex: 1, padding: 16, backgroundColor: k.papier }}>
-          <GrupaWzorow wzory={[]} oczekujace={[]} skaner={kontener.wzor.platforma.skanerDostepny()} t={t} naOtworz={(w) => void wczytaj(w)} naDodaj={(z) => void dodaj(z)} naUsunOczekujacy={() => undefined}
+          <GrupaWzorow wzory={[]} oczekujace={importWToku ? [{ id: 'import', nazwa: importWToku, stan: 'import' }] : []} skaner={kontener.wzor.platforma.skanerDostepny()} t={t} naOtworz={(w) => void wczytaj(w)} naDodaj={(z) => void dodaj(z)} naUsunOczekujacy={() => undefined}
             panelE2e={paneleE2e ? <paneleE2e.PanelWzoru katalogTymczasowy={kontener.z.katalogi.tymczasowy} naDodaj={(w) => void dodaj({ rodzaj: 'gotowe', ...w })} /> : null} />
         </View>
       </Bezpieczny>

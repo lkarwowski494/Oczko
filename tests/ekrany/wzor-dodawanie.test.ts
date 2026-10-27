@@ -1,5 +1,5 @@
 // Stany importu W11 (design-spec „Stany importu”): powód z dodajWzor → alert (tytuł, opis); `anulowano` i strona bez sieci (czeka w skrzynce) bez alertu.
-import { alertImportu, nazwaDomyslna } from '../../src/kompozycja/wzor-dodawanie';
+import { alertImportu, alertSkanu, nazwaDomyslna } from '../../src/kompozycja/wzor-dodawanie';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { tEn } from './pomoc';
 
@@ -27,4 +27,11 @@ test('nazwa domyślna: plik bez rozszerzenia, host strony, „Scan …” / „P
   expect(nazwaDomyslna({ rodzaj: 'adres', adres: 'https://www.example.org/wzory/czapka' }, t, 'Nov 10')).toBe('www.example.org');
   expect(nazwaDomyslna({ rodzaj: 'skan' }, t, 'Nov 10')).toBe('Scan Nov 10');
   expect(nazwaDomyslna({ rodzaj: 'zdjecia' }, t, 'Nov 10')).toBe('Photos Nov 10');
+});
+
+// W11 „Brak dostępu do aparatu (skaner)” (design-spec :664): skaner zwraca `odmowa` (Skaner.swift), a alert ma mówić o aparacie, nie o stronie WWW.
+test('skaner: odmowa → alert braku aparatu z „Open Settings” i „Cancel”; inne powody jak przy imporcie', () => {
+  expect(alertSkanu('odmowa', t)).toEqual({ tytul: t('zdjecia.brak_aparatu_tytul'), opis: t('wzor.brak_aparatu_opis'), ustawienia: true });
+  expect(alertSkanu('anulowano', t)).toBeNull();
+  expect(alertSkanu('zapis', t)).toEqual({ ...alertImportu('zapis', '', t), ustawienia: false });
 });

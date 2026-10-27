@@ -19,3 +19,9 @@ export function nazwaDomyslna(z: { rodzaj: 'plik'; nazwa: string } | { rodzaj: '
   if (z.rodzaj === 'adres') { const m = /^https?:\/\/([^/?#]+)/i.exec(z.adres); return m ? m[1] : z.adres; }
   return t(z.rodzaj === 'skan' ? 'wzor.nazwa_skan' : 'wzor.nazwa_zdjecia', { data });
 }
+/** Skaner stron (W11 :664): `odmowa` = brak dostępu do aparatu (Skaner.swift) → alert z „Open Settings”; inne powody jak import. */
+export function alertSkanu(powod: Powod, t: Tlumacz): { tytul: string; opis: string; ustawienia: boolean } | null {
+  if (powod === 'odmowa') return { tytul: t('zdjecia.brak_aparatu_tytul'), opis: t('wzor.brak_aparatu_opis'), ustawienia: true };
+  const a = alertImportu(powod, '', t);
+  return a ? { ...a, ustawienia: false } : null;
+}
