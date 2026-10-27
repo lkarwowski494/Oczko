@@ -18,10 +18,5 @@ Pod::Spec.new do |s|
   s.dependency 'ExpoModulesCore'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'SWIFT_COMPILATION_MODE' => 'wholemodule' }
   s.source_files = ['ios/**/*.swift', 'Pakiet/Sources/OczkoWzorLogika/*.swift']
-  # Testy okna maszyn (W1–W3, docs/programista/partia-6-natywne.md): test spec CocoaPods, poza buildem aplikacji.
-  s.test_spec 'Testy' do |t|
-    t.source_files = 'TestyOknaMaszyn/*.swift'
-    t.frameworks = 'XCTest'
-    t.resources = 'TestyOknaMaszyn/korpus/*.docx' # node TestyOknaMaszyn/korpus/generuj-korpus.mjs
-  end
+  # Eksperymenty W1–W3: osobny pakiet SwiftPM TestyOknaMaszyn/ (P-261, zadanie `eksperymenty-wzoru` w jakosc-ios.yml), poza podem.
 end

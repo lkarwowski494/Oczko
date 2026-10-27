@@ -64,6 +64,7 @@ Kod 0, 187 zestawów, **2330/2330**.
 Agent: K1–K5 ok. 6–8 h, K6 ok. 8–10 h, K7–K8 ok. 8–12 h (bez kompilacji tutaj — poprawki w oknie maszyn). Czekanie: okno maszyn (K7, W1–W3, E2E iPada), odpowiedzi na S1–S4. Właściciel: identyfikatory App Group i iCloud w portalu (P-233), iPad przy TestFlight (P-226).
 
 ## Dziennik sesji
+- 2026-10-27 ~04:00–05:20 UTC: P-258 (podejrzany expo-screen-orientation, dowód z logów), P-259 A (66e0d5a: orientacja w react-native-screens), P-261 (W1–W3 w CI: pakiet SwiftPM `TestyOknaMaszyn`, zadanie `eksperymenty-wzoru` informacyjne; lista „tylko urządzenie” U1–U8 w partia-6-natywne.md; kontrola-swift pomija dowiązania i Package.swift). Lokalnie, push na sygnał.
 - 2026-10-27 01:19–02:55 UTC: okno P-256 — push 45c09b2 (build czerwony: runOnQueue na Function), 94a7657 (build/swift-test zielone, e2e 01 czerwony na maszynie?); raport do koordynatora; P-257 (c).
 - 2026-10-26 ~20:15–21:00 UTC: K6a (b27607b), P-246 (168204b), błąd procesu: push b27607b po rebase bez verify → 50da380 (P-248); K7 od pod-agenta (worktree, scalony do `partia6-lokalna`); widokWzoru, kompozycja wzoru, wiring tras lokalnie; orientacja; P-248 D1a/D2a.
 - 2026-10-26 ~20:00–20:10 UTC: K1–K2 (f5ac639), P-243 (S1a, S2a), P-244 (gałąź kopii); K3 skrzynka i migawka (adaptery App Group przez expo-file-system `Paths.appleSharedContainers`), K4 argumenty E2E, K5 `ukladOkna` i `politykaPlotna`.

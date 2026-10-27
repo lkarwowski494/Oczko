@@ -1,19 +1,27 @@
-// Eksperymenty okna maszyn (moduly.md „Kontrakt partii 6”, P-187; opis i komendy: docs/programista/partia-6-natywne.md). Test spec `Testy`
-// podspecu OczkoWzor — uruchamiany na symulatorze iOS po prebuild, poza buildem aplikacji.
+// Eksperymenty okna maszyn W1–W3 (moduly.md „Kontrakt partii 6”, P-187; P-261: CI macOS, krok informacyjny; opis: docs/programista/partia-6-natywne.md).
+// Wiersze „W1 …”, „W2 …”, „W3 …” w logu trafiają do podsumowania przebiegu (jakosc-ios.yml, zadanie `eksperymenty-wzoru`).
 // W1: .docx z korpusu (tekst, tabela, obraz) → PDF: plik się otwiera, ≥ 1 strona, tekst obecny (obraz: strona nie jest pusta). Porażka W1 = Word
 //     w podglądzie zastępczym 5a (`wzor.pdf_sha256 = NULL`) — decyzja koordynatora po wyniku.
-// W2: PDF 100 MB / 300 stron — pomiar w Instruments [DO ZMIERZENIA]; tu tylko kontrola, że widok otwiera duży plik i przewija na ostatnią stronę.
+// W2: PDF ≈ 100 MB / 300 stron w PDFView: czas otwarcia i przejścia na ostatnią stronę, przyrost pamięci procesu (phys_footprint) [POMIAR na
+//     symulatorze; płynność przewijania na iPadzie — lista „tylko urządzenie”].
 // W3: `pencilOnly` — XCTest nie wytwarza syntetycznego dotyku palcem w PKCanvasView (brak publicznego API UITouch), więc test sprawdza politykę
 //     płótna po pierwszym rysiku (drawingPolicy == .pencilOnly); przeciągnięcie palcem bez zmiany `drawing.strokes.count` — lista urządzenia (P-226).
+import Darwin
 import PDFKit
 import PencilKit
 import XCTest
-@testable import OczkoWzor
+@testable import WzorNatywny
+
+private func pamiecMB() -> Double {
+  var info = task_vm_info_data_t()
+  var n = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size)
+  let kr = withUnsafeMutablePointer(to: &info) { $0.withMemoryRebound(to: integer_t.self, capacity: Int(n)) { task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &n) } }
+  return kr == KERN_SUCCESS ? Double(info.phys_footprint) / 1_048_576 : -1
+}
 
 final class EksperymentyTests: XCTestCase {
   private func zasob(_ nazwa: String) throws -> URL {
-    let b = Bundle(for: EksperymentyTests.self)
-    return try XCTUnwrap(b.url(forResource: nazwa, withExtension: "docx"), "korpus: uruchom generuj-korpus.mjs przed pod install")
+    try XCTUnwrap(Bundle.module.url(forResource: nazwa, withExtension: "docx"), "korpus: node Testy/korpus/generuj-korpus.mjs")
   }
   private func wynik(_ json: String) throws -> [String: Any] {
     try XCTUnwrap(JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any])
@@ -22,6 +30,7 @@ final class EksperymentyTests: XCTestCase {
   @MainActor func testW1WordNaPdf() async throws {
     for nazwa in ["tekst", "tabela", "obraz"] {
       let w = try wynik(await Konwersja.naPdf(.word(try zasob(nazwa))))
+      print("W1 \(nazwa): wynik \(w)")
       XCTAssertEqual(w["ok"] as? Bool, true, "\(nazwa): \(w)")
       guard let s = w["sciezka"] as? String, let d = PDFDocument(url: URL(fileURLWithPath: s)) else { XCTFail("\(nazwa): brak PDF"); continue }
       XCTAssertGreaterThanOrEqual(d.pageCount, 1, nazwa)
@@ -32,6 +41,7 @@ final class EksperymentyTests: XCTestCase {
 
   @MainActor func testW1StronaBezSieciToBrakSieci() async throws {
     let w = try wynik(await Konwersja.naPdf(.adres(URL(string: "https://nie-istnieje.invalid/wzor")!)))
+    print("W1 adres bez sieci: \(w)")
     XCTAssertEqual(w["powod"] as? String, "brak_sieci")
   }
 
@@ -49,11 +59,23 @@ final class EksperymentyTests: XCTestCase {
         if let o = b?.makeImage() { UIImage(cgImage: o).draw(in: CGRect(x: 72, y: 120, width: 468, height: 468)) }
       }
     }
-    let widok = WidokWzoru(appContext: nil)
-    widok.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-    widok.ustawPlik(cel.path)
-    widok.przejdzDoStrony(299)
-    print("W2: plik \(try FileManager.default.attributesOfItem(atPath: cel.path)[.size] ?? 0) B — pamięć i płynność: Instruments (Allocations, Animation Hitches)")
+    let rozmiar = (try FileManager.default.attributesOfItem(atPath: cel.path)[.size] as? NSNumber)?.intValue ?? 0
+    XCTAssertEqual(SprawdzeniePdf.sprawdz(cel), .success(300))
+    let przed = pamiecMB(), t0 = Date()
+    let okno = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+    let pdf = PDFView(frame: okno.bounds)
+    okno.addSubview(pdf); okno.isHidden = false
+    pdf.autoScales = true
+    pdf.document = try XCTUnwrap(PDFDocument(url: cel))
+    pdf.layoutIfNeeded()
+    let otwarcie = Date().timeIntervalSince(t0)
+    pdf.go(to: try XCTUnwrap(pdf.document?.page(at: 299)))
+    pdf.layoutIfNeeded()
+    RunLoop.main.run(until: Date().addingTimeInterval(1)) // rysowanie kafelków strony
+    let razem = Date().timeIntervalSince(t0)
+    XCTAssertEqual(pdf.currentPage?.pageRef?.pageNumber, 300)
+    print(String(format: "W2: plik %.1f MB, otwarcie %.2f s, do strony 300 %.2f s, pamięć +%.1f MB (przed %.1f MB)",
+                 Double(rozmiar) / 1_048_576, otwarcie, razem, pamiecMB() - przed, przed))
   }
 
   @MainActor func testW3PolitykaPoPierwszymRysiku() {
@@ -66,5 +88,6 @@ final class EksperymentyTests: XCTestCase {
     let wyl = ustawieniePlotna(.wylaczone)
     c.isUserInteractionEnabled = wyl.interakcja
     XCTAssertFalse(c.isUserInteractionEnabled) // bez narzędzia palec przewija PDF (BR-WZR-008 S3)
+    print("W3: tylkoRysik → .pencilOnly, wylaczone → bez interakcji; dotyk palcem po rysiku: lista „tylko urządzenie”")
   }
 }

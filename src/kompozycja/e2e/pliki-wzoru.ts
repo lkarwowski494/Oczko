@@ -1,5 +1,5 @@
 // Build E2E (e2e/README.md `e2e-wzor-word`, `e2e-wzor-www`; scenariusze 24, 25): dokument Word testowy (treść syntetyczna, korpus W1
-// z modules/oczko-wzor/TestyOknaMaszyn/korpus/tekst.docx) i adres strony testowej z domeny zastrzeżonej do przykładów (RFC 2606).
+// z modules/oczko-wzor/TestyOknaMaszyn/Testy/korpus/tekst.docx) i adres strony testowej z domeny zastrzeżonej do przykładów (RFC 2606).
 // Ładowany tylko przez panele E2E (P-238).
 import { otworzDoZapisu, polacz } from '../../dane/pliki/system';
 import { zBase64 } from '../e2e-zdjecie';

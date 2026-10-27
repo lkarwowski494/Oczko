@@ -62,6 +62,49 @@ jobs:
             swift-test.log
             swift-test-wzor.log
           retention-days: 3
+  eksperymenty-wzoru:
+    # W1–W3 modułu wzoru (P-261: właściciel bez Maca; docs/programista/partia-6-natywne.md): pakiet SwiftPM modules/oczko-wzor/TestyOknaMaszyn
+    # (te same pliki konwersji i logiki co pod OczkoWzor, dowiązania) na symulatorze iOS. INFORMACYJNIE: continue-on-error, nie blokuje e2e ani
+    # bramki; wynik w podsumowaniu (wiersze „W1/W2/W3”) i w artefakcie. Co wymaga urządzenia (rysik, płynność) — lista „tylko urządzenie” (P-226).
+    runs-on: macos-26
+    timeout-minutes: 30
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Xcode 26.x (najnowszy z obrazu, P-091 5a)
+        run: bash .github/scripts/jakosc/select-xcode.sh 26 && xcodebuild -version | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Platforma iOS zgodna z SDK (pobranie tylko, gdy jej brak)
+        run: bash .github/scripts/jakosc/ensure-ios-platform.sh
+      - name: W1–W3 (xcodebuild test, symulator iPhone)
+        run: |
+          set -o pipefail
+          SDK=$(xcrun --sdk iphonesimulator --show-sdk-version)
+          LIST=$(xcrun simctl list devices available | awk -v h="-- iOS $SDK --" '$0 == h { f = 1; next } /^-- / { f = 0 } f')
+          [ -n "$LIST" ] || LIST=$(xcrun simctl list devices available)
+          DEV=""
+          for pat in "iPhone 17 \(" "iPhone 16 \(" "iPhone"; do
+            DEV=$(printf '%s\n' "$LIST" | node .github/scripts/jakosc/sim-wybor.mjs "$pat" || true)
+            [ -n "$DEV" ] && break
+          done
+          [ -n "$DEV" ] || { echo "::error::brak symulatora iPhone"; exit 1; }
+          echo "### Eksperymenty W1–W3 (informacyjnie, P-261) — symulator $DEV (iOS $SDK)" >> "$GITHUB_STEP_SUMMARY"
+          cd modules/oczko-wzor/TestyOknaMaszyn
+          kod=0
+          # Schemat pakietu SwiftPM nadaje Xcode (produkt albo „<pakiet>-Package”) — z listy, nie zgadywany
+          SCHEMAT=$(xcodebuild -list -json 2>/dev/null | node -e 'const j=JSON.parse(require("fs").readFileSync(0,"utf8")); const s=(j.workspace||j.project).schemes; console.log(s.find((x)=>x.endsWith("-Package"))||s.find((x)=>x==="OczkoWzorEksperymenty")||s[0])')
+          echo "- schemat: $SCHEMAT" >> "$GITHUB_STEP_SUMMARY"
+          xcodebuild test -scheme "$SCHEMAT" -destination "id=$DEV" -resultBundlePath "$RUNNER_TEMP/w123.xcresult" \
+            2>&1 | tee "$GITHUB_WORKSPACE/eksperymenty-wzoru.log" || kod=$?
+          { grep -E '^W[123] |Test Case .*(passed|failed)|Executed [0-9]+ tests' "$GITHUB_WORKSPACE/eksperymenty-wzoru.log" | sed 's/^/- /'; echo "- kod xcodebuild: $kod"; } >> "$GITHUB_STEP_SUMMARY"
+          exit $kod
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eksperymenty-wzoru
+          path: eksperymenty-wzoru.log
+          retention-days: 7
   build:
     runs-on: macos-26 # SDK 56+: Xcode 26.4+ (macos-15 ma najwyżej 26.3; Trening)
     timeout-minutes: 90 # Trening: build ~40 min (pods 2 + xcodebuild 36); zmierzyć w pierwszym przebiegu

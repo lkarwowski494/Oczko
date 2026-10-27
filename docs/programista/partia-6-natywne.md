@@ -17,11 +17,10 @@ Stan 2026-10-26 ok. 20:30 UTC · gałąź lokalna `partia6-natywne` (od d817ce1)
 1. Wcześniej w repo (08, nie ten commit): `app.json` — plugin celów zna `targets/share` (już jest `@bacons/apple-targets`: cele z katalogu `targets/`), `expo-screen-orientation` 57.0.3 (K7 partii, wiersz ADR-0016), adapter `src/platforma/wzor.ts` na `modules/oczko-wzor`.
 2. `npx expo prebuild --platform ios --clean`, potem `node scripts/wydanie/uprawnienia-celow.mjs ios/Oczko.xcodeproj/project.pbxproj` — oczekiwany wiersz `OczkoUdostepnij\t…generated.entitlements` z `group.com.apps4brew.knitting` (P-234).
 3. Build symulatora (`xcodebuild -workspace ios/Oczko.xcworkspace -scheme Oczko -sdk iphonesimulator -configuration Debug build`) — pierwsza prawdziwa kompilacja Swift modułu i celu; błędy typów spodziewane do poprawki na miejscu.
-4. **W1–W3:** w `ios/Podfile` po `use_expo_modules!` włączyć test spec (`pod 'OczkoWzor', :path => '../modules/oczko-wzor', :testspecs => ['Testy']`), `node modules/oczko-wzor/TestyOknaMaszyn/korpus/generuj-korpus.mjs`, `pod install`, potem
-   `xcodebuild test -workspace ios/Oczko.xcworkspace -scheme OczkoWzor-Unit-Testy -destination 'platform=iOS Simulator,name=iPhone 17'` [DO USTALENIA: nazwa schematu test specu po `pod install`].
-   - W1 (`testW1WordNaPdf`): 3 × `.docx` → PDF, ≥ 1 strona, tekst w `tekst`/`tabela`; log „W1 …: strony, znaki”. Porażka = Word w podglądzie zastępczym 5a (`pdf_sha256 = NULL`) — decyzja koordynatora.
-   - W2 (`testW2DuzyPdf`): tworzy PDF 300 stron ≈ 100 MB i otwiera go w `WidokWzoru` na ostatniej stronie; pamięć i płynność przewijania: Instruments (Allocations, Animation Hitches) na symulatorze i na iPadzie właściciela [DO ZMIERZENIA].
-   - W3 (`testW3PolitykaPoPierwszymRysiku`): XCTest nie wytwarza syntetycznego dotyku palcem w PKCanvasView, więc test sprawdza politykę (`drawingPolicy == .pencilOnly`, `isUserInteractionEnabled == false` bez narzędzia); „palec nie rysuje po rysiku” zostaje na liście urządzenia (ryzyko szczątkowe P-226: właściciel nie ma Apple Pencil).
+4. **W1–W3 (P-261, 2026-10-27: właściciel bez Maca → CI):** pakiet SwiftPM `modules/oczko-wzor/TestyOknaMaszyn/` (źródła `Zrodla/` to dowiązania do `ios/KonwersjaNaPdf.swift`, `ios/SprawdzeniePdf.swift` i `Pakiet/Sources/OczkoWzorLogika` — bez kopii; testy `Testy/EksperymentyTests.swift`, korpus `Testy/korpus/`), uruchamiany w zadaniu `eksperymenty-wzoru` w `jakosc-ios.yml` (`xcodebuild test` na symulatorze iPhone; **informacyjnie**: `continue-on-error`, bez wpływu na e2e i bramkę; wiersze „W1/W2/W3” w podsumowaniu, log w artefakcie `eksperymenty-wzoru`). Test spec `Testy` w podspecu usunięty (wymagał prebuild i `pod install`). Lokalnie na macOS: `cd modules/oczko-wzor/TestyOknaMaszyn && xcodebuild test -scheme OczkoWzorEksperymenty -destination 'platform=iOS Simulator,name=iPhone 17'`.
+   - W1 (`testW1WordNaPdf`, `testW1StronaBezSieciToBrakSieci`): 3 × `.docx` → PDF, ≥ 1 strona, tekst w `tekst`/`tabela`; adres bez sieci → `brak_sieci`. Porażka = Word w podglądzie zastępczym 5a (`pdf_sha256 = NULL`) — decyzja koordynatora.
+   - W2 (`testW2DuzyPdf`): PDF 300 stron ≈ 100 MB w `PDFView` (sam PDFKit; `WidokWzoru` to ExpoView, poza pakietem): czas otwarcia, przejście na stronę 300, przyrost `phys_footprint`. Płynność przewijania i pamięć na iPadzie — lista „tylko urządzenie”.
+   - W3 (`testW3PolitykaPoPierwszymRysiku`): polityka płótna (`.pencilOnly` po pierwszym rysiku, bez narzędzia płótno bez interakcji); „palec nie rysuje po rysiku” — lista „tylko urządzenie” (ryzyko szczątkowe P-226).
 5. `swift test` pakietu logiki w CI: `jakosc-ios.yml` uruchamia dziś tylko `modules/oczko-reguly` — dopisanie kroku `cd modules/oczko-wzor/Pakiet && swift test` należy do 07/08 (poza zakresem tego commita).
 
 ## [DO USTALENIA] i ryzyka
@@ -41,3 +40,17 @@ Stan 2026-10-26 ok. 20:30 UTC · gałąź lokalna `partia6-natywne` (od d817ce1)
 - Przytrzymanie liczone w `pdf.displayBox` (jak nakładka); `skanerDostepny` na wątku głównym; `decisionHandler` z `@Sendable` (sygnatura SDK iOS 18).
 - Rozszerzenie: błąd kolejnego zlecenia cofa wcześniejsze z tego samego udostępnienia.
 - Otwarte z przeglądu: podwójna kopia pliku w rozszerzeniu (kopia tymczasowa + kopia do skrzynki) na wątku głównym — do pomiaru z plikiem 100–200 MB w oknie (W2), ewentualnie `moveItem` z kopii tymczasowej.
+
+## Lista „tylko urządzenie” do TestFlight (P-261, P-226; 2026-10-27)
+Czego nie sprawdzi CI (symulator dotyka tylko palcem, nie ma kamery ani prawdziwych okien iPadOS). Właściciel: iPad bez Apple Pencil i iPhone. Każdy punkt: wynik tak/nie i zrzut do `oczko-warsztat` (raport E2 partii 6).
+| # | Co | Urządzenie | Kryterium |
+|---|---|---|---|
+| U1 | Wzór na iPadzie: pion, poziom, Split View ⅓ i ½, Slide Over — wąskie okno = układ telefonu, kolumna treści ≤ 640 pt na pozostałych ekranach | iPad | NFR-UKL-001: 0 obciętych i nakładających się elementów |
+| U2 | Zakreślacz palcem (BR-WZR-008): rysuje jednym palcem, dwa palce przewijają; „Cofnij” | iPad | kreski zostają po zamknięciu i ponownym otwarciu |
+| U3 | Bez narzędzia: palec przewija PDF, przytrzymanie stawia znacznik rzędu | iPad, iPhone | znacznik na właściwej wysokości, także na obróconej stronie |
+| U4 | Duży PDF (100–200 MB, ~300 stron): otwarcie, przewijanie do końca (W2 na urządzeniu) | iPad | bez zacięć widocznych gołym okiem, bez zamknięcia aplikacji |
+| U5 | Udostępnij do Oczka: Safari (strona), Pliki (PDF, .docx), Zdjęcia (1 i 20), Poczta (załącznik PDF); „New project”; bez sieci → skrzynka; język arkusza = język aplikacji | iPhone, iPad | zlecenie w skrzynce, wzór w wybranym projekcie |
+| U6 | Skaner stron (VisionKit) | iPhone, iPad | PDF ze skanu, strony w kolejności |
+| U7 | Orientacja (P-259): licznik i pozostałe ekrany w pionie na iPhonie, wzór obraca się; iPad obraca wszystko | iPhone, iPad | brak obrotu poza wzorem na iPhonie |
+| U8 | Kreski przy wyjściu do tła i zamknięciu aplikacji w trakcie rysowania | iPad | kreski odzyskane przy następnym otwarciu |
+**Ryzyko szczątkowe nazwane (P-226):** zachowanie z prawdziwym rysikiem — przełączenie na `.pencilOnly` po pierwszym dotyku rysikiem, palec nie rysuje po rysiku, odrzucanie dłoni (BR-WZR-004 S1–S2, BR-WZR-008 S4). Sprawdza je tylko test polityki (W3) i system (ADR-0012); test z rysikiem wymagałby zakupu (decyzja właściciela).
