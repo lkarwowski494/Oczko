@@ -28,8 +28,8 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 ## Sesje ról (konto 1 — po przejściu na konto 2 nieaktywne; uruchomić nowe z szablonu niżej)
 | Rola | Sesja konta 1 | Gałąź kopii / plik stanu | Następny krok |
 |---|---|---|---|
-| 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | `claude/kopia-partia-6` = 56bff2f (bd60073 + 7af7ef2), `docs/programista/partia-6.md` sekcja „Stan · 07:05 UTC — PRZEKAZANIE” | wynik 121 (W1–W3), push 7af7ef2 w kroku 2 kolejki; U1–U8 do TestFlight |
-| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | `claude/kopia-partia-7` = a536cd4, `docs/programista/partia-7.md` sekcja „Przekazanie” (przy kroku 2 możliwy konflikt w `jakosc-ios.yml` z 7af7ef2 — zachować oba kroki) | kroki 1 i 2 kolejki |
+| 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | `claude/kopia-partia-6` = 584ba5f (bd60073 + 7af7ef2 + 937d6f2 scen. 52), `docs/programista/partia-6.md` sekcja „Stan · 07:05 UTC — PRZEKAZANIE” | wynik 121 (W1–W3), push 7af7ef2 w kroku 2 kolejki; U1–U8 do TestFlight |
+| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | `claude/kopia-partia-7` = df33b5c (krok 2: `claude/kopia-partia-7-krok2` 49d32c6), `docs/programista/partia-7.md` sekcja „Przekazanie” (przy kroku 2 możliwy konflikt w `jakosc-ios.yml` z 7af7ef2 — zachować oba kroki) | kroki 1 i 2 kolejki |
 | 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | `docs/jakosc/stan.md` „Przejęcie” (51fe975), `oczko-warsztat` `07-jakosc/2026-10-26-fix3/STAN.md` (bbea5e8) | raporty przebiegów 121, P-262, iCloud |
 | 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | `docs/wydanie/stan.md` (6124f2c) | czeka; potem metadane i zrzuty |
 | koordynator | session_01VjtVbMx8DYWkBfH4pvaCXK | ten plik, `docs/decyzje.md` (ostatnia P-265) | dyżur kolejki okna |
