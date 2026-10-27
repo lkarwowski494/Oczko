@@ -20,7 +20,7 @@ Przebieg 123 (40468002239): build ✅, swift-test ✅, e2e iPhone 1 ✅, iPad �
 
 **Otwarte sprawy.**
 - W1–W3 (P-261): pakiet SwiftPM `modules/oczko-wzor/TestyOknaMaszyn` (Package.swift, `Zrodla/` = dowiązania do `ios/KonwersjaNaPdf.swift`, `ios/SprawdzeniePdf.swift`, `Pakiet/Sources/OczkoWzorLogika`; testy `Testy/EksperymentyTests.swift`). **Nigdy nie skompilowany** (kontener bez Swift) — po pushu 7af7ef2 przeczytać artefakt `eksperymenty-wzoru` (manifest, lista schematów, `error:`), poprawić i wypchnąć na sygnał. Wynik W1 decyduje o Wordzie (porażka = podgląd zastępczy 5a, decyzja koordynatora).
-- Lista „tylko urządzenie” U1–U9 do TestFlight: `docs/programista/partia-6-natywne.md` (koniec pliku); rysik = ryzyko szczątkowe P-226.
+- Lista „tylko urządzenie” U1–U10 do TestFlight: `docs/programista/partia-6-natywne.md` (koniec pliku); rysik = ryzyko szczątkowe P-226.
 - P-259 (orientacja w react-native-screens): ADR-0016/0026 i moduly.md z adnotacjami „do przeglądu 05”.
 - Przed raportem końcowym: `npm run jakosc:slady-wydania` kod 0 (ostatnio 0 na bd60073), raport E2 w `oczko-warsztat` (`08-programista/2026-10-26-partia6/E2-raport.md`), sztafeta po akceptacji.
 - Otwarte z przeglądu kodu: podwójna kopia pliku w rozszerzeniu Udostępnij (pomiar z plikiem 100–200 MB na urządzeniu, U5).
