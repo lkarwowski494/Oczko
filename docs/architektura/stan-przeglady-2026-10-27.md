@@ -1,7 +1,7 @@
 # Rola 05, tryb fix (przeglądy), 2026-10-27 · stan i plan
 Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, U8; port `ProjektMigawki` (P-243 S1a); `ZlecenieImportu` rodzaj `film` (P-246, P-248 D1a); reguła wersji pól iCloud przy migracji schematu (P-264); adnotacje „do przeglądu 05” (P-259, P-247 U6a). Prompt: `oczko-warsztat` 71c83e0 `koordynacja/role-2026-10-27/05-architekt-fix.md` (673 linie, przeczytany w całości). Sesja session_01T66VBxEUVZa1a385Aya8Wy, kopia `claude/kopia-05`. Decyzje na STOP: koordynator (P-087). Kod (`src/`, `tests/`, `modules/`) czytany tylko jako materiał z `claude/kopia-partia-7` (458deea) i `claude/kopia-partia-6` (7e58f01); zmiany kodu idą jako polecenia dla 08.
 
-**Stan: STOP E2 (dowody wysłane koordynatorowi). E1 zakończony (dokumenty) — decyzje P-274: Q1a, Q2a, Q3a, Q4a, Q5 A+C (koordynator wg P-087, 2026-10-27 09:11 UTC). P-273 oceniony (niżej). Polecenia kodu dla 08 p7 — sekcja „Polecenia dla 08”; wysyła je koordynator. „Video link” → 04 (koordynator).**
+**Stan: zakończona — STOP E2 przyjęty (koordynator wg P-087, 2026-10-27 09:30 UTC, z oceną P-273); dopisany kontrakt flagi `film` (P-276). E1 zakończony (dokumenty) — decyzje P-274: Q1a, Q2a, Q3a, Q4a, Q5 A+C (koordynator wg P-087, 2026-10-27 09:11 UTC). P-273 oceniony (niżej). Polecenia kodu dla 08 p7 — sekcja „Polecenia dla 08”; wysyła je koordynator. „Video link” → 04 (koordynator).**
 
 ## E0. Środowisko
 | Sprawdzenie | Wynik |
@@ -68,6 +68,8 @@ Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, 
 2. **Q2a (U7) — start silnika bez czekania.** `src/kompozycja/licznik.ts` (`przygotuj`): `void o.icloud.start().catch(() => undefined)` jak skrzynka. Test oczekiwany (`tests/dane/kompozycja-icloud.test.ts`): atrapa silnika, której `wyslij` (albo `statusKonta`) nigdy się nie kończy, przy `wlaczona = 1` — `przygotuj()` zwraca `{ cel: 'licznik' }` (czerwony dziś: czeka bez końca, limit czasu testu). Drugi: błąd `start()` nie zmienia wyniku `przygotuj()`.
 3. **Q3a (U4) — `pomin` w rekordzie z sieci pomijane.** `src/domena/icloud/odwzorowanie.ts` (`wierszZRekordu`): kolumna z `pomin` nie daje `bledne_dane`, tylko nie trafia do wiersza (nazwa nadal musi spełniać `NAZWA_KOLUMNY`). Testy oczekiwane (`tests/domena/icloud/icloud-odwzorowanie.test.ts`): rekord `licznik` z polem `wartosc` → wiersz bez `wartosc`, `ok: true` (czerwony dziś); rekord z polem `wersja_schematu` (kolumna nieznana) stosowany w `zastosujPartie` bez wpisu `blad` (zielony już dziś — test regresji U4 i ADR-0027 pkt 3); wektory Swift (`Pakiet/wektory.json`) bez zmian, bo Swift niczego nie filtruje.
 4. **Q5 (ADR-0027) w 1.0: bez kodu.** Brak pola `wersja_schematu` = 1, więc 1.0 nie wysyła go i nie zmienia `cloudkit/schemat.ckdb`. Kod `wersja_schematu`/`od_wersji` dopiero przy pierwszej migracji dodającej kolumnę NULL-owalną do tabeli synchronizowanej (test z ADR-0027 „Potwierdzenie”).
+**Polecenie dla 08 p6 (P-276):** flaga `film: boolean` w `ProjektMigawki` — `porty.ts` + blok „Porty domeny” w `moduly.md` jednym commitem, `odswiezMigawke` (`p.film_adres IS NOT NULL`), dekoder Swift rozszerzenia; test przed kodem: migawka projektu z filmem ma `film: true`, bez filmu `false` (kontrakt: `moduly.md`, „Rozwój koperty”, punkt „Flaga `film`”).
+
 5. Opcjonalnie (P2, przy najbliższej zmianie `porty.ts`): typ `BladSynchronizacji = { kod: 'brak_miejsca' | 'siec' | 'inny' }` obok portu `Synchronizacja` i użycie go w adapterze, atrapie i `przyczynaZ` (dziś kontrakt tylko w komentarzach i `moduly.md`).
 
 ## Plan E1 (po decyzjach) — wykonany
@@ -91,4 +93,4 @@ Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, 
 - Nowe znaleziska przekazane: Q2 (P1), Q3, Q4 (P2) — decyzje P-274; „Video link” zastępuje film bez pytania → 04 (koordynator).
 
 ## Punkt czyszczenia
-Rola 05, tryb fix (przeglądy 2026-10-27), prompt `oczko-warsztat` `koordynacja/role-2026-10-27/05-architekt-fix.md`, plik stanu: ten plik na `claude/kopia-05`. Następny krok: decyzja koordynatora po E2; kod Q1a–Q3a robi 08 p7 według sekcji „Polecenia dla 08”.
+Rola 05, tryb fix (przeglądy 2026-10-27), prompt `oczko-warsztat` `koordynacja/role-2026-10-27/05-architekt-fix.md`, plik stanu: ten plik na `claude/kopia-05`. Następny krok: brak dla 05; kod Q1a–Q3a robi 08 p7, flagę `film` 08 p6 (sekcja „Polecenia dla 08”).
