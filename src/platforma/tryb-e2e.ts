@@ -53,3 +53,10 @@ export function szerokoscOknaE2e(): number | null {
 }
 /** `oczkoE2eSkrzynka=pdf` (P-230 Q2a): przed pierwszym ekranem testowy PDF jako zlecenie bez projektu w skrzynce App Group. */
 export const skrzynkaE2e = (): 'pdf' | null => (argument('oczkoE2eSkrzynka') === 'pdf' ? 'pdf' : null);
+/**
+ * Katalog App Group dla skrzynki i migawki (P-266): prawdziwy kontener grupy, a gdy go nie ma (build symulatora bez podpisu: „client is not
+ * entitled”, przebieg 121) i scenariusz wkłada zlecenie (`oczkoE2eSkrzynka=pdf`) — katalog zastępczy w danych aplikacji. Nazwany wyjątek:
+ * E2E nie sprawdza samego kontenera App Group (lista urządzenia U5). Poza E2E zawsze prawdziwa grupa albo null.
+ */
+export const grupaAplikacjiE2e = (grupa: string | null, katalogDanych: string): string | null =>
+  grupa ?? (skrzynkaE2e() ? `${katalogDanych}/e2e-grupa` : null);
