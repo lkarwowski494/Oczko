@@ -88,7 +88,6 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `przypomnienie-co-robic` | przypomnienie | pole (ostatnie w formularzu) | „What to do” | tekstowa |
 | `przypomnienie-podglad` | przypomnienie | podgląd planu rzędów | „You’ll be reminded on rows: …” | |
 | `przypomnienie-zapisz` | przypomnienie | przycisk | „Save reminder” | |
-| `ukonczenie-potwierdz` | ukończenie | potwierdzenie | „Mark as finished” | |
 | `ukonczenie-karta` | ukończenie | karta z pytaniem o włóczkę (U-9) | — | |
 | `ukonczenie-gotowe` | ukończenie | „Done” | „Done” | |
 | `licznik-stoper` | licznik | stoper sesji w pasku: ikona (bez sesji), po starcie kapsuła z czasem — ten sam id, stan w etykiecie (04 fix-6 B, P-191 P1a) | „Start session timer” / „Session timer, {czas}, running. Pause or stop” / „…, paused. Resume or stop” | |
