@@ -169,7 +169,8 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `ustawienia-eksport` | Ustawienia | eksport wszystkich danych | — | |
 | `ustawienia-import` | Ustawienia | import archiwum | — | |
 | `ustawienia-usun-wszystko` | Ustawienia | usunięcie wszystkich danych (BR-DAN-009) | — | |
-| `potwierdz-usun-wszystko` | Ustawienia | potwierdzenie usunięcia | — | |
+| `potwierdz-usun-wszystko` | arkusz „Delete all data” (trasa `/usun-wszystko`, P-268) | potwierdzenie usunięcia — w pasku przycisków arkusza, zawsze widoczny | — | |
+| `usun-wszystko-anuluj` | arkusz „Delete all data” (P-268) | Cancel — zamyka arkusz bez zmian | „Cancel” | |
 | `oferty-ekran` | oferty | kontener ekranu ofert | nagłówek „Oczko Pro” | |
 | `oferty-plan-miesieczny` | oferty | plan (rola radio) | „Monthly · $0.99 / month” (cena ze sklepu) | |
 | `oferty-plan-roczny` | oferty | plan (rola radio) | „Yearly · $6.99 / year” | |
