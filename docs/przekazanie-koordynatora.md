@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-26 21:05 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-251 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 00:30 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-253 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -12,7 +12,7 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 
 ## Stan (2026-10-26 21:05 UTC)
 - **Zakres 1.0:** pełne MVP z wzorami (F) i iCloud (G), P-217. Plan: `docs/plan-app-store.md` (do odświeżenia pod P-217).
-- **Partia 5:** kod gotowy (verify 2330/2330 na d427d34, swift 46/46). Pakiet podstawowy iOS zielony na 80bdeb5 (przebieg 113, zakończony 22:13 UTC). **Nocny pełny przebieg 114** (`[e2e-pelny]`, 94f678b, wypchnięty 22:17 UTC) w kolejce: https://github.com/lkarwowski494/oczko/actions/runs/40411351211 — od teraz żadnych pushy ścieżek kodu/`e2e/**` na roboczą do jego końca (docs/ nie wyzwala). Zielony → STOP E2 partii 5 (zapis P-nnn). Czerwony → diagnoza, poprawka w nowej sesji 08.
+- **Partia 5:** STOP E2 przyjęty (P-253): przebieg 114 zielony, bramka 9/9; ok. 30 czerwonych informacyjnych (19× `licznik-menu`) → diagnoza 07 fix-3. 00:30 UTC: sygnał okna dla partii 7 (push natywnego), partia 6 po zakończeniu buildu partii 7.
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 
