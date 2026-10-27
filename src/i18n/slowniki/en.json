@@ -590,6 +590,8 @@
     "motki_one": "{{count}} skein",
     "motki_other": "{{count}} skeins",
     "motek": "{{dlugosc}} · {{waga}} per skein",
+    "motek_dlugosc": "{{dlugosc}} per skein",
+    "motek_waga": "{{waga}} per skein",
     "dlugosc_obie": "{{wpisane}} ({{przeliczone}})",
     "pusto": "No yarn yet. Add yarn from its label to see what you have, even without a connection.",
     "filtr_pusto": "No yarn in weight {{n}}.",

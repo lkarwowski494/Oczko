@@ -533,6 +533,8 @@
   "zapas.motki_one": "⟦{{count}} škéîñ~~~~~⟧",
   "zapas.motki_other": "⟦{{count}} škéîñš~~~~~~⟧",
   "zapas.motek": "⟦{{dlugosc}} · {{waga}} péŕ škéîñ~~~~~~~~⟧",
+  "zapas.motek_dlugosc": "⟦{{dlugosc}} péŕ škéîñ~~~~~~~~⟧",
+  "zapas.motek_waga": "⟦{{waga}} péŕ škéîñ~~~~~~~~⟧",
   "zapas.dlugosc_obie": "⟦{{wpisane}} ({{przeliczone}})⟧",
   "zapas.pusto": "⟦Ñö ýàŕñ ýét. Àdd ýàŕñ fŕöm îtš làbél tö šéé whàt ýöû hàvé, évéñ wîthöût à çöññéçtîöñ.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~⟧",
   "zapas.filtr_pusto": "⟦Ñö ýàŕñ îñ wéîght {{n}}.~~~~~~~~~~~~⟧",
