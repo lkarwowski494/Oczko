@@ -37,7 +37,9 @@ export default function EkranLicznika(): React.ReactElement {
     },
   }), [licznik]);
   const [projektId, ustawProjekt] = useState<string | null>(null); // stoper sesji w pasku (P-191 P1a) — projekt bieżącego licznika
-  useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik]);
+  // Pierwszy +1 na świeżej instalacji tworzy projekt roboczy bez zmiany `wersja` → odczyt także po +1, ale tylko bez projektu (P-262 (c), scenariusz 38).
+  const plusyBezProjektu = projektId === null ? plusy : -1;
+  useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik, plusyBezProjektu]);
   const [maWzor, ustawMaWzor] = useState(false); // ikona „Pattern” tylko z wzorem (P-220 W2a)
   useFocusEffect(useCallback(() => { if (projektId) void listaWzorow(kontener.z, { projektId }).then((l) => ustawMaWzor(l.ok && l.wartosc.length > 0)); else ustawMaWzor(false); }, [projektId, kontener]));
   // Partia z iCloud (partia 7): stan ekranu blokady i licznik od nowa (np. linia konfliktu, P-220 I1a).
