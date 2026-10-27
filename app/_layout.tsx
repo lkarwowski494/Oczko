@@ -2,7 +2,7 @@
 // raz na proces i stos ekranów bez paska systemowego (pasek rysuje ekran według design-spec). Do kontenera nic nie jest pokazywane poza tłem
 // papieru — pierwszy ekran to licznik (NFR-PIE-001); pętla nieudanych startów albo baza nie do otwarcia → ekran awaryjny.
 import React, { useEffect, useState } from 'react';
-import { AppState, View } from 'react-native';
+import { AppState, Platform, View } from 'react-native';
 import { Stack } from 'expo-router';
 import type { PowodTrybuAwaryjnego } from '../src/ekrany/TrybAwaryjny';
 import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
@@ -16,12 +16,14 @@ import { preferencje } from '../src/kompozycja/preferencje';
 import { useKolory } from '../src/ekrany/motyw';
 import { zainstalujObslugeBledow } from '../src/kompozycja/bledy-js';
 import { paneleE2e } from '../src/platforma/tryb-e2e';
+import { orientacjaEkranu } from '../src/domena/uklad';
 import { wKolejce } from '../src/przypadki-uzycia/kolejka';
 import { zapiszBlad } from '../src/dane/repozytoria/bledy';
 
 // Globalna obsługa błędów JS (ADR-0018, P-194 Q4a): od startu procesu; zapis do `blad` dopiero po otwarciu bazy w starcie normalnym,
 // w trybie awaryjnym bez zapisu (ADR-0019) — błąd zawsze idzie do poprzedniego handlera.
 const obslugaBledow = typeof ErrorUtils === 'undefined' ? null : zainstalujObslugeBledow(ErrorUtils);
+const IPAD = Platform.OS === 'ios' && Platform.isPad; // iPad: dowolna orientacja wszędzie (multitasking; P-218 Q3a)
 
 type Faza = { rodzaj: 'czeka' } | { rodzaj: 'awaria-e2e' } | { rodzaj: 'awaryjny'; powod: PowodTrybuAwaryjnego } | { rodzaj: 'gotowe'; a: Aplikacja };
 
@@ -41,7 +43,6 @@ export default function Korzen(): React.ReactElement {
       await w.wartosc.dostep.odswiez(); // limit dni liczony z bieżącym dostępem już przy pierwszym ekranie
       if (!zywy) return;
       const z = w.wartosc.z;
-      w.wartosc.porty.orientacja.tylkoPion(); // iPhone: pion poza ekranem wzoru (P-221 Q3a); iPad: no-op
       obslugaBledow?.ustawZapis(async (b) => { await wKolejce(z.baza, () => zapiszBlad(z.baza, { czasMs: z.zegar.teraz().ms, kod: b.kod, szczegoly: { ramki: b.szczegoly.ramki, fatal: b.szczegoly.fatal ? 1 : 0 } })); });
       ustaw({ rodzaj: 'gotowe', a: { kontener: w.wartosc, licznik: kompozycjaLicznika(w.wartosc.z, w.wartosc.j, { wibracje: () => p.stan().wibracje, icloud: w.wartosc.icloud?.sterownik, skrzynka: { start: () => w.wartosc.wzor.k.poStarcie(), migawka: () => w.wartosc.wzor.k.odswiezMigawke() } }), preferencje: p } });
     }
@@ -68,7 +69,9 @@ export default function Korzen(): React.ReactElement {
   const a = faza.a;
   return (
     <DostawcaAplikacji wartosc={a}>
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: k.papier } }}>
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: k.papier }, orientation: orientacjaEkranu('inny', IPAD) }}>
+        {/* Orientacja deklarowana w nawigacji (P-221 Q3a, P-259 A): obrót tylko poza maską — start w pionie bez żądania obrotu (P-258). */}
+        <Stack.Screen name="wzor" options={{ orientation: orientacjaEkranu('wzor', IPAD) }} />
         {/* Arkusze systemowe (design-spec „Komponenty”): historia, menu •••, formularze, karta ukończenia. */}
         <Stack.Screen name="historia" options={{ presentation: 'modal' }} />
         <Stack.Screen name="menu" options={{ presentation: 'modal' }} />

@@ -58,7 +58,6 @@ export default function EkranWzoru(): React.ReactElement {
   const katalogRysunkow = `${kontener.z.katalogi.tymczasowy}/rysunki-wzoru`;
   // Odzysk kresek zapisanych przy poprzednim zamknięciu ekranu (zdarzenie bez odbiorcy), potem wczytanie (przegląd 2026-10-26).
   useEffect(() => { void odzyskajRysunki(zw, { katalog: katalogRysunkow }).finally(() => { void wczytaj(id); }); setRysikOtwarcie(); }, [wczytaj, id, zw, katalogRysunkow]);
-  useEffect(() => { const o = kontener.porty.orientacja; o.dowolna(); return () => o.tylkoPion(); }, [kontener]); // F-25: wzór w obu położeniach na iPhonie
   const [dodano, ustawDodano] = useState(false); // „Add pattern” z ekranu projektu: źródło od razu, raz (W7a)
   useEffect(() => {
     if (!lw || dodano || !dodajParam || !['plik', 'skan', 'zdjecia', 'link'].includes(dodajParam)) return;

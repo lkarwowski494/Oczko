@@ -19,6 +19,9 @@ P-217 włącza do 1.0 pisanie po wzorze rysikiem (F-28), a ono wymaga iPada. Do 
 ## Decyzja
 Wybrano A (P-221 Q3a). Blokada pionu na iPhonie poza ekranem wzoru oszczędza przeprojektowania pozostałych ekranów, a usunięcie `UIRequiresFullScreen` i tak będzie wymagane od SDK 27. Na iPadzie nie blokujemy orientacji, bo wielozadaniowość jej nie dopuszcza. Układ zależy od szerokości okna (compact = układ telefonu, regular = kolumna maks. 640 pt; P-220), nie od orientacji. E2E iPada to osobne zadanie nocne z własnym pakietem (P-221 Q4a).
 
+
+**Adnotacja 08 (2026-10-27, P-259 wariant A; do przeglądu 05):** mechanizm blokady pionu zmieniony bez zmiany decyzji A: zamiast `expo-screen-orientation` (usunięty, ADR-0016) opcja `orientation` ekranów react-native-screens — `portrait_up` na iPhonie poza `/wzor`, `all` na `/wzor` i na iPadzie wszędzie (reguła `orientacjaEkranu` w `src/domena/uklad.ts`, `app/_layout.tsx`). Powód: pakiet przy każdym starcie wysyłał żądanie obrotu (także w pionie) i podmieniał główny kontroler; react-native-screens prosi o obrót tylko, gdy bieżąca orientacja jest poza maską (P-258: dowód z logów symulatora). Punkt „Złe: nowa zależność natywna” nieaktualny.
+
 ### Konsekwencje
 - Dobre: F-28 i F-25 bez osobnej aplikacji; wąskie okno działa jak telefon; zgodność z SDK 27.
 - Złe: nowa zależność natywna (`expo-screen-orientation`, wiersz ADR-0016 dopisuje 08 w partii 6 po sprawdzeniu wieku ≥ 14 dni, licencji i manifestu); każdy istniejący ekran trzeba sprawdzić w szerokości regular (zrzuty E2E iPada); zegarek i Dynamic Island na iPadzie nie istnieją (stany 04).

@@ -167,7 +167,6 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/jpeg-metadane.test.ts` | zielony (główny zestaw) | 2 | P-219 | `src/dane/pliki/jpeg`<br>`src/kompozycja/e2e-zdjecie` | — |
 | 9 ? | `tests/adaptery/live-activity.test.ts` | zielony (główny zestaw) | 7 | P-115, P-139 | `src/domena/porty`<br>`src/platforma/dziennik-plus`<br>`src/platforma/live-activity`<br>`src/platforma/zegarek` | Z07-22 |
 | 9 ? | `tests/adaptery/magazyn.test.ts` | zielony (główny zestaw) | 2 | P-130 | `src/dane/pliki/magazyn` | — |
-| 9 ? | `tests/adaptery/orientacja.test.ts` | zielony (główny zestaw) | 3 | P-221 | `src/platforma/orientacja` | — |
 | 9 ? | `tests/adaptery/platforma-proste.test.ts` | zielony (główny zestaw) | 3 | P-135, RD-16 | `src/platforma/ekran-aktywny`<br>`src/platforma/haptyka`<br>`src/platforma/zegar` | — |
 | 9 ? | `tests/adaptery/sklep-status.test.ts` | zielony (główny zestaw) | 1 | KP-13, P-135 | `src/domena/dostep`<br>`src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
 | 9 ? | `tests/adaptery/sklep.test.ts` | zielony (główny zestaw) | 7 | KP-06, P-103, P-135 | `src/platforma/sklep`<br>`src/platforma/sklep-sztuczny` | — |
@@ -180,6 +179,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/prosba-o-ocene.test.ts` | zielony (główny zestaw) | 1 | P-150, P-156 | `src/domena/ocena`<br>`src/domena/zaslepka` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, P-135, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
 | 9 ? | `tests/domena/straznik-startu.test.ts` | zielony (główny zestaw) | 8 | P-080 | `src/konfiguracja`<br>`src/niezawodnosc/start` | — |
+| 9 ? | `tests/domena/wzor/orientacja-ekranu.test.ts` | zielony (główny zestaw) | 3 | P-221, P-258, P-259 | `src/domena/uklad` | — |
 | 9 ? | `tests/domena/wzor/rd21.test.ts` | zielony (główny zestaw) | 3 | BR-WZR-003, P-134, P-139, RD-21 | `src/domena/licznik`<br>`src/domena/znacznik-wzoru` | Z07-22 |
 | 9 ? | `tests/domena/wzor/uklad-rysik.test.ts` | zielony (główny zestaw) | 5 | BR-WZR-004, BR-WZR-008, P-218, P-220, P-225, P-226 | `src/domena/rysik`<br>`src/domena/uklad` | — |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |

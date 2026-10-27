@@ -80,7 +80,7 @@ export interface SkrzynkaImportu { pobierz(): Promise<ZlecenieImportu[]>; usun(i
 export interface MigawkaProjektow { zapisz(projekty: readonly ProjektMigawki[], jezyk: string): Promise<void> } // P-220 R1a/N2: plik w App Group dla rozszerzenia; zapis atomowy, koperta z wersją i językiem aplikacji (P-248 D2a)
 export interface KonwersjaWzoru { naPdf(z: ZrodloWzoru, sygnal?: SygnalCzasu): Promise<Wynik<{ sciezka: string; strony: number }>> } // ADR-0011 (fix-7, P-221 Q2a): WWW, Word, obrazy, skan → PDF; plik tymczasowy
 export interface SkanerStron { skanuj(): Promise<Wynik<{ sciezki: string[] }>> } // P-220 W7a: skaner dokumentów systemu (VisionKit); jeden skan = jeden wzór (P-218 (1))
-export interface Orientacja { tylkoPion(): void; dowolna(): void } // P-221 Q3a: na iPhonie pion poza ekranem wzoru; na iPadzie no-op
+export type Orientacja = 'portrait_up' | 'all'; // P-221 Q3a; P-259 A: deklaracja dla nawigacji (react-native-screens), nie port z efektem — reguła `orientacjaEkranu` w domena/uklad.ts
 
 export type PrzypomnienieStanu = { od: number; co: number; razy: number; tekst: string }; // plan RD-13; tekst ucięty do STAN_PRZYPOMNIENIE_TEKST_MAKS znaków
 export type StanEkranuBlokady = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[]; zablokowany: boolean }; // wersja 3 (moduly.md „Stan Live Activity i zegarka”; N1 P-135 Q7a: zablokowany = licznik.zablokowany); < 4 KB (rejestr Apple 1b)
@@ -319,6 +319,7 @@ Funkcje: F-24, F-25, F-26, F-28, F-55, F-56, rozszerzenie „Udostępnij do Oczk
 
 **iPad i orientacja** (ADR-0026):
 - `Orientacja` (adapter `expo-screen-orientation` 57.0.3): na iPhonie `tylkoPion()` przy wejściu na każdy ekran poza wzorem, `dowolna()` na ekranie wzoru (F-25, P-220 W1a); na iPadzie oba to no-op (multitasking nie dopuszcza blokady). Układ według szerokości okna, nie orientacji: szerokość compact → układ telefonu; regular → kolumna maks. 640 pt (P-220), na wzorze w poziomie wzór i licznik obok siebie (W4b). Bez założeń o pełnym ekranie (wąskie okno, P-218 Q3a).
+  - **Adnotacja 08 (2026-10-27, P-259 wariant A; do przeglądu 05):** adaptera i pakietu już nie ma; `Orientacja` to typ `'portrait_up' | 'all'` dla opcji `orientation` ekranów react-native-screens (`orientacjaEkranu(ekran, ipad)` w `src/domena/uklad.ts`, deklaracja w `app/_layout.tsx`): iPhone `portrait_up` poza `/wzor`, `all` na `/wzor`; iPad `all`. Pole `orientacja` w `kontener.porty` usunięte. Powód: P-258.
 - Zegarek na iPadzie: `WCSession.isSupported() == false` → moduł `oczko-dziennik-plus` nie aktywuje sesji, `Zegarek.wyslijStan`/`potwierdz` są no-op, `odbieraj` nic nie zgłasza; Stan danych nie pokazuje wiersza zegarka (tekst 04). Live Activity działa (ekran blokady iPada), Dynamic Island brak.
 - Ekrany istniejące (lista, projekt, licznik, kosz, ustawienia, arkusze) muszą działać w szerokości regular i w poziomie na iPadzie: NFR-UKL-001 (0 obciętych i nakładających się elementów PR-01–PR-06). Test: zrzuty E2E iPada, pakiet niżej.
 

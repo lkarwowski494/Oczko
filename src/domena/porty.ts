@@ -34,7 +34,7 @@ export interface SkrzynkaImportu { pobierz(): Promise<ZlecenieImportu[]>; usun(i
 export interface MigawkaProjektow { zapisz(projekty: readonly ProjektMigawki[], jezyk: string): Promise<void> } // P-220 R1a/N2: plik w App Group dla rozszerzenia; zapis atomowy, koperta z wersją i językiem aplikacji (P-248 D2a)
 export interface KonwersjaWzoru { naPdf(z: ZrodloWzoru, sygnal?: SygnalCzasu): Promise<Wynik<{ sciezka: string; strony: number }>> } // ADR-0011 (fix-7, P-221 Q2a): WWW, Word, obrazy, skan → PDF; plik tymczasowy
 export interface SkanerStron { skanuj(): Promise<Wynik<{ sciezki: string[] }>> } // P-220 W7a: skaner dokumentów systemu (VisionKit); jeden skan = jeden wzór (P-218 (1))
-export interface Orientacja { tylkoPion(): void; dowolna(): void } // P-221 Q3a: na iPhonie pion poza ekranem wzoru; na iPadzie no-op
+export type Orientacja = 'portrait_up' | 'all'; // P-221 Q3a; P-259 A: deklaracja dla nawigacji (react-native-screens), nie port z efektem — reguła `orientacjaEkranu` w domena/uklad.ts
 
 export type PrzypomnienieStanu = { od: number; co: number; razy: number; tekst: string }; // plan RD-13; tekst ucięty do STAN_PRZYPOMNIENIE_TEKST_MAKS znaków
 export type StanEkranuBlokady = { wersja: number; licznikId: string; nazwa: string; wartosc: number; znaczenie: 'skonczone' | 'w_trakcie'; glowa: string | null; ostatniPlusMs: number | null; dzien: string; dzienDozwolony: boolean; sesjaStartMs: number | null; pro: boolean; proWaznoscDo: number | null; dniWMiesiacu: { dzien: string; pro: boolean }[]; przypomnienia: PrzypomnienieStanu[]; zablokowany: boolean }; // wersja 3 (moduly.md „Stan Live Activity i zegarka”; N1 P-135 Q7a: zablokowany = licznik.zablokowany); < 4 KB (rejestr Apple 1b)
