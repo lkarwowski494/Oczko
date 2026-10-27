@@ -1,7 +1,7 @@
 # Rola 05, tryb fix (przeglądy), 2026-10-27 · stan i plan
 Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, U8; port `ProjektMigawki` (P-243 S1a); `ZlecenieImportu` rodzaj `film` (P-246, P-248 D1a); reguła wersji pól iCloud przy migracji schematu (P-264); adnotacje „do przeglądu 05” (P-259, P-247 U6a). Prompt: `oczko-warsztat` 71c83e0 `koordynacja/role-2026-10-27/05-architekt-fix.md` (673 linie, przeczytany w całości). Sesja session_01T66VBxEUVZa1a385Aya8Wy, kopia `claude/kopia-05`. Decyzje na STOP: koordynator (P-087). Kod (`src/`, `tests/`, `modules/`) czytany tylko jako materiał z `claude/kopia-partia-7` (458deea) i `claude/kopia-partia-6` (7e58f01); zmiany kodu idą jako polecenia dla 08.
 
-**Stan: E1 zakończony (dokumenty) — decyzje P-274: Q1a, Q2a, Q3a, Q4a, Q5 A+C (koordynator wg P-087, 2026-10-27 09:11 UTC). P-273 oceniony (niżej). Polecenia kodu dla 08 p7 — sekcja „Polecenia dla 08”; wysyła je koordynator. „Video link” → 04 (koordynator).**
+**Stan: STOP E2 (dowody wysłane koordynatorowi). E1 zakończony (dokumenty) — decyzje P-274: Q1a, Q2a, Q3a, Q4a, Q5 A+C (koordynator wg P-087, 2026-10-27 09:11 UTC). P-273 oceniony (niżej). Polecenia kodu dla 08 p7 — sekcja „Polecenia dla 08”; wysyła je koordynator. „Video link” → 04 (koordynator).**
 
 ## E0. Środowisko
 | Sprawdzenie | Wynik |
@@ -11,7 +11,7 @@ Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, 
 | Swift, Xcode | brak — zachowanie CKSyncEngine sprawdzalne tylko w oknie maszyn albo na urządzeniu |
 | Sieć | jest: sqlite.org, dokumentacja Apple (JSON), odczyty 2026-10-27 niżej |
 | `npm ci` | kod 0 |
-| Trening (P-087) | brak iCloud, rozszerzenia i blokady orientacji per ekran (`trening/app.json:7` `"orientation": "portrait"`; `docs/48-zgloszenie-1-0.md:199` „aplikacja nie używa interfejsów iCloud”). Analogia tylko dla reguły wersji: protokół zegarka z `WATCH_PROTOCOL` i `WATCH_PROTOCOL_MIN` (`trening/lib/watch/protocol.ts:14-17`) oraz zachowywanie nieznanych pól ustawień przy migracji (`trening/lib/state/migrate.ts:24-25`, audyt J1) |
+| Trening (P-087) | brak iCloud, rozszerzenia i blokady orientacji per ekran (`trening/docs/48-zgloszenie-1-0.md:199` „aplikacja nie używa interfejsów iCloud”; `trening/app.json:7` `"orientation": "portrait"`). Analogia tylko dla reguły wersji: protokół zegarka z `WATCH_PROTOCOL` i `WATCH_PROTOCOL_MIN` (`trening/lib/watch/protocol.ts:14-17`) oraz zachowywanie nieznanych pól ustawień przy migracji (`trening/lib/state/migrate.ts:24-25`, audyt J1) |
 
 ## Źródła (odczyt 2026-10-27)
 - sqlite.org/lang_createtrigger.html: „If the "UPDATE OF column-name" syntax is used, then the trigger will only fire if column-name appears on the left-hand side of one of the terms in the SET clause of the UPDATE statement.” oraz „Due to an historical oversight, columns named in the "UPDATE OF" clause do not actually have to exist in the table being updated.”
@@ -31,7 +31,7 @@ Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, 
 | U7 (start silnika w kompozycji) | Przyjęte, ale **nowe:** `przygotuj()` czeka na `o.icloud.start()` (`src/kompozycja/licznik.ts:146-148`), a ten na `statusKonta()`, `uruchom()` i `wyslij()` = `sendChanges()` przez sieć (`src/przypadki-uzycia/synchronizacja.ts:114-124`). Przy włączonym iCloud i słabej sieci pierwszy ekran czeka na wysyłkę; skrzynka partii 6 tego nie robi (`void`, linia 147) | D, P1, realny przy włączonej synchronizacji | Q2 |
 | U8 (`Licznik.tsx`) | Bez nowych ustaleń; podział pliku przed kolejną zmianą = plan-prac 1.6 (P-268) | — | — |
 | P-243 S1a (`ProjektMigawki`) | Przyjęte: zapis atomowy z odczytem kontrolnym (`src/platforma/migawka.ts`), wiersz w `prywatnosc.md` jest, indeks `wzor_projekt` dla liczby wzorów. `ostatniaPracaMs: number \| null` przy `ostatnia_praca_ms NOT NULL` — zostaje (czytnik tolerancyjny). Brak reguły rozwoju koperty: Swift dekoduje `wzory: Int` jako wymagane (`targets/share/Wspolne/Skrzynka.swift:11-16`) | D, P2 | reguła w `moduly.md` (05): nowe pola koperty opcjonalne w dekoderze albo nowa `MIGAWKA_WERSJA` |
-| P-246 S4a, P-248 D1a (`film`, `sciezki`) | Przyjęte: `film` nie jest wzorem (`src/przypadki-uzycia/skrzynka.ts:20,44`), adres walidowany (`src/przypadki-uzycia/film.ts:10-11`). **Nowe:** (a) manifest `zlecenie.json` bez wersji, a niepoprawny manifest = zlecenie niepełne, kasowane po `SKRZYNKA_PORZUCONE_H` (`src/platforma/skrzynka.ts:38-41`) — zlecenie zostawione przed aktualizacją aplikacji i odczytane ostrzejszym walidatorem zniknęłoby bez śladu; (b) „Video link” do projektu z filmem zastępuje stary link bez pytania (`film.ts:23`) | (a) D, P2, brzegowy; (b) P (04) | (a) Q4; (b) do 04 |
+| P-246 S4a, P-248 D1a (`film`, `sciezki`) | Przyjęte: `film` nie jest wzorem (`src/przypadki-uzycia/skrzynka.ts:20,44`), adres walidowany (`src/przypadki-uzycia/film.ts:10-11`). **Nowe:** (a) manifest `zlecenie.json` bez wersji, a niepoprawny manifest = zlecenie niepełne, kasowane po `SKRZYNKA_PORZUCONE_H` (`src/platforma/skrzynka.ts:38-41`) — zlecenie zostawione przed aktualizacją aplikacji i odczytane ostrzejszym walidatorem zniknęłoby bez śladu; (b) „Video link” do projektu z filmem zastępuje stary link bez pytania (`src/przypadki-uzycia/film.ts:23`) | (a) D, P2, brzegowy; (b) P (04) | (a) Q4; (b) do 04 |
 | P-247 U6a (`urzadzenie_rodzaj`) | Przyjęte (schemat, `stany.json`, kolizja M-14 go nie porównuje — dobrze). Luka inwentarza: `prywatnosc.md` nie wymienia identyfikatora urządzenia (UUID) ani rodzaju urządzenia w zdarzeniu, a oba jadą do iCloud użytkownika | D, P2 | `prywatnosc.md`, `dane.md` (05) |
 | P-259 (orientacja) | Przyjęte. Z wzoru na iPhonie nie otwiera się żaden modal (`app/wzor.tsx` tylko `router.back()`), więc `portrait_up` innych ekranów nie obróci wzoru w trakcie. ADR-0026: opcja A i „Złe: nowa zależność” opisują usunięty pakiet; `moduly.md` „iPad i orientacja” opisuje adapter, którego nie ma | D, P2 (dokumenty) | uporządkowanie ADR-0026 i `moduly.md` (05) |
 | P-264 (reguła wersji pól) | Opcje w Q5 | P→koordynator | Q5, nowy ADR-0027 |
@@ -75,5 +75,20 @@ Zadania: plan-prac 1.3 (P-272) — przegląd U1 i U3 partii 7 (P-245) z U4, U7, 
 2. Polecenia dla 08 p7 (Q1–Q3) i 08 p6 (Q4 b, jeśli wybrane) z testem czerwonym przed poprawką; pytanie (b) filmu do 04.
 3. Na roboczą tylko `docs/`, po `git pull --rebase` i zielonym `env -u NODE_PATH npm run verify`.
 
+## E2. Dowody (STOP)
+| ID | Zmiana | Dowód | Commit |
+|---|---|---|---|
+| P-264 / P-274 Q5 | ADR-0027 (A+C), uzupełnienie ADR-0005 | `kontrola-adr.mjs docs/adr --min 21`: „ADR: 27, błędy: 0” (0027: opcje 3) | d1116e6 |
+| P-243 S1a, P-246, P-248 D1a, P-274 Q4a | reguły rozwoju koperty migawki i manifestu zlecenia | przegląd kodu kopii p6 (wyżej); tylko dokument | 2169528 |
+| P-259 | ADR-0026, `moduly.md` „iPad i orientacja” | źródło RNS 4.26.2 (`RNSScreenWindowTraits.mm:100-125`), test `tests/domena/wzor/orientacja-ekranu.test.ts` istnieje, `package.json` bez `expo-screen-orientation` (grep 0) | 9ffe337 |
+| P-245 U1/U3, P-247 U7, P-274 Q1a–Q3a | `moduly.md` „Przegląd 05 partii 7” | odtworzenie `UPDATE OF` na SQLite 3.50.4 (wyżej); kod → polecenia dla 08 | 8635b3b |
+| P-247 U6a | `prywatnosc.md`, `dane.md` | `src/kompozycja/kontener.ts:54-57` (UUID w `urzadzenie.txt`), `docs/architektura/schemat.sql:79-80` | 538df87 |
+| P-273 | ocena: przyjąć, ryzyko szczątkowe nazwane | sekcja P-273 wyżej | c79e72a |
+
+- Bramka przed pushem na roboczą: `env -u NODE_PATH npm run verify` kod 0, **2537/2537** (220 zestawów) na 45e275f; push `b994546..45e275f` (tylko `docs/`, CI iOS nie rusza).
+- Kontrola dowodów i sekretów (`sprawdz-raport.mjs` ze scratchpada): wobec repo Oczka — błędy tylko dla 5 odwołań `trening/…` (inne repo); wobec katalogu nadrzędnego z `trening/` — 0 błędów cytatów, odwołania istnieją; wzorce sekretów: brak.
+- Bez zrzutów: zmiany niewidoczne w aplikacji. Status „zweryfikowane” nadaje reaudit.
+- Nowe znaleziska przekazane: Q2 (P1), Q3, Q4 (P2) — decyzje P-274; „Video link” zastępuje film bez pytania → 04 (koordynator).
+
 ## Punkt czyszczenia
-Rola 05, tryb fix (przeglądy 2026-10-27), prompt `oczko-warsztat` `koordynacja/role-2026-10-27/05-architekt-fix.md`, plik stanu: ten plik na `claude/kopia-05`. Następny krok: decyzje Q1–Q5 od koordynatora, potem E1.
+Rola 05, tryb fix (przeglądy 2026-10-27), prompt `oczko-warsztat` `koordynacja/role-2026-10-27/05-architekt-fix.md`, plik stanu: ten plik na `claude/kopia-05`. Następny krok: decyzja koordynatora po E2; kod Q1a–Q3a robi 08 p7 według sekcji „Polecenia dla 08”.
