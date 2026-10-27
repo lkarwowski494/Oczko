@@ -686,6 +686,7 @@
     "film_wiersz": "Video",
     "film_otworz_a11y": "Open video link in browser",
     "film_usun": "Remove link",
+    "film_zmien": "Change link",
     "film_bez_sieci_tytul": "No internet connection",
     "rodzaj_pdf": "PDF",
     "rodzaj_zdjecie": "Photo",
@@ -734,6 +735,7 @@
   "udostepnij": {
     "tytul": "Add to Oczko",
     "do_projektu": "Add as a pattern to",
+    "do_projektu_film": "Add the video link to",
     "nowy_projekt": "New project",
     "wzory_one": "{{count}} pattern",
     "wzory_other": "{{count}} patterns",
@@ -743,6 +745,7 @@
     "jako_film": "Video link",
     "gotowe": "It’ll be in {{projekt}} next time you open Oczko.",
     "gotowe_nowy": "It’ll be in a new project next time you open Oczko.",
+    "film_zastapi": "{{projekt}} already has a video link. Saving replaces it with this one.",
     "kolejny": "{{projekt}} already has a pattern. This one is added next to it, and you can switch between them.",
     "bez_migawki": "Oczko will ask which project it’s for when you open it.",
     "za_duzy": "A pattern can be up to {{mb}} MB, so Oczko can’t add this file.",

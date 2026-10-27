@@ -636,6 +636,7 @@
     "film_wiersz": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): tytuł wiersza linku do filmu na ekranie projektu; pod nim nazwa albo adres.",
     "film_otworz_a11y": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): etykieta VoiceOver przycisku ↗ w wierszu filmu.",
     "film_usun": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): akcja usunięcia linku do filmu (menu kontekstowe wiersza), bez kosza.",
+    "film_zmien": "Wzór/film (F-24, BR-WZR-007; P-274): pozycja menu kontekstowego wiersza „Video” na ekranie projektu, nad „Remove link”; otwiera arkusz wzor.film_tytul wypełniony obecnym linkiem i nazwą; Save zastępuje.",
     "film_bez_sieci_tytul": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): nagłówek alertu, gdy film otwierany bez sieci; treść: narzedzia.film_bez_sieci.",
     "rodzaj_pdf": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): rodzaj źródła wzoru w wierszu i w testach (e2e wzor-zrodlo).",
     "rodzaj_zdjecie": "Wzór (F-24…F-28, F-55, F-56; fix NZ-P217-04, P-220): rodzaj źródła: zdjęcie lub skan strony.",
@@ -682,6 +683,7 @@
   "udostepnij": {
     "tytul": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): tytuł arkusza w rozszerzeniu (środek nagłówka). „Oczko” to nazwa aplikacji, bez tłumaczenia.",
     "do_projektu": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): nagłówek listy projektów, do których trafi wzór.",
+    "do_projektu_film": "Rozszerzenie „Udostępnij do Oczka” i arkusz skrzynki (P-276): nagłówek listy projektów, gdy wybrano „Video link” (zamiast udostepnij.do_projektu „Add as a pattern to”).",
     "nowy_projekt": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): ostatni wiersz listy: wzór trafi do nowego projektu (nazwa z pliku albo strony).",
     "wzory": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): dopisek w wierszu projektu, który już ma wzory; {{count}} = liczba wzorów.",
     "wiersz": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): druga linia wiersza projektu: ostatnia praca (projekty.ostatnia_praca_*) i liczba wzorów.",
@@ -690,6 +692,7 @@
     "jako_film": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): segment: tylko link do filmu, bez zapisu strony.",
     "gotowe": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): podpis pod listą: rozszerzenie tylko zapisuje, aplikacja dodaje wzór przy otwarciu; {{projekt}} = wybrany projekt.",
     "gotowe_nowy": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): jak udostepnij.gotowe, gdy wybrano „New project”.",
+    "film_zastapi": "Rozszerzenie „Udostępnij do Oczka” i arkusz skrzynki (P-274): linia pod listą projektów, gdy wybrano „Video link”, a zaznaczony projekt ma już film (jeden film na projekt, P-218 (4)); {{projekt}} = nazwa projektu. Zastępuje udostepnij.gotowe w tym stanie.",
     "kolejny": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): podpis, gdy wybrany projekt ma już wzór (kilka wzorów, jeden widoczny naraz, P-218).",
     "bez_migawki": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): stan bez listy projektów (np. aplikacja jeszcze nie była otwarta): plik czeka w skrzynce.",
     "za_duzy": "Arkusz „Udostępnij do Oczka” (rozszerzenie, ADR-0011, P-220 R1a; fix NZ-P217-04): treść ostrzeżenia, gdy plik przekracza limit; nagłówek wzor.blad_rozmiar; nic nie trafia do skrzynki.",
