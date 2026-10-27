@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 07:46 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-268 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 07:50 UTC — **konto 1 wygaszone (limit 98%); role i dyżury zatrzymane, zaplanowane zadania koordynatora skasowane** · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-268 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -34,7 +34,7 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 | 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | `docs/wydanie/stan.md` (6124f2c) | czeka; potem metadane i zrzuty |
 | koordynator | session_01VjtVbMx8DYWkBfH4pvaCXK | ten plik, `docs/decyzje.md` (ostatnia P-265) | dyżur kolejki okna |
 
-Zaplanowane zadania konta 1 (nie przechodzą): dyżur koordynatora trig_011oVGqtX5QizTxHZt2qDNyw (07:25 UTC), przypomnienie 07 trig_01WvsxiGZvC9Vof2ziQecS4p (07:05 UTC). Na koncie 2 koordynator ustawia własne sprawdzenia (`send_later`, co 15–60 min w oknie).
+Zaplanowane zadania konta 1: skasowane albo wykonane (07:50 UTC). Przebieg 123 (40468002239) ruszył 07:35 i działa niezależnie od konta — nowy koordynator zaczyna od jego wyniku, potem krok 2. Na koncie 2 koordynator ustawia własne sprawdzenia (`send_later`, co 15–60 min w oknie).
 
 ## Zasady nocy (P-241, P-244, P-251)
 - Role raportują koordynatorowi tylko na końcu etapu, przy STOP albo problemie (oszczędność limitu, P-251).
