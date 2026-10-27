@@ -18,6 +18,7 @@ tags:
       oczkoE2eSzerokoscOkna: "375"
 - extendedWaitUntil: { visible: { id: "licznik-plus" }, timeout: 60000 }
 - takeScreenshot: 46-waskie-licznik
+- runFlow: subflows/projekt-roboczy.yaml
 - runFlow: subflows/otworz-wzor-pdf.yaml
 - tapOn: { id: "licznik-plus" }
 - assertVisible: { id: "licznik-wartosc", text: "1" }

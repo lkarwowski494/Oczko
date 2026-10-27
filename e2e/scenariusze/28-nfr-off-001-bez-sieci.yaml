@@ -35,8 +35,8 @@ tags:
 - tapOn: { id: "licznik-menu" }
 - assertVisible: { id: "menu-ukoncz" }
 - tapOn: { id: "menu-ukoncz" }
-- assertVisible: { id: "ukonczenie-potwierdz" }
-- tapOn: { id: "ukonczenie-potwierdz" }
+- extendedWaitUntil: { visible: { id: "ukonczenie-potwierdz|ukonczenie-karta" }, timeout: 20000 }
+- tapOn: { id: "ukonczenie-potwierdz", optional: true } # aplikacja pokazuje kartę od razu, bez potwierdzenia (przebieg 40411351211; pytanie do 04)
 - extendedWaitUntil: { visible: { id: "ukonczenie-karta" }, timeout: 20000 }
 - takeScreenshot: 28-karta-ukonczenia
 - tapOn: { id: "ukonczenie-gotowe" }

@@ -6,11 +6,13 @@ name: "BR-WZR-001/S1 · Import wzoru PDF (z aplikacji Pliki) i odczyt bez sieci 
 tags:
   - BR-WZR-001-S1
   - wzor
+  - stan-licznika
 ---
 - runFlow:
     file: subflows/start-czysty.yaml
     env:
       TERAZ: "2026-11-10T12:00:00"
+- runFlow: subflows/projekt-roboczy.yaml
 - tapOn: { id: "licznik-menu" }
 - assertVisible: { id: "menu-wzor" }
 - tapOn: { id: "menu-wzor" }

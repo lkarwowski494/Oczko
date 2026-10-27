@@ -10,7 +10,7 @@ tags:
     env:
       TERAZ: "2026-11-10T12:00:00"
 - tapOn: { id: "nav-projekty" }
-- assertVisible: { id: "projekty-lista" }
+- extendedWaitUntil: { visible: { id: "projekty-lista" }, timeout: 20000 } # przejście trwało dłużej niż asercja (w ponowieniu, przebieg 40411351211)
 # Wejście: „Tools” → „Yarn” (04 fix-6 D, P-191 P7a; F07-17 zamiast nav-zapas).
 - tapOn: { id: "nav-narzedzia" }
 - assertVisible: { id: "narzedzia-wloczki" }

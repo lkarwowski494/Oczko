@@ -6,11 +6,13 @@ appId: com.apps4brew.knitting
 name: "P-230 · Skrzynka rozszerzenia: 1 pattern to add → projekt → wzór otwarty"
 tags:
   - P-230
+  - stan-licznika
 ---
 - runFlow:
     file: subflows/start-czysty.yaml
     env:
       TERAZ: "2026-11-10T12:00:00"
+- runFlow: subflows/projekt-roboczy.yaml
 - runFlow: subflows/nazwij-projekt.yaml
 - stopApp
 - launchApp:

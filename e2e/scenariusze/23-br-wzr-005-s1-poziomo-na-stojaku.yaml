@@ -11,6 +11,7 @@ tags:
     file: subflows/start-czysty.yaml
     env:
       TERAZ: "2026-11-10T12:00:00"
+- runFlow: subflows/projekt-roboczy.yaml
 - tapOn: { id: "licznik-menu" }
 - assertVisible: { id: "menu-wzor" }
 - tapOn: { id: "menu-wzor" }

@@ -40,7 +40,7 @@ tags:
       - inputText: "a"
       - inputText: "c"
       - inputText: "k"
-      - assertVisible: { id: "formularz-nazwa-czesci", index: 0, text: "Back" }
+      - assertVisible: { id: "formularz-nazwa-czesci", text: "Back" } # bez index: index liczy się po filtrze id+tekst (przebieg 40411351211)
 - pressKey: Enter
 - assertVisible: { id: "formularz-dodaj-czesc" }
 - tapOn: { id: "formularz-dodaj-czesc" }
@@ -56,7 +56,7 @@ tags:
       - inputText: "o"
       - inputText: "n"
       - inputText: "t"
-      - assertVisible: { id: "formularz-nazwa-czesci", index: 1, text: "Front" }
+      - assertVisible: { id: "formularz-nazwa-czesci", text: "Front" }
 - pressKey: Enter
 - assertVisible: { id: "formularz-zapisz" }
 - takeScreenshot: 33-nowy-projekt

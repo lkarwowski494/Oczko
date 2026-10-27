@@ -12,7 +12,8 @@ tags:
 - tapOn: { id: "nav-projekty" }
 - assertVisible: { id: "projekty-lista" }
 - tapOn: { id: "nav-ustawienia" }
-- assertVisible: { id: "ustawienia-jezyk" }
+- assertVisible: { id: "ustawienia" }
+- scrollUntilVisible: { element: { id: "ustawienia-jezyk" } }
 - tapOn: { id: "ustawienia-jezyk" }
 - assertVisible: { id: "jezyk-auto", text: "Same as phone, selected" }
 - scrollUntilVisible: { element: { id: "jezyk-pl" } }
@@ -23,7 +24,8 @@ tags:
 - tapOn: { id: "nav-projekty", optional: true }
 - assertVisible: { id: "projekty-lista" }
 - tapOn: { id: "nav-ustawienia" }
-- assertVisible: { id: "ustawienia-jezyk" }
+- assertVisible: { id: "ustawienia" }
+- scrollUntilVisible: { element: { id: "ustawienia-jezyk" } }
 - tapOn: { id: "ustawienia-jezyk" }
 - scrollUntilVisible: { element: { id: "jezyk-pl" } }
 - assertVisible: { id: "jezyk-pl", text: "Polski, selected" }

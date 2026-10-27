@@ -13,10 +13,10 @@ tags:
       TERAZ: "2026-11-10T19:30:00"
 - assertVisible: "\\+1 row.*"
 - assertVisible: "−1 row"
-- assertVisible: "Project options.*"
 - assertVisible: "History"
 - tapOn: "\\+1 row.*"
 - assertVisible: { id: "licznik-wartosc", text: "1" }
+- assertVisible: "Project options.*" # menu ••• dopiero z projektem (design-spec:138; E2 fix-3)
 - assertVisible: "\\+1 row, when row 2 is done.*"
 - runFlow: subflows/odstep.yaml
 - tapOn: { id: "licznik-plus", repeat: 3, delay: 150 }

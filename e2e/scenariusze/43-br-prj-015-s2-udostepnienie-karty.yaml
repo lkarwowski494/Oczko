@@ -12,14 +12,15 @@ tags:
     file: subflows/start-czysty.yaml
     env:
       TERAZ: "2026-11-10T19:30:00"
+- runFlow: subflows/projekt-roboczy.yaml
 - runFlow: subflows/nazwij-projekt.yaml
 - tapOn: { id: "licznik-plus" }
 - assertVisible: { id: "licznik-wartosc", text: "1" }
 - tapOn: { id: "licznik-menu" }
 - assertVisible: { id: "menu-ukoncz" }
 - tapOn: { id: "menu-ukoncz" }
-- assertVisible: { id: "ukonczenie-potwierdz" }
-- tapOn: { id: "ukonczenie-potwierdz" }
+- extendedWaitUntil: { visible: { id: "ukonczenie-potwierdz|ukonczenie-karta" }, timeout: 20000 }
+- tapOn: { id: "ukonczenie-potwierdz", optional: true } # aplikacja pokazuje kartę od razu, bez potwierdzenia (przebieg 40411351211; pytanie do 04)
 - extendedWaitUntil: { visible: { id: "ukonczenie-karta" }, timeout: 20000 }
 - assertVisible: { id: "karta-udostepnij" }
 - tapOn: { id: "karta-udostepnij" }

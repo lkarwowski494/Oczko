@@ -21,10 +21,12 @@ tags:
 - assertVisible: { id: "ustawienia" }
 - scrollUntilVisible: { element: { id: "ustawienia-usun-wszystko" } }
 - tapOn: { id: "ustawienia-usun-wszystko" }
+- scrollUntilVisible: { element: { id: "usun-z-icloud" } }
 - assertVisible: { id: "usun-z-icloud", checked: false }
 - tapOn: { id: "usun-z-icloud" }
 - assertVisible: { id: "usun-z-icloud", checked: true }
 - takeScreenshot: 51-usun-z-icloud
+- scrollUntilVisible: { element: { id: "potwierdz-usun-wszystko" } } # pod zgięciem (przebieg 40411351211: stuknięcie poza ekranem)
 - tapOn: { id: "potwierdz-usun-wszystko" }
 - extendedWaitUntil: { visible: { id: "licznik-plus|projekty-lista" }, timeout: 60000 }
 - runFlow: subflows/otworz-stan-danych.yaml

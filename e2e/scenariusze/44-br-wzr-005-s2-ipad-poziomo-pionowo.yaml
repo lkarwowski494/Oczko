@@ -12,6 +12,7 @@ tags:
     file: subflows/start-czysty.yaml
     env:
       TERAZ: "2026-11-10T12:00:00"
+- runFlow: subflows/projekt-roboczy.yaml
 - runFlow: subflows/otworz-wzor-pdf.yaml
 - setOrientation: LANDSCAPE_LEFT
 - assertVisible: { id: "wzor-widok" }
