@@ -60,8 +60,8 @@ TT-06 (aktualizacja z danymi z poprzedniego buildu nowej wersji) dotyczy dopiero
 | TT-11 | Na iPhonie: Ustawienia → „Delete all data” → potwierdź. Potem „Oczko Pro” → „Restore purchases”. | Dane puste, Pro wraca. | dane zostały albo Pro nie wraca |
 TT-04 (Family Sharing — potrzebny członek rodziny) i TT-05 (zwrot w piaskownicy, sposób [DO USTALENIA] OP-21) — „nie sprawdzono”, chyba że koordynator postanowi inaczej.
 
-## F. iCloud (warunkowe), ok. 8 min
-**Warunek:** build ma widoczny przełącznik „Sync with iCloud” w Ustawieniach → „Data and sync”. W kodzie jest dziś wyłączony do czasu tego testu (`ICLOUD_W_1_0 = false`, ZM-06) — czy build TestFlight go pokaże, decyduje koordynator; bez przełącznika blok: „nie sprawdzono”.
+## F. iCloud, ok. 8 min
+**Build TestFlight ma przełącznik „Sync with iCloud”** w Ustawieniach → „Data and sync” (`ICLOUD_W_1_0 = true` w buildzie TestFlight, P-290). Wynik TT-08 decyduje, czy przełącznik zostaje w 1.0 (ZM-06).
 | ID | Kroki | Oczekiwany wynik | Zgłoś |
 |---|---|---|---|
 | TT-08 / BR-DAN-002/S1 (bramka ZM-06) | Włącz „Sync with iCloud” na obu urządzeniach. Na iPhonie +1 w projekcie. Otwórz Oczko na iPadzie (poczekaj do minuty). | Na iPadzie ten sam projekt i ta sama wartość. **Nie → iCloud zostaje ukryty w 1.0.** | wartość na iPadzie po 1 min |
@@ -76,7 +76,7 @@ BR-DAN-004/S1 (nowy telefon z kopii urządzenia) i stany „brak miejsca / wylog
 | TT-02 (warunkowe, jak blok E) | Po ostatniej instalacji otwórz aplikację **bez** „Restore purchases”. | Pro działa (uprawnienia bieżące). | brak Pro |
 
 ## Nie sprawdzamy na tym etapie (z powodem)
-- Apple Watch (BR-ZAK-001/S4, wibracja przypomnień) — brak zegarka; zastępczo testy w Node (strategia §8).
+- Apple Watch (BR-ZAK-001/S4, wibracja przypomnień) — brak zegarka, „nie sprawdzono” (P-290); zastępczo testy w Node (strategia §8).
 - TT-06 — od kolejnego buildu nowej wersji.
 - TT-04, TT-05, BR-DAN-004/S1, stany iCloud bez miejsca/konta — wyżej.
 
