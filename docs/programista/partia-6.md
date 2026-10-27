@@ -42,6 +42,7 @@ Dane i przypadki użycia K1–K5 są zrobione, z testami. Braki są w ekranach. 
 | 6 | W1a: Magic Tap (+1 z przeglądarki), ekran nie gaśnie na `/wzor` [DO SPRAWDZENIA, czy spec tego wymaga na wzorze] | `onMagicTap` = 0 | `WzorPrzegladarka.tsx`, `app/wzor.tsx` |
 | 7 | W8: miniatura pierwszej strony w grupie wzorów | brak | wymaga funkcji natywnej (okno maszyn) |
 | 8 | R2: arkusz skrzynki także na ekranie projektu; podgląd pliku | tylko `app/projekty.tsx:25-58` | `app/projekt/[id].tsx` |
+**P-276 (po kroku 3, priorytet poniżej kroku 2 i W1–W3):** link do filmu w projekcie, który go ma — menu wiersza „Video” → „Change link”/„Remove link” (`docs/design/fix8-2026-10-27/film.html`, `film-klucze.json` na roboczej, 04 robocze); w rozszerzeniu i skrzynce `udostepnij.film_zastapi` zamiast `udostepnij.gotowe` (flaga `film` w `ProjektMigawki` — czeka na kontrakt 05); nagłówek listy przy „Video link” → `udostepnij.do_projektu_film`. Zależy od punktu 2 planu (wiersz „Video” jeszcze nie istnieje) — robić razem z nim.
 Zgłoszenie do 04: design-spec `:663` „bez kosza (N4 → 05)” sprzeczny z P-229/P-243 S2a. Kolejność: 1, 5, 4, 2, 3, 8, 6, 7 (najpierw czysty TS bez nowych zależności). Czas agenta ok. 6–9 h; czeka na: okno maszyn (7), decyzję o schowku (3), wynik W1 (Word).
 
 ## E0.1 Środowisko
