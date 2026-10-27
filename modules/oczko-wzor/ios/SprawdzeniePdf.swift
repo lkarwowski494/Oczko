@@ -33,3 +33,11 @@ enum SprawdzeniePdf {
     return true
   }
 }
+
+extension SprawdzeniePdf {
+  /// ZAŚLEPKA (W1, pusta strona 2 po wydruku WKWebView): przycięcie końcowych jednolicie białych stron — nieużywana, dopóki zrzut z E2E
+  /// nie potwierdzi problemu (koordynator 2026-10-27, wariant (a)); test: TestyOknaMaszyn `testW1PustaStronaNaKoncu`.
+  static func bezPustychStronNaKoncu(_ url: URL) -> Int {
+    PDFDocument(url: url)?.pageCount ?? 0
+  }
+}

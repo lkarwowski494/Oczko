@@ -90,4 +90,27 @@ final class EksperymentyTests: XCTestCase {
     XCTAssertFalse(c.isUserInteractionEnabled) // bez narzędzia palec przewija PDF (BR-WZR-008 S3)
     print("W3: tylkoRysik → .pencilOnly, wylaczone → bez interakcji; dotyk palcem po rysiku: lista „tylko urządzenie”")
   }
+
+  /// Pusta strona 2 po wydruku (przebiegi 121/123, scen. 25: „2 pages” przy 3 wierszach) — wariant (a): końcowe jednolicie białe strony przycięte,
+  /// nigdy do zera stron; strona z treścią na końcu zostaje. Bez WebKit (sam PDFKit), więc działa w xctest pakietu.
+  func testW1PustaStronaNaKoncu() throws {
+    func pdf(_ strony: [Bool]) throws -> URL { // true = z tekstem
+      let cel = FileManager.default.temporaryDirectory.appendingPathComponent("w1-pusta-\(UUID().uuidString).pdf")
+      try UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: 612, height: 792)).writePDF(to: cel) { ctx in
+        for zTekstem in strony {
+          ctx.beginPage()
+          if zTekstem { ("Row 1: knit across." as NSString).draw(at: CGPoint(x: 72, y: 72), withAttributes: [.font: UIFont.systemFont(ofSize: 12)]) }
+        }
+      }
+      return cel
+    }
+    XCTAssertEqual(SprawdzeniePdf.bezPustychStronNaKoncu(try pdf([true, false])), 1)
+    XCTAssertEqual(SprawdzeniePdf.bezPustychStronNaKoncu(try pdf([true, false, false])), 1)
+    XCTAssertEqual(SprawdzeniePdf.bezPustychStronNaKoncu(try pdf([true, false, true])), 3) // pusta w środku zostaje (treść bez zmian, P-218 (2))
+    XCTAssertEqual(SprawdzeniePdf.bezPustychStronNaKoncu(try pdf([false])), 1)            // nigdy zero stron
+    let u = try pdf([true, false])
+    _ = SprawdzeniePdf.bezPustychStronNaKoncu(u)
+    XCTAssertEqual(PDFDocument(url: u)?.pageCount, 1) // plik zapisany po przycięciu
+    print("W1 pusta strona: przycięcie końcowych pustych stron sprawdzone")
+  }
 }
