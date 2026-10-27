@@ -45,7 +45,7 @@ public class OczkoWzorModule: Module {
       case let .failure(p): return wynikBlad(p)
       }
     }
-    Function("skanerDostepny") { () -> Bool in VNDocumentCameraViewController.isSupported }.runOnQueue(.main) // API izolowane do MainActor (przegląd 2026-10-26)
+    Function("skanerDostepny") { () -> Bool in VNDocumentCameraViewController.isSupported } // runOnQueue jest tylko dla AsyncFunction; odczyt właściwości urządzenia (CI 2026-10-27)
     AsyncFunction("skanuj") { () async -> String in await Skaner.skanuj() }
 
     View(WidokWzoru.self) {
