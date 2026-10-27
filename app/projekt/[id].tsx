@@ -3,7 +3,7 @@
 // usunięcia + KOSZ_DNI. Po zapisie: ekran blokady i licznik (`poZmianie` / `poUsunieciu`, C2), ogłoszenie VoiceOver, model od nowa.
 import React, { useCallback, useState } from 'react';
 import { Alert, Linking, View } from 'react-native';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useIsFocused, useLocalSearchParams, useRouter } from 'expo-router';
 import { Projekt } from '../../src/ekrany/Projekt';
 import { GrupaZdjec, type Miniatura } from '../../src/ekrany/Zdjecia';
 import { zaleznosciObrazu } from '../../src/kompozycja/obrazy-aplikacji';
@@ -22,6 +22,8 @@ import { KOSZ_DNI } from '../../src/konfiguracja';
 import { useAplikacja } from '../../src/kompozycja/Kontekst';
 import { Bezpieczny } from '../../src/kompozycja/Bezpieczny';
 import { krotkaData, stanProjektu } from '../../src/kompozycja/projekt';
+import { projektyDoSkrzynki } from '../../src/kompozycja/projekty';
+import { SkrzynkaNaEkranie } from '../../src/kompozycja/SkrzynkaNaEkranie';
 import { oglos, systemAplikacji } from '../../src/kompozycja/system';
 import { dodajDni } from '../../src/przypadki-uzycia/daty';
 import { usunCzesc, usunLicznik, usunProjekt, wznowProjekt, zmienDateUkonczenia, zrobPonownie } from '../../src/przypadki-uzycia/projekt';
@@ -33,6 +35,7 @@ export default function EkranProjektu(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const naWierzchu = useIsFocused(); // arkusz skrzynki tylko na ekranie na wierzchu stosu
   const k = useKolory();
   const [w, ustaw] = useState<WidokProjektu | null>(null);
   const [edycja, ustawEdycje] = useState(false);
@@ -165,6 +168,8 @@ export default function EkranProjektu(): React.ReactElement {
           });
         }}
       />
+      {/* R2 (design-spec :775): arkusz skrzynki także na ekranie projektu (nie nad licznikiem, P-046) */}
+      <SkrzynkaNaEkranie wz={kontener.wzor.k} t={t} aktywny={naWierzchu} projekty={() => projektyDoSkrzynki(z, j)} naPoWyborze={() => void wczytaj()} />
     </Bezpieczny>
   );
 }

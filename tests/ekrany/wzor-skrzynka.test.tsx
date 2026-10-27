@@ -3,6 +3,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { ArkuszSkrzynki } from '../../src/ekrany/WzorSkrzynka';
+import { opisZlecenia } from '../../src/kompozycja/wzor-dodawanie';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { tEn } from './pomoc';
 
@@ -28,4 +29,22 @@ test('2 zlecenia: „2 patterns to add”; „Not now” zamyka bez zmian', () =
   expect(screen.getByText('2 patterns to add')).toBeTruthy();
   fireEvent.press(screen.getByRole('button', { name: 'Not now' }));
   expect(naNieTeraz).toHaveBeenCalled();
+});
+
+// R2 (design-spec :775) „z podglądem pliku”: pod nazwą rodzaj (jak `wzor.wiersz_opis`), bez miniatury (miniatura = natywna, plan 1.1 pkt 7).
+test('podgląd pozycji: rodzaj pliku pod nazwą', () => {
+  render(<ArkuszSkrzynki t={t} pozycje={[{ id: 'z1', nazwa: 'Harbor.pdf', opis: 'PDF' }, { id: 'z2', nazwa: 'video.example', opis: 'Video' }]} projekty={[]}
+    naWybierz={jest.fn()} naNieTeraz={jest.fn()} />);
+  expect(screen.getByText('PDF')).toBeTruthy();
+  expect(screen.getByText('Video')).toBeTruthy();
+});
+test.each([
+  [{ rodzaj: 'plik', typ: 'com.adobe.pdf', sciezki: ['a.pdf'] }, 'PDF'],
+  [{ rodzaj: 'plik', typ: 'org.openxmlformats.wordprocessingml.document', sciezki: ['a.docx'] }, 'Word document'],
+  [{ rodzaj: 'plik', typ: 'public.jpeg', sciezki: ['1.jpg'] }, 'Photo'],
+  [{ rodzaj: 'plik', typ: 'public.jpeg', sciezki: ['1.jpg', '2.jpg', '3.jpg'] }, 'Photo · 3 pages'],
+  [{ rodzaj: 'adres', typ: 'public.url', sciezki: [], adres: 'https://example.org/' }, 'Web page'],
+  [{ rodzaj: 'film', typ: 'public.url', sciezki: [] }, 'Video'],
+] as const)('opisZlecenia %j → %s', (zl, opis) => {
+  expect(opisZlecenia({ id: 'z', nazwa: 'n', adres: null, projektId: null, utworzonoMs: 0, ...zl, sciezki: [...zl.sciezki] }, t)).toBe(opis);
 });

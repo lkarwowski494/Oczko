@@ -8,7 +8,7 @@ import type { Tlumacz } from './wspolne';
 
 export type PropsArkuszaSkrzynki = {
   t: Tlumacz;
-  pozycje: { id: string; nazwa: string }[];
+  pozycje: { id: string; nazwa: string; opis?: string }[]; // opis: rodzaj pliku (podgląd R2)
   projekty: { id: string; nazwa: string }[];     // projekty w toku, kolejność listy
   naWybierz(projektId: string | null): void;      // null = nowy projekt
   naNieTeraz(): void;
@@ -20,7 +20,12 @@ export function ArkuszSkrzynki(p: PropsArkuszaSkrzynki): React.ReactElement {
   return (
     <View style={st.tlo} accessibilityViewIsModal testID="skrzynka">
       <Arkusz tytul={t('skrzynka.tytul', { count: p.pozycje.length })} przyciski={<Przycisk tekst={t('wspolne.nie_teraz')} rodzaj="tekstowy" onPress={p.naNieTeraz} />}>
-        {p.pozycje.map((z) => <Text key={z.id} style={st.tekst}>{z.nazwa}</Text>)}
+        {p.pozycje.map((z) => (
+          <View key={z.id}>
+            <Text style={st.tekst}>{z.nazwa}</Text>
+            {!!z.opis && <Text style={st.podpis}>{z.opis}</Text>}
+          </View>
+        ))}
         <Text style={st.naglowek} accessibilityRole="header">{t('skrzynka.dodaj_do')}</Text>
         <View style={st.grupa}>
           {p.projekty.map((x) => (
@@ -44,6 +49,7 @@ function style(k: Kolory) {
     grupa: { borderRadius: promien.grupa, backgroundColor: k.papierGrupa, overflow: 'hidden' },
     wiersz: { minHeight: rozmiary.minimum, justifyContent: 'center', paddingHorizontal: odstep.l, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: k.linia },
     tekst: { ...typografia.tresc, color: k.grafit },
+    podpis: { ...typografia.podpis, color: k.olowek },
     akcja: { fontWeight: '600' },
   });
 }

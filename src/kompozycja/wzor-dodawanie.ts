@@ -1,6 +1,8 @@
 // Dodanie wzoru w aplikacji (design-spec W7a, stany W11): źródło → dodajWzor; powód → alert z tekstami 04; nazwa domyślna (plik bez rozszerzenia,
 // tytuł strony — tu host, bo konwersja nie zwraca tytułu [OCENA 08] — `wzor.nazwa_skan`, `wzor.nazwa_zdjecia`). Każde dodanie = nowy wzór (P-218 (1)).
 import type { Powod } from '../domena/bledy';
+import type { ZlecenieImportu } from '../domena/porty';
+import { zrodloZlecenia } from '../przypadki-uzycia/skrzynka';
 import { WZOR_MAKS_MB } from '../konfiguracja';
 import type { Tlumacz } from '../ekrany/wspolne';
 
@@ -24,4 +26,15 @@ export function alertSkanu(powod: Powod, t: Tlumacz): { tytul: string; opis: str
   if (powod === 'odmowa') return { tytul: t('zdjecia.brak_aparatu_tytul'), opis: t('wzor.brak_aparatu_opis'), ustawienia: true };
   const a = alertImportu(powod, '', t);
   return a ? { ...a, ustawienia: false } : null;
+}
+/** Podgląd pozycji skrzynki (R2 :775): rodzaj jak `wzor.wiersz_opis`, klasyfikacja ta sama co import (`zrodloZlecenia`); typ nieobsługiwany = pusty. */
+export function opisZlecenia(zl: ZlecenieImportu, t: Tlumacz): string {
+  if (zl.rodzaj === 'film') return t('wzor.film_wiersz');
+  const z = zrodloZlecenia(zl);
+  if (!z) return '';
+  if (z.rodzaj === 'obrazy') {
+    const rodzaj = t('wzor.rodzaj_zdjecie');
+    return z.sciezki.length > 1 ? t('wzor.wiersz_opis', { rodzaj, strony: t('wzor.strony', { count: z.sciezki.length }) }) : rodzaj;
+  }
+  return t(z.rodzaj === 'adres' ? 'wzor.rodzaj_strona' : z.rodzaj === 'word' ? 'wzor.rodzaj_word' : 'wzor.rodzaj_pdf');
 }
