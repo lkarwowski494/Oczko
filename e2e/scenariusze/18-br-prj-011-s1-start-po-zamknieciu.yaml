@@ -17,6 +17,21 @@ tags:
 - tapOn: { id: "nav-projekty" }
 - assertVisible: { id: "projekty-lista" }
 - tapOn: { id: "projekty-nowy" }
+- assertVisible: { id: "formularz-nazwa-projektu" } # „New project” otwiera arkusz (jak 33; przebieg 40446976426)
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn: { id: "formularz-nazwa-projektu" }
+      - waitForAnimationToEnd
+      - eraseText: 20
+      - inputText: "V"
+      - inputText: "e"
+      - inputText: "s"
+      - inputText: "t"
+      - assertVisible: { id: "formularz-nazwa-projektu", text: "Vest" }
+- pressKey: Enter
+- assertVisible: { id: "formularz-zapisz" }
+- tapOn: { id: "formularz-zapisz" }
 - assertVisible: { id: "licznik-wartosc", text: "0" }
 - tapOn: { id: "nav-projekty" }
 - assertVisible: { id: "projekty-lista" }
