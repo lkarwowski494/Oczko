@@ -49,7 +49,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik-sklejenie.test.ts` | zielony (główny zestaw) | 1 | P-123, P-124, R-022, R-023 | `src/dane/dziennik`<br>`src/domena/porty` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/dziennik.test.ts` | zielony (główny zestaw) | 5 | NFR-DAN-003, R-020, R-021 | `src/dane/dziennik`<br>`src/domena/porty`<br>`src/przypadki-uzycia/dziennik`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/start` | Z07-11, Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/ekran-blokady.test.ts` | zielony (główny zestaw) | 3 | P-135 | `src/domena/porty`<br>`src/konfiguracja`<br>`src/przypadki-uzycia/ekran-blokady`<br>`src/przypadki-uzycia/licznik` | Z07-22 |
-| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-dwa-urzadzenia.test.ts` | zielony (główny zestaw) | 15 | BR-DAN-002, BR-DAN-002/S1, BR-DAN-002/S3, NFR-DAN-003, P-220 | `src/domena/icloud/kontrakt`<br>`src/domena/porty`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/projekt`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
+| 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-dwa-urzadzenia.test.ts` | zielony (główny zestaw) | 16 | BR-DAN-002, BR-DAN-002/S1, BR-DAN-002/S3, NFR-DAN-003, P-220 | `src/domena/icloud/kontrakt`<br>`src/domena/porty`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/projekt`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-rodzaj-urzadzenia.test.ts` | zielony (główny zestaw) | 2 | P-247 | `src/domena/stany`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-skrzynka.test.ts` | zielony (główny zestaw) | 10 | BR-DAN-002/S3, P-110, P-220, P-221 | `src/dane/baza/adapter-node`<br>`src/dane/migracje/migruj`<br>`src/przypadki-uzycia/projekt` | Z07-22 |
 | 2 dane: port bazy, migracje, repozytoria, archiwum, kopie | `tests/dane/icloud-zastap.test.ts` | zielony (główny zestaw) | 2 | — | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/przypadki-uzycia/archiwum`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/przywracanie` | Z07-22 |
@@ -177,6 +177,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/adaptery/wzor-adapter.test.ts` | zielony (główny zestaw) | 4 | — | `src/platforma/wzor` | — |
 | 9 ? | `tests/adaptery/zdjecia.test.ts` | zielony (główny zestaw) | 4 | P-191, P-218 | `src/platforma/zdjecia` | — |
 | 9 ? | `tests/domena/icloud/icloud-odwzorowanie.test.ts` | zielony (główny zestaw) | 10 | P-221 | `src/domena/icloud/kontrakt`<br>`src/domena/icloud/odwzorowanie` | — |
+| 9 ? | `tests/domena/icloud/wektory-swift.test.ts` | zielony (główny zestaw) | 1 | — | `src/domena/icloud/kontrakt`<br>`src/domena/icloud/odwzorowanie`<br>`src/domena/porty` | Z07-22 |
 | 9 ? | `tests/domena/posiedzenie/posiedzenie.test.ts` | zielony (główny zestaw) | 6 | P-126 | `src/domena/posiedzenie`<br>`src/konfiguracja` | — |
 | 9 ? | `tests/domena/prosba-o-ocene.test.ts` | zielony (główny zestaw) | 1 | P-150, P-156 | `src/domena/ocena`<br>`src/domena/zaslepka` | — |
 | 9 ? | `tests/domena/stan-ekranu.test.ts` | zielony (główny zestaw) | 5 | P-111, P-129, P-131, P-135, R-028 | `src/domena/zegarek`<br>`src/konfiguracja` | Z07-12, Z07-22 |
@@ -185,4 +186,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/uklad-rysik.test.ts` | zielony (główny zestaw) | 5 | BR-WZR-004, BR-WZR-008, P-218, P-220, P-225, P-226 | `src/domena/rysik`<br>`src/domena/uklad` | — |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 181; zależnych od poprawek: 121.
+Razem plików testów: 182; zależnych od poprawek: 122.
