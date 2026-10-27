@@ -33,7 +33,7 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 | 08 partia 6 | session_01T66VByADnL2T64RBV2HPqF | `claude/kopia-partia-6` | krok 2 (pierwszy, bez znacznika; 7af7ef2 + 937d6f2 + 1c78e3f manifest W1–W3, P-270) na sygnał; potem W1–W3 |
 | 05 przeglądy (P-272) | session_01T66VBxEUVZa1a385Aya8Wy (zakończona) | `claude/kopia-05` | zrobione (P-274, P-276) |
 | 04 fix-8 (P-272) | session_01T66VBwdxqMdrc4M8QCPweH (zakończona) | `claude/kopia-04` | zrobione (P-275, P-276); następnie audyt 2.1 |
-| 09 słownik (P-272) | session_01T66VByqAL8puHu6nZh23xw (zakończona) | — (usunięta, P-281) | słownik gotowy (f3115f5); D3/D4 → 06 |
+| 09 słownik (P-272) | session_01T66VByqAL8puHu6nZh23xw (zakończona) | `claude/kopia-09` (do usunięcia przez właściciela, P-281) | słownik gotowy (f3115f5); D3/D4 → 06 |
 | 10 wydanie | — (nie uruchomiona) | `docs/wydanie/stan.md` | uruchomić, gdy będzie zadanie (etap 2.5) |
 | koordynator | session_01T66VBzy9qEVyo8a5aMd7r1 | ten plik, `docs/decyzje.md` | dyżur kolejki okna |
 
@@ -56,6 +56,7 @@ Zaplanowane zadania konta 1: skasowane albo wykonane (07:50 UTC). Przebieg 123 (
 - Od 02:00 UTC (03:00 czasu polskiego) każda sesja zapisuje pracę na gałąź kopii najpóźniej co 30 min i aktualizuje swój plik stanu.
 
 ## Otwarte sprawy
+- Właściciel (niepilne): usunąć gałąź `claude/kopia-09` (commit 163317f z nazwami firm w źródłach; treść jest na roboczej) — P-281; sesja koordynatora nie ma uprawnienia.
 - P-271: lekcje Treningu (`trening/docs/40-lekcje.md`) — L-029 strażnik startu → 08 p6 gotowe na kopii (3b954b1, P-273), push po kroku 3; przegląd ADR-0019 przez 12/05; przy rolach 09/10 dołączyć L-028, L-030, L-038 i docs 41/45 Treningu.
 - Właściciel: identyfikatory `group.com.apps4brew.knitting` i `iCloud.com.apps4brew.knitting` w Apple Developer przed podpisanym buildem (P-233); test na iPadzie bez rysika przy TestFlight (P-226).
 - Rola 05: przegląd U1 i U3 partii 7 (P-245), rozszerzeń portów `ProjektMigawki` (P-243) i `ZlecenieImportu` rodzaj `film` (P-246).
