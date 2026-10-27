@@ -65,6 +65,13 @@ describe('Data and sync: przełącznik iCloud', () => {
     expect(screen.getByText('Sync is waiting for a network connection.')).toBeTruthy();
     expect(screen.getByTestId('icloud-problem').props.children).toBe('Some changes from your other devices aren’t shown yet');
   });
+  test('niepełna historia z nowszej wersji: „Update Oczko…” (icloud.niepelna_nowsza) zamiast „Oczko keeps trying”', () => {
+    const { rerender } = render(<StanDanych stan={stan()} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna', niepelna: true, niepelnaNowsza: true })} />);
+    expect(screen.getByText(/Update Oczko on this iPhone to see them/)).toBeTruthy();
+    expect(screen.queryByText(/Oczko keeps trying/)).toBeNull();
+    rerender(<StanDanych stan={stan()} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna', niepelna: true })} />);
+    expect(screen.getByText(/Oczko keeps trying/)).toBeTruthy();
+  });
   test('liczniki w konflikcie: wiersz z liczbą (odmiana)', () => {
     const { rerender } = render(<StanDanych stan={stan()} t={t} icloud={icloud({ wlaczona: true, stan: 'aktywna', konflikty: 1 })} />);
     expect(screen.getByTestId('icloud-konflikty')).toBeTruthy();

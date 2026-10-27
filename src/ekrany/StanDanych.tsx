@@ -16,6 +16,7 @@ export type IcloudStanuDanych = {
   przyczyna: 'brak_miejsca' | 'siec' | 'inny' | null;
   konflikty: number;
   niepelna: boolean;                   // rekord z iCloud w poczekalni ponad POCZEKALNIA_DNI (P-110 Q1a)
+  niepelnaNowsza?: boolean;            // wśród nich rekord nowszej wersji aplikacji → icloud.niepelna_nowsza (design-spec I1a–I3)
   naPrzelacz(wlacz: boolean): void;
   naUstawienia(): void;                // „Open Settings” (ustawienia systemu)
   naZarzadzaj(): void;                 // „Manage storage”
@@ -82,7 +83,7 @@ export function StanDanych({ stan: s, t, naZamknij, icloud: i, panelE2e }: Props
       </View>
       {i.stan === 'brak_konta' && <Problem ikona="!" naglowek={t('icloud.brak_konta')} opis={t('icloud.brak_konta_opis')} przycisk={{ tekst: t('icloud.ustawienia'), onPress: i.naUstawienia }} />}
       {i.stan === 'blad' && i.przyczyna === 'brak_miejsca' && <Problem ikona="!" naglowek={t('icloud.brak_miejsca')} opis={t('icloud.brak_miejsca_opis')} przycisk={{ tekst: t('icloud.zarzadzaj'), onPress: i.naZarzadzaj }} />}
-      {i.niepelna && <Problem ikona="i" naglowek={t('icloud.niepelna')} opis={t('icloud.niepelna_opis')} />}
+      {i.niepelna && <Problem ikona="i" naglowek={t('icloud.niepelna')} opis={t(i.niepelnaNowsza ? 'icloud.niepelna_nowsza' : 'icloud.niepelna_opis')} />}
       {i.konflikty > 0 && (
         <View testID="icloud-konflikty">
           {i.naKonflikty ? <Przycisk tekst={t('icloud.konflikty', { count: i.konflikty })} onPress={i.naKonflikty} rodzaj="tekstowy" /> : <Tresc>{t('icloud.konflikty', { count: i.konflikty })}</Tresc>}
