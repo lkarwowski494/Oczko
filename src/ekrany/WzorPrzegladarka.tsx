@@ -171,8 +171,8 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
 
   const licznik = (
     <View style={obok ? [st.kolumna, { width: s.uklad.kolumnaLicznika ?? undefined }] : st.pasekLicznika} testID={obok ? 'wzor-kolumna-licznika' : 'wzor-pasek-licznika'}>
-      <View style={st.liczbaBlok}>
-        <Text style={st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(s.licznik.liczba)}</Text>
+      <View style={obok ? st.liczbaBlokKolumna : st.liczbaBlok} testID="wzor-liczba-blok">
+        <Text style={obok ? st.liczbaKolumna : st.liczba} maxFontSizeMultiplier={MAX_SKALA_LICZBY} testID="licznik-wartosc">{String(s.licznik.liczba)}</Text>
         <Text style={st.podpis} testID="licznik-teraz-rzad">{t('licznik.teraz', { n: s.licznik.dziergany })}</Text>
       </View>
       {blad && <Text style={st.tresc} accessibilityRole="alert" testID="blad-zapisu">{t('licznik.blad_zapisu')}</Text>}
@@ -255,12 +255,16 @@ function style(k: Kolory) {
     kolumna: { borderLeftWidth: StyleSheet.hairlineWidth, borderLeftColor: k.linia, padding: odstep.l, gap: odstep.m, backgroundColor: k.papier },
     liczbaBlok: { flexShrink: 1 },
     liczba: { ...typografia.liczba, fontSize: 40, lineHeight: 48, color: k.grafit }, // pasek licznika: 40 pt (design-spec W1a)
+    // Kolumna (W3, W4b): liczba 64 pt, nigdy ściśnięta; +1 bierze resztę z jawną podstawą 0 — na urządzeniu blok liczby wyszedł 0 pt, a −1
+    // poza kolumną (P-262 (b), przebieg 119, scen. 23 i 44; przyczyna w Yoga nieodtworzona poza urządzeniem).
+    liczbaBlokKolumna: { flexShrink: 0 },
+    liczbaKolumna: { ...typografia.liczba, fontSize: 64, lineHeight: 64, color: k.grafit },
     przyciski: { flexDirection: 'row', alignItems: 'center', gap: odstep.m, flexGrow: 1, justifyContent: 'flex-end' },
-    przyciskiKolumna: { flex: 1, flexDirection: 'column-reverse', gap: odstep.m },
+    przyciskiKolumna: { flexGrow: 1, flexShrink: 1, flexBasis: 0, flexDirection: 'column-reverse', gap: odstep.m },
     minus: { width: 56, height: 56, borderRadius: promien.przyciskDrugi, borderWidth: 2, borderColor: k.drugiPrzyciskObrys, alignItems: 'center', justifyContent: 'center' },
     minusTekst: { ...typografia.przycisk, color: k.grafit },
     plus: { minHeight: 72, minWidth: 132, flexGrow: 1, borderRadius: promien.przyciskGlowny, backgroundColor: k.przyciskTlo, alignItems: 'center', justifyContent: 'center', padding: odstep.m },
-    plusKolumna: { flex: 1 },
+    plusKolumna: { flexGrow: 1, flexShrink: 1, flexBasis: 0 },
     plusTekst: { ...typografia.przycisk, color: k.przyciskTekst },
     menuTlo: { ...StyleSheet.absoluteFill, justifyContent: 'flex-end' },
     menu: { maxHeight: '60%', margin: odstep.l, borderRadius: promien.grupa, backgroundColor: k.arkusz },

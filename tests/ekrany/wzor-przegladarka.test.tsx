@@ -1,7 +1,7 @@
 // Przeglądarka wzoru (design-spec „Wzór, rysik i iPad”; P-220 W1a, W3, W4b, W5a, W9b; P-218 (3); BR-WZR-005, BR-WZR-008; testID z e2e/README.md
 // i scenariuszy 44–47, 52). Widok strony PDF to moduł natywny `oczko-wzor` — tu slot (`widok`), więc ekran jest testowalny bez urządzenia.
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { ukladOkna } from '../../src/domena/uklad';
 import { PrzegladarkaWzoru, type StanPrzegladarki } from '../../src/ekrany/WzorPrzegladarka';
@@ -47,6 +47,20 @@ test('układ „obok” (telefon poziomo W3, iPad poziomo W4b): kolumna licznika
   const kolumna = screen.getByTestId('wzor-kolumna-licznika');
   expect(kolumna.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ width: 340 })]));
   expect(screen.getByTestId('wzor-widok')).toBeTruthy();
+});
+
+test('P-262 (b), design-spec W3: w kolumnie liczba 64 pt, blok liczby się nie kurczy; kurczy się tylko +1 (jawna podstawa 0 — przebieg 119: blok 0 pt)', () => {
+  render(<PrzegladarkaWzoru stan={stan({ uklad: ukladOkna({ szerokosc: 874, wysokosc: 402 }) })} t={t} widok={widok} {...wywolania()} />);
+  const plaski = (id: string) => StyleSheet.flatten(screen.getByTestId(id).props.style);
+  expect(plaski('licznik-wartosc')).toMatchObject({ fontSize: 64, lineHeight: 64 });
+  expect(plaski('licznik-wartosc').flexShrink ?? 0).toBe(0);
+  expect(plaski('wzor-liczba-blok')).toMatchObject({ flexShrink: 0 });
+  expect(plaski('licznik-plus')).toMatchObject({ flexGrow: 1, flexShrink: 1, flexBasis: 0 });
+});
+
+test('pasek licznika (pionowo) bez zmian: liczba 40 pt (W1a)', () => {
+  render(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...wywolania()} />);
+  expect(StyleSheet.flatten(screen.getByTestId('licznik-wartosc').props.style)).toMatchObject({ fontSize: 40 });
 });
 
 test('iPhone: zakreślacz włącza tryb (selected), pasek narzędzi: gumka, cofnij, Done; liczba zakreśleń jako tekst (scenariusz 47)', () => {
