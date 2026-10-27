@@ -1,18 +1,40 @@
 // Wspólne elementy arkuszy (design-spec „Komponenty”: arkusze systemowe — treść się przewija, przyciski zawsze widoczne; formularze Save / Cancel).
 // Prezentację arkusza (formSheet) daje trasa expo-router; tu tylko zawartość. Wartości z modułu motywu (tokeny 04).
-import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 
-export function Arkusz(p: { tytul: string; children: React.ReactNode; przyciski: React.ReactNode; testID?: string }): React.ReactElement {
+/** Ile dół paska przycisków (współrzędne okna) zachodzi na górną krawędź klawiatury; bez klawiatury 0 (P-255 (a)). */
+export function odstepNadKlawiatura(w: { dolPrzyciskow: number; gornaKlawiatury: number | null }): number {
+  return w.gornaKlawiatury === null ? 0 : Math.max(0, w.dolPrzyciskow - w.gornaKlawiatury);
+}
+type Pomiar = (f: (x: number, y: number, szer: number, wys: number) => void) => void;
+
+/**
+ * Przyciski zawsze widoczne (design-spec „Komponenty”), także nad klawiaturą numeryczną (scen. 10: Save pod klawiszem „0”). Arkusz formSheet
+ * jest przesunięty w oknie, więc pomiar w oknie (measureInWindow), nie ramka względem rodzica jak w KeyboardAvoidingView. `zmierz`: testy.
+ */
+export function Arkusz(p: { tytul: string; children: React.ReactNode; przyciski: React.ReactNode; testID?: string; zmierz?: Pomiar }): React.ReactElement {
   const st = style(useKolory());
+  const pasek = useRef<View>(null);
+  const [nadKlawiatura, ustawNadKlawiatura] = useState(0);
+  const biezacy = useRef(0);
+  useEffect(() => {
+    const zmierz: Pomiar = p.zmierz ?? ((f) => pasek.current?.measureInWindow(f));
+    const ustaw = (o: number) => { biezacy.current = o; ustawNadKlawiatura(o); };
+    const pokaz = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', (e) => {
+      zmierz((_x, y, _s, wys) => ustaw(odstepNadKlawiatura({ dolPrzyciskow: y + wys - biezacy.current, gornaKlawiatury: e.endCoordinates.screenY })));
+    });
+    const schowaj = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () => ustaw(0));
+    return () => { pokaz.remove(); schowaj.remove(); };
+  }, [p.zmierz]);
   return (
     <View style={st.arkusz} testID={p.testID}>
       <ScrollView contentContainerStyle={st.tresc} keyboardShouldPersistTaps="handled">
         <Text style={st.tytul} accessibilityRole="header">{p.tytul}</Text>
         {p.children}
       </ScrollView>
-      <View style={st.przyciski}>{p.przyciski}</View>
+      <View ref={pasek} style={[st.przyciski, { paddingBottom: odstep.l + nadKlawiatura }]} testID="arkusz-przyciski">{p.przyciski}</View>
     </View>
   );
 }
