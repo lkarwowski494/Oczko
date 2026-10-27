@@ -35,7 +35,8 @@ Stan: E4 (przekazanie) · 2026-10-22 · Rola 04, build; fix NZ-P217-04 2026-10-2
 | Komponent | Systemowy czy własny | Uwagi |
 |---|---|---|
 | Pasek nawigacji, wstecz, duży tytuł | systemowy | nad tytułem części nazwa projektu; pod tytułem „Now knitting row 48” (20 pt): duża liczba to rzędy skończone; stuknięcie w tytuł otwiera menu projektu |
-| Przycisk +1: podpis | własny | „tap when row 48 is done” (soczewki: niejasne, czy +1 zaczyna, czy kończy rząd) |
+| Przycisk +1: podpis | własny | „tap when row 48 is done” (soczewki: niejasne, czy +1 zaczyna, czy kończy rząd). **Przy kategoriach dostępności tekstu** (`isAccessibilityCategory`, AX1–AX5; fix-8, P-275 (3)): podpis tylko w etykiecie VoiceOver, strefa +1 wraca do 168 pt |
+| Licznik przy dużym tekście (fix-8, P-275 (3)) | układ | przy kategoriach dostępności liczba („47 of 96” i linijka celu) stoi **nad** nazwą projektu, nazwą części i „Now knitting row n”; reszta środka bez zmian i przewija się; kolejność VoiceOver idzie za wyglądem (liczba → nazwy); bez automatycznego przewijania do liczby. Pomiar: liczba widoczna bez przewijania przy 320×568, 390×844 i 430×932 (`fix8-2026-10-27/pomiar.json`, `licznik-d`); makieta `fix8-2026-10-27/fix8.html`, wzorce `wzorce-zrzuty/fix8-licznik-d-*` |
 | Przycisk +1 (strefa na dole, ≥ 168 pt wysokości) i −1 (72 × 72 pt, 28 pt odstępu) | własny kształt, zachowanie przycisku systemowego | etykieta zawiera widoczny tekst („+1 row …”, WCAG 2.5.3) |
 | Kreski sesji, zakreślenie instrukcji | własne (SVG → `react-native-svg`) | opis tekstowy w podpisie |
 | Blokada licznika | pozycja w menu ••• („Lock counter (ignore taps)”); w stanie zablokowanym pasek „Counter locked · Unlock” pod paskiem nawigacji | przeniesiona z paska: kłódka czytała się jak znak płatnej funkcji (przejście poznawcze, nowa osoba); stuknięcie w zablokowany licznik: „Counter is locked. Unlock it at the top.” (BR-LIC-004) |
