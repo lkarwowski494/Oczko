@@ -2,7 +2,7 @@
 // albo licznika (`przywroc*`), potem lista od nowa i ogłoszenie `kosz.przywrocono`; pusty kosz zostaje na ekranie (wiersz listy znika po wyjściu).
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Kosz, type PozycjaKosza, type StanKosza } from '../src/ekrany/Kosz';
 import { useKolory } from '../src/ekrany/motyw';
 import { useAplikacja } from '../src/kompozycja/Kontekst';
@@ -16,6 +16,7 @@ import { przywrocNarzedzie, przywrocWloczke } from '../src/przypadki-uzycia/zapa
 
 export default function EkranKosza(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
+  const router = useRouter();
   const k = useKolory();
   const [stan, ustaw] = useState<StanKosza | null>(null);
   const wczytaj = useCallback(async () => {
@@ -38,5 +39,5 @@ export default function EkranKosza(): React.ReactElement {
     oglos(kontener.j.t('kosz.przywrocono', { nazwa }));
     await wczytaj();
   }
-  return <Bezpieczny><Kosz stan={stan} t={kontener.j.t} naPrzywroc={(p) => void przywroc(p)} /></Bezpieczny>;
+  return <Bezpieczny><Kosz stan={stan} t={kontener.j.t} naPrzywroc={(p) => void przywroc(p)} naWstecz={() => router.back()} /></Bezpieczny>;
 }
