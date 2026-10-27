@@ -12,6 +12,8 @@ Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-tho
 | 339a85b | XCTest `oczko-icloud`: pakiet `modules/oczko-icloud/Pakiet`, `wektory.json`, Jest `tests/domena/icloud/wektory-swift.test.ts`, krok `swift test` w `jakosc-ios.yml` (Swift nieskompilowany lokalnie) | tura 2 |
 | e756fa5 i nowsze | ten plik stanu | z turą 2 |
 
+**U12 do listy testów na urządzeniu (P-286, koordynator 2026-10-27; lista U1–U11 w `docs/programista/partia-6-natywne.md` partii 6 — tam przenieść):** | U12 | Zimny start po instalacji (P-286, przebieg 126 scen. 01: pierwsze stuknięcie przy zimnym starcie nie dało +1): usunięcie aplikacji → instalacja z TestFlight → otwarcie → natychmiast, gdy widać licznik, jedno stuknięcie +1 (powtórzyć 3×) | iPhone | liczba 1 za każdym razem — stuknięcie nie ginie |
+
 **STAN 2026-10-27 10:00 UTC (konto 2, sesja session_01T66VBwDdcBHrNrCt25ZNWW):** krok 2 wg P-280 wypchnięty na roboczą jako 65e9a4c `[e2e-pelny]` (P-266 ×3, P-274 Q1a–Q3a, 1.6 podział Licznik.tsx, P-275 (1) klucze fix-8, (2) niszczący/nieaktywny z tokenów, (4) Cancel/Save w nagłówku arkuszy formularzy, P-277 (A) zapas motek roboczy, (C)+(d) limity AX5 1,8/1,4 i liczba nad nazwami; verify 2560/2560). Krok 3 (na sygnał, po przebiegu kroku 2): `claude/kopia-partia-7-krok3` = 65e9a4c + e996bae + 339a85b (iCloud pola NULL, XCTest) + ten wpis. Otwarte do audytu 04: teksty robocze `zapas.motek_dlugosc/_waga`, limity ×1,8/×1,4 jako tokeny (wyjątek P-277), limity na innych ekranach z krojem tytułowym. Przy scenariuszach dla 07: Save formularzy w nagłówku (10, 15, 34, 35, 40), etykiety wierszy łączone (34 „Pair of Back”, 38 „Edited”).
 
 **KONTO 2 (2026-10-27 09:00 UTC, sesja session_01T66VBwDdcBHrNrCt25ZNWW):**
