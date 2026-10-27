@@ -64,6 +64,15 @@
   "#FCFCFA",
   "#26282C"
  ],
+ "jasny: przycisk niszczący: tekst / tło": [
+  "#FCFCFA",
+  "#B3261E"
+ ],
+ "jasny: przycisk niszczący: tło / arkusz (element, 3:1)": [
+  "#B3261E",
+  "#FCFCFA",
+  3
+ ],
  "ciemny: tekst / papier": [
   "#ECECE8",
   "#1B1C1F"
@@ -128,6 +137,15 @@
  "ciemny: wybrany przełącznik: tekst / tło": [
   "#ECECE8",
   "#2E3136"
+ ],
+ "ciemny: przycisk niszczący: tekst / tło": [
+  "#1B1C1F",
+  "#F2B8B5"
+ ],
+ "ciemny: przycisk niszczący: tło / arkusz (element, 3:1)": [
+  "#F2B8B5",
+  "#2A2C31",
+  3
  ],
  "jasny+kontrast: tekst / papier": [
   "#26282C",
@@ -194,6 +212,15 @@
   "#FCFCFA",
   "#26282C"
  ],
+ "jasny+kontrast: przycisk niszczący: tekst / tło": [
+  "#FCFCFA",
+  "#B3261E"
+ ],
+ "jasny+kontrast: przycisk niszczący: tło / arkusz (element, 3:1)": [
+  "#B3261E",
+  "#FCFCFA",
+  3
+ ],
  "ciemny+kontrast: tekst / papier": [
   "#ECECE8",
   "#1B1C1F"
@@ -258,6 +285,15 @@
  "ciemny+kontrast: wybrany przełącznik: tekst / tło": [
   "#ECECE8",
   "#2E3136"
+ ],
+ "ciemny+kontrast: przycisk niszczący: tekst / tło": [
+  "#1B1C1F",
+  "#F2B8B5"
+ ],
+ "ciemny+kontrast: przycisk niszczący: tło / arkusz (element, 3:1)": [
+  "#F2B8B5",
+  "#2A2C31",
+  3
  ],
  "wzór: znacznik / strona (element, 3:1)": [
   "#26282C",
