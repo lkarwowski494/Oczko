@@ -43,15 +43,15 @@ export function Arkusz(p: { tytul: string; children: React.ReactNode; przyciski:
   );
 }
 
-type RodzajPrzycisku = 'glowny' | 'drugi' | 'tekstowy';
+type RodzajPrzycisku = 'glowny' | 'niszczacy' | 'drugi' | 'tekstowy'; // niszczacy: tło `blad`, tekst `papier` (design-spec:776)
 export function Przycisk(p: { tekst: string; etykieta?: string; onPress(): void; rodzaj?: RodzajPrzycisku; testID?: string; rola?: 'button' | 'link'; wylaczony?: boolean }): React.ReactElement {
   const st = style(useKolory());
   const r = p.rodzaj ?? 'drugi';
   return (
     <Pressable accessibilityRole={p.rola ?? 'button'} accessibilityLabel={p.etykieta ?? p.tekst} onPress={p.onPress} testID={p.testID}
       disabled={p.wylaczony} accessibilityState={p.wylaczony ? { disabled: true } : undefined}
-      style={[r === 'glowny' ? st.glowny : r === 'drugi' ? st.drugi : st.tekstowy, p.wylaczony && st.wylaczony]}>
-      <Text style={[r === 'glowny' ? st.glownyTekst : st.drugiTekst, p.wylaczony && st.wylaczonyTekst]}>{p.tekst}</Text>
+      style={[r === 'glowny' ? st.glowny : r === 'niszczacy' ? st.niszczacy : r === 'drugi' ? st.drugi : st.tekstowy, p.wylaczony && st.wylaczony]}>
+      <Text style={[r === 'glowny' ? st.glownyTekst : r === 'niszczacy' ? st.niszczacyTekst : st.drugiTekst, p.wylaczony && st.wylaczonyTekst]}>{p.tekst}</Text>
     </Pressable>
   );
 }
@@ -107,6 +107,8 @@ export function style(k: Kolory) {
     przyciski: { padding: odstep.l, gap: odstep.s, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: k.linia },
     glowny: { minHeight: cel.minimum, borderRadius: promien.przyciskGlowny, backgroundColor: k.przyciskTlo, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
     glownyTekst: { ...typografia.przycisk, color: k.przyciskTekst },
+    niszczacy: { minHeight: cel.minimum, borderRadius: promien.przyciskGlowny, backgroundColor: k.blad, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
+    niszczacyTekst: { ...typografia.przycisk, color: k.papier },
     drugi: { minHeight: cel.minimum, borderRadius: promien.przyciskDrugi, borderWidth: 2, borderColor: k.drugiPrzyciskObrys, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
     tekstowy: { minHeight: cel.minimum, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
     drugiTekst: { ...typografia.tresc, color: k.grafit, fontWeight: '700' },

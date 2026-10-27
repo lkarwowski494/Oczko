@@ -18,7 +18,6 @@ import { systemAplikacji } from '../src/kompozycja/system';
 import { E2E, paneleE2e } from '../src/platforma/tryb-e2e';
 import { udostepnijPlik, wybierzArchiwum } from '../src/platforma/system-plikow-uzytkownika';
 import { eksportuj, importuj } from '../src/przypadki-uzycia/archiwum';
-import { usunWszystkieDane } from '../src/przypadki-uzycia/projekt';
 import { widokProjektow } from '../src/przypadki-uzycia/widok-projektow';
 import { stanBazy } from '../src/dane/repozytoria/icloud';
 
@@ -39,7 +38,7 @@ export default function EkranUstawien(): React.ReactElement {
   const [dostep, ustawDostep] = useState(kontener.dostep.stan());
   const [dane, ustawDane] = useState<Dane>(null);
   const [ostatniEksport, ustawOstatni] = useState<string | null>(null);
-  const [icloudWlaczona, ustawIcloud] = useState(false); // partia 7: „Also delete from iCloud” tylko przy włączonej synchronizacji (P-229)
+  const [icloudWlaczona, ustawIcloud] = useState(false); // partia 7: „Replace” przy włączonej synchronizacji najpierw prosi o wyłączenie
   const wybor = useRef<((t: TrybImportu | 'anuluj') => void) | null>(null);
   const { import: plikImportu } = useLocalSearchParams<{ import?: string }>(); // plik `.oczko` otwarty z Plików (ADR-0004, +native-intent)
 
@@ -119,20 +118,10 @@ export default function EkranUstawien(): React.ReactElement {
         dane={{
           naEksport: () => void eksport().then((s) => { if (s && !E2E) void udostepnijPlik(s); }),
           naImport: () => void wybierzArchiwum().then((p) => { if (p) void importZ(p); }),
-          naUsunWszystko: (takzeZIcloud) => void usunWszystkieDane(z).then(async (w) => {
-            if (!w.ok) { ustawDane({ rodzaj: 'blad' }); return; }
-            if (kontener.icloud) { // L1: skrzynka pusta i synchronizacja wyłączona przed usunięciem wierszy; strefa iCloud tylko na życzenie (P-229)
-              await kontener.icloud.sterownik.wylacz();
-              if (takzeZIcloud) await kontener.icloud.sterownik.usunZIcloud();
-              ustawIcloud(false);
-            }
-            licznik.zresetuj();
-            router.dismissTo('/projekty');
-          }),
+          naUsunWszystko: () => router.push('/usun-wszystko'), // arkusz potwierdzenia (P-266 (3))
         }}
         wynikDanych={wynikDanych}
         panelE2e={panelE2e}
-        icloudWlaczona={icloudWlaczona}
       />
     </Bezpieczny>
   );
