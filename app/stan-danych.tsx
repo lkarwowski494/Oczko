@@ -9,11 +9,11 @@ import { useAplikacja } from '../src/kompozycja/Kontekst';
 import { otworzUstawieniaSystemu } from '../src/kompozycja/system';
 import { paneleE2e } from '../src/platforma/tryb-e2e';
 import { zegarekOstatniaPartiaMs } from '../src/dane/repozytoria/ustawienia';
-import { licznikiWKonflikcie, najstarszyWPoczekalni, stanBazy } from '../src/dane/repozytoria/icloud';
+import { licznikiWKonflikcie, najstarszyWPoczekalni, nowszaWersjaWPoczekalni, stanBazy } from '../src/dane/repozytoria/icloud';
 import { POCZEKALNIA_DNI } from '../src/konfiguracja';
 import type { WidokSynchronizacji } from '../src/przypadki-uzycia/synchronizacja';
 
-type DaneIcloud = { wlaczona: boolean; konflikty: number; niepelna: boolean };
+type DaneIcloud = { wlaczona: boolean; konflikty: number; niepelna: boolean; niepelnaNowsza: boolean };
 
 export default function EkranStanuDanych(): React.ReactElement {
   const { kontener } = useAplikacja();
@@ -29,7 +29,8 @@ export default function EkranStanuDanych(): React.ReactElement {
     const b = kontener.z.baza;
     const s = await stanBazy(b);
     const najstarszy = await najstarszyWPoczekalni(b);
-    ustawDane({ wlaczona: s.wlaczona, konflikty: await licznikiWKonflikcie(b), niepelna: najstarszy !== null && kontener.z.zegar.teraz().ms - najstarszy > POCZEKALNIA_DNI * 86_400_000 });
+    const granica = kontener.z.zegar.teraz().ms - POCZEKALNIA_DNI * 86_400_000;
+    ustawDane({ wlaczona: s.wlaczona, konflikty: await licznikiWKonflikcie(b), niepelna: najstarszy !== null && najstarszy < granica, niepelnaNowsza: await nowszaWersjaWPoczekalni(b, granica) });
   }, [kontener]);
   useEffect(() => { void zegarekOstatniaPartiaMs(kontener.z.baza).then(ustawKontakt); }, [kontener]);
   useFocusEffect(useCallback(() => { void odswiez(); }, [odswiez]));
@@ -66,7 +67,7 @@ export default function EkranStanuDanych(): React.ReactElement {
 
   const synchronizacja = widok?.stan ?? 'wylaczona';
   const icloud: IcloudStanuDanych | undefined = ic && ic.widoczny && dane ? {
-    wlaczona: dane.wlaczona, stan: synchronizacja, przyczyna: widok?.przyczyna ?? null, konflikty: dane.konflikty, niepelna: dane.niepelna,
+    wlaczona: dane.wlaczona, stan: synchronizacja, przyczyna: widok?.przyczyna ?? null, konflikty: dane.konflikty, niepelna: dane.niepelna, niepelnaNowsza: dane.niepelnaNowsza,
     naPrzelacz, naUstawienia: otworzUstawieniaSystemu, naZarzadzaj: otworzUstawieniaSystemu, // „Manage storage”: bez publicznego adresu strony iCloud — Ustawienia
   } : undefined;
   const panelE2e = paneleE2e && e2e ? <paneleE2e.PanelIcloud wyslane={e2e.wyslane} usuniete={e2e.usuniete} /> : null;

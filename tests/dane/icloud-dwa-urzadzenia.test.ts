@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import fc from 'fast-check';
 import type { PartiaIcloud, PortBazy, RekordIcloud } from '../../src/domena/porty';
 import { TABELE_ICLOUD } from '../../src/domena/icloud/kontrakt';
+import { nowszaWersjaWPoczekalni } from '../../src/dane/repozytoria/icloud';
 import { dodajRzad, utworzSzybkiLicznik } from '../../src/przypadki-uzycia/licznik';
 import { kandydaciKonfliktu, rozstrzygnijKonflikt, sterownikSynchronizacji, type Sterownik } from '../../src/przypadki-uzycia/synchronizacja';
 import { usunWszystkieDane } from '../../src/przypadki-uzycia/projekt';
@@ -243,6 +244,9 @@ describe('rekordy z sieci: błędne, kolizja, zasoby', () => {
     expect(await licznik(b.s.baza, l)).toEqual([{ wartosc: 1, konflikt: 0 }]);
     expect(await b.s.baza.all('SELECT id, powod FROM poczekalnia ORDER BY id')).toEqual([{ id: 'wykres:w1', powod: 'nowsza_wersja' }, { id: 'zdarzenie:z-nowy', powod: 'nowsza_wersja' }]);
     expect(await n(b.s.baza, "SELECT count(*) AS n FROM blad WHERE kod = 'icloud_bledny_rekord'")).toBe(0);
+    const teraz = b.s.zegar.teraz().ms; // „Data and sync”: nowsza wersja dopiero po POCZEKALNIA_DNI (P-110 Q1a)
+    expect(await nowszaWersjaWPoczekalni(b.s.baza, teraz - 1)).toBe(false);
+    expect(await nowszaWersjaWPoczekalni(b.s.baza, teraz + 1)).toBe(true);
   });
   test('zasób pliku: zgodny SHA-256 trafia do magazynu; inny SHA-256 nie trafia, rekord czeka, wpis `blad`', async () => {
     const serwer = serwerIcloud();

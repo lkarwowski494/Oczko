@@ -197,6 +197,10 @@ export async function zastosujPartie(tx: PortBazy, p: PartiaIcloud, terazMs: num
 export async function licznikiWKonflikcie(baza: PortBazy): Promise<number> {
   return liczba((await wiersze(baza.all('SELECT count(*) AS n FROM licznik WHERE konflikt = 1 AND usunieto_ms IS NULL'), 'konflikty'))[0], 'n');
 }
+/** Czy w poczekalni czeka rekord iCloud nowszej wersji aplikacji, który przyszedł przed `przedMs` — „Update Oczko…” w Data and sync. */
+export async function nowszaWersjaWPoczekalni(baza: PortBazy, przedMs: number): Promise<boolean> {
+  return (await baza.all("SELECT 1 FROM poczekalnia WHERE zrodlo = 'synchronizacja' AND powod = 'nowsza_wersja' AND przyszlo_ms < ? LIMIT 1", [przedMs])).length > 0;
+}
 /** Najstarszy rekord iCloud w poczekalni (ms) — „niepełna historia” po POCZEKALNIA_DNI (P-110 Q1a). */
 export async function najstarszyWPoczekalni(baza: PortBazy): Promise<number | null> {
   const [r] = await wiersze(baza.all("SELECT min(przyszlo_ms) AS m FROM poczekalnia WHERE zrodlo = 'synchronizacja'"), 'poczekalnia');
