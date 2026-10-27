@@ -56,4 +56,14 @@ describe('ekran „Recently deleted” (C3, BR-DAN-008)', () => {
     expect(screen.getByText('Nothing here. Deleted projects, parts and counters stay here for 30 days.')).toBeTruthy();
     expect(screen.queryByTestId('kosz-przywroc')).toBeNull();
   });
+
+  test('P-266 (2), scen. 36: powrót „‹ Back” (nav-wstecz) także w pustym koszu po przywróceniu ostatniej pozycji', () => {
+    const naWstecz = jest.fn();
+    const { rerender } = render(<Kosz stan={kosz()} t={t} naPrzywroc={jest.fn()} naWstecz={naWstecz} />);
+    expect(screen.getByTestId('nav-wstecz')).toBeTruthy();
+    rerender(<Kosz stan={kosz({ pozycje: [] })} t={t} naPrzywroc={jest.fn()} naWstecz={naWstecz} />);
+    fireEvent.press(screen.getByTestId('nav-wstecz'));
+    expect(naWstecz).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: 'Back' })).toBeTruthy();
+  });
 });
