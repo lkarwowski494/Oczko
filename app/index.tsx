@@ -1,5 +1,5 @@
 // Trasa „/”: ekran licznika (pierwszy ekran, NFR-PIE-001; powrót do miejsca F-49). Gdy zapamiętane miejsce jest w koszu, lista projektów (moduly.md:238).
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Aplikacja } from '../src/ekrany/Aplikacja';
@@ -13,6 +13,7 @@ import { EkranAwaryjny } from '../src/kompozycja/EkranAwaryjny';
 import { SprawdzStopera, StoperLicznika } from '../src/kompozycja/StoperLicznika';
 import { powodAwaryjny, zapiszKamien } from '../src/kompozycja/start-aplikacji';
 import { listaWzorow } from '../src/przypadki-uzycia/wzor';
+import { paneleE2e } from '../src/platforma/tryb-e2e';
 
 export default function EkranLicznika(): React.ReactElement {
   const { kontener, licznik } = useAplikacja();
@@ -22,9 +23,18 @@ export default function EkranLicznika(): React.ReactElement {
   const [awaria, ustawAwarie] = useState<'wersja_nowsza' | 'uszkodzony' | null>(null);
   const [wersja, ustawWersje] = useState(licznik.wersja());
   const [plusy, ustawPlusy] = useState(0); // P-191 P5a: linia „zapomniany stoper” liczona od nowa po każdym udanym +1
+  // Build E2E (P-255 (c), NFR-WYD-001): czas od stuknięcia +1 do drugiej klatki po zapisie (nowa wartość na ekranie); w wydaniu bez pomiaru.
+  const probki = useRef<number[]>([]);
+  const [pomiar, ustawPomiar] = useState<readonly number[]>([]);
   const uslugi = useMemo(() => ({
     ...licznik.uslugi,
-    dodajRzad: async () => { const w = await licznik.uslugi.dodajRzad(); if (w.ok) ustawPlusy((n) => n + 1); return w; },
+    dodajRzad: async () => {
+      const t0 = paneleE2e ? performance.now() : 0;
+      const w = await licznik.uslugi.dodajRzad();
+      if (w.ok) ustawPlusy((n) => n + 1);
+      if (w.ok && paneleE2e) requestAnimationFrame(() => requestAnimationFrame(() => { probki.current.push(performance.now() - t0); ustawPomiar([...probki.current]); }));
+      return w;
+    },
   }), [licznik]);
   const [projektId, ustawProjekt] = useState<string | null>(null); // stoper sesji w pasku (P-191 P1a) — projekt bieżącego licznika
   useEffect(() => { if (gotowe) void licznik.widok().then((w) => ustawProjekt(w ? w.projektId : null)); }, [gotowe, wersja, licznik]);
@@ -77,10 +87,13 @@ export default function EkranLicznika(): React.ReactElement {
           <StoperLicznika z={kontener.z} j={kontener.j} projektId={projektId} oglos={oglos}
             poZmianie={async () => { await licznik.poZmianie(); ustawWersje(licznik.wersja()); }} />
         ) : null}
-        sprawdzStopera={projektId ? (
-          <SprawdzStopera key={plusy} z={kontener.z} j={kontener.j} projektId={projektId}
-            naKorekta={(sesja) => router.push({ pathname: '/sesja-korekta', params: { sesja, projekt: projektId } })} />
-        ) : null}
+        sprawdzStopera={<>
+          {projektId ? (
+            <SprawdzStopera key={plusy} z={kontener.z} j={kontener.j} projektId={projektId}
+              naKorekta={(sesja) => router.push({ pathname: '/sesja-korekta', params: { sesja, projekt: projektId } })} />
+          ) : null}
+          {paneleE2e ? <paneleE2e.PanelPomiaru probkiMs={pomiar} /> : null /* slot pod kreskami: Licznik.tsx przy limicie 20 KB (U8) */}
+        </>}
       />
     </Bezpieczny>
   );

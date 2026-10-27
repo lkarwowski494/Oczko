@@ -111,3 +111,15 @@ function pdfTestowyPlik(katalog: string): string {
   zapiszTekst(sciezka, pdfTestowy());
   return sciezka;
 }
+
+/** p95 najbliższej rangi (ceil(0,95 · n)-ta wartość rosnąco); brak próbek → null (NFR-WYD-001, scenariusz 31). */
+export function p95(probki: readonly number[]): number | null {
+  if (!probki.length) return null;
+  const s = [...probki].sort((a, b) => a - b);
+  return s[Math.ceil(0.95 * s.length) - 1];
+}
+/** Licznik (P-255 (c)): czas od stuknięcia +1 do klatki po nowej wartości; „p95 … ms, n = N”, bez t(). */
+export function PanelPomiaru({ probkiMs }: { probkiMs: readonly number[] }): React.ReactElement | null {
+  const p = p95(probkiMs);
+  return p === null ? null : <Text testID="e2e-pomiar-plus">{`p95 ${Math.round(p)} ms, n = ${probkiMs.length}`}</Text>;
+}
