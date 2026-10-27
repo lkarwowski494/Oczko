@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 07:50 UTC — **konto 1 wygaszone (limit 98%); role i dyżury zatrzymane, zaplanowane zadania koordynatora skasowane** · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-268 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 08:50 UTC — **konto 2 przejęło (P-269)**; sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-269 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -17,7 +17,7 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 - **Okno maszyn macOS** do ok. 14:00 UTC (P-187). Każdy push w ścieżkach `jakosc-ios.yml` (kod, `e2e/**`, `package.json`, `modules/**`, workflow) anuluje bieżący przebieg; pełny pakiet tylko z `[e2e-pelny]` w treści HEAD.
-- **Przebieg 121** (run 40457386369, bd60073, pełny): **zakończony 07:20 UTC — build, swift-test, e2e iPhone 1–3 i iPad success**; `eksperymenty-wzoru` ❌ informacyjnie (P-265). Szczegóły scenariuszy (bramka, kaskada orientacji, 36) w raporcie 07 `E2-przebieg-121.md`. Sygnał dla kroku 1 kolejki dany 07:27 UTC. **Krok 1 wypchnięty:** 8c876ad `[e2e-pelny]` (07:28), przebieg 122 (40467271474) anulowany; 07 wypchnęło F07-30 781f939 `[e2e-pelny]` (P-266) → **przebieg 123 (40468002239)** = P-262 ×3 + F07-30, start 07:35, koniec ok. 09:10 UTC; potem krok 2. Nowe błędy aplikacji z 121 (P-266): 30, 36, 51 → partia 7; 52 → partia 6 (gotowe: kopia 937d6f2 = 7af7ef2 + katalog zastępczy E2E, P-267; push w kroku 2).
+- **Przebieg 121** (run 40457386369, bd60073, pełny): **zakończony 07:20 UTC — build, swift-test, e2e iPhone 1–3 i iPad success**; `eksperymenty-wzoru` ❌ informacyjnie (P-265). Szczegóły scenariuszy (bramka, kaskada orientacji, 36) w raporcie 07 `E2-przebieg-121.md`. Sygnał dla kroku 1 kolejki dany 07:27 UTC. **Krok 1 wypchnięty:** 8c876ad `[e2e-pelny]` (07:28), przebieg 122 (40467271474) anulowany; 07 wypchnęło F07-30 781f939 `[e2e-pelny]` (P-266) → **przebieg 123 (40468002239)** = P-262 ×3 + F07-30, start 07:35, koniec ok. 09:10 UTC; potem krok 2. **Stan 123 o 08:45 UTC (konto 2):** build, swift-test, e2e część 1 iPhone i iPad success; części 2–3 iPhone w toku; `eksperymenty-wzoru` ❌ ta sama klasa co 121 (poprawka 7af7ef2 w kroku 2). Nowe błędy aplikacji z 121 (P-266): 30, 36, 51 → partia 7; 52 → partia 6 (gotowe: kopia 937d6f2 = 7af7ef2 + katalog zastępczy E2E, P-267; push w kroku 2).
 - **Kolejka pushy (po kolei, każdy po końcu poprzedniego przebiegu):**
   1. Partia 7 — poprawki P-262 (a) Save pod klawiaturą, (b) liczba w poziomie, (c) stoper po pierwszym +1: commity do cf5c83b z `claude/kopia-partia-7` (próbny rebase `proba-p262` b28a1d3, verify 2537/2537), head z `[e2e-pelny]` (P-263). Dowód (a): odstęp paska w hierarchii > 0; jeśli 0 → STOP z opcjami (1) InputAccessoryView „Done”, (2) ScrollView z `automaticallyAdjustKeyboardInsets`.
   2. (P-268) Po końcu przebiegu 123, kolejno: partia 6 `claude/kopia-partia-6` (937d6f2 i następny: 7af7ef2 + scen. 52 P-267) bez znacznika → 07 185219e (`e2e/README.md`: `usun-wszystko-anuluj`; kopia jako patch w `oczko-warsztat` 4ae8f46 `07-jakosc/2026-10-26-fix3/kopia/`, odtworzenie `git am`) → partia 7 ostatnia: cherry-pick 85d1b0f, 48af829, cd33af0 (scen. 36, 51, 30; bez iCloud) z `[e2e-pelny]`. Gotowe: `claude/kopia-partia-7-krok2` (49d32c6, verify 2542/2542). Przy kroku 2 sprawdzić wynik P-262 (a): odstęp paska > 0 = OK, 0 = STOP partii 7.
@@ -25,7 +25,18 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 - Właściciel w pracy (P-251, 2026-10-27): pingować tylko przy kosztach, kontach, scaleniu do `main`, wysyłce do Apple; bez raportów stanu.
 
 
-## Sesje ról (konto 1 — po przejściu na konto 2 nieaktywne; uruchomić nowe z szablonu niżej)
+## Sesje ról — konto 2 (od 2026-10-27 08:48 UTC, P-269)
+| Rola | Sesja konta 2 | Gałąź kopii (wynik sesji) | Następny krok |
+|---|---|---|---|
+| 08 partia 7 | session_01T66VBwDdcBHrNrCt25ZNWW | `claude/kopia-partia-7` | krok 2 (ostatni, `[e2e-pelny]`), krok 3 iCloud — na sygnał |
+| 07 fix-3 | session_01T66VBvUS4tz9Ei2heewJzY | `claude/kopia-07` (nowa) | odtworzyć 47b9bd5, raport `E2-przebieg-123.md`; push w kroku 2 na sygnał |
+| 08 partia 6 | session_01T66VByADnL2T64RBV2HPqF | `claude/kopia-partia-6` | krok 2 (pierwszy, bez znacznika) na sygnał; potem W1–W3 |
+| 10 wydanie | — (nie uruchomiona) | `docs/wydanie/stan.md` | uruchomić, gdy będzie zadanie (etap 2.5) |
+| koordynator | session_01T66VBzy9qEVyo8a5aMd7r1 | ten plik, `docs/decyzje.md` | dyżur kolejki okna |
+
+Złożone prompty ról 07 i 08 (prompts@97ec212) dla sesji bez dostępu do `prompts`: `oczko-warsztat` `koordynacja/role-2026-10-27/` (b2ac4cd).
+
+## Sesje ról konta 1 (nieaktywne, tylko historia)
 | Rola | Sesja konta 1 | Gałąź kopii / plik stanu | Następny krok |
 |---|---|---|---|
 | 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | `claude/kopia-partia-6` = 584ba5f (bd60073 + 7af7ef2 + 937d6f2 scen. 52), `docs/programista/partia-6.md` sekcja „Stan · 07:05 UTC — PRZEKAZANIE” | wynik 121 (W1–W3), push 7af7ef2 w kroku 2 kolejki; U1–U8 do TestFlight |
