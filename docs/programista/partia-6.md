@@ -27,6 +27,16 @@ Przebieg 123 (40468002239): build ✅, swift-test ✅, e2e iPhone 1 ✅, iPad �
 
 **Następny krok:** (1) sprawdzić koniec 121 i zgłosić koordynatorowi tylko problem; (2) na sygnał P-265: rebase 7af7ef2 na roboczą, verify, push bez znacznika, hash do koordynatora; (3) artefakt `eksperymenty-wzoru` → poprawki → wynik W1–W3 do koordynatora.
 
+## Do audytu 04 (zbiorczo, stan e779602, 2026-10-27 11:20 UTC)
+1. `skrzynka.film_zastapi` „Has a video link. This one replaces it.” — tekst roboczy 08 (P-283 (a)), druga linia wiersza projektu w arkuszu skrzynki przy „Video link”.
+2. „Add video link” pokazywany zawsze, gdy projekt nie ma filmu (design-spec:650 dosłownie: tylko bez wzoru) — P-283 (c).
+3. „Add note” w przeglądarce to ikona paska nawigacji; design-spec:668 umieszcza `wzor.dodaj_notatke` w menu ••• (rozbieżność sprzed partii 6, bez zmiany).
+4. Podgląd pozycji w arkuszu skrzynki: rodzaj pliku pod nazwą, bez miniatury.
+5. Miniatura w wierszu wzoru: szerokość `cel.minimum`, proporcja 1 : 1,3, obramowanie `linia`, bez promienia (strona = papier) — brak tokenu miniatury.
+6. Podpowiedź rysika: plakietka u góry strony (role=status), 4 s (`RYSIK_PODPOWIEDZ_MS` [OCENA 08]), raz na otwarcie (P-284 (1) A).
+7. Wiersz „Video”: menu „Change link”/„Remove link” po przytrzymaniu (rozwijane pod wierszem) i jako akcje VoiceOver; „Remove link” bez potwierdzenia.
+8. Magic Tap na liczniku (design-spec:88) — brak, przekazane partii 7.
+
 ## P-276 (film: zamiana jawna) + punkt 2 planu 1.1 · 2026-10-27 11:30 UTC — na kopii, push na sygnał
 - **S1** fc390bc: flaga `film` w `ProjektMigawki` (porty.ts + moduly.md razem, `odswiezMigawke`, dekoder Swift w Pakiecie + kopia share); testy TS i Swift czerwone na asercji → zielone (swift test na Linuksie).
 - **S2**: łatka 3 kluczy filmu fix-8 (en, kontekst), `Teksty.swift` share wygenerowany, pseudolokalizacja odświeżona.
