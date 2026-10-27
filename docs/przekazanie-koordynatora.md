@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 06:30 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-265 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 07:05 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-265 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -17,7 +17,7 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 - **Okno maszyn macOS** do ok. 14:00 UTC (P-187). Każdy push w ścieżkach `jakosc-ios.yml` (kod, `e2e/**`, `package.json`, `modules/**`, workflow) anuluje bieżący przebieg; pełny pakiet tylko z `[e2e-pelny]` w treści HEAD.
-- **Przebieg 121** (run 40457386369, bd60073, pełny): partia 6 P-259 + P-261 i 07 F07-27–29. 06:17 UTC: build i swift-test zielone, `eksperymenty-wzoru` padło (informacyjne, P-265). Koniec ok. 07:20 UTC. Sprawdzić: bramka 01–09 + 33, kaskada orientacji (32, 35–37, 39, 41, 42, 51, 52) zniknęła, 36 → pakiet podstawowy jeśli zielony. Raport roli 07 do `oczko-warsztat` (`07-jakosc/.../E2-przebieg-121.md`).
+- **Przebieg 121** (run 40457386369, bd60073, pełny): partia 6 P-259 + P-261 i 07 F07-27–29. 06:58 UTC: build, swift-test, iPad zielone; iPhone 1–3 w toku; `eksperymenty-wzoru` padło (informacyjne, P-265). Koniec ok. 07:20 UTC. Sprawdzić: bramka 01–09 + 33, kaskada orientacji (32, 35–37, 39, 41, 42, 51, 52) zniknęła, 36 → pakiet podstawowy jeśli zielony. Raport roli 07 do `oczko-warsztat` (`07-jakosc/.../E2-przebieg-121.md`).
 - **Kolejka pushy (po kolei, każdy po końcu poprzedniego przebiegu):**
   1. Partia 7 — poprawki P-262 (a) Save pod klawiaturą, (b) liczba w poziomie, (c) stoper po pierwszym +1: commity do cf5c83b z `claude/kopia-partia-7` (próbny rebase `proba-p262` b28a1d3, verify 2537/2537), head z `[e2e-pelny]` (P-263). Dowód (a): odstęp paska w hierarchii > 0; jeśli 0 → STOP z opcjami (1) InputAccessoryView „Done”, (2) ScrollView z `automaticallyAdjustKeyboardInsets`.
   2. Partia 6 7af7ef2 (poprawka zadania `eksperymenty-wzoru`, tylko workflow, bez znacznika) i zaraz partia 7 e996bae + 339a85b (błąd pól NULL w odbiorze iCloud + XCTest wektorów) z `[e2e-pelny]` (P-264, P-265).
@@ -28,10 +28,10 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 ## Sesje ról (konto 1 — po przejściu na konto 2 nieaktywne; uruchomić nowe z szablonu niżej)
 | Rola | Sesja konta 1 | Gałąź kopii / plik stanu | Następny krok |
 |---|---|---|---|
-| 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | `claude/kopia-partia-6`, `docs/programista/partia-6.md` | wynik 121 (W1–W3), push 7af7ef2 w kroku 2 kolejki; U1–U8 do TestFlight |
-| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | `claude/kopia-partia-7`, `docs/programista/partia-7.md` | kroki 1 i 2 kolejki |
-| 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | plik stanu 07 w repo i `oczko-warsztat/07-jakosc/` | raporty przebiegów 121, P-262, iCloud |
-| 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | `docs/wydanie/` | czeka; potem metadane i zrzuty |
+| 08 partia 6 | session_011aVqoG57RGu7Vp1oQgJXGw | `claude/kopia-partia-6` = 56bff2f (bd60073 + 7af7ef2), `docs/programista/partia-6.md` sekcja „Stan · 07:05 UTC — PRZEKAZANIE” | wynik 121 (W1–W3), push 7af7ef2 w kroku 2 kolejki; U1–U8 do TestFlight |
+| 08 partia 7 | session_01TJJQNJ7a1qvykFbdUaXBge | `claude/kopia-partia-7` = a536cd4, `docs/programista/partia-7.md` sekcja „Przekazanie” (przy kroku 2 możliwy konflikt w `jakosc-ios.yml` z 7af7ef2 — zachować oba kroki) | kroki 1 i 2 kolejki |
+| 07 fix-3 | session_01N2tCUwqCgVKPy3XZH3sJvh | `docs/jakosc/stan.md` „Przejęcie” (51fe975), `oczko-warsztat` `07-jakosc/2026-10-26-fix3/STAN.md` (bbea5e8) | raporty przebiegów 121, P-262, iCloud |
+| 10 wydanie | session_0172s2NTk8uAEYNtNpPUHqYB | `docs/wydanie/stan.md` (6124f2c) | czeka; potem metadane i zrzuty |
 | koordynator | session_01VjtVbMx8DYWkBfH4pvaCXK | ten plik, `docs/decyzje.md` (ostatnia P-265) | dyżur kolejki okna |
 
 Zaplanowane zadania konta 1 (nie przechodzą): dyżur koordynatora trig_011oVGqtX5QizTxHZt2qDNyw (07:25 UTC), przypomnienie 07 trig_01WvsxiGZvC9Vof2ziQecS4p (07:05 UTC). Na koncie 2 koordynator ustawia własne sprawdzenia (`send_later`, co 15–60 min w oknie).
@@ -53,3 +53,6 @@ Nagłówek P-087 (decyduje koordynator; właścicielowi zostają koszty, konta, 
 
 ## Konta
 - Właściciel ma drugie konto z pełnym limitem; przy wyczerpaniu limitu bieżącego konta praca przechodzi tam według tego dokumentu (właściciel, 2026-10-26: „A — i tak mam drugie konto z full limitem”).
+
+## Polecenie startowe koordynatora na koncie 2
+Repo `lkarwowski494/oczko`, gałąź `claude/jolly-thompson-paz6d8` (źródło i wynik). Treść: „Jesteś koordynatorem przebudowy Oczka (P-087: decydujesz sam — najpierw jak w repo `trening`, bez analogii wg własnej rekomendacji; zapis w `docs/decyzje.md`; właścicielowi zostają koszty, konta, scalenie do `main`, wysyłka do Apple). Przejmujesz z konta 1, które wyczerpało tygodniowy limit — jego sesje i zaplanowane zadania nie działają. Zacznij od `docs/przekazanie-koordynatora.md`, `CLAUDE.md`, `docs/decyzje.md` od P-251 i `docs/sztafeta.md`. Kolejno: (1) sprawdź wynik „Jakość · iOS” 121 (run 40457386369); (2) uruchom sesje ról z tabeli „Sesje ról” (szablon w tym pliku; każda zaczyna od swojej gałęzi kopii i pliku stanu) — najpierw 08 partia 7 i 07, potem 08 partia 6; 10 dopiero gdy będzie zadanie; (3) prowadź kolejkę pushy okna maszyn (do ok. 14:00 UTC) jak w sekcji Stan; (4) ustaw sobie sprawdzenia `send_later` co 15–60 min; (5) wpisz nowe ID sesji do tego pliku. Właściciel w pracy: bez raportów stanu, ping tylko przy kosztach/kontach/scaleniu/Apple. Tożsamość git: `Łukasz Karwowski <336954459+lkarwowski494@users.noreply.github.com>`.”
