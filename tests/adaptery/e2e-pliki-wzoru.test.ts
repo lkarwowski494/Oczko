@@ -22,3 +22,10 @@ test('wordTestowy: ZIP z word/document.xml zawierającym tekst wzoru', () => {
 test('adres strony testowej: https w domenie przykładowej', () => {
   expect(ADRES_STRONY_TESTOWEJ).toBe('https://example.org/');
 });
+
+// P-282 (W1-A zawężony): tabela i obraz z korpusu W1 w buildzie E2E — bajty identyczne z plikami korpusu (jedno źródło: TestyOknaMaszyn/Testy/korpus).
+const KORPUS = 'modules/oczko-wzor/TestyOknaMaszyn/Testy/korpus';
+test.each(['tekst', 'tabela', 'obraz'] as const)('wordTestowy(%s): bajty = korpus W1', (rodzaj) => {
+  const b = readFileSync(wordTestowy(mkdtempSync(join(tmpdir(), 'oczko-e2e-')), rodzaj));
+  expect(b.equals(readFileSync(join(KORPUS, `${rodzaj}.docx`)))).toBe(true);
+});

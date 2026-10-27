@@ -109,6 +109,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/arkusz-klawiatura.test.tsx` | zielony (główny zestaw) | 2 | P-255 | `src/ekrany/Arkusz`<br>`src/ekrany/motyw` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/bezpieczny-ipad.test.tsx` | zielony (główny zestaw) | 2 | P-220 | `src/kompozycja/Bezpieczny` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/bledy-js.test.ts` | zielony (główny zestaw) | 3 | P-194 | `src/kompozycja/bledy-js` | — |
+| 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-panel-wzoru-word.test.tsx` | zielony (główny zestaw) | 1 | P-282 | `src/kompozycja/e2e/panele` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-pomiar-plus.test.tsx` | zielony (główny zestaw) | 2 | NFR-WYD-001, P-255 | `src/kompozycja/e2e/panele` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/e2e-zdjecie.test.ts` | zielony (główny zestaw) | 1 | — | `src/kompozycja/e2e-zdjecie` | — |
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/formularze-projektu.test.tsx` | zielony (główny zestaw) | 9 | BR-LIC-011/S1, P-126, RD-11, RD-19 | `src/ekrany/FormularzeProjektu`<br>`src/ekrany/MenuProjektu`<br>`src/ekrany/wspolne` | Z07-22 |
@@ -160,7 +161,7 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 4 ekrany (po adapterach platformy, krok 3) | `tests/ekrany/zgloszenie-awaryjne.test.tsx` | zielony (główny zestaw) | 2 | P-194 | `src/ekrany/ZglosProblem`<br>`src/ekrany/wspolne`<br>`src/kompozycja/zgloszenie-awaryjne` | Z07-22 |
 | 9 ? | `tests/adaptery/archiwum-skrot.test.ts` | zielony (główny zestaw) | 2 | P-130, R-067 | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/dane/pliki/magazyn` | Z07-22 |
 | 9 ? | `tests/adaptery/czas-w-tle.test.ts` | zielony (główny zestaw) | 2 | — | `src/dane/archiwum`<br>`src/dane/migracje/migruj`<br>`src/platforma/czas-w-tle`<br>`src/przypadki-uzycia/archiwum` | Z07-22 |
-| 9 ? | `tests/adaptery/e2e-pliki-wzoru.test.ts` | zielony (główny zestaw) | 2 | P-121 | `src/kompozycja/e2e/pliki-wzoru` | — |
+| 9 ? | `tests/adaptery/e2e-pliki-wzoru.test.ts` | zielony (główny zestaw) | 3 | P-121, P-282 | `src/kompozycja/e2e/pliki-wzoru` | — |
 | 9 ? | `tests/adaptery/haptyka-wzorce.test.ts` | zielony (główny zestaw) | 2 | P-135 | `src/platforma/haptyka` | — |
 | 9 ? | `tests/adaptery/icloud-platforma.test.ts` | zielony (główny zestaw) | 11 | P-230, P-242 | `src/domena/porty`<br>`src/platforma/icloud`<br>`src/platforma/icloud-atrapa`<br>`src/przypadki-uzycia/licznik`<br>`src/przypadki-uzycia/synchronizacja` | Z07-22 |
 | 9 ? | `tests/adaptery/identyfikatory.test.ts` | zielony (główny zestaw) | 2 | — | `src/platforma/identyfikatory` | — |
@@ -184,4 +185,4 @@ Wygenerowano: `node docs/jakosc/narzedzia/tabela-08.mjs --wynik docs/jakosc/e4/t
 | 9 ? | `tests/domena/wzor/uklad-rysik.test.ts` | zielony (główny zestaw) | 5 | BR-WZR-004, BR-WZR-008, P-218, P-220, P-225, P-226 | `src/domena/rysik`<br>`src/domena/uklad` | — |
 | 9 ? | `tests/domena/zapas/linia-zapasu.test.ts` | zielony (główny zestaw) | 2 | BR-ZAP-002, P-126 | `src/domena/zapas` | — |
 
-Razem plików testów: 180; zależnych od poprawek: 121.
+Razem plików testów: 181; zależnych od poprawek: 121.
