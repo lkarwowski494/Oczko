@@ -3,7 +3,7 @@
 // (tabele synchronizowane, typ rekordu, `pomin`, `zasob`) i docs/architektura/schemat.sql (kolumny i typy przez SQLite w pamięci).
 // Każda kolumna poza `pomin` = pole; zasób pliku = pole `dane` typu ASSET. Zmiany w CloudKit tylko dodające; wgranie do Development
 // i wdrożenie do Production to krok właściciela (P-217). Składnia jak eksport `cktool export-schema` [DO USTALENIA: `cktool validate-schema` w oknie maszyn].
-// Drugi wynik: modules/oczko-icloud/ios/Pola.swift (typ rekordu i pola DOUBLE/ASSET dla odwzorowania w Swift; tylko gdy moduł istnieje).
+// Drugi wynik: modules/oczko-icloud/Pakiet/Sources/OczkoIcloudLogika/Pola.swift (typ rekordu i pola DOUBLE/ASSET dla odwzorowania w Swift; tylko gdy moduł istnieje).
 // Użycie: node scripts/icloud/generuj-schemat-ckdb.mjs [--check | --stdout]   (bez opcji: zapis plików)
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -12,7 +12,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 const KORZEN = join(dirname(fileURLToPath(import.meta.url)), '../..');
 const CEL = join(KORZEN, 'cloudkit/schemat.ckdb');
-const SWIFT = join(KORZEN, 'modules/oczko-icloud/ios/Pola.swift');
+const SWIFT = join(KORZEN, 'modules/oczko-icloud/Pakiet/Sources/OczkoIcloudLogika/Pola.swift');
 const kontrakt = JSON.parse(readFileSync(join(KORZEN, 'docs/architektura/icloud-tabele.json'), 'utf8'));
 const db = new DatabaseSync(':memory:');
 db.exec(readFileSync(join(KORZEN, 'docs/architektura/schemat.sql'), 'utf8'));
