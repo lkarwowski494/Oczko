@@ -1,5 +1,5 @@
 {
-  "zrodlo": "Rola 04, fix-8 — PROPOZYCJA do decyzji C (P-274, zgłoszenie 05: „Video link” zastępuje poprzedni bez pytania). Nakładać dopiero po decyzji. Wariant (A): zmiana linku w aplikacji przez wypełniony arkusz; w rozszerzeniu i skrzynce linia informacji przed Save (wymaga flagi filmu w migawce projektów, 05).",
+  "zrodlo": "Scalone do klucze.json (P-276, przyjęte (A)). Plik zostaje jako ślad propozycji.",
   "en": {
     "wzor.film_zmien": "Change link",
     "udostepnij.film_zastapi": "{{projekt}} already has a video link. Saving replaces it with this one."
