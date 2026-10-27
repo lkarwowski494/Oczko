@@ -1,32 +1,55 @@
-// P-266 (1), scenariusz 30 (NFR-DOS-002, AX5; przebieg 121): przy dużym tekście nazwy projektu i części zajmują cały przewijany środek ekranu
-// (+1 rośnie z tekstem), a liczba — kluczowa wartość — zostaje poza widokiem. Po zmianie wartości (i przy pierwszym układzie) środek przewija
-// się do liczby, gdy nie jest cała widoczna; przy zwykłym tekście nic się nie przewija.
+// Scenariusz 30 (NFR-DOS-002, AX5): kluczowa liczba widoczna przy dużym tekście. P-275 (3) wariant (d) z 04 fix-8 (`fix8-2026-10-27.md`,
+// „Decyzja A”): przy kategoriach dostępności liczba nad nazwami projektu i części, podpis +1 tylko w etykiecie VoiceOver; zamiast
+// przewijania do liczby (P-266 (1), odrzucone w P-275). P-277: krój tytułowy najwyżej ×1,8, „−1” najwyżej ×1,4 (jak makieta; pomiar
+// przebiegu 123: RN mnoży każdy tekst przez 3,571 przy AX5 → +1 482 pt, „−1” niewidoczne).
 import React from 'react';
-import { ScrollView } from 'react-native';
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 import { Licznik } from '../../src/ekrany/Licznik';
-import { przewiniecieDoLiczby } from '../../src/ekrany/LiczbaWidoczna';
+import { MAX_SKALA_MINUSA, MAX_SKALA_TYTULOWA } from '../../src/ekrany/motyw';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaHaptyki, stanLicznika, tEn, wywolaniaLicznika } from './pomoc';
 
 let t: Tlumacz;
 beforeAll(async () => { t = await tEn(); });
+afterEach(() => { mockSkala = 1; });
 
-test('decyzja: liczba widoczna → bez przewijania; poniżej albo powyżej widoku → przewinięcie do jej góry', () => {
-  expect(przewiniecieDoLiczby({ przesuniecie: 0, wysokosc: 600, y: 200, h: 125 })).toBeNull();
-  expect(przewiniecieDoLiczby({ przesuniecie: 0, wysokosc: 180, y: 900, h: 125 })).toBe(900);
-  expect(przewiniecieDoLiczby({ przesuniecie: 950, wysokosc: 180, y: 900, h: 125 })).toBe(900);
-  expect(przewiniecieDoLiczby({ przesuniecie: 0, wysokosc: 0, y: 900, h: 125 })).toBeNull(); // przed układem widoku
+let mockSkala = 1;
+jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({ __esModule: true, default: () => ({ width: 402, height: 874, scale: 3, fontScale: mockSkala }) }));
+const skala = (fontScale: number) => { mockSkala = fontScale; };
+const rysuj = () => render(<Licznik stan={stanLicznika({ projekt: 'Harbor', czesc: 'Back', skonczone: 1, dziergany: 2 })} t={t} oglos={jest.fn()} haptyka={atrapaHaptyki()} {...wywolaniaLicznika()} />);
+const kolejnosc = (ids: string[]) => {
+  const wszystkie = screen.UNSAFE_root.findAll((n) => typeof n.props.testID === 'string' && typeof n.type === 'string').map((n) => n.props.testID as string);
+  return ids.map((id) => wszystkie.indexOf(id));
+};
+
+test('AX5 (kategoria dostępności): liczba nad nazwą projektu i części; podpis +1 tylko w etykiecie VoiceOver', () => {
+  skala(3.571);
+  rysuj();
+  const [liczba, projekt, teraz] = kolejnosc(['licznik-wartosc', 'licznik-projekt', 'licznik-teraz-rzad']);
+  expect(liczba).toBeGreaterThanOrEqual(0);
+  expect(liczba < projekt && projekt < teraz).toBe(true);
+  expect(screen.queryByText('tap when row 2 is done')).toBeNull();
+  expect(screen.getByRole('button', { name: '+1 row, when row 2 is done' })).toBeTruthy();
 });
 
-test('AX5: po +1 (nowa wartość) środek licznika przewija się do liczby poza widokiem', () => {
-  const props = { t, oglos: jest.fn(), haptyka: atrapaHaptyki(), ...wywolaniaLicznika() };
-  const { rerender } = render(<Licznik stan={stanLicznika({ skonczone: 0, dziergany: 1 })} {...props} />);
-  const srodek = screen.UNSAFE_getAllByType(ScrollView)[0];
-  const scrollTo = srodek.instance.scrollTo as jest.Mock;
-  fireEvent(srodek, 'layout', { nativeEvent: { layout: { x: 0, y: 148, width: 402, height: 180 } } });
-  fireEvent(screen.getByTestId('licznik-wartosc-wiersz'), 'layout', { nativeEvent: { layout: { x: 20, y: 900, width: 362, height: 125 } } });
-  scrollTo.mockClear();
-  act(() => { rerender(<Licznik stan={stanLicznika({ skonczone: 1, dziergany: 2 })} {...props} />); });
-  expect(scrollTo).toHaveBeenCalledWith({ y: 900, animated: false });
+test('AX1 (1,786) to już kategoria dostępności; XXXL (1,353) jeszcze nie — kolejność z design-spec i podpis +1 widoczny', () => {
+  skala(1.786);
+  rysuj();
+  expect(screen.queryByText('tap when row 2 is done')).toBeNull();
+  screen.unmount();
+  skala(1.353);
+  rysuj();
+  const [liczba, projekt] = kolejnosc(['licznik-wartosc', 'licznik-projekt']);
+  expect(projekt < liczba).toBe(true);
+  expect(screen.getByText('tap when row 2 is done')).toBeTruthy();
+});
+
+test('P-277: krój tytułowy (+1, nazwa części, „Now knitting”) najwyżej ×1,8, „−1” najwyżej ×1,4; liczba bez zmian (×1,3)', () => {
+  rysuj();
+  expect([MAX_SKALA_TYTULOWA, MAX_SKALA_MINUSA]).toEqual([1.8, 1.4]);
+  expect(screen.getByText('+1 row').props.maxFontSizeMultiplier).toBe(1.8);
+  expect(screen.getByText('−1').props.maxFontSizeMultiplier).toBe(1.4);
+  expect(screen.getByText('Back').props.maxFontSizeMultiplier).toBe(1.8);
+  expect(screen.getByTestId('licznik-teraz-rzad').props.maxFontSizeMultiplier).toBe(1.8);
+  expect(screen.getByTestId('licznik-wartosc').props.maxFontSizeMultiplier).toBe(1.3);
 });
