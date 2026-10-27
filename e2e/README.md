@@ -221,6 +221,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `wzor-cofnij-rysunek` | pasek rysowania | cofnięcie ostatniej kreski | „Undo last stroke” | |
 | `wzor-link-pole` | arkusz „Web page” | pole adresu strony wzoru | „Link to the pattern page” | tekstowa |
 | `wzor-film-wiersz` | ekran projektu | wiersz „Video” | „Video, {nazwa}” | |
+| `wzor-film-pole` | arkusz „Video link” | pole adresu filmu (przy zmianie wypełnione; zły adres → `wzor.link_blad`; partia 6 92df7ea, P-283) | „Link” | tekstowa |
 | `wzor-czeka-siec` | ekran projektu | wiersz strony czekającej na sieć | „Waiting for the internet to save the web page.” | |
 | `udostepnij-projekt` | arkusz rozszerzenia „Udostępnij do Oczka” | wiersz projektu (powtarzalny, `index`, rola radio; 04 fix-7, grupa R) | „{nazwa}, last worked {…}” | |
 | `udostepnij-nowy-projekt` | arkusz rozszerzenia | New project | „New project” | |
