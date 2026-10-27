@@ -8,7 +8,7 @@ import { migruj } from '../../src/dane/migracje/migruj';
 import { usunWszystkieDane } from '../../src/przypadki-uzycia/projekt';
 import { katalogTymczasowy, przygotuj } from './pomocnicze/srodowisko';
 
-type Kontrakt = { tabele: { tabela: string; klucz: string[]; tylko_klucze?: string[] }[]; lokalne: string[] };
+type Kontrakt = { tabele: { tabela: string; klucz: string[]; tylko_klucze?: string[]; pomin?: string[] }[]; lokalne: string[] };
 const KONTRAKT: Kontrakt = JSON.parse(readFileSync(join(__dirname, '../../docs/architektura/icloud-tabele.json'), 'utf8'));
 const T = 1_793_000_000_000;
 
@@ -154,5 +154,40 @@ describe('F1 łatka L1: operacje na całej bazie a skrzynka (zero utraty danych 
     expect(await s.baza.all('SELECT encja FROM zmiana_icloud')).toEqual([]);
     expect(await s.baza.all('SELECT id, wlaczona, wejscie, stan_silnika FROM synchronizacja')).toEqual([{ id: 1, wlaczona: 0, wejscie: 0, stan_silnika: null }]);
     expect((await s.baza.all('SELECT count(*) AS n FROM projekt'))[0]).toEqual({ n: 0 });
+  });
+
+  // P-245 U3 → P-274 Q1a: wyzwalacz UPDATE licznika tylko na kolumnach synchronizowanych (tabela minus `pomin` z kontraktu);
+  // +1 zmienia samą pamięć podręczną (wartosc, glowa — liczniki.ts), która w rekordzie i tak nie jedzie.
+  const ZMIANA_KOLUMNY: Record<string, (b: PortBazyTx) => Promise<unknown>> = {
+    czesc_id: async (b) => { await b.run("INSERT INTO czesc (id, projekt_id, nazwa, kolejnosc, zmieniono_ms) VALUES ('p1-c2', 'p1', 'Tył', 1, ?)", [T]); return 'p1-c2'; },
+    nazwa: async () => 'Raglan', rodzaj: async () => 'oczka', znaczenie: async () => 'w_trakcie', dlugosc_powtorzenia: async () => 4,
+    zablokowany: async () => 1, kolejnosc: async () => 3, zmieniono_ms: async () => T + 1, usunieto_ms: async () => T + 2,
+  };
+  test('P-274 Q1a: +1 (wartosc, glowa, konflikt) nie dopisuje licznika do skrzynki', async () => {
+    const b = await baza();
+    await projektZLicznikiem(b, 'p1');
+    await wlacz(b);
+    await b.run("UPDATE licznik SET wartosc = 1, glowa = 'z1' WHERE id = 'p1-l'");
+    await b.run("UPDATE licznik SET wartosc = 2, glowa = 'z2', konflikt = 1 WHERE id = 'p1-l'");
+    expect(await skrzynka(b)).toEqual([]);
+    b.zamknij();
+  });
+  test('P-274 Q1a: zmiana każdej kolumny synchronizowanej licznika dopisuje go do skrzynki (literówka w UPDATE OF nie przejdzie)', async () => {
+    const t = KONTRAKT.tabele.find((x) => x.tabela === 'licznik');
+    const b = await baza();
+    const kolumny = (await b.all<{ name: string }>("SELECT name FROM pragma_table_info('licznik')")).map((r) => r.name)
+      .filter((k) => !(t?.pomin ?? []).includes(k) && !(t?.klucz ?? []).includes(k));
+    expect(kolumny.filter((k) => !(k in ZMIANA_KOLUMNY))).toEqual([]); // nowa kolumna = nowa wartość w teście
+    for (const k of kolumny) {
+      await projektZLicznikiem(b, 'p1');
+      await wlacz(b);
+      const nowa = await ZMIANA_KOLUMNY[k](b);
+      await b.run(`UPDATE licznik SET ${k} = ? WHERE id = 'p1-l'`, [nowa as string | number]); // nazwa kolumny z pragma, nie z wejścia
+      expect([k, (await skrzynka(b)).filter((w) => w.encja === 'licznik')]).toEqual([k, [{ encja: 'licznik', klucz: 'p1-l', usuniete: 0 }]]); // czesc_id: nowa część też wchodzi do skrzynki
+      await b.run('UPDATE synchronizacja SET wlaczona = 0 WHERE id = 1');
+      await b.run("DELETE FROM projekt WHERE id = 'p1'");
+      await b.run('DELETE FROM zmiana_icloud');
+    }
+    b.zamknij();
   });
 });
