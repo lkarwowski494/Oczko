@@ -48,7 +48,8 @@ export function sprawdz(slownik, en) {
     }
   }
   for (const [id, z] of Object.entries(zrodla)) {
-    if (!z.url || !z.szczebel) bledy.push(`źródło ${id}: brak url albo szczebla`);
+    if (!z.szczebel || !z.rejestr) bledy.push(`źródło ${id}: brak szczebla albo odsyłacza do rejestru`);
+    if (z.url || z.tytul) bledy.push(`źródło ${id}: tytuł i adres tylko w prywatnym rejestrze (oczko-warsztat), nie w repo publicznym`);
     if (z.szczebel >= 5) bledy.push(`źródło ${id}: szczebel 5 (fora, Wikipedia) nie potwierdza terminu`);
   }
   return { bledy, uwagi };
@@ -105,8 +106,8 @@ export function md(slownik, en) {
     const l = pojecia.filter((p) => p.jezyki[j]?.pewnosc === 'niska').map((p) => `${p.id} („${p.jezyki[j].zalecany}”)`);
     if (l.length) o.push(`- **${j}** (${l.length}): ${l.join(', ')}`);
   }
-  o.push('', '## Źródła', '', '| ID | tytuł | adres | szczebel | kraj | odczyt |', '|---|---|---|---|---|---|');
-  for (const [id, z] of Object.entries(zrodla).sort()) o.push(`| ${id} | ${esc(z.tytul)} | ${esc(z.url)} | ${z.szczebel} | ${z.kraj ?? ''} | ${z.odczyt ?? ''} |`);
+  o.push('', '## Źródła', '', 'Tytuły, adresy i kopie surowych tekstów są w prywatnym rejestrze (kolumna „rejestr”); w repo publicznym tylko ID (decyzja koordynatora 2026-10-27, bramka marek P-121 (5)).', '', '| ID | szczebel | kraj | język | odczyt | rejestr |', '|---|---|---|---|---|---|');
+  for (const [id, z] of Object.entries(zrodla).sort()) o.push(`| ${id} | ${z.szczebel} | ${z.kraj ?? ''} | ${z.jezyk ?? ''} | ${z.odczyt ?? ''} | ${esc(z.rejestr)} |`);
   return o.join('\n') + '\n';
 }
 

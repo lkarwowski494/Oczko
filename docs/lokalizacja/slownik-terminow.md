@@ -2,9 +2,9 @@
 
 Plik generowany z `docs/lokalizacja/slownik-terminow.json` (jedno źródło); nie edytuj ręcznie: `node docs/lokalizacja/narzedzia/slownik.mjs --md`.
 
-Termin zalecany = słowo, którego używają wzory i producenci włóczek w danym kraju (nie dosłowny przekład z en ani z pl), z przeczytanego źródła według hierarchii P-017 (normy → podręczniki → organizacje i producenci → przewodniki; fora i Wikipedia tylko wskazówka). Brak źródła = pewność niska i [DO SPRAWDZENIA], nie zgadujemy. „zakazane” = kalki i fałszywi przyjaciele z powodem; wzorzec to wyrażenie regularne (bez wielkości liter, Unicode). Źródłem tekstów jest en-US (P-075); pułapki US/UK (szydełko, bind off/cast off, gauge/tension) rozstrzyga znaczenie US. Pojedyncze terminy z DROPS tylko jako fakty z ID (P-104, P-106).
+Termin zalecany = słowo, którego używają wzory i producenci włóczek w danym kraju (nie dosłowny przekład z en ani z pl), z przeczytanego źródła według hierarchii P-017 (normy → podręczniki → organizacje i producenci → przewodniki; fora i Wikipedia tylko wskazówka). Brak źródła = pewność niska i [DO SPRAWDZENIA], nie zgadujemy. „zakazane” = kalki i fałszywi przyjaciele z powodem; wzorzec to wyrażenie regularne (bez wielkości liter, Unicode). Źródłem tekstów jest en-US (P-075); pułapki US/UK (szydełko, bind off/cast off, gauge/tension) rozstrzyga znaczenie US. Pojedyncze terminy ze słownika producenta S-DRP tylko jako fakty z ID (P-104, P-106).
 
-Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 56, średnia 22, niska 1462). Pewność: **wysoka** — termin dosłownie w przeczytanym źródle szczebla 1–3, w tym znaczeniu (cytat); nadal bez przeglądu rodzimego użytkownika; **srednia** — źródło szczebla 4, termin tylko pośrednio w źródle szczebla 1–3, cytat niesprawdzony dosłownie albo termin produktu (brzmienie 04); **niska** — bez przeczytanego źródła: [DO SPRAWDZENIA] u rodzimego użytkownika albo w źródle.
+Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 55, średnia 23, niska 1462). Pewność: **wysoka** — termin dosłownie w przeczytanym źródle szczebla 1–3, w tym znaczeniu (cytat); nadal bez przeglądu rodzimego użytkownika; **srednia** — źródło szczebla 4, termin tylko pośrednio w źródle szczebla 1–3, cytat niesprawdzony dosłownie albo termin produktu (brzmienie 04); **niska** — bez przeczytanego źródła: [DO SPRAWDZENIA] u rodzimego użytkownika albo w źródle.
 
 ## Pojęcia
 
@@ -60,7 +60,7 @@ Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 56, średnia 22, niska 146
 | pojęcie | en | pl | bg | cs | da | de | el | es | es-419 |
 |---|---|---|---|---|---|---|---|---|---|
 | `robotka` | knitting ~ | robótka ~ |  ? |  ? |  ? |  ? |  ? |  ? |  ? |
-| `dziergac_na_drutach` | knit ✓ | robić na drutach ✓ |  ? |  ? |  ? |  ? |  ? |  ? |  ? |
+| `dziergac_na_drutach` | knit ✓ | robić na drutach ~ |  ? |  ? |  ? |  ? |  ? |  ? |  ? |
 | `szydelkowac` | crochet ✓ | szydełkować ~ |  ? |  ? |  ? |  ? |  ? |  ? |  ? |
 | `rzad` | row ✓ | rząd ✓ |  ? |  ? |  ? |  ? |  ? |  ? |  ? |
 | `okrazenie` | round ✓ | okrążenie ✓ |  ? |  ? |  ? |  ? |  ? |  ? |  ? |
@@ -258,8 +258,8 @@ Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 56, średnia 22, niska 146
 | `grubosc_wloczki` | pl | `(?<![\p{L}])wag[aię]\s+włóczk` | kalka „yarn weight” — w pl grubość, nie waga [DO SPRAWDZENIA] |
 | `druty` | pl | `(?<![\p{L}])igł` | „needles” w robótkach to druty, nie igły (igła dziewiarska to inne narzędzie) |
 | `szydelko` | pl | `(?<![\p{L}])ha(?:k\|cz)` | „hook” to szydełko, nie hak/haczyk |
-| `nabieranie_oczek` | pl | `narzucani` | „narzucanie oczek” (Barnden) koliduje z „narzut” (yo) |
-| `zamykanie_oczek` | pl | `zamyk` | niejednoznaczne: u Barnden ujmowanie, w szydełku oczko zamykające; używać „zakańczanie” [decyzja nazwy: 06] |
+| `nabieranie_oczek` | pl | `narzucani` | „narzucanie oczek” (S-BAR) koliduje z „narzut” (yo) |
+| `zamykanie_oczek` | pl | `zamyk` | niejednoznaczne: u S-BAR ujmowanie, w szydełku oczko zamykające; używać „zakańczanie” [decyzja nazwy: 06] |
 | `ujmowanie` | pl | `zamykan` | „zamykanie” w pl częściej = zakańczanie (bind off) |
 | `oczko_scisle` | pl | `(?<![\p{L}])słup(?:ek\|ka\|ki)(?![\p{L}])` | „słupek” to US dc; kalka UK „double crochet” → słupek przesuwa ścieg |
 | `slupek` | pl | `podwójn\w* słup` | kalka „double crochet” → „podwójny słupek” to US tr |
@@ -303,17 +303,19 @@ Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 56, średnia 22, niska 146
 
 ## Źródła
 
-| ID | tytuł | adres | szczebel | kraj | odczyt |
+Tytuły, adresy i kopie surowych tekstów są w prywatnym rejestrze (kolumna „rejestr”); w repo publicznym tylko ID (decyzja koordynatora 2026-10-27, bramka marek P-121 (5)).
+
+| ID | szczebel | kraj | język | odczyt | rejestr |
 |---|---|---|---|---|---|
-| S-BAR | Barnden, „300 porad: druty” (tłumaczenie) | skan od właściciela | 3 | PL | 2026-10-25 |
-| S-CYC-C | Craft Yarn Council, Crochet Abbreviations / Term Differences U.S./U.K./Canada | https://www.craftyarncouncil.com/standards/crochet-abbreviations | 1 | US | 2026-10-21 |
-| S-CYC-H | Craft Yarn Council, Hooks & Needles | https://www.craftyarncouncil.com/standards/hooks-and-needles | 1 | US | 2026-10-21 |
-| S-CYC-K | Craft Yarn Council, Knitting Abbreviations Master List | https://www.craftyarncouncil.com/standards/knitting-abbreviations | 1 | US | 2026-10-27 |
-| S-CYC-W | Craft Yarn Council, Standard Yarn Weight System | https://www.craftyarncouncil.com/standards/yarn-weight-system | 1 | US | 2026-10-21 |
-| S-DROPS | DROPS Glossary (garnstudio.com/glossary.php) — tylko pojedyncze terminy (P-104, P-106) | https://www.garnstudio.com/glossary.php | 3 | NO | 2026-10-26 |
-| S-GUZ | B. Guzowska, „Szydełko dla początkujących”, Literat 2020 | e-book (Ebookpoint) | 3 | PL | 2026-10-25 |
-| S-KD | I. Kurto-Dzikielewska, „Robótki na drutach dla początkujących”, Literat (polski oryginał) | ISBN 978-83-7774-511-3 | 3 | PL | 2026-10-25 |
-| S-RM450 | „450 ściegów na drutach”, Wydawnictwo RM (tłum. z „Harmony Guides”) | egzemplarz biblioteczny (skan) | 3 | PL | 2026-10-25 |
-| S-SC-UK | Stylecraft / Inside Crochet, Crochet Guide (UK terms) | https://www.stylecraft-yarns.co.uk/Content/Downloads/CrochetGuideNew.pdf | 3 | GB | 2026-10-25 |
-| S-TKGA-B | TKGA, Why Blocking Matters | https://www.tkga.org/ | 3 | US | 2026-10-21 |
-| S-TKGA-G | TKGA, Accurately Measure Gauge (L. Gonzalez) | https://www.tkga.org/ | 3 | US | 2026-10-21 |
+| S-BAR | 3 | PL | pl | 2026-10-25 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-CYC-C | 1 | US | en | 2026-10-21 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-CYC-H | 1 | US | en | 2026-10-21 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-CYC-K | 1 | US | en | 2026-10-27 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-CYC-W | 1 | US | en | 2026-10-21 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-DRP | 3 | NO | wiele | 2026-10-26 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-GUZ | 3 | PL | pl | 2026-10-25 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-KD | 3 | PL | pl | 2026-10-25 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-RM450 | 3 | PL | pl | 2026-10-25 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-SC-UK | 3 | GB | en | 2026-10-25 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-TKG-B | 3 | US | en | 2026-10-21 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |
+| S-TKG-G | 3 | US | en | 2026-10-21 | oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json |

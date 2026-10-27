@@ -1,6 +1,6 @@
 {
  "_opis": "Słownik terminów dziewiarskich i szydełkowych Oczka (rola 09, P-271; lekcja L-030 repo trening). Jedno źródło: kontrola i generator docs/lokalizacja/narzedzia/slownik.mjs, opis docs/lokalizacja/slownik-terminow.md. Używają go przekład (E3, termin zalecany języka docelowego w kontekście tłumacza), drugi przegląd AI i strażnik terminów zakazanych (--slowniki). Kluczy src/i18n nie zmienia.",
- "_zasada": "Termin zalecany = słowo, którego używają wzory i producenci włóczek w danym kraju (nie dosłowny przekład z en ani z pl), z przeczytanego źródła według hierarchii P-017 (normy → podręczniki → organizacje i producenci → przewodniki; fora i Wikipedia tylko wskazówka). Brak źródła = pewność niska i [DO SPRAWDZENIA], nie zgadujemy. „zakazane” = kalki i fałszywi przyjaciele z powodem; wzorzec to wyrażenie regularne (bez wielkości liter, Unicode). Źródłem tekstów jest en-US (P-075); pułapki US/UK (szydełko, bind off/cast off, gauge/tension) rozstrzyga znaczenie US. Pojedyncze terminy z DROPS tylko jako fakty z ID (P-104, P-106).",
+ "_zasada": "Termin zalecany = słowo, którego używają wzory i producenci włóczek w danym kraju (nie dosłowny przekład z en ani z pl), z przeczytanego źródła według hierarchii P-017 (normy → podręczniki → organizacje i producenci → przewodniki; fora i Wikipedia tylko wskazówka). Brak źródła = pewność niska i [DO SPRAWDZENIA], nie zgadujemy. „zakazane” = kalki i fałszywi przyjaciele z powodem; wzorzec to wyrażenie regularne (bez wielkości liter, Unicode). Źródłem tekstów jest en-US (P-075); pułapki US/UK (szydełko, bind off/cast off, gauge/tension) rozstrzyga znaczenie US. Pojedyncze terminy ze słownika producenta S-DRP tylko jako fakty z ID (P-104, P-106).",
  "pewnosc": {
   "wysoka": "termin dosłownie w przeczytanym źródle szczebla 1–3, w tym znaczeniu (cytat); nadal bez przeglądu rodzimego użytkownika",
   "srednia": "źródło szczebla 4, termin tylko pośrednio w źródle szczebla 1–3, cytat niesprawdzony dosłownie albo termin produktu (brzmienie 04)",
@@ -46,112 +46,88 @@
  ],
  "zrodla": {
   "S-BAR": {
-   "tytul": "Barnden, „300 porad: druty” (tłumaczenie)",
-   "url": "skan od właściciela",
    "szczebel": 3,
    "kraj": "PL",
    "jezyk": "pl",
    "odczyt": "2026-10-25",
-   "kopia": "oczko-warsztat/06-tresci/zrodla-pl/barnden-300-porad-druty.md"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-CYC-C": {
-   "tytul": "Craft Yarn Council, Crochet Abbreviations / Term Differences U.S./U.K./Canada",
-   "url": "https://www.craftyarncouncil.com/standards/crochet-abbreviations",
    "szczebel": 1,
    "kraj": "US",
    "jezyk": "en",
    "odczyt": "2026-10-21",
-   "kopia": "oczko-warsztat/01-odkrywanie/zrodla/cyc-crochet.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-CYC-H": {
-   "tytul": "Craft Yarn Council, Hooks & Needles",
-   "url": "https://www.craftyarncouncil.com/standards/hooks-and-needles",
    "szczebel": 1,
    "kraj": "US",
    "jezyk": "en",
    "odczyt": "2026-10-21",
-   "kopia": "oczko-warsztat/01-odkrywanie/zrodla/cyc-hooks.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-CYC-K": {
-   "tytul": "Craft Yarn Council, Knitting Abbreviations Master List",
-   "url": "https://www.craftyarncouncil.com/standards/knitting-abbreviations",
    "szczebel": 1,
    "kraj": "US",
    "jezyk": "en",
    "odczyt": "2026-10-27",
-   "kopia": "zrodla/S-CYC-K.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-CYC-W": {
-   "tytul": "Craft Yarn Council, Standard Yarn Weight System",
-   "url": "https://www.craftyarncouncil.com/standards/yarn-weight-system",
    "szczebel": 1,
    "kraj": "US",
    "jezyk": "en",
    "odczyt": "2026-10-21",
-   "kopia": "oczko-warsztat/01-odkrywanie/zrodla/cyc-weight.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
-  "S-DROPS": {
-   "tytul": "DROPS Glossary (garnstudio.com/glossary.php) — tylko pojedyncze terminy (P-104, P-106)",
-   "url": "https://www.garnstudio.com/glossary.php",
+  "S-DRP": {
    "szczebel": 3,
    "kraj": "NO",
    "jezyk": "wiele",
    "odczyt": "2026-10-26",
-   "kopia": "oczko-warsztat/06-tresci/zrodla-wielojezyczne/drops-glossary.md"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-GUZ": {
-   "tytul": "B. Guzowska, „Szydełko dla początkujących”, Literat 2020",
-   "url": "e-book (Ebookpoint)",
    "szczebel": 3,
    "kraj": "PL",
    "jezyk": "pl",
    "odczyt": "2026-10-25",
-   "kopia": "oczko-warsztat/06-tresci/zrodla-pl/guzowska-szydelko-2020.md"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-KD": {
-   "tytul": "I. Kurto-Dzikielewska, „Robótki na drutach dla początkujących”, Literat (polski oryginał)",
-   "url": "ISBN 978-83-7774-511-3",
    "szczebel": 3,
    "kraj": "PL",
    "jezyk": "pl",
    "odczyt": "2026-10-25",
-   "kopia": "oczko-warsztat/06-tresci/zrodla-pl/kurto-dzikielewska-druty.md"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-RM450": {
-   "tytul": "„450 ściegów na drutach”, Wydawnictwo RM (tłum. z „Harmony Guides”)",
-   "url": "egzemplarz biblioteczny (skan)",
    "szczebel": 3,
    "kraj": "PL",
    "jezyk": "pl",
    "odczyt": "2026-10-25",
-   "kopia": "oczko-warsztat/06-tresci/zrodla-pl/450-sciegow-rm.md"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
   "S-SC-UK": {
-   "tytul": "Stylecraft / Inside Crochet, Crochet Guide (UK terms)",
-   "url": "https://www.stylecraft-yarns.co.uk/Content/Downloads/CrochetGuideNew.pdf",
    "szczebel": 3,
    "kraj": "GB",
    "jezyk": "en",
    "odczyt": "2026-10-25",
-   "kopia": "oczko-warsztat/strona-katalog/2026-10-25-research/zrodla/B-stylecraft-uk-crochet-guide.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
-  "S-TKGA-B": {
-   "tytul": "TKGA, Why Blocking Matters",
-   "url": "https://www.tkga.org/",
+  "S-TKG-B": {
    "szczebel": 3,
    "kraj": "US",
    "jezyk": "en",
    "odczyt": "2026-10-21",
-   "kopia": "oczko-warsztat/01-odkrywanie/zrodla/tkga-block.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   },
-  "S-TKGA-G": {
-   "tytul": "TKGA, Accurately Measure Gauge (L. Gonzalez)",
-   "url": "https://www.tkga.org/",
+  "S-TKG-G": {
    "szczebel": 3,
    "kraj": "US",
    "jezyk": "en",
    "odczyt": "2026-10-21",
-   "kopia": "oczko-warsztat/01-odkrywanie/zrodla/tkga-gauge.txt"
+   "rejestr": "oczko-warsztat/09-lokalizacja/2026-10-27-slownik/zrodla.json"
   }
  },
  "pojecia": [
@@ -180,13 +156,7 @@
      ],
      "pewnosc": "srednia",
      "status": "potwierdzony",
-     "zrodla": [
-      {
-       "id": "S-KD",
-       "cytat": "„Robótki na drutach dla początkujących” (tytuł)"
-      }
-     ],
-     "uwaga": "słowo wspólne dla drutów i szydełka; „dzień z robótką” (BRD, decyzje)"
+     "uwaga": "słowo w tytułach S-KD i decyzjach projektu; słowo wspólne dla drutów i szydełka; „dzień z robótką” (BRD, decyzje)"
     },
     "bg": {
      "nie_zbadano": true,
@@ -380,14 +350,9 @@
      "warianty": [
       "dziergać"
      ],
-     "pewnosc": "wysoka",
+     "pewnosc": "srednia",
      "status": "potwierdzony",
-     "zrodla": [
-      {
-       "id": "S-KD",
-       "cytat": "„Robótki na drutach dla początkujących” (tytuł)"
-      }
-     ]
+     "uwaga": "wyrażenie z tytułu S-KD; cytatu z treści brak"
     },
     "bg": {
      "nie_zbadano": true,
@@ -581,12 +546,7 @@
      "zalecany": "szydełkować",
      "pewnosc": "srednia",
      "status": "potwierdzony",
-     "zrodla": [
-      {
-       "id": "S-GUZ",
-       "cytat": "„Szydełko dla początkujących” (tytuł)"
-      }
-     ]
+     "uwaga": "czasownik ogólny; S-GUZ opisuje szydełkowanie, cytatu z czasownikiem brak"
     },
     "bg": {
      "nie_zbadano": true,
@@ -993,7 +953,7 @@
     "pl": {
      "zalecany": "okrążenie",
      "warianty": [
-      "okrąg (szydełko, Guzowska)"
+      "okrąg (szydełko, S-GUZ)"
      ],
      "skrot": "okr.",
      "pewnosc": "wysoka",
@@ -1004,7 +964,7 @@
        "cytat": "okr. – okrążenie"
       }
      ],
-     "uwaga": "Guzowska: „okr. – okrąg” — w szydełku oba słowa"
+     "uwaga": "S-GUZ: „okr. – okrąg” — w szydełku oba słowa"
     },
     "bg": {
      "nie_zbadano": true,
@@ -1189,7 +1149,7 @@
      "status": "potwierdzony",
      "zrodla": [
       {
-       "id": "S-TKGA-G",
+       "id": "S-TKG-G",
        "cytat": "The industry standard statement for stitch gauge is x number of stitches and x number of rows = 4”/10cm."
       }
      ]
@@ -1211,7 +1171,7 @@
        "cytat": "o. – oczko, oczka"
       },
       {
-       "id": "S-DROPS",
+       "id": "S-DRP",
        "cytat": "stitch, st — oczko (o.)"
       }
      ]
@@ -2997,7 +2957,7 @@
      "status": "potwierdzony",
      "zrodla": [
       {
-       "id": "S-TKGA-G",
+       "id": "S-TKG-G",
        "cytat": "Before working your project, make a gauge swatch using the yarn and needles you plan to use for the project."
       }
      ]
@@ -3405,7 +3365,7 @@
      "status": "potwierdzony",
      "zrodla": [
       {
-       "id": "S-TKGA-B",
+       "id": "S-TKG-B",
        "cytat": "Why Blocking Matters: Unlocking the Magic in Your Swatches and Knits"
       }
      ]
@@ -6367,7 +6327,7 @@
      "zakazane": [
       {
        "wzorzec": "narzucani",
-       "powod": "„narzucanie oczek” (Barnden) koliduje z „narzut” (yo)"
+       "powod": "„narzucanie oczek” (S-BAR) koliduje z „narzut” (yo)"
       }
      ],
      "pewnosc": "wysoka",
@@ -6580,7 +6540,7 @@
      "zakazane": [
       {
        "wzorzec": "zamyk",
-       "powod": "niejednoznaczne: u Barnden ujmowanie, w szydełku oczko zamykające; używać „zakańczanie” [decyzja nazwy: 06]"
+       "powod": "niejednoznaczne: u S-BAR ujmowanie, w szydełku oczko zamykające; używać „zakańczanie” [decyzja nazwy: 06]"
       }
      ],
      "pewnosc": "wysoka",
@@ -6595,7 +6555,7 @@
        "cytat": "zakańczanie oczek (na prawo / na lewo)"
       }
      ],
-     "uwaga": "Kurto-Dzikielewska: „oczka zamykające” (zamykanie); „zamykanie” u Barnden = ujmowanie, a w szydełku „oczko zamykające” = slip stitch — w interfejsie „zakańczanie”"
+     "uwaga": "S-KD: „oczka zamykające” (zamykanie); „zamykanie” u S-BAR = ujmowanie, a w szydełku „oczko zamykające” = slip stitch — w interfejsie „zakańczanie”"
     },
     "bg": {
      "nie_zbadano": true,
@@ -8225,7 +8185,7 @@
        "cytat": "„o. zamykające (o. ścisłe)” — łuk (s. 14)"
       }
      ],
-     "uwaga": "Guzowska: „oczko zamykające (ścisłe)”; DROPS „oczko zamykające (oz)”"
+     "uwaga": "S-GUZ: „oczko zamykające (ścisłe)”; S-DRP „oczko zamykające (oz)”"
     },
     "bg": {
      "nie_zbadano": true,
@@ -8436,7 +8396,7 @@
        "cytat": "półsłupek zwykły (s. 3) — ruch = US sc"
       },
       {
-       "id": "S-DROPS",
+       "id": "S-DRP",
        "cytat": "oczko ścisłe (oś) — Double crochet (dc), UK"
       }
      ],
@@ -8645,7 +8605,7 @@
        "cytat": "półsłupek nawijany (s. 4) — ruch = US hdc"
       },
       {
-       "id": "S-DROPS",
+       "id": "S-DRP",
        "cytat": "półsłupek (psł) — UK htr / US hdc"
       }
      ],
@@ -8858,7 +8818,7 @@
        "cytat": "słupek (s. 5): narzut, wkłucie, przeciągnięcie, 2× przez dwie pętelki"
       },
       {
-       "id": "S-DROPS",
+       "id": "S-DRP",
        "cytat": "słupek (sł) — Treble crochet (tr), UK"
       }
      ],
