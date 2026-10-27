@@ -29,6 +29,16 @@ describe('kompozycja licznika z iCloud', () => {
     expect(wywolania).toEqual(['[{"wlaczona":0}]']);
   });
 
+  test('P-274 Q2a: przygotuj nie czeka na icloud.start — wysyłka bez odpowiedzi sieci nie blokuje pierwszego ekranu', async () => {
+    const s = await przygotuj();
+    let wystartowal = false;
+    const icloud = { start: () => { wystartowal = true; return new Promise<void>(() => undefined); } }; // sendChanges bez odpowiedzi
+    const k = kompozycjaLicznika({ ...s.z, migruj: (b) => migruj(b), liveActivity, zegarek }, await j(), { wibracje: () => true, icloud });
+    const wynik = await Promise.race([k.przygotuj(), new Promise<'czeka'>((r) => setTimeout(() => r('czeka'), 1000))]);
+    expect(wynik).toEqual({ ok: true, wartosc: { cel: 'licznik' } });
+    expect(wystartowal).toBe(true);
+  });
+
   test('49: konflikt z atrapy przy starcie → stan licznika z linią (1 tutaj, 6 z „iPad (test)”); wybór wersji → 6, linia znika', async () => {
     const s = await przygotuj();
     const plik = { czytaj: () => null, zapisz: () => undefined };
@@ -41,8 +51,11 @@ describe('kompozycja licznika z iCloud', () => {
     await st1.wlacz();
     s.zegar.przesun(10 * MIN);
     const st2 = sterownikSynchronizacji({ ...s.z, synchronizacja: atrapaIcloud({ tryb: 'konflikt', baza: s.baza, zegar: s.zegar, plik }), magazyn: s.magazyn });
-    const k2 = kompozycjaLicznika({ ...s.z, rodzajUrzadzenia: 'iphone', migruj: (b) => migruj(b), liveActivity, zegarek }, t, { wibracje: () => true, icloud: st2 });
+    let startSilnika: Promise<void> = Promise.resolve();
+    const icloud = { start: () => (startSilnika = st2.start()) }; // P-274 Q2a: silnik w tle — test czeka na jego start, aplikacja odświeża licznik po partii (naPartie)
+    const k2 = kompozycjaLicznika({ ...s.z, rodzajUrzadzenia: 'iphone', migruj: (b) => migruj(b), liveActivity, zegarek }, t, { wibracje: () => true, icloud });
     await k2.przygotuj();
+    await startSilnika;
     const start = await k2.uslugi.start();
     expect(start.licznik.skonczone).toBe(1);
     expect(start.licznik.konflikt).toEqual({ lokalna: 1, zdalna: 6, urzadzenie: 'iPad (test)' });
