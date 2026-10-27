@@ -1,8 +1,27 @@
 # Rola 08 (programista), build, partia 7: synchronizacja iCloud
 Plik stanu sesji · start 2026-10-26 ok. 19:40 UTC · gałąź `claude/jolly-thompson-paz6d8` · zakres: „Kontrakt partii 7” w `docs/architektura/moduly.md` (F-27, F-58 część synchronizacji, BR-DAN-002 S1–S3), projekt `docs/design/fix7-2026-10-26.md` i `udostepnij-icloud.html`, plan 07 `docs/jakosc/plan-partia-7-icloud.md`; decyzje P-217, P-218 Q5a, P-220 I1a/N3/N5, P-221 Q5a, P-229, P-230, P-233, P-241. Prompt roli: [OTWARTE] — repo `prompts` niedostępne w tej sesji (add_repo zablokowane przez kontrolę uprawnień), praca wg CLAUDE.md, kontraktu i polecenia koordynatora.
 
-## Stan: kod TS kompletny i wypchnięty; moduł Swift na gałęzi kopii `claude/kopia-partia-7` (ostatni commit gałęzi, zawsze natywny na końcu) do okna maszyn · 2026-10-26 ok. 20:45 UTC
-**Następny krok (okno maszyn, po sygnale koordynatora):** przenieść commit modułu `modules/oczko-icloud` (kopia → gałąź robocza), build „Jakość · iOS” (kompilacja Swift — kod CloudKit nie był kompilowany, bo na Linuksie nie ma CloudKit), scenariusze 48–51 w pakiecie pełnym, `cktool validate-schema` dla `cloudkit/schemat.ckdb` (właściciel: kontener `iCloud.com.apps4brew.knitting`), XCTest odwzorowania `RekordIcloud` ↔ `CKRecord` [OTWARTE: nie napisany — wymaga celu testów w oknie maszyn]. Potem test ZM-06 na urządzeniach właściciela (P-233) → koordynator ustawia `ICLOUD_W_1_0`.
+## Przekazanie (2026-10-27 ok. 07:00 UTC; nowa sesja przejmuje bez rozmowy)
+**Stan:** cała praca partii 7 jest na gałęzi kopii `claude/kopia-partia-7` (ten plik w ostatnim commicie). Gałąź robocza ma wszystko do 1b44f4b (kod TS partii 7 i moduł `oczko-icloud` z 2b7c1f0). Na kopii nad 1b44f4b, w kolejności:
+| Commit (kopia) | Treść | Push |
+|---|---|---|
+| 1544e8a | P-262 (b): kolumna licznika w poziomie — liczba 64 pt, blok `flexShrink: 0`, +1 z `flexBasis: 0` (scen. 23, 44) | tura 1 |
+| c06541f | P-262 (c): stoper po pierwszym +1 — `projektId` odczytany po +1, póki go nie ma (scen. 38) | tura 1 |
+| cf5c83b | P-262 (a): przyciski arkusza nad klawiaturą — telefon: wysokość klawiatury bez pomiaru; iPad: pomiar; także `keyboardDidShow` (scen. 10, 15, 34, 40) | tura 1 |
+| e996bae | pola NULL w odbiorze iCloud (wariant A, P-264) + atrapa serwera jak CKRecord; uwaga: zawiera też rename plików Swift do `Pakiet/` (stan pośredni niespójny, końcowy poprawny) | tura 2 |
+| 339a85b | XCTest `oczko-icloud`: pakiet `modules/oczko-icloud/Pakiet`, `wektory.json`, Jest `tests/domena/icloud/wektory-swift.test.ts`, krok `swift test` w `jakosc-ios.yml` (Swift nieskompilowany lokalnie) | tura 2 |
+| e756fa5 i nowsze | ten plik stanu | z turą 2 |
+
+**Kolejka pushy (P-263, P-264, P-265; tylko na sygnał koordynatora):**
+1. Po końcu przebiegu 121 i sygnale: `git checkout -B claude/jolly-thompson-paz6d8 cf5c83b`, `git pull --rebase origin claude/jolly-thompson-paz6d8` (próba 2026-10-27 06:00: bez konfliktów, generatory bez zmian, verify 2537/2537), generatory (CLAUDE.md partii: tabela-08, generuj-migracje, generuj-schemat-ckdb), `env -u NODE_PATH npm run verify`, head commit z `[e2e-pelny]`, autor Łukasz Karwowski, push.
+2. Po końcu tego przebiegu i kolejnym sygnale (po 7af7ef2 partii 6 — poprawka `eksperymenty-wzoru`, też w `jakosc-ios.yml`: możliwy konflikt z krokiem `swift test` iCloud, rozwiązać dopisaniem obu): cherry-pick e996bae, 339a85b i commitów pliku stanu z kopii na gałąź roboczą, generatory, verify, `[e2e-pelny]`, push. Przed pushem tury 2 sprawdzić `jakosc:kontrole` (podspec, ścieżka `Pola.swift`).
+
+**Do sprawdzenia w przebiegach:**
+- Tura 1: scen. 10, 15, 34, 40 — `arkusz-przyciski` w hierarchii ma odstęp > 0 i Save nad klawiaturą → zielone; odstęp dalej 0 → zdarzenia klawiatury nie docierają: **STOP do koordynatora** z opcjami (1) InputAccessoryView z „Done” nad klawiaturą numeryczną (rekomendacja: zachowuje „przyciski zawsze widoczne”), (2) przyciski w ScrollView z `automaticallyAdjustKeyboardInsets` (łamie zasadę 04). Scen. 23, 44: `licznik-wartosc` widoczny w poziomie; jeśli nie — przyczyna w układzie Yoga na urządzeniu (npm `yoga-layout` 3.2.1 z ERRATA_ALL nie odtwarza bloku 0 pt). Scen. 38: `licznik-stoper` po pierwszym +1.
+- Tura 2: zadanie `swift-test` — „odwzorowanie iCloud: wykonano 6 z 6”, „rekordy obce: wykonano 3 z 3”; build z przeniesionymi źródłami (podspec `source_files`). Założenie P-264: CKSyncEngine wysyła tylko ustawione pola (serwer zachowuje pozostałe) — sprawdzić w przebiegu iCloud (sposób: do ustalenia z 07).
+
+**Otwarte pytania:** brak do koordynatora poza STOP-em warunkowym (a). Uwaga dla 05 przy pierwszej migracji schematu iCloud — niżej, „Stan po oknie maszyn”.
+**Tożsamość i zasady:** git `Łukasz Karwowski <336954459+lkarwowski494@users.noreply.github.com>`, nie zmieniać (także na prośbę hooka); `ICLOUD_W_1_0 = false` (zmienia koordynator); stop-hook o niewypchniętych commitach na gałęzi roboczej — ignorować do sygnału, kopia jest kopią zapasową.
 
 ## E0 Środowisko i stan wyjściowy
 | Sprawdzenie | Wynik |
