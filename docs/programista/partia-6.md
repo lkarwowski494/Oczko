@@ -118,6 +118,7 @@ Kod 0, 187 zestawów, **2330/2330**.
 Agent: K1–K5 ok. 6–8 h, K6 ok. 8–10 h, K7–K8 ok. 8–12 h (bez kompilacji tutaj — poprawki w oknie maszyn). Czekanie: okno maszyn (K7, W1–W3, E2E iPada), odpowiedzi na S1–S4. Właściciel: identyfikatory App Group i iCloud w portalu (P-233), iPad przy TestFlight (P-226).
 
 ## Dziennik sesji
+- 2026-10-27 ~14:30–14:50 UTC (P-289): raport E2 w `oczko-warsztat` a9eefeb (`08-programista/2026-10-26-partia6/E2-raport.md`, logi verify 2616/2616 i śladów wydania kod 0 na a107a49). W czystym TS nic nie zostało: plan 1.1 pkt 1–8 zrobione; otwarte tylko Swift po zrzucie 07 (pusta strona 2) i okno maszyn.
 - 2026-10-27 08:40–08:55 UTC: przejęcie na koncie 2; rebase kroku 2, verify 2538/2538; przyczyna W1–W3 (manifest 5.9 + `.v18`) potwierdzona Swiftem 6.1 na Linuksie i poprawiona.
 - 2026-10-27 08:22 UTC: KONIEC PRACY sesji na koncie 1 (limit). Robocza bez zmian od bd60073. Kopia = ten commit (7af7ef2 + P-266 + stan). Przejmuje sesja z konta 2: zacznij od sekcji „Stan · PRZEKAZANIE” powyżej; push kopii na roboczą tylko na sygnał koordynatora (krok 2, P-265/P-267), po `git pull --rebase` i verify.
 - 2026-10-27 ~05:45–07:05 UTC: P-262 push bd60073 (przebieg 121); `eksperymenty-wzoru` ❌ przed kompilacją → 7af7ef2 lokalnie (P-265: push na sygnał); przekazanie. Pomiary okna P-256/P-257 (czasy czystych instalacji 15–155 s, czerwień 94a7657 = maszyna) i dowód P-258 (logi symulatora: żądanie obrotu przy starcie) — w historii tego pliku (commity 6388fff…2c69367 przed rebase, `git log -p docs/programista/partia-6.md`).
