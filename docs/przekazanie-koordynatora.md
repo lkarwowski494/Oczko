@@ -2,21 +2,21 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 ok. 16:00 UTC — **WSTRZYMANE przez właściciela (sekcja niżej)**; wcześniej 08:50 UTC konto 2 przejęło (P-269); sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-290 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
+**Ostatnia aktualizacja:** 2026-10-27 ok. 16:00 UTC — **WSTRZYMANE przez właściciela (sekcja niżej)**; wcześniej 08:50 UTC konto 2 przejęło (P-269); sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-291 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
 
 ## WSTRZYMANIE (właściciel, 2026-10-27 ok. 16:00 UTC) — stan do wznowienia
-Praca wstrzymana na polecenie właściciela. Zaplanowane zadania koordynatora Oczka: brak (nocne sprawdzenie skasowane). Sesje ról zapisały stan i czekają bez zadań.
+Praca wstrzymana na polecenie właściciela. Zaplanowane zadania koordynatora Oczka: brak (nocne sprawdzenie skasowane). Sesje ról zapisały stan (hashe w tabeli niżej, potwierdzone na zdalnych gałęziach) i czekają bez zadań. Kontenery sesji mogą zostać zwolnione po kilku dniach — stan żyje wyłącznie w gałęziach `claude/kopia-*`, plikach stanu ról (`docs/programista/partia-6.md`, `partia-7.md`, `docs/jakosc/stan.md` na kopiach) i w `oczko-warsztat`; nowa sesja roli startuje z nich (szablon niżej, prompty: `oczko-warsztat` `koordynacja/role-2026-10-27/`).
 
 **Gałąź robocza** `claude/jolly-thompson-paz6d8` — ostatni kod: 2c6d69e (krok 3: iCloud pola NULL + XCTest, hook P-260, Magic Tap, P0 wyścig pierwszego +1, panel zegarka, pasek AX5). Ostatnia decyzja: P-290.
 
-**CI:** przebieg 128 (run 40503412220, 2c6d69e, `[e2e-pelny]`) czekał w kolejce maszyn macOS od 12:23 — nie anulowany; ruszy sam przy wolnych maszynach. Jego wynik to pierwszy krok po wznowieniu: build i `swift-test` iCloud („wykonano N z N”), bramka 01 (P0, P-287/P-288), 11, 31, 15, 30.
+**CI (P-291):** przebieg 128 (run 40503412220, 2c6d69e) zakończony 14:21: build z iCloud ✅, swift-test z XCTest iCloud ✅, `eksperymenty-wzoru` ❌ (W1 środowisko); **e2e anulowane bez maszyny** — P0 (bramka 01), 15, 30 niesprawdzone w E2E. Pierwszy krok po wznowieniu: ponowić e2e 128 (`rerun_failed_jobs`, do 30 dni) albo od razu kolejka niżej (jej przebieg z `[e2e-pelny]` sprawdzi 01).
 
 **Czeka na push (po końcu 128, kolejno, każdy po poprzednim):**
 | # | Kto | Gałąź kopii (HEAD) | Zawartość | Znacznik |
 |---|---|---|---|---|
-| 1 | 08 partia 6 | `claude/kopia-partia-6` (12aabe2) | P-271 strażnik startu (tło ≠ awaria), W1-A (Word tabela/obraz), P-276 film (zamiana jawna, flaga `film`), plan 1.1 pkt 1–8 („Rename”, Magic Tap we wzorze, W11 + błąd komunikatu aparatu, arkusz skrzynki na projekcie, „Paste” przez `oczko-wzor`, miniatura PDF), P-283–P-285, U9–U12; dużo nowego, nieskompilowanego Swift | bez |
-| 2 | 07 | `claude/kopia-07` (b71f1e0) | scen. 53 (Word), testID P-283, F07-34 (35), F07-35 (JAK-09: `akceptacja` jako bramka) | `[e2e-pelny]`, jeśli 3 nie idzie od razu |
-| 3 | 08 partia 7 | `claude/kopia-partia-7-noc` (9d94084) | iCloud TS: poczekalnia `nowsza_wersja`, „Update Oczko…”, „Syncing…” | `[e2e-pelny]` |
+| 1 | 08 partia 6 | `claude/kopia-partia-6` (942f8dd) | P-271 strażnik startu (tło ≠ awaria), W1-A (Word tabela/obraz), P-276 film (zamiana jawna, flaga `film`), plan 1.1 pkt 1–8 („Rename”, Magic Tap we wzorze, W11 + błąd komunikatu aparatu, arkusz skrzynki na projekcie, „Paste” przez `oczko-wzor`, miniatura PDF), P-283–P-285, U9–U12; dużo nowego, nieskompilowanego Swift | bez |
+| 2 | 07 | `claude/kopia-07` (c9a6325) | scen. 53 (Word), testID P-283, F07-34 (35), F07-35 (JAK-09: `akceptacja` jako bramka) | `[e2e-pelny]`, jeśli 3 nie idzie od razu |
+| 3 | 08 partia 7 | `claude/kopia-partia-7-noc` (146cc64) | iCloud TS: poczekalnia `nowsza_wersja`, „Update Oczko…”, „Syncing…” | `[e2e-pelny]` |
 Każdy: `git pull --rebase origin claude/jolly-thompson-paz6d8`, generatory, `env -u NODE_PATH npm run verify` (hook P-260 i tak uruchamia), push na sygnał koordynatora.
 
 **Sesje (konto 2):** koordynator session_01T66VBzy9qEVyo8a5aMd7r1; 08 p6 session_01T66VByADnL2T64RBV2HPqF; 08 p7 session_01T66VBwDdcBHrNrCt25ZNWW; 07 session_01T66VBvUS4tz9Ei2heewJzY. Zarchiwizowane: 04, 05, 09 (praca zakończona). 10 — nieuruchomiona.
