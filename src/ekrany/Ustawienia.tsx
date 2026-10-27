@@ -1,7 +1,7 @@
 // Ustawienia (BR-ZAK-004, BR-ZAK-006/S5, S7, BR-DAN-012/S3, KP-13, KP-14, F-48). Ekran nienarysowany (design-spec.md:95, Z07-05): lista grupowana
 // z komponentów design-spec, etykiety robocze w en.kontekst.json. Sygnatura: propozycja 07 (E3), granice 05 (Z07-22).
 // „Rate Oczko” otwiera stronę recenzji (action=write-review), nie systemową prośbę (BR-DAN-012/S3).
-import React, { useState } from 'react';
+import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { Przycisk } from './Arkusz';
 import { cel, odstep, promien, typografia, useKolory } from './motyw';
@@ -20,9 +20,8 @@ export type PropsUstawien = {
   naZglosProblem(): void;
   naStanDanych(): void;
   /** Dane (BR-DAN-006, BR-DAN-009): kompozycja; bez nich pozycji nie ma. */
-  dane?: { naEksport(): void; naImport(): void; naUsunWszystko(takzeZIcloud: boolean): void };
-  /** Synchronizacja iCloud włączona: arkusz „Delete all data” ma przełącznik „Also delete from iCloud” (P-229, domyślnie wyłączony). */
-  icloudWlaczona?: boolean;
+  /** naUsunWszystko: otwiera arkusz potwierdzenia `/usun-wszystko` (BR-DAN-009; usunięcie dopiero po potwierdzeniu, P-266 (3)). */
+  dane?: { naEksport(): void; naImport(): void; naUsunWszystko(): void };
   /** Wynik eksportu albo import w toku (kompozycja), pod grupą danych. */
   wynikDanych?: React.ReactNode;
   /** Panele buildu E2E (e2e/README.md, bez t()); w buildzie wydania null. */
@@ -32,10 +31,8 @@ export type PropsUstawien = {
   jezyk?: { stan: { wartosc: PreferencjaJezyka; jezyk: string }; naJezyk(): void; naZglosTlumaczenie(): void };
   naZrodla?(): void;
 };
-export function Ustawienia({ stan: s, t, system, adresy, naOferty, naWibracje, naZglosProblem, naStanDanych, dane, wynikDanych, panelE2e, naWstecz, jezyk, naZrodla, icloudWlaczona }: PropsUstawien): React.ReactElement {
+export function Ustawienia({ stan: s, t, system, adresy, naOferty, naWibracje, naZglosProblem, naStanDanych, dane, wynikDanych, panelE2e, naWstecz, jezyk, naZrodla }: PropsUstawien): React.ReactElement {
   const k = useKolory();
-  const [pytanie, ustawPytanie] = useState(false); // BR-DAN-009: usunięcie dopiero po potwierdzeniu
-  const [zIcloud, ustawZIcloud] = useState(false); // P-229: „Also delete from iCloud” osobno, domyślnie wyłączony (ochrona danych)
   const st = StyleSheet.create({
     grupa: { borderRadius: promien.grupa, backgroundColor: k.papierGrupa, padding: odstep.s, gap: odstep.xs },
     podpis: { ...typografia.podpis, color: k.olowek, paddingHorizontal: odstep.m },
@@ -61,24 +58,7 @@ export function Ustawienia({ stan: s, t, system, adresy, naOferty, naWibracje, n
         <View style={st.grupa}>
           <Przycisk tekst={t('ustawienia.eksport')} onPress={dane.naEksport} rodzaj="tekstowy" testID="ustawienia-eksport" />
           <Przycisk tekst={t('ustawienia.import')} onPress={dane.naImport} rodzaj="tekstowy" testID="ustawienia-import" />
-          <Przycisk tekst={t('ustawienia.usun_wszystko')} onPress={() => ustawPytanie(true)} rodzaj="tekstowy" testID="ustawienia-usun-wszystko" />
-          {pytanie && (
-            <View accessibilityRole="alert" style={{ gap: odstep.s, padding: odstep.m }}>
-              <Text style={{ ...typografia.tresc, color: k.grafit }}>{t('ustawienia.usun_pytanie')}</Text>
-              {icloudWlaczona && (
-                <>
-                  <View style={st.wiersz}>
-                    <Text style={{ ...typografia.tresc, color: k.grafit, flex: 1 }} importantForAccessibility="no" accessibilityElementsHidden>{t('icloud.usun_z_icloud')}</Text>
-                    <Switch accessibilityRole="switch" accessibilityLabel={t('icloud.usun_z_icloud')} accessibilityState={{ checked: zIcloud }} value={zIcloud} onValueChange={ustawZIcloud} testID="usun-z-icloud" />
-                  </View>
-                  <Text style={st.podpis}>{t('icloud.usun_z_icloud_opis')}</Text>
-                  {!zIcloud && <Text style={st.podpis}>{t('icloud.usun_zostaje')}</Text>}
-                </>
-              )}
-              <Przycisk tekst={t('ustawienia.usun_potwierdz')} onPress={() => { ustawPytanie(false); dane.naUsunWszystko(Boolean(icloudWlaczona) && zIcloud); ustawZIcloud(false); }} rodzaj="glowny" testID="potwierdz-usun-wszystko" />
-              <Przycisk tekst={t('wspolne.anuluj')} onPress={() => { ustawPytanie(false); ustawZIcloud(false); }} rodzaj="tekstowy" />
-            </View>
-          )}
+          <Przycisk tekst={t('ustawienia.usun_wszystko')} onPress={dane.naUsunWszystko} rodzaj="tekstowy" testID="ustawienia-usun-wszystko" />
         </View>
       )}
       {wynikDanych}
