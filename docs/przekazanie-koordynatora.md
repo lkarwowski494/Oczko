@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 08:50 UTC — **konto 2 przejęło (P-269)**; sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-288 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
+**Ostatnia aktualizacja:** 2026-10-27 08:50 UTC — **konto 2 przejęło (P-269)**; sesje ról 08 p7, 07, 08 p6 uruchomione na koncie 2 · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-289 · **koordynator: session_01T66VBzy9qEVyo8a5aMd7r1 (konto 2, od 08:45 UTC)**; poprzedni (konto 1, nieaktywny): session_01VjtVbMx8DYWkBfH4pvaCXK
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -31,9 +31,9 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 | 08 partia 7 | session_01T66VBwDdcBHrNrCt25ZNWW | `claude/kopia-partia-7` | krok 2 (ostatni, `[e2e-pelny]`), krok 3 iCloud — na sygnał |
 | 07 fix-3 | session_01T66VBvUS4tz9Ei2heewJzY | `claude/kopia-07` (nowa) | odtworzyć 47b9bd5, raport `E2-przebieg-123.md`; push w kroku 2 na sygnał |
 | 08 partia 6 | session_01T66VByADnL2T64RBV2HPqF | `claude/kopia-partia-6` | krok 2 (pierwszy, bez znacznika; 7af7ef2 + 937d6f2 + 1c78e3f manifest W1–W3, P-270) na sygnał; potem W1–W3 |
-| 05 przeglądy (P-272) | session_01T66VBxEUVZa1a385Aya8Wy (zakończona) | `claude/kopia-05` | zrobione (P-274, P-276) |
-| 04 fix-8 (P-272) | session_01T66VBwdxqMdrc4M8QCPweH (zakończona) | `claude/kopia-04` | zrobione (P-275, P-276); następnie audyt 2.1 |
-| 09 słownik (P-272) | session_01T66VByqAL8puHu6nZh23xw (zakończona) | `claude/kopia-09` (do usunięcia przez właściciela, P-281) | słownik gotowy (f3115f5); D3/D4 → 06 |
+| 05 przeglądy (P-272) | session_01T66VBxEUVZa1a385Aya8Wy (zarchiwizowana) | `claude/kopia-05` | zrobione (P-274, P-276) |
+| 04 fix-8 (P-272) | session_01T66VBwdxqMdrc4M8QCPweH (zarchiwizowana) | `claude/kopia-04` | zrobione (P-275, P-276); następnie audyt 2.1 |
+| 09 słownik (P-272) | session_01T66VByqAL8puHu6nZh23xw (zarchiwizowana) | `claude/kopia-09` (do usunięcia przez właściciela, P-281) | słownik gotowy (f3115f5); D3/D4 → 06 |
 | 10 wydanie | — (nie uruchomiona) | `docs/wydanie/stan.md` | uruchomić, gdy będzie zadanie (etap 2.5) |
 | koordynator | session_01T66VBzy9qEVyo8a5aMd7r1 | ten plik, `docs/decyzje.md` | dyżur kolejki okna |
 
