@@ -254,6 +254,8 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `e2e-wzor-zdjecie` | dodanie wzoru (build E2E) | zdjęcie strony testowe | bez `t()` | |
 | `e2e-wzor-www` | dodanie wzoru (build E2E) | zapisana strona testowa | bez `t()` | |
 | `e2e-wzor-word` | dodanie wzoru (build E2E) | plik .docx testowy | bez `t()` | |
+| `e2e-wzor-word-tabela` | dodanie wzoru (build E2E) | plik .docx z tabelą (korpus W1, P-282; scen. 53) | bez `t()` | |
+| `e2e-wzor-word-obraz` | dodanie wzoru (build E2E) | plik .docx z obrazem (korpus W1, P-282; scen. 53) | bez `t()` | |
 | `e2e-zdjecie-testowe` | dodanie zdjęcia (build E2E) | zdjęcie testowe (EXIF GPS celowo) | bez `t()` | |
 
 ## Kryterium → scenariusz
@@ -305,6 +307,7 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | P-230 problemy konta iCloud | `50-p-230-icloud-problemy-konta.yaml` |
 | BR-DAN-009 z iCloud | `51-br-dan-009-usun-takze-z-icloud.yaml` |
 | P-230 skrzynka rozszerzenia | `52-p-230-skrzynka-rozszerzenia.yaml` |
+| P-282 Word: tekst, tabela, obraz (informacyjnie) | `53-p-282-word-tabela-obraz.yaml` |
 | (przepływy pakietu podstawowego spoza poziomu E2E) BR-LIC-002/S1–S3, BR-LIC-019/S1, BR-LIC-003/S2 · BR-ZAK-006/S1, KP-13 · BR-ZAK-001/S1, PR-09 · P-089 (3a) · BR-DAN-005/S1, BR-DAN-006/S1, P-113 Q2a (bez karty) · ADR-0019 | `04`, `05`, `06`, `07`, `08`, `09` |
 
 Kryteria „tylko-urządzenie” (18, `kryteria.json`) nie mają scenariusza — lista telefonu (strategia §8, TT-01–TT-09) albo „Nie sprawdzono”.

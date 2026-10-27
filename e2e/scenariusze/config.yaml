@@ -54,3 +54,4 @@ flows:
   - 50-p-230-icloud-problemy-konta.yaml
   - 51-br-dan-009-usun-takze-z-icloud.yaml
   - 52-p-230-skrzynka-rozszerzenia.yaml
+  - 53-p-282-word-tabela-obraz.yaml
