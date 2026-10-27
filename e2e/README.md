@@ -91,7 +91,8 @@ Kolumna „tekst / etykieta”: tekst albo etykieta VoiceOver z `design-spec.md`
 | `ukonczenie-karta` | ukończenie | karta z pytaniem o włóczkę (U-9) | — | |
 | `ukonczenie-gotowe` | ukończenie | „Done” | „Done” | |
 | `licznik-stoper` | licznik | stoper sesji w pasku: ikona (bez sesji), po starcie kapsuła z czasem — ten sam id, stan w etykiecie (04 fix-6 B, P-191 P1a) | „Start session timer” / „Session timer, {czas}, running. Pause or stop” / „…, paused. Resume or stop” | |
-| `stoper-wstrzymaj` | menu kapsuły | Pause timer albo Resume timer (ta sama pozycja menu) | „Pause timer” / „Resume timer” | |
+| `stoper-wstrzymaj` | menu kapsuły | Pause timer (stoper biegnie) | „Pause timer” | |
+| `stoper-wznow` | menu kapsuły | Resume timer (stoper wstrzymany; ta sama pozycja menu co Pause, osobny testID — F07-33) | „Resume timer” | |
 | `stoper-zatrzymaj` | menu kapsuły | Stop timer (bez potwierdzenia) | „Stop timer” | |
 | `stoper-inny-potwierdz` | alert sesji w innym projekcie (P-191 P3a) | Stop and start here | „Stop and start here” | |
 | `stoper-sprawdz` | licznik | linia „zapomniany stoper” z odnośnikiem do korekty (P-191 P5a) | „Check the end time” | |
