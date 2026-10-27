@@ -43,7 +43,7 @@ export function Arkusz(p: { tytul: string; children: React.ReactNode; przyciski:
   );
 }
 
-type RodzajPrzycisku = 'glowny' | 'niszczacy' | 'drugi' | 'tekstowy'; // niszczacy: tło `blad`, tekst `papier` (design-spec:776)
+type RodzajPrzycisku = 'glowny' | 'niszczacy' | 'drugi' | 'tekstowy'; // niszczacy: tylko arkusz decyzji o nieodwracalnym usunięciu, jeden na ekran (04 fix-8, P-275 (2))
 export function Przycisk(p: { tekst: string; etykieta?: string; onPress(): void; rodzaj?: RodzajPrzycisku; testID?: string; rola?: 'button' | 'link'; wylaczony?: boolean }): React.ReactElement {
   const st = style(useKolory());
   const r = p.rodzaj ?? 'drugi';
@@ -107,14 +107,14 @@ export function style(k: Kolory) {
     przyciski: { padding: odstep.l, gap: odstep.s, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: k.linia },
     glowny: { minHeight: cel.minimum, borderRadius: promien.przyciskGlowny, backgroundColor: k.przyciskTlo, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
     glownyTekst: { ...typografia.przycisk, color: k.przyciskTekst },
-    niszczacy: { minHeight: cel.minimum, borderRadius: promien.przyciskGlowny, backgroundColor: k.blad, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
-    niszczacyTekst: { ...typografia.przycisk, color: k.papier },
+    niszczacy: { minHeight: cel.minimum, borderRadius: promien.przyciskGlowny, backgroundColor: k.przyciskNiszczacyTlo, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
+    niszczacyTekst: { ...typografia.przycisk, color: k.przyciskNiszczacyTekst },
     drugi: { minHeight: cel.minimum, borderRadius: promien.przyciskDrugi, borderWidth: 2, borderColor: k.drugiPrzyciskObrys, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
     tekstowy: { minHeight: cel.minimum, alignItems: 'center', justifyContent: 'center', paddingHorizontal: odstep.l },
     drugiTekst: { ...typografia.tresc, color: k.grafit, fontWeight: '700' },
     pole: { gap: odstep.xs },
-    wylaczony: { backgroundColor: k.linia, borderColor: k.linia }, // stan nieaktywny z istniejących tokenów (brak tokenu „disabled” — zgłoszenie do 04)
-    wylaczonyTekst: { color: k.olowek },
+    wylaczony: { backgroundColor: k.przyciskNieaktywnyTlo, borderColor: k.przyciskNieaktywnyTlo }, // design-spec R1 (bez obrysu)
+    wylaczonyTekst: { color: k.przyciskNieaktywnyTekst },
     wybor: { gap: odstep.s },
     opcja: { minHeight: cel.minimum, borderRadius: promien.pole, borderWidth: 2, borderColor: k.linia, padding: odstep.m, justifyContent: 'center' },
     opcjaWybrana: { borderColor: k.drugiPrzyciskObrys },
