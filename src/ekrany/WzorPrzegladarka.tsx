@@ -189,7 +189,7 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
   );
 
   return (
-    <View style={[st.ekran, obok && st.obok]}>
+    <View style={[st.ekran, obok && st.obok]} onMagicTap={() => void licz(p.naPlus)}>{/* Magic Tap = +1 (design-spec :668, jak licznik) */}
       {wzor}
       {licznik}
       {menu === 'opcje' && (

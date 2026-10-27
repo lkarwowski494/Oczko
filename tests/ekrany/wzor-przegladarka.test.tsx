@@ -169,3 +169,13 @@ test('menu ••• (design-spec W1a): „Rename” między obrotem a usunięci
   fireEvent.press(screen.getByTestId('wzor-zmien-nazwe'));
   expect(w.naZmienNazwe).toHaveBeenCalledTimes(1);
 });
+
+test('VoiceOver Magic Tap = +1 na ekranie wzoru (design-spec W1a :668, jak licznik :88)', async () => {
+  const w = wywolania();
+  const { toJSON } = render(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...w} />);
+  const korzen = toJSON() as { props: { onMagicTap?: () => void } };
+  expect(typeof korzen.props.onMagicTap).toBe('function');
+  korzen.props.onMagicTap?.();
+  await new Promise((r) => setTimeout(r, 0));
+  expect(w.naPlus).toHaveBeenCalledTimes(1);
+});
