@@ -62,8 +62,9 @@ export async function potwierdzWyslane(tx: PortBazy, p: PotwierdzenieIcloud): Pr
 
 type Wynik1 = 'zastosowany' | 'poczekalnia' | 'blad' | 'pominiety';
 
-async function kolumnyTabeli(tx: PortBazy, tabela: string): Promise<Set<string>> {
-  return new Set((await wiersze(tx.all(`SELECT name FROM pragma_table_info('${tabela}')`), 'kolumny')).map((r) => tekst(r, 'name')));
+/** Kolumny tabeli → czy dopuszczają NULL. */
+async function kolumnyTabeli(tx: PortBazy, tabela: string): Promise<Map<string, boolean>> {
+  return new Map((await wiersze(tx.all(`SELECT name, "notnull" FROM pragma_table_info('${tabela}')`), 'kolumny')).map((r) => [tekst(r, 'name'), liczba(r, 'notnull') === 0]));
 }
 /** Rodzic z klucza obcego, którego jeszcze nie ma (sprawdzenie przed INSERT; odroczone klucze odrzuciłyby całą partię przy COMMIT). */
 async function brakRodzica(tx: PortBazy, tabela: string, w: WierszIcloud): Promise<boolean> {
@@ -91,6 +92,9 @@ async function zastosujRekord(tx: PortBazy, r: RekordIcloud, terazMs: number, li
   const kol = await kolumnyTabeli(tx, t.tabela);
   const wiersz = Object.fromEntries(Object.entries(w.wartosc.wiersz).filter(([k]) => kol.has(k))); // pole z nowszego schematu: pomijane (zmiany tylko dodające)
   if (await brakRodzica(tx, t.tabela, wiersz)) { await doPoczekalni(tx, r, 'brak_rodzica', terazMs); return 'poczekalnia'; }
+  // CloudKit nie trzyma pól nil (zapis nil usuwa pole, Odwzorowanie.swift): brak kolumny dopuszczającej NULL = wyczyszczona na nadawcy
+  // (cel, przywrócenie z kosza). Bez tego aktualizacja zostawiała starą wartość. Klucz i `pomin` (liczone lokalnie) bez zmian.
+  if (t.scalanie === 'zmieniono_ms') for (const [k, nullable] of kol) if (nullable && !(k in wiersz) && !t.klucz.includes(k) && !t.pomin.includes(k)) wiersz[k] = null;
   const nazwy = Object.keys(wiersz);
   const wartosci = Object.values(wiersz);
   await tx.run('SAVEPOINT icloud_rekord');

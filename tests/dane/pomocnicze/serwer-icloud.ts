@@ -13,6 +13,9 @@ export type UrzadzenieTestowe = Synchronizacja & {
 };
 export type SerwerTestowy = { rekordy: Map<string, RekordIcloud>; usuniete: Map<string, { encja: string; klucz: string }>; urzadzenie(): UrzadzenieTestowe; wszystko(): PartiaIcloud };
 
+/** Jak CKRecord: pole z wartością nil nie istnieje (zapis nil usuwa pole, pobrany rekord go nie ma; Odwzorowanie.swift `wypelnij`/`doJs`). */
+const jakCkRecord = (r: RekordIcloud): RekordIcloud => ({ ...structuredClone(r), pola: Object.fromEntries(Object.entries(r.pola).filter(([, v]) => v !== null)) });
+
 export function serwerIcloud(): SerwerTestowy {
   const rekordy = new Map<string, RekordIcloud>();
   const usuniete = new Map<string, { encja: string; klucz: string }>();
@@ -35,7 +38,7 @@ export function serwerIcloud(): SerwerTestowy {
           u.wyslano.push([...zmiany]);
           for (const z of zmiany) {
             const n = `${z.encja}:${z.klucz}`;
-            if (z.rekord) { rekordy.set(n, structuredClone(z.rekord)); usuniete.delete(n); } else { rekordy.delete(n); usuniete.set(n, { encja: z.encja, klucz: z.klucz }); }
+            if (z.rekord) { rekordy.set(n, jakCkRecord(z.rekord)); usuniete.delete(n); } else { rekordy.delete(n); usuniete.set(n, { encja: z.encja, klucz: z.klucz }); }
           }
           if (u.przedPotwierdzeniem) await u.przedPotwierdzeniem();
           await potw?.({ wyslane: zmiany.map((z) => ({ encja: z.encja, klucz: z.klucz, nr: z.nr })), stanSilnika: new Uint8Array([7]) });
