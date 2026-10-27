@@ -1,10 +1,11 @@
 # BR-PRJ-001/S1 (docs/brd/wymagania-projekt.md:5): projekt z częściami — „New project” z nazwą i dwiema częściami (formularz 04 fix-5, P-183),
 # licznik pierwszej części otwiera się od razu (U-5), rzędy liczą się w tej części, druga ma 0. Wyrocznia: BRD S1 („rękaw lewy 30, pozostałe 0”),
-# tu w skali 1 rzędu. Pakiet pełny; do `podstawowy` po pierwszym zielonym przebiegu (P-198 Q3a, zasada roli 07 nr 8).
+# tu w skali 1 rzędu. W `podstawowy` od pierwszego zielonego przebiegu 40446976426 (P-198 Q3a, P-255, zasada roli 07 nr 8).
 appId: com.apps4brew.knitting
 name: "BR-PRJ-001/S1 · Nowy projekt z dwiema częściami: rząd w pierwszej, druga ma 0"
 tags:
   - BR-PRJ-001-S1
+  - podstawowy
   - stan-licznika
 ---
 - runFlow:
