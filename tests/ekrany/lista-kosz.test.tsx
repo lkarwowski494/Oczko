@@ -44,7 +44,7 @@ describe('ekran „Recently deleted” (C3, BR-DAN-008)', () => {
   test('opis z KOSZ_DNI, pozycje z terminem, „Restore” z etykietą nazwy wywołuje przywrócenie właściwej pozycji', () => {
     const naPrzywroc = jest.fn();
     render(<Kosz stan={kosz()} t={t} naPrzywroc={naPrzywroc} />);
-    expect(screen.getByText('Projects, parts and counters stay here for 30 days. Then they’re deleted for good.')).toBeTruthy();
+    expect(screen.getByText('Deleted projects, parts, counters, patterns, yarn and needles stay here for 30 days. Then they’re deleted for good.')).toBeTruthy();
     expect(screen.getByText('Counter in Harbor, Back · until Nov 21')).toBeTruthy();
     fireEvent.press(przycisk('Restore Scarf', 'button'));
     expect(naPrzywroc).toHaveBeenCalledWith({ rodzaj: 'projekt', id: 'p2' });
@@ -53,7 +53,7 @@ describe('ekran „Recently deleted” (C3, BR-DAN-008)', () => {
 
   test('pusty kosz: zdanie „Nothing here…” bez listy', () => {
     render(<Kosz stan={kosz({ pozycje: [] })} t={t} naPrzywroc={jest.fn()} />);
-    expect(screen.getByText('Nothing here. Deleted projects, parts and counters stay here for 30 days.')).toBeTruthy();
+    expect(screen.getByText('Nothing here. Deleted projects, parts, counters, patterns, yarn and needles stay here for 30 days.')).toBeTruthy();
     expect(screen.queryByTestId('kosz-przywroc')).toBeNull();
   });
 

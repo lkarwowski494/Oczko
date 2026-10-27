@@ -196,7 +196,7 @@ export function PrzegladarkaWzoru(p: PropsPrzegladarki): React.ReactElement {
           <Pozycja st={st} tekst={t('wzor.obroc')} id="wzor-obroc" onPress={() => { ustawMenu('brak'); p.naObroc(); }} />
           <Pozycja st={st} tekst={t('wzor.usun')} id="wzor-usun" niszczaca onPress={() => {
             ustawMenu('brak');
-            p.potwierdz(t('wzor.usun_tytul', { nazwa: s.nazwa }), t('usun.wzor_opis', { data: p.terminKosza ?? '' }), t('wzor.usun_potwierdz'), p.naUsun);
+            p.potwierdz(t('wzor.usun_tytul', { nazwa: s.nazwa }), t('wzor.usun_opis', { data: p.terminKosza ?? '' }), t('wzor.usun_potwierdz'), p.naUsun);
           }} />
         </Menu>
       )}

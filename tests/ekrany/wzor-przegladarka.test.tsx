@@ -101,7 +101,7 @@ test('W9b, P-218 (3): przy ≥ 2 wzorach tytuł przełącza (menu z ✓ przy bie
   expect(w.naPrzelacz).toHaveBeenCalledWith('w2');
 });
 
-test('menu •••: obrót strony, usunięcie do kosza po potwierdzeniu (P-229, tekst roboczy usun.wzor_opis)', () => {
+test('menu •••: obrót strony, usunięcie do kosza po potwierdzeniu (P-229, P-275: tekst 04 wzor.usun_opis z terminem)', () => {
   const w = wywolania();
   render(<PrzegladarkaWzoru stan={stan()} t={t} widok={widok} {...w} terminKosza="Nov 25" />);
   fireEvent.press(screen.getByTestId('wzor-menu'));
@@ -109,7 +109,7 @@ test('menu •••: obrót strony, usunięcie do kosza po potwierdzeniu (P-229
   expect(w.naObroc).toHaveBeenCalled();
   fireEvent.press(screen.getByTestId('wzor-menu'));
   fireEvent.press(screen.getByTestId('wzor-usun'));
-  expect(w.potwierdz).toHaveBeenCalledWith('Delete “Harbor chart”?', expect.stringContaining('until Nov 25'), 'Delete pattern', expect.any(Function));
+  expect(w.potwierdz).toHaveBeenCalledWith('Delete “Harbor chart”?', 'You can restore it with its highlights and drawings from Recently deleted on the Projects list until Nov 25. Row notes and counters stay.', 'Delete pattern', expect.any(Function));
   expect(w.naUsun).toHaveBeenCalled();
 });
 
