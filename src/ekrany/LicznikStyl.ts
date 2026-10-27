@@ -7,7 +7,8 @@ export function style(k: Kolory) {
   return StyleSheet.create({
     ekran: { flex: 1, backgroundColor: k.papier },
     pasek: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: odstep.l, minHeight: rozmiary.minimum },
-    paskaPrawa: { flexDirection: 'row', gap: odstep.s },
+    paskaPrawa: { flexDirection: 'row', gap: odstep.s, flexShrink: 0 }, // ikony zostają w pasku przy AX5 (makieta fix-8 `.nav .ikony`, P-287)
+    navLink: { flexShrink: 1, alignItems: 'flex-start' }, // „‹ Projects” zawija się zamiast wypychać ikony
     ikona: { minWidth: rozmiary.minimum, minHeight: rozmiary.minimum, alignItems: 'center', justifyContent: 'center' },
     ikonaTekst: { ...typografia.instrukcja, color: k.grafit },
     blokada: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: odstep.l, backgroundColor: k.papierGrupa, minHeight: rozmiary.minimum },

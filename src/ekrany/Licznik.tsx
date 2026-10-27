@@ -93,23 +93,23 @@ export function Licznik(p: PropsLicznika): React.ReactElement {
     <View style={st.ekran} onMagicTap={() => void plus()}>{/* Magic Tap = +1, ta sama ścieżka co przycisk (design-spec:88, P-284) */}
       <View style={st.pasek}>
         {p.naProjekty ? (
-          <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.tytul')} onPress={p.naProjekty} style={st.ikona} testID="nav-projekty">
+          <Pressable accessibilityRole="button" accessibilityLabel={t('projekty.tytul')} onPress={p.naProjekty} style={[st.ikona, st.navLink]} testID="nav-projekty">
             <Text style={[st.tresc, st.link]}>{`‹ ${t('projekty.tytul')}`}</Text>
           </Pressable>
         ) : <View />}
-        <View style={st.paskaPrawa}>
+        <View style={st.paskaPrawa} testID="licznik-ikony">
           {p.stoper}
           {p.naWzor && (
             <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.wzor_a11y')} onPress={p.naWzor} style={st.ikona} testID="licznik-wzor">
-              <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>▤</Text>
+              <Text style={st.ikonaTekst} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>▤</Text>
             </Pressable>
           )}
           <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.historia')} onPress={p.naHistorie} style={st.ikona} testID="licznik-historia">
-            <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>◷</Text>
+            <Text style={st.ikonaTekst} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>◷</Text>
           </Pressable>
           {s.projekt !== null && (
             <Pressable accessibilityRole="button" accessibilityLabel={t('licznik.menu_a11y')} onPress={p.naMenu} style={st.ikona} testID="licznik-menu">
-              <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>•••</Text>
+              <Text style={st.ikonaTekst} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>•••</Text>
             </Pressable>
           )}
         </View>

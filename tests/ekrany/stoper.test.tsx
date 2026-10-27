@@ -57,3 +57,8 @@ describe('Stoper', () => {
     expect([w.naInnyPotwierdz.mock.calls.length, w.naInnyAnuluj.mock.calls.length]).toEqual([1, 1]);
   });
 });
+
+test('P-287 (30): ikona i kapsuła stopera w pasku najwyżej ×1,8 przy dużym tekście (makieta fix-8 `.nav svg`)', () => {
+  pokaz({ rodzaj: 'brak' });
+  expect(screen.getByText('⏱', { includeHiddenElements: true }).props.maxFontSizeMultiplier).toBe(1.8);
+});

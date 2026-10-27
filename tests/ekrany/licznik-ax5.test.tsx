@@ -53,3 +53,15 @@ test('P-277: krój tytułowy (+1, nazwa części, „Now knitting”) najwyżej 
   expect(screen.getByTestId('licznik-teraz-rzad').props.maxFontSizeMultiplier).toBe(1.8);
   expect(screen.getByTestId('licznik-wartosc').props.maxFontSizeMultiplier).toBe(1.3);
 });
+
+// P-287 (30), przebieg 126: przy AX5 menu ••• (`licznik-menu`) wypadało z paska — link „‹ Projects” rósł ×3,571 i wypychał ikony.
+// Makieta fix-8 (`.nav`): grupa ikon nie kurczy się (pola 44 pt, ikona ×1,8), link może się zawijać.
+test('pasek przy AX5: ikony ◷ i ••• najwyżej ×1,8, grupa ikon flexShrink 0, link „Projects” kurczy się', () => {
+  skala(3.571);
+  render(<Licznik stan={stanLicznika({ projekt: 'Harbor', czesc: 'Back', skonczone: 1, dziergany: 2 })} t={t} oglos={jest.fn()} haptyka={atrapaHaptyki()} {...wywolaniaLicznika()} naProjekty={() => undefined} />);
+  expect(screen.getByText('◷', { includeHiddenElements: true }).props.maxFontSizeMultiplier).toBe(1.8);
+  expect(screen.getByText('•••', { includeHiddenElements: true }).props.maxFontSizeMultiplier).toBe(1.8);
+  expect(screen.getByTestId('licznik-ikony')).toHaveStyle({ flexShrink: 0 });
+  expect(screen.getByTestId('licznik-ikony')).toContainElement(screen.getByTestId('licznik-menu'));
+  expect(screen.getByTestId('nav-projekty')).toHaveStyle({ flexShrink: 1 });
+});
