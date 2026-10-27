@@ -21,6 +21,11 @@ for (const [m, k] of Object.entries(motywy)) {
   p('ołówek / arkusz', 'olowek', 'arkusz');
   p('wybrany przełącznik: obrys / arkusz (element, 3:1)', 'przyciskObrys', 'arkusz', 3);
   p('wybrany przełącznik: tekst / tło', 'przyciskTekst', 'przyciskTlo');
+  // Przycisk niszczący (fix-8, P-268): tło = `blad`, tekst = `papier`; tło jako element do arkusza 3:1.
+  if (k.przyciskNiszczacyTlo) {
+    p('przycisk niszczący: tekst / tło', 'przyciskNiszczacyTekst', 'przyciskNiszczacyTlo');
+    p('przycisk niszczący: tło / arkusz (element, 3:1)', 'przyciskNiszczacyTlo', 'arkusz', 3);
+  }
 }
 // Znacznik wzoru: stałe kolory na stronie dokumentu (NZ-08-P2-04).
 const w = t.wzor;

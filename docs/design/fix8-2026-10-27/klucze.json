@@ -1,0 +1,21 @@
+{
+  "zrodlo": "Rola 04, fix-8 (P-243 S2a, P-209, P-268). Teksty ostateczne zamiast roboczych tekstów 08 (wzór i włóczka/drut w koszu) oraz opis kosza, który po P-209 i P-243 obejmuje też wzory, włóczkę i druty. Nakłada 08 ręcznie w src/i18n/slowniki/en.json i en.kontekst.json (zastąpienie istniejących wartości; 04 nie zna wartości roboczych — kwarantanna). Placeholdery: {{data}} = usunieto_ms + KOSZ_DNI, krótka data regionu (jak usun.projekt_opis); {{projekt}} = projekt, do którego wzór wróci.",
+  "en": {
+    "wzor.usun_opis": "You can restore it with its highlights and drawings from Recently deleted on the Projects list until {{data}}. Row notes and counters stay.",
+    "kosz.wzor": "Pattern in {{projekt}} · until {{data}}",
+    "kosz.wloczka": "Yarn · until {{data}}",
+    "kosz.narzedzie": "Needles or hook · until {{data}}",
+    "kosz.opis_one": "Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} day. Then they’re deleted for good.",
+    "kosz.opis_other": "Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} days. Then they’re deleted for good.",
+    "kosz.pusto_one": "Nothing here. Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} day.",
+    "kosz.pusto_other": "Nothing here. Deleted projects, parts, counters, patterns, yarn and needles stay here for {{count}} days."
+  },
+  "kontekst": {
+    "wzor.usun_opis": "Wzór (F-24…F-28; P-229, P-243 S2a): treść alertu potwierdzenia usunięcia wzoru; wzór idzie do kosza na KOSZ_DNI z zakreśleniami i rysunkami; notatki rzędów należą do licznika i zostają. „Recently deleted” i „Projects” jak kosz.tytul i projekty.tytul. {{data}} = ostatni dzień przywrócenia, krótka data regionu.",
+    "kosz.wzor": "Podpis wiersza wzoru w koszu (P-243 S2a); {{projekt}} = projekt, do którego wzór wróci; {{data}} jak w kosz.projekt. Wzór pokazany tylko, gdy jego projekt nie jest w koszu (jak część).",
+    "kosz.wloczka": "Podpis wiersza włóczki w koszu (P-209); {{data}} jak w kosz.projekt. „Yarn” jak nazwa zapasu włóczki.",
+    "kosz.narzedzie": "Podpis wiersza drutu albo szydełka w koszu (P-209); {{data}} jak w kosz.projekt. „Needles or hook” jak tytuł formularza formularz.narzedzie_tytul.",
+    "kosz.opis": "Zdanie pod tytułem kosza; {{count}} = KOSZ_DNI (dziś 30). Wymienia wszystko, co trafia do kosza (BR-DAN-008, P-209, P-243); zdjęcia nie trafiają (bez kosza).",
+    "kosz.pusto": "Pusty ekran kosza; {{count}} = KOSZ_DNI (dziś 30); lista rodzajów jak w kosz.opis."
+  }
+}
