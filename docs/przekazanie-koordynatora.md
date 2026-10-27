@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 04:00 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-261 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 05:47 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-262 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -13,7 +13,7 @@ Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, tak�
 ## Stan (2026-10-26 21:05 UTC)
 - **Zakres 1.0:** pełne MVP z wzorami (F) i iCloud (G), P-217. Plan: `docs/plan-app-store.md` (do odświeżenia pod P-217).
 - **Partia 5:** STOP E2 przyjęty (P-253): przebieg 114 zielony, bramka 9/9. Czerwone informacyjne zdiagnozowane przez 07 (P-254, P-255): większość to scenariusze (F07-26 lokalnie u 07), 3 błędy kodu P1 → 08 partii 7.
-- **Kolejka pushy w oknie maszyn (P-255; każdy push kodu/`e2e/**` anuluje bieżący przebieg):** (1) partia 7 natywne — ZROBIONE (przebieg 115 zielony, P-256) → (2) partia 6 natywne + P-252 [sygnał 01:12 UTC; push 45c09b2 → przebieg 116 czerwony (kompilacja Swift, runOnQueue), naprawa 94a7657 → przebieg 117: build+swift-test zielone, bramka 01 czerwona (DeviceUnreachable; P-257 bez ponowienia)] → (3) poprawki partii 7 1b44f4b, przebieg 118: build+swift zielone, 01 zielony, 03 czerwony (drzewo widoków nieczytelne; P-258) → (4) 07 F07-26 z `[e2e-pelny]` wypchnięte 03:55 UTC (2bc9dfc, przebieg 119 w toku) → (5) partia 6 P-259 (orientacja w react-native-screens, 66e0d5a na kopii) — push po końcu 119, potem przebieg „po” → (6) koordynator: hook pre-push P-260 (lokalna gałąź `p260-pre-push`, b5b4e6c; jeśli sesja koordynatora zginęła — odtworzyć z opisu P-260) → (3) partia 7 poprawki P1 → (4) 07 F07-26 z `[e2e-pelny]` (pełny przebieg). Koordynator daje sygnał każdemu kolejnemu.
+- **Kolejka pushy w oknie maszyn (P-255, P-262; każdy push kodu/`e2e/**` anuluje bieżący przebieg):** zrobione: 114 (partia 5), 115 (partia 7 natywne), 117–118 (partia 6 natywne, poprawki P-255), 119 (07 F07-26, `[e2e-pelny]`, zielony, bramka 9/9). Teraz [sygnał 05:46 UTC]: partia 6 P-259 + P-261 (W1–W3 w CI) → zaraz po niej 07 F07-27–29 z `[e2e-pelny]` (jeden wspólny pełny przebieg) → partia 7 poprawki P-262 (Save pod klawiaturą nadal, liczba w poziomie, stoper) → koordynator hook P-260 (lokalna gałąź `p260-pre-push`, b5b4e6c). Okno maszyn do ok. 14:00 UTC.
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 
