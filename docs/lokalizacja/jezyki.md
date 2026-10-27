@@ -15,5 +15,6 @@ Kolejność przeglądów rodzimych (przesiew 02, `docs/monetyzacja.md` „Przesi
 
 Kontrole polityki „szeroka” ((a)–(e)) zostaną rozliczone w E3 i E4; w E0–E1 żaden język nie jest „w wydaniu”.
 Wyjątki: `wyjatki.json` powstaje przy pierwszej uwadze skryptu (E1).
+Słownik terminów dziedziny (glosariusz, P-271, 2026-10-27): `slownik-terminow.json` / `.md`, kontrola `narzedzia/slownik.mjs`; stan `stan-slownik.md`. Przekład E3 bierze termin zalecany języka docelowego, nie wybiera słowa sam.
 
 Stan na STOP E1: słownik źródłowy `en` (9 kluczy), `supportedLocales` = `CFBundleLocalizations` = `locales` = `en`; pozostałe języki dochodzą z falami E3. `pt` = Portugalia, `pt-BR` = Brazylia (nakładka na `pt`), jak w Treningu (P-076).
