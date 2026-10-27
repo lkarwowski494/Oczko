@@ -2,7 +2,7 @@
 
 Aktualizuje koordynator po każdej zmianie stanu (P-244). Nowy koordynator, także na innym koncie Claude, zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` (od P-217) i `docs/sztafeta.md`, nie od pamięci rozmowy.
 
-**Ostatnia aktualizacja:** 2026-10-27 07:28 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-265 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
+**Ostatnia aktualizacja:** 2026-10-27 07:30 UTC · gałąź robocza `claude/jolly-thompson-paz6d8` · ostatnia decyzja P-265 · **koordynator: session_01VjtVbMx8DYWkBfH4pvaCXK (od 21:03 UTC, P-251)**; role powiadomione o nowym adresacie
 
 ## Jak przejąć na innym koncie
 1. Sesje i zaplanowane zadania poprzedniego konta nie są widoczne z nowego konta. Pracę przejmujesz z repozytorium, nie z sesji.
@@ -17,7 +17,7 @@ Sesje ról i zaplanowane zadania konta 1 **nie działają** na koncie 2: role tr
 - **Fundament partii 6/7:** L1–L3c nałożone (P-236). Panele E2E poza buildem wydania (P-238, P-240).
 - **Strona:** `apps4brew.com/oczko/` opublikowana, adres polityki przełączony (P-239).
 - **Okno maszyn macOS** do ok. 14:00 UTC (P-187). Każdy push w ścieżkach `jakosc-ios.yml` (kod, `e2e/**`, `package.json`, `modules/**`, workflow) anuluje bieżący przebieg; pełny pakiet tylko z `[e2e-pelny]` w treści HEAD.
-- **Przebieg 121** (run 40457386369, bd60073, pełny): **zakończony 07:20 UTC — build, swift-test, e2e iPhone 1–3 i iPad success**; `eksperymenty-wzoru` ❌ informacyjnie (P-265). Szczegóły scenariuszy (bramka, kaskada orientacji, 36) w raporcie 07 `E2-przebieg-121.md`. Sygnał dla kroku 1 kolejki dany 07:27 UTC.
+- **Przebieg 121** (run 40457386369, bd60073, pełny): **zakończony 07:20 UTC — build, swift-test, e2e iPhone 1–3 i iPad success**; `eksperymenty-wzoru` ❌ informacyjnie (P-265). Szczegóły scenariuszy (bramka, kaskada orientacji, 36) w raporcie 07 `E2-przebieg-121.md`. Sygnał dla kroku 1 kolejki dany 07:27 UTC. **Krok 1 wypchnięty:** 8c876ad `[e2e-pelny]` (07:28), przebieg 122 (40467271474), koniec ok. 09:00 UTC; potem krok 2.
 - **Kolejka pushy (po kolei, każdy po końcu poprzedniego przebiegu):**
   1. Partia 7 — poprawki P-262 (a) Save pod klawiaturą, (b) liczba w poziomie, (c) stoper po pierwszym +1: commity do cf5c83b z `claude/kopia-partia-7` (próbny rebase `proba-p262` b28a1d3, verify 2537/2537), head z `[e2e-pelny]` (P-263). Dowód (a): odstęp paska w hierarchii > 0; jeśli 0 → STOP z opcjami (1) InputAccessoryView „Done”, (2) ScrollView z `automaticallyAdjustKeyboardInsets`.
   2. Partia 6 7af7ef2 (poprawka zadania `eksperymenty-wzoru`, tylko workflow, bez znacznika) i zaraz partia 7 e996bae + 339a85b (błąd pól NULL w odbiorze iCloud + XCTest wektorów) z `[e2e-pelny]` (P-264, P-265).
