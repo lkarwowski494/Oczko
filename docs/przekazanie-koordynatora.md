@@ -19,7 +19,9 @@ Praca wstrzymana na polecenie właściciela. Zaplanowane zadania koordynatora Oc
 | 3 | 08 partia 7 | `claude/kopia-partia-7-noc` (146cc64) | iCloud TS: poczekalnia `nowsza_wersja`, „Update Oczko…”, „Syncing…” | `[e2e-pelny]` |
 Każdy: `git pull --rebase origin claude/jolly-thompson-paz6d8`, generatory, `env -u NODE_PATH npm run verify` (hook P-260 i tak uruchamia), push na sygnał koordynatora.
 
-**Sesje (konto 2):** koordynator session_01T66VBzy9qEVyo8a5aMd7r1; 08 p6 session_01T66VByADnL2T64RBV2HPqF; 08 p7 session_01T66VBwDdcBHrNrCt25ZNWW; 07 session_01T66VBvUS4tz9Ei2heewJzY. Zarchiwizowane: 04, 05, 09 (praca zakończona). 10 — nieuruchomiona.
+**Wznowienie 2026-10-30 (P-292):** koordynator session_01T66VBzF5WujVAEY4E1VVLW; 08 partia 6 (push 1) session_01T66VBxnanDHvraKAoVNbpX (sonnet, z `claude/kopia-partia-6`, polecenie `oczko-warsztat` 8a800e0 `koordynacja/role-2026-10-30/`). Ponowienie e2e 128 nieudane (artefakt wygasł) — push 1 pushuje po zielonym verify. Stare sesje niżej: zarchiwizowane, nic do nich nie wysyłać.
+
+**Sesje (konto 2, zarchiwizowane):** koordynator session_01T66VBzy9qEVyo8a5aMd7r1; 08 p6 session_01T66VByADnL2T64RBV2HPqF; 08 p7 session_01T66VBwDdcBHrNrCt25ZNWW; 07 session_01T66VBvUS4tz9Ei2heewJzY. Zarchiwizowane: 04, 05, 09 (praca zakończona). 10 — nieuruchomiona.
 
 **Otwarte (bez okna maszyn):** pusta strona 2 przy konwersji Word (decyzja po zrzucie scen. 53, P-282 (a)); audyt 04 (lista zbiorcza w raporcie E2 partii 6 `oczko-warsztat` a9eefeb i P-275–P-284); 06 — D3/D4 słownika (P-281); plan TestFlight `docs/jakosc/testflight-na-urzadzeniu.md` (P-290: build TF z `ICLOUD_W_1_0 = true`).
 
