@@ -19,7 +19,7 @@ Stan wyjściowy: `docs/przekazanie-koordynatora.md` (kolejka okna maszyn, kopie 
 | 1.4 | 04: teksty kosza wzoru (P-243 S2a), rodzaj przycisku `niszczacy` i alternatywy dla scen. 30 (P-268) | 04 | nic | **tak** |
 | 1.5 | 07: kolejne F07 z raportów, pakiet podstawowy (36 po zielonym), plan testów na urządzeniu U1–U8 (P-261, P-267 U5) | 07 | przebiegi | po 0.1 |
 | 1.6 | 08: podział `Licznik.tsx` (20 090 / 20 480 B) przed kolejną zmianą licznika | 08 p7 | 0.2 | tak, na kopii |
-| 1.7 | 05 + 08: N12-12 `integrity_check` kopii przed udostępnieniem (P-197) — sprawdzić, czy zrobione | 08 | nic | **tak** — sprawdzenie |
+| 1.7 | ~~05 + 08: N12-12 `integrity_check`~~ **zrobione** (`src/dane/archiwum.ts:88`, test 06c9ff8; P-299) | 08 | nic | **tak** — sprawdzenie |
 
 ## Etap 2: audyty i treści (ok. 29.10–1.11)
 | # | Zadanie | Kto | Zależy od |
