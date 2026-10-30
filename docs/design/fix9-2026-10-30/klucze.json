@@ -1,5 +1,5 @@
 {
- "zrodlo": "Rola 04, audyt 2.1 (2026-10-30; P-302, P-304): jednostka limitu „crafting day” i teksty neutralne dla drutów i szydełka. Zastępuje istniejące wartości w src/i18n/slowniki/en.json (08 nakłada ręcznie, z testami; wartości roboczych 08 w kwarantannie nie czytam). Nie dotyczy: probka.kategoria, probka.kategoria_otwarta (merytoryka 06, P-304 (3): kategoria tylko dla drutów w 1.0). Kontekst en.kontekst.json: bez zmian poza dopiskiem przy limit.arkusz_dni i licznik.teraz w polu `kontekst` niżej. Rola 09: wykrywacz słownika (pojęcie robotka) wymaga dopisania „crafting day(s)”, „working row”.",
+ "zrodlo": "Rola 04, audyt 2.1 (2026-10-30; P-302, P-304): jednostka limitu „crafting day” i teksty neutralne dla drutów i szydełka. Zastępuje istniejące wartości w src/i18n/slowniki/en.json (08 nakłada ręcznie, z testami; wartości roboczych 08 w kwarantannie nie czytam). Nie dotyczy: probka.kategoria, probka.kategoria_otwarta (merytoryka 06, P-304 (3): kategoria tylko dla drutów w 1.0). Kontekst en.kontekst.json: bez zmian poza dopiskiem przy limit.arkusz_dni i licznik.teraz w polu `kontekst` niżej. Rola 09: wykrywacz słownika (pojęcie robotka) wymaga dopisania „crafting day(s)”, „working row”. Dopisek 2026-10-30 15:20: wzor.film_usun_opis (korekta tekstu roboczego 08); wzor.film_menu, wzor.film_usun_tytul i formularz.nazwa_czesc_n zaakceptowane bez zmian.",
  "en": {
   "licznik.teraz": "Now working row {{n}}",
   "licznik.ostatni_darmowy": "1 free crafting day left in {{miesiac}}",
@@ -28,10 +28,12 @@
   "zdjecia.brak_aparatu_opis": "To take a photo of your work or a yarn label, allow camera access in Settings. You can still choose a photo from your library.",
   "karta.czas": "crafting time",
   "icloud.konflikt_opis": "{{lokalna}} rows here, {{zdalna}} from {{urzadzenie}}. Choose the one that matches your work.",
-  "icloud.konflikt_wybor_opis": "Pick the one that matches your work. The other stays in the history."
+  "icloud.konflikt_wybor_opis": "Pick the one that matches your work. The other stays in the history.",
+  "wzor.film_usun_opis": "The link and its name are removed from this project. The video itself isn’t affected."
  },
  "kontekst": {
   "limit.arkusz_dni": "Definicja „crafting day” (P-302): dzień kalendarzowy (strefa urządzenia), w którym użytkownik policzył pierwszy rząd; neutralna nazwa dla drutów i szydełka (tłumaczenie: słowo wspólne języka z słownika `robotka`, w etykietach do 12 znaków słowo szersze, P-301).",
-  "licznik.teraz": "Pod tytułem części: rząd, nad którym się pracuje (neutralnie dla drutów i szydełka, P-304); „working row” to termin obu technik."
+  "licznik.teraz": "Pod tytułem części: rząd, nad którym się pracuje (neutralnie dla drutów i szydełka, P-304); „working row” to termin obu technik.",
+  "wzor.film_usun_opis": "Potwierdzenie usunięcia linku do filmu (04-studio-projektowe-006): znika link i jego nazwa (Oczko trzyma tylko je, P-218 (4)); nie obiecuje, że da się je przywrócić, bo adres trzeba wpisać ponownie. Zastępuje tekst roboczy 08 „…You can add it again any time.” (04, 2026-10-30)."
  }
 }
