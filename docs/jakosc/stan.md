@@ -2,7 +2,10 @@
 - **Werdykt GOTOWE Z ZASTRZEŻENIAMI** dla kodu fb5d819 (= kod przebiegu iOS 131, 258a026; różnica tylko `docs/`). Raport: `oczko-warsztat` `07-jakosc/2026-10-30-audyt/07-jakosc-2026-10-30.md` (`sprawdz-raport` OK). `verify` kod 0, 236 zestawów, 2645/2645; 4 z 5 mutantów wykryte.
 - Znaleziska P2 (brak P0/P1): 07-jakosc-001 (testy „liczność” zależne od kolejności, `--randomize` czerwone), 07-jakosc-002 (przeżył mutant strażnika nazwy `-2` w `src/dane/archiwum.ts`), 07-jakosc-003 (inwentarz kryteriów bez 57 scenariuszy MVP z BRD).
 - Zastrzeżenia: pełny pakiet `[e2e-pelny]` na kodzie kandydata, lista TestFlight (TT/U) i TT-07 (warunek wysyłki), Apple Watch; raporty audytu 04/05/08/12 z tego SHA nie istnieją.
-- Następny krok: decyzja koordynatora o naprawie 001–003 (`07-jakosc --tryb fix`), potem reaudit tylko tych ID.
+- **Po P-305 (2026-10-30 ~15:30 UTC):** 001 (1a08f2b: testy liczności niezależne od kolejności, `--randomize` zielone), 002 (test dwóch eksportów w jeden dzień), 003 (inwentarz: `docs/jakosc/e0/kryteria-uzupelnienie.json` + `docs/jakosc/narzedzia/kompletnosc-kryteriow.mjs` w `tests/jakosc/kompletnosc-kryteriow.test.ts`) — wszystko na roboczej, verify 2655/2655. Dowody: `oczko-warsztat` `07-jakosc/2026-10-30-audyt/fix-001-002-ciemny.md`.
+- **Ciemny motyw (04-002):** gałąź `claude/kopia-07-2026-10-30` b669e08 (krok „Symulator”, znacznik `[e2e-ciemny]`, test Linux) — na roboczą po końcu #132 i sygnale koordynatora (`.github/**` uruchamia CI iOS).
+- **Przegląd 08 (1e92c8d, kopia -b 3f56a14):** scenariusze 01, 03, 05, 06, 18 i `e2e/README.md` zgodne z `en.json`; wynik wysłany do koordynatora.
+- **Następny krok (noc, sygnał koordynatora):** raport E2 przebiegu #132 (bramka, scen. 15, 30, 35, 53, 44–52) i aneks werdyktu; potem wypchnięcie kopii ciemnego motywu. Jedna sesja audytu = jeden werdykt; reaudit tylko 001–003 jest zrobiony testami (tryb fix).
 
 # Stan roli 07-jakosc — fix-3 NZ-P5-07 (2026-10-26)
 ## Przejęcie (P-244: inna sesja, także na innym koncie, startuje tylko z tego pliku) — stan 2026-10-27 ~07:45 UTC
