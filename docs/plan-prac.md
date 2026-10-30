@@ -25,7 +25,7 @@ Stan wyjściowy: `docs/przekazanie-koordynatora.md` (kolejka okna maszyn, kopie 
 | # | Zadanie | Kto | Zależy od |
 |---|---|---|---|
 | 2.1 | Audyt 04 (wygląd zgodny z `docs/design/`, iPad, poziomo, AX5, ciemny) | 04 | koniec etapu 1 |
-| 2.2 | 55 kluczy bez wpisu w `en.kontekst.json` (664/719) uzupełnić, potem zamrożenie tekstów en | 08 + 09 | 2.1 (teksty po audycie) |
+| 2.2 | ~~55 kluczy bez wpisu w `en.kontekst.json`~~ **zrobione** (2026-10-30, 08 p7: `npm run i18n` 669/669 z kontekstem, eda6dcc); zostaje zamrożenie tekstów en po 2.1 | 08 + 09 | 2.1 (teksty po audycie) |
 | 2.3 | Przekład 35 języków przez API z kontekstem (≤ 6 USD bez pytania, P-144), drugi przegląd AI, przegląd zastępczy (D-027) | 09 | 2.2 |
 | 2.4 | Audyt 07 (strategia, definicja ukończenia, pokrycie BR) | 07 | etap 1 |
 | 2.5 | Metadane, zrzuty (iPhone, iPad), notatka do recenzji, strona prywatności | 10 | 2.1, 2.3 dla lokalizacji |
