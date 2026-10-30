@@ -24,8 +24,8 @@ Słownik terminów dziewiarskich i szydełkowych przed przekładem interfejsu (l
 ## Decyzje dla koordynatora (P-087)
 - **D1 „robótka” (knitting day, Keep knitting) w 17 językach bez słowa wspólnego** (de, nl, da, nb, sv, fi, cs, sk, sl, hr, sr, et, lv, lt, hu, es, vi): (a) para „druty i szydełko”, jak w słowniku teraz — wierne, ale długie; (b) samo słowo drutowe, jak źródło en — krótkie, wyklucza szydełkujących; (c) słowo szersze (de Handarbeit) — obejmuje też szycie. Rekomendacja: (a) w nazwach i opisach, (b) dopuszczalne w etykietach ≤ 12 znaków jako wyjątek z wpisem; brzmienie zatwierdza 04 w audycie.
 - **D2 it „ferro” vs „riga”** (rząd w liczniku wspólnym dla obu rzemiosł): rekomendacja „riga” (ferro = też drut); słownik ma teraz „ferro” ze źródła.
-- **D3 nazwy kategorii grubości CYC w 33 językach** (lace…jumbo; CYC es/fr ma kalki „Liston”, „Peso”): do roli 06 — tłumaczyć czy zostawić numer kategorii z nazwą en.
-- **D4 pl: zakańczanie vs zamykanie, 4 nazwy ujmowania, „oczko ścisłe”/„półsłupek zwykły”** — do roli 06 (nazwa w atlasie i interfejsie).
+- **D3 nazwy kategorii grubości CYC — ROZSTRZYGNIĘTE 2026-10-30 (P-298, wariant c, rola 06):** numer 0–7 zawsze; nazwa lokalna tylko ze źródła szczebla ≤ 3 — es, es-419, fr (tabele CYC, sekcja `kategorie_cyc` w słowniku); pozostałe języki: numer + nazwa en. Wyjątek nazwany: es kategoria 0 = „Lace” (CYC-ES: „Liston”, niepewne znaczenie, do przeglądu rodzimego). Wpływ na klucze: 08 i 09.
+- **D4 pl — ROZSTRZYGNIĘTE 2026-10-30 (rola 06, hierarchia źródeł, TRE-05):** bind off = „zakańczanie” (warianty „zamykanie”, „oczka zamykające”); ujmowanie = „odejmowanie” (symetria z „dodawanie”, tie-break nazwany; 4 inne nazwy jako warianty); sc = „półsłupek zwykły” („oczko ścisłe” wieloznaczne nawet w jednym źródle). Szczegóły w uwagach pojęć i w `oczko-warsztat/06-tresci/2026-10-30-fix-p281/`.
 
 ## Polecenia dla innych ról (nie wykonane tu, P-272)
 - 07: strażnik w `tests/` uruchamiający `node docs/lokalizacja/narzedzia/slownik.mjs --slowniki src/i18n/slowniki` po każdej fali E3 oraz samą kontrolę (`… slownik.mjs`, kod 0) w `verify`.

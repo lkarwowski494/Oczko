@@ -667,7 +667,6 @@ Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 704, średnia 392, niska 4
 | `nabieranie_oczek` | sl | `\bpobira` | pobirati zanke = podnosić spuszczone oczka (Fran: „pobirati zanke na nogavicah”) |
 | `nabieranie_oczek` | zh-Hant | `钩\|针\|编\|织\|线` | znaki uproszczone (Chiny kontynentalne); zh-Hant (TW/HK) pisze 鉤 針 編 織 線 |
 | `nabieranie_oczek` | zh-Hant | `起圈\|上機` | NAER cast on = 起圈，針織上機 (maszyna) |
-| `zamykanie_oczek` | pl | `zamyk` | niejednoznaczne: u S-BAR ujmowanie, w szydełku oczko zamykające; używać „zakańczanie” [decyzja nazwy: 06] |
 | `zamykanie_oczek` | da | `\bhæft` | hæfte ender = chowanie nitek (S-MAY-DA „Hæft ender”), nie zamykanie oczek |
 | `zamykanie_oczek` | de | `\bschließ` | schließen = zszywanie szwów (S-LG-DE „Schulternähte schließen”), nie zamykanie oczek |
 | `zamykanie_oczek` | fr | `\bfermer (?:les\|toutes les) mailles\b` | kalka z pl „zamykanie oczek” [DO SPRAWDZENIA]; w szydełku „fermées ensemble” (S-BDF-2525) jest poprawne — to inne pojęcie |

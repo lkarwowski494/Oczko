@@ -17626,12 +17626,6 @@
     },
     "pl": {
      "zalecany": "zakańczanie oczek",
-     "zakazane": [
-      {
-       "wzorzec": "zamyk",
-       "powod": "niejednoznaczne: u S-BAR ujmowanie, w szydełku oczko zamykające; używać „zakańczanie” [decyzja nazwy: 06]"
-      }
-     ],
      "pewnosc": "wysoka",
      "status": "potwierdzony",
      "zrodla": [
@@ -17644,7 +17638,11 @@
        "cytat": "zakańczanie oczek (na prawo / na lewo)"
       }
      ],
-     "uwaga": "S-KD: „oczka zamykające” (zamykanie); „zamykanie” u S-BAR = ujmowanie, a w szydełku „oczko zamykające” = slip stitch — w interfejsie „zakańczanie”"
+     "uwaga": "P-281 D4(1), 2026-10-30, TRE-05 (ten sam szczebel 3, część wspólna i różnica). ZAKAŃCZANIE: S-BAR s. 50 i słowniczek s. 153, S-RM450 s. 9 (oba przekłady). ZAMYKANIE (bind off): S-KD s. 10 „oczka zamykające” (polski oryginał) oraz lekcje producenta po polsku (tytuł „Zamykanie oczek (kończenie robótki)” ze snippetu wyszukiwarki; strona zablokowana 403, niesprawdzone dosłownie — [DO SPRAWDZENIA]). Różnica: „zamykanie” jest wieloznaczne — u S-BAR i w lekcji producenta „Zamykanie (redukowanie) oczek” = ujmowanie, w szydełku „oczko zamykające” = slip stitch. Rozstrzygnięcie: zalecane „zakańczanie” (jednoznaczne, jedno pojęcie = jedna nazwa); „zamykanie oczek” i „oczka zamykające” jako warianty rozpoznawane w szukaniu i glosariuszu, nie w nazwach UI. Zakaz wzorca „zamyk” zdjęty, bo wariant jest w użyciu u dwóch źródeł szczebla 3; kolizję z ujmowaniem pilnuje zakaz w pojęciu ujmowanie.",
+     "warianty": [
+      "zamykanie oczek",
+      "oczka zamykające"
+     ]
     },
     "bg": {
      "zalecany": "закриване на бримки",
@@ -18178,7 +18176,9 @@
      "zalecany": "odejmowanie oczek",
      "warianty": [
       "gubienie oczek",
-      "ujmowanie"
+      "ujmowanie",
+      "spuszczanie oczek",
+      "redukowanie oczek"
      ],
      "zakazane": [
       {
@@ -18198,7 +18198,7 @@
        "cytat": "gubienie oczek (= ujmowanie) (s. 10)"
       }
      ],
-     "uwaga": "4 nazwy w źródłach PL (spuszczanie, zamykanie, gubienie, odejmowanie); wybór nazwy: 06"
+     "uwaga": "P-281 D4(2), 2026-10-30, TRE-05. Nazwy w źródłach szczebla 3: odejmowanie (S-RM450 „od. – odejmij”), gubienie (S-KD s. 10, polski oryginał; też S-BAR s. 84), spuszczanie i zamykanie (S-BAR s. 56–59, słowniczek s. 153), „ujęcia” (S-BAR s. 59: ujęcia podwójne), redukowanie i zamykanie (lekcja producenta po polsku, tytuł ze snippetu, niesprawdzony dosłownie — [DO SPRAWDZENIA]). Brak części wspólnej: pięć nazw, każda w jednym–dwóch źródłach. Zalecane „odejmowanie oczek” rozstrzyga reguła symetrii z pojęciem dodawanie („dodawanie/odejmowanie” w S-RM450 i jako para synonimów w S-KD), nie przewaga źródeł; to zapis wyboru wraz z odrzuconymi (gubienie: tylko jeden polski oryginał; zamykanie: zajęte przez zakańczanie i szydełko). Do przeglądu rodzimego pl."
     },
     "bg": {
      "zalecany": "свиване",
@@ -21572,7 +21572,7 @@
        "cytat": "„o. zamykające (o. ścisłe)” — łuk (s. 14)"
       }
      ],
-     "uwaga": "S-GUZ: „oczko zamykające (ścisłe)”; [nazwa] „oczko zamykające (oz)”"
+     "uwaga": "S-GUZ: „oczko zamykające (ścisłe)”; [nazwa] „oczko zamykające (oz)” P-281 D4(3): ta sama nazwa „oczko zamykające” w drutach (S-KD s. 10) to bind off — w UI zawsze z kontekstem rzemiosła; S-GUZ s. 14 używa „o. ścisłe” jako synonimu tego oczka."
     },
     "bg": {
      "zalecany": "залепена бримка",
@@ -22079,7 +22079,7 @@
        "cytat": "oczko ścisłe (oś) — Double crochet (dc), UK"
       }
      ],
-     "uwaga": "dwie nazwy w źródłach (P-106: podać obie przy jednym ID); tłumacz musi przyjąć znaczenie US ze źródła en, nie UK"
+     "uwaga": "P-281 D4(3), 2026-10-30, TRE-05. Dwie nazwy tego samego ruchu (US sc): „półsłupek zwykły” (S-GUZ s. 3, definicja przez ruchy) i „oczko ścisłe” (S-DRP). Ale „oczko ścisłe” jest wieloznaczne nawet w S-GUZ: legenda s. 14 „o. zamykające (o. ścisłe)” = slip stitch, a w opisie łańcuszka na nawrót (s. 11) „1 o. ścisłe = 1 o. łańcuszka” pasuje do sc; pikotek (s. 10) używa „o. ścisłe wkłute w pierwsze” — mapowanie US w S-GUZ to ocena koordynatora z opisu ruchów (zapis w kopii źródła), niepotwierdzona drugim niezależnym źródłem szczebla ≤ 3. Rozstrzygnięcie: zalecane „półsłupek zwykły” (jedna nazwa = jeden ruch w S-GUZ; „półsłupek nawijany” = hdc); „oczko ścisłe” tylko wariant rozpoznawany, w UI nie używać bez dopisku „(sc)”. Uwaga: „półsłupek” bez przymiotnika w S-DRP oznacza hdc, więc „półsłupek” nigdy samodzielnie. Pewność średnia zostaje; do przeglądu rodzimego pl."
     },
     "bg": {
      "zalecany": "нисък пълнеж",
