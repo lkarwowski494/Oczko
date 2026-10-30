@@ -1,0 +1,48 @@
+# Metadane en — twierdzenia, warunki, otwarte (rola 10, E2, 2026-10-30)
+Pola: `en.store.json` (en-US, en-GB; format EAS Metadata, niczego nie wysyła). `sprawdz-wydanie.mjs metadane en.store.json` → OK, kod 0 (2026-10-30; kopia skryptu z promptu roli, scratchpad). Liczby: nazwa 18 zn., podtytuł 26 zn., tekst promocyjny 160 zn., opis 1730 zn., słowa kluczowe en-US 94 B (en-GB 99 B). Limity: nazwa 30, podtytuł 30, promo 170, opis 4000, słowa 100 B (App Store Connect Help, odczyt 18.10.2026; sprawdź w dniu wysyłki). Brzmienie en nie jest zamrożone: wymaga audytu 04 i kroku 2.2 planu prac (P-297: ryzyko przeróbek nazwane). Przekład 35 języków dopiero po zamrożeniu.
+
+## Twierdzenie → dowód w kontrakcie zakresu / kodzie
+Wszystkie F-ID z `docs/scope-contract.md` (decyzja MVP). „Kod” oznacza ciąg w `src/i18n/slowniki/en.json` (otwarty 2026-10-30). Potwierdzenie działania w buildzie: audyt 07 (2.4) i test na urządzeniu; do tego czasu teksty są szkicem.
+
+| Zdanie w sklepie | Dowód | Uwaga |
+|---|---|---|
+| +1 z wibracją, −1 | F-01, kod `licznik.plus`, `licznik.minus` | — |
+| ekran nie gaśnie | F-10 | test U11 |
+| historia z godziną, cofnięcie | F-02, kod `licznik.historia`, `licznik.cofnij_one` | — |
+| „offers to undo” przy lawinie stuknięć; opcjonalna blokada | F-47 (kod `licznik.baner_seria_one`: „Undo?”), F-03 (`licznik.zablokowany`) | nie piszę „protection” (zgodnie z `docs/wzrost.md`) |
+| otwiera się w ostatnim miejscu, notatka obok licznika | F-49, F-18, F-15 | — |
+| wzór z PDF, Worda, zdjęcia/skanu, strony WWW, link do filmu | F-24, F-55; kod `wzor.skanuj`, „Choose file (PDF or Word)” | **OG-07** (P-218): weryfikacja patentowa w gotowym kodzie (plan-prac, etap 4) — do tego czasu zdania o wzorze i słowa pattern/pdf to warunek |
+| „Share” z innych aplikacji | rozszerzenie „Udostępnij do Oczka” (P-217, ADR-0011), U5 | — |
+| znacznik rzędu na wzorze, zakreślanie palcem, Apple Pencil na iPadzie | F-26, F-56, F-28; kod `wzor.zakreslacz`, `wzor.rysik_podpowiedz` | „Apple Pencil”: znak towarowy Apple użyty opisowo; ryzyko 2.3.7 nisko, rozstrzyga recenzent [OCENA]. Test z Pencil: krok właściciela przy TestFlight |
+| wzór i licznik na jednym ekranie | F-25 | — |
+| części, kilka liczników, powtórzenia, cele | F-14, F-04, F-05, F-08; kod `formularz.powt_tytul`, `formularz.cel_tytul` | — |
+| przypomnienia „every 6th row, 8 times” | F-06; kod `formularz.przyp_opis` | przypomnienie na ekranie licznika, nie powiadomienie |
+| rozmiar drutu/szydełka, próbka, zdjęcia, notatki | F-17, F-16, F-15; kod `formularz.narzedzie_tytul`, `projekt.probka` | — |
+| stoper sesji, kalendarz dni | F-21, F-59 | — |
+| zapas włóczki i narzędzi, kalkulator próbki | F-37, F-38; kod `narzedzia.probka` | — |
+| „Recently deleted” 30 dni | F-33; kod `projekty.kosz` | — |
+| bez konta, reklam i śledzenia; offline | F-36, NFR-PRY-001; `docs/architektura/prywatnosc.md` | — |
+| eksport wszystkiego, import kopii | F-32; kod `ustawienia.eksport`, `ustawienia.import` | — |
+| 5 „knitting days” w miesiącu, Pro znosi limit, praca w toku nie jest przerywana | F-63, `docs/monetyzacja.md` „Opis w sklepie”; kod `oferty.bez_pro`, `limit.arkusz_dni` | „knitting days” jak w aplikacji; E1-4 z `docs/wzrost.md` („5 project days”) pominięta w aplikacji — jeśli 04/02 zmienią, zmienić tu razem |
+| miesięczna, roczna i jednorazowa; odnowienie do anulowania | `docs/monetyzacja.md` (V4); kod `oferty.odnawianie_miesiac` | **bez cen w opisie** (2.3.7: „pricing information”); obowiązek ujawnień 3.1.2 spełnia ekran ofert |
+
+## Celowo nieobecne w tekście bazowym (warunki)
+| Treść | Dlaczego | Wariant po warunku |
+|---|---|---|
+| synchronizacja iCloud | `ICLOUD_W_1_0 = false` (`src/konfiguracja.ts:29`): przełącznik ukryty w buildzie App Store do czasu ZM-06 (test telefon ↔ iPad, P-218 Q5a). F-27 jest MVP, ale w wydaniu zależy od testu | po ZM-06: do „YOUR DATA STAYS YOURS” dopisać: „Optional iCloud sync keeps your projects on your iPhone and iPad.” (+ polityka prywatności i App Privacy, `sklep.md` §4) |
+| Live Activity na ekranie blokady, Apple Watch | F-11, F-12 są MVP, ale `docs/wzrost.md` i P-146 wymagają potwierdzenia przez 07 audit i test; właściciel nie ma zegarka (P-290: „nie sprawdzono”) | po audycie 07: „Count from the Lock Screen and on Apple Watch.” (zegarek bez testu = bez zdania w sklepie, wystarczy opis w notatce) |
+| ceny | 2.3.7 | nigdy w metadanych |
+| „free app”, „trial” | MS-47, 2.3.2 | — |
+| Siri, szacunek czasu, dodawanie/ujmowanie oczek, słownik | F-13, F-22, F-40, F-44: PÓŹNIEJ | wzrost 1.1 |
+| Family Sharing | `FAMILY_SHARING = false` (`src/kompozycja/adresy.ts:10`) do kroku ASC 2 | po kroku 2 i 08 |
+
+## Słowa kluczowe
+`knitting,stitch,tracker,pattern,pdf,yarn,stash,needles,project,tally,gauge,notes,hook,reminder` (en-US 94 B); en-GB dodaje `wool` (99 B). Bez nazwy aplikacji i innych aplikacji; nie powtarzają słów z nazwy i podtytułu (skrypt: bez UWAG). Pochodzą z propozycji `docs/wzrost.md` (P-148 E1-3a), brak własnego badania w tej sesji. Warunek `pattern`, `pdf`: OG-07 (wyżej). Brak słowa „crochet” w słowach, bo jest w podtytule (Apple indeksuje podtytuł).
+
+## „What’s New”
+Pierwsza wersja: pole nie jest dostępne („isn’t available for the first version”, App Store Connect Help, odczyt 18.10.2026), więc `releaseNotes` w pliku ("First release of Oczko.") to zapas na wypadek innego zachowania ASC; nie wgrywać, jeśli pole jest wyszarzone. Dla 1.0.1 i 1.1: szablon z kontraktu roli (lista zmian z `git log`, bez zmyślonych próśb; 2.3.12).
+
+## Otwarte
+1. **[DO USTALENIA] Kategoria** (Lifestyle vs Productivity): propozycja 11 w `docs/wzrost.md`; wybór w ASC przy wpisie (krok właściciela).
+2. **Przegląd native speakera** nie dotyczy en; dla en wystarczy przegląd AI (D-027). Brzmienie tekstów promocyjnych rozstrzyga 04 (głos marki) — zgłoszenie po audycie.
+3. Zrzuty (2.5): po audycie 04. Klasy do wykonania (`ios.supportsTablet = true`, `app.json`): iPhone z Dynamic Island, duży (1320×2868) jako bezpieczny nadzbiór klasy średniej, oraz iPad 13″ (2064×2752); format PNG/JPEG bez przezroczystości (App Store Connect Help, odczyt 18.10.2026; wymagane klasy potwierdzi pierwsza wysyłka [DO USTALENIA]).

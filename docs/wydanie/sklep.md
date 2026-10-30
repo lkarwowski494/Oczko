@@ -107,6 +107,18 @@ Reguły Apple i GitHuba niżej przeczytano 2026-10-26 na surowym tekście stron 
 | Dostępność (Accessibility Nutrition Labels) | nie deklarować przed audytem 04 | moduł roli: deklaracja tylko z dowodem z audytu 04 (wspólne zadania przechodzą) |
 | DSA | §3, krok 10 | — |
 
+### Uzupełnienie E2 (2026-10-30): App Privacy a iCloud, wiek, dostępność
+- **Odczyt źródła 2026-10-30** (developer.apple.com/app-store/app-privacy-details/, surowy tekst): „“Collect” refers to transmitting data off the device in a way that allows you and/or your third-party partners to access it for a period longer than what is necessary to service the transmitted request in real time.” Zdanie przy „Apple frameworks or services, such as MapKit, CloudKit, or App Analytics”: „If you collect data about your app from Apple frameworks or services, you should indicate what data you collect and how you use it. You are not responsible for disclosing data collected by Apple.” Strona nie rozstrzyga wprost prywatnej bazy CloudKit użytkownika.
+- **Decyzja D-M1 (koordynator, P-087), warunkowa wobec ZM-06:**
+  | Opcja | Skutek | Kiedy |
+  |---|---|---|
+  | (a) **Data Not Collected** | zgodne z tym, że twórca nie ma dostępu do prywatnej bazy użytkownika [OCENA; dokumentacja CloudKit o prywatnej bazie do przeczytania przez 10 przed ustawieniem formularza, nie czytana w tej sesji] | build App Store bez widocznego iCloud (ZM-06 niezaliczony) — wtedy dane nie opuszczają urządzenia z wyjątkiem działań użytkownika |
+  | (b) Deklaracja ostrożna: „User Content” (zdjęcia/pliki/inne treści), niepowiązane z tożsamością, bez śledzenia, cel „App Functionality” | pewne wobec recenzji, ale strona sklepu pokazuje „Data Not Linked to You” zamiast „Data Not Collected” (kosztuje zaufanie w niszy prywatności) | przy widocznym iCloud, jeśli (a) nie ma źródła pierwotnego |
+  Rekomendacja: (a) z przeczytaniem dokumentacji CloudKit przy włączeniu iCloud; do tego czasu zasada 3 roli („przy wątpliwości deklarujesz więcej”) przechyla na (b) tylko jeśli iCloud jest w buildzie. Zależy od ZM-06.
+- **Skan stron („Scan pages”) i aparat:** przetwarzane na urządzeniu (inwentarz 05); bez wpisu w App Privacy. Pobranie strony WWW wskazanej przez użytkownika przy imporcie: sieć do tej strony, bez serwera twórcy; nie jest „collect” w rozumieniu powyżej [OCENA].
+- **Wiek:** odpowiedzi jak w tabeli wyżej, a oczekiwany wynik 4+ nadal [DO USTALENIA] do przejścia kwestionariusza przy wpisie przez właściciela (pytanie o nieograniczony dostęp do sieci: import strony WWW pobiera adres wskazany przez użytkownika; czytać pytanie dosłownie przy wpisie i zapisać odpowiedź tu [DO USTALENIA]).
+- **Dostępność:** nadal bez deklaracji; po audycie 04 (2.1) wolno deklarować tylko to, co przejdzie wspólne zadania.
+
 ## 5. Lista przed wysyłką do App Store (szkielet; dowody przy wysyłce)
 1. Build = SHA z werdyktu 07 (brak raportu 07 → nic nie wysyłam). Wersja w `app.json`: dziś `0.1.0`, do zmiany na `1.0.0` (zgłoszenie dla 08, §7). Numer z workflow (D3a).
 2. `sprawdz-wydanie.mjs` z kodem 0:
@@ -120,7 +132,8 @@ Reguły Apple i GitHuba niżej przeczytano 2026-10-26 na surowym tekście stron 
 6. Notatka dla recenzenta (§6) uzupełniona o ścieżki ekranów po przeglądzie zakresu; ≤ 4000 bajtów.
 7. Sposób wydania: ręcznie, bez wydania stopniowego na start (D5a); zgody właściciela w dzienniku.
 
-## 6. Notatka dla App Review (szkic EN, bez ścieżek ekranów — uzupełnię po przeglądzie zakresu)
+## 6. Notatka dla App Review
+**Aktualny tekst (E2, 2026-10-30, 2354 bajty, bez konta demo): `docs/wydanie/metadane/notatka-recenzja.txt`.** Szkic niżej to wersja z 2026-10-26, zachowana jako historia; ścieżki ekranów uzupełnione po przeglądzie zakresu. Do potwierdzenia przez 08 przed wysyłką: zakup dostępny z Ustawień bez wyczerpania limitu (P-206), obecność celu zegarka w buildzie 1.0, brzmienie nazw ekranów.
 ```text
 Purpose: Oczko is a row counter for knitting and crochet projects; all data stays on the device.
 Account: none needed. The app has no sign-in and no server.
