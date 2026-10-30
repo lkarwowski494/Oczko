@@ -13571,7 +13571,7 @@
        "cytat": "para crear diseños abiertos, tipo encaje"
       }
      ],
-     "uwaga": "Nazwa kategorii 0 w języku hiszpańskim niepotwierdzona źródłem z Hiszpanii."
+     "uwaga": "Nazwa kategorii 0 w języku hiszpańskim niepotwierdzona źródłem z Hiszpanii. P-281 D3 (P-298): w nazwach kategorii UI zob. sekcja kategorie_cyc (kategoria 0 es = „Lace”)."
     },
     "es-419": {
      "zalecany": "encaje",
@@ -23651,5 +23651,102 @@
     }
    }
   }
- ]
+ ],
+ "kategorie_cyc": {
+  "decyzja": "P-298 (koordynator wg P-087, 2026-10-30; D3 z P-281): wariant (c). W interfejsie zawsze widoczny numer kategorii 0–7; nazwa lokalna tylko tam, gdzie jest przeczytane źródło ze szczebla ≤ 3 (tu: es i fr z tabeli kategorii CYC, szczebel 1); w pozostałych językach numer + nazwa en. Odrzucone: (a) zawsze numer + nazwa en (wierne CYC, ale nazwa po angielsku także tam, gdzie źródło ma lokalną); (b) nazwy tłumaczone we wszystkich językach (dla 31 języków bez normy CYC i bez źródła szczebla ≤ 3; kalki).",
+  "pozostale": "numer kategorii + nazwa en (lace, super fine, fine, light, medium, bulky, super bulky, jumbo) w każdym języku poza en i językami z tej sekcji; nazwa lokalna dochodzi dopiero z przeczytanym źródłem szczebla ≤ 3 (osobne badanie, nie w tej partii).",
+  "nazwy_en": [
+   "lace",
+   "super fine",
+   "fine",
+   "light",
+   "medium",
+   "bulky",
+   "super bulky",
+   "jumbo"
+  ],
+  "jezyki_lokalne": {
+   "es": {
+    "zrodlo": "S-CYC-ES",
+    "miejsce": "tabela „Sistema de Peso Estandar para Estambre”, nagłówek „Nuevos Nombres de la Categoria” (osiem komórek, kolejność 0–7; zgodna z kolejnością en w tabeli CYC)",
+    "odczyt": "2026-10-30",
+    "cytat": "Liston | Super fino | Fino | Ligero | Medio | Abultado | Super Abultado | Jumbo",
+    "nazwy_zrodlo": [
+     "Liston",
+     "Super fino",
+     "Fino",
+     "Ligero",
+     "Medio",
+     "Abultado",
+     "Super Abultado",
+     "Jumbo"
+    ],
+    "nazwy_ui": [
+     "Lace",
+     "Súper fino",
+     "Fino",
+     "Ligero",
+     "Medio",
+     "Abultado",
+     "Súper abultado",
+     "Jumbo"
+    ],
+    "uwaga": "Pisownia „Súper” z akcentem to ortografia (strona CYC-ES bez znaków diakrytycznych), do przeglądu rodzimego. Wyjątek nazwany: kategoria 0 w CYC-ES to „Liston”, ale „listón” znaczy wstążka/listwa, a nie koronka (ocena na podstawie wiedzy; sprawdzenie w słowniku RAE niemożliwe w tej sesji, dle.rae.es zwraca 403 — [DO SPRAWDZENIA]); przypis CYC-ES do kategorii 0 mówi o „hilos de peso Listón … diseños abiertos, tipo encaje”, czyli o włóczce ażurowej. W interfejsie kategoria 0 = „Lace” (nazwa en) do przeglądu rodzimego es. Kalka „peso” w tytule systemu CYC-ES nie wchodzi do UI (zakaz w grubosc_wloczki es)."
+   },
+   "es-419": {
+    "zrodlo": "S-CYC-ES",
+    "miejsce": "jak es; strona CYC-ES jest wydaniem hiszpańskim dla rynku USA",
+    "odczyt": "2026-10-30",
+    "cytat": "Liston | Super fino | Fino | Ligero | Medio | Abultado | Super Abultado | Jumbo",
+    "nazwy_zrodlo": [
+     "Liston",
+     "Super fino",
+     "Fino",
+     "Ligero",
+     "Medio",
+     "Abultado",
+     "Super Abultado",
+     "Jumbo"
+    ],
+    "nazwy_ui": [
+     "Lace",
+     "Súper fino",
+     "Fino",
+     "Ligero",
+     "Medio",
+     "Abultado",
+     "Súper abultado",
+     "Jumbo"
+    ],
+    "uwaga": "Te same nazwy co es: źródło (CYC, wydanie es dla USA) obejmuje odbiorców hiszpańskojęzycznych w Ameryce; przeniesienie na es-419 to ocena, do przeglądu rodzimego es-419. Zastrzeżenia jak w es (kategoria 0)."
+   },
+   "fr": {
+    "zrodlo": "S-CYC-FR",
+    "miejsce": "tabela „Système Standard de Grosseur”, nagłówek „Nouvelle Catégorie Noms” (osiem komórek, kolejność 0–7)",
+    "odczyt": "2026-10-30",
+    "cytat": "Dentelle | Super Fin | Fin | Léger | Moyen | Bulky | Trés Épais | Géant",
+    "nazwy_zrodlo": [
+     "Dentelle",
+     "Super Fin",
+     "Fin",
+     "Léger",
+     "Moyen",
+     "Bulky",
+     "Trés Épais",
+     "Géant"
+    ],
+    "nazwy_ui": [
+     "Dentelle",
+     "Super fin",
+     "Fin",
+     "Léger",
+     "Moyen",
+     "Bulky",
+     "Très épais",
+     "Géant"
+    ],
+    "uwaga": "W źródle „Trés Épais” z błędnym akcentem; w UI „Très épais” (ortografia, do przeglądu rodzimego fr). Kategoria 5 w CYC-FR zostaje po angielsku („Bulky”) — źródło tak ją nazywa. „Dentelle” to też koronka jako technika: w UI zawsze z numerem 0 (patrz wloczka_lace fr). CYC-FR pisze też „fils de poids dentelles” w przypisie; ta kalka „poids” nie wchodzi do UI."
+   }
+  }
+ }
 }

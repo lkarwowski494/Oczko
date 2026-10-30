@@ -21,21 +21,21 @@ Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 704, średnia 392, niska 4
 | `licznik` | counter (row counter) | licznik (rzędów) | narzędzie w aplikacji liczące rzędy albo oczka danej części. | 37 |
 | `czesc` | part (a piece counted separately: a sleeve, the back, a sock) | część (element robótki) | element projektu liczony osobno, np. rękaw, tył, skarpeta. NIE: część zamienna, rozdział. | 37 |
 | `powtorzenie` | repeat (pattern repeat) | powtórzenie (raport wzoru) | zestaw rzędów (albo oczek) wzoru powtarzany wielokrotnie; „Rows in one repeat”. NIE: „powtórz” w sensie ponów operację, NIE: ponowne odtwarzanie. | 5 |
-| `wzor` | pattern (written instructions for a project) | wzór (opis / instrukcja wykonania) | dokument z instrukcją wykonania robótki (PDF, zdjęcie, strona). NIE: wzór splotu/ornament (ścieg), NIE: szablon/form krawiecki. | 37 |
+| `wzor` | pattern (written instructions for a project) | wzór (opis / instrukcja wykonania) | dokument z instrukcją wykonania robótki (PDF, zdjęcie, strona). NIE: wzór splotu/ornament (ścieg), NIE: szablon/form krawiecki. | 40 |
 | `schemat` | chart (knitting/crochet chart) | schemat | graficzny zapis wzoru w kratkach/symbolach, czytany zwykle od dołu. NIE: wykres statystyczny. | 2 |
 | `znacznik_rzedu` | marker / row marker (on the pattern page in the app) | znacznik (rzędu na stronie wzoru) | pozioma linia w aplikacji pokazująca bieżący rząd na stronie wzoru. NIE: znacznik oczek (fizyczny kółeczko na drucie) — choć słowo bywa to samo, w aplikacji chodzi o zakładkę/linijkę. | 5 |
 | `probka` | swatch | próbka | mały kawałek dzianiny wykonany przed projektem do zmierzenia gęstości. | 11 |
 | `gestosc` | gauge (US) / tension (UK) | gęstość dzianiny (oczka i rzędy na 10 cm) | liczba oczek i rzędów na 10 cm / 4 in, zmierzona na próbce. NIE: kaliber, NIE: przyrząd pomiarowy (miarka do drutów). | 9 |
 | `blokowanie` | block / blocking | blokowanie (wykończenie: namoczenie/naparowanie i rozpięcie) | nadanie gotowej dzianinie (lub próbce) kształtu i wymiaru przez zwilżenie/parowanie i suszenie rozpiętej. NIE: blokowanie ekranu/dostępu. | 1 |
-| `wloczka` | yarn | włóczka | nić do robótek ręcznych. NIE: przędza przemysłowa w sensie technicznym, NIE: nić do szycia. | 16 |
-| `motek` | skein (unit of yarn as sold; ball/hank) | motek | jednostka sprzedaży włóczki (motek/kłębek), liczona w zapasie i zużyciu. | 13 |
+| `wloczka` | yarn | włóczka | nić do robótek ręcznych. NIE: przędza przemysłowa w sensie technicznym, NIE: nić do szycia. | 20 |
+| `motek` | skein (unit of yarn as sold; ball/hank) | motek | jednostka sprzedaży włóczki (motek/kłębek), liczona w zapasie i zużyciu. | 15 |
 | `zapas` | stash (yarn stash) | zapas (włóczki) | włóczka, którą użytkownik ma w domu. NIE: kryjówka, NIE: magazyn sklepu. | 7 |
 | `grubosc_wloczki` | yarn weight (category 0–7) | grubość włóczki (kategoria) | kategoria grubości nici według standardu CYC (0 lace … 7 jumbo). NIE: masa w gramach (osobne pojęcie masa_motka). | 7 |
 | `masa_motka` | weight per skein (grams) | waga (masa) motka w gramach | masa jednego motka, np. 50 g. NIE: grubość włóczki. | 1 |
 | `metraz` | length per skein (yardage) | długość nici w motku (metraż) | długość nici w jednym motku, np. 200 m / 50 g. | 1 |
 | `etykieta_wloczki` | yarn label (ball band) | etykieta (banderola) włóczki | opaska na motku z danymi włóczki (skład, masa, długość, zalecane druty). | 4 |
 | `wloczka_lace` | lace yarn / lace weight (category 0) | włóczka koronkowa (najcieńsza, kategoria 0) | najcieńsza kategoria grubości włóczki. NIE: robótka ażurowa/koronka jako technika (choć w wielu językach to samo słowo). | 2 |
-| `druty` | knitting needles | druty (do robótek) | narzędzie do robienia na drutach. NIE: igły do szycia, NIE: drut metalowy. | 11 |
+| `druty` | knitting needles | druty (do robótek) | narzędzie do robienia na drutach. NIE: igły do szycia, NIE: drut metalowy. | 15 |
 | `szydelko` | crochet hook | szydełko | narzędzie z haczykiem do szydełkowania. NIE: hak, haczyk wędkarski. | 11 |
 | `druty_z_zylka` | circular needles | druty z żyłką (okrągłe) | dwa krótkie druty połączone żyłką, do robótki na okrągło lub dużych prac. | 1 |
 | `rozmiar_drutu` | needle size / hook size (mm; US number) | rozmiar (grubość) drutów / szydełka w mm | średnica drutu lub szydełka w milimetrach (w USA dodatkowo numer). NIE: długość drutu. | 2 |
@@ -778,6 +778,29 @@ Pojęć: 44 · języków: 35 · wpisów: 1540 (wysoka 704, średnia 392, niska 4
 | `slupek` | zh-Hant | `钩\|针\|编\|织\|线` | znaki uproszczone (Chiny kontynentalne); zh-Hant (TW/HK) pisze 鉤 針 編 織 線 |
 | `slupek` | zh-Hant | `長長針` | 長長針 = US tr, nie dc |
 | `slupek` | zh-Hant | `短針` | 短針 = US sc (UK dc) — pułapka UK „double crochet” |
+
+## Nazwy kategorii grubości CYC 0–7 (P-298)
+
+P-298 (koordynator wg P-087, 2026-10-30; D3 z P-281): wariant (c). W interfejsie zawsze widoczny numer kategorii 0–7; nazwa lokalna tylko tam, gdzie jest przeczytane źródło ze szczebla ≤ 3 (tu: es i fr z tabeli kategorii CYC, szczebel 1); w pozostałych językach numer + nazwa en. Odrzucone: (a) zawsze numer + nazwa en (wierne CYC, ale nazwa po angielsku także tam, gdzie źródło ma lokalną); (b) nazwy tłumaczone we wszystkich językach (dla 31 języków bez normy CYC i bez źródła szczebla ≤ 3; kalki).
+
+Pozostałe języki: numer kategorii + nazwa en (lace, super fine, fine, light, medium, bulky, super bulky, jumbo) w każdym języku poza en i językami z tej sekcji; nazwa lokalna dochodzi dopiero z przeczytanym źródłem szczebla ≤ 3 (osobne badanie, nie w tej partii).
+
+| kategoria | en | es | es-419 | fr |
+|---|---|---|---|---|
+| 0 | lace | Lace | Lace | Dentelle |
+| 1 | super fine | Súper fino | Súper fino | Super fin |
+| 2 | fine | Fino | Fino | Fin |
+| 3 | light | Ligero | Ligero | Léger |
+| 4 | medium | Medio | Medio | Moyen |
+| 5 | bulky | Abultado | Abultado | Bulky |
+| 6 | super bulky | Súper abultado | Súper abultado | Très épais |
+| 7 | jumbo | Jumbo | Jumbo | Géant |
+
+- **es** (S-CYC-ES, odczyt 2026-10-30, tabela „Sistema de Peso Estandar para Estambre”, nagłówek „Nuevos Nombres de la Categoria” (osiem komórek, kolejność 0–7; zgodna z kolejnością en w tabeli CYC)): „Liston \| Super fino \| Fino \| Ligero \| Medio \| Abultado \| Super Abultado \| Jumbo” — Pisownia „Súper” z akcentem to ortografia (strona CYC-ES bez znaków diakrytycznych), do przeglądu rodzimego. Wyjątek nazwany: kategoria 0 w CYC-ES to „Liston”, ale „listón” znaczy wstążka/listwa, a nie koronka (ocena na podstawie wiedzy; sprawdzenie w słowniku RAE niemożliwe w tej sesji, dle.rae.es zwraca 403 — [DO SPRAWDZENIA]); przypis CYC-ES do kategorii 0 mówi o „hilos de peso Listón … diseños abiertos, tipo encaje”, czyli o włóczce ażurowej. W interfejsie kategoria 0 = „Lace” (nazwa en) do przeglądu rodzimego es. Kalka „peso” w tytule systemu CYC-ES nie wchodzi do UI (zakaz w grubosc_wloczki es).
+
+- **es-419** (S-CYC-ES, odczyt 2026-10-30, jak es; strona CYC-ES jest wydaniem hiszpańskim dla rynku USA): „Liston \| Super fino \| Fino \| Ligero \| Medio \| Abultado \| Super Abultado \| Jumbo” — Te same nazwy co es: źródło (CYC, wydanie es dla USA) obejmuje odbiorców hiszpańskojęzycznych w Ameryce; przeniesienie na es-419 to ocena, do przeglądu rodzimego es-419. Zastrzeżenia jak w es (kategoria 0).
+
+- **fr** (S-CYC-FR, odczyt 2026-10-30, tabela „Système Standard de Grosseur”, nagłówek „Nouvelle Catégorie Noms” (osiem komórek, kolejność 0–7)): „Dentelle \| Super Fin \| Fin \| Léger \| Moyen \| Bulky \| Trés Épais \| Géant” — W źródle „Trés Épais” z błędnym akcentem; w UI „Très épais” (ortografia, do przeglądu rodzimego fr). Kategoria 5 w CYC-FR zostaje po angielsku („Bulky”) — źródło tak ją nazywa. „Dentelle” to też koronka jako technika: w UI zawsze z numerem 0 (patrz wloczka_lace fr). CYC-FR pisze też „fils de poids dentelles” w przypisie; ta kalka „poids” nie wchodzi do UI.
 
 ## Do sprawdzenia przez rodzimego użytkownika albo źródło (pewność niska)
 

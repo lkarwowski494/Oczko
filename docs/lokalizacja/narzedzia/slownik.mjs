@@ -52,6 +52,21 @@ export function sprawdz(slownik, en) {
     if (z.url || z.tytul) bledy.push(`źródło ${id}: tytuł i adres tylko w prywatnym rejestrze (oczko-warsztat), nie w repo publicznym`);
     if (z.szczebel >= 5) bledy.push(`źródło ${id}: szczebel 5 (fora, Wikipedia) nie potwierdza terminu`);
   }
+  const k = slownik.kategorie_cyc;
+  if (!k) bledy.push('kategorie_cyc: brak sekcji (P-298: nazwy kategorii grubości CYC 0–7, numer + nazwa lokalna tylko ze źródła szczebla ≤ 3)');
+  else {
+    const e = (m) => bledy.push(`kategorie_cyc: ${m}`);
+    if (k.nazwy_en?.length !== 8) e('nazwy_en: potrzeba 8 nazw (kategorie 0–7)');
+    for (const [j, l] of Object.entries(k.jezyki_lokalne || {})) {
+      if (!jezyki.includes(j)) e(`${j}: język spoza listy słownika`);
+      const z = zrodla[l.zrodlo];
+      if (!z || z.szczebel > 3) e(`${j}: nazwa lokalna bez źródła ze szczebla ≤ 3 (${l.zrodlo ?? 'brak'})`);
+      if (!l.cytat?.trim() || !l.miejsce?.trim() || !/^\d{4}-\d\d-\d\d$/.test(l.odczyt ?? '')) e(`${j}: brak cytatu, miejsca albo daty odczytu`);
+      for (const pole of ['nazwy_zrodlo', 'nazwy_ui']) if (l[pole]?.length !== 8 || l[pole].some((n) => !n?.trim())) e(`${j}: ${pole} musi mieć 8 niepustych nazw`);
+      if (l.nazwy_ui?.some((n, i) => n.toLowerCase() === k.nazwy_en?.[i]?.toLowerCase() && !l.wyjatki?.[i]) && l.nazwy_ui?.length === 8 && l.nazwy_ui.every((n, i) => n === k.nazwy_en?.[i])) e(`${j}: nazwy_ui = nazwy en (język powinien być poza jezyki_lokalne)`);
+    }
+    if (!k.pozostale?.trim()) e('brak reguły dla pozostałych języków (numer + nazwa en)');
+  }
   return { bledy, uwagi };
 }
 
@@ -101,6 +116,12 @@ export function md(slownik, en) {
   }
   o.push('## Terminy zakazane (kalki)', '', '| pojęcie | język | wzorzec | powód |', '|---|---|---|---|');
   for (const p of pojecia) for (const j of jezyki) for (const z of p.jezyki[j]?.zakazane || []) o.push(`| \`${p.id}\` | ${j} | \`${esc(z.wzorzec)}\` | ${esc(z.powod)} |`);
+  if (slownik.kategorie_cyc) {
+    const k = slownik.kategorie_cyc;
+    o.push('', '## Nazwy kategorii grubości CYC 0–7 (P-298)', '', k.decyzja, '', `Pozostałe języki: ${k.pozostale}`, '', `| kategoria | en | ${Object.keys(k.jezyki_lokalne).join(' | ')} |`, `|---|---|${Object.keys(k.jezyki_lokalne).map(() => '---').join('|')}|`);
+    k.nazwy_en.forEach((n, i) => o.push(`| ${i} | ${n} | ${Object.values(k.jezyki_lokalne).map((l) => esc(l.nazwy_ui[i])).join(' | ')} |`));
+    for (const [j, l] of Object.entries(k.jezyki_lokalne)) o.push('', `- **${j}** (${l.zrodlo}, odczyt ${l.odczyt}, ${l.miejsce}): „${esc(l.cytat)}” — ${esc(l.uwaga)}`);
+  }
   o.push('', '## Do sprawdzenia przez rodzimego użytkownika albo źródło (pewność niska)', '');
   for (const j of jezyki) {
     const l = pojecia.filter((p) => p.jezyki[j]?.pewnosc === 'niska').map((p) => `${p.id} („${p.jezyki[j].zalecany}”)`);
