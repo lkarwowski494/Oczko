@@ -25,6 +25,12 @@ on:
       - 'docs/monetyzacja/wektory-*.json' # wektory czytane przez swift test (ADR-0007)
       - 'tests/wspolne/**'
       - 'tests/wektory/brd.json'
+  workflow_dispatch: # ręczny pełny przebieg bez commita (P-299); działa z gałęzi, na której workflow już jest
+    inputs:
+      znacznik:
+        description: 'Znacznik pakietu w miejsce treści commitu (np. [e2e-pelny] albo [e2e-ipad])'
+        type: string
+        default: '[e2e-pelny]'
 permissions:
   contents: read
 concurrency:
@@ -220,7 +226,7 @@ jobs:
       - name: Plan części
         id: plan
         env:
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_MSG: ${{ github.event.head_commit.message || inputs.znacznik }}
           PAKIET: ${{ matrix.urzadzenie == 'ipad' && 'ipad' || '' }} # iPad: pakiet `ipad` (bez [e2e-pelny]/[e2e-ipad] w commicie część kończy bez pracy)
         run: node scripts/ci/e2e-czesci.mjs czesc "${{ matrix.czesc }}" --out e2e-czesc
       - name: Xcode 26.x
