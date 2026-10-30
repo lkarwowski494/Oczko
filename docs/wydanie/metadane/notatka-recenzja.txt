@@ -11,7 +11,7 @@ Main flow
 New in this version: first release; every feature above is new.
 
 In-App Purchases (open Settings, then "Oczko Pro")
-- Free use is limited to 5 knitting days per calendar month. A knitting day starts with the first row counted that day. Work in progress is never interrupted.
+- Free use is limited to 5 crafting days per calendar month. A crafting day starts with the first row counted that day. Work in progress is never interrupted.
 - "Oczko Pro" removes the limit: Monthly and Yearly auto-renewing subscriptions, and a Lifetime non-consumable. Subscriptions have no introductory offer.
 - "Restore purchases" and "Manage subscription" are on the same screen. You can buy without waiting for the limit.
 
