@@ -1,13 +1,15 @@
 # Przekazanie koordynatora Oczka
 
+**Wszystkie sesje ról zapisały stan i są zarchiwizowane (16:44 UTC); pliki stanu: `docs/programista/partia-7.md`, `docs/lokalizacja/stan-przeklad.md`, `docs/jakosc/stan.md`, `docs/design/stan-audytu-2-1.md`.**
+
 **Stan: WSTRZYMANIE (właściciel, 2026-10-30 ok. 16:35 UTC) — praca przechodzi na inne konto (tygodniowy limit).** Historia poprzednich przekazań: `docs/przekazanie-koordynatora-historia-2026-10-27.md`. Nowy koordynator zaczyna od tego pliku, `CLAUDE.md`, `docs/decyzje.md` od P-292 (ostatnia P-309), `docs/plan-prac.md`, nie od pamięci rozmowy.
 
 ## Gałęzie (stan przy wstrzymaniu — sprawdź `git fetch`, role mogły dopisać pliki stanu)
 | Gałąź | HEAD | Zawartość | Stan |
 |---|---|---|---|
 | `claude/jolly-thompson-paz6d8` (robocza) | b98dc61+ | kod 1.0: partie 6 i 7, 07, `workflow_dispatch` (0f1dec0) | przebiegi 129, 130, 131 zielone; #132 pełny bez maszyn (P-307) |
-| `claude/kopia-partia-7-2026-10-30-b` (08) | b8d537f+ | R1 plugin `icloud-tlo` (tryb tła od flagi iCloud), P-304 (e) próbka szydełko bez kategorii, P-302/P-304 (f) en „crafting days”, P-303 kategorie CYC, P-301 poprawki audytu 04 (003–006, klucze), krój Libre Franklin statyczny 700, 17 kluczy z `count` (sumy en.json 74ae9284…, en.kontekst.json 1cc9f57f…) | verify zielone; **czeka na push 1** |
-| `claude/kopia-09-2026-10-30` (09) | 6985598+ | przekład 34 języków (propozycje `docs/lokalizacja/przeklad-api/*.json`), skrypt/workflow API (nieużywane, P-309); podpięcie słowników do `src/` — zob. `docs/lokalizacja/stan-przeklad.md` | verify zielone; **push 2** |
+| `claude/kopia-partia-7-2026-10-30-b` (08) | 4982ef2 (kod = b8d537f; stan `docs/programista/partia-7.md` „WSTRZYMANIE 2026-10-30”) | R1 plugin `icloud-tlo` (tryb tła od flagi iCloud), P-304 (e) próbka szydełko bez kategorii, P-302/P-304 (f) en „crafting days”, P-303 kategorie CYC, P-301 poprawki audytu 04 (003–006, klucze), krój Libre Franklin statyczny 700, 17 kluczy z `count` (sumy en.json 74ae9284…, en.kontekst.json 1cc9f57f…) | verify zielone; **czeka na push 1** |
+| `claude/kopia-09-2026-10-30` (09) | 4316d41 (słowniki 35 języków podpięte w `src/`, app.json, `targets/*/Teksty.swift` — 714e46f; kompilacja Swift z 35 językami i Intl.PluralRules na Hermes niesprawdzone na macOS) | przekład 34 języków (propozycje `docs/lokalizacja/przeklad-api/*.json`), skrypt/workflow API (nieużywane, P-309); podpięcie słowników do `src/` — zob. `docs/lokalizacja/stan-przeklad.md` | verify zielone; **push 2** |
 | `claude/kopia-07-2026-10-30` (07) | b669e08 | ciemny motyw w e2e (`[e2e-ciemny]`, `simctl ui appearance dark`) | **push 3, ostatni, HEAD z `[e2e-pelny] [e2e-ciemny]`** |
 | `main` | ad8d6b0 | bez zmian | scalenie tylko za zgodą właściciela |
 | do pominięcia | — | `claude/kopia-partia-7-2026-10-30` (b598299, stara), `claude/kopia-07` (c9a6325), `claude/kopia-partia-6` | nieaktualne; usunięcie — właściciel |
