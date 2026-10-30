@@ -1,3 +1,9 @@
+# Stan roli 07-jakosc — audit plan-prac 2.4 (2026-10-30)
+- **Werdykt GOTOWE Z ZASTRZEŻENIAMI** dla kodu fb5d819 (= kod przebiegu iOS 131, 258a026; różnica tylko `docs/`). Raport: `oczko-warsztat` `07-jakosc/2026-10-30-audyt/07-jakosc-2026-10-30.md` (`sprawdz-raport` OK). `verify` kod 0, 236 zestawów, 2645/2645; 4 z 5 mutantów wykryte.
+- Znaleziska P2 (brak P0/P1): 07-jakosc-001 (testy „liczność” zależne od kolejności, `--randomize` czerwone), 07-jakosc-002 (przeżył mutant strażnika nazwy `-2` w `src/dane/archiwum.ts`), 07-jakosc-003 (inwentarz kryteriów bez 57 scenariuszy MVP z BRD).
+- Zastrzeżenia: pełny pakiet `[e2e-pelny]` na kodzie kandydata, lista TestFlight (TT/U) i TT-07 (warunek wysyłki), Apple Watch; raporty audytu 04/05/08/12 z tego SHA nie istnieją.
+- Następny krok: decyzja koordynatora o naprawie 001–003 (`07-jakosc --tryb fix`), potem reaudit tylko tych ID.
+
 # Stan roli 07-jakosc — fix-3 NZ-P5-07 (2026-10-26)
 ## Przejęcie (P-244: inna sesja, także na innym koncie, startuje tylko z tego pliku) — stan 2026-10-27 ~07:45 UTC
 - **Rola i tryb:** 07-jakosc, `fix`, zadanie NZ-P5-07 (+ przekazania P-197, P-202, P-224–P-237). Prompt: sklonuj prywatne `lkarwowski494/prompts` (add_repo), `git checkout 97ec212`, `node tools/assemble.mjs 07-jakosc --tryb fix --zadania NZ-P5-07 --galaz claude/jolly-thompson-paz6d8 --plik <scratchpad>/07-fix3.md` (64 343 znaków); przeczytaj w całości. Decyzje: koordynator (P-087); **od P-251 koordynator to sesja `session_01VjtVbMx8DYWkBfH4pvaCXK`** — raporty tylko tam i tylko na końcu etapu, przy STOP albo problemie; odpowiedzi zapisuj „koordynator wg P-087”.
