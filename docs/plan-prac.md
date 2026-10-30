@@ -35,7 +35,7 @@ Stan wyjściowy: `docs/przekazanie-koordynatora.md` (kolejka okna maszyn, kopie 
 |---|---|---|
 | 3.1 | **Właściciel:** identyfikatory `group.com.apps4brew.knitting` i `iCloud.com.apps4brew.knitting` w Apple Developer (P-233), sekrety podpisu, token CloudKit | właściciel (~30 min) |
 | 3.2 | Build podpisany, `testflight.yml`, wysłanie | 10 |
-| 3.3 | **Właściciel:** test na iPhonie, zegarku i iPadzie (lista U1–U8, ZM-06 iCloud telefon ↔ iPad — niezaliczony = przełącznik ukryty, P-218 Q5a; iPad bez rysika, P-226) | właściciel (45–90 min) |
+| 3.3 | **Właściciel:** test na iPhonie i iPadzie (zegarek: brak urządzenia — „nie sprawdzono”, P-290); plan: `docs/jakosc/testflight-na-urzadzeniu.md` (lista U1–U8, ZM-06 iCloud telefon ↔ iPad — niezaliczony = przełącznik ukryty, P-218 Q5a; iPad bez rysika, P-226) | właściciel (45–90 min) |
 
 ## Etap 4: pełny audyt i wysyłka (ok. 4–10.11)
 Pełny audyt przed App Store (12, 07, 04), poprawki blokerów, weryfikacja patentowa funkcji wzoru w gotowym kodzie (P-218 OG-07). **Właściciel:** scalenie do `main`, App Store Connect, „Submit for Review”. Wydanie ręczne po przeglądzie Apple.

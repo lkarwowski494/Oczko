@@ -4,7 +4,7 @@
 // Odstępstwo nazwane (jak R8, P-191): menu i alert „inny projekt” jako widoki w ekranie, nie systemowy arkusz akcji / Alert.
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { cel, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
+import { cel, MAX_SKALA_TYTULOWA, odstep, promien, typografia, useKolory, type Kolory } from './motyw';
 import { Przycisk } from './Arkusz';
 import type { Tlumacz } from './wspolne';
 
@@ -48,13 +48,13 @@ export function Stoper(p: PropsStopera): React.ReactElement {
     <View>
       {s.rodzaj === 'brak' ? (
         <Pressable accessibilityRole="button" accessibilityLabel={t('stoper.start_a11y')} onPress={p.naStart} style={st.ikona} testID="licznik-stoper">
-          <Text style={st.ikonaTekst} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>⏱</Text>
+          <Text style={st.ikonaTekst} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>⏱</Text>
         </Pressable>
       ) : (
         <Pressable accessibilityRole="button" testID="licznik-stoper"
           accessibilityLabel={t(s.rodzaj === 'trwa' ? 'stoper.trwa_a11y' : 'stoper.wstrzymana_a11y', { czas })}
           onPress={() => ustawMenu((m) => !m)} style={[st.kapsula, s.rodzaj === 'wstrzymana' && st.kapsulaPauza]}>
-          <Text style={[st.kapsulaTekst, s.rodzaj === 'wstrzymana' && st.kapsulaTekstPauza]} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+          <Text style={[st.kapsulaTekst, s.rodzaj === 'wstrzymana' && st.kapsulaTekstPauza]} maxFontSizeMultiplier={MAX_SKALA_TYTULOWA} importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
             {`${s.rodzaj === 'trwa' ? '⏱' : '⏸'} `}<Text>{czas}</Text>
           </Text>
         </Pressable>

@@ -146,6 +146,22 @@ describe('BR-DAN-002/S1 i S2: drugie urządzenie, konflikt', () => {
     await b.st.wyslijZaleglosci(); await a.u.dostarcz();
     expect(await a.s.baza.all('SELECT nazwa FROM licznik WHERE id = ?', [l])).toEqual([{ nazwa: 'Nowsza' }]);
   });
+  test('wyczyszczenie pola na A (cel, przywrócenie z kosza) → NULL na B; CloudKit nie trzyma pól nil, więc brak pola = null (08 partia 7)', async () => {
+    const serwer = serwerIcloud();
+    const a = await urzadzenie(serwer, 'iphone', 'a');
+    const b = await urzadzenie(serwer, 'ipad', 'b');
+    await szybki(a.s.z);
+    const [c] = await a.s.baza.all<{ id: string }>('SELECT id FROM czesc');
+    await a.s.baza.run('UPDATE czesc SET cel_rzedow = 40, usunieto_ms = zmieniono_ms + 1, zmieniono_ms = zmieniono_ms + 1 WHERE id = ?', [c.id]);
+    await a.st.wlacz(); await b.st.wlacz(); await b.u.dostarcz();
+    expect(await b.s.baza.all('SELECT cel_rzedow, usunieto_ms IS NOT NULL AS w_koszu FROM czesc WHERE id = ?', [c.id])).toEqual([{ cel_rzedow: 40, w_koszu: 1 }]);
+    await a.s.baza.run('UPDATE czesc SET cel_rzedow = NULL, usunieto_ms = NULL, zmieniono_ms = zmieniono_ms + 1 WHERE id = ?', [c.id]);
+    await a.st.wyslijZaleglosci();
+    expect(Object.keys(serwer.rekordy.get(`czesc:${c.id}`)?.pola ?? {})).not.toContain('usunieto_ms');
+    await b.u.dostarcz();
+    expect(await b.s.baza.all('SELECT cel_rzedow, usunieto_ms FROM czesc WHERE id = ?', [c.id])).toEqual([{ cel_rzedow: null, usunieto_ms: null }]);
+    expect(await zrzut(b.s.baza)).toEqual(await zrzut(a.s.baza));
+  });
   test('zmiana po wysłaniu, przed potwierdzeniem, nie ginie (numer zmiany)', async () => {
     const serwer = serwerIcloud();
     const a = await urzadzenie(serwer, 'iphone', 'a');

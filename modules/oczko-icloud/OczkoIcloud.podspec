@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
   s.frameworks     = 'CloudKit'
   s.dependency 'ExpoModulesCore'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'SWIFT_COMPILATION_MODE' => 'wholemodule' }
-  s.source_files = "ios/**/*.{h,m,mm,swift,hpp,cpp}"
+  s.source_files = ['ios/**/*.{h,m,mm,swift,hpp,cpp}', 'Pakiet/Sources/OczkoIcloudLogika/*.swift'] # logika czysta testowana `swift test` (Pakiet)
 end

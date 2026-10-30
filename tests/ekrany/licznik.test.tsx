@@ -2,7 +2,7 @@
 // i ekrany.html / prototyp.html (makiety 04); BR z docs/brd/wymagania-licznik.md. Teksty przez prawdziwe t() z en.json:
 // klucze z tymi tekstami dodaje 08 (DEV-12). Stany bez makiety: zapytanie robocze z komentarzem Z07-05.
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { Licznik, type StanEkranuLicznika, type WynikPlus } from '../../src/ekrany/Licznik';
 import type { Tlumacz } from '../../src/ekrany/wspolne';
 import { atrapaHaptyki, odroczona, zagrane, plusOk, przycisk, stanLicznika, tEn, wywolaniaLicznika } from './pomoc';
@@ -220,4 +220,19 @@ describe('Licznik', () => {
     expect(screen.queryByText(/Oczko Pro/)).toBeNull();
     expect(w.naOferty).not.toHaveBeenCalled();
   });
+});
+
+// P-284: VoiceOver Magic Tap = +1 na liczniku (design-spec:88); ta sama ścieżka co przycisk +1 — przy blokadzie bez zapisu (BR-LIC-004/S3).
+test('VoiceOver Magic Tap = +1 (design-spec:88); zablokowany → bez naPlus', async () => {
+  const w = wywolaniaLicznika();
+  const { toJSON, unmount } = render(<Licznik stan={stanLicznika()} t={t} oglos={jest.fn()} haptyka={atrapaHaptyki()} {...w} />);
+  const korzen = toJSON() as { props: { onMagicTap?: () => void } };
+  expect(typeof korzen.props.onMagicTap).toBe('function');
+  await act(async () => { korzen.props.onMagicTap?.(); });
+  expect(w.naPlus).toHaveBeenCalledTimes(1);
+  unmount();
+  const z = wywolaniaLicznika();
+  const r = render(<Licznik stan={stanLicznika({ zablokowany: true })} t={t} oglos={jest.fn()} haptyka={atrapaHaptyki()} {...z} />);
+  await act(async () => { (r.toJSON() as { props: { onMagicTap?: () => void } }).props.onMagicTap?.(); });
+  expect(z.naPlus).not.toHaveBeenCalled();
 });

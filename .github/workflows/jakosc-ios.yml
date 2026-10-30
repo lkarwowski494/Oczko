@@ -54,6 +54,12 @@ jobs:
           cd modules/oczko-wzor/Pakiet
           swift test 2>&1 | tee ../../../swift-test-wzor.log
           { echo "### swift test (wzór)"; grep -E 'Executed [0-9]+ tests' ../../../swift-test-wzor.log | tail -1 | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: swift test — odwzorowanie iCloud (modules/oczko-icloud/Pakiet; 08 partia 7)
+        run: |
+          set -o pipefail
+          cd modules/oczko-icloud/Pakiet
+          swift test 2>&1 | tee ../../../swift-test-icloud.log
+          { echo "### swift test (iCloud)"; grep -E 'wykonano [0-9]+ z [0-9]+|Executed [0-9]+ tests' ../../../swift-test-icloud.log | sed 's/^/- /'; } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

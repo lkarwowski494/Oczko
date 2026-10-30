@@ -110,6 +110,13 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
   let baner: BanerLicznika = null;
   let aktywnosc = false;
   let wersja = 0;
+  // P-287: +1 w toku (pierwsze tworzy projekt roboczy i ustawia licznikId). Odczyt ekranu rozpoczęty w tym czasie (przemontowanie po naPartie,
+  // poZmianie, odswiez) czeka na zapis — inaczej nowy ekran pokazałby stan sprzed stuknięcia, a wynik +1 trafiłby do odmontowanego komponentu.
+  let plusWToku: Promise<unknown> = Promise.resolve();
+  async function stanPoZapisie(): Promise<{ s: StanEkranuLicznika; w: WidokLicznika | null }> {
+    await plusWToku;
+    return stan();
+  }
 
   async function stan(): Promise<{ s: StanEkranuLicznika; w: WidokLicznika | null }> {
     const ch = z.zegar.teraz();
@@ -140,6 +147,24 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
   }
   const potwierdz = (ids: readonly string[]) => { if (ids.length > 0) z.zegarek.potwierdz(ids); };
   const ekranu = <T>(w: Wynik<T>): WynikEkranu<T> => (w.ok ? w : { ok: false, powod: w.powod === 'limit' || w.powod === 'zablokowany' || w.powod === 'bledne_dane' || w.powod === 'niedozwolone_przejscie' ? w.powod : 'zapis' });
+
+  /** +1 z ekranu (BR-LIC-001/S2: pierwsze tworzy projekt roboczy); przez `uslugi.dodajRzad`, które zapamiętuje zapis w toku (P-287). */
+  async function plusZEkranu(): Promise<WynikPlus> {
+    if (!licznikId) { // pierwsze +1 bez projektu: projekt roboczy, potem zwykłe +1 (BR-LIC-001/S2)
+      const n = await utworzSzybkiLicznik(z);
+      if (!n.ok) return ekranu(n);
+      licznikId = n.wartosc.licznikId;
+      await zapamietajLicznik(z, { licznikId });
+    }
+    const r = await dodajRzad(z, { licznikId });
+    if (!r.ok) return ekranu(r);
+    baner = null; // baner „Removed …” znika przy kolejnym +1 (design-spec „Baner strażnika”)
+    const { w } = await stan();
+    void poZapisie(w);
+    if (!w) return { ok: false, powod: 'bledne_dane' };
+    const sygnal = wejscie(w, r.wartosc.wartosc - 1);
+    return { ok: true, wartosc: { skonczone: w.wartosc, dziergany: w.wartosc + 1, zdarzenia: zdarzeniaPlus(w, sygnal !== null), wejscieWPrzypomnienie: sygnal } };
+  }
 
   const k: KompozycjaLicznika = {
     async przygotuj() {
@@ -175,7 +200,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
     async poZmianie() {
       void o.skrzynka?.migawka().catch(() => undefined); // partia 6: migawka dla rozszerzenia po każdej zmianie projektu (kontrakt: po COMMIT operacji listy)
       baner = null;
-      const { w } = await stan();
+      const { w } = await stanPoZapisie();
       await poZapisie(w);
       wersja += 1;
     },
@@ -210,25 +235,14 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
     },
     uslugi: {
       async start(): Promise<StanStartu> {
-        const { s, w } = await stan();
+        const { s, w } = await stanPoZapisie();
         void poZapisie(w); // stan ekranu blokady po starcie (po scaleniu dziennika i potwierdzeniach zegarka)
         return { licznik: s, ekranWlaczony: true }; // F-10: opcja z Ustawień (3C); domyślnie włączona
       },
-      async dodajRzad(): Promise<WynikPlus> {
-        if (!licznikId) { // pierwsze +1 bez projektu: projekt roboczy, potem zwykłe +1 (BR-LIC-001/S2)
-          const n = await utworzSzybkiLicznik(z);
-          if (!n.ok) return ekranu(n);
-          licznikId = n.wartosc.licznikId;
-          await zapamietajLicznik(z, { licznikId });
-        }
-        const r = await dodajRzad(z, { licznikId });
-        if (!r.ok) return ekranu(r);
-        baner = null; // baner „Removed …” znika przy kolejnym +1 (design-spec „Baner strażnika”)
-        const { w } = await stan();
-        void poZapisie(w);
-        if (!w) return { ok: false, powod: 'bledne_dane' };
-        const sygnal = wejscie(w, r.wartosc.wartosc - 1);
-        return { ok: true, wartosc: { skonczone: w.wartosc, dziergany: w.wartosc + 1, zdarzenia: zdarzeniaPlus(w, sygnal !== null), wejscieWPrzypomnienie: sygnal } };
+      dodajRzad(): Promise<WynikPlus> {
+        const p = plusZEkranu();
+        plusWToku = p.catch(() => undefined);
+        return p;
       },
       async scalDziennik() {
         void o.skrzynka?.start().catch(() => undefined); // partia 6: nowe zlecenia z rozszerzenia po powrocie na pierwszy plan
@@ -260,7 +274,7 @@ export function kompozycjaLicznika(z: ZaleznosciKompozycji, j: Jezyk, o: OpcjeKo
         const r = await ustawBlokade(z, { licznikId, zablokowany: false });
         if (r.ok) void stan().then(({ w }) => poZapisie(w)); // N1: stan blokady na ekranie blokady i zegarku
       },
-      odswiez: async () => (await stan()).s,
+      odswiez: async () => (await stanPoZapisie()).s,
     },
   };
   return k;
