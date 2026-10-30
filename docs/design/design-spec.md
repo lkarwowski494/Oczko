@@ -867,6 +867,7 @@ Raport: `oczko-warsztat` `04-studio/2026-10-30-audyt/`. Rozstrzygnięcia poniże
 - **Wiersz „Video” (pkt 7):** „Remove link” ze zwykłym potwierdzeniem (jak każde usunięcie, słownik studia), menu „Change link” / „Remove link” także z widocznego przycisku •••; przytrzymanie zostaje skrótem.
 - **Magic Tap (pkt 8):** zrobiony w kodzie; sprawdzenie na urządzeniu w liście testów 07.
 - **Kosz wzoru (P-243 S2a):** teksty z `fix8-2026-10-27/klucze.json` potwierdzone, są w `en.json`.
+- **Termin jednostki limitu (prośba 10, P-148 E1-4a), czeka na decyzję koordynatora:** rekomendacja 04: „crafting days” zamiast „knitting days” (raport, 04-studio-projektowe-007); do decyzji teksty en zostają bez zmian.
 - **D1a (P-281), brzmienie dla 35 języków:** w nazwach i opisach para „druty i szydełko”; w etykietach do 12 znaków słowo szersze (rękodzieło), a nie samo słowo drutowe; języki bez takiego słowa w słowniku: `[DO USTALENIA]` (rola 09).
 
 ## Poza tym etapem (dla audytu roli 04 po roli 08 albo osobnej sesji)
