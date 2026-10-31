@@ -518,3 +518,9 @@
 
 
 
+
+* **DEC-35 Naprawa E2E iOS i hook przed pushem (31.10.2026, wybór właściciela: A1 + B1):**
+  * *Problem (realny):* `e2e-ios.yml` padał od 17.10.2026 na `pod install` — obraz `macos-14` ma tylko Xcode 15.4, a React Native 0.86 wymaga ≥ 16.1. `.github/scripts/select-xcode.sh` po braku Xcode 26 brał `Xcode.app` i wypisywał „Wybrany Xcode: 26”, a łańcuch `26 || 16 || 15` po cichu zjeżdżał do starszej wersji. Ten sam błąd miał `testflight.yml` (kolejny build by padł).
+  * *Rozstrzygnięcie:* oba workflowy na `macos-26` (Xcode 26.6; `macos-15` ma najwyżej 26.3, a Expo SDK 56+ wymaga 26.4+, więc jest tylko ta opcja), jeden skrypt `scripts/ci/select-xcode.sh 26` bez zjazdu, kontrakt `tests/ci-xcode.contract.test.ts`. Koszt 0 PLN (repo publiczne).
+  * *Hook przed pushem:* `.claude/settings.json` (PreToolUse) uruchamia `scripts/pre-push-check.mjs` — typecheck, i18n, macierz (~9 s) — i blokuje `git push` agenta przy porażce. Pełne `verify` zostaje w CI. Nie obejmuje pushy wykonywanych ręcznie przez właściciela.
+  * *Odrzucone:* B2 (hook gita z `core.hooksPath` — wymaga ustawienia w każdym klonie), B3 (pełne `verify` przed każdym pushem, ~50 s); płatne runnery, sharding i `isolate: false` (CI trwa ~1 min, zasada 0 PLN, ryzyko przecieku stanu SQLite).

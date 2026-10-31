@@ -29,7 +29,7 @@ env:
 jobs:
   build:
     name: Archive & Upload (.ipa -> TestFlight)
-    runs-on: macos-14
+    runs-on: macos-26
     timeout-minutes: 60
     outputs:
       version: ${{ steps.ver.outputs.version }}
@@ -59,7 +59,7 @@ jobs:
           cache: npm
 
       - name: Select Xcode 26 (iOS 26 SDK)
-        run: bash .github/scripts/select-xcode.sh 26 || bash .github/scripts/select-xcode.sh 16 || bash .github/scripts/select-xcode.sh 15
+        run: bash scripts/ci/select-xcode.sh 26
 
       - name: Install JS dependencies
         run: npm ci

@@ -14,6 +14,7 @@
 - **Czystość marek:** Zakaz używania znaków towarowych innych firm (`tests/brands.contract.test.ts`).
 
 ## 3. Komenda Weryfikacyjna
+Hook `.claude/settings.json` blokuje `git push` agenta, gdy padnie typecheck, i18n albo macierz (`scripts/pre-push-check.mjs`, DEC-35). Pełne `verify` uruchamiaj i tak.
 Przed każdym zatwierdzeniem zmian:
 ```bash
 npm run verify

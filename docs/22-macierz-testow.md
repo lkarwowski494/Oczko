@@ -114,7 +114,7 @@ Dowód liczy się tylko z kodu testu: bez komentarzy, tytułów `test`/`describe
 | Brak pasujących włóczek | app/(tabs)/stash.tsx | tests/matrix-coverage.test.tsx |
 | Brak wczytanego wzoru | src/components/PatternPdfViewer.tsx | tests/matrix-coverage.test.tsx |
 | Cel / Postęp | src/components/KnitProofOverlay.tsx | tests/matrix-coverage.test.tsx |
-| co | src/components/IntervalConfigModal.tsx | tests/audit-fixes.test.tsx, tests/brands.contract.test.ts, tests/close-button-guard.test.tsx +42 |
+| co | src/components/IntervalConfigModal.tsx | tests/audit-fixes.test.tsx, tests/brands.contract.test.ts, tests/ci-xcode.contract.test.ts +43 |
 | Co widzisz? | app/(tabs)/learn.tsx | tests/matrix-coverage.test.tsx |
 | Cofnij | app/(tabs)/learn.tsx | tests/matrix-coverage.test.tsx |
 | Części | app/(tabs)/projects.tsx | tests/matrix-coverage.test.tsx |

@@ -28,15 +28,15 @@ concurrency:
 
 jobs:
   e2e:
-    runs-on: macos-14
+    runs-on: macos-26
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Select Xcode 26.x / 16.x
-        run: bash .github/scripts/select-xcode.sh 26 || bash .github/scripts/select-xcode.sh 16 || bash .github/scripts/select-xcode.sh 15
+      - name: Select Xcode 26
+        run: bash scripts/ci/select-xcode.sh 26
 
       - uses: actions/setup-node@v4
         with:
